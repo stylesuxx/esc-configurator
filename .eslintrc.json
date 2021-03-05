@@ -1,0 +1,61 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/all"],
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/jsx-max-depth": ["warn", { "max": 5 }],
+    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "react/jsx-indent": ["warn", 2],
+    "react/jsx-indent-props": ["warn", 2],
+    "react/jsx-no-literals": "off",
+    "react/no-multi-comp": "off",
+    "react/no-set-state": "off",
+    "no-unreachable": "off",
+    "react/no-array-index-key": "warn",
+    "react/no-danger": "warn",
+    "no-unused-vars": "warn",
+    "new-cap": [
+      "error", {
+        "capIsNewExceptionPattern": "^(Immutable.)?Component$"
+      }
+    ],
+    "semi": "error",
+    "space-infix-ops": "error",
+    "radix": "error",
+    "arrow-body-style": "error",
+    "arrow-parens": "error",
+    "no-plusplus": "warn",
+    "eqeqeq": "error",
+    "object-curly-spacing": ["error", "always"],
+    "object-curly-newline": ["error", {
+      "ObjectExpression": { "multiline": true, "minProperties": 2 },
+      "ObjectPattern": { "multiline": true, "minProperties": 2 },
+      "ImportDeclaration": { "multiline": true, "minProperties": 1 },
+      "ExportDeclaration": { "multiline": true, "minProperties": 1 }
+    }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "globals": {
+    "document": false,
+    "process": false,
+    "navigator": false,
+    "console": false,
+    "fetch": false,
+    "URL": false,
+    "window": false,
+    "setInterval": false,
+    "clearInterval": false,
+    "Uint8Array": false,
+    "ArrayBuffer": false,
+    "DataView": false,
+    "setTimeout": false,
+    "clearTimeout": false,
+    "Promise": false
+  },
+  "parser": "babel-eslint"
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Unreleased",
+    "items": [
+      "Initial commit of the web based app",
+      "Supports flashing and setting of SiLabs based ESC's",
+      "Only supports flashing of bluejay firmware"
+    ]
+  }
+]
