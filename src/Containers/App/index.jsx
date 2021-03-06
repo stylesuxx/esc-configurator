@@ -699,11 +699,13 @@ class App extends Component {
                 <div className="logo_text" />
               </div>
 
+              {/*
               <a
                 href="#"
                 i18n_title="optionsTitle"
                 id="options"
               />
+              */}
 
               <PortPicker
                 connect={this.openPort}
