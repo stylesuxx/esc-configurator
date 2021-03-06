@@ -30,6 +30,12 @@ import {
 
 import './style.css';
 
+import settings from '../../settings.json';
+const {
+  version,
+  corsProxy,
+} = settings;
+
 class App extends Component {
   constructor() {
     super();
@@ -74,7 +80,6 @@ class App extends Component {
       versions: {},
       individualSettings: [],
       packetErrors: 0,
-      version: '0.1.0',
     };
   }
 
@@ -300,7 +305,7 @@ class App extends Component {
     const {
       flashTargets, serial, escs, progress,
     } = this.state;
-    // Improve: * The original code had some functionality to cache hex files
+    // IMPROVE: * The original code had some functionality to cache hex files
     //            this might be useful to re-implement in some way using the
     //            local storage. Caching could be done based on URL.
 
@@ -318,7 +323,7 @@ class App extends Component {
 
     try {
       // Proxy is needed to bypass CORS on github
-      const proxy = 'https://thingproxy.freeboard.io/fetch/' + url;
+      const proxy = `${corsProxy}${url}`;
       const response = await fetch(proxy);
       const text = await response.text();
 
@@ -358,7 +363,7 @@ class App extends Component {
   }
 
   async serialConnectHandler() {
-    /*
+    /**
      * If we are here, the user has already given permission to access the
      * device - mark  conncted
      */
@@ -585,7 +590,6 @@ class App extends Component {
       open,
       serialLog,
       packetErrors,
-      version,
     } = this.state;
     if (!checked) {
       return null;
