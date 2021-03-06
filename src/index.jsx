@@ -1,13 +1,16 @@
 import React, {
-  Suspense, 
+  Suspense,
 } from 'react';
+import {
+  Helmet,
+} from "react-helmet";
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './Containers/App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import {
-  I18nextProvider, 
+  I18nextProvider,
 } from 'react-i18next';
 import i18next from 'i18next';
 
@@ -23,6 +26,16 @@ ReactDOM.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
       <Suspense fallback="loading">
+        <Helmet>
+          <title>
+            Bluejay ESC Configurator
+          </title>
+
+          <description>
+            Flash your BLHELI_S ESC&apos;s with Bluejay directly from an up to date browser supporting the Web Serial APi.
+          </description>
+        </Helmet>
+
         <App />
       </Suspense>
     </I18nextProvider>

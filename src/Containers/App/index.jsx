@@ -72,6 +72,8 @@ class App extends Component {
       progress: [],
       versions: {},
       individualSettings: [],
+      packetErrors: 0,
+      version: '0.1.0',
     };
   }
 
@@ -208,14 +210,10 @@ class App extends Component {
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
-        await this.delay(500);
         const settings = await serial.fourWayGetInfo(i);
         if(settings) {
           escFlash.push(settings);
         }
-
-        await this.delay(250);
-        await serial.fourWayReset(i);
       }
       open = true;
       // console.log(escFlash);
@@ -360,7 +358,7 @@ class App extends Component {
      */
     const ports = await navigator.serial.getPorts();
     if(ports.length > 0) {
-      this.addLogMessage('Connected');
+      this.addLogMessage('Plugged in');
 
       const serial = new Serial(ports[0]);
 
@@ -372,8 +370,16 @@ class App extends Component {
   }
 
   serialDisconnectHandler() {
-    this.addLogMessage('Disconnected');
-    this.closePort();
+    const { serial } = this.state;
+    this.addLogMessage('Unplugged');
+    this.setState({
+      connected: false,
+      open: false,
+      escs: [],
+      lastConnected: 0,
+    });
+
+    serial.disconnect();
   }
 
   async setPort() {
@@ -543,7 +549,7 @@ class App extends Component {
     );
     serialLog.push(this.formatLogMessage(uidElement));
 
-    this.setState({
+    await this.setState({
       open: true,
       serialLog,
     });
@@ -566,7 +572,13 @@ class App extends Component {
 
   render() {
     const {
-      checked, hasSerial, connected, open, serialLog,
+      checked,
+      hasSerial,
+      connected,
+      open,
+      serialLog,
+      packetErrors,
+      version,
     } = this.state;
     if (!checked) {
       return null;
@@ -752,12 +764,12 @@ class App extends Component {
               <span i18n="statusbarPacketError" />
 
               <span className="packet-error">
-                0
+                {packetErrors}
               </span>
             </div>
 
             <div className="version">
-              {/* configuration version generated here */}
+              {version}
             </div>
           </div>
 

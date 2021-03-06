@@ -1,19 +1,41 @@
-class MSP {
-  constructor(serial, serialWriter, serialReader) {
+import {
+  NotEnoughDataError,
+} from './helpers/QueueProcessor';
+
+const MSP = {
+  MSP_API_VERSION: 1,
+  MSP_FC_VARIANT: 2,
+  MSP_FC_VERSION: 3,
+  MSP_BOARD_INFO: 4,
+  MSP_BUILD_INFO: 5,
+
+  // Multiwii MSP commands
+  MSP_IDENT: 100,
+  MSP_STATUS: 101,
+  MSP_MOTOR: 104,
+  MSP_3D: 124,
+  MSP_SET_3D: 217,
+
+  MSP_SET_4WAY_IF: 245,
+
+  // Additional baseflight commands that are not compatible with MultiWii
+  MSP_UID: 160, // Unique device ID
+};
+
+class Msp {
+  constructor(serial) {
     this.serial = serial;
-    this.serialWriter = serialWriter;
-    this.serialReader = serialReader;
 
     this.packetError = 0;
-    this.lastReceivedTimestamp = null;
 
     this.unsupported = 0;
 
     this.messageDirection = 1; // ????
-    this.analogLastReceivedTimestamp = null; // ????
+
+    this.read = this.read.bind(this);
   }
 
-  read(data) {
+  read(data, resolve, reject) {
     let code = 0;
     let state = 0;
     let messageBuffer = null;
@@ -59,12 +81,17 @@ class MSP {
 
         case 3: {
           messageLengthExpected = data[i];
-
           messageChecksum = data[i];
 
           // Setup arraybuffer
           messageBuffer = new ArrayBuffer(messageLengthExpected);
           messageBufferUint8View = new Uint8Array(messageBuffer);
+
+          /*
+          if(messageLengthExpected !== messageBuffer.length) {
+            return reject(new NotEnoughDataError());
+          }
+          */
 
           state += 1;
         } break;
@@ -104,24 +131,24 @@ class MSP {
 
             this.lastReceivedTimestamp = Date.now();
 
-            return response;
+            return resolve(response);
           }
-          console.log(`code: ${code} - crc failed`);
 
           this.packetError += 1;
+          return reject(new Error(`code: ${code} - crc failed`));
 
           // TODO: Needs callback for packet Error
         } break;
 
         default: {
-          console.log(`Unknown state detected: ${state}`);
+          return reject(new Error(`Unknown state detected: ${state}`));
         }
       }
     }
 
     this.lastReceivedTimestamp = Date.now();
 
-    return null;
+    return reject(new NotEnoughDataError());
   }
 
   async send(code, data) {
@@ -162,33 +189,7 @@ class MSP {
       bufView[5] = bufView[3] ^ bufView[4]; // Checksum
     }
 
-    /*
-    const writer = this.serial.writable.getWriter();
-    await writer.write(bufferOut);
-    await writer.releaseLock();
-    */
-    await this.serialWriter(bufferOut);
-
-    let valueTotal = [];
-    valueTotal = await this.serialReader();
-    /*
-    if (this.serial.readable) {
-      const reader = await this.serial.readable.getReader();
-      const forever = true;
-      while (forever) {
-        const { value } = await reader.read();
-
-        if (value) {
-          valueTotal = value;
-
-          reader.releaseLock();
-          break;
-        }
-      }
-    }
-    */
-
-    return this.read(valueTotal);
+    return this.serial(bufferOut, this.read);
   }
 
   getApiVersion() {
@@ -387,22 +388,4 @@ class MSP {
   }
 }
 
-MSP.MSP_API_VERSION = 1;
-MSP.MSP_FC_VARIANT = 2;
-MSP.MSP_FC_VERSION = 3;
-MSP.MSP_BOARD_INFO = 4;
-MSP.MSP_BUILD_INFO = 5;
-
-// Multiwii MSP commands
-MSP.MSP_IDENT = 100;
-MSP.MSP_STATUS = 101;
-MSP.MSP_MOTOR = 104;
-MSP.MSP_3D = 124;
-MSP.MSP_SET_3D = 217;
-
-MSP.MSP_SET_4WAY_IF = 245;
-
-// Additional baseflight commands that are not compatible with MultiWii
-MSP.MSP_UID = 160; // Unique device ID
-
-export default MSP;
+export default Msp;

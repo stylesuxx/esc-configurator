@@ -137,7 +137,7 @@ input[type="number"]::-webkit-inner-spin-button {
     height: 90px;
     z-index: 0;
     background-repeat: no-repeat;
-    width: 340px;
+    width: 95px;
     background-position: left center;
     background-size: contain;
     margin-left: 23px;

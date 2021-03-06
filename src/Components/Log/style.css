@@ -58,14 +58,11 @@
     text-decoration: underline;
 }
 
-/* Log switch */
 .logswitch {
-    position: absolute;
-    right: 20px;
-    margin-top: -1px;
-    float: right;
-    padding: 2px;
-    z-index: 10;
+  position: absolute;
+  right: 20px;
+  z-index: 10;
+  line-height: 27px;
 }
 
 .logswitch a {

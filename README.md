@@ -1,6 +1,8 @@
 # Bluejay PWA
 A webapp to flash your BLHELI_S capable ESC's directly from the web using the [Web Serial API](https://wicg.github.io/serial/).
 
+> The latest state of the master branch can be [viewed in the browser](https://sad-goodall-6b6045.netlify.app/)
+
 This is basically a complete re-write of the original BLHELI_S configurator. Some bits and pieces have been re-used.
 
 I mainly did this since I was interested in having this as an web app, but also because the original BLHELI_S configurator code was too much for me to re-factor and I thought I might re-write it in the same amount of time.

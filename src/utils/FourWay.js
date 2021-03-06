@@ -46,11 +46,13 @@ import {
   BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
 } from './Bluejay';
 
+import {
+  NotEnoughDataError,
+} from './helpers/QueueProcessor';
+
 class FourWay {
-  constructor(serial, serialWriter, serialReader) {
+  constructor(serial) {
     this.serial = serial;
-    this.serialWriter = serialWriter;
-    this.serialReader = serialReader;
 
     this.commandQueue = [];
 
@@ -111,10 +113,17 @@ class FourWay {
     this.progressCallback = null;
 
     this.logCallback = null;
+    this.packetErrorsCallback = null;
+
+    this.parseMessageNew = this.parseMessageNew.bind(this);
   }
 
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
+  }
+
+  setBrokenPacketCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
   }
 
   addLogMessage(message) {
@@ -237,6 +246,52 @@ class FourWay {
     return message;
   }
 
+  parseMessageNew(buffer, resolve, reject) {
+    const fourWayIf = 0x2e;
+
+    let view = new Uint8Array(buffer);
+    if (view[0] !== fourWayIf) {
+      const error = `invalid message start: ${view[0]}`;
+      console.debug(error);
+      return reject(new Error(error));
+    }
+
+    if (view.length < 9) {
+      console.debug('Incomplete message');
+      return reject(new NotEnoughDataError());
+    }
+
+    let paramCount = view[4];
+    if (paramCount === 0) {
+      paramCount = 256;
+    }
+
+    if (view.length < 8 + paramCount) {
+      console.debug('Incomplete message');
+      return reject(new NotEnoughDataError());
+    }
+
+    const message = {
+      command: view[1],
+      address: view[2] << 8 | view[3],
+      ack: view[5 + paramCount],
+      checksum: view[6 + paramCount] << 8 | view[7 + paramCount],
+      params: view.slice(5, 5 + paramCount),
+    };
+
+    const msgWithoutChecksum = view.subarray(0, 6 + paramCount);
+    const checksum = msgWithoutChecksum.reduce(this.crc16XmodemUpdate, 0);
+
+    if (checksum !== message.checksum) {
+      // TODO: increase broken packets.
+      const error = `checksum mismatch, received: ${message.checksum}, calculated: ${checksum}`;
+      console.debug(error);
+      return reject(new Error(error));
+    }
+
+    return resolve(message);
+  }
+
   async processQueue() {
     if(!this.processing) {
       this.processing = true;
@@ -286,26 +341,15 @@ class FourWay {
       }
 
       const processMessage = async(resolve, reject) => {
-        try {
-          await this.serialWriter(message);
-        } catch(e) {
-          reject(e);
-        }
-
         // Immediately resolve the exit command since it will not produce any
         // processable output.
         if (command === this.commands.cmd_InterfaceExit) {
+          await this.serial(message, null);
           return resolve();
         }
 
-        let valueTotal = null;
-        try {
-          valueTotal = await this.serialReader();
-        } catch(e) {
-          reject(e);
-        }
+        const msg = await this.serial(message, this.parseMessageNew);
 
-        const msg = this.parseMessages(valueTotal);
         if (msg && msg.ack === self.ack.ACK_OK) {
           return resolve(msg);
         }
@@ -326,7 +370,7 @@ class FourWay {
   }
 
   async getInfo(target) {
-    await this.reset(target);
+    //await this.reset(target);
     const flash = await this.initFlash(target);
 
     if (flash) {

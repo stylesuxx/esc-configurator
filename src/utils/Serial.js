@@ -1,5 +1,9 @@
-import MSP from './Msp';
+import Msp from './Msp';
 import FourWay from './FourWay';
+
+import {
+  QueueProcessor,
+} from './helpers/QueueProcessor';
 
 /**
  * Abstraction layer for all serial communication
@@ -13,8 +17,20 @@ class Serial {
     this.reader = null;
 
     this.write = this.write.bind(this);
-    this.read = this.read.bind(this);
+    this.executeCommand = this.executeCommand.bind(this);
     this.logCallback = null;
+
+    this.qp = new QueueProcessor();
+  }
+
+  /**
+   * Send a buffer via serial and process response with the response handler
+   */
+  async executeCommand(buffer, responseHandler) {
+    await this.write(buffer);
+    if(responseHandler) {
+      return this.qp.addCommand(responseHandler);
+    }
   }
 
   setLogCallback(logCallback) {
@@ -91,25 +107,23 @@ class Serial {
   }
 
   async write(buffer) {
-    await this.writer.write(buffer);
+    if(this.writer) {
+      await this.writer.write(buffer);
+    }
   }
 
-  async read() {
-    const process = async(resolve, reject) => {
+  async startReader() {
+    while(this.running) {
       try {
-        if (this.port.readable) {
-          const reader = await this.port.readable.getReader();
-          const { value } = await reader.read();
-          await reader.cancel();
-          await reader.releaseLock();
-          resolve(value);
+        const { value } = await this.reader.read();
+        if(value) {
+          this.qp.addData(value);
         }
-      } catch (e) {
-        reject(e);
+      } catch(e) {
+        console.debug('Reader failed', e);
+        return;
       }
-    };
-
-    return new Promise((resolve, reject) => process(resolve, reject));
+    }
   }
 
   async open(baudRate) {
@@ -117,39 +131,34 @@ class Serial {
 
     try {
       this.writer = await this.port.writable.getWriter();
-      //this.reader = await this.port.readable.getReader();
+      this.reader = await this.port.readable.getReader();
     } catch(e) {
       console.debug('Port not read or writable');
       throw new Error('Port not read or writable');
     }
 
-    this.msp = new MSP(this.port, this.write, this.read);
-    this.fourWay = new FourWay(this.port, this.write, this.read);
-    // this.msp = new MSP(this.write, this.write, this.read);
-    // this.fourWay = new FourWay(this.port, this.write, this.read);
+    this.msp = new Msp(this.executeCommand);
+    this.fourWay = new FourWay(this.executeCommand);
+
+    this.running = true;
+    this.startReader();
+  }
+
+  disconnect() {
+    this.running = false;
+    this.reader = null;
+    this.writer = null;
   }
 
   async close() {
-    if(this.fourWay) {
-      await this.fourWay.exit();
-    }
+    this.running = false;
 
-    if(this.port) {
-      try {
-        if(this.reader) {
-          await this.reader.cancel();
-          await this.reader.releaseLock();
-        }
+    await this.fourWay.exit();
 
-        if(this.writer) {
-          await this.writer.releaseLock();
-        }
-
-        await this.port.close();
-      } catch(e) {
-        console.log(e);
-      }
-    }
+    this.reader.cancel();
+    await this.reader.releaseLock();
+    await this.writer.releaseLock();
+    await this.port.close();
   }
 }
 
