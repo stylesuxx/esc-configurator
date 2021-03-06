@@ -39,6 +39,7 @@ import {
 } from './OpenEsc';
 
 import {
+  canMigrate as bluejayCanMigrate,
   BLUEJAY_TYPES,
   BLUEJAY_LAYOUT,
   BLUEJAY_LAYOUT_SIZE,
@@ -115,7 +116,7 @@ class FourWay {
     this.logCallback = null;
     this.packetErrorsCallback = null;
 
-    this.parseMessageNew = this.parseMessageNew.bind(this);
+    this.parseMessage = this.parseMessage.bind(this);
   }
 
   setLogCallback(logCallback) {
@@ -209,50 +210,7 @@ class FourWay {
     return bufferOut;
   }
 
-  parseMessages(buffer) {
-    const fourWayIf = 0x2e;
-
-    let view = new Uint8Array(buffer);
-    if (view[0] !== fourWayIf) {
-      console.debug(`invalid message start: ${view[0]}`);
-      return null;
-    }
-
-    if (view.length < 9) {
-      console.debug('Incomplete message');
-      return null;
-    }
-
-    let paramCount = view[4];
-    if (paramCount === 0) {
-      paramCount = 256;
-    }
-
-    if (view.length < 8 + paramCount) {
-      console.debug('Incomplete message');
-      return null;
-    }
-
-    const message = {
-      command: view[1],
-      address: view[2] << 8 | view[3],
-      ack: view[5 + paramCount],
-      checksum: view[6 + paramCount] << 8 | view[7 + paramCount],
-      params: view.slice(5, 5 + paramCount),
-    };
-
-    const msgWithoutChecksum = view.subarray(0, 6 + paramCount);
-    const checksum = msgWithoutChecksum.reduce(this.crc16XmodemUpdate, 0);
-
-    if (checksum !== message.checksum) {
-      console.debug(`checksum mismatch, received: ${message.checksum}, calculated: ${checksum}`);
-      return null;
-    }
-
-    return message;
-  }
-
-  parseMessageNew(buffer, resolve, reject) {
+  parseMessage(buffer, resolve, reject) {
     const fourWayIf = 0x2e;
 
     let view = new Uint8Array(buffer);
@@ -355,7 +313,7 @@ class FourWay {
           return resolve();
         }
 
-        const msg = await this.serial(message, this.parseMessageNew);
+        const msg = await this.serial(message, this.parseMessage);
 
         if (msg && msg.ack === self.ack.ACK_OK) {
           return resolve(msg);
@@ -725,17 +683,29 @@ class FourWay {
           default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
         }
 
-        const newEsc = await this.getInfo(target);
-
-        /*
-        if(newSettings.MODE == esc.settings.MODE) {
-          //
-        }
-        */
-
         const elapsedSec = (Date.now() - startTimestamp) / 1000;
         const rounded = Math.round(elapsedSec * 10) / 10;
         this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
+
+        /**
+         * Migrate settings from the previous firmware if possible.
+         */
+        const newEsc = await this.getInfo(target);
+        const newSettings = Object.assign({}, newEsc.settings);
+        const oldSettings = esc.settings;
+
+        if(newSettings.MODE === oldSettings.MODE) {
+          for (var prop in newSettings) {
+            if (newSettings[prop] && oldSettings[prop] &&
+                bluejayCanMigrate(prop, oldSettings, newSettings)
+            ) {
+              newSettings[prop] = oldSettings[prop];
+            }
+          }
+        }
+
+        await this.writeSettings(target, newEsc, newSettings);
+        newEsc.settings = newSettings;
 
         return newEsc;
       } catch(e) {
