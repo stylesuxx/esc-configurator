@@ -26,13 +26,34 @@ class Msp {
   constructor(serial) {
     this.serial = serial;
 
-    this.packetError = 0;
-
     this.unsupported = 0;
 
     this.messageDirection = 1; // ????
 
     this.read = this.read.bind(this);
+
+    this.logCallback = null;
+    this.packetErrorsCallback = null;
+  }
+
+  setLogCallback(logCallback) {
+    this.logCallback = logCallback;
+  }
+
+  addLogMessage(message) {
+    if(this.logCallback) {
+      this.logCallback(message);
+    }
+  }
+
+  setPacketErrorsCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
+  }
+
+  increasePacketErrors(count) {
+    if(this.packetErrorsCallback) {
+      this.packetErrorsCallback(count);
+    }
   }
 
   read(data, resolve, reject) {
@@ -134,10 +155,9 @@ class Msp {
             return resolve(response);
           }
 
-          this.packetError += 1;
           return reject(new Error(`code: ${code} - crc failed`));
 
-          // TODO: Needs callback for packet Error
+          this.increasePacketErrors(1);
         } break;
 
         default: {
@@ -372,16 +392,9 @@ class Msp {
         }
       }
     } else if (code === MSP.MSP_SET_4WAY_IF) {
-
-      /*
-       * GUI.log(chrome.i18n.getMessage('blheliPassthroughNotSupported'));
-       * TODO: log callback
-       */
+      this.addLogMessage('BLHELI passthrough not supported');
     } else {
-      console.log(
-        'FC reports unsupported message error:',
-        code
-      );
+      console.log('FC reports unsupported message error:', code);
     }
 
     return null;

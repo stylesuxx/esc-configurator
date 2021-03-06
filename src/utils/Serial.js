@@ -18,7 +18,9 @@ class Serial {
 
     this.write = this.write.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
+
     this.logCallback = null;
+    this.packetErrorsCallback = null;
 
     this.qp = new QueueProcessor();
   }
@@ -37,6 +39,14 @@ class Serial {
     this.logCallback = logCallback;
 
     this.fourWay.setLogCallback(logCallback);
+    this.msp.setLogCallback(logCallback);
+  }
+
+  setPacketErrorsCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
+
+    this.fourWay.setPacketErrorsCallback(packetErrorsCallback);
+    this.msp.setPacketErrorsCallback(packetErrorsCallback);
   }
 
   async getApiVersion() {

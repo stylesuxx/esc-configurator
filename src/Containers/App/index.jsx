@@ -52,6 +52,7 @@ class App extends Component {
     this.handleSingleFlash = this.handleSingleFlash.bind(this);
     this.handleCancelFirmwareSelection = this.handleCancelFirmwareSelection.bind(this);
     this.handleIndividualSettingsUpdate = this.handleIndividualSettingsUpdate.bind(this);
+    this.handlePacketErrors = this.handlePacketErrors.bind(this);
 
     this.state = {
       lastConnected: 0,
@@ -137,6 +138,11 @@ class App extends Component {
     versions.blheli[BLHELI_TYPES.BLHELI_S_SILABS] = {};
 
     return versions;
+  }
+
+  handlePacketErrors(count) {
+    const { packetErrors } = this.state;
+    this.setState({ packetErrors: packetErrors + count });
   }
 
   handleSettingsUpdate(settings) {
@@ -419,6 +425,7 @@ class App extends Component {
     try {
       await serial.open(baudRate);
       serial.setLogCallback(this.addLogMessage);
+      serial.setPacketErrorsCallback(this.handlePacketErrors);
       serialLog.push(this.formatLogMessage('Opened serial port'));
     } catch (e) {
       console.debug(e);

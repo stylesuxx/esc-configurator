@@ -122,13 +122,19 @@ class FourWay {
     this.logCallback = logCallback;
   }
 
-  setBrokenPacketCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-  }
-
   addLogMessage(message) {
     if(this.logCallback) {
       this.logCallback(message);
+    }
+  }
+
+  setPacketErrorsCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
+  }
+
+  increasePacketErrors(count) {
+    if(this.packetErrorsCallback) {
+      this.packetErrorsCallback(count);
     }
   }
 
@@ -283,7 +289,8 @@ class FourWay {
     const checksum = msgWithoutChecksum.reduce(this.crc16XmodemUpdate, 0);
 
     if (checksum !== message.checksum) {
-      // TODO: increase broken packets.
+      this.increasePacketErrors(1);
+
       const error = `checksum mismatch, received: ${message.checksum}, calculated: ${checksum}`;
       console.debug(error);
       return reject(new Error(error));
