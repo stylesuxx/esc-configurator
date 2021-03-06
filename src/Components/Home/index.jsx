@@ -4,7 +4,13 @@ import changeLogEntries from '../../changelog.json';
 import bluejay from './images/bluejay.svg';
 import './style.css';
 
+import {
+  useTranslation,
+} from 'react-i18next';
+
 function Home() {
+  const { t } = useTranslation('common');
+
   const ChangelogContent = () => changeLogEntries.map((entry) => {
     const listItems = entry.items.map((item, index) => (
       <li
@@ -41,8 +47,7 @@ function Home() {
           >
             <div
               align="center"
-              className=""
-              i18n="defaultWelcomeIntro"
+              dangerouslySetInnerHTML={{ __html: t('homeWelcome') }}
             />
           </div>
         </div>
@@ -50,35 +55,23 @@ function Home() {
         <div className="content_mid">
           <div className="column third_left text1">
             <div className="wrap">
-              <h2 i18n="defaultWelcomeHead" />
+              <h2>
+                {t('homeDisclaimerHeader')}
+              </h2>
 
-              <div i18n="defaultWelcomeText" />
+              <div dangerouslySetInnerHTML={{ __html: t('homeDisclamierText') }} />
             </div>
           </div>
 
           <div className="column third_center text2">
             <div className="wrap">
-              {/* <!-- <h2 i18n="defaultContributingHead"></h2>
-              <div i18n="defaultContributingText"></div> --> */}
 
               <h2>
-                This is an experimental fork to configure Bluejay firmware
+                {t('homeExperimental')}
               </h2>
 
               <div>
-                Always use the most
-                {' '}
-
-                <a
-                  href="https://github.com/mathiasvr/blheli-configurator/releases"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  recent version
-                </a>
-
-                {' '}
-                to avoid issues!
+                {t('homeVersionInfo')}
               </div>
 
               <div>
@@ -92,7 +85,11 @@ function Home() {
           </div>
 
           <div className="column third_right text3">
-            {/* <!-- Free real estate --> */}
+            <h2>
+              {t('homeContributionHeader')}
+            </h2>
+
+            <div dangerouslySetInnerHTML={{ __html: t('homeContributionText') }} />
           </div>
         </div>
 

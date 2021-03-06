@@ -132,10 +132,12 @@
     width: 40%;
 }
 
+.tab-landing .content_mid .text3 ul,
 .tab-landing .content_mid .text2 ul {
     margin-top: 10px;
 }
 
+.tab-landing .content_mid .text3 li,
 .tab-landing .content_mid .text2 li {
     padding: 5px 0;
     border-top: 1px dotted silver;
