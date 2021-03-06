@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  useTranslation, 
+  useTranslation,
 } from 'react-i18next';
 
 import Checkbox from '../Checkbox';
 import Select from '../Select';
 import Slider from '../Slider';
+
+import './style.css';
 
 function Esc({
   index,
@@ -48,7 +50,7 @@ function Esc({
 
   function handleCheckboxChange(e) {
     const {
-      name, checked, 
+      name, checked,
     } = e.target;
     currentSettings[name] = checked ? 1 : 0;
 
@@ -57,7 +59,7 @@ function Esc({
 
   function handleSelectChange(e) {
     const {
-      name, value, 
+      name, value,
     } = e.target;
     currentSettings[name] = value;
 
