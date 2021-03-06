@@ -734,7 +734,8 @@ class FourWay {
         */
 
         const elapsedSec = (Date.now() - startTimestamp) / 1000;
-        console.log(`Flashed in ${elapsedSec} seconds`);
+        const rounded = Math.round(elapsedSec * 10) / 10;
+        this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
 
         return newEsc;
       } catch(e) {
