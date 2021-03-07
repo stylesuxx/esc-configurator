@@ -229,17 +229,12 @@ class App extends Component {
         }
       }
       open = true;
-      // console.log(escFlash);
-      // console.log(JSON.stringify(escFlash));
 
       serialLog.push(this.formatLogMessage('Done reading ESC\'s'));
     } catch(e) {
-      console.log(e);
+      console.debug(e);
       serialLog.push(this.formatLogMessage('Failed reading ESC\'s'));
     }
-
-    // await serial.fourWayExit();
-    // await this.delay(1000);
 
     this.setState({
       open,
@@ -411,7 +406,7 @@ class App extends Component {
       });
     } catch (e) {
       // No port selected, do nothing
-      console.log(e);
+      console.debug(e);
     }
   }
 
