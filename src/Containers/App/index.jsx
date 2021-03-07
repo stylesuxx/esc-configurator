@@ -41,10 +41,10 @@ class App extends Component {
   constructor() {
     super();
 
-    this.setPort = this.setPort.bind(this);
-    this.openPort = this.openPort.bind(this);
-    this.closePort = this.closePort.bind(this);
-    this.setBaudRate = this.setBaudRate.bind(this);
+    this.handleSetPort = this.handleSetPort.bind(this);
+    this.handleConnect = this.handleConnect.bind(this);
+    this.handleDisconnect = this.handleDisconnect.bind(this);
+    this.handleSetBaudRate = this.handleSetBaudRate.bind(this);
     this.serialConnectHandler = this.serialConnectHandler.bind(this);
     this.serialDisconnectHandler = this.serialDisconnectHandler.bind(this);
     this.addLogMessage = this.addLogMessage.bind(this);
@@ -398,7 +398,7 @@ class App extends Component {
     serial.disconnect();
   }
 
-  async setPort() {
+  async handleSetPort() {
     try {
       const { serialLog } = this.state;
       const port = await navigator.serial.requestPort();
@@ -421,11 +421,13 @@ class App extends Component {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  setBaudRate(rate) {
+  handleSetBaudRate(rate) {
     this.setState({ baudRate: rate });
   }
 
-  async openPort() {
+  async handleConnect(e) {
+    e.preventDefault();
+
     const {
       serial,
       baudRate,
@@ -572,7 +574,9 @@ class App extends Component {
     });
   }
 
-  async closePort() {
+  async handleDisconnect(e) {
+    e.preventDefault();
+
     const {
       serial,
       escs
@@ -725,12 +729,12 @@ class App extends Component {
               */}
 
               <PortPicker
-                connect={this.openPort}
-                disconnect={this.closePort}
                 hasPort={connected}
+                onConnect={this.handleConnect}
+                onDisconnect={this.handleDisconnect}
+                onSetBaudRate={this.handleSetBaudRate}
+                onSetPort={this.handleSetPort}
                 open={open}
-                setBaudRate={this.setBaudRate}
-                setPort={this.setPort}
               />
             </div>
 

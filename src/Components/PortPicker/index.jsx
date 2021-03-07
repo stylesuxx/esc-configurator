@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  useTranslation, 
+  useTranslation,
 } from 'react-i18next';
 import './list-style.css';
 import './style.css';
@@ -9,10 +9,10 @@ import './style.css';
 function PortPicker({
   hasPort,
   open,
-  setPort,
-  setBaudRate,
-  connect,
-  disconnect,
+  onSetPort,
+  onSetBaudRate,
+  onConnect,
+  onDisconnect,
 }) {
   const { t } = useTranslation('common');
 
@@ -47,7 +47,7 @@ function PortPicker({
             <a
               className="connect active"
               href="#"
-              onClick={disconnect}
+              onClick={onDisconnect}
             />
           </div>
 
@@ -64,7 +64,7 @@ function PortPicker({
           <a
             className="connect"
             href="#"
-            onClick={connect}
+            onClick={onConnect}
           />
         </div>
 
@@ -76,7 +76,7 @@ function PortPicker({
   }
 
   function changeBaudRate(e) {
-    setBaudRate(e.target.value);
+    onSetBaudRate(e.target.value);
   }
 
   return (
@@ -84,7 +84,7 @@ function PortPicker({
       { !hasPort &&
         <div id="serial-permission-overlay">
           <button
-            onClick={setPort}
+            onClick={onSetPort}
             type="button"
           >
             {t('serialPermission')}
@@ -128,12 +128,12 @@ function PortPicker({
 }
 
 PortPicker.propTypes = {
-  connect: PropTypes.func.isRequired,
-  disconnect: PropTypes.func.isRequired,
   hasPort: PropTypes.bool.isRequired,
+  onConnect: PropTypes.func.isRequired,
+  onDisconnect: PropTypes.func.isRequired,
+  onSetBaudRate: PropTypes.func.isRequired,
+  onSetPort: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  setBaudRate: PropTypes.func.isRequired,
-  setPort: PropTypes.func.isRequired,
 };
 
 export default PortPicker;
