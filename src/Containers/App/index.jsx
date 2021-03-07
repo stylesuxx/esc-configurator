@@ -595,6 +595,7 @@ class App extends Component {
       open,
       serialLog,
       packetErrors,
+      serial,
     } = this.state;
     if (!checked) {
       return null;
@@ -737,6 +738,7 @@ class App extends Component {
           </div>
 
           <Statusbar
+            getUtilization={serial ? serial.getUtilization : null}
             packetErrors={packetErrors}
             version={version}
           />
