@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  useTranslation, 
+  useTranslation,
 } from 'react-i18next';
 
 import {
@@ -26,11 +26,11 @@ function CommonSettings({
   escs,
   onSettingsUpdate,
 }) {
+  const { t } = useTranslation('common');
+
   if(escs.length === 0) {
     return null;
   }
-
-  const { t } = useTranslation('common');
 
   const master = getMaster(escs);
   //const availableSettings = master.settings;
@@ -50,7 +50,7 @@ function CommonSettings({
 
   function handleCheckboxChange(e) {
     const {
-      name, checked, 
+      name, checked,
     } = e.target;
     currentSettings[name] = checked ? 1 : 0;
 
@@ -59,7 +59,7 @@ function CommonSettings({
 
   function handleSelectChange(e) {
     const {
-      name, value, 
+      name, value,
     } = e.target;
     currentSettings[name] = value;
 

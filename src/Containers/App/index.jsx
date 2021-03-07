@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, {
   Component,
 } from 'react';
@@ -9,6 +10,7 @@ import PortPicker from '../../Components/PortPicker';
 import Log from '../../Components/Log';
 import Buttonbar from '../../Components/Buttonbar';
 import FirmwareSelector from '../../Components/FirmwareSelector';
+import Statusbar from '../../Components/Statusbar';
 
 import Serial from '../../utils/Serial';
 import {
@@ -227,17 +229,12 @@ class App extends Component {
         }
       }
       open = true;
-      // console.log(escFlash);
-      // console.log(JSON.stringify(escFlash));
 
       serialLog.push(this.formatLogMessage('Done reading ESC\'s'));
     } catch(e) {
-      console.log(e);
+      console.debug(e);
       serialLog.push(this.formatLogMessage('Failed reading ESC\'s'));
     }
-
-    // await serial.fourWayExit();
-    // await this.delay(1000);
 
     this.setState({
       open,
@@ -272,7 +269,6 @@ class App extends Component {
   }
 
   handleSingleFlash(index) {
-    console.log('Flash', index);
     this.setState({
       flashTargets: [index],
       isSelecting: true,
@@ -329,6 +325,9 @@ class App extends Component {
 
       // TODO: In case of ATMEL an eep needs to be fetched
 
+      /**
+       * Flash the ESC's
+       */
       for(let i = 0; i < flashTargets.length; i += 1) {
         const target = flashTargets[i];
         const newProgress = progress;
@@ -407,7 +406,7 @@ class App extends Component {
       });
     } catch (e) {
       // No port selected, do nothing
-      console.log(e);
+      console.debug(e);
     }
   }
 
@@ -567,8 +566,15 @@ class App extends Component {
   }
 
   async closePort() {
-    const { serial } = this.state;
+    const {
+      serial,
+      escs
+    } = this.state;
     if(serial) {
+      for(let i = 0; i < escs.length; i += 1) {
+        await serial.fourWayReset(i);
+      }
+
       serial.close();
     }
 
@@ -726,69 +732,14 @@ class App extends Component {
             />
           </div>
 
-          {/*
-          <div className="tab_container">
-            <div id="tabs">
-              <ul className="mode-disconnected">
-                <li className="tab_landing">
-                  <a
-                    href="#"
-                    i18n="tabLanding"
-                    className="tabicon ic_welcome"
-                    i18n_title="tabLanding">
-                  </a>
-                </li>
-              </ul>
-              <ul className="mode-connected">
-                <li className="tab_esc">
-                  <a
-                    href="#"
-                    i18n="tabESC"
-                    className="tabicon ic_cli"
-                    i18n_title="tabESC"></a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="clear-both"></div>
-          </div>
-          */}
-
           <div id="content">
             <MainContent />
           </div>
 
-          <div id="status-bar">
-            <div>
-              <span i18n="statusbarPortUtilization" />
-
-              <span className="port_usage_down">
-                D: 0%
-              </span>
-
-              <span className="port_usage_up">
-                U: 0%
-              </span>
-            </div>
-
-            <div>
-              <span i18n="statusbarPacketError" />
-
-              <span className="packet-error">
-                {packetErrors}
-              </span>
-            </div>
-
-            <div className="version">
-              {version}
-            </div>
-          </div>
-
-          <div id="cache">
-            <div className="data-loading">
-              <p i18n="waitingForData" />
-            </div>
-          </div>
+          <Statusbar
+            packetErrors={packetErrors}
+            version={version}
+          />
         </div>
       </div>
     );

@@ -293,7 +293,7 @@ class FourWay {
     });
   }
 
-  sendMessagePromised(command, params = [0], address = 0, timeout = 5000) {
+  sendMessagePromised(command, params = [0], address = 0) {
     const self = this;
 
     const process = async (resolve) => {
@@ -335,7 +335,6 @@ class FourWay {
   }
 
   async getInfo(target) {
-    //await this.reset(target);
     const flash = await this.initFlash(target);
 
     if (flash) {
