@@ -61,6 +61,7 @@ class App extends Component {
     this.handleCancelFirmwareSelection = this.handleCancelFirmwareSelection.bind(this);
     this.handleIndividualSettingsUpdate = this.handleIndividualSettingsUpdate.bind(this);
     this.handlePacketErrors = this.handlePacketErrors.bind(this);
+    this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
 
     this.state = {
       lastConnected: 0,
@@ -183,6 +184,17 @@ class App extends Component {
     );
   }
 
+  handleLocalSubmit(e, force) {
+    e.preventDefault();
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const text = (e.target.result);
+      this.flash(text, force);
+    };
+    reader.readAsText(e.target.files[0]);
+  }
+
   async handleReadEscs(e) {
     e.preventDefault();
     const {
@@ -260,8 +272,9 @@ class App extends Component {
     await this.setState({ isWriting: true });
     for(let i = 0; i < escs.length; i += 1) {
       const esc = escs[i];
+      const currentEscSettings = esc.settings;
       const customSettings = individualSettings[i];
-      const mergedSettings = Object.assign({}, settings, customSettings);
+      const mergedSettings = Object.assign({}, settings, currentEscSettings, customSettings);
       await serial.fourWayWriteSettings(i, esc, mergedSettings);
     }
 
@@ -297,61 +310,56 @@ class App extends Component {
     });
   }
 
-  async handleFlashUrl(url) {
-    const {
-      flashTargets, serial, escs, progress,
-    } = this.state;
+  async handleFlashUrl(url, force) {
     // IMPROVE: * The original code had some functionality to cache hex files
     //            this might be useful to re-implement in some way using the
     //            local storage. Caching could be done based on URL.
 
-    /*
-    const arrayBufferToHex = (buffer) => {
-      const array = new Uint8Array (buffer)
-      return array.map((b) => b.toString (16).padStart (2, "0")).join ("");
-    };
-    */
+    try {
+      // TODO: In case of ATMEL an eep needs to be fetched
+
+      // Proxy is needed to bypass CORS on github
+      const proxy = `${corsProxy}${url}`;
+      const response = await fetch(proxy);
+      const text = await response.text();
+
+      await this.flash(text, force);
+    } catch(e) {
+      console.log('File could not be fetched', e);
+    }
+  }
+
+  async flash(text, force) {
+    const {
+      flashTargets, serial, escs, progress,
+    } = this.state;
 
     await this.setState({
       isSelecting: false,
       isFlashing: true,
     });
 
-    try {
-      // Proxy is needed to bypass CORS on github
-      const proxy = `${corsProxy}${url}`;
-      const response = await fetch(proxy);
-      const text = await response.text();
+    for(let i = 0; i < flashTargets.length; i += 1) {
+      const target = flashTargets[i];
+      const newProgress = progress;
+      const esc = escs[target];
+      newProgress[target] = 0;
 
-      // TODO: In case of ATMEL an eep needs to be fetched
-
-      /**
-       * Flash the ESC's
-       */
-      for(let i = 0; i < flashTargets.length; i += 1) {
-        const target = flashTargets[i];
-        const newProgress = progress;
-        const esc = escs[target];
-        newProgress[target] = 1;
-
-        const updateProgress = async(progress) => {
-          newProgress[target] = progress;
-          await this.setState({ progress: newProgress });
-        };
-
+      const updateProgress = async(progress) => {
+        newProgress[target] = progress;
         await this.setState({ progress: newProgress });
+      };
 
-        const result = await serial.fourWayWriteHex(target, esc, text , updateProgress);
-        escs[target] = result;
+      // await this.setState({ progress: newProgress });
 
-        newProgress[target] = 0;
-        await this.setState({
-          progress: newProgress,
-          escs,
-        });
-      }
-    } catch(e) {
-      console.log('File could not be fetched', e);
+      const result = await serial.fourWayWriteHex(target, esc, text, force, updateProgress);
+      escs[target] = result;
+
+      newProgress[target] = 0;
+      await this.setState({
+        progress: newProgress,
+        escs,
+      });
     }
 
     await this.setState({
@@ -595,6 +603,7 @@ class App extends Component {
       open,
       serialLog,
       packetErrors,
+      serial,
     } = this.state;
     if (!checked) {
       return null;
@@ -661,6 +670,7 @@ class App extends Component {
               <FirmwareSelector
                 escHint={esc.settings.LAYOUT}
                 onCancel={this.handleCancelFirmwareSelection}
+                onLocalSubmit={this.handleLocalSubmit}
                 onSubmit={this.handleFlashUrl}
                 signatureHint={esc.meta.signature}
                 versions={versions}
@@ -737,6 +747,7 @@ class App extends Component {
           </div>
 
           <Statusbar
+            getUtilization={serial ? serial.getUtilization : null}
             packetErrors={packetErrors}
             version={version}
           />

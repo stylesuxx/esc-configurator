@@ -1,5 +1,18 @@
 [
   {
+    "title": "Unreleased",
+    "items": []
+  },
+  {
+    "title": "0.2.0",
+    "items": [
+      "OG Tags",
+      "Port utilization",
+      "MCU and Layout override",
+      "Local file flash"
+    ]
+  },
+  {
     "title": "0.1.1",
     "items": [
       "Initial commit of the web based app",

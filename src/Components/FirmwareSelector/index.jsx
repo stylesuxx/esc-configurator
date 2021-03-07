@@ -3,7 +3,7 @@
 
 import PropTypes from 'prop-types';
 import React, {
-  useState, useEffect,
+  useState, useEffect, useRef,
 } from 'react';
 import {
   useTranslation,
@@ -39,8 +39,11 @@ function FirmwareSelector({
   selectedMode,
   versions,
   onSubmit,
+  onLocalSubmit,
 }) {
   const { t } = useTranslation('common');
+
+  const file = useRef(null);
 
   const [selectedEsc, setSelectedEsc] = useState(null);
   const [type, setType] = useState(null);
@@ -72,10 +75,19 @@ function FirmwareSelector({
     }
 
 
-  }, [selectedEsc]);
+  }, []);
 
   function updateEsc(e) {
     setSelectedEsc(e.target.value);
+  }
+
+  function clickFile() {
+    file.current.click();
+  }
+
+  function submitLocalFile(e) {
+    e.preventDefault();
+    onLocalSubmit(e, force);
   }
 
   function updateMode(e) {
@@ -107,7 +119,7 @@ function FirmwareSelector({
       mode,
     );
 
-    onSubmit(formattedUrl);
+    onSubmit(formattedUrl, force);
   }
 
   function EscSelect() {
@@ -328,31 +340,25 @@ function FirmwareSelector({
                 href="#"
                 onClick={submit}
               >
-                {/*
-                className={
-                  this.state.selectedEsc &&
-                  ([BLHELI_TYPES.BLHELI_S_SILABS, OPEN_ESC_TYPES.ARM ].includes(this.state.type) ||
-                  (this.state.selectedMode && this.state.type !== BLUEJAY_TYPES.EFM8 ) ||
-                  (this.state.type === BLUEJAY_TYPES.EFM8 && this.state.selectedPwmFreq)) &&
-                  this.state.selectedVersion !== -1 ? "" : "disabled"
-                }
-                onClick={this.onlineFirmwareSelected}
-                */}
-
                 {t('escButtonSelect')}
               </a>
             </div>
 
-            {/*
             <div className="default_btn">
+              <input
+                onChange={submitLocalFile}
+                ref={file}
+                style={{ display: 'none' }}
+                type="file"
+              />
+
               <a
                 href="#"
-                onClick={this.localFirmwareSelected}
+                onClick={clickFile}
               >
                 {t('escButtonSelectLocally')}
               </a>
             </div>
-            */}
 
             <div className="default_btn">
               <a
@@ -376,6 +382,7 @@ FirmwareSelector.defaultProps = { selectedMode: null };
 FirmwareSelector.propTypes = {
   escHint: PropTypes.string.isRequired,
   onCancel: PropTypes.func.isRequired,
+  onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
   signatureHint: PropTypes.number.isRequired,

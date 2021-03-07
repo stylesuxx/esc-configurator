@@ -1,9 +1,6 @@
 import React, {
   Suspense,
 } from 'react';
-import {
-  Helmet,
-} from "react-helmet";
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './Containers/App';
@@ -26,17 +23,6 @@ ReactDOM.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
       <Suspense fallback="loading">
-        <Helmet>
-          <title>
-            Bluejay ESC Configurator
-          </title>
-
-          <meta
-            content="Flash your BLHELI_S ESC&apos;s with Bluejay directly from an up to date browser supporting the Web Serial APi."
-            name="description"
-          />
-        </Helmet>
-
         <App />
       </Suspense>
     </I18nextProvider>

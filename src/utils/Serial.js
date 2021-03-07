@@ -11,6 +11,7 @@ import {
 class Serial {
   constructor(port) {
     this.port = port;
+    this.baudRate = 115200;
     this.msp = null;
     this.fourWay = null;
     this.writer = null;
@@ -18,11 +19,18 @@ class Serial {
 
     this.write = this.write.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
+    this.getUtilization = this.getUtilization.bind(this);
 
     this.logCallback = null;
     this.packetErrorsCallback = null;
+    this.utilizationCallback = null;
 
     this.qp = new QueueProcessor();
+
+    this.sent = 0;
+    this.sentTotal = 0;
+    this.received = 0;
+    this.receivedTotal = 0;
   }
 
   /**
@@ -40,6 +48,10 @@ class Serial {
 
     this.fourWay.setLogCallback(logCallback);
     this.msp.setLogCallback(logCallback);
+  }
+
+  setUtilizationCallback(utilizationCallback) {
+    this.utilizationCallback = utilizationCallback;
   }
 
   setPacketErrorsCallback(packetErrorsCallback) {
@@ -81,8 +93,8 @@ class Serial {
     return this.fourWay.writeSettings(index, esc, settings);
   }
 
-  async fourWayWriteHex(index, esc, hex, cbProgress) {
-    return this.fourWay.writeHex(index, esc, hex, cbProgress);
+  async fourWayWriteHex(index, esc, hex, force, cbProgress) {
+    return this.fourWay.writeHex(index, esc, hex, force, cbProgress);
   }
 
   async fourWayStart() {
@@ -118,6 +130,7 @@ class Serial {
 
   async write(buffer) {
     if(this.writer) {
+      this.sent += buffer.byteLength;
       await this.writer.write(buffer);
     }
   }
@@ -127,6 +140,7 @@ class Serial {
       try {
         const { value } = await this.reader.read();
         if(value) {
+          this.received += value.byteLength;
           this.qp.addData(value);
         }
       } catch(e) {
@@ -136,7 +150,24 @@ class Serial {
     }
   }
 
+  getUtilization() {
+    const up = Math.round((this.sent * 10 / this.baudRate) * 100);
+    const down = Math.round((this.received * 10 / this.baudRate) * 100);
+
+    this.sentTotal += this.sent;
+    this.receivedTotal += this.received;
+
+    this.sent = 0;
+    this.received = 0;
+
+    return {
+      up,
+      down,
+    };
+  }
+
   async open(baudRate) {
+    this.baudRate = baudRate;
     await this.port.open({ baudRate });
 
     try {
@@ -163,7 +194,9 @@ class Serial {
   async close() {
     this.running = false;
 
-    await this.fourWay.exit();
+    if(this.fourWay) {
+      await this.fourWay.exit();
+    }
 
     this.reader.cancel();
     await this.reader.releaseLock();
