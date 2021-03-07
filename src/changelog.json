@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "OG Tags"
+    ]
+  },
+  {
     "title": "0.1.1",
     "items": [
       "Initial commit of the web based app",
