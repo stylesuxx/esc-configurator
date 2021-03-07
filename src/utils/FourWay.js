@@ -511,7 +511,7 @@ class FourWay {
     this.addLogMessage(`Updating ESC ${target + 1} - failed`);
   }
 
-  async writeHex(target, esc, hex, cbProgress) {
+  async writeHex(target, esc, hex, force, cbProgress) {
     const {
       interfaceMode, signature,
     } = esc.meta;
@@ -618,10 +618,10 @@ class FourWay {
                 target_layout_str = 'EMPTY';
               }
 
-              // TODO: for now we throw, we should be able to override this though
-              // if (!self.state.ignoreMCULayout) {
-              throw new Error('Layout mismatch');
-              //}
+              if(!force) {
+                this.addLogMessage('Layout mismatch, override not enabled - aborted');
+                return esc;
+              }
             }
 
             const target_mcu = escSettingArrayTmp.subarray(
@@ -636,10 +636,10 @@ class FourWay {
                 target_mcu_str = 'EMPTY';
               }
 
-              // TODO: for now we throw, we should be able to override this though
-              //if (!self.state.ignoreMCULayout) {
-              throw new Error('MCU mismatch');
-              //}
+              if(!force) {
+                this.addLogMessage('MCU mismatch, override not enabled - aborted');
+                return esc;
+              }
             }
 
             // erase EEPROM page

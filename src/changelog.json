@@ -2,7 +2,9 @@
   {
     "title": "Unreleased",
     "items": [
-      "OG Tags"
+      "OG Tags",
+      "Port utilization",
+      "MCU and Layout override"
     ]
   },
   {

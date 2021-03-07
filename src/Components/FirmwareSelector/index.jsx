@@ -72,7 +72,7 @@ function FirmwareSelector({
     }
 
 
-  }, [selectedEsc]);
+  }, []);
 
   function updateEsc(e) {
     setSelectedEsc(e.target.value);
@@ -107,7 +107,7 @@ function FirmwareSelector({
       mode,
     );
 
-    onSubmit(formattedUrl);
+    onSubmit(formattedUrl, force);
   }
 
   function EscSelect() {

@@ -260,8 +260,9 @@ class App extends Component {
     await this.setState({ isWriting: true });
     for(let i = 0; i < escs.length; i += 1) {
       const esc = escs[i];
+      const currentEscSettings = esc.settings;
       const customSettings = individualSettings[i];
-      const mergedSettings = Object.assign({}, settings, customSettings);
+      const mergedSettings = Object.assign({}, settings, currentEscSettings, customSettings);
       await serial.fourWayWriteSettings(i, esc, mergedSettings);
     }
 
@@ -297,20 +298,13 @@ class App extends Component {
     });
   }
 
-  async handleFlashUrl(url) {
+  async handleFlashUrl(url, force) {
     const {
       flashTargets, serial, escs, progress,
     } = this.state;
     // IMPROVE: * The original code had some functionality to cache hex files
     //            this might be useful to re-implement in some way using the
     //            local storage. Caching could be done based on URL.
-
-    /*
-    const arrayBufferToHex = (buffer) => {
-      const array = new Uint8Array (buffer)
-      return array.map((b) => b.toString (16).padStart (2, "0")).join ("");
-    };
-    */
 
     await this.setState({
       isSelecting: false,
@@ -332,16 +326,16 @@ class App extends Component {
         const target = flashTargets[i];
         const newProgress = progress;
         const esc = escs[target];
-        newProgress[target] = 1;
+        newProgress[target] = 0;
 
         const updateProgress = async(progress) => {
           newProgress[target] = progress;
           await this.setState({ progress: newProgress });
         };
 
-        await this.setState({ progress: newProgress });
+        // await this.setState({ progress: newProgress });
 
-        const result = await serial.fourWayWriteHex(target, esc, text , updateProgress);
+        const result = await serial.fourWayWriteHex(target, esc, text, force, updateProgress);
         escs[target] = result;
 
         newProgress[target] = 0;
