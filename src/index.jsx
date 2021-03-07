@@ -31,9 +31,10 @@ ReactDOM.render(
             Bluejay ESC Configurator
           </title>
 
-          <description>
-            Flash your BLHELI_S ESC&apos;s with Bluejay directly from an up to date browser supporting the Web Serial APi.
-          </description>
+          <meta
+            content="Flash your BLHELI_S ESC&apos;s with Bluejay directly from an up to date browser supporting the Web Serial APi."
+            name="description"
+          />
         </Helmet>
 
         <App />

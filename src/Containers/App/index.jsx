@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, {
   Component,
 } from 'react';
@@ -9,6 +10,7 @@ import PortPicker from '../../Components/PortPicker';
 import Log from '../../Components/Log';
 import Buttonbar from '../../Components/Buttonbar';
 import FirmwareSelector from '../../Components/FirmwareSelector';
+import Statusbar from '../../Components/Statusbar';
 
 import Serial from '../../utils/Serial';
 import {
@@ -726,69 +728,14 @@ class App extends Component {
             />
           </div>
 
-          {/*
-          <div className="tab_container">
-            <div id="tabs">
-              <ul className="mode-disconnected">
-                <li className="tab_landing">
-                  <a
-                    href="#"
-                    i18n="tabLanding"
-                    className="tabicon ic_welcome"
-                    i18n_title="tabLanding">
-                  </a>
-                </li>
-              </ul>
-              <ul className="mode-connected">
-                <li className="tab_esc">
-                  <a
-                    href="#"
-                    i18n="tabESC"
-                    className="tabicon ic_cli"
-                    i18n_title="tabESC"></a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="clear-both"></div>
-          </div>
-          */}
-
           <div id="content">
             <MainContent />
           </div>
 
-          <div id="status-bar">
-            <div>
-              <span i18n="statusbarPortUtilization" />
-
-              <span className="port_usage_down">
-                D: 0%
-              </span>
-
-              <span className="port_usage_up">
-                U: 0%
-              </span>
-            </div>
-
-            <div>
-              <span i18n="statusbarPacketError" />
-
-              <span className="packet-error">
-                {packetErrors}
-              </span>
-            </div>
-
-            <div className="version">
-              {version}
-            </div>
-          </div>
-
-          <div id="cache">
-            <div className="data-loading">
-              <p i18n="waitingForData" />
-            </div>
-          </div>
+          <Statusbar
+            packetErrors={packetErrors}
+            version={version}
+          />
         </div>
       </div>
     );

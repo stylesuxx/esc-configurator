@@ -293,7 +293,7 @@ class FourWay {
     });
   }
 
-  sendMessagePromised(command, params = [0], address = 0, timeout = 5000) {
+  sendMessagePromised(command, params = [0], address = 0) {
     const self = this;
 
     const process = async (resolve) => {
