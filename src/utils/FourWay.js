@@ -335,7 +335,6 @@ class FourWay {
   }
 
   async getInfo(target) {
-    //await this.reset(target);
     const flash = await this.initFlash(target);
 
     if (flash) {

@@ -274,7 +274,6 @@ class App extends Component {
   }
 
   handleSingleFlash(index) {
-    console.log('Flash', index);
     this.setState({
       flashTargets: [index],
       isSelecting: true,
@@ -331,6 +330,9 @@ class App extends Component {
 
       // TODO: In case of ATMEL an eep needs to be fetched
 
+      /**
+       * Flash the ESC's
+       */
       for(let i = 0; i < flashTargets.length; i += 1) {
         const target = flashTargets[i];
         const newProgress = progress;
@@ -569,8 +571,15 @@ class App extends Component {
   }
 
   async closePort() {
-    const { serial } = this.state;
+    const {
+      serial,
+      escs
+    } = this.state;
     if(serial) {
+      for(let i = 0; i < escs.length; i += 1) {
+        await serial.fourWayReset(i);
+      }
+
       serial.close();
     }
 
