@@ -13,6 +13,8 @@ import {
   findMCU,
 } from '../../utils/helpers/General';
 
+import LabeledSelect from '../LabeledSelect';
+
 import {
   BLUEJAY_ESCS,
 } from '../../utils/escs/Bluejay';
@@ -122,177 +124,48 @@ function FirmwareSelector({
     onSubmit(formattedUrl, force);
   }
 
-  function EscSelect() {
-    const descriptions = BLHELI_ESCS.layouts[type] || BLUEJAY_ESCS.layouts[type] || OPEN_ESC_ESCS.layouts[type];
+  const descriptions = BLHELI_ESCS.layouts[type] || BLUEJAY_ESCS.layouts[type] || OPEN_ESC_ESCS.layouts[type];
+  const escOptions = [];
+  for (const layout in descriptions) {
+    const esc = descriptions[layout];
 
-    const escs = [];
-    for (const layout in descriptions) {
-      const esc = descriptions[layout];
-
-      escs.push((
-        <option
-          key={layout}
-          value={layout}
-        >
-          {esc.name}
-        </option>
-      ));
-    }
-
-    return (
-      <div className="select">
-        <label>
-          <select
-            defaultValue={selectedEsc}
-            onChange={updateEsc}
-          >
-            <option
-              className="hidden"
-              disabled
-              key="label"
-            >
-              Select ESC
-            </option>
-
-            {escs}
-          </select>
-
-          <span>
-            ESC
-          </span>
-        </label>
-      </div>
-    );
+    escOptions.push({
+      key: layout,
+      value: layout,
+      name: esc.name,
+    });
   }
 
-  function ModeSelect() {
-    if(type === BLHELI_TYPES.SILABS || type === BLHELI_TYPES.ATMEL) {
-      const modes = [];
-      for (const mode in BLHELI_MODES) {
-        modes.push(
-          <option
-            key={mode}
-            value={mode}
-          >
-            {mode}
-          </option>
-        );
-      }
-
-      return(
-        <div className="select">
-          <label>
-
-            <select
-              defaultValue={mode || -1}
-              onChange={updateMode}
-            >
-              <option
-                className="hidden"
-                disabled
-              >
-                Select Mode
-              </option>
-
-              {modes}
-            </select>
-
-            <span>
-              Mode
-            </span>
-          </label>
-        </div>
-      );
-    }
-
-    return null;
+  const modeOptions = [];
+  for (const mode in BLHELI_MODES) {
+    modeOptions.push({
+      key: mode,
+      value: mode,
+      name: mode,
+    });
   }
 
-  function VersionSelect() {
-    const versionsSelected = versions.blheli[type] || versions.bluejay[type] || versions.openEsc[type];
+  const versionsSelected = versions.blheli[type] || versions.bluejay[type] || versions.openEsc[type];
+  const versionOptions = [];
+  for (const version in versionsSelected) {
+    const current = versionsSelected[version];
+    const url = current.url;
 
-    const options = [];
-    for (const version in versionsSelected) {
-      const current = versionsSelected[version];
-      const url = current.url;
-
-      options.push((
-        <option
-          key={current.key}
-          value={url}
-        >
-          {current.name}
-        </option>
-      ));
-    }
-
-    return (
-      <div className="select">
-        <label>
-          <select
-            defaultValue={url || -1}
-            onChange={updateVersion}
-          >
-            <option
-              className="hidden"
-              disabled
-              value={-1}
-            >
-              Select Version
-            </option>
-
-            {options}
-          </select>
-
-          <span>
-            Version
-          </span>
-        </label>
-      </div>
-    );
+    versionOptions.push({
+      key: current.key,
+      value: url,
+      name: current.name
+    });
   }
 
-  function RpmSelect() {
-    if (type === BLUEJAY_TYPES.EFM8) {
-      const frequencies = [24, 48, 96];
-
-      const options = frequencies.map((item) => (
-        <option
-          key={item}
-          value={item}
-        >
-          {item}
-        </option>
-      ));
-
-      return (
-        <div className="select">
-          <label>
-            <select
-              defaultValue={pwm || -1}
-              onChange={updatePwm}
-            >
-              <option
-                className="hidden"
-                disabled
-                value={-1}
-              >
-                Select PWM Frequency
-              </option>
-
-              {options}
-            </select>
-
-            <span>
-              PWM Frequency
-            </span>
-          </label>
-        </div>
-      );
+  const frequencies = [24, 48, 96];
+  const frequencyOptions = frequencies.map((item) => (
+    {
+      key: item,
+      value: item,
+      name: item,
     }
-
-    return null;
-  }
+  ));
 
   return (
     <>
@@ -326,13 +199,39 @@ function FirmwareSelector({
 
           <div className="spacer_box">
 
-            <EscSelect />
+            <LabeledSelect
+              firstLabel="Select ESC"
+              label="ESC"
+              onChange={updateEsc}
+              options={escOptions}
+              selected={selectedEsc}
+            />
 
-            <ModeSelect />
+            {type === BLHELI_TYPES.SILABS || type === BLHELI_TYPES.ATMEL &&
+              <LabeledSelect
+                firstLabel="Select Mode"
+                label="Mode"
+                onChange={updateMode}
+                options={modeOptions}
+                selected={mode}
+              />}
 
-            <VersionSelect />
+            <LabeledSelect
+              firstLabel="Select Version"
+              label="Version"
+              onChange={updateVersion}
+              options={versionOptions}
+              selected={url}
+            />
 
-            <RpmSelect />
+            {type === BLUEJAY_TYPES.EFM8 &&
+              <LabeledSelect
+                firstLabel="Select PWM Frequency"
+                label="PWM Frequency"
+                onChange={updatePwm}
+                options={frequencyOptions}
+                selected={pwm}
+              />}
 
             <div className="default_btn">
               <a

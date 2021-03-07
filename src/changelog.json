@@ -1,7 +1,9 @@
 [
   {
     "title": "Unreleased",
-    "items": []
+    "items": [
+      "Refactored selects in firmware selector"
+    ]
   },
   {
     "title": "0.2.0",
