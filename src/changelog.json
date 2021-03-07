@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.1.1",
     "items": [
       "Initial commit of the web based app",
       "Supports flashing and setting of SiLabs based ESC's",
