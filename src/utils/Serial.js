@@ -11,6 +11,7 @@ import {
 class Serial {
   constructor(port) {
     this.port = port;
+    this.baudRate = 0;
     this.msp = null;
     this.fourWay = null;
     this.writer = null;
@@ -18,11 +19,19 @@ class Serial {
 
     this.write = this.write.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
+    this.updateUtilization = this.updateUtilization.bind(this);
 
     this.logCallback = null;
     this.packetErrorsCallback = null;
+    this.utilizationCallback = null;
 
     this.qp = new QueueProcessor();
+
+    this.updateInterval = null;
+    this.sent = 0;
+    this.sentTotal = 0;
+    this.received = 0;
+    this.receivedTotal = 0;
   }
 
   /**
@@ -40,6 +49,10 @@ class Serial {
 
     this.fourWay.setLogCallback(logCallback);
     this.msp.setLogCallback(logCallback);
+  }
+
+  setUtilizationCallback(utilizationCallback) {
+    this.utilizationCallback = utilizationCallback;
   }
 
   setPacketErrorsCallback(packetErrorsCallback) {
@@ -118,6 +131,7 @@ class Serial {
 
   async write(buffer) {
     if(this.writer) {
+      this.sent += buffer.byteLength;
       await this.writer.write(buffer);
     }
   }
@@ -127,6 +141,7 @@ class Serial {
       try {
         const { value } = await this.reader.read();
         if(value) {
+          this.received += value.byteLength;
           this.qp.addData(value);
         }
       } catch(e) {
@@ -136,8 +151,25 @@ class Serial {
     }
   }
 
+  updateUtilization() {
+    const up = Math.round((this.sent * 10 / this.baudRate) * 100);
+    const down = Math.round((this.received * 10 / this.baudRate) * 100);
+
+    if(this.utilizationCallback) {
+      this.utilizationCallback(up, down);
+    }
+
+    this.sentTotal += this.sent;
+    this.receivedTotal += this.received;
+
+    this.sent = 0;
+    this.received = 0;
+  }
+
   async open(baudRate) {
+    this.baudRate = baudRate;
     await this.port.open({ baudRate });
+    this.updateInterval = setInterval(this.updateUtilization, 1000);
 
     try {
       this.writer = await this.port.writable.getWriter();
@@ -163,7 +195,13 @@ class Serial {
   async close() {
     this.running = false;
 
-    await this.fourWay.exit();
+    if(this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+
+    if(this.fourWay) {
+      await this.fourWay.exit();
+    }
 
     this.reader.cancel();
     await this.reader.releaseLock();
