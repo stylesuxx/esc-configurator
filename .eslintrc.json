@@ -55,7 +55,8 @@
     "DataView": false,
     "setTimeout": false,
     "clearTimeout": false,
-    "Promise": false
+    "Promise": false,
+    "FileReader": false
   },
   "parser": "babel-eslint"
 }
