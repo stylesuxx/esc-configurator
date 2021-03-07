@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {
+  useState,
+  useEffect
+} from 'react';
 import {
   useTranslation,
 } from 'react-i18next';
@@ -7,9 +10,36 @@ import {
 
 function Statusbar({
   packetErrors,
+  getUtilization,
   version,
 }) {
+  const [utilization, setUtilization] = useState({
+    up: 0,
+    down: 0,
+  });
+  const [timeout, setTimeout] = useState(null);
+
+  useEffect(() => {
+    if(getUtilization) {
+      if(!timeout) {
+        const to = setInterval(() => {
+          const current = getUtilization();
+          setUtilization(current);
+        }, 1000);
+
+        setTimeout(to);
+      }
+    } else {
+      if(timeout) {
+        clearTimeout(timeout);
+        setTimeout(null);
+      }
+    }
+  });
+
   const { t } = useTranslation('common');
+  const upString = `U: ${utilization.up}%`;
+  const downString = `D: ${utilization.down}% `;
 
   return (
     <div id="status-bar">
@@ -19,11 +49,11 @@ function Statusbar({
         </span>
 
         <span className="port_usage_down">
-          D: 0%
+          {downString}
         </span>
 
         <span className="port_usage_up">
-          U: 0%
+          {upString}
         </span>
       </div>
 
@@ -44,7 +74,10 @@ function Statusbar({
   );
 }
 
+Statusbar.defaultProps = { getUtilization: null };
+
 Statusbar.propTypes = {
+  getUtilization: PropTypes.func,
   packetErrors: PropTypes.number.isRequired,
   version: PropTypes.string.isRequired,
 };
