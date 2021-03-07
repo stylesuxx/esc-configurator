@@ -344,7 +344,6 @@ class App extends Component {
 
         const result = await serial.fourWayWriteHex(target, esc, text , updateProgress);
         escs[target] = result;
-        console.log('After flashing', result);
 
         newProgress[target] = 0;
         await this.setState({
@@ -649,7 +648,6 @@ class App extends Component {
           versions, flashTargets, escs,
         } = this.state;
         const esc = escs[flashTargets[0]];
-        console.log(esc);
 
         return (
           <div className="tab-esc toolbar_fixed_bottom">

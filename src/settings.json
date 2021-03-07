@@ -1,4 +1,4 @@
 {
   "version": "0.1.0",
-  "corsProxy": "http://bubblesort.me:8080/"
+  "corsProxy": "https://bubblesort.me/?"
 }
