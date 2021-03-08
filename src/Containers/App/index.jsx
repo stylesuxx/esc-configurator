@@ -38,6 +38,7 @@ const {
 } = settings;
 
 class App extends Component {
+
   constructor() {
     super();
 
@@ -61,6 +62,7 @@ class App extends Component {
     this.handleIndividualSettingsUpdate = this.handleIndividualSettingsUpdate.bind(this);
     this.handlePacketErrors = this.handlePacketErrors.bind(this);
     this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
+    this.handleSaveLog = this.handleSaveLog.bind(this);
 
     this.state = {
       lastConnected: 0,
@@ -89,6 +91,36 @@ class App extends Component {
     const that = this;
     this.onMount(async() => {
       const hasSerial = 'serial' in navigator;
+
+      // Redefine the console and tee logs
+      var console = (function(old) {
+        return {
+          log: (text, ...args) => {
+            const msg = [text, args.join(' ')].join(' ');
+            that.log.push(msg);
+            old.log(text, ...args);
+          },
+          debug: (text, ...args) => {
+            const msg = [text, args.join(' ')].join(' ');
+            that.log.push(msg);
+            old.debug(text, ...args);
+          },
+          info: (text) => {
+            that.log.push(text);
+            old.info(text);
+          },
+          warn: (text) => {
+            that.log.push(text);
+            old.warn(text);
+          },
+          error: (text) => {
+            that.log.push(text);
+            old.error(text);
+          }
+        };
+      }(window.console));
+      window.console = console;
+
       if (hasSerial) {
         navigator.serial.removeEventListener('connect', that.serialConnectHandler);
         navigator.serial.removeEventListener('disconnect', that.serialDisconnectHandler);
@@ -113,6 +145,14 @@ class App extends Component {
   shouldComponentUpdate() {
     return true;
   }
+
+  /**
+   * All console.log output will be appended here.
+   * It is not part of the state since we do not want to trigger updates
+   * due to this being changed, it is only needed when the "Save Log" button
+   * is clicked.
+   */
+  log = [];
 
   onMount(cb){
     cb();
@@ -168,6 +208,15 @@ class App extends Component {
     console.log('Reset default handler not implemented');
   }
 
+  handleSaveLog() {
+    const element = document.createElement("a");
+    const file = new Blob([this.log.join("\n")], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = "esc-configurator-log.txt";
+    document.body.appendChild(element);
+    element.click();
+  }
+
   formatLogMessage(html) {
     const now = new Date();
     const formatted = dateFormat(now, 'yyyy-mm-dd @ HH:MM:ss -- ');
@@ -188,6 +237,8 @@ class App extends Component {
 
     const reader = new FileReader();
     reader.onload = async (e) => {
+      console.debug(`Flashing local file`);
+
       const text = (e.target.result);
       this.flash(text, force);
     };
@@ -231,6 +282,7 @@ class App extends Component {
 
     const escFlash = [];
     let open = false;
+    console.debug(`Getting info for ${connected} ESC's`);
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
@@ -270,6 +322,8 @@ class App extends Component {
 
     await this.setState({ isWriting: true });
     for(let i = 0; i < escs.length; i += 1) {
+      console.debug(`Writing settings to ESC ${i} `);
+
       const esc = escs[i];
       const currentEscSettings = esc.settings;
       const customSettings = individualSettings[i];
@@ -315,6 +369,7 @@ class App extends Component {
     //            local storage. Caching could be done based on URL.
 
     try {
+      console.debug(`Fetching firmware from ${url} `);
       // TODO: In case of ATMEL an eep needs to be fetched
 
       // Proxy is needed to bypass CORS on github
@@ -324,7 +379,7 @@ class App extends Component {
 
       await this.flash(text, force);
     } catch(e) {
-      console.log('File could not be fetched', e);
+      console.debug('Failed fetching firmware');
     }
   }
 
@@ -339,6 +394,8 @@ class App extends Component {
     });
 
     for(let i = 0; i < flashTargets.length; i += 1) {
+      console.debug(`Flashing ESC ${i}`);
+
       const target = flashTargets[i];
       const newProgress = progress;
       const esc = escs[target];
@@ -704,6 +761,7 @@ class App extends Component {
             canWrite={canWrite}
             onReadSetup={this.handleReadEscs}
             onResetDefaults={this.handleResetDefaultls}
+            onSaveLog={this.handleSaveLog}
             onSeletFirmwareForAll={this.handleSelectFirmwareForAll}
             onWriteSetup={this.handleWriteSetup}
           />

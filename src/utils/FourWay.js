@@ -221,7 +221,7 @@ class FourWay {
     }
 
     if (view.length < 9) {
-      console.debug('Incomplete message');
+      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 
@@ -231,7 +231,7 @@ class FourWay {
     }
 
     if (view.length < 8 + paramCount) {
-      console.debug('Incomplete message');
+      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 
