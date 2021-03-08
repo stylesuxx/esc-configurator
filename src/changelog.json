@@ -2,7 +2,10 @@
   {
     "title": "Unreleased",
     "items": [
-      "Refactored selects in firmware selector"
+      "Refactored selects in firmware selector",
+      "Allow for saving logs",
+      "Cache downloaded files in local storage",
+      "Refactored firmware select elements",
     ]
   },
   {
