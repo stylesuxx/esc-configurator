@@ -363,23 +363,45 @@ class App extends Component {
     });
   }
 
+  /**
+   * Acquires the hex file from an URL. Before doing so, the local storage is
+   * checked if the file already exists there, it is used, otherwise it is
+   * downloaded and put into local storage for later use.
+   */
   async handleFlashUrl(url, force) {
-    // IMPROVE: * The original code had some functionality to cache hex files
-    //            this might be useful to re-implement in some way using the
-    //            local storage. Caching could be done based on URL.
+    let text = null;
+    if (typeof Storage !== "undefined") {
+      text = localStorage.getItem(url);
 
-    try {
-      console.debug(`Fetching firmware from ${url} `);
-      // TODO: In case of ATMEL an eep needs to be fetched
+      if(text) {
+        console.debug('Got file from local storage');
+      }
+    }
 
-      // Proxy is needed to bypass CORS on github
-      const proxy = `${corsProxy}${url}`;
-      const response = await fetch(proxy);
-      const text = await response.text();
+    if(!text) {
+      try {
+        console.debug(`Fetching firmware from ${url} `);
+        // TODO: In case of ATMEL an eep needs to be fetched
 
+        // Proxy is needed to bypass CORS on github
+        const proxy = `${corsProxy}${url}`;
+        const response = await fetch(proxy);
+        text = await response.text();
+
+        if (typeof Storage !== "undefined") {
+          localStorage.setItem(url, text);
+          console.debug('Saved file to local storage');
+        }
+
+      } catch(e) {
+        console.debug('Failed fetching firmware');
+      }
+    }
+
+    if(text) {
       await this.flash(text, force);
-    } catch(e) {
-      console.debug('Failed fetching firmware');
+    } else {
+      this.addLogMessage('Could not get file for flashing');
     }
   }
 

@@ -57,7 +57,8 @@
     "clearTimeout": false,
     "Promise": false,
     "FileReader": false,
-    "Blob": false
+    "Blob": false,
+    "localStorage": false
   },
   "parser": "babel-eslint"
 }
