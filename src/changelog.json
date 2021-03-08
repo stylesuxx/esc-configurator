@@ -6,7 +6,8 @@
       "Allow for saving logs",
       "Cache downloaded files in local storage",
       "Refactored firmware select elements",
-      "Refactored firmware configuration files"
+      "Refactored firmware configuration files",
+      "Allow firmware selection in flash screen"
     ]
   },
   {

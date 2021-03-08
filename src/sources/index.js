@@ -2,6 +2,12 @@ import {
   blheliConfig
 } from './Blheli';
 
+/*
+import {
+  blheliMConfig
+} from './BlheliM';
+*/
+
 import {
   bluejayConfig
 } from './Bluejay';
@@ -14,6 +20,7 @@ import {
 
 const sources = [
   bluejayConfig,
+  // blheliMConfig,
   blheliConfig,
   // openEscConfig,
 ];
