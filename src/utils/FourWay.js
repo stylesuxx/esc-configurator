@@ -8,13 +8,8 @@ import {
   Blheli,
 } from './Blheli';
 
-import {
-  BLHELI_ESCS,
-} from './escs/Blheli';
-
-import {
-  BLUEJAY_ESCS,
-} from './escs/Bluejay';
+import BLHELI_ESCS from '../sources/Blheli/escs.json';
+import BLUEJAY_ESCS  from '../sources/Bluejay/escs.json';
 
 import {
   fillImage,

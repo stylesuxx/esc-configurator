@@ -15,15 +15,8 @@ import Serial from '../../utils/Serial';
 import {
   BLHELI_TYPES,
 } from '../../utils/Blheli';
-import {
-  BLHELI_VERSIONS_REMOTE,
-} from '../../utils/sources/Blheli';
-import {
-  BLUEJAY_VERSIONS_REMOTE,
-} from '../../utils/sources/Bluejay';
-import {
-  OPEN_ESC_VERSIONS_REMOTE,
-} from '../../utils/sources/OpenEsc';
+
+import sources from '../../sources';
 
 import {
   getMasterSettings,
@@ -81,9 +74,12 @@ class App extends Component {
       escs: [],
       flashTargets: [],
       progress: [],
-      versions: {},
       individualSettings: [],
       packetErrors: 0,
+      configs: {
+        versions: {},
+        escs: {},
+      },
     };
   }
 
@@ -127,12 +123,13 @@ class App extends Component {
 
         navigator.serial.addEventListener('connect', that.serialConnectHandler);
         navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
-        const versions = await that.fetchVersions();
+
+        const configs = await that.fetchConfigs();
 
         await this.setState({
           checked: true,
           hasSerial: true,
-          versions,
+          configs,
         });
 
         await that.serialConnectHandler();
@@ -174,17 +171,20 @@ class App extends Component {
     return response.json();
   }
 
-  async fetchVersions() {
-    const versions = {
-      blheli: await this.fetchJson(BLHELI_VERSIONS_REMOTE),
-      bluejay: await this.fetchJson(BLUEJAY_VERSIONS_REMOTE),
-      openEsc: await this.fetchJson(OPEN_ESC_VERSIONS_REMOTE),
-    };
+  async fetchConfigs() {
+    const { configs } = this.state;
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = await source.getEscs();
+    }
 
     // TODO: only bluejay
-    versions.blheli[BLHELI_TYPES.BLHELI_S_SILABS] = {};
+    configs.versions.blheli[BLHELI_TYPES.BLHELI_S_SILABS] = {};
 
-    return versions;
+    return configs;
   }
 
   handlePacketErrors(count) {
@@ -742,7 +742,7 @@ class App extends Component {
 
       if (isSelecting) {
         const {
-          versions, flashTargets, escs,
+          configs, flashTargets, escs,
         } = this.state;
         const esc = escs[flashTargets[0]];
 
@@ -751,11 +751,12 @@ class App extends Component {
             <div className="content_wrapper">
               <FirmwareSelector
                 escHint={esc.settings.LAYOUT}
+                escs={configs.escs}
                 onCancel={this.handleCancelFirmwareSelection}
                 onLocalSubmit={this.handleLocalSubmit}
                 onSubmit={this.handleFlashUrl}
                 signatureHint={esc.meta.signature}
-                versions={versions}
+                versions={configs.versions}
               />
             </div>
           </div>

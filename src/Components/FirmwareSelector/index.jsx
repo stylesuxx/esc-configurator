@@ -16,16 +16,6 @@ import {
 import LabeledSelect from '../LabeledSelect';
 
 import {
-  BLUEJAY_ESCS,
-} from '../../utils/escs/Bluejay';
-import {
-  BLHELI_ESCS,
-} from '../../utils/escs/Blheli';
-import {
-  OPEN_ESC_ESCS,
-} from '../../utils/escs/OpenEsc';
-
-import {
   BLHELI_TYPES,
   BLHELI_MODES,
 } from '../../utils/Blheli';
@@ -42,6 +32,7 @@ function FirmwareSelector({
   versions,
   onSubmit,
   onLocalSubmit,
+  escs,
 }) {
   const { t } = useTranslation('common');
 
@@ -56,27 +47,25 @@ function FirmwareSelector({
 
   useEffect(async () => {
     if(
-      BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8][escHint] ||
+      escs.bluejay.layouts[BLUEJAY_TYPES.EFM8][escHint] ||
       BLHELI_TYPES.BLHELI_S_SILABS[escHint] ||
       BLHELI_TYPES.SILABS[escHint] ||
-      BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL][escHint]
+      escs.blheli.layouts[BLHELI_TYPES.ATMEL][escHint]
     ) {
       await setSelectedEsc(escHint);
     }
 
-    if(findMCU(signatureHint, BLUEJAY_ESCS.signatures[BLUEJAY_TYPES.EFM8])) {
+    if(findMCU(signatureHint, escs.bluejay.signatures[BLUEJAY_TYPES.EFM8])) {
       setType(BLUEJAY_TYPES.EFM8);
-    } else if (findMCU(signatureHint, BLHELI_ESCS.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
+    } else if (findMCU(signatureHint, escs.blheli.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
       setType(BLHELI_TYPES.BLHELI_S_SILABS);
-    } else if (findMCU(signatureHint, BLHELI_ESCS.signatures[BLHELI_TYPES.SILABS])) {
+    } else if (findMCU(signatureHint, escs.blheli.signatures[BLHELI_TYPES.SILABS])) {
       setType(BLHELI_TYPES.SILABS);
-    } else if (findMCU(signatureHint, BLHELI_ESCS.signatures[BLHELI_TYPES.ATMEL])) {
+    } else if (findMCU(signatureHint, escs.blheli.signatures[BLHELI_TYPES.ATMEL])) {
       setType(BLHELI_TYPES.ATMEL);
     } else {
       throw new Error('Unknown MCU signature: ' + signatureHint.toString(0x10));
     }
-
-
   }, []);
 
   function updateEsc(e) {
@@ -110,21 +99,21 @@ function FirmwareSelector({
 
   function submit(e) {
     e.preventDefault();
-    const escs = BLHELI_ESCS.layouts[type] || BLUEJAY_ESCS.layouts[type] || OPEN_ESC_ESCS.layouts[type];
+    const escsAll = escs.blheli.layouts[type] || escs.bluejay.layouts[type] || escs.openEsc.layouts[type];
 
     const format = (str2Format, ...args) =>
       str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );
 
     const formattedUrl = format(
       url,
-      (escs[selectedEsc].name.replace(/[\s-]/g, '_').toUpperCase() + (pwm ? '_' + pwm : '')),
+      (escsAll[selectedEsc].name.replace(/[\s-]/g, '_').toUpperCase() + (pwm ? '_' + pwm : '')),
       mode,
     );
 
     onSubmit(formattedUrl, force);
   }
 
-  const descriptions = BLHELI_ESCS.layouts[type] || BLUEJAY_ESCS.layouts[type] || OPEN_ESC_ESCS.layouts[type];
+  const descriptions = escs.blheli.layouts[type] || escs.bluejay.layouts[type] || escs.openEsc.layouts[type];
   const escOptions = [];
   for (const layout in descriptions) {
     const esc = descriptions[layout];
@@ -280,6 +269,7 @@ FirmwareSelector.defaultProps = { selectedMode: null };
 
 FirmwareSelector.propTypes = {
   escHint: PropTypes.string.isRequired,
+  escs: PropTypes.shape().isRequired,
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
