@@ -1,6 +1,6 @@
 class Source {
-  constructor(name, versions, escs, localVersions, localEscs) {
-    if(!name || !versions || !escs || !localVersions || !localEscs) {
+  constructor(name, versions, escs, localVersions, localEscs, pwm) {
+    if(!name || !versions || !escs || !localVersions || !localEscs || !pwm) {
       throw new Error("Parameters required: name, versions, escs, localVersions, localEscs");
     }
 
@@ -9,6 +9,7 @@ class Source {
     this.escs = escs;
     this.localVersions = localVersions;
     this.localEscs = localEscs;
+    this.pwm = pwm;
 
     this.fetchJson = async (url) => {
       const response = await fetch(url);
@@ -22,6 +23,10 @@ class Source {
 
   getName() {
     return this.name;
+  }
+
+  getPwm() {
+    return this.pwm;
   }
 
   async getVersions() {

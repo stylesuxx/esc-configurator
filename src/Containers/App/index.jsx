@@ -12,9 +12,6 @@ import FirmwareSelector from '../../Components/FirmwareSelector';
 import Statusbar from '../../Components/Statusbar';
 
 import Serial from '../../utils/Serial';
-import {
-  BLHELI_TYPES,
-} from '../../utils/Blheli';
 
 import sources from '../../sources';
 
@@ -79,6 +76,7 @@ class App extends Component {
       configs: {
         versions: {},
         escs: {},
+        pwm: {},
       },
     };
   }
@@ -162,15 +160,6 @@ class App extends Component {
     await this.setState({ serialLog });
   }
 
-  async fetchJson(url) {
-    const response = await fetch(url);
-    if(!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    return response.json();
-  }
-
   async fetchConfigs() {
     const { configs } = this.state;
     for(let i = 0; i < sources.length; i += 1) {
@@ -179,10 +168,8 @@ class App extends Component {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = await source.getEscs();
+      configs.pwm[name] = await source.getPwm();
     }
-
-    // TODO: only bluejay
-    configs.versions.blheli[BLHELI_TYPES.BLHELI_S_SILABS] = {};
 
     return configs;
   }
@@ -386,13 +373,15 @@ class App extends Component {
         // Proxy is needed to bypass CORS on github
         const proxy = `${corsProxy}${url}`;
         const response = await fetch(proxy);
-        text = await response.text();
 
-        if (typeof Storage !== "undefined") {
-          localStorage.setItem(url, text);
-          console.debug('Saved file to local storage');
+        if(response.ok) {
+          text = await response.text();
+
+          if (typeof Storage !== "undefined") {
+            localStorage.setItem(url, text);
+            console.debug('Saved file to local storage');
+          }
         }
-
       } catch(e) {
         console.debug('Failed fetching firmware');
       }
@@ -750,13 +739,12 @@ class App extends Component {
           <div className="tab-esc toolbar_fixed_bottom">
             <div className="content_wrapper">
               <FirmwareSelector
+                configs={configs}
                 escHint={esc.settings.LAYOUT}
-                escs={configs.escs}
                 onCancel={this.handleCancelFirmwareSelection}
                 onLocalSubmit={this.handleLocalSubmit}
                 onSubmit={this.handleFlashUrl}
                 signatureHint={esc.meta.signature}
-                versions={configs.versions}
               />
             </div>
           </div>

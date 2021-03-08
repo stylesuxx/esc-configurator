@@ -29,44 +29,76 @@ function FirmwareSelector({
   escHint,
   signatureHint,
   selectedMode,
-  versions,
   onSubmit,
   onLocalSubmit,
-  escs,
+  configs,
 }) {
   const { t } = useTranslation('common');
+  const {
+    escs,
+    versions,
+    pwm,
+  } = configs;
+  const availableFirmware = Object.keys(escs);
+  const firmwareOptions = availableFirmware.map((key) => (
+    {
+      key,
+      value: key,
+      name: key,
+    }
+  ));
 
   const file = useRef(null);
 
   const [selectedEsc, setSelectedEsc] = useState(null);
   const [type, setType] = useState(null);
   const [mode, setMode] = useState(selectedMode);
-  const [url, setUrl] = useState(null);
-  const [pwm, setPwm] = useState(null);
   const [force, setForce] = useState(false);
 
+  const [selection, setSelection] = useState({
+    firmware: availableFirmware[0],
+    url: null,
+    pwm: null,
+  });
+
+  // Make choice for preselected layout - only happens once
   useEffect(async () => {
     if(
-      escs.bluejay.layouts[BLUEJAY_TYPES.EFM8][escHint] ||
+      escs.Bluejay.layouts[BLUEJAY_TYPES.EFM8][escHint] ||
+      escs.Blheli.layouts[BLHELI_TYPES.ATMEL][escHint] ||
       BLHELI_TYPES.BLHELI_S_SILABS[escHint] ||
-      BLHELI_TYPES.SILABS[escHint] ||
-      escs.blheli.layouts[BLHELI_TYPES.ATMEL][escHint]
+      BLHELI_TYPES.SILABS[escHint]
     ) {
       await setSelectedEsc(escHint);
     }
+  }, []);
 
-    if(findMCU(signatureHint, escs.bluejay.signatures[BLUEJAY_TYPES.EFM8])) {
+  // Set the type = this needs to happen on every change of firmware selection
+  useEffect(async () => {
+    if(findMCU(signatureHint, escs.Bluejay.signatures[BLUEJAY_TYPES.EFM8]) && selection.firmware === 'Bluejay') {
       setType(BLUEJAY_TYPES.EFM8);
-    } else if (findMCU(signatureHint, escs.blheli.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
+    } else if (findMCU(signatureHint, escs.Blheli.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
       setType(BLHELI_TYPES.BLHELI_S_SILABS);
-    } else if (findMCU(signatureHint, escs.blheli.signatures[BLHELI_TYPES.SILABS])) {
+    } else if (findMCU(signatureHint, escs.Blheli.signatures[BLHELI_TYPES.SILABS])) {
       setType(BLHELI_TYPES.SILABS);
-    } else if (findMCU(signatureHint, escs.blheli.signatures[BLHELI_TYPES.ATMEL])) {
+    } else if (findMCU(signatureHint, escs.Blheli.signatures[BLHELI_TYPES.ATMEL])) {
       setType(BLHELI_TYPES.ATMEL);
     } else {
       throw new Error('Unknown MCU signature: ' + signatureHint.toString(0x10));
     }
-  }, []);
+  }, [selection]);
+
+  function updateFirmware(e) {
+    const firmware = e.target.value;
+
+    const newSelection = {
+      firmware,
+      url: null,
+      pwm: null,
+    };
+
+    setSelection(newSelection);
+  }
 
   function updateEsc(e) {
     setSelectedEsc(e.target.value);
@@ -86,7 +118,8 @@ function FirmwareSelector({
   }
 
   function updateVersion(e) {
-    setUrl(e.target.value);
+    const newSelection = Object.assign({}, selection, { url: e.target.value });
+    setSelection(newSelection);
   }
 
   function updateForce(e) {
@@ -94,26 +127,31 @@ function FirmwareSelector({
   }
 
   function updatePwm(e) {
-    setPwm(e.target.value);
+    const newSelection = Object.assign({}, selection, { pwm: e.target.value });
+    setSelection(newSelection);
   }
 
   function submit(e) {
     e.preventDefault();
-    const escsAll = escs.blheli.layouts[type] || escs.bluejay.layouts[type] || escs.openEsc.layouts[type];
+    const escsAll = escs[selection.firmware].layouts[type];
 
     const format = (str2Format, ...args) =>
       str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );
 
     const formattedUrl = format(
-      url,
-      (escsAll[selectedEsc].name.replace(/[\s-]/g, '_').toUpperCase() + (pwm ? '_' + pwm : '')),
+      selection.url,
+      (escsAll[selectedEsc].name.replace(/[\s-]/g, '_').toUpperCase() + (selection.pwm ? '_' + selection.pwm : '')),
       mode,
     );
 
     onSubmit(formattedUrl, force);
   }
 
-  const descriptions = escs.blheli.layouts[type] || escs.bluejay.layouts[type] || escs.openEsc.layouts[type];
+  if(!type) {
+    return null;
+  }
+
+  const descriptions = escs[selection.firmware].layouts[type];
   const escOptions = [];
   for (const layout in descriptions) {
     const esc = descriptions[layout];
@@ -134,7 +172,7 @@ function FirmwareSelector({
     });
   }
 
-  const versionsSelected = versions.blheli[type] || versions.bluejay[type] || versions.openEsc[type];
+  const versionsSelected = versions[selection.firmware][type];
   const versionOptions = [];
   for (const version in versionsSelected) {
     const current = versionsSelected[version];
@@ -147,7 +185,7 @@ function FirmwareSelector({
     });
   }
 
-  const frequencies = [24, 48, 96];
+  const frequencies = pwm[selection.firmware];
   const frequencyOptions = frequencies.map((item) => (
     {
       key: item,
@@ -155,6 +193,8 @@ function FirmwareSelector({
       name: item,
     }
   ));
+
+  const enableFlashButton = !selection.url || (!selection.pwm && frequencies.length > 0);
 
   return (
     <>
@@ -189,6 +229,14 @@ function FirmwareSelector({
           <div className="spacer_box">
 
             <LabeledSelect
+              firstLabel="Select Firmware"
+              label="Firmware"
+              onChange={updateFirmware}
+              options={firmwareOptions}
+              selected={selection.firmware}
+            />
+
+            <LabeledSelect
               firstLabel="Select ESC"
               label="ESC"
               onChange={updateEsc}
@@ -210,21 +258,21 @@ function FirmwareSelector({
               label="Version"
               onChange={updateVersion}
               options={versionOptions}
-              selected={url}
+              selected={selection.url}
             />
 
-            {type === BLUEJAY_TYPES.EFM8 &&
+            {frequencies.length > 0 &&
               <LabeledSelect
                 firstLabel="Select PWM Frequency"
                 label="PWM Frequency"
                 onChange={updatePwm}
                 options={frequencyOptions}
-                selected={pwm}
+                selected={selection.pwm}
               />}
 
             <div className="default_btn">
               <a
-                className={(!url || !pwm) ? "disabled" : ""}
+                className={enableFlashButton ? "disabled" : ""}
                 href="#"
                 onClick={submit}
               >
@@ -268,14 +316,17 @@ function FirmwareSelector({
 FirmwareSelector.defaultProps = { selectedMode: null };
 
 FirmwareSelector.propTypes = {
+  configs: PropTypes.shape({
+    escs: PropTypes.shape().isRequired,
+    versions: PropTypes.shape().isRequired,
+    pwm: PropTypes.shape().isRequired,
+  }).isRequired,
   escHint: PropTypes.string.isRequired,
-  escs: PropTypes.shape().isRequired,
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
   signatureHint: PropTypes.number.isRequired,
-  versions: PropTypes.shape().isRequired,
 };
 
 export default FirmwareSelector;
