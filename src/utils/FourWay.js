@@ -482,40 +482,37 @@ class FourWay {
   }
 
   async initFlash(target) {
-    return this.addCommand(this.commands.cmd_DeviceInitFlash, [target], 500);
+    return this.addCommand(this.commands.cmd_DeviceInitFlash, [target]);
   }
 
   async writeSettings(target, esc, settings) {
-    const flash = await this.addCommand(
-      this.commands.cmd_DeviceInitFlash, [target], 500
-    );
+    const flash = await this.addCommand(this.commands.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
       const blheli = new Blheli();
-      const newSettings = blheli.settingsArray(settings, esc.layout, esc.layoutSize);
-      if(newSettings.length !== esc.settingsArray.length) {
+      const newSettingsArray = blheli.settingsArray(settings, esc.layout, esc.layoutSize);
+      if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new Error('byteLength of buffers do not match');
       }
 
-      if(compare(newSettings, esc.settingsArray)) {
+      if(compare(newSettingsArray, esc.settingsArray)) {
         this.addLogMessage(`No changes - not updating ESC ${target + 1}`);
-        return;
       } else {
         let readbackSettings = null;
         if(esc.isSiLabs) {
           await this.pageErase(BLHELI_SILABS_EEPROM_OFFSET / BLHELI_SILABS_PAGE_SIZE);
-          await this.write(BLHELI_SILABS_EEPROM_OFFSET, newSettings);
+          await this.write(BLHELI_SILABS_EEPROM_OFFSET, newSettingsArray);
           readbackSettings = (await this.read(BLHELI_SILABS_EEPROM_OFFSET, BLHELI_LAYOUT_SIZE)).params;
         } else if (esc.isArm) {
-          await this.write(OPEN_ESC_EEPROM_OFFSET, newSettings);
+          await this.write(OPEN_ESC_EEPROM_OFFSET, newSettingsArray);
           readbackSettings = (await this.read(OPEN_ESC_EEPROM_OFFSET, OPEN_ESC_LAYOUT_SIZE)).params;
         } else {
           // write only changed bytes for Atmel
-          for (var pos = 0; pos < newSettings.byteLength; pos += 1) {
+          for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
             var offset = pos;
 
             // find the longest span of modified bytes
-            while (newSettings[pos] !== esc.settingsArray[pos]) {
+            while (newSettingsArray[pos] !== esc.settingsArray[pos]) {
               pos += 1;
             }
 
@@ -525,18 +522,19 @@ class FourWay {
             }
 
             // write span
-            await this.writeEEprom(offset, newSettings.subarray(offset, pos));
+            await this.writeEEprom(offset, newSettingsArray.subarray(offset, pos));
             readbackSettings = (await this.readEEprom(0, BLHELI_LAYOUT_SIZE)).params;
           }
         }
 
-        if(!compare(newSettings, readbackSettings)) {
+        if(!compare(newSettingsArray, readbackSettings)) {
           throw new Error('Failed to verify settings');
         }
 
         this.addLogMessage(`Updating ESC ${target + 1} - finished`);
-        return;
       }
+
+      return newSettingsArray;
     }
 
     this.addLogMessage(`Updating ESC ${target + 1} - failed`);
@@ -755,7 +753,7 @@ class FourWay {
             for (var prop in newSettings) {
               if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
                   Object.prototype.hasOwnProperty.call(oldSettings, prop) &&
-                  canMigrate(prop, oldSettings, newSettings, newSettings.settingsDescriptions, newSettings.individualSettingsDescriptions)
+                  canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)
               ) {
                 newSettings[prop] = oldSettings[prop];
 

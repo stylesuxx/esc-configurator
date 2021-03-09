@@ -35,7 +35,7 @@ function Statusbar({
         setTimeout(null);
       }
     }
-  });
+  }, []);
 
   const { t } = useTranslation('common');
   const upString = `U: ${utilization.up}%`;
