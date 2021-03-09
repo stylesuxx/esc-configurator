@@ -21,6 +21,7 @@ import sources from '../../sources';
 
 import {
   getMasterSettings,
+  getIndividualSettingsDescriptions,
 } from '../../utils/Settings';
 
 import './style.css';
@@ -75,7 +76,6 @@ class App extends Component {
       escs: [],
       flashTargets: [],
       progress: [],
-      individualSettings: [],
       packetErrors: 0,
       configs: {
         versions: {},
@@ -188,10 +188,10 @@ class App extends Component {
   }
 
   handleIndividualSettingsUpdate(index, settings) {
-    const  { individualSettings } = this.state;
-    individualSettings[index] = settings;
+    const  { escs } = this.state;
+    escs[index].individualSettings = settings;
 
-    this.setState({ individualSettings });
+    this.setState({ escs });
   }
 
   handleResetDefaultls() {
@@ -288,11 +288,27 @@ class App extends Component {
       serialLog.push(this.formatLogMessage('Failed reading ESC\'s'));
     }
 
+    const masterSettings = getMasterSettings(escFlash);
+
+    /**
+     * Build individaul settings for each ESC.
+     */
+    for(let i = 0; i < escFlash.length; i += 1) {
+      const esc = escFlash[i];
+      const individualSettings = {};
+      const individualKeep = getIndividualSettingsDescriptions(esc);
+      for(let j = 0; j < individualKeep.length; j += 1) {
+        const setting = individualKeep[j];
+        individualSettings[setting] = esc.settings[setting];
+      }
+      escFlash[i].individualSettings = individualSettings;
+    }
+
     this.setState({
       open,
       serialLog,
       escs: escFlash,
-      settings: getMasterSettings(escFlash),
+      settings: masterSettings,
       isReading: false,
       lastConnected: connected,
       progress,
@@ -306,7 +322,6 @@ class App extends Component {
       serial,
       escs,
       settings,
-      individualSettings,
     } = this.state;
 
     await this.setState({ isWriting: true });
@@ -315,8 +330,8 @@ class App extends Component {
 
       const esc = escs[i];
       const currentEscSettings = esc.settings;
-      const customSettings = individualSettings[i];
-      const mergedSettings = Object.assign({}, settings, currentEscSettings, customSettings);
+      const individualEscSettings = esc.individualSettings;
+      const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
       await serial.fourWayWriteSettings(i, esc, mergedSettings);
     }
 

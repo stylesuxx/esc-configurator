@@ -1,4 +1,6 @@
 import {
+  BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
+  BLHELI_SETTINGS_DESCRIPTIONS,
   BLHELI_SILABS_EEPROM_OFFSET,
   BLHELI_SILABS_PAGE_SIZE,
   BLHELI_LAYOUT_SIZE,
@@ -350,18 +352,18 @@ class FourWay {
           const isSiLabs = this.siLabsModes.includes(interfaceMode);
           const isArm = interfaceMode === this.modes.ARMBLB;
           let settingsArray = null;
-          let layout = BLUEJAY_LAYOUT;
+          let layout = BLHELI_LAYOUT;
           let layoutSize = BLHELI_LAYOUT_SIZE;
 
           if (isSiLabs) {
+            layoutSize = BLHELI_LAYOUT_SIZE;
             settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
           } else if (isArm) {
             layoutSize = OPEN_ESC_LAYOUT_SIZE;
-            settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
             layout = OPEN_ESC_LAYOUT;
+            settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
           } else {
-            layoutSize = BLUEJAY_LAYOUT_SIZE;
-            settingsArray = (await this.readEEprom(0,layoutSize)).params;
+            throw new Error('Neither Silabs nor Arm');
           }
 
           flash.isSiLabs = isSiLabs;
@@ -373,17 +375,52 @@ class FourWay {
             settingsArray,
             layout
           );
+
+          /**
+           * Baased on the name we can decide if the initially guessed layout
+           * was correct, if not, we need to build a new settings object.
+           */
+          const name = flash.settings.NAME;
+          let newLayout = null;
+          switch(name) {
+            case 'Bluejay':
+            case 'Bluejay (BETA)': {
+              newLayout = BLUEJAY_LAYOUT;
+              layoutSize = BLUEJAY_LAYOUT_SIZE;
+            } break;
+          }
+
+          if(newLayout) {
+            layout = newLayout;
+
+            flash.settings = blheli.settingsObject(
+              settingsArray,
+              layout
+            );
+          }
+
           const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
-          const settingsDescriptions = interfaceMode === this.modes.ARMBLB ?
-            OPEN_ESC_SETTINGS_DESCRIPTIONS :
-            BLUEJAY_SETTINGS_DESCRIPTIONS;
+
+          let individualSettingsDescriptions = null;
+          let settingsDescriptions = null;
+          switch(layout) {
+            case BLHELI_LAYOUT: {
+              settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
+
+            case BLUEJAY_LAYOUT: {
+              settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
+
+            case OPEN_ESC_LAYOUT: {
+              settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
+          }
 
           flash.settingsDescriptions = settingsDescriptions[layoutRevision];
-
-          const individualSettingsDescriptions = interfaceMode === this.modes.ARMBLB ?
-            OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS :
-            BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-
           flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
 
           if (interfaceMode !== this.modes.ARMBLB) {
@@ -397,8 +434,7 @@ class FourWay {
           let make = null;
           if (isSiLabs) {
             const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.SILABS];
-            const blheliSLayouts = BLHELI_ESCS.
-              layouts[BLHELI_TYPES.BLHELI_S_SILABS];
+            const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.BLHELI_S_SILABS];
             const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8];
 
             if (layoutName in blheliLayouts) {
@@ -690,9 +726,13 @@ class FourWay {
 
         if(newSettings.MODE === oldSettings.MODE) {
           for (var prop in newSettings) {
+            // TODO: Setting migration should only be attempted if flashing TO
+            //       Bluejay.
             if (newSettings[prop] && oldSettings[prop] &&
-                bluejayCanMigrate(prop, oldSettings, newSettings)
+                bluejayCanMigrate(prop, oldSettings, newSettings) &&
+                newEsc.settings.NAME === 'Bluejay'
             ) {
+              console.log('Migrating settings');
               newSettings[prop] = oldSettings[prop];
             }
           }

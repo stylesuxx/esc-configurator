@@ -1,7 +1,11 @@
 [
   {
     "title": "Unreleased",
-    "items": []
+    "items": [
+      "Fixed in sync checks",
+      "Fixed applying settings",
+      "Improved layout detection when reading ESC settings"
+    ]
   },
   {
     "title": "0.3.0",

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {
-  useState, 
+  useState,
 } from 'react';
 import InputRange from 'react-input-range';
 
@@ -63,7 +63,7 @@ function Slider({
           onChange={updateValue}
           onChangeComplete={handleUpdate}
           step={step}
-          value={inSync ? getDisplayValue() : null}
+          value={inSync ? getDisplayValue() : 0}
         />
 
         <span className={!inSync ? 'not-in-sync' : ''}>
