@@ -3,6 +3,10 @@ import React, {
 } from 'react';
 import dateFormat from 'dateformat';
 
+import {
+  CookieBanner
+} from '@palmabit/react-cookie-law';
+
 import Home from '../../Components/Home';
 import Flash from '../../Components/Flash';
 import PortPicker from '../../Components/PortPicker';
@@ -666,6 +670,15 @@ class App extends Component {
     });
   }
 
+  handleCookieAccept() {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', process.env.REACT_APP_GTAG_ID);
+  }
+
   render() {
     const {
       checked,
@@ -824,6 +837,40 @@ class App extends Component {
             version={version}
           />
         </div>
+
+        <CookieBanner
+          message="This site or third-party tools used by this site make use of cookies necessary for the operation and useful for the purposes outlined in the cookie policy. By accepting, you consent to the use of cookies."
+          onAccept={this.handleCookieAccept}
+          privacyPolicyLinkText=""
+          styles={{
+            dialog: {
+              bottom: 0,
+              top: 'auto',
+              position: 'fixed',
+              width: '100%',
+              paddingBottom: '20px',
+              paddingTop: '20px',
+              background: 'white',
+              borderTop: 'solid 2px black',
+            },
+            message: {
+              fontSize: '16px',
+              marginBottom: '10px',
+            },
+            button: {
+              padding: '7px',
+              margin: '5px',
+              cursor: 'pointer',
+              background: 'black',
+              color: 'white',
+            },
+            policy: {
+              display: 'inline-block',
+              lineHeight: '30px',
+              fontSize: '14px'
+            }
+          }}
+        />
       </div>
     );
   }

@@ -7,7 +7,8 @@
       "Cache downloaded files in local storage",
       "Refactored firmware select elements",
       "Refactored firmware configuration files",
-      "Allow firmware selection in flash screen"
+      "Allow firmware selection in flash screen",
+      "Cookie consent and  tracking"
     ]
   },
   {
