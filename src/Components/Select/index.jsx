@@ -22,9 +22,9 @@ function Select({
     <div className="select">
       <label>
         <select
-          defaultValue={inSync ? value : -1}
           name={name}
           onChange={onChange}
+          value={inSync ? value : -1}
         >
           <option
             className="hidden"
@@ -43,7 +43,10 @@ function Select({
   );
 }
 
-Select.defaultProps = { inSync: true };
+Select.defaultProps = {
+  inSync: true,
+  value: -1,
+};
 
 Select.propTypes = {
   inSync: PropTypes.bool,
@@ -60,7 +63,7 @@ Select.propTypes = {
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
-  ]).isRequired,
+  ]),
 };
 
 export default Select;

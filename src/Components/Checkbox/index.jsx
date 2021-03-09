@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function Checkbox({
-  name, value, label, onChange, inSync, 
+  name, value, label, onChange, inSync,
 }) {
   return (
     <div className="checkbox">
       <label>
         <input
-          defaultChecked={value === 1}
+          checked={value === 1}
           name={name}
           onChange={onChange}
           type="checkbox"
@@ -22,14 +22,17 @@ function Checkbox({
   );
 }
 
-Checkbox.defaultProps = { inSync: true };
+Checkbox.defaultProps = {
+  inSync: true,
+  value: 0,
+};
 
 Checkbox.propTypes = {
   inSync: PropTypes.bool,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
 };
 
 export default Checkbox;

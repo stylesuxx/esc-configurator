@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.4.1",
+    "items": [
+      "Fixed migration layout check"
+    ]
+  },
+  {
     "title": "0.4.0",
     "items": [
       "Fixed in sync checks",

@@ -29,12 +29,8 @@ function CommonSettings({
 }) {
   const { t } = useTranslation('common');
 
-  if(escs.length === 0) {
-    return null;
-  }
-
   const master = getMaster(escs);
-  //const availableSettings = master.settings;
+  const reference = getMasterSettings(escs);
   const allSettings = getAllSettings(escs);
   const allMulti = isMulti(escs);
 
@@ -106,7 +102,6 @@ function CommonSettings({
 
     // Check all settings against
     let inSync = true;
-    let reference = getMasterSettings(escs);
     for(let i = 0; i < allSettings.length; i += 1) {
       const current = allSettings[i];
       if(reference[description.name] !== current[description.name]) {
@@ -189,7 +184,10 @@ function CommonSettings({
 }
 
 CommonSettings.propTypes = {
-  availableSettings: PropTypes.shape().isRequired,
+  availableSettings: PropTypes.shape({
+    MAIN_REVISION: PropTypes.number.isRequired,
+    SUB_REVISION: PropTypes.number.isRequired,
+  }).isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };

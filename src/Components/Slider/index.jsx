@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {
   useState,
+  useEffect,
 } from 'react';
 import InputRange from 'react-input-range';
 
@@ -22,6 +23,10 @@ function Slider({
   round,
 }) {
   const [currentValue, setCurrentValue] = useState(value);
+
+  useEffect(() => {
+    setCurrentValue(value);
+  }, [value]);
 
   const getDisplayValue = () => {
     let value = factor * currentValue + offset;
@@ -77,23 +82,26 @@ function Slider({
 Slider.defaultProps = {
   factor: 1,
   inSync: true,
+  max: 100,
+  min: 0,
   offset: 0,
   suffix: '',
+  value: 0,
 };
 
 Slider.propTypes = {
   factor: PropTypes.number,
   inSync: PropTypes.bool,
   label: PropTypes.string.isRequired,
-  max: PropTypes.number.isRequired,
-  min: PropTypes.number.isRequired,
+  max: PropTypes.number,
+  min: PropTypes.number,
   name: PropTypes.string.isRequired,
   offset: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   round: PropTypes.bool.isRequired,
   step: PropTypes.number.isRequired,
   suffix: PropTypes.string,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
 };
 
 export default Slider;

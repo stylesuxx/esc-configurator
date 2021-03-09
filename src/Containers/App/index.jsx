@@ -429,11 +429,11 @@ class App extends Component {
       isFlashing: true,
     });
 
+    let newProgress = progress;
     for(let i = 0; i < flashTargets.length; i += 1) {
       console.debug(`Flashing ESC ${i}`);
 
       const target = flashTargets[i];
-      const newProgress = progress;
       const esc = escs[target];
       newProgress[target] = 0;
 
@@ -442,21 +442,18 @@ class App extends Component {
         await this.setState({ progress: newProgress });
       };
 
-      // await this.setState({ progress: newProgress });
-
       const result = await serial.fourWayWriteHex(target, esc, text, force, updateProgress);
       escs[target] = result;
 
       newProgress[target] = 0;
-      await this.setState({
-        progress: newProgress,
-        escs,
-      });
+      await this.setState({ escs });
     }
 
     await this.setState({
       isSelecting: false,
       isFlashing: false,
+      settings: getMasterSettings(escs),
+      progress: newProgress,
     });
   }
 
