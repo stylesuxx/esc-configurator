@@ -8,13 +8,8 @@ import {
   Blheli,
 } from './Blheli';
 
-import {
-  BLHELI_ESCS,
-} from './escs/Blheli';
-
-import {
-  BLUEJAY_ESCS,
-} from './escs/Bluejay';
+import BLHELI_ESCS from '../sources/Blheli/escs.json';
+import BLUEJAY_ESCS  from '../sources/Bluejay/escs.json';
 
 import {
   fillImage,
@@ -221,7 +216,7 @@ class FourWay {
     }
 
     if (view.length < 9) {
-      console.debug('Incomplete message');
+      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 
@@ -231,7 +226,7 @@ class FourWay {
     }
 
     if (view.length < 8 + paramCount) {
-      console.debug('Incomplete message');
+      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 

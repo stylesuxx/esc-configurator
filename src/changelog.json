@@ -4,6 +4,18 @@
     "items": []
   },
   {
+    "title": "0.3.0",
+    "items": [
+      "Refactored selects in firmware selector",
+      "Allow for saving logs",
+      "Cache downloaded files in local storage",
+      "Refactored firmware select elements",
+      "Refactored firmware configuration files",
+      "Allow firmware selection in flash screen",
+      "Cookie consent and  tracking"
+    ]
+  },
+  {
     "title": "0.2.0",
     "items": [
       "OG Tags",

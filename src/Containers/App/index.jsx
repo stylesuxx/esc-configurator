@@ -1,8 +1,11 @@
-import PropTypes from 'prop-types';
 import React, {
   Component,
 } from 'react';
 import dateFormat from 'dateformat';
+
+import {
+  CookieBanner
+} from '@palmabit/react-cookie-law';
 
 import Home from '../../Components/Home';
 import Flash from '../../Components/Flash';
@@ -13,18 +16,8 @@ import FirmwareSelector from '../../Components/FirmwareSelector';
 import Statusbar from '../../Components/Statusbar';
 
 import Serial from '../../utils/Serial';
-import {
-  BLHELI_TYPES,
-} from '../../utils/Blheli';
-import {
-  BLHELI_VERSIONS_REMOTE,
-} from '../../utils/sources/Blheli';
-import {
-  BLUEJAY_VERSIONS_REMOTE,
-} from '../../utils/sources/Bluejay';
-import {
-  OPEN_ESC_VERSIONS_REMOTE,
-} from '../../utils/sources/OpenEsc';
+
+import sources from '../../sources';
 
 import {
   getMasterSettings,
@@ -39,13 +32,14 @@ const {
 } = settings;
 
 class App extends Component {
+
   constructor() {
     super();
 
-    this.setPort = this.setPort.bind(this);
-    this.openPort = this.openPort.bind(this);
-    this.closePort = this.closePort.bind(this);
-    this.setBaudRate = this.setBaudRate.bind(this);
+    this.handleSetPort = this.handleSetPort.bind(this);
+    this.handleConnect = this.handleConnect.bind(this);
+    this.handleDisconnect = this.handleDisconnect.bind(this);
+    this.handleSetBaudRate = this.handleSetBaudRate.bind(this);
     this.serialConnectHandler = this.serialConnectHandler.bind(this);
     this.serialDisconnectHandler = this.serialDisconnectHandler.bind(this);
     this.addLogMessage = this.addLogMessage.bind(this);
@@ -62,6 +56,7 @@ class App extends Component {
     this.handleIndividualSettingsUpdate = this.handleIndividualSettingsUpdate.bind(this);
     this.handlePacketErrors = this.handlePacketErrors.bind(this);
     this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
+    this.handleSaveLog = this.handleSaveLog.bind(this);
 
     this.state = {
       lastConnected: 0,
@@ -80,9 +75,13 @@ class App extends Component {
       escs: [],
       flashTargets: [],
       progress: [],
-      versions: {},
       individualSettings: [],
       packetErrors: 0,
+      configs: {
+        versions: {},
+        escs: {},
+        pwm: {},
+      },
     };
   }
 
@@ -90,18 +89,49 @@ class App extends Component {
     const that = this;
     this.onMount(async() => {
       const hasSerial = 'serial' in navigator;
+
+      // Redefine the console and tee logs
+      var console = (function(old) {
+        return {
+          log: (text, ...args) => {
+            const msg = [text, args.join(' ')].join(' ');
+            that.log.push(msg);
+            old.log(text, ...args);
+          },
+          debug: (text, ...args) => {
+            const msg = [text, args.join(' ')].join(' ');
+            that.log.push(msg);
+            old.debug(text, ...args);
+          },
+          info: (text) => {
+            that.log.push(text);
+            old.info(text);
+          },
+          warn: (text) => {
+            that.log.push(text);
+            old.warn(text);
+          },
+          error: (text) => {
+            that.log.push(text);
+            old.error(text);
+          }
+        };
+      }(window.console));
+      window.console = console;
+
       if (hasSerial) {
         navigator.serial.removeEventListener('connect', that.serialConnectHandler);
         navigator.serial.removeEventListener('disconnect', that.serialDisconnectHandler);
 
         navigator.serial.addEventListener('connect', that.serialConnectHandler);
         navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
-        const versions = await that.fetchVersions();
+
+        const configs = await that.fetchConfigs();
 
         await this.setState({
           checked: true,
           hasSerial: true,
-          versions,
+          configs,
         });
 
         await that.serialConnectHandler();
@@ -115,6 +145,14 @@ class App extends Component {
     return true;
   }
 
+  /**
+   * All console.log output will be appended here.
+   * It is not part of the state since we do not want to trigger updates
+   * due to this being changed, it is only needed when the "Save Log" button
+   * is clicked.
+   */
+  log = [];
+
   onMount(cb){
     cb();
   }
@@ -126,26 +164,18 @@ class App extends Component {
     await this.setState({ serialLog });
   }
 
-  async fetchJson(url) {
-    const response = await fetch(url);
-    if(!response.ok) {
-      throw new Error(response.statusText);
+  async fetchConfigs() {
+    const { configs } = this.state;
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = await source.getEscs();
+      configs.pwm[name] = await source.getPwm();
     }
 
-    return response.json();
-  }
-
-  async fetchVersions() {
-    const versions = {
-      blheli: await this.fetchJson(BLHELI_VERSIONS_REMOTE),
-      bluejay: await this.fetchJson(BLUEJAY_VERSIONS_REMOTE),
-      openEsc: await this.fetchJson(OPEN_ESC_VERSIONS_REMOTE),
-    };
-
-    // TODO: only bluejay
-    versions.blheli[BLHELI_TYPES.BLHELI_S_SILABS] = {};
-
-    return versions;
+    return configs;
   }
 
   handlePacketErrors(count) {
@@ -169,6 +199,15 @@ class App extends Component {
     console.log('Reset default handler not implemented');
   }
 
+  handleSaveLog() {
+    const element = document.createElement("a");
+    const file = new Blob([this.log.join("\n")], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = "esc-configurator-log.txt";
+    document.body.appendChild(element);
+    element.click();
+  }
+
   formatLogMessage(html) {
     const now = new Date();
     const formatted = dateFormat(now, 'yyyy-mm-dd @ HH:MM:ss -- ');
@@ -189,6 +228,8 @@ class App extends Component {
 
     const reader = new FileReader();
     reader.onload = async (e) => {
+      console.debug(`Flashing local file`);
+
       const text = (e.target.result);
       this.flash(text, force);
     };
@@ -232,6 +273,7 @@ class App extends Component {
 
     const escFlash = [];
     let open = false;
+    console.debug(`Getting info for ${connected} ESC's`);
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
@@ -271,6 +313,8 @@ class App extends Component {
 
     await this.setState({ isWriting: true });
     for(let i = 0; i < escs.length; i += 1) {
+      console.debug(`Writing settings to ESC ${i} `);
+
       const esc = escs[i];
       const currentEscSettings = esc.settings;
       const customSettings = individualSettings[i];
@@ -310,22 +354,47 @@ class App extends Component {
     });
   }
 
+  /**
+   * Acquires the hex file from an URL. Before doing so, the local storage is
+   * checked if the file already exists there, it is used, otherwise it is
+   * downloaded and put into local storage for later use.
+   */
   async handleFlashUrl(url, force) {
-    // IMPROVE: * The original code had some functionality to cache hex files
-    //            this might be useful to re-implement in some way using the
-    //            local storage. Caching could be done based on URL.
+    let text = null;
+    if (typeof Storage !== "undefined") {
+      text = localStorage.getItem(url);
 
-    try {
-      // TODO: In case of ATMEL an eep needs to be fetched
+      if(text) {
+        console.debug('Got file from local storage');
+      }
+    }
 
-      // Proxy is needed to bypass CORS on github
-      const proxy = `${corsProxy}${url}`;
-      const response = await fetch(proxy);
-      const text = await response.text();
+    if(!text) {
+      try {
+        console.debug(`Fetching firmware from ${url} `);
+        // TODO: In case of ATMEL an eep needs to be fetched
 
+        // Proxy is needed to bypass CORS on github
+        const proxy = `${corsProxy}${url}`;
+        const response = await fetch(proxy);
+
+        if(response.ok) {
+          text = await response.text();
+
+          if (typeof Storage !== "undefined") {
+            localStorage.setItem(url, text);
+            console.debug('Saved file to local storage');
+          }
+        }
+      } catch(e) {
+        console.debug('Failed fetching firmware');
+      }
+    }
+
+    if(text) {
       await this.flash(text, force);
-    } catch(e) {
-      console.log('File could not be fetched', e);
+    } else {
+      this.addLogMessage('Could not get file for flashing');
     }
   }
 
@@ -340,6 +409,8 @@ class App extends Component {
     });
 
     for(let i = 0; i < flashTargets.length; i += 1) {
+      console.debug(`Flashing ESC ${i}`);
+
       const target = flashTargets[i];
       const newProgress = progress;
       const esc = escs[target];
@@ -399,7 +470,7 @@ class App extends Component {
     serial.disconnect();
   }
 
-  async setPort() {
+  async handleSetPort() {
     try {
       const { serialLog } = this.state;
       const port = await navigator.serial.requestPort();
@@ -422,11 +493,13 @@ class App extends Component {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  setBaudRate(rate) {
+  handleSetBaudRate(rate) {
     this.setState({ baudRate: rate });
   }
 
-  async openPort() {
+  async handleConnect(e) {
+    e.preventDefault();
+
     const {
       serial,
       baudRate,
@@ -573,7 +646,9 @@ class App extends Component {
     });
   }
 
-  async closePort() {
+  async handleDisconnect(e) {
+    e.preventDefault();
+
     const {
       serial,
       escs
@@ -593,6 +668,15 @@ class App extends Component {
       escs: [],
       lastConnected: 0,
     });
+  }
+
+  handleCookieAccept() {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', process.env.REACT_APP_GTAG_ID);
   }
 
   render() {
@@ -660,7 +744,7 @@ class App extends Component {
 
       if (isSelecting) {
         const {
-          versions, flashTargets, escs,
+          configs, flashTargets, escs,
         } = this.state;
         const esc = escs[flashTargets[0]];
 
@@ -668,12 +752,12 @@ class App extends Component {
           <div className="tab-esc toolbar_fixed_bottom">
             <div className="content_wrapper">
               <FirmwareSelector
+                configs={configs}
                 escHint={esc.settings.LAYOUT}
                 onCancel={this.handleCancelFirmwareSelection}
                 onLocalSubmit={this.handleLocalSubmit}
                 onSubmit={this.handleFlashUrl}
                 signatureHint={esc.meta.signature}
-                versions={versions}
               />
             </div>
           </div>
@@ -701,6 +785,7 @@ class App extends Component {
             canWrite={canWrite}
             onReadSetup={this.handleReadEscs}
             onResetDefaults={this.handleResetDefaultls}
+            onSaveLog={this.handleSaveLog}
             onSeletFirmwareForAll={this.handleSelectFirmwareForAll}
             onWriteSetup={this.handleWriteSetup}
           />
@@ -726,12 +811,12 @@ class App extends Component {
               */}
 
               <PortPicker
-                connect={this.openPort}
-                disconnect={this.closePort}
                 hasPort={connected}
+                onConnect={this.handleConnect}
+                onDisconnect={this.handleDisconnect}
+                onSetBaudRate={this.handleSetBaudRate}
+                onSetPort={this.handleSetPort}
                 open={open}
-                setBaudRate={this.setBaudRate}
-                setPort={this.setPort}
               />
             </div>
 
@@ -752,6 +837,40 @@ class App extends Component {
             version={version}
           />
         </div>
+
+        <CookieBanner
+          message="This site or third-party tools used by this site make use of cookies necessary for the operation and useful for the purposes outlined in the cookie policy. By accepting, you consent to the use of cookies."
+          onAccept={this.handleCookieAccept}
+          privacyPolicyLinkText=""
+          styles={{
+            dialog: {
+              bottom: 0,
+              top: 'auto',
+              position: 'fixed',
+              width: '100%',
+              paddingBottom: '20px',
+              paddingTop: '20px',
+              background: 'white',
+              borderTop: 'solid 2px black',
+            },
+            message: {
+              fontSize: '16px',
+              marginBottom: '10px',
+            },
+            button: {
+              padding: '7px',
+              margin: '5px',
+              cursor: 'pointer',
+              background: 'black',
+              color: 'white',
+            },
+            policy: {
+              display: 'inline-block',
+              lineHeight: '30px',
+              fontSize: '14px'
+            }
+          }}
+        />
       </div>
     );
   }

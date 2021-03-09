@@ -11,6 +11,7 @@ function Buttonbar({
   onWriteSetup,
   onSeletFirmwareForAll,
   onResetDefaults,
+  onSaveLog,
   canRead,
   canWrite,
   canFlash,
@@ -18,18 +19,12 @@ function Buttonbar({
 }) {
   const { t } = useTranslation('common');
 
-  function saveLog() {
-    // TODO: Implement save log functionality - this should propagate back to
-    //       the main component.
-    console.log('save Log');
-  }
-
   return (
     <div className="content_toolbar">
       <div className="btn log_btn">
         <a
           href="#"
-          onClick={saveLog}
+          onClick={onSaveLog}
         >
           {t('escButtonSaveLog')}
         </a>
@@ -85,6 +80,7 @@ Buttonbar.propTypes = {
   canWrite: PropTypes.bool.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,
+  onSaveLog: PropTypes.func.isRequired,
   onSeletFirmwareForAll: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
 };

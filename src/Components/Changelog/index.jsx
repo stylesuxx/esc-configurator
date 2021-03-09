@@ -10,7 +10,8 @@ function Changelog({ children }) {
   const { t } = useTranslation('common');
   const [expanded, setExpanded] = useState(false);
 
-  const toggleExpanded = useCallback(() => {
+  const toggleExpanded = useCallback((e) => {
+    e.preventDefault();
     setExpanded(!expanded);
   }, [expanded]);
 
