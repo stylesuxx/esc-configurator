@@ -1,7 +1,14 @@
 [
   {
-    "title": "Unreleased",
-    "items": []
+    "title": "0.4.0",
+    "items": [
+      "Fixed in sync checks",
+      "Fixed applying settings",
+      "Improved layout detection when reading ESC settings",
+      "Improved migration of settings",
+      "Component refactoring",
+      "Improved tracking"
+    ]
   },
   {
     "title": "0.3.0",

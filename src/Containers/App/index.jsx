@@ -2,18 +2,13 @@ import React, {
   Component,
 } from 'react';
 import dateFormat from 'dateformat';
+import TagManager from 'react-gtm-module';
 
-import {
-  CookieBanner
-} from '@palmabit/react-cookie-law';
-
-import Home from '../../Components/Home';
-import Flash from '../../Components/Flash';
 import PortPicker from '../../Components/PortPicker';
 import Log from '../../Components/Log';
-import Buttonbar from '../../Components/Buttonbar';
-import FirmwareSelector from '../../Components/FirmwareSelector';
 import Statusbar from '../../Components/Statusbar';
+import CookieConsent from '../../Components/CookieConsent';
+import MainContent from '../../Components/MainContent';
 
 import Serial from '../../utils/Serial';
 
@@ -21,6 +16,7 @@ import sources from '../../sources';
 
 import {
   getMasterSettings,
+  getIndividualSettingsDescriptions,
 } from '../../utils/Settings';
 
 import './style.css';
@@ -36,6 +32,7 @@ class App extends Component {
   constructor() {
     super();
 
+    // Action handlers passed down to components and triggered by them.
     this.handleSetPort = this.handleSetPort.bind(this);
     this.handleConnect = this.handleConnect.bind(this);
     this.handleDisconnect = this.handleDisconnect.bind(this);
@@ -43,8 +40,6 @@ class App extends Component {
     this.serialConnectHandler = this.serialConnectHandler.bind(this);
     this.serialDisconnectHandler = this.serialDisconnectHandler.bind(this);
     this.addLogMessage = this.addLogMessage.bind(this);
-
-    // Action handlers passed down to components and triggered by them.
     this.handleReadEscs = this.handleReadEscs.bind(this);
     this.handleWriteSetup = this.handleWriteSetup.bind(this);
     this.handleSelectFirmwareForAll = this.handleSelectFirmwareForAll.bind(this);
@@ -57,6 +52,7 @@ class App extends Component {
     this.handlePacketErrors = this.handlePacketErrors.bind(this);
     this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
     this.handleSaveLog = this.handleSaveLog.bind(this);
+    this.handleCookieAccept = this.handleCookieAccept.bind(this);
 
     this.state = {
       lastConnected: 0,
@@ -75,7 +71,6 @@ class App extends Component {
       escs: [],
       flashTargets: [],
       progress: [],
-      individualSettings: [],
       packetErrors: 0,
       configs: {
         versions: {},
@@ -91,6 +86,7 @@ class App extends Component {
       const hasSerial = 'serial' in navigator;
 
       // Redefine the console and tee logs
+      /*
       var console = (function(old) {
         return {
           log: (text, ...args) => {
@@ -118,6 +114,7 @@ class App extends Component {
         };
       }(window.console));
       window.console = console;
+      */
 
       if (hasSerial) {
         navigator.serial.removeEventListener('connect', that.serialConnectHandler);
@@ -126,13 +123,6 @@ class App extends Component {
         navigator.serial.addEventListener('connect', that.serialConnectHandler);
         navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
 
-        const configs = await that.fetchConfigs();
-
-        await this.setState({
-          checked: true,
-          hasSerial: true,
-          configs,
-        });
 
         await that.serialConnectHandler();
       } else {
@@ -152,6 +142,7 @@ class App extends Component {
    * is clicked.
    */
   log = [];
+  gtmActive = false;
 
   onMount(cb){
     cb();
@@ -188,10 +179,10 @@ class App extends Component {
   }
 
   handleIndividualSettingsUpdate(index, settings) {
-    const  { individualSettings } = this.state;
-    individualSettings[index] = settings;
+    const  { escs } = this.state;
+    escs[index].individualSettings = settings;
 
-    this.setState({ individualSettings });
+    this.setState({ escs });
   }
 
   handleResetDefaultls() {
@@ -225,6 +216,7 @@ class App extends Component {
 
   handleLocalSubmit(e, force) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Flashing local file" } });
 
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -238,6 +230,8 @@ class App extends Component {
 
   async handleReadEscs(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
+
     const {
       serial, serialLog, lastConnected, progress,
     } = this.state;
@@ -252,7 +246,6 @@ class App extends Component {
     let connected = 0;
     try {
       if(lastConnected === 0) {
-        await this.delay(500);
         const escs = await serial.enable4WayInterface();
 
         connected = 0;
@@ -260,7 +253,6 @@ class App extends Component {
           connected = escs.connectedESCs;
         }
 
-        await this.delay(250);
         serial.fourWayStart();
       } else {
         connected = lastConnected;
@@ -290,11 +282,27 @@ class App extends Component {
       serialLog.push(this.formatLogMessage('Failed reading ESC\'s'));
     }
 
+    const masterSettings = getMasterSettings(escFlash);
+
+    /**
+     * Build individaul settings for each ESC.
+     */
+    for(let i = 0; i < escFlash.length; i += 1) {
+      const esc = escFlash[i];
+      const individualSettings = {};
+      const individualKeep = getIndividualSettingsDescriptions(esc);
+      for(let j = 0; j < individualKeep.length; j += 1) {
+        const setting = individualKeep[j];
+        individualSettings[setting] = esc.settings[setting];
+      }
+      escFlash[i].individualSettings = individualSettings;
+    }
+
     this.setState({
       open,
       serialLog,
       escs: escFlash,
-      settings: getMasterSettings(escFlash),
+      settings: masterSettings,
       isReading: false,
       lastConnected: connected,
       progress,
@@ -303,12 +311,12 @@ class App extends Component {
 
   async handleWriteSetup(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     const {
       serial,
       escs,
       settings,
-      individualSettings,
     } = this.state;
 
     await this.setState({ isWriting: true });
@@ -317,12 +325,17 @@ class App extends Component {
 
       const esc = escs[i];
       const currentEscSettings = esc.settings;
-      const customSettings = individualSettings[i];
-      const mergedSettings = Object.assign({}, settings, currentEscSettings, customSettings);
-      await serial.fourWayWriteSettings(i, esc, mergedSettings);
+      const individualEscSettings = esc.individualSettings;
+      const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
+      const newSettingsArray = await serial.fourWayWriteSettings(i, esc, mergedSettings);
+
+      escs[i].settingsArray = newSettingsArray;
     }
 
-    this.setState({ isWriting: false });
+    this.setState({
+      isWriting: false,
+      escs,
+    });
   }
 
   handleSingleFlash(index) {
@@ -360,6 +373,14 @@ class App extends Component {
    * downloaded and put into local storage for later use.
    */
   async handleFlashUrl(url, force) {
+    TagManager.dataLayer({
+      dataLayer: {
+        event: "Flashing ESC's",
+        hex: url,
+        force,
+      },
+    });
+
     let text = null;
     if (typeof Storage !== "undefined") {
       text = localStorage.getItem(url);
@@ -444,21 +465,29 @@ class App extends Component {
      * If we are here, the user has already given permission to access the
      * device - mark  conncted
      */
+    let connected = false;
+    let serial = false;
     const ports = await navigator.serial.getPorts();
     if(ports.length > 0) {
+      TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
       this.addLogMessage('Plugged in');
+      connected = true;
 
-      const serial = new Serial(ports[0]);
-
-      this.setState({
-        connected: true,
-        serial,
-      });
+      serial = new Serial(ports[0]);
     }
+
+    this.setState({
+      checked: true,
+      hasSerial: true,
+      connected,
+      serial,
+      configs: await this.fetchConfigs(),
+    });
   }
 
   serialDisconnectHandler() {
     const { serial } = this.state;
+    TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('Unplugged');
     this.setState({
       connected: false,
@@ -499,6 +528,7 @@ class App extends Component {
 
   async handleConnect(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Connect" } });
 
     const {
       serial,
@@ -648,6 +678,7 @@ class App extends Component {
 
   async handleDisconnect(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
     const {
       serial,
@@ -671,12 +702,12 @@ class App extends Component {
   }
 
   handleCookieAccept() {
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      window.dataLayer.push(arguments);
+    if(!this.gtmActive) {
+      const tagManagerArgs = { gtmId: process.env.REACT_APP_GTM_ID };
+      TagManager.initialize(tagManagerArgs);
+
+      this.gtmActive = true;
     }
-    gtag('js', new Date());
-    gtag('config', process.env.REACT_APP_GTAG_ID);
   }
 
   render() {
@@ -688,7 +719,17 @@ class App extends Component {
       serialLog,
       packetErrors,
       serial,
+      escs,
+      settings,
+      isReading,
+      isWriting,
+      progress,
+      isSelecting,
+      isFlashing,
+      configs,
+      flashTargets,
     } = this.state;
+
     if (!checked) {
       return null;
     }
@@ -721,78 +762,6 @@ class App extends Component {
       );
     }
 
-    const MainContent = () => {
-      const {
-        open,
-        escs,
-        isReading,
-        isWriting,
-        isSelecting,
-        isFlashing,
-        settings,
-        progress,
-      } = this.state;
-
-      const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading;
-      const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
-      const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
-      const canResetDefaults = false;
-
-      if (!open) {
-        return <Home />;
-      }
-
-      if (isSelecting) {
-        const {
-          configs, flashTargets, escs,
-        } = this.state;
-        const esc = escs[flashTargets[0]];
-
-        return (
-          <div className="tab-esc toolbar_fixed_bottom">
-            <div className="content_wrapper">
-              <FirmwareSelector
-                configs={configs}
-                escHint={esc.settings.LAYOUT}
-                onCancel={this.handleCancelFirmwareSelection}
-                onLocalSubmit={this.handleLocalSubmit}
-                onSubmit={this.handleFlashUrl}
-                signatureHint={esc.meta.signature}
-              />
-            </div>
-          </div>
-        );
-      }
-
-      return (
-        <div className="tab-esc toolbar_fixed_bottom">
-          <div className="content_wrapper">
-            <Flash
-              availableSettings={settings}
-              canFlash={canFlash}
-              escs={escs}
-              flashProgress={progress}
-              onFlash={this.handleSingleFlash}
-              onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
-              onSettingsUpdate={this.handleSettingsUpdate}
-            />
-          </div>
-
-          <Buttonbar
-            canFlash={canFlash}
-            canRead={canRead}
-            canResetDefaults={canResetDefaults}
-            canWrite={canWrite}
-            onReadSetup={this.handleReadEscs}
-            onResetDefaults={this.handleResetDefaultls}
-            onSaveLog={this.handleSaveLog}
-            onSeletFirmwareForAll={this.handleSelectFirmwareForAll}
-            onWriteSetup={this.handleWriteSetup}
-          />
-        </div>
-      );
-    };
-
     return (
       <div className="App">
         <div id="main-wrapper">
@@ -801,14 +770,6 @@ class App extends Component {
               <div id="logo">
                 <div className="logo_text" />
               </div>
-
-              {/*
-              <a
-                href="#"
-                i18n_title="optionsTitle"
-                id="options"
-              />
-              */}
 
               <PortPicker
                 hasPort={connected}
@@ -828,7 +789,29 @@ class App extends Component {
           </div>
 
           <div id="content">
-            <MainContent />
+            <MainContent
+              configs={configs}
+              escs={escs}
+              flashTargets={flashTargets}
+              isFlashing={isFlashing}
+              isReading={isReading}
+              isSelecting={isSelecting}
+              isWriting={isWriting}
+              onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
+              onFlashUrl={this.handleFlashUrl}
+              onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
+              onLocalSubmit={this.handleLocalSubmit}
+              onReadEscs={this.handleReadEscs}
+              onResetDefaultls={this.handleResetDefaultls}
+              onSaveLog={this.handleSaveLog}
+              onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
+              onSettingsUpdate={this.handleSettingsUpdate}
+              onSingleFlash={this.handleSingleFlash}
+              onWriteSetup={this.handleWriteSetup}
+              open={open}
+              progress={progress}
+              settings={settings}
+            />
           </div>
 
           <Statusbar
@@ -838,38 +821,8 @@ class App extends Component {
           />
         </div>
 
-        <CookieBanner
-          message="This site or third-party tools used by this site make use of cookies necessary for the operation and useful for the purposes outlined in the cookie policy. By accepting, you consent to the use of cookies."
-          onAccept={this.handleCookieAccept}
-          privacyPolicyLinkText=""
-          styles={{
-            dialog: {
-              bottom: 0,
-              top: 'auto',
-              position: 'fixed',
-              width: '100%',
-              paddingBottom: '20px',
-              paddingTop: '20px',
-              background: 'white',
-              borderTop: 'solid 2px black',
-            },
-            message: {
-              fontSize: '16px',
-              marginBottom: '10px',
-            },
-            button: {
-              padding: '7px',
-              margin: '5px',
-              cursor: 'pointer',
-              background: 'black',
-              color: 'white',
-            },
-            policy: {
-              display: 'inline-block',
-              lineHeight: '30px',
-              fontSize: '14px'
-            }
-          }}
+        <CookieConsent
+          onCookieAccept={this.handleCookieAccept}
         />
       </div>
     );

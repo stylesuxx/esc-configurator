@@ -1,7 +1,3 @@
-import {
-  BLHELI_MODES,
-} from './Blheli';
-
 const BLUEJAY_SETTINGS_DESCRIPTIONS = {
   // V0.10
   '201': {
@@ -889,34 +885,10 @@ const BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
   '33': { base: BLHELI_S_INDIVIDUAL_SETTINGS_BACKWARD },
 };
 
-function canMigrate(settingName, from, to) {
-  if (from.MODE === BLHELI_MODES.MULTI && to.MODE === BLHELI_MODES.MULTI) {
-    const fromCommons = BLUEJAY_SETTINGS_DESCRIPTIONS[from.LAYOUT_REVISION].MULTI.base;
-    const toCommons = BLUEJAY_SETTINGS_DESCRIPTIONS[to.LAYOUT_REVISION].MULTI.base;
-
-    const fromCommon = fromCommons.find((setting) => setting.name === settingName);
-    const toCommon = toCommons.find((setting) => setting.name === settingName);
-
-    if (fromCommon && toCommon) {
-      return true;
-    }
-
-    const fromIndividuals = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS[from.LAYOUT_REVISION].base;
-    const toIndividuals = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS[to.LAYOUT_REVISION].base;
-
-    const fromIndividual = fromIndividuals.find((setting) => setting.name === settingName);
-    const toIndividual = toIndividuals.find((setting) => setting.name === settingName);
-
-    if (fromIndividual && toIndividual) {
-      return true;
-    }
-  }
-
-  return false;
-}
+const BLUEJAY_NAMES = ['Bluejay', 'Bluejay (BETA)'];
 
 export {
-  canMigrate,
+  BLUEJAY_NAMES,
   BLUEJAY_TYPES,
   BLUEJAY_LAYOUT,
   BLUEJAY_LAYOUT_SIZE,

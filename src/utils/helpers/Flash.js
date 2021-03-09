@@ -133,7 +133,34 @@ function ascii2buf(ascii) {
   return buffer;
 }
 
+function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualSettingsDescriptions) {
+  if (from.MODE === to.MODE) {
+    const fromCommons = toSettingsDescriptions[from.LAYOUT_REVISION].MULTI.base;
+    const toCommons = toSettingsDescriptions[to.LAYOUT_REVISION].MULTI.base;
+
+    const fromCommon = fromCommons.find((setting) => setting.name === settingName);
+    const toCommon = toCommons.find((setting) => setting.name === settingName);
+
+    if (fromCommon && toCommon) {
+      return true;
+    }
+
+    const fromIndividuals = toIndividualSettingsDescriptions[from.LAYOUT_REVISION].base;
+    const toIndividuals = toIndividualSettingsDescriptions[to.LAYOUT_REVISION].base;
+
+    const fromIndividual = fromIndividuals.find((setting) => setting.name === settingName);
+    const toIndividual = toIndividuals.find((setting) => setting.name === settingName);
+
+    if (fromIndividual && toIndividual) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export {
+  canMigrate,
   fillImage,
   parseHex,
   buf2ascii,

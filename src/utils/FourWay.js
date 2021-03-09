@@ -1,4 +1,6 @@
 import {
+  BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
+  BLHELI_SETTINGS_DESCRIPTIONS,
   BLHELI_SILABS_EEPROM_OFFSET,
   BLHELI_SILABS_PAGE_SIZE,
   BLHELI_LAYOUT_SIZE,
@@ -12,6 +14,7 @@ import BLHELI_ESCS from '../sources/Blheli/escs.json';
 import BLUEJAY_ESCS  from '../sources/Bluejay/escs.json';
 
 import {
+  canMigrate,
   fillImage,
   parseHex,
   buf2ascii,
@@ -34,7 +37,6 @@ import {
 } from './OpenEsc';
 
 import {
-  canMigrate as bluejayCanMigrate,
   BLUEJAY_TYPES,
   BLUEJAY_LAYOUT,
   BLUEJAY_LAYOUT_SIZE,
@@ -49,8 +51,6 @@ import {
 class FourWay {
   constructor(serial) {
     this.serial = serial;
-
-    this.commandQueue = [];
 
     this.lastCommandTimestamp = 0;
     this.commands = {
@@ -252,42 +252,6 @@ class FourWay {
     return resolve(message);
   }
 
-  async processQueue() {
-    if(!this.processing) {
-      this.processing = true;
-      while(this.commandQueue.length > 0) {
-        const commandCurrent = this.commandQueue.shift();
-        const {
-          command, params, address, callback, timeout,
-        } = commandCurrent;
-        const result = await this.sendMessagePromised(command, params, address, timeout);
-
-        if (callback) {
-          callback(result);
-        }
-      }
-    }
-
-    this.processing = false;
-  }
-
-  addCommand(command, params = [0], address = 0, timeout = 5000){
-    return new Promise((resolve) => {
-      const callback = (result) => resolve(result);
-
-      const newCommand = {
-        command,
-        params,
-        address,
-        callback,
-        timeout,
-      };
-
-      this.commandQueue.push(newCommand);
-      this.processQueue();
-    });
-  }
-
   sendMessagePromised(command, params = [0], address = 0) {
     const self = this;
 
@@ -350,18 +314,18 @@ class FourWay {
           const isSiLabs = this.siLabsModes.includes(interfaceMode);
           const isArm = interfaceMode === this.modes.ARMBLB;
           let settingsArray = null;
-          let layout = BLUEJAY_LAYOUT;
+          let layout = BLHELI_LAYOUT;
           let layoutSize = BLHELI_LAYOUT_SIZE;
 
           if (isSiLabs) {
+            layoutSize = BLHELI_LAYOUT_SIZE;
             settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
           } else if (isArm) {
             layoutSize = OPEN_ESC_LAYOUT_SIZE;
-            settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
             layout = OPEN_ESC_LAYOUT;
+            settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
           } else {
-            layoutSize = BLUEJAY_LAYOUT_SIZE;
-            settingsArray = (await this.readEEprom(0,layoutSize)).params;
+            throw new Error('Neither Silabs nor Arm');
           }
 
           flash.isSiLabs = isSiLabs;
@@ -373,17 +337,52 @@ class FourWay {
             settingsArray,
             layout
           );
+
+          /**
+           * Baased on the name we can decide if the initially guessed layout
+           * was correct, if not, we need to build a new settings object.
+           */
+          const name = flash.settings.NAME;
+          let newLayout = null;
+          switch(name) {
+            case 'Bluejay':
+            case 'Bluejay (BETA)': {
+              newLayout = BLUEJAY_LAYOUT;
+              layoutSize = BLUEJAY_LAYOUT_SIZE;
+            } break;
+          }
+
+          if(newLayout) {
+            layout = newLayout;
+
+            flash.settings = blheli.settingsObject(
+              settingsArray,
+              layout
+            );
+          }
+
           const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
-          const settingsDescriptions = interfaceMode === this.modes.ARMBLB ?
-            OPEN_ESC_SETTINGS_DESCRIPTIONS :
-            BLUEJAY_SETTINGS_DESCRIPTIONS;
+
+          let individualSettingsDescriptions = null;
+          let settingsDescriptions = null;
+          switch(layout) {
+            case BLHELI_LAYOUT: {
+              settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
+
+            case BLUEJAY_LAYOUT: {
+              settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
+
+            case OPEN_ESC_LAYOUT: {
+              settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
+          }
 
           flash.settingsDescriptions = settingsDescriptions[layoutRevision];
-
-          const individualSettingsDescriptions = interfaceMode === this.modes.ARMBLB ?
-            OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS :
-            BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-
           flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
 
           if (interfaceMode !== this.modes.ARMBLB) {
@@ -397,8 +396,7 @@ class FourWay {
           let make = null;
           if (isSiLabs) {
             const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.SILABS];
-            const blheliSLayouts = BLHELI_ESCS.
-              layouts[BLHELI_TYPES.BLHELI_S_SILABS];
+            const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.BLHELI_S_SILABS];
             const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8];
 
             if (layoutName in blheliLayouts) {
@@ -446,40 +444,37 @@ class FourWay {
   }
 
   async initFlash(target) {
-    return this.addCommand(this.commands.cmd_DeviceInitFlash, [target], 500);
+    return this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
   }
 
   async writeSettings(target, esc, settings) {
-    const flash = await this.addCommand(
-      this.commands.cmd_DeviceInitFlash, [target], 500
-    );
+    const flash = await this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
       const blheli = new Blheli();
-      const newSettings = blheli.settingsArray(settings, esc.layout, esc.layoutSize);
-      if(newSettings.length !== esc.settingsArray.length) {
+      const newSettingsArray = blheli.settingsArray(settings, esc.layout, esc.layoutSize);
+      if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new Error('byteLength of buffers do not match');
       }
 
-      if(compare(newSettings, esc.settingsArray)) {
+      if(compare(newSettingsArray, esc.settingsArray)) {
         this.addLogMessage(`No changes - not updating ESC ${target + 1}`);
-        return;
       } else {
         let readbackSettings = null;
         if(esc.isSiLabs) {
           await this.pageErase(BLHELI_SILABS_EEPROM_OFFSET / BLHELI_SILABS_PAGE_SIZE);
-          await this.write(BLHELI_SILABS_EEPROM_OFFSET, newSettings);
+          await this.write(BLHELI_SILABS_EEPROM_OFFSET, newSettingsArray);
           readbackSettings = (await this.read(BLHELI_SILABS_EEPROM_OFFSET, BLHELI_LAYOUT_SIZE)).params;
         } else if (esc.isArm) {
-          await this.write(OPEN_ESC_EEPROM_OFFSET, newSettings);
+          await this.write(OPEN_ESC_EEPROM_OFFSET, newSettingsArray);
           readbackSettings = (await this.read(OPEN_ESC_EEPROM_OFFSET, OPEN_ESC_LAYOUT_SIZE)).params;
         } else {
           // write only changed bytes for Atmel
-          for (var pos = 0; pos < newSettings.byteLength; pos += 1) {
+          for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
             var offset = pos;
 
             // find the longest span of modified bytes
-            while (newSettings[pos] !== esc.settingsArray[pos]) {
+            while (newSettingsArray[pos] !== esc.settingsArray[pos]) {
               pos += 1;
             }
 
@@ -489,18 +484,19 @@ class FourWay {
             }
 
             // write span
-            await this.writeEEprom(offset, newSettings.subarray(offset, pos));
+            await this.writeEEprom(offset, newSettingsArray.subarray(offset, pos));
             readbackSettings = (await this.readEEprom(0, BLHELI_LAYOUT_SIZE)).params;
           }
         }
 
-        if(!compare(newSettings, readbackSettings)) {
+        if(!compare(newSettingsArray, readbackSettings)) {
           throw new Error('Failed to verify settings');
         }
 
         this.addLogMessage(`Updating ESC ${target + 1} - finished`);
-        return;
       }
+
+      return newSettingsArray;
     }
 
     this.addLogMessage(`Updating ESC ${target + 1} - failed`);
@@ -688,14 +684,47 @@ class FourWay {
         const newSettings = Object.assign({}, newEsc.settings);
         const oldSettings = esc.settings;
 
-        if(newSettings.MODE === oldSettings.MODE) {
-          for (var prop in newSettings) {
-            if (newSettings[prop] && oldSettings[prop] &&
-                bluejayCanMigrate(prop, oldSettings, newSettings)
-            ) {
-              newSettings[prop] = oldSettings[prop];
+        let settingsDescriptions = null;
+        let individualSettingsDescriptions = null;
+        switch(newEsc.layout) {
+          case BLHELI_LAYOUT: {
+            console.debug('BLHELI layout found');
+            settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case BLUEJAY_LAYOUT: {
+            console.debug('Bluejay layout found');
+            settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case OPEN_ESC_LAYOUT: {
+            console.debug('OpenEsc layout found');
+            settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+        }
+
+        /**
+         * Try migrating settings if possible - this ensures that the motor
+         * direction is saved between flashes.
+         */
+        if(settingsDescriptions && individualSettingsDescriptions) {
+          if(newSettings.MODE === oldSettings.MODE) {
+            for (var prop in newSettings) {
+              if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
+                  Object.prototype.hasOwnProperty.call(oldSettings, prop) &&
+                  canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)
+              ) {
+                newSettings[prop] = oldSettings[prop];
+
+                console.debug(`Migrated setting ${prop}`);
+              }
             }
           }
+        } else {
+          console.debug('Can not migrate settings');
         }
 
         await this.writeSettings(target, newEsc, newSettings);
@@ -834,32 +863,31 @@ class FourWay {
   }
 
   pageErase(page) {
-    return this.addCommand(this.commands.cmd_DevicePageErase, [page], 0);
+    return this.sendMessagePromised(this.commands.cmd_DevicePageErase, [page]);
   }
 
   read(address, bytes) {
-    return this.addCommand(
-      this.commands.cmd_DeviceRead, [bytes === 256 ? 0 : bytes], address, 5000
-    );
+    return this.sendMessagePromised(
+      this.commands.cmd_DeviceRead, [bytes === 256 ? 0 : bytes], address);
   }
 
   readEEprom(address, bytes) {
-    return this.addCommand(
+    return this.sendMessagePromised(
       this.commands.cmd_DeviceReadEEprom, [bytes === 256 ? 0 : bytes], address
     );
   }
 
   write(address, data) {
-    return this.addCommand(this.commands.cmd_DeviceWrite, data, address);
+    return this.sendMessagePromised(this.commands.cmd_DeviceWrite, data, address);
   }
 
   writeEEprom(address, data) {
     // Writing EEprom is real slow on Atmel, hence increased timeout
-    return this.addCommand(this.commands.cmd_DeviceWriteEEprom, data, address, 10000);
+    return this.sendMessagePromised(this.commands.cmd_DeviceWriteEEprom, data, address, 10000);
   }
 
   reset(target) {
-    return this.addCommand(this.commands.cmd_DeviceReset, [target], 0);
+    return this.sendMessagePromised(this.commands.cmd_DeviceReset, [target], 0);
   }
 
   exit() {
@@ -868,11 +896,11 @@ class FourWay {
       this.commandQueue = [];
     }
 
-    return this.addCommand(this.commands.cmd_InterfaceExit);
+    return this.sendMessagePromised(this.commands.cmd_InterfaceExit);
   }
 
   testAlive() {
-    return this.addCommand(this.commands.cmd_InterfaceTestAlive);
+    return this.sendMessagePromised(this.commands.cmd_InterfaceTestAlive);
   }
 
   start() {
