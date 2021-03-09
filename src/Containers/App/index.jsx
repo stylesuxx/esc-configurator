@@ -2,6 +2,7 @@ import React, {
   Component,
 } from 'react';
 import dateFormat from 'dateformat';
+import TagManager from 'react-gtm-module';
 
 import PortPicker from '../../Components/PortPicker';
 import Log from '../../Components/Log';
@@ -51,6 +52,7 @@ class App extends Component {
     this.handlePacketErrors = this.handlePacketErrors.bind(this);
     this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
     this.handleSaveLog = this.handleSaveLog.bind(this);
+    this.handleCookieAccept = this.handleCookieAccept.bind(this);
 
     this.state = {
       lastConnected: 0,
@@ -140,6 +142,7 @@ class App extends Component {
    * is clicked.
    */
   log = [];
+  gtmActive = false;
 
   onMount(cb){
     cb();
@@ -213,6 +216,7 @@ class App extends Component {
 
   handleLocalSubmit(e, force) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Flashing local file" } });
 
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -226,6 +230,8 @@ class App extends Component {
 
   async handleReadEscs(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
+
     const {
       serial, serialLog, lastConnected, progress,
     } = this.state;
@@ -305,6 +311,7 @@ class App extends Component {
 
   async handleWriteSetup(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     const {
       serial,
@@ -366,6 +373,14 @@ class App extends Component {
    * downloaded and put into local storage for later use.
    */
   async handleFlashUrl(url, force) {
+    TagManager.dataLayer({
+      dataLayer: {
+        event: "Flashing ESC's",
+        hex: url,
+        force,
+      },
+    });
+
     let text = null;
     if (typeof Storage !== "undefined") {
       text = localStorage.getItem(url);
@@ -454,6 +469,7 @@ class App extends Component {
     let serial = false;
     const ports = await navigator.serial.getPorts();
     if(ports.length > 0) {
+      TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
       this.addLogMessage('Plugged in');
       connected = true;
 
@@ -471,6 +487,7 @@ class App extends Component {
 
   serialDisconnectHandler() {
     const { serial } = this.state;
+    TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('Unplugged');
     this.setState({
       connected: false,
@@ -511,6 +528,7 @@ class App extends Component {
 
   async handleConnect(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Connect" } });
 
     const {
       serial,
@@ -660,6 +678,7 @@ class App extends Component {
 
   async handleDisconnect(e) {
     e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
     const {
       serial,
@@ -683,12 +702,12 @@ class App extends Component {
   }
 
   handleCookieAccept() {
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      window.dataLayer.push(arguments);
+    if(!this.gtmActive) {
+      const tagManagerArgs = { gtmId: process.env.REACT_APP_GTM_ID };
+      TagManager.initialize(tagManagerArgs);
+
+      this.gtmActive = true;
     }
-    gtag('js', new Date());
-    gtag('config', process.env.REACT_APP_GTAG_ID);
   }
 
   render() {
