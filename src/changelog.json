@@ -1,6 +1,10 @@
 [
   {
     "title": "Unreleased",
+    "items": []
+  },
+  {
+    "title": "0.3.0",
     "items": [
       "Refactored selects in firmware selector",
       "Allow for saving logs",
