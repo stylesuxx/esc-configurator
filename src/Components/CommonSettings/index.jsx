@@ -5,6 +5,7 @@ import {
 } from 'react-i18next';
 
 import {
+  getMasterSettings,
   getMaster,
   getAllSettings,
   isMulti,
@@ -103,13 +104,16 @@ function CommonSettings({
       return null;
     }
 
-    const inSync = allSettings.reduce((escA, escB) => {
-      if (escA[description.name] === escB[description.name]) {
-        return true;
+    // Check all settings against
+    let inSync = true;
+    let reference = getMasterSettings(escs);
+    for(let i = 0; i < allSettings.length; i += 1) {
+      const current = allSettings[i];
+      if(reference[description.name] !== current[description.name]) {
+        inSync = false;
+        break;
       }
-
-      return -1;
-    }) === -1;
+    }
 
     let setting = description;
     if (overrides) {

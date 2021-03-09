@@ -252,7 +252,6 @@ class App extends Component {
     let connected = 0;
     try {
       if(lastConnected === 0) {
-        await this.delay(500);
         const escs = await serial.enable4WayInterface();
 
         connected = 0;
@@ -260,7 +259,6 @@ class App extends Component {
           connected = escs.connectedESCs;
         }
 
-        await this.delay(250);
         serial.fourWayStart();
       } else {
         connected = lastConnected;

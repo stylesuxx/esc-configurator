@@ -17,7 +17,6 @@ const getAllSettings = (escs) => escs.map((esc) => esc.settings);
 
 const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === BLHELI_MODES.MULTI);
 
-
 export {
   getAllSettings,
   getMaster,
