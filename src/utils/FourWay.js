@@ -52,8 +52,6 @@ class FourWay {
   constructor(serial) {
     this.serial = serial;
 
-    this.commandQueue = [];
-
     this.lastCommandTimestamp = 0;
     this.commands = {
       cmd_InterfaceTestAlive: 0x30,
@@ -254,42 +252,6 @@ class FourWay {
     return resolve(message);
   }
 
-  async processQueue() {
-    if(!this.processing) {
-      this.processing = true;
-      while(this.commandQueue.length > 0) {
-        const commandCurrent = this.commandQueue.shift();
-        const {
-          command, params, address, callback, timeout,
-        } = commandCurrent;
-        const result = await this.sendMessagePromised(command, params, address, timeout);
-
-        if (callback) {
-          callback(result);
-        }
-      }
-    }
-
-    this.processing = false;
-  }
-
-  addCommand(command, params = [0], address = 0, timeout = 5000){
-    return new Promise((resolve) => {
-      const callback = (result) => resolve(result);
-
-      const newCommand = {
-        command,
-        params,
-        address,
-        callback,
-        timeout,
-      };
-
-      this.commandQueue.push(newCommand);
-      this.processQueue();
-    });
-  }
-
   sendMessagePromised(command, params = [0], address = 0) {
     const self = this;
 
@@ -482,11 +444,11 @@ class FourWay {
   }
 
   async initFlash(target) {
-    return this.addCommand(this.commands.cmd_DeviceInitFlash, [target]);
+    return this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
   }
 
   async writeSettings(target, esc, settings) {
-    const flash = await this.addCommand(this.commands.cmd_DeviceInitFlash, [target]);
+    const flash = await this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
       const blheli = new Blheli();
@@ -901,32 +863,31 @@ class FourWay {
   }
 
   pageErase(page) {
-    return this.addCommand(this.commands.cmd_DevicePageErase, [page], 0);
+    return this.sendMessagePromised(this.commands.cmd_DevicePageErase, [page]);
   }
 
   read(address, bytes) {
-    return this.addCommand(
-      this.commands.cmd_DeviceRead, [bytes === 256 ? 0 : bytes], address, 5000
-    );
+    return this.sendMessagePromised(
+      this.commands.cmd_DeviceRead, [bytes === 256 ? 0 : bytes], address);
   }
 
   readEEprom(address, bytes) {
-    return this.addCommand(
+    return this.sendMessagePromised(
       this.commands.cmd_DeviceReadEEprom, [bytes === 256 ? 0 : bytes], address
     );
   }
 
   write(address, data) {
-    return this.addCommand(this.commands.cmd_DeviceWrite, data, address);
+    return this.sendMessagePromised(this.commands.cmd_DeviceWrite, data, address);
   }
 
   writeEEprom(address, data) {
     // Writing EEprom is real slow on Atmel, hence increased timeout
-    return this.addCommand(this.commands.cmd_DeviceWriteEEprom, data, address, 10000);
+    return this.sendMessagePromised(this.commands.cmd_DeviceWriteEEprom, data, address, 10000);
   }
 
   reset(target) {
-    return this.addCommand(this.commands.cmd_DeviceReset, [target], 0);
+    return this.sendMessagePromised(this.commands.cmd_DeviceReset, [target], 0);
   }
 
   exit() {
@@ -935,11 +896,11 @@ class FourWay {
       this.commandQueue = [];
     }
 
-    return this.addCommand(this.commands.cmd_InterfaceExit);
+    return this.sendMessagePromised(this.commands.cmd_InterfaceExit);
   }
 
   testAlive() {
-    return this.addCommand(this.commands.cmd_InterfaceTestAlive);
+    return this.sendMessagePromised(this.commands.cmd_InterfaceTestAlive);
   }
 
   start() {
