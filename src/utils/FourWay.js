@@ -14,6 +14,7 @@ import BLHELI_ESCS from '../sources/Blheli/escs.json';
 import BLUEJAY_ESCS  from '../sources/Bluejay/escs.json';
 
 import {
+  canMigrate,
   fillImage,
   parseHex,
   buf2ascii,
@@ -36,7 +37,6 @@ import {
 } from './OpenEsc';
 
 import {
-  canMigrate as bluejayCanMigrate,
   BLUEJAY_TYPES,
   BLUEJAY_LAYOUT,
   BLUEJAY_LAYOUT_SIZE,
@@ -724,18 +724,47 @@ class FourWay {
         const newSettings = Object.assign({}, newEsc.settings);
         const oldSettings = esc.settings;
 
-        if(newSettings.MODE === oldSettings.MODE) {
-          for (var prop in newSettings) {
-            // TODO: Setting migration should only be attempted if flashing TO
-            //       Bluejay.
-            if (newSettings[prop] && oldSettings[prop] &&
-                bluejayCanMigrate(prop, oldSettings, newSettings) &&
-                newEsc.settings.NAME === 'Bluejay'
-            ) {
-              console.log('Migrating settings');
-              newSettings[prop] = oldSettings[prop];
+        let settingsDescriptions = null;
+        let individualSettingsDescriptions = null;
+        switch(newEsc.layout) {
+          case BLHELI_LAYOUT: {
+            console.debug('BLHELI layout found');
+            settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case BLUEJAY_LAYOUT: {
+            console.debug('Bluejay layout found');
+            settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case OPEN_ESC_LAYOUT: {
+            console.debug('OpenEsc layout found');
+            settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+        }
+
+        /**
+         * Try migrating settings if possible - this ensures that the motor
+         * direction is saved between flashes.
+         */
+        if(settingsDescriptions && individualSettingsDescriptions) {
+          if(newSettings.MODE === oldSettings.MODE) {
+            for (var prop in newSettings) {
+              if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
+                  Object.prototype.hasOwnProperty.call(oldSettings, prop) &&
+                  canMigrate(prop, oldSettings, newSettings, newSettings.settingsDescriptions, newSettings.individualSettingsDescriptions)
+              ) {
+                newSettings[prop] = oldSettings[prop];
+
+                console.debug(`Migrated setting ${prop}`);
+              }
             }
           }
+        } else {
+          console.debug('Can not migrate settings');
         }
 
         await this.writeSettings(target, newEsc, newSettings);

@@ -4,7 +4,8 @@
     "items": [
       "Fixed in sync checks",
       "Fixed applying settings",
-      "Improved layout detection when reading ESC settings"
+      "Improved layout detection when reading ESC settings",
+      "Improved migration of settings"
     ]
   },
   {
