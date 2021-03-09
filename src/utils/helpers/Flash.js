@@ -135,6 +135,14 @@ function ascii2buf(ascii) {
 
 function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualSettingsDescriptions) {
   if (from.MODE === to.MODE) {
+    if (!toSettingsDescriptions[from.LAYOUT_REVISION] ||
+        !toSettingsDescriptions[to.LAYOUT_REVISION] ||
+        !toIndividualSettingsDescriptions[from.LAYOUT_REVISION] ||
+        !toIndividualSettingsDescriptions[to.LAYOUT_REVISION]
+    ) {
+      return false;
+    }
+
     const fromCommons = toSettingsDescriptions[from.LAYOUT_REVISION].MULTI.base;
     const toCommons = toSettingsDescriptions[to.LAYOUT_REVISION].MULTI.base;
 

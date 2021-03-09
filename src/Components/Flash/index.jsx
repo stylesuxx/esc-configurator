@@ -40,11 +40,12 @@ function Flash({
       </div>
 
       <div className="leftWrapper common-config">
-        <CommonSettings
-          availableSettings={availableSettings}
-          escs={escs}
-          onSettingsUpdate={onSettingsUpdate}
-        />
+        {escs.length > 0 &&
+          <CommonSettings
+            availableSettings={availableSettings}
+            escs={escs}
+            onSettingsUpdate={onSettingsUpdate}
+          />}
       </div>
 
       <div className="rightWrapper individual-config">
