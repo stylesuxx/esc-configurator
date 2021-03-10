@@ -16,7 +16,6 @@ import sources from '../../sources';
 
 import {
   getMasterSettings,
-  getIndividualSettingsDescriptions,
 } from '../../utils/Settings';
 
 import './style.css';
@@ -178,9 +177,9 @@ class App extends Component {
     this.setState({ settings });
   }
 
-  handleIndividualSettingsUpdate(index, settings) {
+  handleIndividualSettingsUpdate(index, individualSettings) {
     const  { escs } = this.state;
-    escs[index].individualSettings = settings;
+    escs[index].individualSettings = individualSettings;
 
     this.setState({ escs });
   }
@@ -284,20 +283,6 @@ class App extends Component {
 
     const masterSettings = getMasterSettings(escFlash);
 
-    /**
-     * Build individaul settings for each ESC.
-     */
-    for(let i = 0; i < escFlash.length; i += 1) {
-      const esc = escFlash[i];
-      const individualSettings = {};
-      const individualKeep = getIndividualSettingsDescriptions(esc);
-      for(let j = 0; j < individualKeep.length; j += 1) {
-        const setting = individualKeep[j];
-        individualSettings[setting] = esc.settings[setting];
-      }
-      escFlash[i].individualSettings = individualSettings;
-    }
-
     this.setState({
       open,
       serialLog,
@@ -326,6 +311,7 @@ class App extends Component {
       const esc = escs[i];
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
+      console.log(currentEscSettings, settings, individualEscSettings);
       const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
       const newSettingsArray = await serial.fourWayWriteSettings(i, esc, mergedSettings);
 

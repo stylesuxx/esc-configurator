@@ -11,6 +11,9 @@ const getMasterSettings = (escs) => {
   return {};
 };
 
+/**
+ * Return the individaul settings for each ESC - include fixed fields
+ */
 const getIndividualSettingsDescriptions = (esc) => {
   if(esc) {
     const descriptions = esc.individualSettingsDescriptions;
@@ -30,6 +33,18 @@ const getIndividualSettingsDescriptions = (esc) => {
   return [];
 };
 
+const getIndividualSettings = (esc) => {
+  const individualSettings = {};
+  const individualKeep = getIndividualSettingsDescriptions(esc);
+
+  for(let j = 0; j < individualKeep.length; j += 1) {
+    const setting = individualKeep[j];
+    individualSettings[setting] = esc.settings[setting];
+  }
+
+  return individualSettings;
+};
+
 const getMaster = (escs) => escs.find((esc) => esc.meta.available);
 
 const getAllSettings = (escs) => escs.map((esc) => esc.settings);
@@ -38,6 +53,7 @@ const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings
 
 export {
   getAllSettings,
+  getIndividualSettings,
   getIndividualSettingsDescriptions,
   getMaster,
   getMasterSettings,

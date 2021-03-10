@@ -1,5 +1,14 @@
 [
   {
+    "title": "Unreleasd",
+    "items": [
+      "Migrate save settings",
+      "Utilization updates",
+      "Improved styling",
+      "Fix writing of individual settings"
+    ]
+  },
+  {
     "title": "0.4.1",
     "items": [
       "Fixed migration layout check"

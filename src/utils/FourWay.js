@@ -22,6 +22,10 @@ import {
 } from './helpers/Flash';
 
 import {
+  getIndividualSettings,
+} from './Settings';
+
+import {
   retry,
   compare,
   findMCU,
@@ -440,6 +444,8 @@ class FourWay {
       delete flash.checksum;
     }
 
+    flash.individualSettings = getIndividualSettings(flash);
+
     return flash;
   }
 
@@ -740,6 +746,7 @@ class FourWay {
 
         await this.writeSettings(target, newEsc, newSettings);
         newEsc.settings = newSettings;
+        newEsc.individualSettings = getIndividualSettings(newEsc);
 
         return newEsc;
       } catch(e) {

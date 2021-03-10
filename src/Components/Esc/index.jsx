@@ -20,7 +20,7 @@ function Esc({
 }) {
   const { t } = useTranslation('common');
 
-  const settings = esc.settings;
+  const settings = esc.individualSettings;
   const currentSettings = settings;
   const settingsDescriptions = esc.individualSettingsDescriptions;
   let name = (settings.NAME).trim();
