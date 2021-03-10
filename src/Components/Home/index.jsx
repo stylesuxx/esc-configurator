@@ -1,6 +1,4 @@
 import React from 'react';
-import Changelog from '../../Components/Changelog';
-import changeLogEntries from '../../changelog.json';
 import bluejay from './images/bluejay.svg';
 import './style.css';
 
@@ -10,32 +8,6 @@ import {
 
 function Home() {
   const { t } = useTranslation('common');
-
-  const ChangelogContent = () => changeLogEntries.map((entry) => {
-    const listItems = entry.items.map((item, index) => (
-      <li
-        key={index}
-      >
-        {item}
-      </li>
-    ));
-
-
-    return (
-      <div
-        key={entry.title}
-      >
-        <span>
-          {entry.title}
-        </span>
-
-        <ul>
-
-          {listItems}
-        </ul>
-      </div>
-    );
-  });
 
   return (
     <div className="tab-landing">
@@ -48,6 +20,11 @@ function Home() {
             <div
               align="center"
               dangerouslySetInnerHTML={{ __html: t('homeWelcome') }}
+            />
+
+            <div
+              align="center"
+              dangerouslySetInnerHTML={{ __html: t('betaWarning') }}
             />
           </div>
         </div>
@@ -105,10 +82,6 @@ function Home() {
 
         <div className="content_foot" />
       </div>
-
-      <Changelog>
-        <ChangelogContent />
-      </Changelog>
     </div>
   );
 }

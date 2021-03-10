@@ -5,6 +5,7 @@ import React, {
 import {
   useTranslation,
 } from 'react-i18next';
+import './style.css';
 
 function Changelog({ children }) {
   const { t } = useTranslation('common');

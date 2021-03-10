@@ -771,31 +771,29 @@ class App extends Component {
             />
           </div>
 
-          <div id="content">
-            <MainContent
-              configs={configs}
-              escs={escs}
-              flashTargets={flashTargets}
-              isFlashing={isFlashing}
-              isReading={isReading}
-              isSelecting={isSelecting}
-              isWriting={isWriting}
-              onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
-              onFlashUrl={this.handleFlashUrl}
-              onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
-              onLocalSubmit={this.handleLocalSubmit}
-              onReadEscs={this.handleReadEscs}
-              onResetDefaultls={this.handleResetDefaultls}
-              onSaveLog={this.handleSaveLog}
-              onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
-              onSettingsUpdate={this.handleSettingsUpdate}
-              onSingleFlash={this.handleSingleFlash}
-              onWriteSetup={this.handleWriteSetup}
-              open={open}
-              progress={progress}
-              settings={settings}
-            />
-          </div>
+          <MainContent
+            configs={configs}
+            escs={escs}
+            flashTargets={flashTargets}
+            isFlashing={isFlashing}
+            isReading={isReading}
+            isSelecting={isSelecting}
+            isWriting={isWriting}
+            onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
+            onFlashUrl={this.handleFlashUrl}
+            onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
+            onLocalSubmit={this.handleLocalSubmit}
+            onReadEscs={this.handleReadEscs}
+            onResetDefaultls={this.handleResetDefaultls}
+            onSaveLog={this.handleSaveLog}
+            onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
+            onSettingsUpdate={this.handleSettingsUpdate}
+            onSingleFlash={this.handleSingleFlash}
+            onWriteSetup={this.handleWriteSetup}
+            open={open}
+            progress={progress}
+            settings={settings}
+          />
 
           <Statusbar
             getUtilization={serial ? serial.getUtilization : null}

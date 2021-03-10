@@ -1,32 +1,43 @@
 .tab-esc {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+}
+
+.tab-esc .config-wrapper {
+
+}
+
+.tab-esc .configWrapper {
+  display: flex;
 }
 
 .tab-esc .leftWrapper {
-  float: left;
-  width: calc(50% - 20px);
+  margin-right: 10px;
+  flex-basis: 0;
+  flex-grow: 1;
 }
 
 .tab-esc .rightWrapper {
-  float: left;
-  width: calc(50% - 0px);
-  margin: 0 0 0 20px;
+  margin-left: 10px;
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+@media screen and (max-width: 967px) {
+  .tab-esc .configWrapper {
+    flex-direction: column;
+  }
+
+  .tab-esc .rightWrapper,
+  .tab-esc .leftWrapper {
+    margin: 0px;
+  }
 }
 
 .tab-esc .centerWrapper {
     width: 50%;
     margin: auto;
 }
-
-/*.tab-esc .individual-config .gui_box:nth-child(odd) {
-    width: calc(50% - 10px);
-}
-
-.tab-esc .individual-config .gui_box:nth-child(even) {
-    width: calc(50% - 5px);
-    margin-left: 10px;
-}*/
 
 .tab-esc .backdrop {
     border: 1px solid silver;
@@ -178,11 +189,6 @@
 
 .tab-esc .note {
   margin-bottom: 20px;
-}
-
-.tab-esc .log_btn {
-  float: left;
-  margin-left: 15px;
 }
 
 .tab-esc .red {

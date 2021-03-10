@@ -39,23 +39,25 @@ function Flash({
         </div>
       </div>
 
-      <div className="leftWrapper common-config">
-        {escs.length > 0 &&
-          <CommonSettings
-            availableSettings={availableSettings}
-            escs={escs}
-            onSettingsUpdate={onSettingsUpdate}
-          />}
-      </div>
+      <div className="configWrapper">
+        <div className="leftWrapper common-config">
+          {escs.length > 0 &&
+            <CommonSettings
+              availableSettings={availableSettings}
+              escs={escs}
+              onSettingsUpdate={onSettingsUpdate}
+            />}
+        </div>
 
-      <div className="rightWrapper individual-config">
-        <Escs
-          canFlash={canFlash}
-          escs={escs}
-          flashProgress={flashProgress}
-          onFlash={onFlash}
-          onSettingsUpdate={onIndividualSettingsUpdate}
-        />
+        <div className="rightWrapper individual-config">
+          <Escs
+            canFlash={canFlash}
+            escs={escs}
+            flashProgress={flashProgress}
+            onFlash={onFlash}
+            onSettingsUpdate={onIndividualSettingsUpdate}
+          />
+        </div>
       </div>
     </div>
   );
