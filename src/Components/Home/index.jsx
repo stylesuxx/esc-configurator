@@ -72,6 +72,16 @@ function Home() {
 
               <div>
                 {t('homeVersionInfo')}
+
+                <ul>
+                  <li>
+                    BLHELI_S
+                  </li>
+
+                  <li>
+                    Bluejay
+                  </li>
+                </ul>
               </div>
 
               <div>

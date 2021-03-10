@@ -434,21 +434,6 @@ dialog {
     width: 50%;
 }
 
-.third_left {
-    float: left;
-    width: 33%;
-}
-
-.third_center {
-    display: inline-block;
-    width: 34%;
-}
-
-.third_right {
-    float: right;
-    width: 33%;
-}
-
 .fourth {
     float: left;
     width: 25%;

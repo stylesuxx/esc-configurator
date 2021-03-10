@@ -20,6 +20,11 @@
 .tab-landing .content_mid {
     background-color: #eaeaea;
     overflow: hidden;
+    display: flex;
+}
+
+.tab-landing .content_mid > div {
+  flex: 1
 }
 
 .tab-landing .content_foot {
@@ -124,14 +129,6 @@
     margin-left: 0px;
 }
 
-.tab-landing .content_mid .text1 {
-    width: 37%;
-}
-
-.tab-landing .content_mid .text2 {
-    width: 40%;
-}
-
 .tab-landing .content_mid .text3 ul,
 .tab-landing .content_mid .text2 ul {
     margin-top: 10px;
@@ -141,10 +138,6 @@
 .tab-landing .content_mid .text2 li {
     padding: 5px 0;
     border-top: 1px dotted silver;
-}
-
-.tab-landing .content_mid .text3 {
-    width: 23%;
 }
 
 .tab-landing .content_mid .text3 .wrap2 {

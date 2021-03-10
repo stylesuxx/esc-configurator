@@ -23,7 +23,6 @@ function Slider({
   round,
 }) {
   const [currentValue, setCurrentValue] = useState(value);
-
   useEffect(() => {
     setCurrentValue(value);
   }, [value]);
