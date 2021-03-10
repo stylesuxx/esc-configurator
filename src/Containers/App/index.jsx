@@ -741,6 +741,28 @@ class App extends Component {
           <code>
             chrome://flags
           </code>
+
+          <br />
+
+          <br />
+
+          <p>
+            Alternatively download the latest
+
+            {' '}
+
+            <a
+              href="https://www.google.com/intl/de/chrome/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Chrome stable release
+            </a>
+
+            {' '}
+
+            where this feature is already enabled by default.
+          </p>
         </div>
       );
     }
