@@ -1,10 +1,12 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Home from '../Home';
 import Flash from '../Flash';
 import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '..//FirmwareSelector';
+import Changelog from '../../Components/Changelog';
+import changeLogEntries from '../../changelog.json';
 
 function MainContent({
   open,
@@ -34,40 +36,81 @@ function MainContent({
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const canResetDefaults = false;
 
+  const ChangelogContent = () => changeLogEntries.map((entry) => {
+    const listItems = entry.items.map((item, index) => (
+      <li
+        key={index}
+      >
+        {item}
+      </li>
+    ));
+
+    return (
+      <div
+        key={entry.title}
+      >
+        <span>
+          {entry.title}
+        </span>
+
+        <ul>
+
+          {listItems}
+        </ul>
+      </div>
+    );
+  });
+
   if (!open) {
-    return <Home />;
+    return (
+      <>
+        <div id="content">
+          <Home />
+        </div>
+
+        <Changelog>
+          <ChangelogContent />
+        </Changelog>
+      </>
+    );
   }
 
   if (isSelecting) {
     const esc = escs[flashTargets[0]];
     return (
-      <div className="tab-esc toolbar_fixed_bottom">
-        <div className="content_wrapper">
-          <FirmwareSelector
-            configs={configs}
-            escHint={esc.settings.LAYOUT}
-            onCancel={onCancelFirmwareSelection}
-            onLocalSubmit={onLocalSubmit}
-            onSubmit={onFlashUrl}
-            signatureHint={esc.meta.signature}
-          />
+      <div id="content">
+        <div className="tab-esc toolbar_fixed_bottom">
+          <div className="content_wrapper">
+            <FirmwareSelector
+              configs={configs}
+              escHint={esc.settings.LAYOUT}
+              onCancel={onCancelFirmwareSelection}
+              onLocalSubmit={onLocalSubmit}
+              onSubmit={onFlashUrl}
+              signatureHint={esc.meta.signature}
+            />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="tab-esc toolbar_fixed_bottom">
-      <div className="content_wrapper">
-        <Flash
-          availableSettings={settings}
-          canFlash={canFlash}
-          escs={escs}
-          flashProgress={progress}
-          onFlash={onSingleFlash}
-          onIndividualSettingsUpdate={onIndividualSettingsUpdate}
-          onSettingsUpdate={onSettingsUpdate}
-        />
+    <>
+      <div id="content">
+        <div className="tab-esc toolbar_fixed_bottom">
+          <div className="content_wrapper">
+            <Flash
+              availableSettings={settings}
+              canFlash={canFlash}
+              escs={escs}
+              flashProgress={progress}
+              onFlash={onSingleFlash}
+              onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+              onSettingsUpdate={onSettingsUpdate}
+            />
+          </div>
+        </div>
       </div>
 
       <Buttonbar
@@ -81,7 +124,7 @@ function MainContent({
         onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />
-    </div>
+    </>
   );
 }
 

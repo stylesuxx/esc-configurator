@@ -23,7 +23,6 @@ function Slider({
   round,
 }) {
   const [currentValue, setCurrentValue] = useState(value);
-
   useEffect(() => {
     setCurrentValue(value);
   }, [value]);
@@ -57,10 +56,15 @@ function Slider({
     }, 100);
   }
 
+  function format(value) {
+    return `${value}${suffix}`;
+  }
+
   return (
     <div className="number">
       <label>
         <InputRange
+          formatLabel={format}
           labelSuffix={suffix}
           maxValue={max}
           minValue={min}

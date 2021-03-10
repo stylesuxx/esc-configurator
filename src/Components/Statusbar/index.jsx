@@ -21,21 +21,18 @@ function Statusbar({
 
   useEffect(() => {
     if(getUtilization) {
-      if(!timeout) {
-        const to = setInterval(() => {
-          const current = getUtilization();
-          setUtilization(current);
-        }, 1000);
-
-        setTimeout(to);
-      }
-    } else {
       if(timeout) {
         clearTimeout(timeout);
-        setTimeout(null);
       }
+
+      const to = setInterval(() => {
+        const current = getUtilization();
+        setUtilization(current);
+      }, 1000);
+
+      setTimeout(to);
     }
-  }, []);
+  }, [getUtilization]);
 
   const { t } = useTranslation('common');
   const upString = `U: ${utilization.up}%`;

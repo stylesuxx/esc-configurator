@@ -15,11 +15,17 @@
     height: 140px;
     background: #125684;
     padding: 20px;
+    display: flex;
 }
 
 .tab-landing .content_mid {
     background-color: #eaeaea;
     overflow: hidden;
+    display: flex;
+}
+
+.tab-landing .content_mid > div {
+  flex: 1
 }
 
 .tab-landing .content_foot {
@@ -30,13 +36,20 @@
 
 /* hero block */
 .tab-landing .logowrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5px;
     width: 800px;
     color: white;
     font-size: 14px;
     font-family: 'open_sanslight', Arial;
+}
+
+.tab-landing .logowrapper a {
+  color: white;
+  text-decoration: underline;
 }
 
 .tab-landing .logowrapper img {
@@ -124,14 +137,6 @@
     margin-left: 0px;
 }
 
-.tab-landing .content_mid .text1 {
-    width: 37%;
-}
-
-.tab-landing .content_mid .text2 {
-    width: 40%;
-}
-
 .tab-landing .content_mid .text3 ul,
 .tab-landing .content_mid .text2 ul {
     margin-top: 10px;
@@ -141,10 +146,6 @@
 .tab-landing .content_mid .text2 li {
     padding: 5px 0;
     border-top: 1px dotted silver;
-}
-
-.tab-landing .content_mid .text3 {
-    width: 23%;
 }
 
 .tab-landing .content_mid .text3 .wrap2 {
@@ -161,79 +162,4 @@
 .tab-landing .content_mid .text3 .donate {
     margin-top: 10px;
     text-align: center;
-}
-
-/* changelog block */
-#changelog {
-    width: 250px;
-    height: 100%;
-    position: fixed;
-    right: -245px;
-    top: 0px;
-}
-
-#changelog .wrapper {
-    height: 100%;
-    padding: 0 20px;
-    border-left: 5px solid #2a84c4;
-    overflow-y: auto;
-    display: none;
-}
-
-#changelog .button {
-    transform: rotate(270deg);
-    top: 50px;
-    right: 215px;
-    position: absolute;
-    background: #2a84c4;
-    border-radius: 5px 5px 0 0;
-    border-bottom: none;
-    height: 30px;
-}
-
-#changelog .button a {
-    display: block;
-    padding: 5px 10px;
-    width: 70px;
-    text-align: center;
-    color: white;
-}
-
-#changelog .title {
-    margin: 20px 0;
-    font-size: 16px;
-}
-
-#changelog.expanded {
-    right: 0px;
-    background: white;
-}
-
-#changelog.expanded .wrapper {
-    display: block;
-}
-
-/* changelog content */
-#changelog .log {
-    line-height: 17px;
-}
-
-#changelog .log span {
-    display: block;
-    font-weight: bold;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
-}
-
-#changelog .log ul {
-    margin: 5px 0 20px 10px;
-}
-
-#changelog .log li {
-    font-weight: normal;
-    margin-bottom: 5px;
-}
-
-#changelog .log p {
-    margin-bottom: 20px;
 }

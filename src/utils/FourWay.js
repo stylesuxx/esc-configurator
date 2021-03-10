@@ -22,6 +22,10 @@ import {
 } from './helpers/Flash';
 
 import {
+  getIndividualSettings,
+} from './Settings';
+
+import {
   retry,
   compare,
   findMCU,
@@ -440,6 +444,8 @@ class FourWay {
       delete flash.checksum;
     }
 
+    flash.individualSettings = getIndividualSettings(flash);
+
     return flash;
   }
 
@@ -710,16 +716,27 @@ class FourWay {
          * Try migrating settings if possible - this ensures that the motor
          * direction is saved between flashes.
          */
+        const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
         if(settingsDescriptions && individualSettingsDescriptions) {
           if(newSettings.MODE === oldSettings.MODE) {
             for (var prop in newSettings) {
               if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
-                  Object.prototype.hasOwnProperty.call(oldSettings, prop) &&
-                  canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)
+                  Object.prototype.hasOwnProperty.call(oldSettings, prop)
               ) {
-                newSettings[prop] = oldSettings[prop];
+                if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
+                  // With a proper migration path
+                  newSettings[prop] = oldSettings[prop];
 
-                console.debug(`Migrated setting ${prop}`);
+                  console.debug(`Migrated setting ${prop}`);
+                } else {
+                  if (saveMigratins.includes(prop)) {
+                    // Settings that are save to migrate because they are the
+                    // same on all firmwares.
+                    newSettings[prop] = oldSettings[prop];
+
+                    console.debug(`Migrated setting ${prop}`);
+                  }
+                }
               }
             }
           }
@@ -729,6 +746,7 @@ class FourWay {
 
         await this.writeSettings(target, newEsc, newSettings);
         newEsc.settings = newSettings;
+        newEsc.individualSettings = getIndividualSettings(newEsc);
 
         return newEsc;
       } catch(e) {
