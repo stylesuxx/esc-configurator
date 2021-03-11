@@ -270,7 +270,7 @@ function FirmwareSelector({
                 selected={selection.pwm}
               />}
 
-            <div className="default_btn">
+            <div className="default-btn">
               <a
                 className={enableFlashButton ? "disabled" : ""}
                 href="#"
@@ -280,7 +280,7 @@ function FirmwareSelector({
               </a>
             </div>
 
-            <div className="default_btn">
+            <div className="default-btn">
               <input
                 onChange={submitLocalFile}
                 ref={file}
@@ -296,7 +296,7 @@ function FirmwareSelector({
               </a>
             </div>
 
-            <div className="default_btn">
+            <div className="default-btn">
               <a
                 href="#"
                 onClick={onCancel}
