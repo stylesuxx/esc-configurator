@@ -227,8 +227,7 @@ class App extends Component {
     reader.readAsText(e.target.files[0]);
   }
 
-  async handleReadEscs(e) {
-    e.preventDefault();
+  async handleReadEscs() {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
@@ -294,8 +293,7 @@ class App extends Component {
     });
   }
 
-  async handleWriteSetup(e) {
-    e.preventDefault();
+  async handleWriteSetup() {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     const {
@@ -331,8 +329,7 @@ class App extends Component {
     });
   }
 
-  handleSelectFirmwareForAll(e) {
-    e.preventDefault();
+  handleSelectFirmwareForAll() {
     const { escs } = this.state;
 
     const flashTargets = [];

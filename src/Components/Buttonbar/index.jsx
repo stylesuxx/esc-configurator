@@ -4,7 +4,7 @@ import {
   useTranslation,
 } from 'react-i18next';
 
-import './style.css';
+import './style.scss';
 
 function Buttonbar({
   onReadSetup,
@@ -20,54 +20,54 @@ function Buttonbar({
   const { t } = useTranslation('common');
 
   return (
-    <div className="content_toolbar">
-      <div className="btn log_btn">
-        <a
-          href="#"
+    <div id="button-bar">
+      <div className="btn log">
+        <button
           onClick={onSaveLog}
+          type="button"
         >
           {t('escButtonSaveLog')}
-        </a>
+        </button>
       </div>
 
       <div className="btn">
-        <a
+        <button
           className={canRead ? "" : "disabled"}
-          href="#"
           onClick={onReadSetup}
+          type="button"
         >
           {t('escButtonRead')}
-        </a>
+        </button>
       </div>
 
       <div className="btn">
-        <a
+        <button
           className={canWrite ? "" : "disabled"}
-          href="#"
           onClick={onWriteSetup}
+          type="button"
         >
           {t('escButtonWrite')}
-        </a>
+        </button>
       </div>
 
       <div className="btn">
-        <a
+        <button
           className={canFlash ? "" : "disabled"}
-          href="#"
           onClick={onSeletFirmwareForAll}
+          type="button"
         >
           {t('escButtonFlashAll')}
-        </a>
+        </button>
       </div>
 
       <div className={canResetDefaults ? "btn" : "hidden"}>
-        <a
+        <button
           className={canResetDefaults ? "" : "disabled"}
-          href="#"
           onClick={onResetDefaults}
+          type="button"
         >
           {t('resetDefaults')}
-        </a>
+        </button>
       </div>
     </div>
   );
