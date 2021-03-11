@@ -9,11 +9,11 @@ import {
   getMaster,
   getAllSettings,
   isMulti,
-} from '../../utils/Settings';
+} from '../../utils/helpers/Settings';
 
-import Checkbox from '../Checkbox';
-import Select from '../Select';
-import Slider from '../Slider';
+import Checkbox from '../Input/Checkbox';
+import Select from '../Input/Select';
+import Slider from '../Input/Slider';
 
 import './style.css';
 
