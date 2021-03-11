@@ -1,6 +1,6 @@
 import {
   BLHELI_MODES,
-} from './Blheli';
+} from '../Blheli';
 
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);
