@@ -4,6 +4,8 @@ import React, {
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 
+import changelogEntries from '../../changelog.json';
+
 import PortPicker from '../../Components/PortPicker';
 import Log from '../../Components/Log';
 import Statusbar from '../../Components/Statusbar';
@@ -16,7 +18,7 @@ import sources from '../../sources';
 
 import {
   getMasterSettings,
-} from '../../utils/Settings';
+} from '../../utils/helpers/Settings';
 
 import './style.css';
 
@@ -85,7 +87,6 @@ class App extends Component {
       const hasSerial = 'serial' in navigator;
 
       // Redefine the console and tee logs
-      /*
       var console = (function(old) {
         return {
           log: (text, ...args) => {
@@ -113,7 +114,6 @@ class App extends Component {
         };
       }(window.console));
       window.console = console;
-      */
 
       if (hasSerial) {
         navigator.serial.removeEventListener('connect', that.serialConnectHandler);
@@ -794,6 +794,7 @@ class App extends Component {
           </div>
 
           <MainContent
+            changelogEntries={changelogEntries}
             configs={configs}
             escs={escs}
             flashTargets={flashTargets}

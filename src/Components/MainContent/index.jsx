@@ -6,7 +6,6 @@ import Flash from '../Flash';
 import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '..//FirmwareSelector';
 import Changelog from '../../Components/Changelog';
-import changeLogEntries from '../../changelog.json';
 
 function MainContent({
   open,
@@ -30,36 +29,12 @@ function MainContent({
   isFlashing,
   flashTargets,
   onLocalSubmit,
+  changelogEntries,
 }) {
   const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const canResetDefaults = false;
-
-  const ChangelogContent = () => changeLogEntries.map((entry) => {
-    const listItems = entry.items.map((item, index) => (
-      <li
-        key={index}
-      >
-        {item}
-      </li>
-    ));
-
-    return (
-      <div
-        key={entry.title}
-      >
-        <span>
-          {entry.title}
-        </span>
-
-        <ul>
-
-          {listItems}
-        </ul>
-      </div>
-    );
-  });
 
   if (!open) {
     return (
@@ -68,9 +43,9 @@ function MainContent({
           <Home />
         </div>
 
-        <Changelog>
-          <ChangelogContent />
-        </Changelog>
+        <Changelog
+          entries={changelogEntries}
+        />
       </>
     );
   }
@@ -129,6 +104,7 @@ function MainContent({
 }
 
 MainContent.propTypes = {
+  changelogEntries: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,

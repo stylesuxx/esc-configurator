@@ -1,0 +1,70 @@
+#changelog {
+  width: 250px;
+  height: 100%;
+  position: absolute;
+  right: -245px;
+  top: 137px;
+  height: calc(100% - 137px - 21px);
+
+  .wrapper {
+    height: 100%;
+    padding: 0 20px;
+    border-left: 5px solid #2a84c4;
+    overflow-y: auto;
+    display: none;
+  }
+
+  &.expanded {
+    right: 0px;
+    background: white;
+
+    .wrapper {
+      display: block;
+    }
+  }
+
+  .button {
+    transform: rotate(270deg);
+    top: 50px;
+    right: 212px;
+    position: absolute;
+    background: #2a84c4;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+    display: block;
+    padding: 5px 10px;
+    width: 70px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+  }
+
+  .title {
+    margin: 20px 0;
+    font-size: 16px;
+  }
+
+  .log {
+    line-height: 17px;
+
+    span {
+      display: block;
+      font-weight: bold;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    ul {
+      margin: 5px 0 20px 10px;
+
+      li {
+        font-weight: normal;
+        margin-bottom: 5px;
+      }
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+  }
+}
