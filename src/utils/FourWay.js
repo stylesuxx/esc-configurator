@@ -23,7 +23,7 @@ import {
 
 import {
   getIndividualSettings,
-} from './Settings';
+} from './helpers/Settings';
 
 import {
   retry,
