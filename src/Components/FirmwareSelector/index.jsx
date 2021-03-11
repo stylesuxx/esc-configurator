@@ -1,5 +1,4 @@
-// IMPROVE: * Refactor the selects to seperate components
-//          * Check the hints outside of the component
+// IMPROVE: * Check the hints outside of the component
 
 import PropTypes from 'prop-types';
 import React, {
@@ -131,8 +130,7 @@ function FirmwareSelector({
     setSelection(newSelection);
   }
 
-  function submit(e) {
-    e.preventDefault();
+  function submit() {
     const escsAll = escs[selection.firmware].layouts[type];
 
     const format = (str2Format, ...args) =>
@@ -271,13 +269,13 @@ function FirmwareSelector({
               />}
 
             <div className="default-btn">
-              <a
+              <button
                 className={enableFlashButton ? "disabled" : ""}
-                href="#"
                 onClick={submit}
+                type="button"
               >
                 {t('escButtonSelect')}
-              </a>
+              </button>
             </div>
 
             <div className="default-btn">
@@ -288,23 +286,21 @@ function FirmwareSelector({
                 type="file"
               />
 
-              <a
-                href="#"
+              <button
                 onClick={clickFile}
+                type="button"
               >
                 {t('escButtonSelectLocally')}
-              </a>
+              </button>
             </div>
 
             <div className="default-btn">
-              <a
-                href="#"
+              <button
                 onClick={onCancel}
+                type="button"
               >
-
                 {t('buttonCancel')}
-
-              </a>
+              </button>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Esc from '../Esc';
 
+import Esc from '../Esc';
 
 function Escs({
   escs,
@@ -10,32 +10,30 @@ function Escs({
   onFlash,
   onSettingsUpdate,
 }) {
-  if(escs.length === 0) {
-    return null;
+  function EscElements() {
+    return escs.map((esc, index) => (
+      <Esc
+        canFlash={canFlash}
+        esc={esc}
+        index={index}
+        key={index}
+        onFlash={onFlash}
+        onSettingsUpdate={onSettingsUpdate}
+        progress={flashProgress[index]}
+      />
+    ));
   }
 
-  const escElements = escs.map((esc, index) => (
-    <Esc
-      canFlash={canFlash}
-      esc={esc}
-      index={index}
-      key={index}
-      onFlash={onFlash}
-      onSettingsUpdate={onSettingsUpdate}
-      progress={flashProgress[index]}
-    />
-  ));
-
   return (
-    <div>
-      {escElements}
-    </div>
+    <EscElements />
   );
 }
 
+Escs.defaultProps = { escs: [] };
+
 Escs.propTypes = {
   canFlash: PropTypes.bool.isRequired,
-  escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  escs: PropTypes.arrayOf(PropTypes.shape()),
   flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
   onFlash: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
