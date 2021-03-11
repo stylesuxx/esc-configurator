@@ -88,30 +88,13 @@ class App extends Component {
 
       // Redefine the console and tee logs
       var console = (function(old) {
-        return {
-          log: (text, ...args) => {
-            const msg = [text, args.join(' ')].join(' ');
-            that.log.push(msg);
-            old.log(text, ...args);
-          },
+        return Object.assign({}, old, {
           debug: (text, ...args) => {
             const msg = [text, args.join(' ')].join(' ');
             that.log.push(msg);
             old.debug(text, ...args);
           },
-          info: (text) => {
-            that.log.push(text);
-            old.info(text);
-          },
-          warn: (text) => {
-            that.log.push(text);
-            old.warn(text);
-          },
-          error: (text) => {
-            that.log.push(text);
-            old.error(text);
-          }
-        };
+        });
       }(window.console));
       window.console = console;
 
