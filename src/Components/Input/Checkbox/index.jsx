@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import './style.scss';
+
 function Checkbox({
   name, value, label, onChange, inSync,
 }) {

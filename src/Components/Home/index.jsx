@@ -1,6 +1,6 @@
 import React from 'react';
 import bluejay from './images/bluejay.svg';
-import './style.css';
+import './style.scss';
 
 import {
   useTranslation,
@@ -10,7 +10,7 @@ function Home() {
   const { t } = useTranslation('common');
 
   return (
-    <div className="tab-landing">
+    <div id="tab-landing">
       <div className="content_wrapper">
         <div className="content_top">
           <div

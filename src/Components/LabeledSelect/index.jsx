@@ -43,11 +43,14 @@ function LabeledSelect({
   );
 }
 
-LabeledSelect.defaultProps = { selected: null };
+LabeledSelect.defaultProps = {
+  label: "",
+  selected: null,
+};
 
 LabeledSelect.propTypes = {
   firstLabel: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.shape({
     key: PropTypes.oneOfType([

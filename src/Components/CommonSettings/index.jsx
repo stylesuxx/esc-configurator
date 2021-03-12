@@ -15,13 +15,8 @@ import Checkbox from '../Input/Checkbox';
 import Select from '../Input/Select';
 import Slider from '../Input/Slider';
 
-import './style.css';
+import './style.scss';
 
-/**
- * @param {Object} params
- *
- * @return {Component} The Component
- */
 function CommonSettings({
   availableSettings,
   escs,
@@ -169,14 +164,14 @@ function CommonSettings({
   });
 
   return (
-    <div className="gui_box grey">
-      <div className="gui_box_titlebar">
-        <div className="spacer_box_title">
+    <div className="gui-box grey">
+      <div className="gui-box-titlebar">
+        <div className="spacer-box-title">
           {t('commonParameters')}
         </div>
       </div>
 
-      <div className="spacer_box">
+      <div className="spacer-box">
         {settingElements}
       </div>
     </div>

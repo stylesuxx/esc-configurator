@@ -7,6 +7,7 @@ import {
   useTranslation,
 } from 'react-i18next';
 
+import './style.scss';
 
 function Statusbar({
   packetErrors,
@@ -45,11 +46,11 @@ function Statusbar({
           {t('statusbarPortUtilization')}
         </span>
 
-        <span className="port_usage_down">
+        <span>
           {downString}
         </span>
 
-        <span className="port_usage_up">
+        <span>
           {upString}
         </span>
       </div>
@@ -59,7 +60,7 @@ function Statusbar({
           {t('statusbarPacketError')}
         </span>
 
-        <span className="packet-error">
+        <span>
           {packetErrors}
         </span>
       </div>

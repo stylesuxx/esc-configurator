@@ -7,6 +7,8 @@ import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '..//FirmwareSelector';
 import Changelog from '../../Components/Changelog';
 
+import './style.scss';
+
 function MainContent({
   open,
   escs,
@@ -54,7 +56,7 @@ function MainContent({
     const esc = escs[flashTargets[0]];
     return (
       <div id="content">
-        <div className="tab-esc toolbar_fixed_bottom">
+        <div className="tab toolbar_fixed_bottom">
           <div className="content_wrapper">
             <FirmwareSelector
               configs={configs}
@@ -73,7 +75,7 @@ function MainContent({
   return (
     <>
       <div id="content">
-        <div className="tab-esc toolbar_fixed_bottom">
+        <div className="tab toolbar_fixed_bottom">
           <div className="content_wrapper">
             <Flash
               availableSettings={settings}

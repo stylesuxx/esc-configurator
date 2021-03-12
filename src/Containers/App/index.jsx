@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
+import i18next from 'i18next';
 
 import changelogEntries from '../../changelog.json';
 
@@ -12,6 +13,8 @@ import Statusbar from '../../Components/Statusbar';
 import CookieConsent from '../../Components/CookieConsent';
 import MainContent from '../../Components/MainContent';
 
+import Select from '../../Components/Input/Select';
+
 import Serial from '../../utils/Serial';
 
 import sources from '../../sources';
@@ -20,7 +23,7 @@ import {
   getMasterSettings,
 } from '../../utils/helpers/Settings';
 
-import './style.css';
+import './style.scss';
 
 import settings from '../../settings.json';
 const {
@@ -54,6 +57,7 @@ class App extends Component {
     this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
     this.handleSaveLog = this.handleSaveLog.bind(this);
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
+    this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
 
     this.state = {
       lastConnected: 0,
@@ -78,6 +82,7 @@ class App extends Component {
         escs: {},
         pwm: {},
       },
+      language: 'en',
     };
   }
 
@@ -125,6 +130,17 @@ class App extends Component {
    */
   log = [];
   gtmActive = false;
+
+  languages = [
+    {
+      label: "English",
+      value: "en",
+    },
+    {
+      label: "German",
+      value: "de",
+    }
+  ];
 
   onMount(cb){
     cb();
@@ -673,6 +689,12 @@ class App extends Component {
     }
   }
 
+  handleLanguageSelection(e) {
+    const language = e.target.value;
+    i18next.changeLanguage(language);
+    this.setState({ language });
+  }
+
   render() {
     const {
       checked,
@@ -691,6 +713,7 @@ class App extends Component {
       isFlashing,
       configs,
       flashTargets,
+      language,
     } = this.state;
 
     if (!checked) {
@@ -754,6 +777,16 @@ class App extends Component {
             <div className="headerbar">
               <div id="logo">
                 <div className="logo_text" />
+              </div>
+
+              <div className="language-select">
+                <Select
+                  label=""
+                  name="language"
+                  onChange={this.handleLanguageSelection}
+                  options={this.languages}
+                  value={language}
+                />
               </div>
 
               <PortPicker

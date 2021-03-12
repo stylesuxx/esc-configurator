@@ -4,7 +4,7 @@ import {
   useTranslation,
 } from 'react-i18next';
 import './list-style.css';
-import './style.css';
+import './style.scss';
 
 function PortPicker({
   hasPort,
@@ -51,7 +51,7 @@ function PortPicker({
             />
           </div>
 
-          <a className="connect_state">
+          <a className="connect-state">
             {t('disconnect')}
           </a>
         </>
@@ -68,7 +68,7 @@ function PortPicker({
           />
         </div>
 
-        <a className="connect_state">
+        <a className="connect-state">
           {t('connect')}
         </a>
       </>
@@ -119,7 +119,7 @@ function PortPicker({
 
       <div
         className="connect_controls"
-        id="connectbutton"
+        id="connect-button-wrapper"
       >
         <ConnectionButton />
       </div>

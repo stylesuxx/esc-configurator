@@ -156,14 +156,14 @@ function Esc({
   }
 
   return (
-    <div className="gui_box grey">
-      <div className="gui_box_titlebar">
-        <div className="spacer_box_title">
+    <div className="gui-box grey">
+      <div className="gui-box-titlebar">
+        <div className="spacer-box-title">
           {title}
         </div>
       </div>
 
-      <div className="spacer_box">
+      <div className="spacer-box">
         {settingElements}
 
         <FlashBox />

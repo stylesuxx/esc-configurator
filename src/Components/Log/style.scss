@@ -1,0 +1,77 @@
+/* Log setup*/
+#log {
+  margin-bottom: 0px;
+  border: 0px solid silver;
+  background-color: #242424;
+  color: #ccc;
+  color: rgba(255, 255, 255, 0.60);
+  line-height: 21px;
+  height: 27px;
+  overflow-y: hidden;
+
+  #scrollicon {
+    position: fixed;
+    right: 10px;
+    top: 113px;
+    height: 27px;
+    width: 27px;
+    background-image: url(images/icons/scroll.svg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    opacity: 0.0;
+    transition: all ease 0.3s;
+  }
+
+  &.expanded {
+    overflow-y: auto;
+    box-shadow: inset 0 0 15px #000000;
+    height: 111px;
+
+    #scrollicon {
+      height: 110px;
+      margin-top: 10px;
+      margin-right: 20px;
+      width: 110px;
+      opacity: 0.15;
+      background-size: 80%;
+      box-shadow: inset 0 0 5px #000000;
+      transition: all ease 0.3s;
+    }
+  }
+
+  .wrapper {
+    padding: 5px; /* was 5*/
+    padding-left: 10px;
+    padding-bottom: 4px;
+    -webkit-user-select: text;
+    position: relative;
+    bottom: 0px;
+  }
+
+  a {
+    font-weight: regular;
+    color: #252177;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .logswitch {
+    position: absolute;
+    right: 20px;
+    z-index: 10;
+    line-height: 27px;
+
+    a {
+      color: #656565 !important;
+      transition: all 0.3s;
+    }
+
+    a:hover {
+      color: #959595 !important;
+      text-decoration: none !important;
+      transition: all 0.3s;
+    }
+  }
+}

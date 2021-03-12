@@ -7,7 +7,7 @@ import {
 import Escs from '../Escs';
 import CommonSettings from '../CommonSettings';
 
-import './style.css';
+import './style.scss';
 
 
 /**
@@ -26,21 +26,19 @@ function Flash({
 }) {
   const { t } = useTranslation('common');
   return (
-    <div>
+    <div id="flash-content">
       <div className="note">
-        <div className="note_spacer">
-          <p>
-            <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
+        <p>
+          <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
 
-            <br />
+          <br />
 
-            <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
-          </p>
-        </div>
+          <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
+        </p>
       </div>
 
-      <div className="configWrapper">
-        <div className="leftWrapper common-config">
+      <div className="config-wrapper">
+        <div className="common-config">
           {escs.length > 0 &&
             <CommonSettings
               availableSettings={availableSettings}
@@ -49,7 +47,7 @@ function Flash({
             />}
         </div>
 
-        <div className="rightWrapper individual-config">
+        <div className="individual-config">
           <Escs
             canFlash={canFlash}
             escs={escs}

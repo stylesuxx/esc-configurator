@@ -1,0 +1,40 @@
+#flash-content {
+  .note {
+    margin-bottom: 20px;
+    background-color: #fff7cd;
+    border: 1px solid #ffe55f;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: 'open_sansregular', Arial;
+    padding: 5px 7px 5px 7px;
+  }
+
+  .config-wrapper {
+    display: flex;
+
+    .common-config {
+      margin-right: 10px;
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+
+    .individual-config {
+      margin-left: 10px;
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+  }
+
+  @media screen and (max-width: 967px) {
+    .config-wrapper {
+      flex-direction: column;
+
+      .common-config,
+      .individual-config {
+        margin: 0px;
+      }
+    }
+  }
+}

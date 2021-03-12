@@ -23,6 +23,8 @@ import {
   BLUEJAY_TYPES,
 } from '../../utils/Bluejay';
 
+import './style.scss';
+
 function FirmwareSelector({
   onCancel,
   escHint,
@@ -195,36 +197,36 @@ function FirmwareSelector({
   const enableFlashButton = !selection.url || (!selection.pwm && frequencies.length > 0);
 
   return (
-    <>
-      <div className="checkbox">
-        <label>
-          <input
-            defaultValue={force}
-            onChange={updateForce}
-            type="checkbox"
-          />
+    <div id="firmware-selector">
+      <div className="center-wrapper">
+        <div className="checkbox force">
+          <label>
+            <input
+              defaultValue={force}
+              onChange={updateForce}
+              type="checkbox"
+            />
 
-          <span>
             <span>
-              Ignore inappropriate MCU and Layout?
-            </span>
+              <span>
+                Ignore inappropriate MCU and Layout?
+              </span>
 
-            <span className={force ? "red" : "hidden"}>
-              (Flashing inappropriate firmware may damage your ESC, do so at your own risk)
+              <span className={force ? "red" : "hidden"}>
+                (Flashing inappropriate firmware may damage your ESC, do so at your own risk)
+              </span>
             </span>
-          </span>
-        </label>
-      </div>
+          </label>
+        </div>
 
-      <div className="centerWrapper">
-        <div className="gui_box grey">
-          <div className="gui_box_titlebar">
-            <div className="spacer_box_title">
+        <div className="gui-box grey">
+          <div className="gui-box-titlebar">
+            <div className="spacer-box-title">
               Select Target
             </div>
           </div>
 
-          <div className="spacer_box">
+          <div className="spacer-box">
 
             <LabeledSelect
               firstLabel="Select Firmware"
@@ -305,7 +307,7 @@ function FirmwareSelector({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
