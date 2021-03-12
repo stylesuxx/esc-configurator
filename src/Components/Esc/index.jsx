@@ -134,7 +134,7 @@ function Esc({
   function FlashBox() {
     return(
       <div className="half flash-box">
-        <div className="half default-btn flash-btn">
+        <div className="default-btn flash-btn">
           <progress
             className={progress > 0 ? 'progress' : 'hidden'}
             max="100"
