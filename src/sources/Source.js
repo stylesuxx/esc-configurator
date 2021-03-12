@@ -12,12 +12,16 @@ class Source {
     this.pwm = pwm;
 
     this.fetchJson = async (url) => {
-      const response = await fetch(url);
-      if(!response.ok) {
-        throw new Error(response.statusText);
-      }
+      try {
+        const response = await fetch(url);
+        if(!response.ok) {
+          return new Error(response.statusText);
+        }
 
-      return response.json();
+        return response.json();
+      } catch(e) {
+        return new Error(e);
+      }
     };
   }
 
@@ -30,19 +34,27 @@ class Source {
   }
 
   async getVersions() {
-    try {
-      return this.fetchJson(this.versions);
-    } catch(e) {
-      return this.localVersions;
+    if(navigator.online) {
+      try {
+        return this.fetchJson(this.versions);
+      } catch(e) {
+        // No neet to catch - returl local versions anyway
+      }
     }
+
+    return this.localVersions;
   }
 
   async getEscs() {
-    try {
-      return this.fetchJson(this.escs);
-    } catch(e) {
-      return this.localEscs;
+    if(navigator.online) {
+      try {
+        return this.fetchJson(this.escs);
+      } catch(e) {
+        // No neet to catch - returl local escs anyway
+      }
     }
+
+    return this.localEscs;
   }
 }
 
