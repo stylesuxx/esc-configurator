@@ -60,7 +60,6 @@ class App extends Component {
     this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
 
     this.state = {
-      lastConnected: 0,
       checked: false,
       hasSerial: false,
       connected: false,
@@ -132,6 +131,7 @@ class App extends Component {
   log = [];
   gtmActive = false;
   serial = null;
+  lastConnected = 0;
 
   languages = [
     {
@@ -232,7 +232,7 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      serialLog, lastConnected, progress, actions
+      serialLog, progress, actions
     } = this.state;
 
     serialLog.push(this.formatLogMessage('Reading ESC\'s'));
@@ -246,7 +246,7 @@ class App extends Component {
     // Enable 4way if
     let connected = 0;
     try {
-      if(lastConnected === 0) {
+      if(this.lastConnected === 0) {
         const escs = await this.serial.enable4WayInterface();
 
         connected = 0;
@@ -256,7 +256,7 @@ class App extends Component {
 
         this.serial.fourWayStart();
       } else {
-        connected = lastConnected;
+        connected = this.lastConnected;
       }
     } catch(e) {
       console.debug(e);
@@ -285,13 +285,13 @@ class App extends Component {
 
     const masterSettings = getMasterSettings(escFlash);
 
+    this.lastConnected = connected;
     actions.isReading = false;
     this.setState({
       open,
       serialLog,
       escs: escFlash,
       settings: masterSettings,
-      lastConnected: connected,
       progress,
       actions,
     });
@@ -459,7 +459,7 @@ class App extends Component {
      * device - mark  conncted
      */
     let connected = false;
-    let serial = false;
+    this.serial = null;
     const ports = await navigator.serial.getPorts();
     if(ports.length > 0) {
       TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
@@ -480,11 +480,11 @@ class App extends Component {
   serialDisconnectHandler() {
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('Unplugged');
+    this.lastConnected = 0;
     this.setState({
       connected: false,
       open: false,
       escs: [],
-      lastConnected: 0,
     });
 
     this.serial.disconnect();
@@ -677,11 +677,11 @@ class App extends Component {
     }
 
     this.addLogMessage('Closed port');
+    this.lastConnected = 0;
 
     this.setState({
       open: false,
       escs: [],
-      lastConnected: 0,
     });
   }
 
