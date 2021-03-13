@@ -12,8 +12,6 @@ import './style.scss';
 function MainContent({
   open,
   escs,
-  isReading,
-  isWriting,
   settings,
   progress,
   onIndividualSettingsUpdate,
@@ -27,16 +25,23 @@ function MainContent({
   onFlashUrl,
   onSaveLog,
   configs,
-  isSelecting,
-  isFlashing,
   flashTargets,
   onLocalSubmit,
   changelogEntries,
+  actions,
 }) {
-  const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading;
+  const {
+    isSelecting,
+    isFlashing,
+    isReading,
+    isWriting,
+  } = actions;
+  const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const canResetDefaults = false;
+
+  console.log('can read', canRead, actions);
 
   if (!open) {
     return (
@@ -106,6 +111,12 @@ function MainContent({
 }
 
 MainContent.propTypes = {
+  actions: PropTypes.shape({
+    isFlashing: PropTypes.bool.isRequired,
+    isReading: PropTypes.bool.isRequired,
+    isSelecting: PropTypes.bool.isRequired,
+    isWriting: PropTypes.bool.isRequired,
+  }).isRequired,
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
@@ -114,10 +125,6 @@ MainContent.propTypes = {
   }).isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
-  isFlashing: PropTypes.bool.isRequired,
-  isReading: PropTypes.bool.isRequired,
-  isSelecting: PropTypes.bool.isRequired,
-  isWriting: PropTypes.bool.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,

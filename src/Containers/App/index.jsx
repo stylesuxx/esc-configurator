@@ -61,17 +61,12 @@ class App extends Component {
 
     this.state = {
       lastConnected: 0,
-      isReading: false,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
       checked: false,
       hasSerial: false,
       connected: false,
       open: false,
       baudRate: 115200,
       serialLog: [],
-      serial: null,
       settings: {},
       escs: [],
       flashTargets: [],
@@ -81,6 +76,12 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
+      },
+      actions: {
+        isReading: false,
+        isWriting: false,
+        isSelecting: false,
+        isFlashing: false,
       },
       language: 'en',
     };
@@ -130,6 +131,7 @@ class App extends Component {
    */
   log = [];
   gtmActive = false;
+  serial = null;
 
   languages = [
     {
@@ -230,27 +232,29 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      serial, serialLog, lastConnected, progress,
+      serialLog, lastConnected, progress, actions
     } = this.state;
 
     serialLog.push(this.formatLogMessage('Reading ESC\'s'));
-    this.setState({
+
+    actions.isReading = true;
+    await this.setState({
       serialLog,
-      isReading: true,
+      actions,
     });
 
     // Enable 4way if
     let connected = 0;
     try {
       if(lastConnected === 0) {
-        const escs = await serial.enable4WayInterface();
+        const escs = await this.serial.enable4WayInterface();
 
         connected = 0;
         if(escs) {
           connected = escs.connectedESCs;
         }
 
-        serial.fourWayStart();
+        this.serial.fourWayStart();
       } else {
         connected = lastConnected;
       }
@@ -266,7 +270,7 @@ class App extends Component {
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
-        const settings = await serial.fourWayGetInfo(i);
+        const settings = await this.serial.fourWayGetInfo(i);
         if(settings) {
           escFlash.push(settings);
         }
@@ -281,14 +285,15 @@ class App extends Component {
 
     const masterSettings = getMasterSettings(escFlash);
 
+    actions.isReading = false;
     this.setState({
       open,
       serialLog,
       escs: escFlash,
       settings: masterSettings,
-      isReading: false,
       lastConnected: connected,
       progress,
+      actions,
     });
   }
 
@@ -296,56 +301,65 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     const {
-      serial,
       escs,
       settings,
+      actions,
     } = this.state;
 
-    await this.setState({ isWriting: true });
+    actions.isWriting = true;
+    this.setState({ actions });
     for(let i = 0; i < escs.length; i += 1) {
       console.debug(`Writing settings to ESC ${i} `);
 
       const esc = escs[i];
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
-      console.log(currentEscSettings, settings, individualEscSettings);
       const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
-      const newSettingsArray = await serial.fourWayWriteSettings(i, esc, mergedSettings);
+      const newSettingsArray = await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
 
       escs[i].settingsArray = newSettingsArray;
     }
 
+    actions.isWriting = false;
     this.setState({
-      isWriting: false,
+      actions,
       escs,
     });
   }
 
   handleSingleFlash(index) {
+    const { actions } = this.state;
+    actions.isSelecting = true;
     this.setState({
+      actions,
       flashTargets: [index],
-      isSelecting: true,
     });
   }
 
   handleSelectFirmwareForAll() {
-    const { escs } = this.state;
+    const {
+      escs,
+      actions,
+    } = this.state;
 
     const flashTargets = [];
     for (let i = 0; i < escs.length; i += 1) {
       flashTargets.push(i);
     }
 
+    actions.isSelecting = true;
     this.setState({
-      isSelecting: true,
       flashTargets,
+      actions,
     });
   }
 
   handleCancelFirmwareSelection() {
+    const { actions } = this.state;
+    actions.isSelecting = false,
     this.setState({
       flashTargets: [],
-      isSelecting: false,
+      actions,
     });
   }
 
@@ -403,13 +417,12 @@ class App extends Component {
 
   async flash(text, force) {
     const {
-      flashTargets, serial, escs, progress,
+      flashTargets, escs, progress, actions
     } = this.state;
 
-    await this.setState({
-      isSelecting: false,
-      isFlashing: true,
-    });
+    actions.isSelecting = false;
+    actions.isFlashing = true;
+    this.setState({ actions });
 
     let newProgress = progress;
     for(let i = 0; i < flashTargets.length; i += 1) {
@@ -424,18 +437,19 @@ class App extends Component {
         await this.setState({ progress: newProgress });
       };
 
-      const result = await serial.fourWayWriteHex(target, esc, text, force, updateProgress);
+      const result = await this.serial.fourWayWriteHex(target, esc, text, force, updateProgress);
       escs[target] = result;
 
       newProgress[target] = 0;
       await this.setState({ escs });
     }
 
+    actions.isSelecting = false;
+    actions.isFlashing = false;
     await this.setState({
-      isSelecting: false,
-      isFlashing: false,
       settings: getMasterSettings(escs),
       progress: newProgress,
+      actions
     });
   }
 
@@ -452,20 +466,18 @@ class App extends Component {
       this.addLogMessage('Plugged in');
       connected = true;
 
-      serial = new Serial(ports[0]);
+      this.serial = new Serial(ports[0]);
     }
 
     this.setState({
       checked: true,
       hasSerial: true,
       connected,
-      serial,
       configs: await this.fetchConfigs(),
     });
   }
 
   serialDisconnectHandler() {
-    const { serial } = this.state;
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('Unplugged');
     this.setState({
@@ -475,21 +487,20 @@ class App extends Component {
       lastConnected: 0,
     });
 
-    serial.disconnect();
+    this.serial.disconnect();
   }
 
   async handleSetPort() {
     try {
       const { serialLog } = this.state;
       const port = await navigator.serial.requestPort();
-      const serial = new Serial(port);
+      this.serial = new Serial(port);
 
       serialLog.push(this.formatLogMessage('Port selected'));
 
       this.setState({
         serialLog,
         connected: true,
-        serial,
       });
     } catch (e) {
       // No port selected, do nothing
@@ -510,24 +521,21 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Connect" } });
 
     const {
-      serial,
       baudRate,
       serialLog,
     } = this.state;
 
     try {
-      await serial.open(baudRate);
-      serial.setLogCallback(this.addLogMessage);
-      serial.setPacketErrorsCallback(this.handlePacketErrors);
+      await this.serial.open(baudRate);
+      this.serial.setLogCallback(this.addLogMessage);
+      this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       serialLog.push(this.formatLogMessage('Opened serial port'));
     } catch (e) {
       console.debug(e);
 
-      const {
-        serialLog, serial,
-      } = this.state;
+      const { serialLog } = this.state;
       try {
-        serial.close();
+        this.serial.close();
       } catch(e) {
         console.debug(e);
       }
@@ -541,7 +549,7 @@ class App extends Component {
       return;
     }
 
-    const apiVersion = await serial.getApiVersion();
+    const apiVersion = await this.serial.getApiVersion();
     const apiVersionElement = (
       <>
         MultiWii API version
@@ -563,8 +571,8 @@ class App extends Component {
     );
     serialLog.push(this.formatLogMessage(apiVersionElement));
 
-    const fcVariant = await serial.getFcVariant();
-    const fcVersion = await serial.getFcVersion();
+    const fcVariant = await this.serial.getFcVariant();
+    const fcVersion = await this.serial.getFcVersion();
     const fcInfoElement = (
       <>
         Flight controller info, identifier:
@@ -584,7 +592,7 @@ class App extends Component {
     );
     serialLog.push(this.formatLogMessage(fcInfoElement));
 
-    const buildInfo = await serial.getBuildInfo();
+    const buildInfo = await this.serial.getBuildInfo();
     const buildInfoElement = (
       <>
         Running firmware released on:
@@ -598,7 +606,7 @@ class App extends Component {
     );
     serialLog.push(this.formatLogMessage(buildInfoElement));
 
-    const boardInfo = await serial.getBoardInfo();
+    const boardInfo = await this.serial.getBoardInfo();
     const boardInfoElement = (
       <>
         Board:
@@ -620,7 +628,7 @@ class App extends Component {
     );
     serialLog.push(this.formatLogMessage(boardInfoElement));
 
-    let uid = await serial.getUid();
+    let uid = await this.serial.getUid();
     uid = uid.uid;
     let uidHex = 0;
     for (let i = 0; i < uid.length; i += 1) {
@@ -659,16 +667,13 @@ class App extends Component {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
-    const {
-      serial,
-      escs
-    } = this.state;
-    if(serial) {
+    const { escs } = this.state;
+    if(this.serial) {
       for(let i = 0; i < escs.length; i += 1) {
-        await serial.fourWayReset(i);
+        await this.serial.fourWayReset(i);
       }
 
-      serial.close();
+      this.serial.close();
     }
 
     this.addLogMessage('Closed port');
@@ -703,14 +708,10 @@ class App extends Component {
       open,
       serialLog,
       packetErrors,
-      serial,
       escs,
       settings,
-      isReading,
-      isWriting,
+      actions,
       progress,
-      isSelecting,
-      isFlashing,
       configs,
       flashTargets,
       language,
@@ -775,9 +776,7 @@ class App extends Component {
         <div id="main-wrapper">
           <div className="header-wrapper">
             <div className="headerbar">
-              <div id="logo">
-                <div className="logo_text" />
-              </div>
+              <div id="logo" />
 
               <div className="language-select">
                 <Select
@@ -807,14 +806,11 @@ class App extends Component {
           </div>
 
           <MainContent
+            actions={actions}
             changelogEntries={changelogEntries}
             configs={configs}
             escs={escs}
             flashTargets={flashTargets}
-            isFlashing={isFlashing}
-            isReading={isReading}
-            isSelecting={isSelecting}
-            isWriting={isWriting}
             onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
             onFlashUrl={this.handleFlashUrl}
             onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
@@ -832,7 +828,7 @@ class App extends Component {
           />
 
           <Statusbar
-            getUtilization={serial ? serial.getUtilization : null}
+            getUtilization={this.serial ? this.serial.getUtilization : null}
             packetErrors={packetErrors}
             version={version}
           />
