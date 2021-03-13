@@ -232,16 +232,12 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      serialLog, progress, actions
+      progress, actions
     } = this.state;
 
-    serialLog.push(this.formatLogMessage('Reading ESC\'s'));
-
     actions.isReading = true;
-    await this.setState({
-      serialLog,
-      actions,
-    });
+    this.setState({ actions });
+    this.addLogMessage('Reading ESC\'s');
 
     // Enable 4way if
     let connected = 0;
@@ -260,8 +256,7 @@ class App extends Component {
       }
     } catch(e) {
       console.debug(e);
-      serialLog.push(this.formatLogMessage('Could not enable 4 way interface - reconnect flight controller'));
-      this.setState({ serialLog });
+      this.addLogMessage('Could not enable 4 way interface - reconnect flight controller');
     }
 
     const escFlash = [];
@@ -277,10 +272,10 @@ class App extends Component {
       }
       open = true;
 
-      serialLog.push(this.formatLogMessage('Done reading ESC\'s'));
+      this.addLogMessage('Done reading ESC\'s');
     } catch(e) {
       console.debug(e);
-      serialLog.push(this.formatLogMessage('Failed reading ESC\'s'));
+      this.addLogMessage('Failed reading ESC\'s');
     }
 
     const masterSettings = getMasterSettings(escFlash);
@@ -289,7 +284,6 @@ class App extends Component {
     actions.isReading = false;
     this.setState({
       open,
-      serialLog,
       escs: escFlash,
       settings: masterSettings,
       progress,
@@ -492,16 +486,12 @@ class App extends Component {
 
   async handleSetPort() {
     try {
-      const { serialLog } = this.state;
       const port = await navigator.serial.requestPort();
       this.serial = new Serial(port);
 
-      serialLog.push(this.formatLogMessage('Port selected'));
+      this.addLogMessage('Port selected');
 
-      this.setState({
-        serialLog,
-        connected: true,
-      });
+      this.setState({ connected: true });
     } catch (e) {
       // No port selected, do nothing
       console.debug(e);
@@ -520,31 +510,23 @@ class App extends Component {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Connect" } });
 
-    const {
-      baudRate,
-      serialLog,
-    } = this.state;
+    const { baudRate } = this.state;
 
     try {
       await this.serial.open(baudRate);
       this.serial.setLogCallback(this.addLogMessage);
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
-      serialLog.push(this.formatLogMessage('Opened serial port'));
+      this.addLogMessage('Opened serial port');
     } catch (e) {
       console.debug(e);
 
-      const { serialLog } = this.state;
       try {
         this.serial.close();
       } catch(e) {
         console.debug(e);
       }
 
-      serialLog.push(
-        this.formatLogMessage(
-          'Port already in use by another application - try re-connecting'));
-
-      this.setState({ serialLog });
+      this.addLogMessage('Port already in use by another application - try re-connecting');
 
       return;
     }
@@ -569,7 +551,7 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(apiVersionElement));
+    this.addLogMessage(apiVersionElement);
 
     const fcVariant = await this.serial.getFcVariant();
     const fcVersion = await this.serial.getFcVersion();
@@ -590,7 +572,7 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(fcInfoElement));
+    this.addLogMessage(fcInfoElement);
 
     const buildInfo = await this.serial.getBuildInfo();
     const buildInfoElement = (
@@ -604,7 +586,7 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(buildInfoElement));
+    this.addLogMessage(buildInfoElement);
 
     const boardInfo = await this.serial.getBoardInfo();
     const boardInfoElement = (
@@ -626,7 +608,7 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(boardInfoElement));
+    this.addLogMessage(boardInfoElement);
 
     let uid = await this.serial.getUid();
     uid = uid.uid;
@@ -655,12 +637,9 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(uidElement));
+    this.addLogMessage(uidElement);
 
-    await this.setState({
-      open: true,
-      serialLog,
-    });
+    await this.setState({ open: true });
   }
 
   async handleDisconnect(e) {
