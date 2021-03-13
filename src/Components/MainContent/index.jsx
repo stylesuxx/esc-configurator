@@ -41,8 +41,6 @@ function MainContent({
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const canResetDefaults = false;
 
-  console.log('can read', canRead, actions);
-
   if (!open) {
     return (
       <>
