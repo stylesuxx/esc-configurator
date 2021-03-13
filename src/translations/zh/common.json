@@ -48,5 +48,6 @@
   "homeWelcome": "Welcome to <strong>ESC - Configurator</strong>, a utility designed to simplify updating and configuring of your ESCs.",
   "betaWarning": "<strong>This tool is considered BETA.</strong><br />Things might not work as expected yet - if you find any bugs please <a href=\"https://github.com/stylesuxx/bluejay-configurator/issues/new\" title=\"https://github.com\" target=\"_blank\">report them</a>.",
   "escButtonSelectLocally": "Flash Local Firmware",
-  "cookieText": "This site or third-party tools used by this site make use of cookies necessary for the operation and useful for the purposes outlined in the cookie policy. By accepting, you consent to the use of cookies."
+  "cookieText": "This site or third-party tools used by this site make use of cookies necessary for the operation and useful for the purposes outlined in the cookie policy. By accepting, you consent to the use of cookies.",
+  "resetDefaults": "Restore Default Settings"
 }
