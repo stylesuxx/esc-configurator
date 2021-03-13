@@ -48,5 +48,6 @@
   "homeWelcome": "Willkommen im <strong>ESC - Konfigurator</strong>, eine Anwendung um Updates und Konfiguration deines ESC's zu erleichtern.",
   "betaWarning": "<strong>Dieses App gilt als BETA.</strong><br />Möglicherweise funktioniert noch nicht alles wie erwartet - falls du irgendwelche Fehler findest, <a href=\"https://github.com/stylesuxx/bluejay-configurator/issues/new\" title=\"https://github.com\" target=\"_blank\">melde sie</a> bitte.",
   "escButtonSelectLocally": "Lokale Datei flashen",
-  "cookieText": "Diese Website oder Tools von Drittanbietern, die von dieser Website verwendet werden, verwenden Cookies für den Betrieb. Durch deine Zustimmung erklärst du dich mit der Verwendung von Cookies einverstanden."
+  "cookieText": "Diese Website oder Tools von Drittanbietern, die von dieser Website verwendet werden, verwenden Cookies für den Betrieb. Durch deine Zustimmung erklärst du dich mit der Verwendung von Cookies einverstanden.",
+  "resetDefaults": "Restore Default Settings"
 }
