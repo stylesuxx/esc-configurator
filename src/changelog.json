@@ -6,7 +6,11 @@
       "Better logging",
       "Improved offline handling",
       "Language switcher",
-      "Expanded Readme"
+      "Expanded Readme",
+      "Added tool-tops to settings",
+      "Use SCSS instead of CSS",
+      "Removed dead CSS",
+      "List all paired serial devices"
     ]
   },
   {

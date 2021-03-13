@@ -58,6 +58,7 @@ class App extends Component {
     this.handleSaveLog = this.handleSaveLog.bind(this);
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
     this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
+    this.handleChangePort = this.handleChangePort.bind(this);
 
     this.state = {
       checked: false,
@@ -71,6 +72,10 @@ class App extends Component {
       flashTargets: [],
       progress: [],
       packetErrors: 0,
+      serial: {
+        availablePorts: [],
+        chosenPort: null,
+      },
       configs: {
         versions: {},
         escs: {},
@@ -460,6 +465,7 @@ class App extends Component {
       this.addLogMessage('Plugged in');
       connected = true;
 
+      // Set the first  serial port as the active one
       this.serial = new Serial(ports[0]);
     }
 
@@ -468,17 +474,24 @@ class App extends Component {
       hasSerial: true,
       connected,
       configs: await this.fetchConfigs(),
+      serial: { availablePorts: ports },
     });
   }
 
-  serialDisconnectHandler() {
+  async serialDisconnectHandler() {
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('Unplugged');
     this.lastConnected = 0;
+
+    const ports = await navigator.serial.getPorts();
     this.setState({
-      connected: false,
+      connected: ports.length > 0 ? true : false,
       open: false,
       escs: [],
+      serial: {
+        availablePorts: ports,
+        chosenPort: null,
+      }
     });
 
     this.serial.disconnect();
@@ -496,6 +509,16 @@ class App extends Component {
       // No port selected, do nothing
       console.debug(e);
     }
+  }
+
+  handleChangePort(index) {
+    const { serial } = this.state;
+    serial.chosenPort = serial.availablePorts[index];
+    this.serial = new Serial(serial.chosenPort);
+
+    this.addLogMessage('Port changed');
+
+    this.setState({ serial });
   }
 
   delay(ms) {
@@ -694,6 +717,7 @@ class App extends Component {
       configs,
       flashTargets,
       language,
+      serial,
     } = this.state;
 
     if (!checked) {
@@ -769,11 +793,13 @@ class App extends Component {
 
               <PortPicker
                 hasPort={connected}
+                onChangePort={this.handleChangePort}
                 onConnect={this.handleConnect}
                 onDisconnect={this.handleDisconnect}
                 onSetBaudRate={this.handleSetBaudRate}
                 onSetPort={this.handleSetPort}
                 open={open}
+                ports={serial.availablePorts}
               />
             </div>
 
