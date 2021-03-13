@@ -55,6 +55,7 @@ function FirmwareSelector({
   const [type, setType] = useState(null);
   const [mode, setMode] = useState(selectedMode);
   const [force, setForce] = useState(false);
+  const [migrate, setMigrate] = useState(true);
 
   const [selection, setSelection] = useState({
     firmware: availableFirmware[0],
@@ -111,7 +112,7 @@ function FirmwareSelector({
 
   function submitLocalFile(e) {
     e.preventDefault();
-    onLocalSubmit(e, force);
+    onLocalSubmit(e, force, migrate);
   }
 
   function updateMode(e) {
@@ -125,6 +126,10 @@ function FirmwareSelector({
 
   function updateForce(e) {
     setForce(e.target.checked);
+  }
+
+  function updateMigrate(e) {
+    setMigrate(e.target.checked);
   }
 
   function updatePwm(e) {
@@ -144,7 +149,7 @@ function FirmwareSelector({
       mode,
     );
 
-    onSubmit(formattedUrl, force);
+    onSubmit(formattedUrl, force, migrate);
   }
 
   if(!type) {
@@ -202,7 +207,7 @@ function FirmwareSelector({
         <div className="checkbox force">
           <label>
             <input
-              defaultValue={force}
+              defaultChecked={force}
               onChange={updateForce}
               type="checkbox"
             />
@@ -214,6 +219,26 @@ function FirmwareSelector({
 
               <span className={force ? "red" : "hidden"}>
                 (Flashing inappropriate firmware may damage your ESC, do so at your own risk)
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <div className="checkbox migrate">
+          <label>
+            <input
+              defaultChecked={migrate}
+              onChange={updateMigrate}
+              type="checkbox"
+            />
+
+            <span>
+              <span>
+                Migrate settings if possible?
+              </span>
+
+              <span className={!migrate ? "red" : "hidden"}>
+                (This will set the default settings from firmware)
               </span>
             </span>
           </label>

@@ -190,9 +190,30 @@ class App extends Component {
     this.setState({ escs });
   }
 
-  handleResetDefaultls() {
-    // TODO: Allow resetting the settings to defaults
-    console.log('Reset default handler not implemented');
+  async handleResetDefaultls() {
+    TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
+
+    const {
+      escs,
+      actions,
+    } = this.state;
+
+    actions.isWriting = true;
+    this.setState({ actions });
+    for(let i = 0; i < escs.length; i += 1) {
+      console.debug(`Restoring default settings on ESC ${i} `);
+
+      const esc = escs[i];
+      const currentEscSettings = esc.settings;
+      const defaultSettings = esc.defaultSettings;
+      const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
+      await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
+    }
+
+    actions.isWriting = false;
+    this.setState({ actions });
+
+    this.handleReadEscs();
   }
 
   handleSaveLog() {
@@ -219,7 +240,7 @@ class App extends Component {
     );
   }
 
-  handleLocalSubmit(e, force) {
+  handleLocalSubmit(e, force, migrate) {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Flashing local file" } });
 
@@ -228,7 +249,7 @@ class App extends Component {
       console.debug(`Flashing local file`);
 
       const text = (e.target.result);
-      this.flash(text, force);
+      this.flash(text, force, migrate);
     };
     reader.readAsText(e.target.files[0]);
   }
@@ -367,7 +388,7 @@ class App extends Component {
    * checked if the file already exists there, it is used, otherwise it is
    * downloaded and put into local storage for later use.
    */
-  async handleFlashUrl(url, force) {
+  async handleFlashUrl(url, force, migrate) {
     TagManager.dataLayer({
       dataLayer: {
         event: "Flashing ESC's",
@@ -408,13 +429,13 @@ class App extends Component {
     }
 
     if(text) {
-      await this.flash(text, force);
+      await this.flash(text, force, migrate);
     } else {
       this.addLogMessage('Could not get file for flashing');
     }
   }
 
-  async flash(text, force) {
+  async flash(text, force, migrate) {
     const {
       flashTargets, escs, progress, actions
     } = this.state;
@@ -436,7 +457,7 @@ class App extends Component {
         await this.setState({ progress: newProgress });
       };
 
-      const result = await this.serial.fourWayWriteHex(target, esc, text, force, updateProgress);
+      const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
       escs[target] = result;
 
       newProgress[target] = 0;

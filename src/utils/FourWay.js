@@ -1,13 +1,14 @@
 import {
-  BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-  BLHELI_SETTINGS_DESCRIPTIONS,
-  BLHELI_SILABS_EEPROM_OFFSET,
-  BLHELI_SILABS_PAGE_SIZE,
-  BLHELI_LAYOUT_SIZE,
+  Blheli,
+  BLHELI_TYPES,
   BLHELI_LAYOUT,
   BLHELI_SILABS,
-  BLHELI_TYPES,
-  Blheli,
+  BLHELI_S_DEFAULTS,
+  BLHELI_LAYOUT_SIZE,
+  BLHELI_SILABS_PAGE_SIZE,
+  BLHELI_SILABS_EEPROM_OFFSET,
+  BLHELI_SETTINGS_DESCRIPTIONS,
+  BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
 } from './Blheli';
 
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
@@ -33,9 +34,10 @@ import {
 } from './helpers/General';
 
 import {
-  OPEN_ESC_EEPROM_OFFSET,
   OPEN_ESC_LAYOUT,
+  OPEN_ESC_DEFAULTS,
   OPEN_ESC_LAYOUT_SIZE,
+  OPEN_ESC_EEPROM_OFFSET,
   OPEN_ESC_SETTINGS_DESCRIPTIONS,
   OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
 } from './OpenEsc';
@@ -43,6 +45,7 @@ import {
 import {
   BLUEJAY_TYPES,
   BLUEJAY_LAYOUT,
+  BLUEJAY_DEFAULTS,
   BLUEJAY_LAYOUT_SIZE,
   BLUEJAY_SETTINGS_DESCRIPTIONS,
   BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
@@ -320,6 +323,7 @@ class FourWay {
           let settingsArray = null;
           let layout = BLHELI_LAYOUT;
           let layoutSize = BLHELI_LAYOUT_SIZE;
+          let defaultSettings = BLHELI_S_DEFAULTS;
 
           if (isSiLabs) {
             layoutSize = BLHELI_LAYOUT_SIZE;
@@ -327,6 +331,7 @@ class FourWay {
           } else if (isArm) {
             layoutSize = OPEN_ESC_LAYOUT_SIZE;
             layout = OPEN_ESC_LAYOUT;
+            defaultSettings = OPEN_ESC_DEFAULTS;
             settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
           } else {
             throw new Error('Neither Silabs nor Arm');
@@ -353,6 +358,7 @@ class FourWay {
             case 'Bluejay (BETA)': {
               newLayout = BLUEJAY_LAYOUT;
               layoutSize = BLUEJAY_LAYOUT_SIZE;
+              defaultSettings = BLUEJAY_DEFAULTS;
             } break;
           }
 
@@ -419,6 +425,7 @@ class FourWay {
             }
           }
 
+          flash.defaultSettings = defaultSettings[layoutRevision];
           flash.bootloaderRevision = bootloaderRevision;
           flash.layoutSize = layoutSize;
           flash.layout = layout;
@@ -508,7 +515,7 @@ class FourWay {
     this.addLogMessage(`Updating ESC ${target + 1} - failed`);
   }
 
-  async writeHex(target, esc, hex, force, cbProgress) {
+  async writeHex(target, esc, hex, force, migrate, cbProgress) {
     const {
       interfaceMode, signature,
     } = esc.meta;
@@ -683,74 +690,77 @@ class FourWay {
         const rounded = Math.round(elapsedSec * 10) / 10;
         this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
 
-        /**
-         * Migrate settings from the previous firmware if possible.
-         */
         const newEsc = await this.getInfo(target);
-        const newSettings = Object.assign({}, newEsc.settings);
-        const oldSettings = esc.settings;
 
-        let settingsDescriptions = null;
-        let individualSettingsDescriptions = null;
-        switch(newEsc.layout) {
-          case BLHELI_LAYOUT: {
-            console.debug('BLHELI layout found');
-            settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-          } break;
+        if(migrate) {
+          /**
+           * Migrate settings from the previous firmware if possible.
+           */
+          const newSettings = Object.assign({}, newEsc.settings);
+          const oldSettings = esc.settings;
 
-          case BLUEJAY_LAYOUT: {
-            console.debug('Bluejay layout found');
-            settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-          } break;
+          let settingsDescriptions = null;
+          let individualSettingsDescriptions = null;
+          switch(newEsc.layout) {
+            case BLHELI_LAYOUT: {
+              console.debug('BLHELI layout found');
+              settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
 
-          case OPEN_ESC_LAYOUT: {
-            console.debug('OpenEsc layout found');
-            settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-          } break;
-        }
+            case BLUEJAY_LAYOUT: {
+              console.debug('Bluejay layout found');
+              settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
 
-        /**
-         * Try migrating settings if possible - this ensures that the motor
-         * direction is saved between flashes.
-         */
-        const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
-        if(settingsDescriptions && individualSettingsDescriptions) {
-          if(newSettings.MODE === oldSettings.MODE) {
-            for (var prop in newSettings) {
-              if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
-                  Object.prototype.hasOwnProperty.call(oldSettings, prop)
-              ) {
-                if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
-                  // With a proper migration path
-                  newSettings[prop] = oldSettings[prop];
+            case OPEN_ESC_LAYOUT: {
+              console.debug('OpenEsc layout found');
+              settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            } break;
+          }
 
-                  console.debug(`Migrated setting ${prop}`);
-                } else {
-                  if (saveMigratins.includes(prop)) {
-                    // Settings that are save to migrate because they are the
-                    // same on all firmwares.
+          /**
+           * Try migrating settings if possible - this ensures that the motor
+           * direction is saved between flashes.
+           */
+          const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
+          if(settingsDescriptions && individualSettingsDescriptions) {
+            if(newSettings.MODE === oldSettings.MODE) {
+              for (var prop in newSettings) {
+                if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
+                    Object.prototype.hasOwnProperty.call(oldSettings, prop)
+                ) {
+                  if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
+                    // With a proper migration path
                     newSettings[prop] = oldSettings[prop];
 
                     console.debug(`Migrated setting ${prop}`);
+                  } else {
+                    if (saveMigratins.includes(prop)) {
+                      // Settings that are save to migrate because they are the
+                      // same on all firmwares.
+                      newSettings[prop] = oldSettings[prop];
+
+                      console.debug(`Migrated setting ${prop}`);
+                    }
                   }
                 }
               }
             }
+          } else {
+            console.debug('Can not migrate settings');
           }
-        } else {
-          console.debug('Can not migrate settings');
-        }
 
-        await this.writeSettings(target, newEsc, newSettings);
-        newEsc.settings = newSettings;
-        newEsc.individualSettings = getIndividualSettings(newEsc);
+          await this.writeSettings(target, newEsc, newSettings);
+          newEsc.settings = newSettings;
+          newEsc.individualSettings = getIndividualSettings(newEsc);
+        }
 
         return newEsc;
       } catch(e) {
-        console.log(e);
+        console.debug(e);
       }
 
     } else {

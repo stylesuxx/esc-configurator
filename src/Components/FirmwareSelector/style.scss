@@ -1,5 +1,5 @@
 #firmware-selector {
-  .checkbox.force {
+  .checkbox {
     float: none;
     width: auto;
     margin-left: 0px;
@@ -15,5 +15,9 @@
   .center-wrapper {
     width: 50%;
     margin: auto;
+  }
+
+  .red {
+    color: red;
   }
 }

@@ -39,7 +39,6 @@ function MainContent({
   const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
-  const canResetDefaults = false;
 
   if (!open) {
     return (
@@ -96,7 +95,7 @@ function MainContent({
       <Buttonbar
         canFlash={canFlash}
         canRead={canRead}
-        canResetDefaults={canResetDefaults}
+        canResetDefaults={canWrite}
         canWrite={canWrite}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
