@@ -1,0 +1,44 @@
+#content .tab .info-wrapper {
+  position: relative;
+  margin: 0px;
+  margin-left: 5px;
+  display: inline-block;
+
+  span {
+    margin: 0px;
+  }
+
+  span.info-icon {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: lightgray;
+    display: inline-block;
+    color: black;
+    text-align: center;
+    line-height: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 5px;
+    cursor: pointer;
+    z-index: -1;
+  }
+
+  .info-text {
+    display: none;
+    position: absolute;
+    border: 1px solid darkgray;
+    padding: 5px;
+    background: lightgray;
+    max-width: 200px;
+    width: max-content;
+    margin-top: -5px;
+    z-index: 1;
+  }
+
+  &:hover {
+    .info-text {
+      display: inline-block;
+    }
+  }
+}

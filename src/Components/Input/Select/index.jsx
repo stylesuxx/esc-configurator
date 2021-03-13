@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Info from '../Info';
+
 import './style.scss';
 
 function Select({
@@ -10,6 +12,7 @@ function Select({
   options,
   onChange,
   inSync,
+  hint,
 }) {
   const optionElements = options.map((option) => (
     <option
@@ -39,6 +42,8 @@ function Select({
 
         <span className={!inSync ? 'not-in-sync' : ''}>
           {label}
+
+          {hint && <Info hint={hint} /> }
         </span>
       </label>
     </div>
@@ -46,11 +51,13 @@ function Select({
 }
 
 Select.defaultProps = {
+  hint: null,
   inSync: true,
   value: -1,
 };
 
 Select.propTypes = {
+  hint: PropTypes.string,
   inSync: PropTypes.bool,
   label: PropTypes.oneOfType([
     PropTypes.string,

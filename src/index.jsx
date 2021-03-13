@@ -12,13 +12,17 @@ import {
 import i18next from 'i18next';
 
 import CommonEn from './translations/en/common.json';
+import HintsEn from './translations/en/hints.json';
 import CommonDe from './translations/de/common.json';
 
 i18next.init({
   interpolation: { excapeValue: false },
   lng: 'en',
   resources: {
-    en: { common: CommonEn },
+    en: {
+      common: CommonEn,
+      hints: HintsEn,
+    },
     de: { common: CommonDe },
   },
 });

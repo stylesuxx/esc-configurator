@@ -5,6 +5,8 @@ import React, {
 } from 'react';
 import InputRange from 'react-input-range';
 
+import Info from '../Info';
+
 import 'react-input-range/lib/css/index.css';
 import './style.scss';
 
@@ -21,6 +23,7 @@ function Slider({
   offset,
   factor,
   round,
+  hint,
 }) {
   const [currentValue, setCurrentValue] = useState(value);
   useEffect(() => {
@@ -77,6 +80,8 @@ function Slider({
 
         <span className={!inSync ? 'not-in-sync' : ''}>
           {label}
+
+          {hint && <Info hint={hint} /> }
         </span>
       </label>
     </div>
@@ -85,6 +90,7 @@ function Slider({
 
 Slider.defaultProps = {
   factor: 1,
+  hint: null,
   inSync: true,
   max: 100,
   min: 0,
@@ -95,6 +101,7 @@ Slider.defaultProps = {
 
 Slider.propTypes = {
   factor: PropTypes.number,
+  hint: PropTypes.string,
   inSync: PropTypes.bool,
   label: PropTypes.string.isRequired,
   max: PropTypes.number,
