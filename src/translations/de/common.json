@@ -51,7 +51,7 @@
   "cookieText": "Diese Website oder Tools von Drittanbietern, die von dieser Website verwendet werden, verwenden Cookies für den Betrieb. Durch deine Zustimmung erklärst du dich mit der Verwendung von Cookies einverstanden.",
   "resetDefaults": "Standardeinstellungen wiederherstellen",
   "forceFlashText": "Unpassendes MCU Layout ignorieren.",
-  "forceFlashHint": "(Flashing inappropriate firmware may damage your ESC, do so at your own risk)",
-  "migrateFlashText": "Migrate settings if possible?",
-  "migrateFlashHint": "(This will set the default settings from firmware)"
+  "forceFlashHint": "(Ungeeignete Firmware könnte deinen ESC beschädigen. Auf eigene Verantwortung fortfahren.)",
+  "migrateFlashText": "Einstellungen wenn möglich übernehmen.",
+  "migrateFlashHint": "(Dies wird die Standardeinstellungen der Firmware wiederherstellen)"
 }
