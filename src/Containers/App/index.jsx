@@ -96,6 +96,12 @@ class App extends Component {
     this.onMount(async() => {
       const hasSerial = 'serial' in navigator;
 
+      const language = localStorage.getItem('language');
+      if(language) {
+        i18next.changeLanguage(language);
+        this.setState({ language });
+      }
+
       // Redefine the console and tee logs
       var console = (function(old) {
         return Object.assign({}, old, {
@@ -721,6 +727,7 @@ class App extends Component {
 
   handleLanguageSelection(e) {
     const language = e.target.value;
+    localStorage.setItem('language', language);
     i18next.changeLanguage(language);
     this.setState({ language });
   }
