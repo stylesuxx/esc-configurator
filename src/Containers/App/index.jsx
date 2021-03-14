@@ -431,7 +431,9 @@ class App extends Component {
     if(text) {
       await this.flash(text, force, migrate);
     } else {
-      this.addLogMessage('Could not get file for flashing');
+      const error = 'Could not get file for flashing.';
+      console.debug(error);
+      this.addLogMessage(error);
     }
   }
 
