@@ -6,7 +6,7 @@
   "serialPermission": "Seriellen Port wählen",
   "showLog": "Log zeigen",
   "hideLog": "Log ausblenden",
-  "notePropsOff": "<strong>Achtung:</strong> Stelle sicher, dass die Propeller <strong>entfernt</strong> sind, bevor du den Konfigurator verwendest.",
+  "notePropsOff": "<strong>Achtung:</strong> Stelle sicher, dass die Propeller <strong>entfernt</strong> wurden, bevor du den Konfigurator verwendest.",
   "noteConnectPower": "<strong>Achtung:</strong> Stelle sicher, dass eine Batterie angesteckt ist.",
   "commonParameters": "Allgemeine Parameter",
   "escProgrammingByTX": "Programmierung durch den Sender",
