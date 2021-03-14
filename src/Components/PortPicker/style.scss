@@ -10,9 +10,9 @@
     margin-top: 0px;
     margin-bottom: 0px;
     margin-right: 20px;
-    background-color: #125684;
+    background-color: var(--color-primary);
     border-radius: 3px;
-    border: 1px solid #125684;
+    border: 1px solid var(--color-primary);
     color: #fff;
     float: right;
     font-family: 'open_sansbold', Arial;
@@ -93,8 +93,8 @@
     }
 
     a.connect {
-      background-color: #2a84c4;
-      border: 1px solid #125684;
+      background-color: var(--color-secondary);
+      border: 1px solid var(--color-primary);
       background-image: url(images/icons/cf_icon_usb2_white.svg);
       background-repeat: no-repeat;
       background-size: 44px;
@@ -103,7 +103,7 @@
     }
 
     a.connect:hover {
-      background-color: #125684;
+      background-color: var(--color-primary);
     }
 
     a.connect.active {

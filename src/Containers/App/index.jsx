@@ -725,6 +725,8 @@ class App extends Component {
     this.setState({ language });
   }
 
+
+
   render() {
     const {
       checked,
@@ -797,22 +799,21 @@ class App extends Component {
       );
     }
 
+    const languageElements = this.languages.map((item) => (
+      <option
+        key={item.value}
+        value={item.value}
+      >
+        {item.label}
+      </option>
+    ));
+
     return (
       <div className="App">
         <div id="main-wrapper">
           <div className="header-wrapper">
             <div className="headerbar">
               <div id="logo" />
-
-              <div className="language-select">
-                <Select
-                  label=""
-                  name="language"
-                  onChange={this.handleLanguageSelection}
-                  options={this.languages}
-                  value={language}
-                />
-              </div>
 
               <PortPicker
                 hasPort={connected}
@@ -824,6 +825,18 @@ class App extends Component {
                 open={open}
                 ports={serial.availablePorts}
               />
+
+              <div className="language-select ">
+                <div className="dropdown dropdown-dark">
+                  <select
+                    className="dropdown-select"
+                    defaultValue={language}
+                    onChange={this.handleLanguageSelection}
+                  >
+                    {languageElements}
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div className="clear-both" />

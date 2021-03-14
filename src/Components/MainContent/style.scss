@@ -37,7 +37,7 @@
       font-weight: bold;
       font-family: 'open_sanssemibold', Arial;
       background-color: #FFFFFF;
-      border: 1px solid #252177;
+      border: 1px solid var(--color-tertiary);
       border-radius: 4px;
       width: calc(100% - 2px);
 
@@ -47,7 +47,7 @@
 
       .gui-box-titlebar {
         margin-bottom: 0px;
-        background-color: #252177;
+        background-color: var(--color-tertiary);
         border-radius: 3px 3px 0px 0px;
         font-size: 13px;
         width: 100%;
