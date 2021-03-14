@@ -214,11 +214,11 @@ function FirmwareSelector({
 
             <span>
               <span>
-                Ignore inappropriate MCU and Layout?
+                {t('forceFlashText')}
               </span>
 
               <span className={force ? "red" : "hidden"}>
-                (Flashing inappropriate firmware may damage your ESC, do so at your own risk)
+                {t('forceFlashHint')}
               </span>
             </span>
           </label>
@@ -234,11 +234,11 @@ function FirmwareSelector({
 
             <span>
               <span>
-                Migrate settings if possible?
+                {t('migrateFlashText')}
               </span>
 
               <span className={!migrate ? "red" : "hidden"}>
-                (This will set the default settings from firmware)
+                {t('migrateFlashHint')}
               </span>
             </span>
           </label>
