@@ -93,8 +93,8 @@ class Serial {
     return this.fourWay.writeSettings(index, esc, settings);
   }
 
-  async fourWayWriteHex(index, esc, hex, force, cbProgress) {
-    return this.fourWay.writeHex(index, esc, hex, force, cbProgress);
+  async fourWayWriteHex(index, esc, hex, force, migrate, cbProgress) {
+    return this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
   }
 
   async fourWayStart() {

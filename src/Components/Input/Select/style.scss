@@ -1,0 +1,12 @@
+.select {
+   margin-bottom: 5px;
+   clear: left;
+   width: 100%;
+   float: left;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+}

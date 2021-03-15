@@ -1,0 +1,24 @@
+#status-bar {
+  position: fixed;
+  bottom: 0px;
+  width: calc(100% - 20px);
+  height: 20px;
+  line-height: 20px;
+  padding: 0 10px 0 10px;
+  border-top: 1px solid #7d7d79;
+  background-color: #bfbeb5;
+
+  div {
+    float: left;
+    padding-right: 10px;
+    margin-right: 10px;
+    border-right: 1px solid #7d7d79;
+  }
+
+  .version {
+    float: right;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+}

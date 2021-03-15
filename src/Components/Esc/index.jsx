@@ -4,11 +4,11 @@ import {
   useTranslation,
 } from 'react-i18next';
 
-import Checkbox from '../Checkbox';
-import Select from '../Select';
-import Slider from '../Slider';
+import Checkbox from '../Input/Checkbox';
+import Select from '../Input/Select';
+import Slider from '../Input/Slider';
 
-import './style.css';
+import './style.scss';
 
 function Esc({
   index,
@@ -23,7 +23,6 @@ function Esc({
   const settings = esc.individualSettings;
   const currentSettings = settings;
   const settingsDescriptions = esc.individualSettingsDescriptions;
-  let name = (settings.NAME).trim();
   const revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
 
   let make = '';
@@ -31,6 +30,7 @@ function Esc({
     make = `${esc.make}, `;
   }
 
+  let name = (settings.NAME).trim();
   if (name.length > 0) {
     name = `, ${name}`;
   }
@@ -39,6 +39,8 @@ function Esc({
   if (esc.bootloaderRevision !== null) {
     bootloader = ` (bootloader verseion ${esc.bootloaderRevision})`;
   }
+
+  const title = `ESC ${(index + 1)}: ${make} ${revision}${name}${bootloader}`;
 
   function flashFirmware() {
     onFlash(index);
@@ -72,7 +74,7 @@ function Esc({
     updateSettings();
   }
 
-  const rows = settingsDescriptions.base.map((setting) => {
+  const settingElements = settingsDescriptions.base.map((setting) => {
     if (setting.visibleIf && !setting.visibleIf(settings)) {
       return null;
     }
@@ -129,12 +131,10 @@ function Esc({
     }
   });
 
-  const title = `ESC ${(index + 1)}: ${make} ${revision}${name}${bootloader}`;
-
   function FlashBox() {
     return(
-      <div className="half">
-        <div className="default_btn half flash_btn">
+      <div className="half flash-box">
+        <div className="default-btn flash-btn">
           <progress
             className={progress > 0 ? 'progress' : 'hidden'}
             max="100"
@@ -142,28 +142,29 @@ function Esc({
             value={progress}
           />
 
-          <a
+          <button
             className={canFlash ? '' : 'disabled'}
             href="#"
             onClick={flashFirmware}
+            type="button"
           >
             {t('escButtonFlash')}
-          </a>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="gui_box grey">
-      <div className="gui_box_titlebar">
-        <div className="spacer_box_title">
+    <div className="gui-box grey">
+      <div className="gui-box-titlebar">
+        <div className="spacer-box-title">
           {title}
         </div>
       </div>
 
-      <div className="spacer_box">
-        {rows}
+      <div className="spacer-box">
+        {settingElements}
 
         <FlashBox />
       </div>

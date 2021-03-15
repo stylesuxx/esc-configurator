@@ -3,6 +3,9 @@ import React, {
 } from 'react';
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
+import i18next from 'i18next';
+
+import changelogEntries from '../../changelog.json';
 
 import PortPicker from '../../Components/PortPicker';
 import Log from '../../Components/Log';
@@ -10,15 +13,17 @@ import Statusbar from '../../Components/Statusbar';
 import CookieConsent from '../../Components/CookieConsent';
 import MainContent from '../../Components/MainContent';
 
+import Select from '../../Components/Input/Select';
+
 import Serial from '../../utils/Serial';
 
 import sources from '../../sources';
 
 import {
   getMasterSettings,
-} from '../../utils/Settings';
+} from '../../utils/helpers/Settings';
 
-import './style.css';
+import './style.scss';
 
 import settings from '../../settings.json';
 const {
@@ -52,30 +57,37 @@ class App extends Component {
     this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
     this.handleSaveLog = this.handleSaveLog.bind(this);
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
+    this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
+    this.handleChangePort = this.handleChangePort.bind(this);
 
     this.state = {
-      lastConnected: 0,
-      isReading: false,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
       checked: false,
       hasSerial: false,
       connected: false,
       open: false,
       baudRate: 115200,
       serialLog: [],
-      serial: null,
       settings: {},
       escs: [],
       flashTargets: [],
       progress: [],
       packetErrors: 0,
+      serial: {
+        availablePorts: [],
+        chosenPort: null,
+      },
       configs: {
         versions: {},
         escs: {},
         pwm: {},
       },
+      actions: {
+        isReading: false,
+        isWriting: false,
+        isSelecting: false,
+        isFlashing: false,
+      },
+      language: 'en',
     };
   }
 
@@ -84,36 +96,23 @@ class App extends Component {
     this.onMount(async() => {
       const hasSerial = 'serial' in navigator;
 
+      const language = localStorage.getItem('language');
+      if(language) {
+        i18next.changeLanguage(language);
+        this.setState({ language });
+      }
+
       // Redefine the console and tee logs
-      /*
       var console = (function(old) {
-        return {
-          log: (text, ...args) => {
-            const msg = [text, args.join(' ')].join(' ');
-            that.log.push(msg);
-            old.log(text, ...args);
-          },
+        return Object.assign({}, old, {
           debug: (text, ...args) => {
             const msg = [text, args.join(' ')].join(' ');
             that.log.push(msg);
             old.debug(text, ...args);
           },
-          info: (text) => {
-            that.log.push(text);
-            old.info(text);
-          },
-          warn: (text) => {
-            that.log.push(text);
-            old.warn(text);
-          },
-          error: (text) => {
-            that.log.push(text);
-            old.error(text);
-          }
-        };
+        });
       }(window.console));
       window.console = console;
-      */
 
       if (hasSerial) {
         navigator.serial.removeEventListener('connect', that.serialConnectHandler);
@@ -142,6 +141,19 @@ class App extends Component {
    */
   log = [];
   gtmActive = false;
+  serial = null;
+  lastConnected = 0;
+
+  languages = [
+    {
+      label: "English",
+      value: "en",
+    },
+    {
+      label: "German",
+      value: "de",
+    }
+  ];
 
   onMount(cb){
     cb();
@@ -184,9 +196,30 @@ class App extends Component {
     this.setState({ escs });
   }
 
-  handleResetDefaultls() {
-    // TODO: Allow resetting the settings to defaults
-    console.log('Reset default handler not implemented');
+  async handleResetDefaultls() {
+    TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
+
+    const {
+      escs,
+      actions,
+    } = this.state;
+
+    actions.isWriting = true;
+    this.setState({ actions });
+    for(let i = 0; i < escs.length; i += 1) {
+      console.debug(`Restoring default settings on ESC ${i} `);
+
+      const esc = escs[i];
+      const currentEscSettings = esc.settings;
+      const defaultSettings = esc.defaultSettings;
+      const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
+      await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
+    }
+
+    actions.isWriting = false;
+    this.setState({ actions });
+
+    this.handleReadEscs();
   }
 
   handleSaveLog() {
@@ -213,7 +246,7 @@ class App extends Component {
     );
   }
 
-  handleLocalSubmit(e, force) {
+  handleLocalSubmit(e, force, migrate) {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Flashing local file" } });
 
@@ -222,44 +255,40 @@ class App extends Component {
       console.debug(`Flashing local file`);
 
       const text = (e.target.result);
-      this.flash(text, force);
+      this.flash(text, force, migrate);
     };
     reader.readAsText(e.target.files[0]);
   }
 
-  async handleReadEscs(e) {
-    e.preventDefault();
+  async handleReadEscs() {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      serial, serialLog, lastConnected, progress,
+      progress, actions
     } = this.state;
 
-    serialLog.push(this.formatLogMessage('Reading ESC\'s'));
-    this.setState({
-      serialLog,
-      isReading: true,
-    });
+    actions.isReading = true;
+    this.setState({ actions });
+    this.addLogMessage('Reading ESC\'s');
 
     // Enable 4way if
     let connected = 0;
     try {
-      if(lastConnected === 0) {
-        const escs = await serial.enable4WayInterface();
+      if(this.lastConnected === 0) {
+        const escs = await this.serial.enable4WayInterface();
 
         connected = 0;
         if(escs) {
           connected = escs.connectedESCs;
         }
 
-        serial.fourWayStart();
+        this.serial.fourWayStart();
       } else {
-        connected = lastConnected;
+        connected = this.lastConnected;
       }
     } catch(e) {
       console.debug(e);
-      serialLog.push(this.formatLogMessage('Could not enable 4 way interface - reconnect flight controller'));
-      this.setState({ serialLog });
+      this.addLogMessage('Could not enable 4 way interface - reconnect flight controller');
     }
 
     const escFlash = [];
@@ -268,88 +297,95 @@ class App extends Component {
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
-        const settings = await serial.fourWayGetInfo(i);
+        const settings = await this.serial.fourWayGetInfo(i);
         if(settings) {
           escFlash.push(settings);
         }
       }
       open = true;
 
-      serialLog.push(this.formatLogMessage('Done reading ESC\'s'));
+      this.addLogMessage('Done reading ESC\'s');
     } catch(e) {
       console.debug(e);
-      serialLog.push(this.formatLogMessage('Failed reading ESC\'s'));
+      this.addLogMessage('Failed reading ESC\'s');
     }
 
     const masterSettings = getMasterSettings(escFlash);
 
+    this.lastConnected = connected;
+    actions.isReading = false;
     this.setState({
       open,
-      serialLog,
       escs: escFlash,
       settings: masterSettings,
-      isReading: false,
-      lastConnected: connected,
       progress,
+      actions,
     });
   }
 
-  async handleWriteSetup(e) {
-    e.preventDefault();
+  async handleWriteSetup() {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     const {
-      serial,
       escs,
       settings,
+      actions,
     } = this.state;
 
-    await this.setState({ isWriting: true });
+    actions.isWriting = true;
+    this.setState({ actions });
     for(let i = 0; i < escs.length; i += 1) {
       console.debug(`Writing settings to ESC ${i} `);
 
       const esc = escs[i];
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
-      console.log(currentEscSettings, settings, individualEscSettings);
       const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
-      const newSettingsArray = await serial.fourWayWriteSettings(i, esc, mergedSettings);
+      const newSettingsArray = await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
 
       escs[i].settingsArray = newSettingsArray;
     }
 
+    actions.isWriting = false;
     this.setState({
-      isWriting: false,
+      actions,
       escs,
     });
   }
 
   handleSingleFlash(index) {
+    const { actions } = this.state;
+    actions.isSelecting = true;
     this.setState({
+      actions,
       flashTargets: [index],
-      isSelecting: true,
     });
   }
 
-  handleSelectFirmwareForAll(e) {
-    e.preventDefault();
-    const { escs } = this.state;
+  handleSelectFirmwareForAll() {
+    const {
+      escs,
+      actions,
+    } = this.state;
 
     const flashTargets = [];
     for (let i = 0; i < escs.length; i += 1) {
       flashTargets.push(i);
     }
 
+    actions.isSelecting = true;
     this.setState({
-      isSelecting: true,
       flashTargets,
+      actions,
     });
   }
 
   handleCancelFirmwareSelection() {
+    const { actions } = this.state;
+    actions.isSelecting = false,
     this.setState({
       flashTargets: [],
-      isSelecting: false,
+      actions,
     });
   }
 
@@ -358,7 +394,7 @@ class App extends Component {
    * checked if the file already exists there, it is used, otherwise it is
    * downloaded and put into local storage for later use.
    */
-  async handleFlashUrl(url, force) {
+  async handleFlashUrl(url, force, migrate) {
     TagManager.dataLayer({
       dataLayer: {
         event: "Flashing ESC's",
@@ -399,21 +435,22 @@ class App extends Component {
     }
 
     if(text) {
-      await this.flash(text, force);
+      await this.flash(text, force, migrate);
     } else {
-      this.addLogMessage('Could not get file for flashing');
+      const error = 'Could not get file for flashing.';
+      console.debug(error);
+      this.addLogMessage(error);
     }
   }
 
-  async flash(text, force) {
+  async flash(text, force, migrate) {
     const {
-      flashTargets, serial, escs, progress,
+      flashTargets, escs, progress, actions
     } = this.state;
 
-    await this.setState({
-      isSelecting: false,
-      isFlashing: true,
-    });
+    actions.isSelecting = false;
+    actions.isFlashing = true;
+    this.setState({ actions });
 
     let newProgress = progress;
     for(let i = 0; i < flashTargets.length; i += 1) {
@@ -428,18 +465,19 @@ class App extends Component {
         await this.setState({ progress: newProgress });
       };
 
-      const result = await serial.fourWayWriteHex(target, esc, text, force, updateProgress);
+      const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
       escs[target] = result;
 
       newProgress[target] = 0;
       await this.setState({ escs });
     }
 
+    actions.isSelecting = false;
+    actions.isFlashing = false;
     await this.setState({
-      isSelecting: false,
-      isFlashing: false,
       settings: getMasterSettings(escs),
       progress: newProgress,
+      actions
     });
   }
 
@@ -449,56 +487,67 @@ class App extends Component {
      * device - mark  conncted
      */
     let connected = false;
-    let serial = false;
+    this.serial = null;
     const ports = await navigator.serial.getPorts();
     if(ports.length > 0) {
       TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
       this.addLogMessage('Plugged in');
       connected = true;
 
-      serial = new Serial(ports[0]);
+      // Set the first  serial port as the active one
+      this.serial = new Serial(ports[0]);
     }
 
     this.setState({
       checked: true,
       hasSerial: true,
       connected,
-      serial,
       configs: await this.fetchConfigs(),
+      serial: { availablePorts: ports },
     });
   }
 
-  serialDisconnectHandler() {
-    const { serial } = this.state;
+  async serialDisconnectHandler() {
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('Unplugged');
+    this.lastConnected = 0;
+
+    const ports = await navigator.serial.getPorts();
     this.setState({
-      connected: false,
+      connected: ports.length > 0 ? true : false,
       open: false,
       escs: [],
-      lastConnected: 0,
+      serial: {
+        availablePorts: ports,
+        chosenPort: null,
+      }
     });
 
-    serial.disconnect();
+    this.serial.disconnect();
   }
 
   async handleSetPort() {
     try {
-      const { serialLog } = this.state;
       const port = await navigator.serial.requestPort();
-      const serial = new Serial(port);
+      this.serial = new Serial(port);
 
-      serialLog.push(this.formatLogMessage('Port selected'));
+      this.addLogMessage('Port selected');
 
-      this.setState({
-        serialLog,
-        connected: true,
-        serial,
-      });
+      this.setState({ connected: true });
     } catch (e) {
       // No port selected, do nothing
       console.debug(e);
     }
+  }
+
+  handleChangePort(index) {
+    const { serial } = this.state;
+    serial.chosenPort = serial.availablePorts[index];
+    this.serial = new Serial(serial.chosenPort);
+
+    this.addLogMessage('Port changed');
+
+    this.setState({ serial });
   }
 
   delay(ms) {
@@ -513,39 +562,28 @@ class App extends Component {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Connect" } });
 
-    const {
-      serial,
-      baudRate,
-      serialLog,
-    } = this.state;
+    const { baudRate } = this.state;
 
     try {
-      await serial.open(baudRate);
-      serial.setLogCallback(this.addLogMessage);
-      serial.setPacketErrorsCallback(this.handlePacketErrors);
-      serialLog.push(this.formatLogMessage('Opened serial port'));
+      await this.serial.open(baudRate);
+      this.serial.setLogCallback(this.addLogMessage);
+      this.serial.setPacketErrorsCallback(this.handlePacketErrors);
+      this.addLogMessage('Opened serial port');
     } catch (e) {
       console.debug(e);
 
-      const {
-        serialLog, serial,
-      } = this.state;
       try {
-        serial.close();
+        this.serial.close();
       } catch(e) {
         console.debug(e);
       }
 
-      serialLog.push(
-        this.formatLogMessage(
-          'Port already in use by another application - try re-connecting'));
-
-      this.setState({ serialLog });
+      this.addLogMessage('Port already in use by another application - try re-connecting');
 
       return;
     }
 
-    const apiVersion = await serial.getApiVersion();
+    const apiVersion = await this.serial.getApiVersion();
     const apiVersionElement = (
       <>
         MultiWii API version
@@ -565,10 +603,10 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(apiVersionElement));
+    this.addLogMessage(apiVersionElement);
 
-    const fcVariant = await serial.getFcVariant();
-    const fcVersion = await serial.getFcVersion();
+    const fcVariant = await this.serial.getFcVariant();
+    const fcVersion = await this.serial.getFcVersion();
     const fcInfoElement = (
       <>
         Flight controller info, identifier:
@@ -586,9 +624,9 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(fcInfoElement));
+    this.addLogMessage(fcInfoElement);
 
-    const buildInfo = await serial.getBuildInfo();
+    const buildInfo = await this.serial.getBuildInfo();
     const buildInfoElement = (
       <>
         Running firmware released on:
@@ -600,9 +638,9 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(buildInfoElement));
+    this.addLogMessage(buildInfoElement);
 
-    const boardInfo = await serial.getBoardInfo();
+    const boardInfo = await this.serial.getBoardInfo();
     const boardInfoElement = (
       <>
         Board:
@@ -622,9 +660,9 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(boardInfoElement));
+    this.addLogMessage(boardInfoElement);
 
-    let uid = await serial.getUid();
+    let uid = await this.serial.getUid();
     uid = uid.uid;
     let uidHex = 0;
     for (let i = 0; i < uid.length; i += 1) {
@@ -651,36 +689,30 @@ class App extends Component {
         </strong>
       </>
     );
-    serialLog.push(this.formatLogMessage(uidElement));
+    this.addLogMessage(uidElement);
 
-    await this.setState({
-      open: true,
-      serialLog,
-    });
+    await this.setState({ open: true });
   }
 
   async handleDisconnect(e) {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
-    const {
-      serial,
-      escs
-    } = this.state;
-    if(serial) {
+    const { escs } = this.state;
+    if(this.serial) {
       for(let i = 0; i < escs.length; i += 1) {
-        await serial.fourWayReset(i);
+        await this.serial.fourWayReset(i);
       }
 
-      serial.close();
+      this.serial.close();
     }
 
     this.addLogMessage('Closed port');
+    this.lastConnected = 0;
 
     this.setState({
       open: false,
       escs: [],
-      lastConnected: 0,
     });
   }
 
@@ -693,6 +725,15 @@ class App extends Component {
     }
   }
 
+  handleLanguageSelection(e) {
+    const language = e.target.value;
+    localStorage.setItem('language', language);
+    i18next.changeLanguage(language);
+    this.setState({ language });
+  }
+
+
+
   render() {
     const {
       checked,
@@ -701,16 +742,14 @@ class App extends Component {
       open,
       serialLog,
       packetErrors,
-      serial,
       escs,
       settings,
-      isReading,
-      isWriting,
+      actions,
       progress,
-      isSelecting,
-      isFlashing,
       configs,
       flashTargets,
+      language,
+      serial,
     } = this.state;
 
     if (!checked) {
@@ -767,23 +806,44 @@ class App extends Component {
       );
     }
 
+    const languageElements = this.languages.map((item) => (
+      <option
+        key={item.value}
+        value={item.value}
+      >
+        {item.label}
+      </option>
+    ));
+
     return (
       <div className="App">
         <div id="main-wrapper">
           <div className="header-wrapper">
             <div className="headerbar">
-              <div id="logo">
-                <div className="logo_text" />
-              </div>
+              <div id="logo" />
 
               <PortPicker
                 hasPort={connected}
+                onChangePort={this.handleChangePort}
                 onConnect={this.handleConnect}
                 onDisconnect={this.handleDisconnect}
                 onSetBaudRate={this.handleSetBaudRate}
                 onSetPort={this.handleSetPort}
                 open={open}
+                ports={serial.availablePorts}
               />
+
+              <div className="language-select ">
+                <div className="dropdown dropdown-dark">
+                  <select
+                    className="dropdown-select"
+                    defaultValue={language}
+                    onChange={this.handleLanguageSelection}
+                  >
+                    {languageElements}
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div className="clear-both" />
@@ -794,13 +854,11 @@ class App extends Component {
           </div>
 
           <MainContent
+            actions={actions}
+            changelogEntries={changelogEntries}
             configs={configs}
             escs={escs}
             flashTargets={flashTargets}
-            isFlashing={isFlashing}
-            isReading={isReading}
-            isSelecting={isSelecting}
-            isWriting={isWriting}
             onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
             onFlashUrl={this.handleFlashUrl}
             onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
@@ -818,7 +876,7 @@ class App extends Component {
           />
 
           <Statusbar
-            getUtilization={serial ? serial.getUtilization : null}
+            getUtilization={this.serial ? this.serial.getUtilization : null}
             packetErrors={packetErrors}
             version={version}
           />

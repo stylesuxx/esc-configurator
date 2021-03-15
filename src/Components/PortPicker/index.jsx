@@ -4,7 +4,7 @@ import {
   useTranslation,
 } from 'react-i18next';
 import './list-style.css';
-import './style.css';
+import './style.scss';
 
 function PortPicker({
   hasPort,
@@ -13,21 +13,23 @@ function PortPicker({
   onSetBaudRate,
   onConnect,
   onDisconnect,
+  ports,
+  onChangePort,
 }) {
   const { t } = useTranslation('common');
 
-  /*
-  // TODO: The web Serial API also supports multiple ports - each one had to be
-  //       given permission to use, but once allowed we could list all allowed
-  //       ports here.
   const portOptions = ports.map((item, index) => {
     const info = item.getInfo();
-    console.log(info);
+    const name = `${info.usbVendorId}:${info.usbProductId}`;
     return (
-      <option key={index}>xx</option>
+      <option
+        key={name}
+        value={index}
+      >
+        {name}
+      </option>
     );
   });
-  */
 
   const rates = [115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200];
   const rateElements = rates.map((rate) => (
@@ -38,6 +40,14 @@ function PortPicker({
       {rate}
     </option>
   ));
+
+  function changeBaudRate(e) {
+    onSetBaudRate(e.target.value);
+  }
+
+  function changePort(e) {
+    onChangePort(e.target.value);
+  }
 
   function ConnectionButton() {
     if (open) {
@@ -51,7 +61,7 @@ function PortPicker({
             />
           </div>
 
-          <a className="connect_state">
+          <a className="connect-state">
             {t('disconnect')}
           </a>
         </>
@@ -68,15 +78,11 @@ function PortPicker({
           />
         </div>
 
-        <a className="connect_state">
+        <a className="connect-state">
           {t('connect')}
         </a>
       </>
     );
-  }
-
-  function changeBaudRate(e) {
-    onSetBaudRate(e.target.value);
   }
 
   return (
@@ -92,22 +98,23 @@ function PortPicker({
         </div>}
 
       <div id="portsinput">
-        {/*
         <div className="dropdown dropdown-dark">
           <select
             className="dropdown-select"
+            disabled={open ? true : false}
             id="port"
+            onChange={changePort}
             title={t('port')}
           >
             {portOptions}
           </select>
         </div>
-        */}
 
         <div className="dropdown dropdown-dark">
           <select
             className="dropdown-select"
             defaultValue="115200"
+            disabled={open ? true : false}
             id="baud"
             onChange={changeBaudRate}
             title={t('baudRate')}
@@ -119,7 +126,7 @@ function PortPicker({
 
       <div
         className="connect_controls"
-        id="connectbutton"
+        id="connect-button-wrapper"
       >
         <ConnectionButton />
       </div>
@@ -129,11 +136,13 @@ function PortPicker({
 
 PortPicker.propTypes = {
   hasPort: PropTypes.bool.isRequired,
+  onChangePort: PropTypes.func.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnect: PropTypes.func.isRequired,
   onSetBaudRate: PropTypes.func.isRequired,
   onSetPort: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  ports: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default PortPicker;

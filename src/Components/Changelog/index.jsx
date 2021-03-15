@@ -1,39 +1,61 @@
 import PropTypes from 'prop-types';
 import React, {
-  useState, useCallback,
+  useState,
+  useCallback,
 } from 'react';
 import {
   useTranslation,
 } from 'react-i18next';
-import './style.css';
 
-function Changelog({ children }) {
+import './style.scss';
+
+function Changelog({ entries }) {
   const { t } = useTranslation('common');
-  const [expanded, setExpanded] = useState(false);
 
-  const toggleExpanded = useCallback((e) => {
-    e.preventDefault();
-    setExpanded(!expanded);
-  }, [expanded]);
+  const [state, setState] = useState({
+    expanded: false,
+    title: t('defaultChangelogTitle'),
+  });
 
-  let title = t('defaultChangelogTitle');
-  if(expanded) {
-    title = t('changelogClose');
-  }
+  const ChangelogContent = () => entries.map((entry) => {
+    const listItems = entry.items.map((item) => (
+      <li key={item}>
+        {item}
+      </li>
+    ));
+
+    return (
+      <div key={entry.title}>
+        <span>
+          {entry.title}
+        </span>
+
+        <ul>
+          {listItems}
+        </ul>
+      </div>
+    );
+  });
+
+  const toggleExpanded = useCallback(() => {
+    const newExpanded = !state.expanded;
+    setState({
+      expanded: newExpanded,
+      title: newExpanded ? t('changelogClose') : t('defaultChangelogTitle'),
+    });
+  });
 
   return (
     <div
-      className={expanded ? "expanded" : ""}
+      className={state.expanded ? "expanded" : ""}
       id="changelog"
     >
-      <div className="button">
-        <a
-          href="#"
-          id="changelog_toggle"
-          onClick={toggleExpanded}
-        >
-          {title}
-        </a>
+      <div
+        className="button"
+        onClick={toggleExpanded}
+        type="button"
+      >
+        {state.title}
       </div>
 
       <div className="wrapper">
@@ -42,7 +64,7 @@ function Changelog({ children }) {
         </div>
 
         <div className="log">
-          {children}
+          <ChangelogContent />
         </div>
 
       </div>
@@ -50,6 +72,6 @@ function Changelog({ children }) {
   );
 }
 
-Changelog.propTypes = { children: PropTypes.element.isRequired };
+Changelog.propTypes = { entries: PropTypes.arrayOf(PropTypes.shape()).isRequired };
 
 export default Changelog;

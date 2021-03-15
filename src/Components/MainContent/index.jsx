@@ -6,13 +6,12 @@ import Flash from '../Flash';
 import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '..//FirmwareSelector';
 import Changelog from '../../Components/Changelog';
-import changeLogEntries from '../../changelog.json';
+
+import './style.scss';
 
 function MainContent({
   open,
   escs,
-  isReading,
-  isWriting,
   settings,
   progress,
   onIndividualSettingsUpdate,
@@ -26,40 +25,20 @@ function MainContent({
   onFlashUrl,
   onSaveLog,
   configs,
-  isSelecting,
-  isFlashing,
   flashTargets,
   onLocalSubmit,
+  changelogEntries,
+  actions,
 }) {
-  const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading;
+  const {
+    isSelecting,
+    isFlashing,
+    isReading,
+    isWriting,
+  } = actions;
+  const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
-  const canResetDefaults = false;
-
-  const ChangelogContent = () => changeLogEntries.map((entry) => {
-    const listItems = entry.items.map((item, index) => (
-      <li
-        key={index}
-      >
-        {item}
-      </li>
-    ));
-
-    return (
-      <div
-        key={entry.title}
-      >
-        <span>
-          {entry.title}
-        </span>
-
-        <ul>
-
-          {listItems}
-        </ul>
-      </div>
-    );
-  });
 
   if (!open) {
     return (
@@ -68,9 +47,9 @@ function MainContent({
           <Home />
         </div>
 
-        <Changelog>
-          <ChangelogContent />
-        </Changelog>
+        <Changelog
+          entries={changelogEntries}
+        />
       </>
     );
   }
@@ -79,7 +58,7 @@ function MainContent({
     const esc = escs[flashTargets[0]];
     return (
       <div id="content">
-        <div className="tab-esc toolbar_fixed_bottom">
+        <div className="tab toolbar_fixed_bottom">
           <div className="content_wrapper">
             <FirmwareSelector
               configs={configs}
@@ -98,7 +77,7 @@ function MainContent({
   return (
     <>
       <div id="content">
-        <div className="tab-esc toolbar_fixed_bottom">
+        <div className="tab toolbar_fixed_bottom">
           <div className="content_wrapper">
             <Flash
               availableSettings={settings}
@@ -116,7 +95,7 @@ function MainContent({
       <Buttonbar
         canFlash={canFlash}
         canRead={canRead}
-        canResetDefaults={canResetDefaults}
+        canResetDefaults={canWrite}
         canWrite={canWrite}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
@@ -129,6 +108,13 @@ function MainContent({
 }
 
 MainContent.propTypes = {
+  actions: PropTypes.shape({
+    isFlashing: PropTypes.bool.isRequired,
+    isReading: PropTypes.bool.isRequired,
+    isSelecting: PropTypes.bool.isRequired,
+    isWriting: PropTypes.bool.isRequired,
+  }).isRequired,
+  changelogEntries: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,
@@ -136,10 +122,6 @@ MainContent.propTypes = {
   }).isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
-  isFlashing: PropTypes.bool.isRequired,
-  isReading: PropTypes.bool.isRequired,
-  isSelecting: PropTypes.bool.isRequired,
-  isWriting: PropTypes.bool.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,

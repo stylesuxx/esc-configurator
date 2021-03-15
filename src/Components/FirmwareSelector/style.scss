@@ -1,0 +1,23 @@
+#firmware-selector {
+  .checkbox {
+    float: none;
+    width: auto;
+    margin-left: 0px;
+    margin-bottom: 20px;
+    margin-top: 0;
+    padding-bottom: 0px;
+
+    span:last-child {
+      margin-left: 5px;
+    }
+  }
+
+  .center-wrapper {
+    width: 50%;
+    margin: auto;
+  }
+
+  .red {
+    color: red;
+  }
+}

@@ -1,5 +1,4 @@
-// IMPROVE: * Refactor the selects to seperate components
-//          * Check the hints outside of the component
+// IMPROVE: * Check the hints outside of the component
 
 import PropTypes from 'prop-types';
 import React, {
@@ -23,6 +22,8 @@ import {
 import {
   BLUEJAY_TYPES,
 } from '../../utils/Bluejay';
+
+import './style.scss';
 
 function FirmwareSelector({
   onCancel,
@@ -54,6 +55,7 @@ function FirmwareSelector({
   const [type, setType] = useState(null);
   const [mode, setMode] = useState(selectedMode);
   const [force, setForce] = useState(false);
+  const [migrate, setMigrate] = useState(true);
 
   const [selection, setSelection] = useState({
     firmware: availableFirmware[0],
@@ -110,7 +112,7 @@ function FirmwareSelector({
 
   function submitLocalFile(e) {
     e.preventDefault();
-    onLocalSubmit(e, force);
+    onLocalSubmit(e, force, migrate);
   }
 
   function updateMode(e) {
@@ -126,13 +128,16 @@ function FirmwareSelector({
     setForce(e.target.checked);
   }
 
+  function updateMigrate(e) {
+    setMigrate(e.target.checked);
+  }
+
   function updatePwm(e) {
     const newSelection = Object.assign({}, selection, { pwm: e.target.value });
     setSelection(newSelection);
   }
 
-  function submit(e) {
-    e.preventDefault();
+  function submit() {
     const escsAll = escs[selection.firmware].layouts[type];
 
     const format = (str2Format, ...args) =>
@@ -144,7 +149,7 @@ function FirmwareSelector({
       mode,
     );
 
-    onSubmit(formattedUrl, force);
+    onSubmit(formattedUrl, force, migrate);
   }
 
   if(!type) {
@@ -197,36 +202,56 @@ function FirmwareSelector({
   const enableFlashButton = !selection.url || (!selection.pwm && frequencies.length > 0);
 
   return (
-    <>
-      <div className="checkbox">
-        <label>
-          <input
-            defaultValue={force}
-            onChange={updateForce}
-            type="checkbox"
-          />
+    <div id="firmware-selector">
+      <div className="center-wrapper">
+        <div className="checkbox force">
+          <label>
+            <input
+              defaultChecked={force}
+              onChange={updateForce}
+              type="checkbox"
+            />
 
-          <span>
             <span>
-              Ignore inappropriate MCU and Layout?
-            </span>
+              <span>
+                {t('forceFlashText')}
+              </span>
 
-            <span className={force ? "red" : "hidden"}>
-              (Flashing inappropriate firmware may damage your ESC, do so at your own risk)
+              <span className={force ? "red" : "hidden"}>
+                {t('forceFlashHint')}
+              </span>
             </span>
-          </span>
-        </label>
-      </div>
+          </label>
+        </div>
 
-      <div className="centerWrapper">
-        <div className="gui_box grey">
-          <div className="gui_box_titlebar">
-            <div className="spacer_box_title">
+        <div className="checkbox migrate">
+          <label>
+            <input
+              defaultChecked={migrate}
+              onChange={updateMigrate}
+              type="checkbox"
+            />
+
+            <span>
+              <span>
+                {t('migrateFlashText')}
+              </span>
+
+              <span className={!migrate ? "red" : "hidden"}>
+                {t('migrateFlashHint')}
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <div className="gui-box grey">
+          <div className="gui-box-titlebar">
+            <div className="spacer-box-title">
               Select Target
             </div>
           </div>
 
-          <div className="spacer_box">
+          <div className="spacer-box">
 
             <LabeledSelect
               firstLabel="Select Firmware"
@@ -270,17 +295,17 @@ function FirmwareSelector({
                 selected={selection.pwm}
               />}
 
-            <div className="default_btn">
-              <a
+            <div className="default-btn">
+              <button
                 className={enableFlashButton ? "disabled" : ""}
-                href="#"
                 onClick={submit}
+                type="button"
               >
                 {t('escButtonSelect')}
-              </a>
+              </button>
             </div>
 
-            <div className="default_btn">
+            <div className="default-btn">
               <input
                 onChange={submitLocalFile}
                 ref={file}
@@ -288,28 +313,26 @@ function FirmwareSelector({
                 type="file"
               />
 
-              <a
-                href="#"
+              <button
                 onClick={clickFile}
+                type="button"
               >
                 {t('escButtonSelectLocally')}
-              </a>
+              </button>
             </div>
 
-            <div className="default_btn">
-              <a
-                href="#"
+            <div className="default-btn">
+              <button
                 onClick={onCancel}
+                type="button"
               >
-
                 {t('buttonCancel')}
-
-              </a>
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

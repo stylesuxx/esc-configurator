@@ -7,7 +7,7 @@ import {
 import {
   useState,
 } from 'react';
-import './style.css';
+import './style.scss';
 
 function Log({ messages }) {
   const { t } = useTranslation('common');
