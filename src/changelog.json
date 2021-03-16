@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Improved tool-tips"
+    ]
+  },
+  {
     "title": "0.6.0",
     "items": [
       "Component refactoring",

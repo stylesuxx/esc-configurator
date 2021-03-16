@@ -23,11 +23,12 @@ function Checkbox({
           type="checkbox"
         />
 
-        <span className={!inSync ? 'not-in-sync' : ''} >
-          {label}
-
-          {hint && <Info hint={hint} /> }
-        </span>
+        <Info
+          hint={hint}
+          inSync={inSync}
+          label={label}
+          name={name}
+        />
       </label>
     </div>
   );
