@@ -2,6 +2,12 @@
   {
     "title": "Unreleased",
     "items": [
+      "Improved tool-tips"
+    ]
+  },
+  {
+    "title": "0.6.0",
+    "items": [
       "Component refactoring",
       "Better logging",
       "Improved offline handling",
@@ -10,7 +16,8 @@
       "Added tool-tops to settings",
       "Use SCSS instead of CSS",
       "Removed dead CSS",
-      "List all paired serial devices"
+      "List all paired serial devices",
+      "Restore default settings"
     ]
   },
   {

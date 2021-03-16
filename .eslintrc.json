@@ -11,6 +11,7 @@
     "react/jsx-no-literals": "off",
     "react/no-multi-comp": "off",
     "react/no-set-state": "off",
+    "react/forbid-component-props": "off",
     "no-unreachable": "off",
     "react/no-array-index-key": "warn",
     "react/no-danger": "warn",

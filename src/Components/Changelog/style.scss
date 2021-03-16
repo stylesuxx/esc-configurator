@@ -9,7 +9,7 @@
   .wrapper {
     height: 100%;
     padding: 0 20px;
-    border-left: 5px solid #2a84c4;
+    border-left: 5px solid var(--color-secondary);
     overflow-y: auto;
     display: none;
   }
@@ -28,7 +28,7 @@
     top: 50px;
     right: 212px;
     position: absolute;
-    background: #2a84c4;
+    background: var(--color-secondary);
     border-radius: 5px 5px 0 0;
     border-bottom: none;
     display: block;

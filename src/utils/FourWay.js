@@ -259,7 +259,7 @@ class FourWay {
     return resolve(message);
   }
 
-  sendMessagePromised(command, params = [0], address = 0) {
+  sendMessagePromised(command, params = [0], address = 0, retries = 10) {
     const self = this;
 
     const process = async (resolve) => {
@@ -272,15 +272,16 @@ class FourWay {
       }
 
       const processMessage = async(resolve, reject) => {
-        // Immediately resolve the exit command since it will not produce any
-        // processable output.
+        /**
+         * Immediately resolve the exit command since it will not produce any
+         * processable output.
+         */
         if (command === this.commands.cmd_InterfaceExit) {
           await this.serial(message, null);
           return resolve();
         }
 
         const msg = await this.serial(message, this.parseMessage);
-
         if (msg && msg.ack === self.ack.ACK_OK) {
           return resolve(msg);
         }
@@ -289,10 +290,10 @@ class FourWay {
       };
 
       try {
-        const result = await retry(processMessage, 10, 250);
+        const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
-        console.debug('Failed processing command', command);
+        console.debug(`Failed processing command ${command} after ${retries} retries.`);
         resolve(null);
       }
     };

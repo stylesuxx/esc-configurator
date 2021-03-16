@@ -50,7 +50,7 @@ class Source {
       try {
         return this.fetchJson(this.escs);
       } catch(e) {
-        // No neet to catch - returl local escs anyway
+        // No neet to catch - return local escs anyway
       }
     }
 

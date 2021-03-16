@@ -24,21 +24,7 @@
     z-index: -1;
   }
 
-  .info-text {
-    display: none;
-    position: absolute;
-    border: 1px solid darkgray;
-    padding: 5px;
-    background: lightgray;
+  .tooltip {
     max-width: 200px;
-    width: max-content;
-    margin-top: -5px;
-    z-index: 1;
-  }
-
-  &:hover {
-    .info-text {
-      display: inline-block;
-    }
   }
 }

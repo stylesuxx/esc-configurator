@@ -96,6 +96,12 @@ class App extends Component {
     this.onMount(async() => {
       const hasSerial = 'serial' in navigator;
 
+      const language = localStorage.getItem('language');
+      if(language) {
+        i18next.changeLanguage(language);
+        this.setState({ language });
+      }
+
       // Redefine the console and tee logs
       var console = (function(old) {
         return Object.assign({}, old, {
@@ -431,7 +437,9 @@ class App extends Component {
     if(text) {
       await this.flash(text, force, migrate);
     } else {
-      this.addLogMessage('Could not get file for flashing');
+      const error = 'Could not get file for flashing.';
+      console.debug(error);
+      this.addLogMessage(error);
     }
   }
 
@@ -719,9 +727,12 @@ class App extends Component {
 
   handleLanguageSelection(e) {
     const language = e.target.value;
+    localStorage.setItem('language', language);
     i18next.changeLanguage(language);
     this.setState({ language });
   }
+
+
 
   render() {
     const {
@@ -795,22 +806,21 @@ class App extends Component {
       );
     }
 
+    const languageElements = this.languages.map((item) => (
+      <option
+        key={item.value}
+        value={item.value}
+      >
+        {item.label}
+      </option>
+    ));
+
     return (
       <div className="App">
         <div id="main-wrapper">
           <div className="header-wrapper">
             <div className="headerbar">
               <div id="logo" />
-
-              <div className="language-select">
-                <Select
-                  label=""
-                  name="language"
-                  onChange={this.handleLanguageSelection}
-                  options={this.languages}
-                  value={language}
-                />
-              </div>
 
               <PortPicker
                 hasPort={connected}
@@ -822,6 +832,18 @@ class App extends Component {
                 open={open}
                 ports={serial.availablePorts}
               />
+
+              <div className="language-select ">
+                <div className="dropdown dropdown-dark">
+                  <select
+                    className="dropdown-select"
+                    defaultValue={language}
+                    onChange={this.handleLanguageSelection}
+                  >
+                    {languageElements}
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div className="clear-both" />
