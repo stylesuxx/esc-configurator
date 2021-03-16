@@ -1,0 +1,8 @@
+{
+  "STARTUP_BEEP": "Wenn der ESC mit Strom versorgt wird und ein Motor verbunden ist, ertönt eine Melodie.",
+  "BRAKE_ON_STOP": "Wenn der ESC den Befehl zum Stoppen des Motors bekommt, wird dieser aktiv gebremst.",
+  "BEACON_DELAY": "Zeitraum der Inaktivität bis der Beacon Ton aúsgegeben wird.",
+  "TEMPERATURE_PROTECTION": "Legt die maximale Temperatur fest, welche der ESC erreichen darf bis dieser sich abschält.",
+  "BEEP_STRENGTH": "Die Lautstärke der Startmelodie. Wenn diese zu hoch gesetzt wird besteht Gefahr die Motoren zu beschädigen.",
+  "BEACON_STRENGTH": "Die Lautstärke des Beacon. Wenn diese zu hoch gesetzt wird besteht Gefahr die Motoren zu beschädigen."
+}
