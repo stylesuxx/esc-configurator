@@ -11,5 +11,5 @@
   "RPM_POWER_SLOPE": "Limits how much power can be increased according to how fast the motor is spinning. Lower values will avoid power spikes but can also decrease acceleration and maximum attainable speed.",
   "MOTOR_DIRECTION": "The motor rotation direction can be normal or reversed. In bidirectional mode, center throttle is zero.",
   "COMMUTATION_TIMING": "Motor commutation advance timing. Higher timing are less prone to desyncs and can provide more power at the cost of efficiency.",
-  "DEMAG_COMPENSATION": "Determines how aggressively power should be cut off during demags."
+  "DEMAG_COMPENSATION": "The extent to which power should be cut to protect against motor stalls caused by long winding demagnetization time after commutation."
 }
