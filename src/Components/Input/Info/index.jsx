@@ -38,8 +38,10 @@ function Info({
   );
 }
 
+Info.defaultProps = { hint: null };
+
 Info.propTypes = {
-  hint: PropTypes.string.isRequired,
+  hint: PropTypes.string,
   inSync: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
