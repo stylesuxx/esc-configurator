@@ -539,7 +539,10 @@ class App extends Component {
 
       this.addLogMessage('Port selected');
 
-      this.setState({ connected: true });
+      this.setState({
+        connected: true,
+        serial: { availablePorts: [port] },
+      });
     } catch (e) {
       // No port selected, do nothing
       console.debug(e);
