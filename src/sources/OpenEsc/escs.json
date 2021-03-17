@@ -1,9 +1,17 @@
 {
   "layouts":{
     "Arm":{
+      "DIATONE":{
+        "name":"Diatone",
+        "fileName":"DIATONE"
+      },
       "FD6288":{
         "name":"FD6288 based",
         "fileName":"FD6288"
+      },
+      "HGLRC60A":{
+        "name":"HGLRC 60A",
+        "fileName":"HGLRC"
       },
       "HGLRC60A":{
         "name":"HGLRC 60A",
@@ -12,6 +20,18 @@
       "IFLIGHT":{
         "name":"iFlight 50A",
         "fileName":"IFLIGHT"
+      },
+      "MAMBA_F40PRO":{
+        "name":"Mamba F40 Pro",
+        "fileName":"MAMBA_F40PRO"
+      },
+      "MAMBA_F50PRO":{
+        "name":"Mamba F50 Pro",
+        "fileName":"MAMBA_F50PRO"
+      },
+      "MAMBA_F60PRO":{
+        "name":"Mamba F60 Pro",
+        "fileName":"MAMBA_F60PRO"
       },
       "MP6531":{
         "name":"MP6531 based",

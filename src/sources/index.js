@@ -12,17 +12,15 @@ import {
   bluejayConfig
 } from './Bluejay';
 
-/*
 import {
   openEscConfig
 } from './OpenEsc';
-*/
 
 const sources = [
   bluejayConfig,
   // blheliMConfig,
   blheliConfig,
-  // openEscConfig,
+  openEscConfig,
 ];
 
 export default sources;

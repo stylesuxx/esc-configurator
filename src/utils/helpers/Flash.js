@@ -143,8 +143,22 @@ function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualS
       return false;
     }
 
-    const fromCommons = toSettingsDescriptions[from.LAYOUT_REVISION].MULTI.base;
-    const toCommons = toSettingsDescriptions[to.LAYOUT_REVISION].MULTI.base;
+    const fromLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
+    const toLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
+
+    let fromCommons = null;
+    let toCommons = null;
+    if(fromLayout.MULTI && toLayout.MULTI) {
+      fromCommons = fromLayout.MULTI.base;
+      toCommons = toLayout.MULTI.base;
+    } else if(fromLayout.base && toLayout.base) {
+      fromCommons = fromLayout.base;
+      toCommons = toLayout.base;
+    }
+
+    if(!fromCommons || !toCommons) {
+      return false;
+    }
 
     const fromCommon = fromCommons.find((setting) => setting.name === settingName);
     const toCommon = toCommons.find((setting) => setting.name === settingName);
