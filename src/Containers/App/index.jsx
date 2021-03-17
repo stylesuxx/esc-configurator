@@ -23,6 +23,10 @@ import {
   getMasterSettings,
 } from '../../utils/helpers/Settings';
 
+import {
+  delay,
+} from '../../utils/helpers/General';
+
 import './style.scss';
 
 import settings from '../../settings.json';
@@ -294,6 +298,7 @@ class App extends Component {
     const escFlash = [];
     let open = false;
     console.debug(`Getting info for ${connected} ESC's`);
+    await delay(1000);
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
