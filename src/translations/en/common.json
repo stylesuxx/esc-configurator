@@ -54,5 +54,16 @@
   "forceFlashText": "Ignore inappropriate MCU and Layout?",
   "forceFlashHint": "(Flashing inappropriate firmware may damage your ESC, do so at your own risk)",
   "migrateFlashText": "Migrate settings if possible?",
-  "migrateFlashHint": "(This will set the default settings from firmware)"
+  "migrateFlashHint": "(This will set the default settings from firmware)",
+  "escDirectionReversed": "Direction Reversed",
+  "escBidirectionalMode": "Bidirectional Mode",
+  "escSinusoidalStartup": "Sinusoidal Startup",
+  "escComplementaryPwm": "Complementary PWM",
+  "escVariablePwmFrequency": "Variable PWM Frequency",
+  "escStuckRotorProtection": "Stuck Rotor Protection",
+  "escStallProtection": "Stall Protection",
+  "escTimingAdvance": "Timing Advance (degrees)",
+  "escPwmFrequency": "PWM Frequency (kHz)",
+  "escMotorKv": "Motor KV",
+  "escMotorPoles": "Motor Poles"
 }
