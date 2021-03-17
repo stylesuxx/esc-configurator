@@ -65,5 +65,14 @@
   "escTimingAdvance": "Timing Advance (degrees)",
   "escPwmFrequency": "PWM Frequency (kHz)",
   "escMotorKv": "Motor KV",
-  "escMotorPoles": "Motor Poles"
+  "escMotorPoles": "Motor Poles",
+  "escBeepVolume": "Beeper Volume",
+  "escIntervalTelemetry": "30ms Telemetry Output",
+  "escServoLowThreshold": "Servo Low Threshold",
+  "escServoHighThreshold": "Servo High Threshold",
+  "escServoNeutral": "Servo Neutral",
+  "escServoDeadBand": "Servo Neutral Dead Band",
+  "escLowVoltageCutoff": "Low Voltage Cut Off",
+  "escLowVoltageThreshold": "Low Voltage Cut-Off Threshold",
+  "escRcCarReversing":"Rc Car Style Reversing"
 }
