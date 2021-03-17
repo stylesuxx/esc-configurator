@@ -1,14 +1,17 @@
-import Source from '../Source';
+import Source, {
+  PLATFORMS,
+} from '../Source';
 
-const OPEN_ESC_VERSIONS_LOCAL = './versions.json';
-const OPEN_ESC_ESCS_LOCAL = './escs.json';
+import OPEN_ESC_VERSIONS_LOCAL from './versions.json';
+import OPEN_ESC_ESCS_LOCAL from './escs.json';
 
-const OPEN_ESC_VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/open_esc_versions.json';
-const OPEN_ESC_ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/open_esc_escs.json';
+const OPEN_ESC_VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/OpenEsc/versions.json';
+const OPEN_ESC_ESCS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/OpenEsc/escs.json';
 
 const pwmOptions = [];
 const openEscConfig = new Source(
-  'openEsc',
+  'OpenEsc',
+  PLATFORMS.ARM,
   OPEN_ESC_VERSIONS_REMOTE,
   OPEN_ESC_ESCS_REMOTE,
   OPEN_ESC_VERSIONS_LOCAL,

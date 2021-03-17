@@ -37,7 +37,7 @@ function Esc({
 
   let bootloader = '';
   if (esc.bootloaderRevision !== null) {
-    bootloader = ` (bootloader verseion ${esc.bootloaderRevision})`;
+    bootloader = ` (bootloader revision ${esc.bootloaderRevision})`;
   }
 
   const title = `ESC ${(index + 1)}: ${make} ${revision}${name}${bootloader}`;

@@ -1,3 +1,19 @@
+import blujayEscs from '../../sources/Bluejay/escs.json';
+import blheliEscs from '../../sources/Blheli/escs.json';
+import openEscEscs from '../../sources/OpenEsc/escs.json';
+
+import {
+  BLUEJAY_TYPES,
+} from '../Bluejay';
+
+import {
+  BLHELI_TYPES,
+} from '../Blheli';
+
+import {
+  OPEN_ESC_TYPES,
+} from '../OpenEsc';
+
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
@@ -77,10 +93,25 @@ async function retry(func, maxRetries, iterationDelay = null) {
 // signatrue is expected to be a decimal
 const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === parseInt(signature, 10));
 
+// Check if a given layout is available in any of the sources
+const isValidLayout = (layout) => {
+  if(blujayEscs.layouts[BLUEJAY_TYPES.EFM8][layout] ||
+     blheliEscs.layouts[BLHELI_TYPES.ATMEL][layout] ||
+     openEscEscs.layouts[OPEN_ESC_TYPES.ARM][layout] ||
+     BLHELI_TYPES.BLHELI_S_SILABS[layout] ||
+     BLHELI_TYPES.SILABS[layout]
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
 export {
   retry,
   delay,
   compare,
   findMCU,
   isValidFlash,
+  isValidLayout,
 };

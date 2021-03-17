@@ -1,9 +1,19 @@
 {
   "Arm":[
     {
-      "name":"1.58",
-      "url":"https://raw.githubusercontent.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/master/Release/1_58/{0}_1_58.hex",
-      "key":"1.58"
+      "name": "1.65 - pre release",
+      "url": "https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/{0}_1.65.hex",
+      "key": "1.65"
+    },
+    {
+      "name": "1.64",
+      "url": "https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.64/{0}_1.64.hex",
+      "key": "1.64"
+    },
+    {
+      "name": "1.58",
+      "url": "https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.58/{0}_1_58.hex",
+      "key": "1.58"
     }
   ]
 }

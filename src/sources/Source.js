@@ -1,10 +1,23 @@
+import {
+  BLHELI_TYPES,
+} from '../utils/Blheli';
+
+import {
+  BLUEJAY_TYPES,
+} from '../utils/Bluejay';
+
+import {
+  OPEN_ESC_TYPES,
+} from '../utils/OpenEsc';
+
 class Source {
-  constructor(name, versions, escs, localVersions, localEscs, pwm) {
+  constructor(name, platform, versions, escs, localVersions, localEscs, pwm) {
     if(!name || !versions || !escs || !localVersions || !localEscs || !pwm) {
       throw new Error("Parameters required: name, versions, escs, localVersions, localEscs");
     }
 
     this.name = name;
+    this.platform = platform;
     this.versions = versions;
     this.escs = escs;
     this.localVersions = localVersions;
@@ -15,14 +28,18 @@ class Source {
       try {
         const response = await fetch(url);
         if(!response.ok) {
-          return new Error(response.statusText);
+          throw new Error(response.statusText);
         }
 
         return response.json();
       } catch(e) {
-        return new Error(e);
+        throw new Error(e);
       }
     };
+  }
+
+  getPlatform() {
+    return this.platform;
   }
 
   getName() {
@@ -34,9 +51,10 @@ class Source {
   }
 
   async getVersions() {
-    if(navigator.online) {
+    if(navigator.onLine) {
       try {
-        return this.fetchJson(this.versions);
+        const result = await this.fetchJson(this.versions);
+        return result;
       } catch(e) {
         // No neet to catch - returl local versions anyway
       }
@@ -46,9 +64,10 @@ class Source {
   }
 
   async getEscs() {
-    if(navigator.online) {
+    if(navigator.onLine) {
       try {
-        return this.fetchJson(this.escs);
+        const result = await this.fetchJson(this.escs);
+        return result;
       } catch(e) {
         // No neet to catch - return local escs anyway
       }
@@ -58,4 +77,23 @@ class Source {
   }
 }
 
+const PLATFORMS = {
+  SILABS: 0,
+  ARM: 1,
+};
+
+const SILABS_TYPES = [
+  BLHELI_TYPES.BLHELI_S_SILABS,
+  BLUEJAY_TYPES.EFM8,
+];
+
+const ARM_TYPES = [
+  OPEN_ESC_TYPES.ARM,
+];
+
+export {
+  ARM_TYPES,
+  PLATFORMS,
+  SILABS_TYPES,
+};
 export default Source;

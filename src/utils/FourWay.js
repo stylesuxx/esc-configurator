@@ -13,6 +13,7 @@ import {
 
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
 import BLUEJAY_ESCS  from '../sources/Bluejay/escs.json';
+import OPEN_ESC_ESCS  from '../sources/OpenEsc/escs.json';
 
 import {
   canMigrate,
@@ -27,6 +28,7 @@ import {
 } from './helpers/Settings';
 
 import {
+  delay,
   retry,
   compare,
   findMCU,
@@ -36,8 +38,10 @@ import {
 import {
   OPEN_ESC_LAYOUT,
   OPEN_ESC_DEFAULTS,
+  OPEN_ESC_PAGE_SIZE,
   OPEN_ESC_LAYOUT_SIZE,
   OPEN_ESC_EEPROM_OFFSET,
+  OPEN_ESC_RESET_DELAY_MS,
   OPEN_ESC_SETTINGS_DESCRIPTIONS,
   OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
 } from './OpenEsc';
@@ -293,7 +297,7 @@ class FourWay {
         const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
-        console.debug(`Failed processing command ${command} after ${retries} retries.`);
+        console.debug(`Failed processing command ${this.commandToString(command)} after ${retries} retries.`);
         resolve(null);
       }
     };
@@ -327,15 +331,17 @@ class FourWay {
           let defaultSettings = BLHELI_S_DEFAULTS;
 
           if (isSiLabs) {
+            console.debug('SiLabs detected');
             layoutSize = BLHELI_LAYOUT_SIZE;
             settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
           } else if (isArm) {
+            console.debug('ARM detected');
             layoutSize = OPEN_ESC_LAYOUT_SIZE;
             layout = OPEN_ESC_LAYOUT;
             defaultSettings = OPEN_ESC_DEFAULTS;
             settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
           } else {
-            throw new Error('Neither Silabs nor Arm');
+            throw new Error('Neither SiLabs nor Arm');
           }
 
           flash.isSiLabs = isSiLabs;
@@ -438,7 +444,7 @@ class FourWay {
             retry += 1;
             continue ;
           }
-          console.log(`ESC ${target + 1} read settings failed ${e.message}`, e);
+          console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
 
           return null;
         }
@@ -545,7 +551,7 @@ class FourWay {
         } break;
 
         case this.modes.ARMBLB: {
-          mcu = findMCU(signature, BLHELI_ESCS.signatures.Arm);
+          mcu = findMCU(signature, OPEN_ESC_ESCS.signatures.Arm);
         } break;
 
         default: {
@@ -564,9 +570,243 @@ class FourWay {
       return mcu.flash_size;
     })();
 
+    const migrateSettings = async(oldEsc, newEsc) => {
+      /**
+       * Migrate settings from the previous firmware if possible.
+       */
+      const newSettings = Object.assign({}, newEsc.settings);
+      const oldSettings = esc.settings;
+
+      let settingsDescriptions = null;
+      let individualSettingsDescriptions = null;
+      switch(newEsc.layout) {
+        case BLHELI_LAYOUT: {
+          console.debug('BLHELI layout found');
+          settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+        } break;
+
+        case BLUEJAY_LAYOUT: {
+          console.debug('Bluejay layout found');
+          settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+        } break;
+
+        case OPEN_ESC_LAYOUT: {
+          console.debug('OpenEsc layout found');
+          settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+        } break;
+      }
+
+      /**
+       * Try migrating settings if possible - this ensures that the motor
+       * direction is saved between flashes.
+       */
+      const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
+      if(settingsDescriptions && individualSettingsDescriptions) {
+        if(newSettings.MODE === oldSettings.MODE) {
+          for (var prop in newSettings) {
+            if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
+                Object.prototype.hasOwnProperty.call(oldSettings, prop)
+            ) {
+              if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
+                // With a proper migration path
+                newSettings[prop] = oldSettings[prop];
+
+                console.debug(`Migrated setting ${prop}`);
+              } else {
+                if (saveMigratins.includes(prop)) {
+                  // Settings that are save to migrate because they are the
+                  // same on all firmwares.
+                  newSettings[prop] = oldSettings[prop];
+
+                  console.debug(`Migrated setting ${prop}`);
+                }
+              }
+            }
+          }
+        }
+      } else {
+        console.debug('Can not migrate settings');
+      }
+
+      await this.writeSettings(target, newEsc, newSettings);
+      newEsc.settings = newSettings;
+      newEsc.individualSettings = getIndividualSettings(newEsc);
+
+      return newEsc;
+    };
+
+    const flashSiLabs = async(flash) => {
+      /**
+       * The size of the Flash is larger than the pages we write.
+       * that is why we need to calculate the total Bytes by page size
+       * and actual pages we write, which in this case is 14.
+       *
+       * We then double that since we are also tracking the bytes read back
+       * and update the progress bar accordingly.
+       */
+      this.totalBytes = BLHELI_SILABS_PAGE_SIZE * 14 * 2;
+      this.bytesWritten = 0;
+
+      const message = await this.read(BLHELI_SILABS.EEPROM_OFFSET, BLHELI_LAYOUT_SIZE);
+
+      // checkESCAndMCU
+      const escSettingArrayTmp = message.params;
+      const target_layout = escSettingArrayTmp.subarray(
+        BLHELI_LAYOUT.LAYOUT.offset,
+        BLHELI_LAYOUT.LAYOUT.offset + BLHELI_LAYOUT.LAYOUT.size);
+
+      const settings_image = flash.subarray(BLHELI_SILABS_EEPROM_OFFSET);
+      const fw_layout = settings_image.subarray(
+        BLHELI_LAYOUT.LAYOUT.offset,
+        BLHELI_LAYOUT.LAYOUT.offset + BLHELI_LAYOUT.LAYOUT.size);
+
+      if (!compare(target_layout, fw_layout)) {
+        var target_layout_str = buf2ascii(target_layout).trim();
+        if (target_layout_str.length === 0) {
+          target_layout_str = 'EMPTY';
+        }
+
+        if(!force) {
+          this.addLogMessage('Layout mismatch, override not enabled - aborted');
+          return esc;
+        }
+      }
+
+      const target_mcu = escSettingArrayTmp.subarray(
+        BLHELI_LAYOUT.MCU.offset,
+        BLHELI_LAYOUT.MCU.offset + BLHELI_LAYOUT.MCU.size);
+      const fw_mcu = settings_image.subarray(
+        BLHELI_LAYOUT.MCU.offset,
+        BLHELI_LAYOUT.MCU.offset + BLHELI_LAYOUT.MCU.size);
+      if (!compare(target_mcu, fw_mcu)) {
+        var target_mcu_str = buf2ascii(target_mcu).trim();
+        if (target_mcu_str.length === 0) {
+          target_mcu_str = 'EMPTY';
+        }
+
+        if(!force) {
+          this.addLogMessage('MCU mismatch, override not enabled - aborted');
+          return esc;
+        }
+      }
+
+      // erase EEPROM page
+      await this.erasePage(0x0D);
+
+      // write **FLASH*FAILED** as ESC NAME
+      await this.writeEEpromSafeguard(escSettingArrayTmp);
+
+      // write `LJMP bootloader` to avoid bricking
+      await this.writeBootoaderFailsafe();
+
+      // erase up to EEPROM, skipping first two first pages with
+      // bootloader failsafe
+      await this.erasePages(0x02, 0x0D);
+
+      // write & verify just erased locations
+      await this.writePages(0x02, 0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
+      await this.verifyPages(0x02, 0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
+
+      // write & verify first page
+      await this.writePage(0x00, BLHELI_SILABS_PAGE_SIZE, flash);
+      await this.verifyPage(0x00, BLHELI_SILABS_PAGE_SIZE, flash);
+
+      // erase second page
+      await this.erasePage(0x01);
+
+      // write & verify second page
+      await this.writePage(0x01, BLHELI_SILABS_PAGE_SIZE, flash);
+      await this.verifyPage(0x01, BLHELI_SILABS_PAGE_SIZE, flash);
+
+      // erase EEPROM
+      await this.erasePage(0x0D);
+
+      // write & verify EEPROM
+      await this.writePage(0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
+      await this.verifyPage(0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
+    };
+
+    const flashArm = async(flash) => {
+      this.totalBytes = (flash.byteLength - (flash.firmwareStart ? flash.firmwareStart : 0)) * 2;
+      this.bytesWritten = 0;
+
+      const message = await this.read(OPEN_ESC_EEPROM_OFFSET, OPEN_ESC_LAYOUT_SIZE);
+      const originalSettings = message.params;
+
+      const eepromInfo = new Uint8Array(17).fill(0x00);
+      eepromInfo.set([ originalSettings[1], originalSettings[2] ], 1);
+      eepromInfo.set(ascii2buf('FLASH FAIL  '), 5);
+
+      await this.write(OPEN_ESC_EEPROM_OFFSET, eepromInfo);
+
+      // TODO: implement writePages
+      await this.writePages(0x04, 0x40, OPEN_ESC_PAGE_SIZE, flash);
+      await this.verifyPages(0x04, 0x40, OPEN_ESC_PAGE_SIZE, flash);
+
+      originalSettings[0] = 0x01;
+      originalSettings.fill(0x00, 3, 5);
+      originalSettings.set(ascii2buf('NOT READY   '), 5);
+
+      await this.write(OPEN_ESC_EEPROM_OFFSET, originalSettings);
+    };
+
+    const flashTarget = async(target, flash) => {
+      const startTimestamp = Date.now();
+
+      const message = await this.initFlash(target);
+      const interfaceMode = message.params[3];
+
+      switch (interfaceMode) {
+        case this.modes.SiLBLB: {
+          await flashSiLabs(flash);
+        } break;
+
+        case this.modes.ARMBLB: {
+          await flashArm(flash);
+          await this.reset(target);
+          await delay(OPEN_ESC_RESET_DELAY_MS);
+        } break;
+
+        default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
+      }
+
+      const elapsedSec = (Date.now() - startTimestamp) / 1000;
+      const rounded = Math.round(elapsedSec * 10) / 10;
+      this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
+
+      let newEsc = await this.getInfo(target);
+      if(migrate) {
+        newEsc = migrateSettings(esc, newEsc);
+      }
+
+      return newEsc;
+    };
+
     if(esc.isArm) {
-      // TODO: This still needs implementation
-      throw new Error('Can not flash ARM yet.');
+      try {
+        const parsed = parseHex(hex);
+        const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
+        const flash = fillImage(parsed, endAddress - flashOffset, flashOffset);
+
+        //TODO: Also check for the firmware name
+        // But we first need to get this moved to a fixed location
+        const firstBytes = flash.subarray(firmwareStart, firmwareStart + 4);
+        const vecTabStart = new Uint8Array([ 0x00, 0x20, 0x00, 0x20 ]);
+        if (!compare(firstBytes, vecTabStart)) {
+          throw new Error('Invalid hex file');
+        }
+
+        if (firmwareStart) {
+          flash.firmwareStart = firmwareStart;
+        }
+
+        return flashTarget(target, flash);
+      } catch(e) {
+        console.debug('Failed flashing Arm:', e);
+      }
     } else if(!esc.isAtmel) {
       try {
         const parsed = parseHex(hex);
@@ -586,184 +826,10 @@ class FourWay {
           flash.firmwareStart = firmwareStart;
         }
 
-        const startTimestamp = Date.now();
-
-        const message = await this.initFlash(target);
-        const interfaceMode = message.params[3];
-
-        switch (interfaceMode) {
-          case this.modes.SiLBLB: {
-            /**
-             * The size of the Flash is larger than the pages we write.
-             * that is why we need to calculate the total Bytes by page size
-             * and actual pages we write, which in this case is 14.
-             *
-             * We then double that since we are also tracking the bytes read back
-             * and update the progress bar accordingly.
-             */
-            this.totalBytes = BLHELI_SILABS_PAGE_SIZE * 14 * 2;
-            this.bytesWritten = 0;
-
-            const message = await this.read(BLHELI_SILABS.EEPROM_OFFSET, BLHELI_LAYOUT_SIZE);
-
-            // checkESCAndMCU
-            const escSettingArrayTmp = message.params;
-            const target_layout = escSettingArrayTmp.subarray(
-              BLHELI_LAYOUT.LAYOUT.offset,
-              BLHELI_LAYOUT.LAYOUT.offset + BLHELI_LAYOUT.LAYOUT.size);
-
-            const settings_image = flash.subarray(BLHELI_SILABS_EEPROM_OFFSET);
-            const fw_layout = settings_image.subarray(
-              BLHELI_LAYOUT.LAYOUT.offset,
-              BLHELI_LAYOUT.LAYOUT.offset + BLHELI_LAYOUT.LAYOUT.size);
-
-            if (!compare(target_layout, fw_layout)) {
-              var target_layout_str = buf2ascii(target_layout).trim();
-              if (target_layout_str.length === 0) {
-                target_layout_str = 'EMPTY';
-              }
-
-              if(!force) {
-                this.addLogMessage('Layout mismatch, override not enabled - aborted');
-                return esc;
-              }
-            }
-
-            const target_mcu = escSettingArrayTmp.subarray(
-              BLHELI_LAYOUT.MCU.offset,
-              BLHELI_LAYOUT.MCU.offset + BLHELI_LAYOUT.MCU.size);
-            const fw_mcu = settings_image.subarray(
-              BLHELI_LAYOUT.MCU.offset,
-              BLHELI_LAYOUT.MCU.offset + BLHELI_LAYOUT.MCU.size);
-            if (!compare(target_mcu, fw_mcu)) {
-              var target_mcu_str = buf2ascii(target_mcu).trim();
-              if (target_mcu_str.length === 0) {
-                target_mcu_str = 'EMPTY';
-              }
-
-              if(!force) {
-                this.addLogMessage('MCU mismatch, override not enabled - aborted');
-                return esc;
-              }
-            }
-
-            // erase EEPROM page
-            await this.erasePage(0x0D);
-
-            // write **FLASH*FAILED** as ESC NAME
-            await this.writeEEpromSafeguard(escSettingArrayTmp);
-
-            // write `LJMP bootloader` to avoid bricking
-            await this.writeBootoaderFailsafe();
-
-            // erase up to EEPROM, skipping first two first pages with
-            // bootloader failsafe
-            await this.erasePages(0x02, 0x0D);
-
-            // write & verify just erased locations
-            await this.writePages(0x02, 0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPages(0x02, 0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-
-            // write & verify first page
-            await this.writePage(0x00, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPage(0x00, BLHELI_SILABS_PAGE_SIZE, flash);
-
-            // erase second page
-            await this.erasePage(0x01);
-
-            // write & verify second page
-            await this.writePage(0x01, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPage(0x01, BLHELI_SILABS_PAGE_SIZE, flash);
-
-            // erase EEPROM
-            await this.erasePage(0x0D);
-
-            // write & verify EEPROM
-            await this.writePage(0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPage(0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-
-          } break;
-
-          default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
-        }
-
-        const elapsedSec = (Date.now() - startTimestamp) / 1000;
-        const rounded = Math.round(elapsedSec * 10) / 10;
-        this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
-
-        const newEsc = await this.getInfo(target);
-
-        if(migrate) {
-          /**
-           * Migrate settings from the previous firmware if possible.
-           */
-          const newSettings = Object.assign({}, newEsc.settings);
-          const oldSettings = esc.settings;
-
-          let settingsDescriptions = null;
-          let individualSettingsDescriptions = null;
-          switch(newEsc.layout) {
-            case BLHELI_LAYOUT: {
-              console.debug('BLHELI layout found');
-              settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case BLUEJAY_LAYOUT: {
-              console.debug('Bluejay layout found');
-              settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case OPEN_ESC_LAYOUT: {
-              console.debug('OpenEsc layout found');
-              settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-          }
-
-          /**
-           * Try migrating settings if possible - this ensures that the motor
-           * direction is saved between flashes.
-           */
-          const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
-          if(settingsDescriptions && individualSettingsDescriptions) {
-            if(newSettings.MODE === oldSettings.MODE) {
-              for (var prop in newSettings) {
-                if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
-                    Object.prototype.hasOwnProperty.call(oldSettings, prop)
-                ) {
-                  if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
-                    // With a proper migration path
-                    newSettings[prop] = oldSettings[prop];
-
-                    console.debug(`Migrated setting ${prop}`);
-                  } else {
-                    if (saveMigratins.includes(prop)) {
-                      // Settings that are save to migrate because they are the
-                      // same on all firmwares.
-                      newSettings[prop] = oldSettings[prop];
-
-                      console.debug(`Migrated setting ${prop}`);
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            console.debug('Can not migrate settings');
-          }
-
-          await this.writeSettings(target, newEsc, newSettings);
-          newEsc.settings = newSettings;
-          newEsc.individualSettings = getIndividualSettings(newEsc);
-        }
-
-        return newEsc;
+        return flashTarget(target, flash);
       } catch(e) {
-        console.debug(e);
+        console.debug('Failed flashing SiLabs:', e);
       }
-
     } else {
       throw new Error('Can not flash Atmel yet.');
     }

@@ -13,8 +13,6 @@ import Statusbar from '../../Components/Statusbar';
 import CookieConsent from '../../Components/CookieConsent';
 import MainContent from '../../Components/MainContent';
 
-import Select from '../../Components/Input/Select';
-
 import Serial from '../../utils/Serial';
 
 import sources from '../../sources';
@@ -22,6 +20,10 @@ import sources from '../../sources';
 import {
   getMasterSettings,
 } from '../../utils/helpers/Settings';
+
+import {
+  delay,
+} from '../../utils/helpers/General';
 
 import './style.scss';
 
@@ -80,6 +82,7 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
+        platforms: {},
       },
       actions: {
         isReading: false,
@@ -121,6 +124,8 @@ class App extends Component {
         navigator.serial.addEventListener('connect', that.serialConnectHandler);
         navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
 
+        // Fetch the configs only once.
+        this.setState({ configs: await this.fetchConfigs() });
 
         await that.serialConnectHandler();
       } else {
@@ -174,7 +179,8 @@ class App extends Component {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = await source.getEscs();
-      configs.pwm[name] = await source.getPwm();
+      configs.platforms[name] = source.getPlatform();
+      configs.pwm[name] = source.getPwm();
     }
 
     return configs;
@@ -294,6 +300,7 @@ class App extends Component {
     const escFlash = [];
     let open = false;
     console.debug(`Getting info for ${connected} ESC's`);
+    await delay(1000);
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
@@ -502,7 +509,6 @@ class App extends Component {
       checked: true,
       hasSerial: true,
       connected,
-      configs: await this.fetchConfigs(),
       serial: { availablePorts: ports },
     });
   }
@@ -533,7 +539,10 @@ class App extends Component {
 
       this.addLogMessage('Port selected');
 
-      this.setState({ connected: true });
+      this.setState({
+        connected: true,
+        serial: { availablePorts: [port] },
+      });
     } catch (e) {
       // No port selected, do nothing
       console.debug(e);
