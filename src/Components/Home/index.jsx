@@ -52,21 +52,45 @@ function Home() {
 
                 <ul>
                   <li>
-                    BLHELI_S
+                    <a
+                      href="https://github.com/bitdump/BLHeli"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      BLHELI_S
+                    </a>
                   </li>
 
                   <li>
-                    Bluejay
+                    <a
+                      href="https://github.com/mathiasvr/bluejay"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Bluejay
+                    </a>
+                  </li>
+
+                  <li>
+                    <a
+                      href="https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      AM32
+                    </a>
                   </li>
                 </ul>
               </div>
 
-              <div>
-                <img
-                  alt="Bluejay"
-                  src={bluejay}
-                  width="75%"
-                />
+              <div className="firmware-logo-bar">
+                <div>
+
+                  <img
+                    alt="Bluejay"
+                    src={bluejay}
+                  />
+                </div>
               </div>
             </div>
           </div>
