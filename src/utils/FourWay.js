@@ -293,7 +293,7 @@ class FourWay {
         const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
-        console.debug(`Failed processing command ${command} after ${retries} retries.`);
+        console.debug(`Failed processing command ${this.commandToString(command)} after ${retries} retries.`);
         resolve(null);
       }
     };
@@ -327,15 +327,17 @@ class FourWay {
           let defaultSettings = BLHELI_S_DEFAULTS;
 
           if (isSiLabs) {
+            console.debug('SiLabs detected');
             layoutSize = BLHELI_LAYOUT_SIZE;
             settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
           } else if (isArm) {
+            console.debug('ARM detected');
             layoutSize = OPEN_ESC_LAYOUT_SIZE;
             layout = OPEN_ESC_LAYOUT;
             defaultSettings = OPEN_ESC_DEFAULTS;
             settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
           } else {
-            throw new Error('Neither Silabs nor Arm');
+            throw new Error('Neither SiLabs nor Arm');
           }
 
           flash.isSiLabs = isSiLabs;
