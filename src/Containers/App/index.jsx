@@ -124,6 +124,8 @@ class App extends Component {
         navigator.serial.addEventListener('connect', that.serialConnectHandler);
         navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
 
+        // Fetch the configs only once.
+        this.setState({ configs: await this.fetchConfigs() });
 
         await that.serialConnectHandler();
       } else {
@@ -507,7 +509,6 @@ class App extends Component {
       checked: true,
       hasSerial: true,
       connected,
-      configs: await this.fetchConfigs(),
       serial: { availablePorts: ports },
     });
   }
