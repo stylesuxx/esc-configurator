@@ -15,12 +15,12 @@ class Source {
       try {
         const response = await fetch(url);
         if(!response.ok) {
-          return new Error(response.statusText);
+          throw new Error(response.statusText);
         }
 
         return response.json();
       } catch(e) {
-        return new Error(e);
+        throw new Error(e);
       }
     };
   }
@@ -34,9 +34,10 @@ class Source {
   }
 
   async getVersions() {
-    if(navigator.online) {
+    if(navigator.onLine) {
       try {
-        return this.fetchJson(this.versions);
+        const result = await this.fetchJson(this.versions);
+        return result;
       } catch(e) {
         // No neet to catch - returl local versions anyway
       }
@@ -46,9 +47,10 @@ class Source {
   }
 
   async getEscs() {
-    if(navigator.online) {
+    if(navigator.onLine) {
       try {
-        return this.fetchJson(this.escs);
+        const result = await this.fetchJson(this.escs);
+        return result;
       } catch(e) {
         // No neet to catch - return local escs anyway
       }
