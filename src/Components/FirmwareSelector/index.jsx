@@ -10,6 +10,7 @@ import {
 
 import {
   findMCU,
+  isValidLayout,
 } from '../../utils/helpers/General';
 
 import LabeledSelect from '../LabeledSelect';
@@ -27,6 +28,12 @@ import {
   OPEN_ESC_TYPES,
 } from '../../utils/OpenEsc';
 
+import {
+  PLATFORMS,
+  SILABS_TYPES,
+  ARM_TYPES,
+} from '../../sources';
+
 import './style.scss';
 
 function FirmwareSelector({
@@ -43,15 +50,12 @@ function FirmwareSelector({
     escs,
     versions,
     pwm,
+    platforms,
   } = configs;
 
-  const siLabsFirmwares = ['Bluejay', 'Blheli'];
-  const armFirmwares = ['OpenEsc'];
-
-  const siLabsTypes = [BLUEJAY_TYPES.EFM8, BLHELI_TYPES.BLHELI_S_SILABS];
-  const armTypes = [OPEN_ESC_TYPES.ARM];
-
   const availableFirmware = Object.keys(escs);
+  const siLabsFirmwares = availableFirmware.filter((name) => platforms[name] === PLATFORMS.SILABS);
+  const armFirmwares = availableFirmware.filter((name) => platforms[name] === PLATFORMS.ARM);
 
   const file = useRef(null);
 
@@ -69,14 +73,9 @@ function FirmwareSelector({
     pwm: null,
   });
 
-  // Make choice for preselected layout - only happens once
+  // Pre select ESC if escHint is a valid layout
   useEffect(async () => {
-    if(
-      escs.Bluejay.layouts[BLUEJAY_TYPES.EFM8][escHint] ||
-      escs.Blheli.layouts[BLHELI_TYPES.ATMEL][escHint] ||
-      BLHELI_TYPES.BLHELI_S_SILABS[escHint] ||
-      BLHELI_TYPES.SILABS[escHint]
-    ) {
+    if(isValidLayout(escHint)) {
       setEsc(escHint);
     }
   }, []);
@@ -151,7 +150,6 @@ function FirmwareSelector({
     const format = (str2Format, ...args) =>
       str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );
 
-    console.log(escsAll[esc]);
     const name = escsAll[esc].fileName ? escsAll[esc].fileName : escsAll[esc].name.replace(/[\s-]/g, '_').toUpperCase();
     const pwmSuffix = selection.pwm ? '_' + selection.pwm : '';
     const formattedUrl = format(
@@ -168,8 +166,8 @@ function FirmwareSelector({
   }
 
   const validFirmware = availableFirmware.filter((key) => {
-    if((siLabsTypes.includes(type) && siLabsFirmwares.includes(key)) ||
-       (armTypes.includes(type) && armFirmwares.includes(key))
+    if((SILABS_TYPES.includes(type) && siLabsFirmwares.includes(key)) ||
+       (ARM_TYPES.includes(type) && armFirmwares.includes(key))
     ) {
       return true;
     }
@@ -379,6 +377,7 @@ FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
+    platforms: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,
   }).isRequired,
   escHint: PropTypes.string.isRequired,

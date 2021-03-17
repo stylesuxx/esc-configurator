@@ -13,8 +13,6 @@ import Statusbar from '../../Components/Statusbar';
 import CookieConsent from '../../Components/CookieConsent';
 import MainContent from '../../Components/MainContent';
 
-import Select from '../../Components/Input/Select';
-
 import Serial from '../../utils/Serial';
 
 import sources from '../../sources';
@@ -84,6 +82,7 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
+        platforms: {},
       },
       actions: {
         isReading: false,
@@ -178,7 +177,8 @@ class App extends Component {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = await source.getEscs();
-      configs.pwm[name] = await source.getPwm();
+      configs.platforms[name] = source.getPlatform();
+      configs.pwm[name] = source.getPwm();
     }
 
     return configs;

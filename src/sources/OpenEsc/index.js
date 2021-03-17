@@ -1,4 +1,6 @@
-import Source from '../Source';
+import Source, {
+  PLATFORMS,
+} from '../Source';
 
 import OPEN_ESC_VERSIONS_LOCAL from './versions.json';
 import OPEN_ESC_ESCS_LOCAL from './escs.json';
@@ -9,6 +11,7 @@ const OPEN_ESC_ESCS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-co
 const pwmOptions = [];
 const openEscConfig = new Source(
   'OpenEsc',
+  PLATFORMS.ARM,
   OPEN_ESC_VERSIONS_REMOTE,
   OPEN_ESC_ESCS_REMOTE,
   OPEN_ESC_VERSIONS_LOCAL,

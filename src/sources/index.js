@@ -1,4 +1,10 @@
 import {
+  PLATFORMS,
+  SILABS_TYPES,
+  ARM_TYPES,
+} from './Source';
+
+import {
   blheliConfig
 } from './Blheli';
 
@@ -23,4 +29,9 @@ const sources = [
   openEscConfig,
 ];
 
+export {
+  PLATFORMS,
+  SILABS_TYPES,
+  ARM_TYPES,
+};
 export default sources;

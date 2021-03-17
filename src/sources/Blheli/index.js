@@ -1,4 +1,6 @@
-import Source from '../Source';
+import Source, {
+  PLATFORMS,
+} from '../Source';
 
 import BLHELI_VERSIONS_LOCAL from './versions.json';
 import BLHELI_ESCS_LOCAL from './escs.json';
@@ -9,6 +11,7 @@ const BLHELI_ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurato
 const pwmOptions = [];
 const blheliConfig = new Source(
   'Blheli',
+  PLATFORMS.SILABS,
   BLHELI_VERSIONS_REMOTE,
   BLHELI_ESCS_REMOTE,
   BLHELI_VERSIONS_LOCAL,
