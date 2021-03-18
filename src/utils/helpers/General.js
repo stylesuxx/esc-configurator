@@ -1,18 +1,17 @@
-import blujayEscs from '../../sources/Bluejay/escs.json';
-import blheliEscs from '../../sources/Blheli/escs.json';
-import am32Escs from '../../sources/AM32/escs.json';
-
 import {
   BLUEJAY_TYPES,
 } from '../Bluejay';
+import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
 
 import {
   BLHELI_TYPES,
 } from '../Blheli';
+import BLHELI_ESCS from '../../sources/Blheli/escs.json';
 
 import {
   AM32_TYPES,
 } from '../AM32';
+import AM32_ESCS from '../../sources/AM32/escs.json';
 
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
@@ -95,9 +94,9 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
 
 // Check if a given layout is available in any of the sources
 const isValidLayout = (layout) => {
-  if(blujayEscs.layouts[BLUEJAY_TYPES.EFM8][layout] ||
-     blheliEscs.layouts[BLHELI_TYPES.ATMEL][layout] ||
-     am32Escs.layouts[AM32_TYPES.ARM][layout] ||
+  if(BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8][layout] ||
+     BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL][layout] ||
+     AM32_ESCS.layouts[AM32_TYPES.ARM][layout] ||
      BLHELI_TYPES.BLHELI_S_SILABS[layout] ||
      BLHELI_TYPES.SILABS[layout]
   ) {
@@ -107,6 +106,31 @@ const isValidLayout = (layout) => {
   return false;
 };
 
+const getPossibleTypes = (signature) => {
+  const types = [];
+  if(findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_TYPES.EFM8])) {
+    types.push(BLUEJAY_TYPES.EFM8);
+  }
+
+  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
+    types.push(BLHELI_TYPES.BLHELI_S_SILABS);
+  }
+
+  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.SILABS])) {
+    types.push(BLHELI_TYPES.SILABS);
+  }
+
+  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.ATMEL])) {
+    types.push(BLHELI_TYPES.ATMEL);
+  }
+
+  if (findMCU(signature, AM32_ESCS.signatures[AM32_TYPES.ARM])) {
+    types.push(AM32_TYPES.ARM);
+  }
+
+  return types;
+};
+
 export {
   retry,
   delay,
@@ -114,4 +138,5 @@ export {
   findMCU,
   isValidFlash,
   isValidLayout,
+  getPossibleTypes,
 };
