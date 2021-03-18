@@ -46,17 +46,8 @@ function Slider({
   }
 
   function handleUpdate(value) {
-    /**
-     * This timeout is needed in order for the InputRange component to
-     * disable the on click handlers.
-     *
-     * TODO: Improve this by using a different InputRange library - this one
-     *       is pretty outdated.
-     */
-    setTimeout(() => {
-      value = Math.floor((value - offset) / factor);
-      onChange(name, value);
-    }, 100);
+    value = Math.floor((value - offset) / factor);
+    onChange(name, value);
   }
 
   function format(value) {
