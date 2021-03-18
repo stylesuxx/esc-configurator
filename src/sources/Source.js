@@ -7,8 +7,8 @@ import {
 } from '../utils/Bluejay';
 
 import {
-  OPEN_ESC_TYPES,
-} from '../utils/OpenEsc';
+  AM32_TYPES,
+} from '../utils/AM32';
 
 class Source {
   constructor(name, platform, versions, escs, localVersions, localEscs, pwm) {
@@ -88,7 +88,7 @@ const SILABS_TYPES = [
 ];
 
 const ARM_TYPES = [
-  OPEN_ESC_TYPES.ARM,
+  AM32_TYPES.ARM,
 ];
 
 export {

@@ -13,7 +13,7 @@ import {
 
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
 import BLUEJAY_ESCS  from '../sources/Bluejay/escs.json';
-import OPEN_ESC_ESCS  from '../sources/OpenEsc/escs.json';
+import AM32_ESCS  from '../sources/AM32/escs.json';
 
 import {
   canMigrate,
@@ -36,15 +36,15 @@ import {
 } from './helpers/General';
 
 import {
-  OPEN_ESC_LAYOUT,
-  OPEN_ESC_DEFAULTS,
-  OPEN_ESC_PAGE_SIZE,
-  OPEN_ESC_LAYOUT_SIZE,
-  OPEN_ESC_EEPROM_OFFSET,
-  OPEN_ESC_RESET_DELAY_MS,
-  OPEN_ESC_SETTINGS_DESCRIPTIONS,
-  OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-} from './OpenEsc';
+  AM32_LAYOUT,
+  AM32_DEFAULTS,
+  AM32_PAGE_SIZE,
+  AM32_LAYOUT_SIZE,
+  AM32_EEPROM_OFFSET,
+  AM32_RESET_DELAY_MS,
+  AM32_SETTINGS_DESCRIPTIONS,
+  AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
+} from './AM32';
 
 import {
   BLUEJAY_TYPES,
@@ -336,10 +336,10 @@ class FourWay {
             settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
           } else if (isArm) {
             console.debug('ARM detected');
-            layoutSize = OPEN_ESC_LAYOUT_SIZE;
-            layout = OPEN_ESC_LAYOUT;
-            defaultSettings = OPEN_ESC_DEFAULTS;
-            settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
+            layoutSize = AM32_LAYOUT_SIZE;
+            layout = AM32_LAYOUT;
+            defaultSettings = AM32_DEFAULTS;
+            settingsArray = (await this.read(AM32_EEPROM_OFFSET, layoutSize)).params;
           } else {
             throw new Error('Neither SiLabs nor Arm');
           }
@@ -393,9 +393,9 @@ class FourWay {
               individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
             } break;
 
-            case OPEN_ESC_LAYOUT: {
-              settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            case AM32_LAYOUT: {
+              settingsDescriptions = AM32_SETTINGS_DESCRIPTIONS;
+              individualSettingsDescriptions = AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
             } break;
           }
 
@@ -486,8 +486,8 @@ class FourWay {
           await this.write(BLHELI_SILABS_EEPROM_OFFSET, newSettingsArray);
           readbackSettings = (await this.read(BLHELI_SILABS_EEPROM_OFFSET, BLHELI_LAYOUT_SIZE)).params;
         } else if (esc.isArm) {
-          await this.write(OPEN_ESC_EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(OPEN_ESC_EEPROM_OFFSET, OPEN_ESC_LAYOUT_SIZE)).params;
+          await this.write(AM32_EEPROM_OFFSET, newSettingsArray);
+          readbackSettings = (await this.read(AM32_EEPROM_OFFSET, AM32_LAYOUT_SIZE)).params;
         } else {
           // write only changed bytes for Atmel
           for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
@@ -551,7 +551,7 @@ class FourWay {
         } break;
 
         case this.modes.ARMBLB: {
-          mcu = findMCU(signature, OPEN_ESC_ESCS.signatures.Arm);
+          mcu = findMCU(signature, AM32_ESCS.signatures.Arm);
         } break;
 
         default: {
@@ -592,10 +592,10 @@ class FourWay {
           individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
 
-        case OPEN_ESC_LAYOUT: {
-          console.debug('OpenEsc layout found');
-          settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+        case AM32_LAYOUT: {
+          console.debug('AM32 layout found');
+          settingsDescriptions = AM32_SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
       }
 
@@ -733,24 +733,24 @@ class FourWay {
       this.totalBytes = (flash.byteLength - (flash.firmwareStart ? flash.firmwareStart : 0)) * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(OPEN_ESC_EEPROM_OFFSET, OPEN_ESC_LAYOUT_SIZE);
+      const message = await this.read(AM32_EEPROM_OFFSET, AM32_LAYOUT_SIZE);
       const originalSettings = message.params;
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
       eepromInfo.set([ originalSettings[1], originalSettings[2] ], 1);
       eepromInfo.set(ascii2buf('FLASH FAIL  '), 5);
 
-      await this.write(OPEN_ESC_EEPROM_OFFSET, eepromInfo);
+      await this.write(AM32_EEPROM_OFFSET, eepromInfo);
 
       // TODO: implement writePages
-      await this.writePages(0x04, 0x40, OPEN_ESC_PAGE_SIZE, flash);
-      await this.verifyPages(0x04, 0x40, OPEN_ESC_PAGE_SIZE, flash);
+      await this.writePages(0x04, 0x40, AM32_PAGE_SIZE, flash);
+      await this.verifyPages(0x04, 0x40, AM32_PAGE_SIZE, flash);
 
       originalSettings[0] = 0x01;
       originalSettings.fill(0x00, 3, 5);
       originalSettings.set(ascii2buf('NOT READY   '), 5);
 
-      await this.write(OPEN_ESC_EEPROM_OFFSET, originalSettings);
+      await this.write(AM32_EEPROM_OFFSET, originalSettings);
     };
 
     const flashTarget = async(target, flash) => {
@@ -767,7 +767,7 @@ class FourWay {
         case this.modes.ARMBLB: {
           await flashArm(flash);
           await this.reset(target);
-          await delay(OPEN_ESC_RESET_DELAY_MS);
+          await delay(AM32_RESET_DELAY_MS);
         } break;
 
         default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
