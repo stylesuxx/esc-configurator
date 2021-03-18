@@ -36,6 +36,14 @@ import {
 } from './helpers/General';
 
 import {
+  ACK,
+  ATMEL_MODES,
+  COMMANDS,
+  MODES,
+  SILABS_MODES,
+} from './FourWayConstants';
+
+import {
   AM32_LAYOUT,
   AM32_DEFAULTS,
   AM32_PAGE_SIZE,
@@ -64,56 +72,6 @@ class FourWay {
     this.serial = serial;
 
     this.lastCommandTimestamp = 0;
-    this.commands = {
-      cmd_InterfaceTestAlive: 0x30,
-      cmd_ProtocolGetVersion: 0x31,
-      cmd_InterfaceGetName: 0x32,
-      cmd_InterfaceGetVersion: 0x33,
-      cmd_InterfaceExit: 0x34,
-      cmd_DeviceReset: 0x35,
-      cmd_DeviceInitFlash: 0x37,
-      cmd_DeviceEraseAll: 0x38,
-      cmd_DevicePageErase: 0x39,
-      cmd_DeviceRead: 0x3a,
-      cmd_DeviceWrite: 0x3b,
-      cmd_DeviceC2CK_LOW: 0x3c,
-      cmd_DeviceReadEEprom: 0x3d,
-      cmd_DeviceWriteEEprom: 0x3e,
-      cmd_InterfaceSetMode: 0x3f,
-    };
-
-    // Acknowledgment answers from interface
-    this.ack = {
-      ACK_OK: 0x00,
-      ACK_I_UNKNOWN_ERROR: 0x01, // Unused
-      ACK_I_INVALID_CMD: 0x02,
-      ACK_I_INVALID_CRC: 0x03,
-      ACK_I_VERIFY_ERROR: 0x04,
-      ACK_D_INVALID_COMMAND: 0x05, // Unused
-      ACK_D_COMMAND_FAILED: 0x06, // Unused
-      ACK_D_UNKNOWN_ERROR: 0x07, // Unused
-      ACK_I_INVALID_CHANNEL: 0x08,
-      ACK_I_INVALID_PARAM: 0x09,
-      ACK_D_GENERAL_ERROR: 0x0f,
-    };
-
-    this.modes = {
-      SiLC2: 0,
-      SiLBLB: 1,
-      AtmBLB: 2,
-      AtmSK: 3,
-      ARMBLB: 4,
-    };
-
-    this.siLabsModes = [
-      this.modes.SiLC2,
-      this.modes.SiLBLB,
-    ];
-
-    this.atmelModes = [
-      this.modes.AtmBLB,
-      this.modes.AtmSK,
-    ];
 
     this.totalBytes = 0;
     this.bytesWritten = 0;
@@ -146,24 +104,22 @@ class FourWay {
   }
 
   commandToString(command) {
-    for (const field in this.commands) {
-      if (this.commands[field] === command) {
+    for (const field in COMMANDS) {
+      if (COMMANDS[field] === command) {
         return field;
       }
     }
 
-    console.debug(`invalid command: ${command}`);
     return null;
   }
 
   ackToString(ack) {
-    for (const field in this.ack) {
-      if (this.ack[field] === ack) {
+    for (const field in ACK) {
+      if (ACK[field] === ack) {
         return field;
       }
     }
 
-    console.debug(`invalid ack: ${ack}`);
     return null;
   }
 
@@ -271,7 +227,7 @@ class FourWay {
       const message = self.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
-      if (command !== this.commands.cmd_InterfaceTestAlive) {
+      if (command !== COMMANDS.cmd_InterfaceTestAlive) {
         console.debug('sending', this.commandToString(command), address.toString(0x10));
       }
 
@@ -280,13 +236,13 @@ class FourWay {
          * Immediately resolve the exit command since it will not produce any
          * processable output.
          */
-        if (command === this.commands.cmd_InterfaceExit) {
+        if (command === COMMANDS.cmd_InterfaceExit) {
           await this.serial(message, null);
           return resolve();
         }
 
         const msg = await this.serial(message, this.parseMessage);
-        if (msg && msg.ack === self.ack.ACK_OK) {
+        if (msg && msg.ack === ACK.ACK_OK) {
           return resolve(msg);
         }
 
@@ -309,145 +265,133 @@ class FourWay {
     const flash = await this.initFlash(target);
 
     if (flash) {
-      const maxRetry = 5;
-      let retry = 0;
-      while(retry < maxRetry) {
-        flash.meta = {};
+      flash.meta = {};
 
-        try {
-          const blheli = new Blheli();
-          const interfaceMode = flash.params[3];
+      try {
+        const blheli = new Blheli();
+        const interfaceMode = flash.params[3];
 
-          flash.meta.signature = flash.params[1] << 8 | flash.params[0];
-          flash.meta.interfaceMode = interfaceMode;
-          flash.meta.available = true;
+        flash.meta.signature = flash.params[1] << 8 | flash.params[0];
+        flash.meta.interfaceMode = interfaceMode;
+        flash.meta.available = true;
 
-          const isAtmel = this.atmelModes.includes(interfaceMode);
-          const isSiLabs = this.siLabsModes.includes(interfaceMode);
-          const isArm = interfaceMode === this.modes.ARMBLB;
-          let settingsArray = null;
-          let layout = BLHELI_LAYOUT;
-          let layoutSize = BLHELI_LAYOUT_SIZE;
-          let defaultSettings = BLHELI_S_DEFAULTS;
+        const isAtmel = ATMEL_MODES.includes(interfaceMode);
+        const isSiLabs = SILABS_MODES.includes(interfaceMode);
+        const isArm = interfaceMode === MODES.ARMBLB;
+        let settingsArray = null;
+        let layout = BLHELI_LAYOUT;
+        let layoutSize = BLHELI_LAYOUT_SIZE;
+        let defaultSettings = BLHELI_S_DEFAULTS;
 
-          if (isSiLabs) {
-            console.debug('SiLabs detected');
-            layoutSize = BLHELI_LAYOUT_SIZE;
-            settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
-          } else if (isArm) {
-            console.debug('ARM detected');
-            layoutSize = AM32_LAYOUT_SIZE;
-            layout = AM32_LAYOUT;
-            defaultSettings = AM32_DEFAULTS;
-            settingsArray = (await this.read(AM32_EEPROM_OFFSET, layoutSize)).params;
-          } else {
-            throw new Error('Neither SiLabs nor Arm');
-          }
+        if (isSiLabs) {
+          layoutSize = BLHELI_LAYOUT_SIZE;
+          settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
+        } else if (isArm) {
+          layoutSize = AM32_LAYOUT_SIZE;
+          layout = AM32_LAYOUT;
+          defaultSettings = AM32_DEFAULTS;
+          settingsArray = (await this.read(AM32_EEPROM_OFFSET, layoutSize)).params;
+        } else {
+          throw new Error('Neither SiLabs nor Arm');
+        }
 
-          flash.isSiLabs = isSiLabs;
-          flash.isArm = isArm;
-          flash.isAtmel = isAtmel;
+        flash.isSiLabs = isSiLabs;
+        flash.isArm = isArm;
+        flash.isAtmel = isAtmel;
 
-          flash.settingsArray = settingsArray;
+        flash.settingsArray = settingsArray;
+        flash.settings = blheli.settingsObject(
+          settingsArray,
+          layout
+        );
+
+        /**
+         * Baased on the name we can decide if the initially guessed layout
+         * was correct, if not, we need to build a new settings object.
+         */
+        const name = flash.settings.NAME;
+        let newLayout = null;
+        switch(name) {
+          case 'Bluejay':
+          case 'Bluejay (BETA)': {
+            newLayout = BLUEJAY_LAYOUT;
+            layoutSize = BLUEJAY_LAYOUT_SIZE;
+            defaultSettings = BLUEJAY_DEFAULTS;
+          } break;
+        }
+
+        if(newLayout) {
+          layout = newLayout;
+
           flash.settings = blheli.settingsObject(
             settingsArray,
             layout
           );
-
-          /**
-           * Baased on the name we can decide if the initially guessed layout
-           * was correct, if not, we need to build a new settings object.
-           */
-          const name = flash.settings.NAME;
-          let newLayout = null;
-          switch(name) {
-            case 'Bluejay':
-            case 'Bluejay (BETA)': {
-              newLayout = BLUEJAY_LAYOUT;
-              layoutSize = BLUEJAY_LAYOUT_SIZE;
-              defaultSettings = BLUEJAY_DEFAULTS;
-            } break;
-          }
-
-          if(newLayout) {
-            layout = newLayout;
-
-            flash.settings = blheli.settingsObject(
-              settingsArray,
-              layout
-            );
-          }
-
-          const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
-
-          let individualSettingsDescriptions = null;
-          let settingsDescriptions = null;
-          switch(layout) {
-            case BLHELI_LAYOUT: {
-              settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case BLUEJAY_LAYOUT: {
-              settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case AM32_LAYOUT: {
-              settingsDescriptions = AM32_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-          }
-
-          flash.settingsDescriptions = settingsDescriptions[layoutRevision];
-          flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
-
-          if (interfaceMode !== this.modes.ARMBLB) {
-            const mode = blheli.modeToString(flash.settings.MODE);
-            const descriptions = settingsDescriptions[layoutRevision][mode];
-            flash.settingsDescriptions = descriptions;
-          }
-
-          const layoutName = (flash.settings.LAYOUT || '').trim();
-          let bootloaderRevision = null;
-          let make = null;
-          if (isSiLabs) {
-            const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.SILABS];
-            const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.BLHELI_S_SILABS];
-            const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8];
-
-            if (layoutName in blheliLayouts) {
-              make = blheliLayouts[layoutName].name;
-            } else if (layoutName in blheliSLayouts) {
-              make = blheliSLayouts[layoutName].name;
-            } else if (layoutName in bluejayLayouts) {
-              make = bluejayLayouts[layoutName].name;
-            }
-          } else if (isArm) {
-            bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
-          } else {
-            const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL];
-            if (layoutName in blheliAtmelLayouts) {
-              make = blheliAtmelLayouts[layoutName].name;
-            }
-          }
-
-          flash.defaultSettings = defaultSettings[layoutRevision];
-          flash.bootloaderRevision = bootloaderRevision;
-          flash.layoutSize = layoutSize;
-          flash.layout = layout;
-          flash.make = make;
-
-          break;
-        } catch (e) {
-          if(retry < maxRetry) {
-            retry += 1;
-            continue ;
-          }
-          console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
-
-          return null;
         }
+
+        const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
+
+        let individualSettingsDescriptions = null;
+        let settingsDescriptions = null;
+        switch(layout) {
+          case BLHELI_LAYOUT: {
+            settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case BLUEJAY_LAYOUT: {
+            settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case AM32_LAYOUT: {
+            settingsDescriptions = AM32_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+        }
+
+        flash.settingsDescriptions = settingsDescriptions[layoutRevision];
+        flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
+
+        if (interfaceMode !== MODES.ARMBLB) {
+          const mode = blheli.modeToString(flash.settings.MODE);
+          const descriptions = settingsDescriptions[layoutRevision][mode];
+          flash.settingsDescriptions = descriptions;
+        }
+
+        const layoutName = (flash.settings.LAYOUT || '').trim();
+        let bootloaderRevision = null;
+        let make = null;
+        if (isSiLabs) {
+          const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.SILABS];
+          const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.BLHELI_S_SILABS];
+          const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8];
+
+          if (layoutName in blheliLayouts) {
+            make = blheliLayouts[layoutName].name;
+          } else if (layoutName in blheliSLayouts) {
+            make = blheliSLayouts[layoutName].name;
+          } else if (layoutName in bluejayLayouts) {
+            make = bluejayLayouts[layoutName].name;
+          }
+        } else if (isArm) {
+          bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
+          flash.settings.LAYOUT = flash.settings.NAME;
+        } else {
+          const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL];
+          if (layoutName in blheliAtmelLayouts) {
+            make = blheliAtmelLayouts[layoutName].name;
+          }
+        }
+
+        flash.defaultSettings = defaultSettings[layoutRevision];
+        flash.bootloaderRevision = bootloaderRevision;
+        flash.layoutSize = layoutSize;
+        flash.layout = layout;
+        flash.make = make;
+      } catch (e) {
+        console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
+        return null;
       }
 
       // Delete some things that we do not need to pass on to the client
@@ -464,11 +408,11 @@ class FourWay {
   }
 
   async initFlash(target) {
-    return this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
   }
 
   async writeSettings(target, esc, settings) {
-    const flash = await this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
+    const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
       const blheli = new Blheli();
@@ -535,22 +479,22 @@ class FourWay {
       let mcu = null;
 
       switch(interfaceMode) {
-        case this.modes.SiLC2: {
+        case MODES.SiLC2: {
           return BLHELI_SILABS.FLASH_SIZE;
         }
 
-        case this.modes.SiLBLB: {
+        case MODES.SiLBLB: {
           mcu = findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_TYPES.EFM8]) ||
                 findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.BLHELI_S_SILABS]) ||
                 findMCU(signature, BLHELI_ESCS.signatures.SiLabs);
         } break;
 
-        case this.modes.AtmBLB:
-        case this.modes.AtmSK: {
+        case MODES.AtmBLB:
+        case MODES.AtmSK: {
           mcu = findMCU(signature, BLHELI_ESCS.signatures.Atmel);
         } break;
 
-        case this.modes.ARMBLB: {
+        case MODES.ARMBLB: {
           mcu = findMCU(signature, AM32_ESCS.signatures.Arm);
         } break;
 
@@ -760,12 +704,14 @@ class FourWay {
       const interfaceMode = message.params[3];
 
       switch (interfaceMode) {
-        case this.modes.SiLBLB: {
+        case MODES.SiLBLB: {
           await flashSiLabs(flash);
         } break;
 
-        case this.modes.ARMBLB: {
+        case MODES.ARMBLB: {
           await flashArm(flash);
+
+          // Reset after flashing to update name and settings
           await this.reset(target);
           await delay(AM32_RESET_DELAY_MS);
         } break;
@@ -958,44 +904,47 @@ class FourWay {
   }
 
   pageErase(page) {
-    return this.sendMessagePromised(this.commands.cmd_DevicePageErase, [page]);
+    return this.sendMessagePromised(COMMANDS.cmd_DevicePageErase, [page]);
   }
 
   read(address, bytes) {
     return this.sendMessagePromised(
-      this.commands.cmd_DeviceRead, [bytes === 256 ? 0 : bytes], address);
+      COMMANDS.cmd_DeviceRead,
+      [bytes === 256 ? 0 : bytes],
+      address
+    );
   }
 
   readEEprom(address, bytes) {
     return this.sendMessagePromised(
-      this.commands.cmd_DeviceReadEEprom, [bytes === 256 ? 0 : bytes], address
+      COMMANDS.cmd_DeviceReadEEprom,
+      [bytes === 256 ? 0 : bytes],
+      address
     );
   }
 
   write(address, data) {
-    return this.sendMessagePromised(this.commands.cmd_DeviceWrite, data, address);
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceWrite, data, address);
   }
 
   writeEEprom(address, data) {
-    // Writing EEprom is real slow on Atmel, hence increased timeout
-    return this.sendMessagePromised(this.commands.cmd_DeviceWriteEEprom, data, address, 10000);
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceWriteEEprom, data, address);
   }
 
   reset(target) {
-    return this.sendMessagePromised(this.commands.cmd_DeviceReset, [target], 0);
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
   }
 
   exit() {
     if (this.interval) {
       clearInterval(this.interval);
-      this.commandQueue = [];
     }
 
-    return this.sendMessagePromised(this.commands.cmd_InterfaceExit);
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
   }
 
   testAlive() {
-    return this.sendMessagePromised(this.commands.cmd_InterfaceTestAlive);
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
   }
 
   start() {
