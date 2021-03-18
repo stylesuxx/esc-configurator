@@ -1,6 +1,6 @@
 import blujayEscs from '../../sources/Bluejay/escs.json';
 import blheliEscs from '../../sources/Blheli/escs.json';
-import openEscEscs from '../../sources/OpenEsc/escs.json';
+import am32Escs from '../../sources/AM32/escs.json';
 
 import {
   BLUEJAY_TYPES,
@@ -11,8 +11,8 @@ import {
 } from '../Blheli';
 
 import {
-  OPEN_ESC_TYPES,
-} from '../OpenEsc';
+  AM32_TYPES,
+} from '../AM32';
 
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
@@ -97,7 +97,7 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
 const isValidLayout = (layout) => {
   if(blujayEscs.layouts[BLUEJAY_TYPES.EFM8][layout] ||
      blheliEscs.layouts[BLHELI_TYPES.ATMEL][layout] ||
-     openEscEscs.layouts[OPEN_ESC_TYPES.ARM][layout] ||
+     am32Escs.layouts[AM32_TYPES.ARM][layout] ||
      BLHELI_TYPES.BLHELI_S_SILABS[layout] ||
      BLHELI_TYPES.SILABS[layout]
   ) {

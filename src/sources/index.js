@@ -19,14 +19,14 @@ import {
 } from './Bluejay';
 
 import {
-  openEscConfig
-} from './OpenEsc';
+  AM32Config
+} from './AM32';
 
 const sources = [
   bluejayConfig,
   // blheliMConfig,
   blheliConfig,
-  openEscConfig,
+  AM32Config,
 ];
 
 export {

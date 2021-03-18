@@ -25,8 +25,8 @@ import {
 } from '../../utils/Bluejay';
 
 import {
-  OPEN_ESC_TYPES,
-} from '../../utils/OpenEsc';
+  AM32_TYPES,
+} from '../../utils/AM32';
 
 import {
   PLATFORMS,
@@ -90,8 +90,8 @@ function FirmwareSelector({
       setType(BLHELI_TYPES.SILABS);
     } else if (findMCU(signatureHint, escs.Blheli.signatures[BLHELI_TYPES.ATMEL])) {
       setType(BLHELI_TYPES.ATMEL);
-    } else if (findMCU(signatureHint, escs.OpenEsc.signatures[OPEN_ESC_TYPES.ARM])) {
-      setType(OPEN_ESC_TYPES.ARM);
+    } else if (findMCU(signatureHint, escs.AM32.signatures[AM32_TYPES.ARM])) {
+      setType(AM32_TYPES.ARM);
     } else {
       throw new Error('Unknown MCU signature: ' + signatureHint.toString(0x10));
     }
