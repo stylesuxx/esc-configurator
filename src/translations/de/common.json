@@ -73,5 +73,7 @@
   "escServoDeadBand": "Servo Totzone bei Neutralstellung",
   "escLowVoltageCutoff": "Abschaltung bei niedriger Spannung",
   "escLowVoltageThreshold": "Wert der Abschaltung bei niedriger Spannung",
-  "escRcCarReversing": "Motorendrehrichtung umkehren wie bei RC Autos"
+  "escRcCarReversing": "Motorendrehrichtung umkehren wie bei RC Autos",
+  "bluejayText": "Bluejay is BLHELI_S based firmware capable of bi-directional DSHOT - so a great choice if you want to run RPM filtering on your rig. This project also aims to clean up and simplify the original BLHELI_S source code. A startup sound editor is also part of the deal.",
+  "blheli32ToAM32": "<strong>AM32 can be flashed on BLHELI_32 ESC's</strong>. But, you will have to first flash the AM32 Bootloader via <a href=\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\" target=\"_blank\">STM32 Cube Programmer</a> and ST Link V2 programming adapter. The required bootloader can be found in the <a href=\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\" target=\"_blank\">AM32 bootloader repository</a>."
 }
