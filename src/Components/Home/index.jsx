@@ -92,6 +92,20 @@ function Home() {
                   />
                 </div>
               </div>
+
+              <h3>
+                Bluejay
+              </h3>
+
+              <div dangerouslySetInnerHTML={{ __html: t('bluejayText') }} />
+
+              <br />
+
+              <h3>
+                AM32
+              </h3>
+
+              <div dangerouslySetInnerHTML={{ __html: t('blheli32ToAM32') }} />
             </div>
           </div>
 

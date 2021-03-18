@@ -29,6 +29,13 @@
     background-color: #eaeaea;
     overflow: hidden;
     display: flex;
+    padding-bottom: 30px;
+    padding-top: 20px;
+
+    a,
+    a:hover {
+      text-decoration: underline;
+    }
 
     & > div {
       flex: 1
@@ -44,12 +51,12 @@
 
     h2 {
         margin-bottom: 5px;
-        font-size: 13px;
+        font-size: 18px;
     }
 
     h3 {
-        font-size: 12px;
-        margin-bottom: 5px;
+        font-size: 16px;
+        margin-bottom: 2px;
     }
   }
 
@@ -91,7 +98,8 @@
     margin-bottom: 15px;
     font-weight: normal;
     font-family: 'open_sansregular', Arial;
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 20px;
   }
 
   .text1 .wrap {

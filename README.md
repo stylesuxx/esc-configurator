@@ -1,3 +1,5 @@
+<img align="right" src="./public/logo512.png" alt="ESC Configurator" width="250">
+
 [![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom)
 
 # ESC Configurator - PWA
