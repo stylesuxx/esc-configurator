@@ -2,9 +2,10 @@
   {
     "title": "Unreleased",
     "items": [
-      "Improved tool-tips",
       "AM32 read/write settings",
-      "AM32 flash"
+      "AM32 flash",
+      "Improved tool-tips",
+      "New color schema and logo"
     ]
   },
   {

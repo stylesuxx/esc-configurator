@@ -3,7 +3,6 @@ import React from 'react';
 import {
   useTranslation,
 } from 'react-i18next';
-import './list-style.css';
 import './style.scss';
 
 function PortPicker({
