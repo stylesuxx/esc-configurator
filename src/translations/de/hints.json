@@ -8,8 +8,8 @@
   "STARTUP_POWER_MIN": "Die minimal angewendete Leistung die aufgewendet wird um die Motoren zu starten. Erhöhe diesen Wert wenn die Motoren sich nicht bei minimalen Schub bewegen.",
   "DITHERING": "Erhöht die effektive PWM Auflösung auf 2000 werte. Es ist prinzipiell gut diese Einstellung aktiviert zu lasse - vor allem mit PWM Frequenzen über 24kHz.",
   "STARTUP_POWER_MAX": "Limitiert die Leistung wenn die Motoren gestartet oder die Drehrichtung geändert wird.",
-  "RPM_POWER_SLOPE": "Limits how much power can be increased according to how fast the motor is spinning. Lower values will avoid power spikes but can also decrease acceleration and maximum attainable speed.",
-  "MOTOR_DIRECTION": "The motor rotation direction can be normal or reversed. In bidirectional mode, center throttle is zero.",
-  "COMMUTATION_TIMING": "Motor commutation advance timing. Higher timing are less prone to desyncs and can provide more power at the cost of efficiency.",
-  "DEMAG_COMPENSATION": "The extent to which power should be cut to protect against motor stalls caused by long winding demagnetization time after commutation."
+  "RPM_POWER_SLOPE": "Beschränkt wie sehr die Leistung, basierend auf der momentanen Drehzahl, erhöht werden kann. Niedrige Werte verhindern Leistungsspitzen, können aber auch zu verminderter Beschleunigung und verminderter maximal Geschwindigkeit führen.",
+  "MOTOR_DIRECTION": "Die Motordrehrichtung kann normal oder rückwärts sein. Im \"bidirecional\" Modus ist die Mittelstellung des Steuerknüppels Null.",
+  "COMMUTATION_TIMING": "Motorkommutations timing. Höhere Werte führen in der Regel zu weniger de-syncs und führen zu mehr Leistung auf kosten der Effizienz.",
+  "DEMAG_COMPENSATION": "Wie sehr die Leistung beschränkt werden soll um das stocken des Motors durch lange dauernde de-magnetisierung nach der Kommutation zu verhindern."
 }
