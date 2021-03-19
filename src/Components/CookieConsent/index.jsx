@@ -24,6 +24,7 @@ function CookieConsent({ onCookieAccept }) {
           paddingTop: '20px',
           background: 'white',
           borderTop: 'solid 2px black',
+          zIndex: 2,
         },
         message: {
           fontSize: '16px',
