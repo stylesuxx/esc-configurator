@@ -144,6 +144,7 @@ function Esc({
 
           <button
             className={canFlash ? '' : 'disabled'}
+            disabled={!canFlash}
             href="#"
             onClick={flashFirmware}
             type="button"

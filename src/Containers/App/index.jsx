@@ -485,6 +485,8 @@ class App extends Component {
         await this.setState({ progress: newProgress });
       };
 
+      updateProgress(0.1);
+
       const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
       if(result) {
         escs[target] = result;

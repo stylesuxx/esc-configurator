@@ -139,11 +139,15 @@ body {
       text-decoration:none;
     }
 
-    button.disabled,
-    a.disabled {
+    button[disabled],
+    button[disabled]:hover,
+    a.disabled,
+    a.disabled:hover {
       background-color: #fff;
+      text-shadow: none;
       border: 1px solid #ccc;
       color: #ccc;
+      cursor: default;
     }
 
     button:active,
