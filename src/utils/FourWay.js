@@ -169,7 +169,6 @@ class FourWay {
     }
 
     if (view.length < 9) {
-      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 
@@ -179,7 +178,6 @@ class FourWay {
     }
 
     if (view.length < 8 + paramCount) {
-      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 
@@ -738,6 +736,7 @@ class FourWay {
         return flashTarget(target, flash);
       } catch(e) {
         console.debug('Failed flashing Arm:', e);
+        return null;
       }
     } else if(!esc.isAtmel) {
       try {
@@ -761,6 +760,7 @@ class FourWay {
         return flashTarget(target, flash);
       } catch(e) {
         console.debug('Failed flashing SiLabs:', e);
+        return null;
       }
     } else {
       throw new Error('Can not flash Atmel yet.');

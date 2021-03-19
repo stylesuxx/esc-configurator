@@ -77,7 +77,6 @@ async function retry(func, maxRetries, iterationDelay = null) {
         }
 
         if(iterationDelay) {
-          console.debug('Retrying...');
           await delay(iterationDelay * retries);
         }
       }
