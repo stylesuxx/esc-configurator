@@ -163,6 +163,15 @@ function PortPicker({
             {rateElements}
           </select>
         </div>
+
+        <div className="button-dark">
+          <button
+            onClick={onSetPort}
+            type="button"
+          >
+            {t('openPortSelection')}
+          </button>
+        </div>
       </div>
 
       <div
