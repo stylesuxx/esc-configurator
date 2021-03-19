@@ -248,7 +248,7 @@ class FourWay {
   }
 
   async getInfo(target) {
-    const flash = await this.initFlash(target);
+    const flash = await this.initFlash(target, 3);
 
     if (flash) {
       flash.meta = {};
@@ -380,6 +380,8 @@ class FourWay {
         return null;
       }
 
+      flash.individualSettings = getIndividualSettings(flash);
+
       // Delete some things that we do not need to pass on to the client
       delete flash.ack;
       delete flash.params;
@@ -388,13 +390,11 @@ class FourWay {
       delete flash.checksum;
     }
 
-    flash.individualSettings = getIndividualSettings(flash);
-
     return flash;
   }
 
-  async initFlash(target) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
+  async initFlash(target, retries = 10) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
   }
 
   async writeSettings(target, esc, settings) {
