@@ -275,7 +275,6 @@ class App extends Component {
 
     actions.isReading = true;
     this.setState({ actions });
-    this.addLogMessage('Reading ESC\'s');
 
     // Enable 4way if
     let connected = 0;
@@ -299,7 +298,11 @@ class App extends Component {
 
     const escFlash = [];
     let open = false;
-    console.debug(`Getting info for ${connected} ESC's`);
+
+    const message = `Trying to read ${connected} ESC's`;
+    this.addLogMessage(message);
+    console.debug(message);
+
     await delay(1000);
     try {
       for (let i = 0; i < connected; i += 1) {
@@ -307,6 +310,14 @@ class App extends Component {
         const settings = await this.serial.fourWayGetInfo(i);
         if(settings) {
           escFlash.push(settings);
+
+          const message = `Read ESC ${i + 1}`;
+          this.addLogMessage(message);
+          console.debug(message);
+        } else {
+          const error = `Failed reading ESC ${i + 1}`;
+          this.addLogMessage(error);
+          console.debug(error);
         }
       }
       open = true;
@@ -578,6 +589,10 @@ class App extends Component {
       this.serial.setLogCallback(this.addLogMessage);
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('Opened serial port');
+
+      // Send a reset of the 4 way interface, just in case it was not cleanly
+      // disconnected before.
+      await this.serial.fourWayExit();
     } catch (e) {
       console.debug(e);
 
