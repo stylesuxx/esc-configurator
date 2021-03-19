@@ -3,6 +3,7 @@
   float: right;
   display: flex;
   padding-left: 10px;
+  padding-bottom: 14px;
 
   button {
     cursor: pointer;
@@ -58,7 +59,10 @@
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.7);
-    padding-bottom: 14px;
+
+    button {
+      margin-right: 0px;
+    }
   }
 
   #portsinput {
@@ -143,6 +147,7 @@
   border: 1px solid red;
   background: white;
   margin: 20px;
+  margin-top: 12px;
   margin-bottom: 0px;
   margin-left: 10px;
   padding: 10px;
