@@ -79,5 +79,5 @@
   "blhelisText": "<p>BLHELI_S benötigt wahrscheinlich keine Einführung - die beliebte ESC-Firmware für fast jeden EFM8-basierten ESC im Quadrocopter-Hobby.</p><p>Erprobt und getestet, unterstützt es alle analogen und digitalen Protokolle die in Betaflight existieren</p>",
   "whatsNextHeader": "Was kommt als nächstes?",
   "whatsNextText": "<p>Wenn du mitverfolgen willst welche Funktionen in Zukunft entstehen, kannst du dies im <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com\" target=\"_blank\">github-Repository</a>beobachten. Gerne kannst du auch eine Feature-Anfrage erstellen, wenn du eine Idee zu einem Feature hast, welches du gerne implementiert hättest.</p>",
-  "openPortSelection": "Open Port Selection"
+  "openPortSelection": "Portauswahl öffnen"
 }
