@@ -665,12 +665,11 @@ class FourWay {
       const originalSettings = message.params;
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
-      eepromInfo.set([ originalSettings[1], originalSettings[2] ], 1);
+      eepromInfo.set([originalSettings[1], originalSettings[2]], 1);
       eepromInfo.set(ascii2buf('FLASH FAIL  '), 5);
 
       await this.write(AM32_EEPROM.EEPROM_OFFSET, eepromInfo);
 
-      // TODO: implement writePages
       await this.writePages(0x04, 0x40, AM32_EEPROM.PAGE_SIZE, flash);
       await this.verifyPages(0x04, 0x40, AM32_EEPROM.PAGE_SIZE, flash);
 
