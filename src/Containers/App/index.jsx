@@ -472,7 +472,9 @@ class App extends Component {
 
     let newProgress = progress;
     for(let i = 0; i < flashTargets.length; i += 1) {
-      console.debug(`Flashing ESC ${i}`);
+      const message = `Flashing ESC ${i + 1}`;
+      console.debug(message);
+      this.addLogMessage(message);
 
       const target = flashTargets[i];
       const esc = escs[target];
@@ -484,10 +486,16 @@ class App extends Component {
       };
 
       const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
-      escs[target] = result;
+      if(result) {
+        escs[target] = result;
+        newProgress[target] = 0;
 
-      newProgress[target] = 0;
-      await this.setState({ escs });
+        await this.setState({ escs });
+      } else {
+        const error = `Failed flashing ESC ${i + 1} - check file type`;
+        console.debug(error);
+        this.addLogMessage(error);
+      }
     }
 
     actions.isSelecting = false;
