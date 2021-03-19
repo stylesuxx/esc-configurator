@@ -4,34 +4,27 @@ import {
   ARM_TYPES,
 } from './Source';
 
-import {
-  blheliConfig
-} from './Blheli';
+import blheliSource from './Blheli';
+import bluejaySource from './Bluejay';
+import am32Source from './AM32';
 
-/*
-import {
-  blheliMConfig
-} from './BlheliM';
-*/
-
-import {
-  bluejayConfig
-} from './Bluejay';
-
-import {
-  AM32Config
-} from './AM32';
+// TODO: Needs implementation
+// import blheliMConfig from './BlheliM';
 
 const sources = [
-  bluejayConfig,
+  blheliSource,
+  bluejaySource,
+  am32Source,
   // blheliMConfig,
-  blheliConfig,
-  AM32Config,
 ];
 
 export {
   PLATFORMS,
   SILABS_TYPES,
   ARM_TYPES,
+  blheliSource,
+  bluejaySource,
+  am32Source,
 };
+
 export default sources;

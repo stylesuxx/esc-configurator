@@ -1,6 +1,6 @@
 import {
   BLHELI_MODES,
-} from '../Blheli';
+} from '../../sources/Blheli/eeprom';
 
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);

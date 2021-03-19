@@ -1,16 +1,16 @@
 import {
   BLUEJAY_TYPES,
-} from '../Bluejay';
+} from '../../sources/Bluejay/eeprom';
 import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
 
 import {
   BLHELI_TYPES,
-} from '../Blheli';
+} from '../../sources/Blheli/eeprom';
 import BLHELI_ESCS from '../../sources/Blheli/escs.json';
 
 import {
   AM32_TYPES,
-} from '../AM32';
+} from '../../sources/AM32/eeprom';
 import AM32_ESCS from '../../sources/AM32/escs.json';
 
 function compare(a, b) {

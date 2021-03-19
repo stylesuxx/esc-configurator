@@ -2,27 +2,24 @@ import Source, {
   PLATFORMS,
 } from '../Source';
 
-import BLHELI_VERSIONS_LOCAL from './versions.json';
-import BLHELI_ESCS_LOCAL from './escs.json';
+import EEPROM from './eeprom';
 
-const BLHELI_VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
-const BLHELI_ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_escs.json';
+import VERSIONS_LOCAL from './versions.json';
+import ESCS_LOCAL from './escs.json';
+
+const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
+const ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_escs.json';
 
 const pwmOptions = [];
 const blheliConfig = new Source(
   'Blheli',
   PLATFORMS.SILABS,
-  BLHELI_VERSIONS_REMOTE,
-  BLHELI_ESCS_REMOTE,
-  BLHELI_VERSIONS_LOCAL,
-  BLHELI_ESCS_LOCAL,
+  VERSIONS_REMOTE,
+  ESCS_REMOTE,
+  EEPROM,
+  VERSIONS_LOCAL,
+  ESCS_LOCAL,
   pwmOptions
 );
 
-export {
-  BLHELI_VERSIONS_REMOTE,
-  BLHELI_VERSIONS_LOCAL,
-  BLHELI_ESCS_REMOTE,
-  BLHELI_ESCS_LOCAL,
-  blheliConfig,
-};
+export default blheliConfig;

@@ -2,27 +2,26 @@ import Source, {
   PLATFORMS,
 } from '../Source';
 
-import AM32_VERSIONS_LOCAL from './versions.json';
-import AM32_ESCS_LOCAL from './escs.json';
+import EEPROM from './eeprom';
 
-const AM32_VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/versions.json';
-const AM32_ESCS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/escs.json';
+import VERSIONS_LOCAL from './versions.json';
+import ESCS_LOCAL from './escs.json';
+
+const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/versions.json';
+const ESCS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/escs.json';
 
 const pwmOptions = [];
-const AM32Config = new Source(
+const am32Config = new Source(
   'AM32',
   PLATFORMS.ARM,
-  AM32_VERSIONS_REMOTE,
-  AM32_ESCS_REMOTE,
-  AM32_VERSIONS_LOCAL,
-  AM32_ESCS_LOCAL,
+  VERSIONS_REMOTE,
+  ESCS_REMOTE,
+  EEPROM,
+  VERSIONS_LOCAL,
+  ESCS_LOCAL,
   pwmOptions
 );
 
-export {
-  AM32_VERSIONS_REMOTE,
-  AM32_VERSIONS_LOCAL,
-  AM32_ESCS_REMOTE,
-  AM32_ESCS_LOCAL,
-  AM32Config,
-};
+
+
+export default am32Config;

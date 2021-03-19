@@ -1,25 +1,26 @@
 import {
   BLHELI_TYPES,
-} from '../utils/Blheli';
+} from './Blheli/eeprom';
 
 import {
   BLUEJAY_TYPES,
-} from '../utils/Bluejay';
+} from './Bluejay/eeprom';
 
 import {
   AM32_TYPES,
-} from '../utils/AM32';
+} from './AM32/eeprom';
 
 class Source {
-  constructor(name, platform, versions, escs, localVersions, localEscs, pwm) {
+  constructor(name, platform, versions, escs, eeprom, localVersions, localEscs, pwm) {
     if(!name || !versions || !escs || !localVersions || !localEscs || !pwm) {
-      throw new Error("Parameters required: name, versions, escs, localVersions, localEscs");
+      throw new Error("Parameters required: name, platform, versions, escs, eeprom, localVersions, localEscs");
     }
 
     this.name = name;
     this.platform = platform;
     this.versions = versions;
     this.escs = escs;
+    this.eeprom = eeprom;
     this.localVersions = localVersions;
     this.localEscs = localEscs;
     this.pwm = pwm;
@@ -75,6 +76,10 @@ class Source {
 
     return this.localEscs;
   }
+
+  getEeprom() {
+    return this.eeprom;
+  }
 }
 
 const PLATFORMS = {
@@ -96,4 +101,5 @@ export {
   PLATFORMS,
   SILABS_TYPES,
 };
+
 export default Source;

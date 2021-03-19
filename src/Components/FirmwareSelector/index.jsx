@@ -16,11 +16,11 @@ import LabeledSelect from '../LabeledSelect';
 import {
   BLHELI_TYPES,
   BLHELI_MODES,
-} from '../../utils/Blheli';
+} from '../../sources/Blheli/eeprom';
 
 import {
   BLUEJAY_TYPES,
-} from '../../utils/Bluejay';
+} from '../../sources/Bluejay/eeprom';
 
 import {
   PLATFORMS,
