@@ -765,56 +765,6 @@ class App extends Component {
       return null;
     }
 
-    if (!hasSerial) {
-      return (
-        <div id="not-supported">
-          Sorry,
-          {' '}
-
-          <b>
-            Web Serial
-          </b>
-
-          {' '}
-          is not supported on this device,
-          make sure you&apos;re running Chrome 78 or later and have enabled the
-
-          <code>
-            #enable-experimental-web-platform-features
-          </code>
-
-          {' '}
-          flag in &nbsp;
-
-          <code>
-            chrome://flags
-          </code>
-
-          <br />
-
-          <br />
-
-          <p>
-            Alternatively download the latest
-
-            {' '}
-
-            <a
-              href="https://www.google.com/intl/de/chrome/"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Chrome stable release
-            </a>
-
-            {' '}
-
-            where this feature is already enabled by default.
-          </p>
-        </div>
-      );
-    }
-
     const languageElements = this.languages.map((item) => (
       <option
         key={item.value}
@@ -833,6 +783,7 @@ class App extends Component {
 
               <PortPicker
                 hasPort={connected}
+                hasSerial={hasSerial}
                 onChangePort={this.handleChangePort}
                 onConnect={this.handleConnect}
                 onDisconnect={this.handleDisconnect}

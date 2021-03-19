@@ -1,5 +1,5 @@
 import React from 'react';
-import bluejay from './images/bluejay.svg';
+import bluejay from './images/bluejay_logo.png';
 import './style.scss';
 
 import {
@@ -83,38 +83,65 @@ function Home() {
                 </ul>
               </div>
 
-              <div className="firmware-logo-bar">
-                <div>
+              <div className="summary-section">
+                <h3>
+                  BLHELI_S
+                </h3>
 
+                <section>
+                  <div>
+                    <div dangerouslySetInnerHTML={{ __html: t('blhelisText') }} />
+                  </div>
+                </section>
+              </div>
+
+              <div className="summary-section">
+                <h3>
+                  Bluejay
+                </h3>
+
+                <section>
                   <img
                     alt="Bluejay"
                     src={bluejay}
                   />
-                </div>
+
+                  <div>
+                    <div dangerouslySetInnerHTML={{ __html: t('bluejayText') }} />
+                  </div>
+                </section>
               </div>
 
-              <h3>
-                Bluejay
-              </h3>
+              <div className="summary-section">
+                <h3>
+                  AM32
+                </h3>
 
-              <div dangerouslySetInnerHTML={{ __html: t('bluejayText') }} />
-
-              <br />
-
-              <h3>
-                AM32
-              </h3>
-
-              <div dangerouslySetInnerHTML={{ __html: t('blheli32ToAM32') }} />
+                <section>
+                  <div dangerouslySetInnerHTML={{ __html: t('blheli32ToAM32') }} />
+                </section>
+              </div>
             </div>
           </div>
 
           <div className="column third_right text3">
-            <h2>
-              {t('homeContributionHeader')}
-            </h2>
+            <div className="wrap">
+              <h2>
+                {t('homeContributionHeader')}
+              </h2>
 
-            <div dangerouslySetInnerHTML={{ __html: t('homeContributionText') }} />
+              <div dangerouslySetInnerHTML={{ __html: t('homeContributionText') }} />
+
+              <div className="summary-section">
+                <h3>
+                  {t('whatsNextHeader')}
+                </h3>
+
+                <section>
+                  <div dangerouslySetInnerHTML={{ __html: t('whatsNextText') }} />
+                </section>
+              </div>
+            </div>
           </div>
         </div>
 

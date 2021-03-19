@@ -17,19 +17,6 @@ body {
   overflow-x: hidden;
 }
 
-#not-supported {
-  border: 1px solid red;
-  background: white;
-  margin: 20px;
-  padding: 20px;
-  font-size: 20px;
-  text-align: center;
-
-  a {
-    text-decoration: underline;
-  }
-}
-
 #main-wrapper {
   padding: 0px 0px 0 0px;
   height: calc(100% - 7px);

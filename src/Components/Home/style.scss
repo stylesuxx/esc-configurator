@@ -32,6 +32,40 @@
     padding-bottom: 30px;
     padding-top: 20px;
 
+    @media only screen and (max-width: 991px) {
+      & {
+        flex-direction: column;
+      }
+    }
+
+    .summary-section {
+      margin-top: 20px;
+
+      h3 {
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid silver;
+      }
+
+      section {
+        display: flex;
+
+        p {
+          padding-bottom: 10px;
+        }
+
+        p:last-of-type {
+          padding-bottom: 0px;
+        }
+
+        img {
+          width: 128px;
+          height: 128px;
+          margin-right: 15px;
+        }
+      }
+    }
+
     a,
     a:hover {
       text-decoration: underline;
@@ -111,8 +145,9 @@
     margin-top: 10px;
 
     li {
-        padding: 5px 0;
-        border-top: 1px dotted silver;
+      line-height: 24px;
+      margin-left: 20px;
+      list-style: disc;
     }
   }
 }
