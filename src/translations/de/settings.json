@@ -1,6 +1,6 @@
 {
-  "settingsHeader": "Settings",
-  "closeText": "Close",
-  "directInput": "Direct Input",
-  "directInputHint": "Use direct input for numbers instead of sliders."
+  "settingsHeader": "Einstellungen",
+  "closeText": "Schließen",
+  "directInput": "Direkteingabe",
+  "directInputHint": "Direkte Eingabe für Zahlen statt Schieberegler."
 }
