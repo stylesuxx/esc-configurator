@@ -17,19 +17,6 @@ body {
   overflow-x: hidden;
 }
 
-#not-supported {
-  border: 1px solid red;
-  background: white;
-  margin: 20px;
-  padding: 20px;
-  font-size: 20px;
-  text-align: center;
-
-  a {
-    text-decoration: underline;
-  }
-}
-
 #main-wrapper {
   padding: 0px 0px 0 0px;
   height: calc(100% - 7px);
@@ -112,7 +99,7 @@ body {
 
   .language-select {
     float: right;
-    margin-top: 20px;
+    margin-top: 12px;
     width: 120px;
     margin-right: 10px;
   }
@@ -143,13 +130,6 @@ body {
       font-weight: bold;
     }
 
-    button.disabled,
-    a.disabled {
-      background-color: #fff;
-      border: 1px solid #ccc;
-      color: #ccc;
-    }
-
     button:hover,
     a:hover {
       background-color: var(--color-tertiary);
@@ -157,6 +137,17 @@ body {
       text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
       transition: all ease 0.2s;
       text-decoration:none;
+    }
+
+    button[disabled],
+    button[disabled]:hover,
+    a.disabled,
+    a.disabled:hover {
+      background-color: #fff;
+      text-shadow: none;
+      border: 1px solid #ccc;
+      color: #ccc;
+      cursor: default;
     }
 
     button:active,

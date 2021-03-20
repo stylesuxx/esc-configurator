@@ -1,37 +1,53 @@
 {
-  "layouts":{
-    "Arm":{
-      "FD6288":{
+  "layouts": {
+    "Arm": {
+      "DIATONE gen": {
+        "name":"Diatone",
+        "fileName":"DIATONE"
+      },
+      "FD6288_PA2": {
         "name":"FD6288 based",
         "fileName":"FD6288"
       },
-      "HGLRC60A":{
+      "HGLRC_60A": {
         "name":"HGLRC 60A",
         "fileName":"HGLRC60A"
       },
-      "IFLIGHT":{
+      "IFlight_50A": {
         "name":"iFlight 50A",
         "fileName":"IFLIGHT"
       },
-      "MP6531":{
+      "MAMBA F40PRO": {
+        "name":"Mamba F40 Pro",
+        "fileName":"MAMBA_F40PRO"
+      },
+      "MAMBA F50PRO": {
+        "name":"Mamba F50 Pro",
+        "fileName":"MAMBA_F50PRO"
+      },
+      "MAMBA F60PRO": {
+        "name":"Mamba F60 Pro",
+        "fileName":"MAMBA_F60PRO"
+      },
+      "Mp6531_Dev": {
         "name":"MP6531 based",
         "fileName":"MP6531"
       },
-      "SISKIN":{
+      "SISKIN_PA2": {
         "name":"Sunrise Siskin",
         "fileName":"SISKIN"
       },
-      "TMOTOR45A":{
+      "T-MOTOR 45A": {
         "name":"T-motor 45A",
         "fileName":"TMOTOR45A"
       },
-      "TMOTOR55A":{
+      "T-MOTOR 55A": {
         "name":"T-motor 55A",
         "fileName":"TMOTOR55A"
       }
     }
   },
-  "signatures":{
+  "signatures": {
     "Arm":[
       {
         "name":"STM32F051",

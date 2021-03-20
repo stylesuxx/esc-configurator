@@ -1,3 +1,18 @@
+import {
+  BLUEJAY_TYPES,
+} from '../../sources/Bluejay/eeprom';
+import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
+
+import {
+  BLHELI_TYPES,
+} from '../../sources/Blheli/eeprom';
+import BLHELI_ESCS from '../../sources/Blheli/escs.json';
+
+import {
+  AM32_TYPES,
+} from '../../sources/AM32/eeprom';
+import AM32_ESCS from '../../sources/AM32/escs.json';
+
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
@@ -62,7 +77,7 @@ async function retry(func, maxRetries, iterationDelay = null) {
         }
 
         if(iterationDelay) {
-          console.debug('Retrying...');
+          console.debug(`Retrying: ${e.message}`);
           await delay(iterationDelay * retries);
         }
       }
@@ -77,10 +92,51 @@ async function retry(func, maxRetries, iterationDelay = null) {
 // signatrue is expected to be a decimal
 const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === parseInt(signature, 10));
 
+// Check if a given layout is available in any of the sources
+const isValidLayout = (layout) => {
+  if(BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8][layout] ||
+     BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL][layout] ||
+     AM32_ESCS.layouts[AM32_TYPES.ARM][layout] ||
+     BLHELI_TYPES.BLHELI_S_SILABS[layout] ||
+     BLHELI_TYPES.SILABS[layout]
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+const getPossibleTypes = (signature) => {
+  const types = [];
+  if(findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_TYPES.EFM8])) {
+    types.push(BLUEJAY_TYPES.EFM8);
+  }
+
+  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
+    types.push(BLHELI_TYPES.BLHELI_S_SILABS);
+  }
+
+  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.SILABS])) {
+    types.push(BLHELI_TYPES.SILABS);
+  }
+
+  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.ATMEL])) {
+    types.push(BLHELI_TYPES.ATMEL);
+  }
+
+  if (findMCU(signature, AM32_ESCS.signatures[AM32_TYPES.ARM])) {
+    types.push(AM32_TYPES.ARM);
+  }
+
+  return types;
+};
+
 export {
   retry,
   delay,
   compare,
   findMCU,
   isValidFlash,
+  isValidLayout,
+  getPossibleTypes,
 };

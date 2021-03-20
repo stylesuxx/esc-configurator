@@ -13,8 +13,6 @@ import Statusbar from '../../Components/Statusbar';
 import CookieConsent from '../../Components/CookieConsent';
 import MainContent from '../../Components/MainContent';
 
-import Select from '../../Components/Input/Select';
-
 import Serial from '../../utils/Serial';
 
 import sources from '../../sources';
@@ -22,6 +20,10 @@ import sources from '../../sources';
 import {
   getMasterSettings,
 } from '../../utils/helpers/Settings';
+
+import {
+  delay,
+} from '../../utils/helpers/General';
 
 import './style.scss';
 
@@ -80,6 +82,7 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
+        platforms: {},
       },
       actions: {
         isReading: false,
@@ -121,6 +124,8 @@ class App extends Component {
         navigator.serial.addEventListener('connect', that.serialConnectHandler);
         navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
 
+        // Fetch the configs only once.
+        this.setState({ configs: await this.fetchConfigs() });
 
         await that.serialConnectHandler();
       } else {
@@ -174,7 +179,8 @@ class App extends Component {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = await source.getEscs();
-      configs.pwm[name] = await source.getPwm();
+      configs.platforms[name] = source.getPlatform();
+      configs.pwm[name] = source.getPwm();
     }
 
     return configs;
@@ -191,7 +197,13 @@ class App extends Component {
 
   handleIndividualSettingsUpdate(index, individualSettings) {
     const  { escs } = this.state;
-    escs[index].individualSettings = individualSettings;
+    for(let i = 0; i < escs.length; i += 1) {
+      if(escs[i].index === index) {
+        escs[i].individualSettings = individualSettings;
+
+        break;
+      }
+    }
 
     this.setState({ escs });
   }
@@ -207,13 +219,15 @@ class App extends Component {
     actions.isWriting = true;
     this.setState({ actions });
     for(let i = 0; i < escs.length; i += 1) {
-      console.debug(`Restoring default settings on ESC ${i} `);
-
       const esc = escs[i];
+      const target = esc.index;
+
+      console.debug(`Restoring default settings on ESC ${target + 1} `);
+
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
-      await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
+      await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
     }
 
     actions.isWriting = false;
@@ -269,7 +283,6 @@ class App extends Component {
 
     actions.isReading = true;
     this.setState({ actions });
-    this.addLogMessage('Reading ESC\'s');
 
     // Enable 4way if
     let connected = 0;
@@ -293,13 +306,27 @@ class App extends Component {
 
     const escFlash = [];
     let open = false;
-    console.debug(`Getting info for ${connected} ESC's`);
+
+    const message = `Trying to read ${connected} ESC's`;
+    this.addLogMessage(message);
+    console.debug(message);
+
+    await delay(1000);
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
         const settings = await this.serial.fourWayGetInfo(i);
         if(settings) {
+          settings.index = i;
           escFlash.push(settings);
+
+          const message = `Read ESC ${i + 1}`;
+          this.addLogMessage(message);
+          console.debug(message);
+        } else {
+          const error = `Failed reading ESC ${i + 1}`;
+          this.addLogMessage(error);
+          console.debug(error);
         }
       }
       open = true;
@@ -335,13 +362,15 @@ class App extends Component {
     actions.isWriting = true;
     this.setState({ actions });
     for(let i = 0; i < escs.length; i += 1) {
-      console.debug(`Writing settings to ESC ${i} `);
-
       const esc = escs[i];
+      const target = esc.index;
+
+      console.debug(`Writing settings to ESC ${target + 1}`);
+
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
-      const newSettingsArray = await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
+      const newSettingsArray = await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
 
       escs[i].settingsArray = newSettingsArray;
     }
@@ -370,7 +399,8 @@ class App extends Component {
 
     const flashTargets = [];
     for (let i = 0; i < escs.length; i += 1) {
-      flashTargets.push(i);
+      const esc = escs[i];
+      flashTargets.push(esc.index);
     }
 
     actions.isSelecting = true;
@@ -454,10 +484,13 @@ class App extends Component {
 
     let newProgress = progress;
     for(let i = 0; i < flashTargets.length; i += 1) {
-      console.debug(`Flashing ESC ${i}`);
-
       const target = flashTargets[i];
-      const esc = escs[target];
+
+      const message = `Flashing ESC ${target + 1}`;
+      console.debug(message);
+      this.addLogMessage(message);
+
+      const esc = escs.find((esc) => esc.index === target);
       newProgress[target] = 0;
 
       const updateProgress = async(progress) => {
@@ -465,11 +498,21 @@ class App extends Component {
         await this.setState({ progress: newProgress });
       };
 
-      const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
-      escs[target] = result;
+      updateProgress(0.1);
 
-      newProgress[target] = 0;
-      await this.setState({ escs });
+      const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
+      result.index = target;
+
+      if(result) {
+        escs[i] = result;
+        newProgress[target] = 0;
+
+        await this.setState({ escs });
+      } else {
+        const error = `Failed flashing ESC ${target + 1} - check file type`;
+        console.debug(error);
+        this.addLogMessage(error);
+      }
     }
 
     actions.isSelecting = false;
@@ -502,7 +545,6 @@ class App extends Component {
       checked: true,
       hasSerial: true,
       connected,
-      configs: await this.fetchConfigs(),
       serial: { availablePorts: ports },
     });
   }
@@ -533,7 +575,10 @@ class App extends Component {
 
       this.addLogMessage('Port selected');
 
-      this.setState({ connected: true });
+      this.setState({
+        connected: true,
+        serial: { availablePorts: [port] },
+      });
     } catch (e) {
       // No port selected, do nothing
       console.debug(e);
@@ -569,6 +614,10 @@ class App extends Component {
       this.serial.setLogCallback(this.addLogMessage);
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('Opened serial port');
+
+      // Send a reset of the 4 way interface, just in case it was not cleanly
+      // disconnected before.
+      await this.serial.fourWayExit();
     } catch (e) {
       console.debug(e);
 
@@ -713,6 +762,12 @@ class App extends Component {
     this.setState({
       open: false,
       escs: [],
+      actions: {
+        isReading: false,
+        isWriting: false,
+        isSelecting: false,
+        isFlashing: false,
+      },
     });
   }
 
@@ -756,56 +811,6 @@ class App extends Component {
       return null;
     }
 
-    if (!hasSerial) {
-      return (
-        <div id="not-supported">
-          Sorry,
-          {' '}
-
-          <b>
-            Web Serial
-          </b>
-
-          {' '}
-          is not supported on this device,
-          make sure you&apos;re running Chrome 78 or later and have enabled the
-
-          <code>
-            #enable-experimental-web-platform-features
-          </code>
-
-          {' '}
-          flag in &nbsp;
-
-          <code>
-            chrome://flags
-          </code>
-
-          <br />
-
-          <br />
-
-          <p>
-            Alternatively download the latest
-
-            {' '}
-
-            <a
-              href="https://www.google.com/intl/de/chrome/"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Chrome stable release
-            </a>
-
-            {' '}
-
-            where this feature is already enabled by default.
-          </p>
-        </div>
-      );
-    }
-
     const languageElements = this.languages.map((item) => (
       <option
         key={item.value}
@@ -824,6 +829,7 @@ class App extends Component {
 
               <PortPicker
                 hasPort={connected}
+                hasSerial={hasSerial}
                 onChangePort={this.handleChangePort}
                 onConnect={this.handleConnect}
                 onDisconnect={this.handleDisconnect}

@@ -3,11 +3,11 @@ import React from 'react';
 import {
   useTranslation,
 } from 'react-i18next';
-import './list-style.css';
 import './style.scss';
 
 function PortPicker({
   hasPort,
+  hasSerial,
   open,
   onSetPort,
   onSetBaudRate,
@@ -85,6 +85,47 @@ function PortPicker({
     );
   }
 
+  if(!hasSerial) {
+    return (
+      <div id="not-supported">
+        Sorry,
+        {' '}
+
+        <b>
+          Web Serial
+        </b>
+
+        {' '}
+        is not supported on this device,
+        make sure you&apos;re running the latest
+
+        {' '}
+
+        <a
+          href="https://www.google.com/intl/de/chrome/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Chrome stable release
+        </a>
+
+        {' '}
+
+        or any other
+
+        {' '}
+
+        <a
+          href="https://caniuse.com/mdn-api_serial"
+          rel="noreferrer"
+          target="_blank"
+        >
+          compatible browser.
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div id="port-picker">
       { !hasPort &&
@@ -122,6 +163,15 @@ function PortPicker({
             {rateElements}
           </select>
         </div>
+
+        <div className="button-dark">
+          <button
+            onClick={onSetPort}
+            type="button"
+          >
+            {t('openPortSelection')}
+          </button>
+        </div>
       </div>
 
       <div
@@ -136,6 +186,7 @@ function PortPicker({
 
 PortPicker.propTypes = {
   hasPort: PropTypes.bool.isRequired,
+  hasSerial: PropTypes.bool.isRequired,
   onChangePort: PropTypes.func.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnect: PropTypes.func.isRequired,

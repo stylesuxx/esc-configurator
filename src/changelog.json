@@ -1,5 +1,15 @@
 [
   {
+    "title": "0.7.0",
+    "items": [
+      "AM32 read/write settings",
+      "AM32 flash",
+      "Improved tool-tips",
+      "New color schema and logo",
+      "Refactored firmware selection"
+    ]
+  },
+  {
     "title": "0.6.0",
     "items": [
       "Component refactoring",

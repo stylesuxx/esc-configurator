@@ -1,18 +1,21 @@
-import {
-  Blheli,
-  BLHELI_TYPES,
-  BLHELI_LAYOUT,
-  BLHELI_SILABS,
-  BLHELI_S_DEFAULTS,
-  BLHELI_LAYOUT_SIZE,
-  BLHELI_SILABS_PAGE_SIZE,
-  BLHELI_SILABS_EEPROM_OFFSET,
-  BLHELI_SETTINGS_DESCRIPTIONS,
-  BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-} from './Blheli';
+import Blheli from './Blheli';
 
+import {
+  BLHELI_SILABS,
+} from '../sources/Blheli/eeprom';
+
+import {
+  AM32_RESET_DELAY_MS,
+} from '../sources/AM32/eeprom';
+
+import blheliSource from '../sources/Blheli';
+import bluejaySource from '../sources/Bluejay';
+import am32Source from '../sources/AM32';
+
+// TODO: We might use the ones from the source here...
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
-import BLUEJAY_ESCS  from '../sources/Bluejay/escs.json';
+import BLUEJAY_ESCS from '../sources/Bluejay/escs.json';
+import AM32_ESCS from '../sources/AM32/escs.json';
 
 import {
   canMigrate,
@@ -27,6 +30,7 @@ import {
 } from './helpers/Settings';
 
 import {
+  delay,
   retry,
   compare,
   findMCU,
@@ -34,82 +38,26 @@ import {
 } from './helpers/General';
 
 import {
-  OPEN_ESC_LAYOUT,
-  OPEN_ESC_DEFAULTS,
-  OPEN_ESC_LAYOUT_SIZE,
-  OPEN_ESC_EEPROM_OFFSET,
-  OPEN_ESC_SETTINGS_DESCRIPTIONS,
-  OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-} from './OpenEsc';
-
-import {
-  BLUEJAY_TYPES,
-  BLUEJAY_LAYOUT,
-  BLUEJAY_DEFAULTS,
-  BLUEJAY_LAYOUT_SIZE,
-  BLUEJAY_SETTINGS_DESCRIPTIONS,
-  BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-} from './Bluejay';
+  ACK,
+  ATMEL_MODES,
+  COMMANDS,
+  MODES,
+  SILABS_MODES,
+} from './FourWayConstants';
 
 import {
   NotEnoughDataError,
 } from './helpers/QueueProcessor';
+
+const BLHELI_EEPROM = blheliSource.getEeprom();
+const BLUEJAY_EEPROM = bluejaySource.getEeprom();
+const AM32_EEPROM = am32Source.getEeprom();
 
 class FourWay {
   constructor(serial) {
     this.serial = serial;
 
     this.lastCommandTimestamp = 0;
-    this.commands = {
-      cmd_InterfaceTestAlive: 0x30,
-      cmd_ProtocolGetVersion: 0x31,
-      cmd_InterfaceGetName: 0x32,
-      cmd_InterfaceGetVersion: 0x33,
-      cmd_InterfaceExit: 0x34,
-      cmd_DeviceReset: 0x35,
-      cmd_DeviceInitFlash: 0x37,
-      cmd_DeviceEraseAll: 0x38,
-      cmd_DevicePageErase: 0x39,
-      cmd_DeviceRead: 0x3a,
-      cmd_DeviceWrite: 0x3b,
-      cmd_DeviceC2CK_LOW: 0x3c,
-      cmd_DeviceReadEEprom: 0x3d,
-      cmd_DeviceWriteEEprom: 0x3e,
-      cmd_InterfaceSetMode: 0x3f,
-    };
-
-    // Acknowledgment answers from interface
-    this.ack = {
-      ACK_OK: 0x00,
-      ACK_I_UNKNOWN_ERROR: 0x01, // Unused
-      ACK_I_INVALID_CMD: 0x02,
-      ACK_I_INVALID_CRC: 0x03,
-      ACK_I_VERIFY_ERROR: 0x04,
-      ACK_D_INVALID_COMMAND: 0x05, // Unused
-      ACK_D_COMMAND_FAILED: 0x06, // Unused
-      ACK_D_UNKNOWN_ERROR: 0x07, // Unused
-      ACK_I_INVALID_CHANNEL: 0x08,
-      ACK_I_INVALID_PARAM: 0x09,
-      ACK_D_GENERAL_ERROR: 0x0f,
-    };
-
-    this.modes = {
-      SiLC2: 0,
-      SiLBLB: 1,
-      AtmBLB: 2,
-      AtmSK: 3,
-      ARMBLB: 4,
-    };
-
-    this.siLabsModes = [
-      this.modes.SiLC2,
-      this.modes.SiLBLB,
-    ];
-
-    this.atmelModes = [
-      this.modes.AtmBLB,
-      this.modes.AtmSK,
-    ];
 
     this.totalBytes = 0;
     this.bytesWritten = 0;
@@ -142,24 +90,22 @@ class FourWay {
   }
 
   commandToString(command) {
-    for (const field in this.commands) {
-      if (this.commands[field] === command) {
+    for (const field in COMMANDS) {
+      if (COMMANDS[field] === command) {
         return field;
       }
     }
 
-    console.debug(`invalid command: ${command}`);
     return null;
   }
 
   ackToString(ack) {
-    for (const field in this.ack) {
-      if (this.ack[field] === ack) {
+    for (const field in ACK) {
+      if (ACK[field] === ack) {
         return field;
       }
     }
 
-    console.debug(`invalid ack: ${ack}`);
     return null;
   }
 
@@ -223,7 +169,6 @@ class FourWay {
     }
 
     if (view.length < 9) {
-      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 
@@ -233,7 +178,6 @@ class FourWay {
     }
 
     if (view.length < 8 + paramCount) {
-      console.debug('Incomplete message - waiting');
       return reject(new NotEnoughDataError());
     }
 
@@ -267,7 +211,7 @@ class FourWay {
       const message = self.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
-      if (command !== this.commands.cmd_InterfaceTestAlive) {
+      if (command !== COMMANDS.cmd_InterfaceTestAlive) {
         console.debug('sending', this.commandToString(command), address.toString(0x10));
       }
 
@@ -276,13 +220,13 @@ class FourWay {
          * Immediately resolve the exit command since it will not produce any
          * processable output.
          */
-        if (command === this.commands.cmd_InterfaceExit) {
+        if (command === COMMANDS.cmd_InterfaceExit) {
           await this.serial(message, null);
           return resolve();
         }
 
         const msg = await this.serial(message, this.parseMessage);
-        if (msg && msg.ack === self.ack.ACK_OK) {
+        if (msg && msg.ack === ACK.ACK_OK) {
           return resolve(msg);
         }
 
@@ -293,7 +237,7 @@ class FourWay {
         const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
-        console.debug(`Failed processing command ${command} after ${retries} retries.`);
+        console.debug(`Failed processing command ${this.commandToString(command)} after ${retries} retries.`);
         resolve(null);
       }
     };
@@ -302,147 +246,139 @@ class FourWay {
   }
 
   async getInfo(target) {
-    const flash = await this.initFlash(target);
+    const flash = await this.initFlash(target, 3);
 
     if (flash) {
-      const maxRetry = 5;
-      let retry = 0;
-      while(retry < maxRetry) {
-        flash.meta = {};
+      flash.meta = {};
 
-        try {
-          const blheli = new Blheli();
-          const interfaceMode = flash.params[3];
+      try {
+        const blheli = new Blheli();
+        const interfaceMode = flash.params[3];
 
-          flash.meta.signature = flash.params[1] << 8 | flash.params[0];
-          flash.meta.interfaceMode = interfaceMode;
-          flash.meta.available = true;
+        flash.meta.signature = flash.params[1] << 8 | flash.params[0];
+        flash.meta.interfaceMode = interfaceMode;
+        flash.meta.available = true;
 
-          const isAtmel = this.atmelModes.includes(interfaceMode);
-          const isSiLabs = this.siLabsModes.includes(interfaceMode);
-          const isArm = interfaceMode === this.modes.ARMBLB;
-          let settingsArray = null;
-          let layout = BLHELI_LAYOUT;
-          let layoutSize = BLHELI_LAYOUT_SIZE;
-          let defaultSettings = BLHELI_S_DEFAULTS;
+        const isAtmel = ATMEL_MODES.includes(interfaceMode);
+        const isSiLabs = SILABS_MODES.includes(interfaceMode);
+        const isArm = interfaceMode === MODES.ARMBLB;
+        let settingsArray = null;
+        let layout = BLHELI_EEPROM.LAYOUT;
+        let layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
+        let defaultSettings = BLHELI_EEPROM.DEFAULTS;
 
-          if (isSiLabs) {
-            layoutSize = BLHELI_LAYOUT_SIZE;
-            settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
-          } else if (isArm) {
-            layoutSize = OPEN_ESC_LAYOUT_SIZE;
-            layout = OPEN_ESC_LAYOUT;
-            defaultSettings = OPEN_ESC_DEFAULTS;
-            settingsArray = (await this.read(OPEN_ESC_EEPROM_OFFSET, layoutSize)).params;
-          } else {
-            throw new Error('Neither Silabs nor Arm');
-          }
+        if (isSiLabs) {
+          layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
+          settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
+        } else if (isArm) {
+          layoutSize = AM32_EEPROM.LAYOUT_SIZE;
+          layout = AM32_EEPROM.LAYOUT;
+          defaultSettings = AM32_EEPROM.DEFAULTS;
+          settingsArray = (await this.read(AM32_EEPROM.EEPROM_OFFSET, layoutSize)).params;
+        } else {
+          throw new Error('Neither SiLabs nor Arm');
+        }
 
-          flash.isSiLabs = isSiLabs;
-          flash.isArm = isArm;
-          flash.isAtmel = isAtmel;
+        flash.isSiLabs = isSiLabs;
+        flash.isArm = isArm;
+        flash.isAtmel = isAtmel;
 
-          flash.settingsArray = settingsArray;
+        flash.settingsArray = settingsArray;
+        flash.settings = blheli.settingsObject(
+          settingsArray,
+          layout
+        );
+
+        /**
+         * Baased on the name we can decide if the initially guessed layout
+         * was correct, if not, we need to build a new settings object.
+         */
+        const name = flash.settings.NAME;
+        let newLayout = null;
+        switch(name) {
+          case 'Bluejay':
+          case 'Bluejay (BETA)': {
+            newLayout = BLUEJAY_EEPROM.LAYOUT;
+            layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
+            defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
+          } break;
+        }
+
+        if(newLayout) {
+          layout = newLayout;
+
           flash.settings = blheli.settingsObject(
             settingsArray,
             layout
           );
-
-          /**
-           * Baased on the name we can decide if the initially guessed layout
-           * was correct, if not, we need to build a new settings object.
-           */
-          const name = flash.settings.NAME;
-          let newLayout = null;
-          switch(name) {
-            case 'Bluejay':
-            case 'Bluejay (BETA)': {
-              newLayout = BLUEJAY_LAYOUT;
-              layoutSize = BLUEJAY_LAYOUT_SIZE;
-              defaultSettings = BLUEJAY_DEFAULTS;
-            } break;
-          }
-
-          if(newLayout) {
-            layout = newLayout;
-
-            flash.settings = blheli.settingsObject(
-              settingsArray,
-              layout
-            );
-          }
-
-          const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
-
-          let individualSettingsDescriptions = null;
-          let settingsDescriptions = null;
-          switch(layout) {
-            case BLHELI_LAYOUT: {
-              settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case BLUEJAY_LAYOUT: {
-              settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case OPEN_ESC_LAYOUT: {
-              settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-          }
-
-          flash.settingsDescriptions = settingsDescriptions[layoutRevision];
-          flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
-
-          if (interfaceMode !== this.modes.ARMBLB) {
-            const mode = blheli.modeToString(flash.settings.MODE);
-            const descriptions = settingsDescriptions[layoutRevision][mode];
-            flash.settingsDescriptions = descriptions;
-          }
-
-          const layoutName = (flash.settings.LAYOUT || '').trim();
-          let bootloaderRevision = null;
-          let make = null;
-          if (isSiLabs) {
-            const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.SILABS];
-            const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.BLHELI_S_SILABS];
-            const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8];
-
-            if (layoutName in blheliLayouts) {
-              make = blheliLayouts[layoutName].name;
-            } else if (layoutName in blheliSLayouts) {
-              make = blheliSLayouts[layoutName].name;
-            } else if (layoutName in bluejayLayouts) {
-              make = bluejayLayouts[layoutName].name;
-            }
-          } else if (isArm) {
-            bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
-          } else {
-            const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL];
-            if (layoutName in blheliAtmelLayouts) {
-              make = blheliAtmelLayouts[layoutName].name;
-            }
-          }
-
-          flash.defaultSettings = defaultSettings[layoutRevision];
-          flash.bootloaderRevision = bootloaderRevision;
-          flash.layoutSize = layoutSize;
-          flash.layout = layout;
-          flash.make = make;
-
-          break;
-        } catch (e) {
-          if(retry < maxRetry) {
-            retry += 1;
-            continue ;
-          }
-          console.log(`ESC ${target + 1} read settings failed ${e.message}`, e);
-
-          return null;
         }
+
+        const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
+
+        let individualSettingsDescriptions = null;
+        let settingsDescriptions = null;
+        switch(layout) {
+          case BLHELI_EEPROM.LAYOUT: {
+            settingsDescriptions = BLHELI_EEPROM.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLHELI_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case BLUEJAY_EEPROM.LAYOUT: {
+            settingsDescriptions = BLUEJAY_EEPROM.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = BLUEJAY_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+
+          case AM32_EEPROM.LAYOUT: {
+            settingsDescriptions = AM32_EEPROM.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = AM32_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          } break;
+        }
+
+        flash.settingsDescriptions = settingsDescriptions[layoutRevision];
+        flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
+
+        if (interfaceMode !== MODES.ARMBLB) {
+          const mode = blheli.modeToString(flash.settings.MODE);
+          const descriptions = settingsDescriptions[layoutRevision][mode];
+          flash.settingsDescriptions = descriptions;
+        }
+
+        const layoutName = (flash.settings.LAYOUT || '').trim();
+        let bootloaderRevision = null;
+        let make = null;
+        if (isSiLabs) {
+          const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.SILABS];
+          const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS];
+          const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_EEPROM.TYPES.EFM8];
+
+          if (layoutName in blheliLayouts) {
+            make = blheliLayouts[layoutName].name;
+          } else if (layoutName in blheliSLayouts) {
+            make = blheliSLayouts[layoutName].name;
+          } else if (layoutName in bluejayLayouts) {
+            make = bluejayLayouts[layoutName].name;
+          }
+        } else if (isArm) {
+          bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
+          flash.settings.LAYOUT = flash.settings.NAME;
+        } else {
+          const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.ATMEL];
+          if (layoutName in blheliAtmelLayouts) {
+            make = blheliAtmelLayouts[layoutName].name;
+          }
+        }
+
+        flash.defaultSettings = defaultSettings[layoutRevision];
+        flash.bootloaderRevision = bootloaderRevision;
+        flash.layoutSize = layoutSize;
+        flash.layout = layout;
+        flash.make = make;
+      } catch (e) {
+        console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
+        return null;
       }
+
+      flash.individualSettings = getIndividualSettings(flash);
 
       // Delete some things that we do not need to pass on to the client
       delete flash.ack;
@@ -452,17 +388,15 @@ class FourWay {
       delete flash.checksum;
     }
 
-    flash.individualSettings = getIndividualSettings(flash);
-
     return flash;
   }
 
-  async initFlash(target) {
-    return this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
+  async initFlash(target, retries = 10) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
   }
 
   async writeSettings(target, esc, settings) {
-    const flash = await this.sendMessagePromised(this.commands.cmd_DeviceInitFlash, [target]);
+    const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
       const blheli = new Blheli();
@@ -476,12 +410,12 @@ class FourWay {
       } else {
         let readbackSettings = null;
         if(esc.isSiLabs) {
-          await this.pageErase(BLHELI_SILABS_EEPROM_OFFSET / BLHELI_SILABS_PAGE_SIZE);
-          await this.write(BLHELI_SILABS_EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(BLHELI_SILABS_EEPROM_OFFSET, BLHELI_LAYOUT_SIZE)).params;
+          await this.pageErase(BLHELI_EEPROM.EEPROM_OFFSET / BLHELI_EEPROM.PAGE_SIZE);
+          await this.write(BLHELI_EEPROM.EEPROM_OFFSET, newSettingsArray);
+          readbackSettings = (await this.read(BLHELI_EEPROM.EEPROM_OFFSET, BLHELI_EEPROM.LAYOUT_SIZE)).params;
         } else if (esc.isArm) {
-          await this.write(OPEN_ESC_EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(OPEN_ESC_EEPROM_OFFSET, OPEN_ESC_LAYOUT_SIZE)).params;
+          await this.write(AM32_EEPROM.EEPROM_OFFSET, newSettingsArray);
+          readbackSettings = (await this.read(AM32_EEPROM.EEPROM_OFFSET, AM32_EEPROM.LAYOUT_SIZE)).params;
         } else {
           // write only changed bytes for Atmel
           for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
@@ -499,7 +433,7 @@ class FourWay {
 
             // write span
             await this.writeEEprom(offset, newSettingsArray.subarray(offset, pos));
-            readbackSettings = (await this.readEEprom(0, BLHELI_LAYOUT_SIZE)).params;
+            readbackSettings = (await this.readEEprom(0, BLHELI_EEPROM.LAYOUT_SIZE)).params;
           }
         }
 
@@ -529,23 +463,23 @@ class FourWay {
       let mcu = null;
 
       switch(interfaceMode) {
-        case this.modes.SiLC2: {
+        case MODES.SiLC2: {
           return BLHELI_SILABS.FLASH_SIZE;
         }
 
-        case this.modes.SiLBLB: {
-          mcu = findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_TYPES.EFM8]) ||
-                findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.BLHELI_S_SILABS]) ||
+        case MODES.SiLBLB: {
+          mcu = findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_EEPROM.TYPES.EFM8]) ||
+                findMCU(signature, BLHELI_ESCS.signatures[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS]) ||
                 findMCU(signature, BLHELI_ESCS.signatures.SiLabs);
         } break;
 
-        case this.modes.AtmBLB:
-        case this.modes.AtmSK: {
+        case MODES.AtmBLB:
+        case MODES.AtmSK: {
           mcu = findMCU(signature, BLHELI_ESCS.signatures.Atmel);
         } break;
 
-        case this.modes.ARMBLB: {
-          mcu = findMCU(signature, BLHELI_ESCS.signatures.Arm);
+        case MODES.ARMBLB: {
+          mcu = findMCU(signature, AM32_ESCS.signatures.Arm);
         } break;
 
         default: {
@@ -564,9 +498,245 @@ class FourWay {
       return mcu.flash_size;
     })();
 
+    const migrateSettings = async(oldEsc, newEsc) => {
+      /**
+       * Migrate settings from the previous firmware if possible.
+       */
+      const newSettings = Object.assign({}, newEsc.settings);
+      const oldSettings = esc.settings;
+
+      let settingsDescriptions = null;
+      let individualSettingsDescriptions = null;
+      switch(newEsc.layout) {
+        case BLHELI_EEPROM.LAYOUT: {
+          console.debug('BLHELI layout found');
+          settingsDescriptions = BLHELI_EEPROM.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = BLHELI_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+        } break;
+
+        case BLUEJAY_EEPROM.LAYOUT: {
+          console.debug('Bluejay layout found');
+          settingsDescriptions = BLUEJAY_EEPROM.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = BLUEJAY_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+        } break;
+
+        case AM32_EEPROM.LAYOUT: {
+          console.debug('AM32 layout found');
+          settingsDescriptions = AM32_EEPROM.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = AM32_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+        } break;
+      }
+
+      /**
+       * Try migrating settings if possible - this ensures that the motor
+       * direction is saved between flashes.
+       */
+      const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
+      if(settingsDescriptions && individualSettingsDescriptions) {
+        if(newSettings.MODE === oldSettings.MODE) {
+          for (var prop in newSettings) {
+            if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
+                Object.prototype.hasOwnProperty.call(oldSettings, prop)
+            ) {
+              if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
+                // With a proper migration path
+                newSettings[prop] = oldSettings[prop];
+
+                console.debug(`Migrated setting ${prop}`);
+              } else {
+                if (saveMigratins.includes(prop)) {
+                  // Settings that are save to migrate because they are the
+                  // same on all firmwares.
+                  newSettings[prop] = oldSettings[prop];
+
+                  console.debug(`Migrated setting ${prop}`);
+                }
+              }
+            }
+          }
+        }
+      } else {
+        console.debug('Can not migrate settings');
+      }
+
+      await this.writeSettings(target, newEsc, newSettings);
+      newEsc.settings = newSettings;
+      newEsc.individualSettings = getIndividualSettings(newEsc);
+
+      return newEsc;
+    };
+
+    const flashSiLabs = async(flash) => {
+      /**
+       * The size of the Flash is larger than the pages we write.
+       * that is why we need to calculate the total Bytes by page size
+       * and actual pages we write, which in this case is 14.
+       *
+       * We then double that since we are also tracking the bytes read back
+       * and update the progress bar accordingly.
+       */
+      this.totalBytes = BLHELI_EEPROM.PAGE_SIZE * 14 * 2;
+      this.bytesWritten = 0;
+
+      const message = await this.read(BLHELI_SILABS.EEPROM_OFFSET, BLHELI_EEPROM.LAYOUT_SIZE);
+
+      // checkESCAndMCU
+      const escSettingArrayTmp = message.params;
+      const target_layout = escSettingArrayTmp.subarray(
+        BLHELI_EEPROM.LAYOUT.LAYOUT.offset,
+        BLHELI_EEPROM.LAYOUT.LAYOUT.offset + BLHELI_EEPROM.LAYOUT.LAYOUT.size);
+
+      const settings_image = flash.subarray(BLHELI_EEPROM.EEPROM_OFFSET);
+      const fw_layout = settings_image.subarray(
+        BLHELI_EEPROM.LAYOUT.LAYOUT.offset,
+        BLHELI_EEPROM.LAYOUT.LAYOUT.offset + BLHELI_EEPROM.LAYOUT.LAYOUT.size);
+
+      if (!compare(target_layout, fw_layout)) {
+        var target_layout_str = buf2ascii(target_layout).trim();
+        if (target_layout_str.length === 0) {
+          target_layout_str = 'EMPTY';
+        }
+
+        if(!force) {
+          this.addLogMessage('Layout mismatch, override not enabled - aborted');
+          return esc;
+        }
+      }
+
+      const target_mcu = escSettingArrayTmp.subarray(
+        BLHELI_EEPROM.LAYOUT.MCU.offset,
+        BLHELI_EEPROM.LAYOUT.MCU.offset + BLHELI_EEPROM.LAYOUT.MCU.size);
+      const fw_mcu = settings_image.subarray(
+        BLHELI_EEPROM.LAYOUT.MCU.offset,
+        BLHELI_EEPROM.LAYOUT.MCU.offset + BLHELI_EEPROM.LAYOUT.MCU.size);
+      if (!compare(target_mcu, fw_mcu)) {
+        var target_mcu_str = buf2ascii(target_mcu).trim();
+        if (target_mcu_str.length === 0) {
+          target_mcu_str = 'EMPTY';
+        }
+
+        if(!force) {
+          this.addLogMessage('MCU mismatch, override not enabled - aborted');
+          return esc;
+        }
+      }
+
+      // erase EEPROM page
+      await this.erasePage(0x0D);
+
+      // write **FLASH*FAILED** as ESC NAME
+      await this.writeEEpromSafeguard(escSettingArrayTmp);
+
+      // write `LJMP bootloader` to avoid bricking
+      await this.writeBootoaderFailsafe();
+
+      // erase up to EEPROM, skipping first two first pages with
+      // bootloader failsafe
+      await this.erasePages(0x02, 0x0D);
+
+      // write & verify just erased locations
+      await this.writePages(0x02, 0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.verifyPages(0x02, 0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
+
+      // write & verify first page
+      await this.writePage(0x00, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.verifyPage(0x00, BLHELI_EEPROM.PAGE_SIZE, flash);
+
+      // erase second page
+      await this.erasePage(0x01);
+
+      // write & verify second page
+      await this.writePage(0x01, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.verifyPage(0x01, BLHELI_EEPROM.PAGE_SIZE, flash);
+
+      // erase EEPROM
+      await this.erasePage(0x0D);
+
+      // write & verify EEPROM
+      await this.writePage(0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.verifyPage(0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
+    };
+
+    const flashArm = async(flash) => {
+      this.totalBytes = (flash.byteLength - (flash.firmwareStart ? flash.firmwareStart : 0)) * 2;
+      this.bytesWritten = 0;
+
+      const message = await this.read(AM32_EEPROM.EEPROM_OFFSET, AM32_EEPROM.LAYOUT_SIZE);
+      const originalSettings = message.params;
+
+      const eepromInfo = new Uint8Array(17).fill(0x00);
+      eepromInfo.set([originalSettings[1], originalSettings[2]], 1);
+      eepromInfo.set(ascii2buf('FLASH FAIL  '), 5);
+
+      await this.write(AM32_EEPROM.EEPROM_OFFSET, eepromInfo);
+
+      await this.writePages(0x04, 0x40, AM32_EEPROM.PAGE_SIZE, flash);
+      await this.verifyPages(0x04, 0x40, AM32_EEPROM.PAGE_SIZE, flash);
+
+      originalSettings[0] = 0x01;
+      originalSettings.fill(0x00, 3, 5);
+      originalSettings.set(ascii2buf('NOT READY   '), 5);
+
+      await this.write(AM32_EEPROM.EEPROM_OFFSET, originalSettings);
+    };
+
+    const flashTarget = async(target, flash) => {
+      const startTimestamp = Date.now();
+
+      const message = await this.initFlash(target);
+      const interfaceMode = message.params[3];
+
+      switch (interfaceMode) {
+        case MODES.SiLBLB: {
+          await flashSiLabs(flash);
+        } break;
+
+        case MODES.ARMBLB: {
+          await flashArm(flash);
+
+          // Reset after flashing to update name and settings
+          await this.reset(target);
+          await delay(AM32_RESET_DELAY_MS);
+        } break;
+
+        default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
+      }
+
+      const elapsedSec = (Date.now() - startTimestamp) / 1000;
+      const rounded = Math.round(elapsedSec * 10) / 10;
+      this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
+
+      let newEsc = await this.getInfo(target);
+      if(migrate) {
+        newEsc = migrateSettings(esc, newEsc);
+      }
+
+      return newEsc;
+    };
+
     if(esc.isArm) {
-      // TODO: This still needs implementation
-      throw new Error('Can not flash ARM yet.');
+      try {
+        const parsed = parseHex(hex);
+        const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
+        const flash = fillImage(parsed, endAddress - flashOffset, flashOffset);
+
+        //TODO: Also check for the firmware name
+        // But we first need to get this moved to a fixed location
+        const firstBytes = flash.subarray(firmwareStart, firmwareStart + 4);
+        const vecTabStart = new Uint8Array([ 0x00, 0x20, 0x00, 0x20 ]);
+        if (!compare(firstBytes, vecTabStart)) {
+          throw new Error('Invalid hex file');
+        }
+
+        if (firmwareStart) {
+          flash.firmwareStart = firmwareStart;
+        }
+
+        return flashTarget(target, flash);
+      } catch(e) {
+        console.debug('Failed flashing Arm:', e);
+        return null;
+      }
     } else if(!esc.isAtmel) {
       try {
         const parsed = parseHex(hex);
@@ -575,8 +745,8 @@ class FourWay {
         // Check pseudo-eeprom page for BLHELI signature
         const mcu = buf2ascii(
           flash.subarray(BLHELI_SILABS.EEPROM_OFFSET)
-            .subarray(BLHELI_LAYOUT.MCU.offset)
-            .subarray(0, BLHELI_LAYOUT.MCU.size));
+            .subarray(BLHELI_EEPROM.LAYOUT.MCU.offset)
+            .subarray(0, BLHELI_EEPROM.LAYOUT.MCU.size));
 
         if(!isValidFlash(mcu, flash)) {
           throw new Error('Invalid hex file');
@@ -586,184 +756,11 @@ class FourWay {
           flash.firmwareStart = firmwareStart;
         }
 
-        const startTimestamp = Date.now();
-
-        const message = await this.initFlash(target);
-        const interfaceMode = message.params[3];
-
-        switch (interfaceMode) {
-          case this.modes.SiLBLB: {
-            /**
-             * The size of the Flash is larger than the pages we write.
-             * that is why we need to calculate the total Bytes by page size
-             * and actual pages we write, which in this case is 14.
-             *
-             * We then double that since we are also tracking the bytes read back
-             * and update the progress bar accordingly.
-             */
-            this.totalBytes = BLHELI_SILABS_PAGE_SIZE * 14 * 2;
-            this.bytesWritten = 0;
-
-            const message = await this.read(BLHELI_SILABS.EEPROM_OFFSET, BLHELI_LAYOUT_SIZE);
-
-            // checkESCAndMCU
-            const escSettingArrayTmp = message.params;
-            const target_layout = escSettingArrayTmp.subarray(
-              BLHELI_LAYOUT.LAYOUT.offset,
-              BLHELI_LAYOUT.LAYOUT.offset + BLHELI_LAYOUT.LAYOUT.size);
-
-            const settings_image = flash.subarray(BLHELI_SILABS_EEPROM_OFFSET);
-            const fw_layout = settings_image.subarray(
-              BLHELI_LAYOUT.LAYOUT.offset,
-              BLHELI_LAYOUT.LAYOUT.offset + BLHELI_LAYOUT.LAYOUT.size);
-
-            if (!compare(target_layout, fw_layout)) {
-              var target_layout_str = buf2ascii(target_layout).trim();
-              if (target_layout_str.length === 0) {
-                target_layout_str = 'EMPTY';
-              }
-
-              if(!force) {
-                this.addLogMessage('Layout mismatch, override not enabled - aborted');
-                return esc;
-              }
-            }
-
-            const target_mcu = escSettingArrayTmp.subarray(
-              BLHELI_LAYOUT.MCU.offset,
-              BLHELI_LAYOUT.MCU.offset + BLHELI_LAYOUT.MCU.size);
-            const fw_mcu = settings_image.subarray(
-              BLHELI_LAYOUT.MCU.offset,
-              BLHELI_LAYOUT.MCU.offset + BLHELI_LAYOUT.MCU.size);
-            if (!compare(target_mcu, fw_mcu)) {
-              var target_mcu_str = buf2ascii(target_mcu).trim();
-              if (target_mcu_str.length === 0) {
-                target_mcu_str = 'EMPTY';
-              }
-
-              if(!force) {
-                this.addLogMessage('MCU mismatch, override not enabled - aborted');
-                return esc;
-              }
-            }
-
-            // erase EEPROM page
-            await this.erasePage(0x0D);
-
-            // write **FLASH*FAILED** as ESC NAME
-            await this.writeEEpromSafeguard(escSettingArrayTmp);
-
-            // write `LJMP bootloader` to avoid bricking
-            await this.writeBootoaderFailsafe();
-
-            // erase up to EEPROM, skipping first two first pages with
-            // bootloader failsafe
-            await this.erasePages(0x02, 0x0D);
-
-            // write & verify just erased locations
-            await this.writePages(0x02, 0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPages(0x02, 0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-
-            // write & verify first page
-            await this.writePage(0x00, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPage(0x00, BLHELI_SILABS_PAGE_SIZE, flash);
-
-            // erase second page
-            await this.erasePage(0x01);
-
-            // write & verify second page
-            await this.writePage(0x01, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPage(0x01, BLHELI_SILABS_PAGE_SIZE, flash);
-
-            // erase EEPROM
-            await this.erasePage(0x0D);
-
-            // write & verify EEPROM
-            await this.writePage(0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-            await this.verifyPage(0x0D, BLHELI_SILABS_PAGE_SIZE, flash);
-
-          } break;
-
-          default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
-        }
-
-        const elapsedSec = (Date.now() - startTimestamp) / 1000;
-        const rounded = Math.round(elapsedSec * 10) / 10;
-        this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
-
-        const newEsc = await this.getInfo(target);
-
-        if(migrate) {
-          /**
-           * Migrate settings from the previous firmware if possible.
-           */
-          const newSettings = Object.assign({}, newEsc.settings);
-          const oldSettings = esc.settings;
-
-          let settingsDescriptions = null;
-          let individualSettingsDescriptions = null;
-          switch(newEsc.layout) {
-            case BLHELI_LAYOUT: {
-              console.debug('BLHELI layout found');
-              settingsDescriptions = BLHELI_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case BLUEJAY_LAYOUT: {
-              console.debug('Bluejay layout found');
-              settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = BLUEJAY_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-
-            case OPEN_ESC_LAYOUT: {
-              console.debug('OpenEsc layout found');
-              settingsDescriptions = OPEN_ESC_SETTINGS_DESCRIPTIONS;
-              individualSettingsDescriptions = OPEN_ESC_INDIVIDUAL_SETTINGS_DESCRIPTIONS;
-            } break;
-          }
-
-          /**
-           * Try migrating settings if possible - this ensures that the motor
-           * direction is saved between flashes.
-           */
-          const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
-          if(settingsDescriptions && individualSettingsDescriptions) {
-            if(newSettings.MODE === oldSettings.MODE) {
-              for (var prop in newSettings) {
-                if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
-                    Object.prototype.hasOwnProperty.call(oldSettings, prop)
-                ) {
-                  if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
-                    // With a proper migration path
-                    newSettings[prop] = oldSettings[prop];
-
-                    console.debug(`Migrated setting ${prop}`);
-                  } else {
-                    if (saveMigratins.includes(prop)) {
-                      // Settings that are save to migrate because they are the
-                      // same on all firmwares.
-                      newSettings[prop] = oldSettings[prop];
-
-                      console.debug(`Migrated setting ${prop}`);
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            console.debug('Can not migrate settings');
-          }
-
-          await this.writeSettings(target, newEsc, newSettings);
-          newEsc.settings = newSettings;
-          newEsc.individualSettings = getIndividualSettings(newEsc);
-        }
-
-        return newEsc;
+        return flashTarget(target, flash);
       } catch(e) {
-        console.debug(e);
+        console.debug('Failed flashing SiLabs:', e);
+        return null;
       }
-
     } else {
       throw new Error('Can not flash Atmel yet.');
     }
@@ -816,11 +813,11 @@ class FourWay {
   }
 
   async writeEEpromSafeguard(settings) {
-    settings.set(ascii2buf('**FLASH*FAILED**'), BLHELI_LAYOUT.NAME.offset);
-    const response = await this.write(BLHELI_SILABS_EEPROM_OFFSET, settings);
+    settings.set(ascii2buf('**FLASH*FAILED**'), BLHELI_EEPROM.LAYOUT.NAME.offset);
+    const response = await this.write(BLHELI_EEPROM.EEPROM_OFFSET, settings);
 
     const verifySafeguard = async (resolve, reject) => {
-      const message = await this.read(response.address, BLHELI_LAYOUT_SIZE);
+      const message = await this.read(response.address, BLHELI_EEPROM.LAYOUT_SIZE);
 
       if (!compare(settings, message.params)) {
         reject(new Error('failed to verify write **FLASH*FAILED**'));
@@ -892,44 +889,47 @@ class FourWay {
   }
 
   pageErase(page) {
-    return this.sendMessagePromised(this.commands.cmd_DevicePageErase, [page]);
+    return this.sendMessagePromised(COMMANDS.cmd_DevicePageErase, [page]);
   }
 
   read(address, bytes) {
     return this.sendMessagePromised(
-      this.commands.cmd_DeviceRead, [bytes === 256 ? 0 : bytes], address);
+      COMMANDS.cmd_DeviceRead,
+      [bytes === 256 ? 0 : bytes],
+      address
+    );
   }
 
   readEEprom(address, bytes) {
     return this.sendMessagePromised(
-      this.commands.cmd_DeviceReadEEprom, [bytes === 256 ? 0 : bytes], address
+      COMMANDS.cmd_DeviceReadEEprom,
+      [bytes === 256 ? 0 : bytes],
+      address
     );
   }
 
   write(address, data) {
-    return this.sendMessagePromised(this.commands.cmd_DeviceWrite, data, address);
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceWrite, data, address);
   }
 
   writeEEprom(address, data) {
-    // Writing EEprom is real slow on Atmel, hence increased timeout
-    return this.sendMessagePromised(this.commands.cmd_DeviceWriteEEprom, data, address, 10000);
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceWriteEEprom, data, address);
   }
 
   reset(target) {
-    return this.sendMessagePromised(this.commands.cmd_DeviceReset, [target], 0);
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
   }
 
   exit() {
     if (this.interval) {
       clearInterval(this.interval);
-      this.commandQueue = [];
     }
 
-    return this.sendMessagePromised(this.commands.cmd_InterfaceExit);
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
   }
 
   testAlive() {
-    return this.sendMessagePromised(this.commands.cmd_InterfaceTestAlive);
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
   }
 
   start() {

@@ -45,7 +45,7 @@ class QueueProcessor {
   /**
    * Timeout reached, reject the command, clear the buffer and reset states
    */
-  resolveTimout() {
+  resolveTimeout() {
     const command = this.commands.shift();
     this.buffer = new Uint8Array([]);
     this.newData = false;
@@ -81,7 +81,7 @@ class QueueProcessor {
            * available.
            */
           if(!this.processing) {
-            return this.resolveTimout();
+            return this.resolveTimeout();
           }
 
           this.quit = true;
@@ -129,7 +129,7 @@ class QueueProcessor {
           // Timeout was triggered while we aere processing, in this case we
           // quit now.
           if(this.quit) {
-            this.resolveTimout();
+            this.resolveTimeout();
           }
           return;
         } else {
