@@ -27,23 +27,6 @@
     line-height: 28px;
   }
 
-  .button-dark {
-    button {
-      margin: 0px;
-      width: 100%;
-      line-height: 22px;
-      padding: 0px;
-      color: #a6a6a6;
-      background: #3e403f;
-      border-color: #111 #0a0a0a black;
-      background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
-
-      &:active {
-        color: white;
-      }
-    }
-  }
-
   .dropdown-dark .dropdown-select {
     padding-right: 20px;
   }
@@ -172,9 +155,9 @@
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
   width:99%;
-  margin-bottom:7px;
+  margin-bottom: 5px;
   border: 1px solid;
-   border-color: #ccc #ccc #ccc;
+  border-color: #ccc #ccc #ccc;
   border-radius: 3px;
 
   &:before, &:after {

@@ -21,6 +21,35 @@ body {
   padding: 0px 0px 0 0px;
   height: calc(100% - 7px);
 
+
+
+  .button-dark {
+    button {
+      border-radius: 3px;
+      border: 1px solid var(--color-primary);
+      color: #fff;
+      float: right;
+      font-family: "open_sansbold", Arial;
+      font-size: 12px;
+      text-shadow: 0px 1px rgb(0 0 0 / 25%);
+      display: block;
+      cursor: pointer;
+      transition: all ease 0.2s;
+      margin: 0px;
+      width: 100%;
+      line-height: 20px;
+      padding: 0px;
+      color: #a6a6a6;
+      background: #3e403f;
+      border-color: #111 #0a0a0a black;
+      background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+
+      &:active {
+        color: white;
+      }
+    }
+  }
+
   .header-wrapper {
     background: #3d3f3e;
     position: fixed;
@@ -147,7 +176,7 @@ body {
       text-shadow: none;
       border: 1px solid #ccc;
       color: #ccc;
-      cursor: default;
+      cursor:  aliasdefault;
     }
 
     button:active,
