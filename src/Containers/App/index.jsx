@@ -197,7 +197,13 @@ class App extends Component {
 
   handleIndividualSettingsUpdate(index, individualSettings) {
     const  { escs } = this.state;
-    escs[index].individualSettings = individualSettings;
+    for(let i = 0; i < escs.length; i += 1) {
+      if(escs[i].index === index) {
+        escs[i].individualSettings = individualSettings;
+
+        break;
+      }
+    }
 
     this.setState({ escs });
   }
@@ -213,13 +219,15 @@ class App extends Component {
     actions.isWriting = true;
     this.setState({ actions });
     for(let i = 0; i < escs.length; i += 1) {
-      console.debug(`Restoring default settings on ESC ${i} `);
-
       const esc = escs[i];
+      const target = esc.index;
+
+      console.debug(`Restoring default settings on ESC ${target + 1} `);
+
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
-      await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
+      await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
     }
 
     actions.isWriting = false;
@@ -309,6 +317,7 @@ class App extends Component {
         progress[i] = 0;
         const settings = await this.serial.fourWayGetInfo(i);
         if(settings) {
+          settings.index = i;
           escFlash.push(settings);
 
           const message = `Read ESC ${i + 1}`;
@@ -353,13 +362,15 @@ class App extends Component {
     actions.isWriting = true;
     this.setState({ actions });
     for(let i = 0; i < escs.length; i += 1) {
-      console.debug(`Writing settings to ESC ${i} `);
-
       const esc = escs[i];
+      const target = esc.index;
+
+      console.debug(`Writing settings to ESC ${target + 1}`);
+
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
-      const newSettingsArray = await this.serial.fourWayWriteSettings(i, esc, mergedSettings);
+      const newSettingsArray = await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
 
       escs[i].settingsArray = newSettingsArray;
     }
@@ -388,7 +399,8 @@ class App extends Component {
 
     const flashTargets = [];
     for (let i = 0; i < escs.length; i += 1) {
-      flashTargets.push(i);
+      const esc = escs[i];
+      flashTargets.push(esc.index);
     }
 
     actions.isSelecting = true;
@@ -472,12 +484,13 @@ class App extends Component {
 
     let newProgress = progress;
     for(let i = 0; i < flashTargets.length; i += 1) {
-      const message = `Flashing ESC ${i + 1}`;
+      const target = flashTargets[i];
+
+      const message = `Flashing ESC ${target + 1}`;
       console.debug(message);
       this.addLogMessage(message);
 
-      const target = flashTargets[i];
-      const esc = escs[target];
+      const esc = escs.find((esc) => esc.index === target);
       newProgress[target] = 0;
 
       const updateProgress = async(progress) => {
@@ -488,13 +501,15 @@ class App extends Component {
       updateProgress(0.1);
 
       const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
+      result.index = target;
+
       if(result) {
-        escs[target] = result;
+        escs[i] = result;
         newProgress[target] = 0;
 
         await this.setState({ escs });
       } else {
-        const error = `Failed flashing ESC ${i + 1} - check file type`;
+        const error = `Failed flashing ESC ${target + 1} - check file type`;
         console.debug(error);
         this.addLogMessage(error);
       }
@@ -747,6 +762,12 @@ class App extends Component {
     this.setState({
       open: false,
       escs: [],
+      actions: {
+        isReading: false,
+        isWriting: false,
+        isSelecting: false,
+        isFlashing: false,
+      },
     });
   }
 

@@ -55,7 +55,8 @@ function MainContent({
   }
 
   if (isSelecting) {
-    const esc = escs[flashTargets[0]];
+    const targetIndex = flashTargets[0];
+    const esc = escs.find((esc) => esc.index === targetIndex);
     return (
       <div id="content">
         <div className="tab toolbar_fixed_bottom">

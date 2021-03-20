@@ -11,15 +11,15 @@ function Escs({
   onSettingsUpdate,
 }) {
   function EscElements() {
-    return escs.map((esc, index) => (
+    return escs.map((esc) => (
       <Esc
         canFlash={canFlash}
         esc={esc}
-        index={index}
-        key={index}
+        index={esc.index}
+        key={esc.index}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
-        progress={flashProgress[index]}
+        progress={flashProgress[esc.index]}
       />
     ));
   }
