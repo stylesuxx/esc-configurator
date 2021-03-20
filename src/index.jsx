@@ -16,6 +16,7 @@ import SettingsEn from './translations/en/settings.json';
 
 import CommonDe from './translations/de/common.json';
 import HintsDe from './translations/de/hints.json';
+import SettingsDe from './translations/de/settings.json';
 
 i18next.init({
   interpolation: { excapeValue: false },
@@ -29,6 +30,7 @@ i18next.init({
     de: {
       common: CommonDe,
       hints: HintsDe,
+      settings: SettingsDe,
     },
   },
 });
