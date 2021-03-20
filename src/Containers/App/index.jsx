@@ -902,6 +902,7 @@ class App extends Component {
 
           <MainContent
             actions={actions}
+            appSettings={appSettings}
             changelogEntries={changelogEntries}
             configs={configs}
             escs={escs}

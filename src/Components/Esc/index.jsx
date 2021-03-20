@@ -7,16 +7,18 @@ import {
 import Checkbox from '../Input/Checkbox';
 import Select from '../Input/Select';
 import Slider from '../Input/Slider';
+import Number from '../Input/Number';
 
 import './style.scss';
 
 function Esc({
-  index,
-  esc,
   canFlash,
-  progress,
-  onSettingsUpdate,
+  directInput,
+  esc,
+  index,
   onFlash,
+  onSettingsUpdate,
+  progress,
 }) {
   const { t } = useTranslation('common');
 
@@ -68,7 +70,7 @@ function Esc({
     updateSettings();
   }
 
-  function handleSliderChange(name, value) {
+  function handleNumberChange(name, value) {
     currentSettings[name] = value;
 
     updateSettings();
@@ -109,6 +111,24 @@ function Esc({
       }
 
       case 'number': {
+        if(directInput) {
+          return (
+            <Number
+              factor={setting.factor}
+              key={setting.name}
+              label={t(setting.label)}
+              max={setting.max}
+              min={setting.min}
+              name={setting.name}
+              offset={setting.offset}
+              onChange={handleNumberChange}
+              round={false}
+              step={1}
+              value={value}
+            />
+          );
+        }
+
         return (
           <Slider
             factor={setting.factor}
@@ -118,7 +138,7 @@ function Esc({
             min={setting.min}
             name={setting.name}
             offset={setting.offset}
-            onChange={handleSliderChange}
+            onChange={handleNumberChange}
             round={false}
             step={setting.step}
             suffix={setting.suffix}
@@ -180,6 +200,7 @@ Esc.defaultProps = {
 
 Esc.propTypes = {
   canFlash: PropTypes.bool,
+  directInput: PropTypes.bool.isRequired,
   esc: PropTypes.shape().isRequired,
   index: PropTypes.number.isRequired,
   onFlash: PropTypes.func.isRequired,

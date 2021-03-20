@@ -4,9 +4,10 @@ import React from 'react';
 import Esc from '../Esc';
 
 function Escs({
+  canFlash,
+  directInput,
   escs,
   flashProgress,
-  canFlash,
   onFlash,
   onSettingsUpdate,
 }) {
@@ -14,6 +15,7 @@ function Escs({
     return escs.map((esc) => (
       <Esc
         canFlash={canFlash}
+        directInput={directInput}
         esc={esc}
         index={esc.index}
         key={esc.index}
@@ -33,6 +35,7 @@ Escs.defaultProps = { escs: [] };
 
 Escs.propTypes = {
   canFlash: PropTypes.bool.isRequired,
+  directInput: PropTypes.bool.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()),
   flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
   onFlash: PropTypes.func.isRequired,

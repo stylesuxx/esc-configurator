@@ -1,5 +1,12 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Settings Screen",
+      "Direct input instead of sliders"
+    ]
+  },
+  {
     "title": "0.7.0",
     "items": [
       "AM32 read/write settings",

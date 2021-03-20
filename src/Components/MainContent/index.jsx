@@ -10,6 +10,7 @@ import Changelog from '../../Components/Changelog';
 import './style.scss';
 
 function MainContent({
+  appSettings,
   open,
   escs,
   settings,
@@ -83,6 +84,7 @@ function MainContent({
             <Flash
               availableSettings={settings}
               canFlash={canFlash}
+              directInput={appSettings.directInput.value}
               escs={escs}
               flashProgress={progress}
               onFlash={onSingleFlash}
@@ -115,6 +117,7 @@ MainContent.propTypes = {
     isSelecting: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
+  appSettings: PropTypes.shape({ directInput: PropTypes.shape({ value: PropTypes.bool.isRequired }).isRequired }).isRequired,
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,

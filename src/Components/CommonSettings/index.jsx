@@ -14,11 +14,13 @@ import {
 import Checkbox from '../Input/Checkbox';
 import Select from '../Input/Select';
 import Slider from '../Input/Slider';
+import Number from '../Input/Number';
 
 import './style.scss';
 
 function CommonSettings({
   availableSettings,
+  directInput,
   escs,
   onSettingsUpdate,
 }) {
@@ -61,7 +63,7 @@ function CommonSettings({
     updateSettings();
   }
 
-  function handleSliderChange(name, value) {
+  function handleNumberChange(name, value) {
     currentSettings[name] = value;
 
     updateSettings();
@@ -147,6 +149,26 @@ function CommonSettings({
       }
 
       case 'number': {
+        if(directInput) {
+          return (
+            <Number
+              factor={setting.displayFactor}
+              hint={hint}
+              inSync={inSync}
+              key={setting.name}
+              label={t(setting.label)}
+              max={setting.max}
+              min={setting.min}
+              name={setting.name}
+              offset={setting.displayOffset}
+              onChange={handleNumberChange}
+              round={false}
+              step={setting.step}
+              value={value}
+            />
+          );
+        }
+
         return (
           <Slider
             factor={setting.displayFactor}
@@ -158,7 +180,7 @@ function CommonSettings({
             min={setting.min}
             name={setting.name}
             offset={setting.displayOffset}
-            onChange={handleSliderChange}
+            onChange={handleNumberChange}
             round={false}
             step={setting.step}
             value={value}
@@ -190,6 +212,7 @@ CommonSettings.propTypes = {
     MAIN_REVISION: PropTypes.number.isRequired,
     SUB_REVISION: PropTypes.number.isRequired,
   }).isRequired,
+  directInput: PropTypes.bool.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };
