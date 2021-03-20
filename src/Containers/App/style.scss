@@ -24,7 +24,9 @@ body {
 
 
   .button-dark {
+    a,
     button {
+      text-align: center;
       border-radius: 3px;
       border: 1px solid var(--color-primary);
       color: #fff;
@@ -37,7 +39,7 @@ body {
       transition: all ease 0.2s;
       margin: 0px;
       width: 100%;
-      line-height: 20px;
+      line-height: 21px;
       padding: 0px;
       color: #a6a6a6;
       background: #3e403f;
@@ -47,6 +49,11 @@ body {
       &:active {
         color: white;
       }
+    }
+
+    a {
+      margin-top: 8px;
+      width: 118px;
     }
   }
 

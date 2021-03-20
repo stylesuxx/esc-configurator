@@ -890,6 +890,17 @@ class App extends Component {
                     Settings
                   </button>
                 </div>
+
+                <div className="button-dark">
+                  <a
+                    href="https://discord.gg/QvSS5dk23C"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Join Discord Chat
+                  </a>
+                </div>
+
               </div>
             </div>
 
