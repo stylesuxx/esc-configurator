@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.8.1",
+    "items": [
+      "Add discord Link"
+    ]
+  },
+  {
     "title": "0.8.0",
     "items": [
       "Settings Screen",
