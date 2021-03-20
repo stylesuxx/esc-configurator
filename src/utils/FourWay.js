@@ -339,8 +339,15 @@ class FourWay {
 
         if (interfaceMode !== MODES.ARMBLB) {
           const mode = blheli.modeToString(flash.settings.MODE);
-          const descriptions = settingsDescriptions[layoutRevision][mode];
-          flash.settingsDescriptions = descriptions;
+          try {
+            const descriptions = settingsDescriptions[layoutRevision][mode];
+            flash.settingsDescriptions = descriptions;
+          } catch(e) {
+            const error = `Layout revision ${layoutRevision} is not yet supported`;
+            this.addLogMessage(error);
+            console.debug(error);
+            return;
+          }
         }
 
         const layoutName = (flash.settings.LAYOUT || '').trim();
