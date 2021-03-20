@@ -1,6 +1,6 @@
 <img align="right" src="./public/logo512.png" alt="ESC Configurator" width="250">
 
-[![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom)
+[![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom) [![Discord](https://img.shields.io/discord/822952715944460368.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/QvSS5dk23C)
 
 # ESC Configurator - PWA (Progressive Web App)
 A webapp to flash your BLHELI_S capable ESC's directly from the web using the [Web Serial API](https://wicg.github.io/serial/).
