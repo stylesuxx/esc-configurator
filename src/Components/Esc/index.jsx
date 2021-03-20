@@ -25,14 +25,14 @@ function Esc({
   const settings = esc.individualSettings;
   const currentSettings = settings;
   const settingsDescriptions = esc.individualSettingsDescriptions;
-  const revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+  const revision = settings ? `${settings.MAIN_REVISION}.${settings.SUB_REVISION}` : 'UNSUPPORTED';
 
   let make = '';
   if (esc.make) {
     make = `${esc.make}, `;
   }
 
-  let name = (settings.NAME).trim();
+  let name = settings ? (settings.NAME).trim() : '';
   if (name.length > 0) {
     name = `, ${name}`;
   }
@@ -76,7 +76,9 @@ function Esc({
     updateSettings();
   }
 
-  const settingElements = settingsDescriptions.base.map((setting) => {
+  let settingElements = null;
+  if(settingsDescriptions) {
+    settingElements = settingsDescriptions.base.map((setting) => {
     if (setting.visibleIf && !setting.visibleIf(settings)) {
       return null;
     }
@@ -150,6 +152,7 @@ function Esc({
       default: return null;
     }
   });
+  }
 
   function FlashBox() {
     return(

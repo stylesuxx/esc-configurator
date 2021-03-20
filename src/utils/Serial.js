@@ -198,10 +198,20 @@ class Serial {
       await this.fourWay.exit();
     }
 
-    this.reader.cancel();
-    await this.reader.releaseLock();
-    await this.writer.releaseLock();
-    await this.port.close();
+    if(this.reader) {
+      this.reader.cancel();
+      await this.reader.releaseLock();
+    }
+
+    if(this.writer) {
+      await this.writer.releaseLock();
+    }
+
+    try {
+      await this.port.close();
+    } catch(e) {
+      // we tried...
+    }
   }
 }
 

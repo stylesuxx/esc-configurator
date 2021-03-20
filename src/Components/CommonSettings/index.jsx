@@ -70,14 +70,19 @@ function CommonSettings({
   }
 
   if (!settingsDescriptions) {
-    const unsupported = `${availableSettings.MAIN_REVISION}.${
-      availableSettings.SUB_REVISION}`;
+    console.log(availableSettings);
+    const unsupported = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
+
     return (
-      <h3>
-        Version
-        {unsupported}
-        is unsupported
-      </h3>
+      <h3
+        dangerouslySetInnerHTML={{
+          __html: t('common:versionUnsupported', {
+            version: unsupported,
+            name: availableSettings.NAME,
+            layout: availableSettings.LAYOUT_REVISION,
+          })
+        }}
+      />
     );
   }
 
@@ -209,7 +214,9 @@ function CommonSettings({
 
 CommonSettings.propTypes = {
   availableSettings: PropTypes.shape({
+    LAYOUT_REVISION: PropTypes.number.isRequired,
     MAIN_REVISION: PropTypes.number.isRequired,
+    NAME: PropTypes.string.isRequired,
     SUB_REVISION: PropTypes.number.isRequired,
   }).isRequired,
   directInput: PropTypes.bool.isRequired,

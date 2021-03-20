@@ -3,7 +3,8 @@
     "title": "Unreleased",
     "items": [
       "Settings Screen",
-      "Direct input instead of sliders"
+      "Direct input instead of sliders",
+      "Handle unsupported versions"
     ]
   },
   {

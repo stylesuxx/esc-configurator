@@ -346,7 +346,6 @@ class FourWay {
             const error = `Layout revision ${layoutRevision} is not yet supported`;
             this.addLogMessage(error);
             console.debug(error);
-            return;
           }
         }
 
@@ -385,7 +384,11 @@ class FourWay {
         return null;
       }
 
-      flash.individualSettings = getIndividualSettings(flash);
+      try {
+        flash.individualSettings = getIndividualSettings(flash);
+      } catch(e) {
+        console.debug('Could not get individual settings');
+      }
 
       // Delete some things that we do not need to pass on to the client
       delete flash.ack;
