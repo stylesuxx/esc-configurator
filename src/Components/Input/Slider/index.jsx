@@ -47,7 +47,11 @@ function Slider({
 
   function handleUpdate(value) {
     value = Math.floor((value - offset) / factor);
-    onChange(name, value);
+
+    // Timout needed for individual settings
+    setTimeout(() => {
+      onChange(name, value);
+    }, 100);
   }
 
   function format(value) {

@@ -1,8 +1,15 @@
 {
-  "STARTUP_BEEP": "Enable beeps when the ESC is powered up.",
+  "STARTUP_BEEP": "Enable beep melody when the ESC is powered up.",
   "BRAKE_ON_STOP": "Brake when motors are stopped.",
   "BEACON_DELAY": "After how much time of inactivity the beacon should start to go off.",
   "TEMPERATURE_PROTECTION": "At which temperature the ESC will shut down.",
   "BEEP_STRENGTH": "The volume of the startup beeps. Setting this too high might damage the motors.",
-  "BEACON_STRENGTH": "The volume of the beacon. Setting this too high might damage the motors."
+  "BEACON_STRENGTH": "The volume of the beacon. Setting this too high might damage the motors.",
+  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to start up with low throttle input.",
+  "DITHERING": "Increases the effective pwm resolution 2000 steps. It is generally recommended to leave this on especially with pwm frequencies above 24kHz.",
+  "STARTUP_POWER_MAX": "Limits power when starting motors or reversing direction.",
+  "RPM_POWER_SLOPE": "Limits how much power can be increased according to how fast the motor is spinning. Lower values will avoid power spikes but can also decrease acceleration and maximum attainable speed.",
+  "MOTOR_DIRECTION": "The motor rotation direction can be normal or reversed. In bidirectional mode, center throttle is zero.",
+  "COMMUTATION_TIMING": "Motor commutation advance timing. Higher timing are less prone to desyncs and can provide more power at the cost of efficiency.",
+  "DEMAG_COMPENSATION": "The extent to which power should be cut to protect against motor stalls caused by long winding demagnetization time after commutation."
 }

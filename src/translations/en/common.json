@@ -80,5 +80,6 @@
   "blhelisText": "<p>BLHELI_S probably does not need an introduction - the wildly popular ESC firmware used on almost every EFM8 based ESC in the quadrocopter hobby.</p><p>Tried and tested, supports every analog and digital protocol out there.</p>",
   "whatsNextHeader": "What's next?",
   "whatsNextText": "<p>If you want to see which features are upcoming, drop by in the <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com\" target=\"_blank\">github repository</a>. Also feel free to add a feature request if you have an idea that you want to see implemented.</p>",
-  "openPortSelection": "Open Port Selection"
+  "openPortSelection": "Open Port Selection",
+  "versionUnsupported": "{{name}} version '{{version}}' (Layout {{layout}}) is not yet supported.<br/><br/>Let us know by opening an <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">issue</a>."
 }

@@ -22,4 +22,8 @@ const bluejayConfig = new Source(
   pwmOptions
 );
 
+export {
+  EEPROM,
+};
+
 export default bluejayConfig;

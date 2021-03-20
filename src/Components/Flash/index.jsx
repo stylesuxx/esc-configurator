@@ -17,12 +17,13 @@ import './style.scss';
  */
 function Flash({
   availableSettings,
+  canFlash,
+  directInput,
   escs,
   flashProgress,
-  canFlash,
   onFlash,
-  onSettingsUpdate,
   onIndividualSettingsUpdate,
+  onSettingsUpdate,
 }) {
   const { t } = useTranslation('common');
   return (
@@ -42,6 +43,7 @@ function Flash({
           {escs.length > 0 &&
             <CommonSettings
               availableSettings={availableSettings}
+              directInput={directInput}
               escs={escs}
               onSettingsUpdate={onSettingsUpdate}
             />}
@@ -50,6 +52,7 @@ function Flash({
         <div className="individual-config">
           <Escs
             canFlash={canFlash}
+            directInput={directInput}
             escs={escs}
             flashProgress={flashProgress}
             onFlash={onFlash}
@@ -64,6 +67,7 @@ function Flash({
 Flash.propTypes = {
   availableSettings: PropTypes.shape().isRequired,
   canFlash: PropTypes.bool.isRequired,
+  directInput: PropTypes.bool.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
   onFlash: PropTypes.func.isRequired,

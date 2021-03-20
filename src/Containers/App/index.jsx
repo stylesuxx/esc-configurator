@@ -12,6 +12,7 @@ import Log from '../../Components/Log';
 import Statusbar from '../../Components/Statusbar';
 import CookieConsent from '../../Components/CookieConsent';
 import MainContent from '../../Components/MainContent';
+import AppSettings from '../../Components/AppSettings';
 
 import Serial from '../../utils/Serial';
 
@@ -61,6 +62,9 @@ class App extends Component {
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
     this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
     this.handleChangePort = this.handleChangePort.bind(this);
+    this.handleCloseSettings = this.handleCloseSettings.bind(this);
+    this.handleOpenSettings = this.handleOpenSettings.bind(this);
+    this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
 
     this.state = {
       checked: false,
@@ -91,6 +95,8 @@ class App extends Component {
         isFlashing: false,
       },
       language: 'en',
+      showSettings: false,
+      appSettings: {},
     };
   }
 
@@ -104,6 +110,16 @@ class App extends Component {
         i18next.changeLanguage(language);
         this.setState({ language });
       }
+
+      const defaultSettings = {
+        directInput: {
+          type: 'boolean',
+          value: false,
+        },
+      };
+      const settings = JSON.parse(localStorage.getItem('settings'));
+      const currentSettings = Object.assign({}, defaultSettings, settings);
+      this.setState({ appSettings: currentSettings });
 
       // Redefine the console and tee logs
       var console = (function(old) {
@@ -787,7 +803,21 @@ class App extends Component {
     this.setState({ language });
   }
 
+  handleCloseSettings() {
+    this.setState({ showSettings: false });
+  }
 
+  handleOpenSettings() {
+    this.setState({ showSettings: true });
+  }
+
+  handleUpdateSettings(name, value) {
+    const { appSettings } = this.state;
+
+    appSettings[name].value = value;
+    localStorage.setItem('settings', JSON.stringify(appSettings));
+    this.setState({ appSettings });
+  }
 
   render() {
     const {
@@ -805,6 +835,8 @@ class App extends Component {
       flashTargets,
       language,
       serial,
+      showSettings,
+      appSettings,
     } = this.state;
 
     if (!checked) {
@@ -849,6 +881,15 @@ class App extends Component {
                     {languageElements}
                   </select>
                 </div>
+
+                <div className="button-dark">
+                  <button
+                    onClick={this.handleOpenSettings}
+                    type="button"
+                  >
+                    Settings
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -861,6 +902,7 @@ class App extends Component {
 
           <MainContent
             actions={actions}
+            appSettings={appSettings}
             changelogEntries={changelogEntries}
             configs={configs}
             escs={escs}
@@ -891,6 +933,13 @@ class App extends Component {
         <CookieConsent
           onCookieAccept={this.handleCookieAccept}
         />
+
+        {showSettings &&
+          <AppSettings
+            onClose={this.handleCloseSettings}
+            onUpdate={this.handleUpdateSettings}
+            settings={appSettings}
+          />}
       </div>
     );
   }

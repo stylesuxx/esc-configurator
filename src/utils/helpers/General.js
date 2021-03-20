@@ -1,6 +1,9 @@
 import {
-  BLUEJAY_TYPES,
-} from '../../sources/Bluejay/eeprom';
+  EEPROM as BLUEJAY_EEPROM
+} from '../../sources/Bluejay';
+
+const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
+
 import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
 
 import {

@@ -339,8 +339,14 @@ class FourWay {
 
         if (interfaceMode !== MODES.ARMBLB) {
           const mode = blheli.modeToString(flash.settings.MODE);
-          const descriptions = settingsDescriptions[layoutRevision][mode];
-          flash.settingsDescriptions = descriptions;
+          try {
+            const descriptions = settingsDescriptions[layoutRevision][mode];
+            flash.settingsDescriptions = descriptions;
+          } catch(e) {
+            const error = `Layout revision ${layoutRevision} is not yet supported`;
+            this.addLogMessage(error);
+            console.debug(error);
+          }
         }
 
         const layoutName = (flash.settings.LAYOUT || '').trim();
@@ -378,7 +384,11 @@ class FourWay {
         return null;
       }
 
-      flash.individualSettings = getIndividualSettings(flash);
+      try {
+        flash.individualSettings = getIndividualSettings(flash);
+      } catch(e) {
+        console.debug('Could not get individual settings');
+      }
 
       // Delete some things that we do not need to pass on to the client
       delete flash.ack;

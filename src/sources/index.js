@@ -12,8 +12,8 @@ import am32Source from './AM32';
 // import blheliMConfig from './BlheliM';
 
 const sources = [
-  blheliSource,
   bluejaySource,
+  blheliSource,
   am32Source,
   // blheliMConfig,
 ];

@@ -2,9 +2,8 @@ import {
   BLHELI_TYPES,
 } from './Blheli/eeprom';
 
-import {
-  BLUEJAY_TYPES,
-} from './Bluejay/eeprom';
+import BLUEJAY_EEPROM from './Bluejay/eeprom';
+const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
 
 import {
   AM32_TYPES,

@@ -14,11 +14,13 @@ import {
 import Checkbox from '../Input/Checkbox';
 import Select from '../Input/Select';
 import Slider from '../Input/Slider';
+import Number from '../Input/Number';
 
 import './style.scss';
 
 function CommonSettings({
   availableSettings,
+  directInput,
   escs,
   onSettingsUpdate,
 }) {
@@ -61,21 +63,26 @@ function CommonSettings({
     updateSettings();
   }
 
-  function handleSliderChange(name, value) {
+  function handleNumberChange(name, value) {
     currentSettings[name] = value;
 
     updateSettings();
   }
 
   if (!settingsDescriptions) {
-    const unsupported = `${availableSettings.MAIN_REVISION}.${
-      availableSettings.SUB_REVISION}`;
+    console.log(availableSettings);
+    const unsupported = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
+
     return (
-      <h3>
-        Version
-        {unsupported}
-        is unsupported
-      </h3>
+      <h3
+        dangerouslySetInnerHTML={{
+          __html: t('common:versionUnsupported', {
+            version: unsupported,
+            name: availableSettings.NAME,
+            layout: availableSettings.LAYOUT_REVISION,
+          })
+        }}
+      />
     );
   }
 
@@ -147,6 +154,26 @@ function CommonSettings({
       }
 
       case 'number': {
+        if(directInput) {
+          return (
+            <Number
+              factor={setting.displayFactor}
+              hint={hint}
+              inSync={inSync}
+              key={setting.name}
+              label={t(setting.label)}
+              max={setting.max}
+              min={setting.min}
+              name={setting.name}
+              offset={setting.displayOffset}
+              onChange={handleNumberChange}
+              round={false}
+              step={setting.step}
+              value={value}
+            />
+          );
+        }
+
         return (
           <Slider
             factor={setting.displayFactor}
@@ -158,7 +185,7 @@ function CommonSettings({
             min={setting.min}
             name={setting.name}
             offset={setting.displayOffset}
-            onChange={handleSliderChange}
+            onChange={handleNumberChange}
             round={false}
             step={setting.step}
             value={value}
@@ -187,9 +214,12 @@ function CommonSettings({
 
 CommonSettings.propTypes = {
   availableSettings: PropTypes.shape({
+    LAYOUT_REVISION: PropTypes.number.isRequired,
     MAIN_REVISION: PropTypes.number.isRequired,
+    NAME: PropTypes.string.isRequired,
     SUB_REVISION: PropTypes.number.isRequired,
   }).isRequired,
+  directInput: PropTypes.bool.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };
