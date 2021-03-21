@@ -1,5 +1,11 @@
 [
   {
+    "0.8.3",
+    "items": [
+      "Updated OG image path"
+    ]
+  },
+  {
     "title": "0.8.2",
     "items": [
       "Swapped GNU-GPL for GNU-AGPL license",
