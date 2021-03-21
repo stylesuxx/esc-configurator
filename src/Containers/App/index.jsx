@@ -4,6 +4,10 @@ import React, {
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 import i18next from 'i18next';
+import {
+  ToastContainer,
+} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import changelogEntries from '../../changelog.json';
 
@@ -951,6 +955,8 @@ class App extends Component {
             onUpdate={this.handleUpdateSettings}
             settings={appSettings}
           />}
+
+        <ToastContainer />
       </div>
     );
   }
