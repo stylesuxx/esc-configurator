@@ -1,5 +1,14 @@
 [
   {
+    "title": "0.8.2",
+    "items": [
+      "Swapped GNU-GPL for GNU-AGPL license",
+      "Check for app updates and inform user if there is an update",
+      "Decreased retries on inital settings reading",
+      "Wait a second after initializing the 4 way interface to"
+    ]
+  },
+  {
     "title": "0.8.1",
     "items": [
       "Add discord Link"

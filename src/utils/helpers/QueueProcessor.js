@@ -52,7 +52,8 @@ class QueueProcessor {
     this.timeout = null;
     this.quit = false;
 
-    return command.rejectCallback(new TimeoutError());
+    const error = `Timed out after ${command.timeout}ms`;
+    command.rejectCallback(new TimeoutError(error));
   }
 
   /**
@@ -81,7 +82,7 @@ class QueueProcessor {
            * available.
            */
           if(!this.processing) {
-            return this.resolveTimeout();
+            this.resolveTimeout();
           }
 
           this.quit = true;
@@ -142,6 +143,8 @@ class QueueProcessor {
           this.commands.shift();
           this.quit = false;
           this.processing = false;
+          this.buffer = new Uint8Array([]);
+          this.newData = false;
 
           return command.rejectCallback(e);
         }
@@ -165,7 +168,7 @@ class QueueProcessor {
    *          special case of rejection - not enough data. In this case the
    *          accoring error should be thrown
    */
-  addCommand(command, timeout = 1000) {
+  addCommand(command, timeout = 500) {
     return new Promise((resolve, reject) => {
       const resolveCallback = (result) => resolve(result);
       const rejectCallback = (error) => reject(error);

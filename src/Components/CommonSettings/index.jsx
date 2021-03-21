@@ -70,7 +70,6 @@ function CommonSettings({
   }
 
   if (!settingsDescriptions) {
-    console.log(availableSettings);
     const unsupported = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
     return (

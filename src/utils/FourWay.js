@@ -164,7 +164,6 @@ class FourWay {
     let view = new Uint8Array(buffer);
     if (view[0] !== fourWayIf) {
       const error = `invalid message start: ${view[0]}`;
-      console.debug(error);
       return reject(new Error(error));
     }
 
@@ -225,9 +224,14 @@ class FourWay {
           return resolve();
         }
 
-        const msg = await this.serial(message, this.parseMessage);
-        if (msg && msg.ack === ACK.ACK_OK) {
-          return resolve(msg);
+        try {
+          const msg = await this.serial(message, this.parseMessage);
+          if (msg && msg.ack === ACK.ACK_OK) {
+            return resolve(msg);
+          }
+        } catch(e) {
+          console.debug('Command failed:', e.message);
+          return reject(e);
         }
 
         return reject(new Error('Message not OK'));
@@ -246,7 +250,7 @@ class FourWay {
   }
 
   async getInfo(target) {
-    const flash = await this.initFlash(target, 3);
+    const flash = await this.initFlash(target, 0);
 
     if (flash) {
       flash.meta = {};

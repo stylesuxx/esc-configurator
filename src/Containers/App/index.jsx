@@ -4,6 +4,10 @@ import React, {
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 import i18next from 'i18next';
+import {
+  ToastContainer,
+} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import changelogEntries from '../../changelog.json';
 
@@ -312,6 +316,7 @@ class App extends Component {
         }
 
         this.serial.fourWayStart();
+        await delay(1000);
       } else {
         connected = this.lastConnected;
       }
@@ -327,7 +332,6 @@ class App extends Component {
     this.addLogMessage(message);
     console.debug(message);
 
-    await delay(1000);
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
@@ -951,6 +955,8 @@ class App extends Component {
             onUpdate={this.handleUpdateSettings}
             settings={appSettings}
           />}
+
+        <ToastContainer />
       </div>
     );
   }

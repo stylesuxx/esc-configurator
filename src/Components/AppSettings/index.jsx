@@ -6,9 +6,6 @@ import Checkbox from '../Input/Checkbox';
 import {
   useTranslation,
 } from 'react-i18next';
-import {
-  useState,
-} from 'react';
 import './style.scss';
 
 function AppSettings({

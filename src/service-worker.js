@@ -10,19 +10,19 @@
  */
 
 import {
-  clientsClaim, 
+  clientsClaim,
 } from 'workbox-core';
 import {
-  ExpirationPlugin, 
+  ExpirationPlugin,
 } from 'workbox-expiration';
 import {
-  createHandlerBoundToURL, precacheAndRoute, 
+  createHandlerBoundToURL, precacheAndRoute,
 } from 'workbox-precaching';
 import {
-  registerRoute, 
+  registerRoute,
 } from 'workbox-routing';
 import {
-  StaleWhileRevalidate, 
+  StaleWhileRevalidate,
 } from 'workbox-strategies';
 
 clientsClaim();
@@ -44,7 +44,7 @@ const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({
-    request, url, 
+    request, url,
   }) => {
     // If this isn't a navigation, skip.
     if (request.mode !== 'navigate') {

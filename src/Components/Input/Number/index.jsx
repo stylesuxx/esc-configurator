@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {
   useState,
-  useEffect,
 } from 'react';
 
 import Info from '../Info';
@@ -18,7 +17,6 @@ function Number({
   inSync,
   offset,
   factor,
-  round,
   step,
   hint,
 }) {
@@ -96,7 +94,6 @@ Number.propTypes = {
   name: PropTypes.string.isRequired,
   offset: PropTypes.number,
   onChange: PropTypes.func.isRequired,
-  round: PropTypes.bool.isRequired,
   step: PropTypes.number,
   value: PropTypes.number,
 };
