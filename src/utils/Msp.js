@@ -9,14 +9,15 @@ const MSP = {
   MSP_BOARD_INFO: 4,
   MSP_BUILD_INFO: 5,
 
+  MSP_SET_MOTOR: 214,
+  MSP_SET_PASSTHROUGH: 245,
+
   // Multiwii MSP commands
   MSP_IDENT: 100,
   MSP_STATUS: 101,
   MSP_MOTOR: 104,
   MSP_3D: 124,
   MSP_SET_3D: 217,
-
-  MSP_SET_4WAY_IF: 245,
 
   // Additional baseflight commands that are not compatible with MultiWii
   MSP_UID: 160, // Unique device ID
@@ -237,7 +238,30 @@ class Msp {
   }
 
   set4WayIf() {
-    return this.send(MSP.MSP_SET_4WAY_IF);
+    return this.send(MSP.MSP_SET_PASSTHROUGH);
+  }
+
+  spinAllMotors(speed) {
+    const bufferOut = new ArrayBuffer(16);
+    const bufView = new Uint8Array(bufferOut);
+
+    for(let i = 0; i < 8; i += 2) {
+      bufView[i] = 0x00ff & speed;
+      bufView[i + 1] = speed >> 8;
+    }
+
+    return this.send(MSP.MSP_SET_MOTOR, bufView);
+  }
+
+  spinMotor(motor, speed) {
+    const offset = (motor - 1) * 2;
+    const bufferOut = new ArrayBuffer(16);
+    const bufView = new Uint8Array(bufferOut);
+
+    bufView[offset] = 0x00ff & speed;
+    bufView[offset + 1] = speed >> 8;
+
+    return this.send(MSP.MSP_SET_MOTOR, bufView);
   }
 
   processData(code, messageBuffer, messageLength) {
@@ -286,7 +310,7 @@ class Msp {
           return motorData;
         }
 
-        case MSP.MSP_SET_4WAY_IF: {
+        case MSP.MSP_SET_PASSTHROUGH: {
           escConfig.connectedESCs = data.getUint8(0);
 
           return escConfig;
@@ -391,7 +415,7 @@ class Msp {
           );
         }
       }
-    } else if (code === MSP.MSP_SET_4WAY_IF) {
+    } else if (code === MSP.MSP_SET_PASSTHROUGH) {
       this.addLogMessage('BLHELI passthrough not supported');
     } else {
       console.log('FC reports unsupported message error:', code);

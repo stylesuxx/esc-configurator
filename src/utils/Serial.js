@@ -89,6 +89,14 @@ class Serial {
     return this.msp.set4WayIf();
   }
 
+  async spinMotor(index, speed) {
+    return this.msp.spinMotor(index, speed);
+  }
+
+  async spinAllMotors(speed) {
+    return this.msp.spinAllMotors(speed);
+  }
+
   async fourWayWriteSettings(index, esc, settings) {
     return this.fourWay.writeSettings(index, esc, settings);
   }
