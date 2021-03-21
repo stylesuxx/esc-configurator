@@ -81,6 +81,10 @@ class Serial {
     return this.msp.getBoardInfo();
   }
 
+  async getMotorData() {
+    return this.msp.getMotorData();
+  }
+
   async getUid() {
     return this.msp.getUid();
   }

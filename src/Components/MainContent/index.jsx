@@ -6,6 +6,7 @@ import Flash from '../Flash';
 import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '..//FirmwareSelector';
 import Changelog from '../../Components/Changelog';
+import MotorControl from '../../Components/MotorControl';
 
 import './style.scss';
 
@@ -30,6 +31,10 @@ function MainContent({
   onLocalSubmit,
   changelogEntries,
   actions,
+  onAllMotorSpeed,
+  onSingleMotorSpeed,
+  connected,
+  fourWay,
 }) {
   const {
     isSelecting,
@@ -91,6 +96,13 @@ function MainContent({
               onIndividualSettingsUpdate={onIndividualSettingsUpdate}
               onSettingsUpdate={onSettingsUpdate}
             />
+
+            {!fourWay && !actions.isReading &&
+              <MotorControl
+                motorCount={connected}
+                onAllUpdate={onAllMotorSpeed}
+                onSingleUpdate={onSingleMotorSpeed}
+              />}
           </div>
         </div>
       </div>
@@ -124,8 +136,11 @@ MainContent.propTypes = {
     pwm: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
   }).isRequired,
+  connected: PropTypes.number.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
+  fourWay: PropTypes.bool.isRequired,
+  onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
@@ -136,6 +151,7 @@ MainContent.propTypes = {
   onSelectFirmwareForAll: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
   onSingleFlash: PropTypes.func.isRequired,
+  onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   progress: PropTypes.arrayOf(PropTypes.number).isRequired,

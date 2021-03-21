@@ -237,6 +237,10 @@ class Msp {
     return this.send(MSP.MSP_UID);
   }
 
+  getMotorData() {
+    return this.send(MSP.MSP_MOTOR);
+  }
+
   set4WayIf() {
     return this.send(MSP.MSP_SET_PASSTHROUGH);
   }
@@ -317,7 +321,7 @@ class Msp {
         }
 
         case MSP.MSP_SET_MOTOR: {
-          console.log('Motor Speeds Updated');
+          // Motor speeds updated
         } break;
 
         // Additional baseflight commands that are not compatible with MultiWii

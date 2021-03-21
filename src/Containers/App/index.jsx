@@ -69,11 +69,13 @@ class App extends Component {
     this.handleCloseSettings = this.handleCloseSettings.bind(this);
     this.handleOpenSettings = this.handleOpenSettings.bind(this);
     this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
+    this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
+    this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
 
     this.state = {
       checked: false,
       hasSerial: false,
-      connected: false,
+      connected: 0,
       open: false,
       baudRate: 115200,
       serialLog: [],
@@ -85,6 +87,8 @@ class App extends Component {
       serial: {
         availablePorts: [],
         chosenPort: null,
+        connected: false,
+        fourWay: false,
       },
       configs: {
         versions: {},
@@ -107,7 +111,6 @@ class App extends Component {
   async componentDidMount() {
     const that = this;
     this.onMount(async() => {
-      window.console.log(navigator);
       const hasSerial = 'serial' in navigator;
 
       const language = localStorage.getItem('language');
@@ -299,7 +302,7 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      progress, actions
+      progress, actions, serial
     } = this.state;
 
     actions.isReading = true;
@@ -318,6 +321,7 @@ class App extends Component {
 
         this.serial.fourWayStart();
         await delay(1000);
+        serial.fourWay = true;
       } else {
         connected = this.lastConnected;
       }
@@ -368,6 +372,8 @@ class App extends Component {
       settings: masterSettings,
       progress,
       actions,
+      connected,
+      serial,
     });
   }
 
@@ -565,8 +571,10 @@ class App extends Component {
     this.setState({
       checked: true,
       hasSerial: true,
-      connected,
-      serial: { availablePorts: ports },
+      serial: {
+        availablePorts: ports,
+        connected,
+      },
     });
   }
 
@@ -577,12 +585,13 @@ class App extends Component {
 
     const ports = await navigator.serial.getPorts();
     this.setState({
-      connected: ports.length > 0 ? true : false,
       open: false,
       escs: [],
       serial: {
         availablePorts: ports,
         chosenPort: null,
+        connected: ports.length > 0 ? true : false,
+        fourWay: false,
       }
     });
 
@@ -597,8 +606,10 @@ class App extends Component {
       this.addLogMessage('Port selected');
 
       this.setState({
-        connected: true,
-        serial: { availablePorts: [port] },
+        serial: {
+          availablePorts: [port],
+          connected: true,
+        },
       });
     } catch (e) {
       // No port selected, do nothing
@@ -733,6 +744,8 @@ class App extends Component {
     this.addLogMessage(boardInfoElement);
 
     let uid = await this.serial.getUid();
+
+
     uid = uid.uid;
     let uidHex = 0;
     for (let i = 0; i < uid.length; i += 1) {
@@ -761,14 +774,31 @@ class App extends Component {
     );
     this.addLogMessage(uidElement);
 
-    await this.setState({ open: true });
+    let motorData = await this.serial.getMotorData();
+    motorData = motorData.filter((motor) => motor > 0);
+
+    await this.setState({
+      open: true,
+      connected: motorData.length,
+    });
+  }
+
+  async handleAllMotorSpeed(speed) {
+    await this.serial.spinAllMotors(speed);
+  }
+
+  async handleSingleMotorSpeed(index, speed) {
+    await this.serial.spinMotor(index, speed);
   }
 
   async handleDisconnect(e) {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
-    const { escs } = this.state;
+    const {
+      escs,
+      serial,
+    } = this.state;
     if(this.serial) {
       for(let i = 0; i < escs.length; i += 1) {
         await this.serial.fourWayReset(i);
@@ -780,6 +810,8 @@ class App extends Component {
     this.addLogMessage('Closed port');
     this.lastConnected = 0;
 
+    serial.fourWay = false;
+
     this.setState({
       open: false,
       escs: [],
@@ -789,6 +821,7 @@ class App extends Component {
         isSelecting: false,
         isFlashing: false,
       },
+      serial,
     });
   }
 
@@ -865,7 +898,7 @@ class App extends Component {
               <div id="logo" />
 
               <PortPicker
-                hasPort={connected}
+                hasPort={serial.connected}
                 hasSerial={hasSerial}
                 onChangePort={this.handleChangePort}
                 onConnect={this.handleConnect}
@@ -921,8 +954,11 @@ class App extends Component {
             appSettings={appSettings}
             changelogEntries={changelogEntries}
             configs={configs}
+            connected={connected}
             escs={escs}
             flashTargets={flashTargets}
+            fourWay={serial.fourWay}
+            onAllMotorSpeed={this.handleAllMotorSpeed}
             onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
             onFlashUrl={this.handleFlashUrl}
             onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
@@ -933,6 +969,7 @@ class App extends Component {
             onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
             onSettingsUpdate={this.handleSettingsUpdate}
             onSingleFlash={this.handleSingleFlash}
+            onSingleMotorSpeed={this.handleSingleMotorSpeed}
             onWriteSetup={this.handleWriteSetup}
             open={open}
             progress={progress}

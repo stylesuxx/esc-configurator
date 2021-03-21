@@ -81,5 +81,9 @@
   "whatsNextHeader": "What's next?",
   "whatsNextText": "<p>If you want to see which features are upcoming, drop by in the <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com\" target=\"_blank\">github repository</a>. Also feel free to add a feature request if you have an idea that you want to see implemented.</p>",
   "openPortSelection": "Open Port Selection",
-  "versionUnsupported": "{{name}} version '{{version}}' (Layout {{layout}}) is not yet supported.<br/><br/>Let us know by opening an <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">issue</a>."
+  "versionUnsupported": "{{name}} version '{{version}}' (Layout {{layout}}) is not yet supported.<br/><br/>Let us know by opening an <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">issue</a>.",
+  "motorControl": "Motor Control",
+  "enableMotorControl": "Enable motor control",
+  "masterSpeed": "Master Speed",
+  "motorNr": "Motor {{index}}"
 }
