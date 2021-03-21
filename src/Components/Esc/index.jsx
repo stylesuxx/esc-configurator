@@ -79,43 +79,60 @@ function Esc({
   let settingElements = null;
   if(settingsDescriptions) {
     settingElements = settingsDescriptions.base.map((setting) => {
-    if (setting.visibleIf && !setting.visibleIf(settings)) {
-      return null;
-    }
-
-    const value = settings[setting.name];
-
-    switch (setting.type) {
-      case 'bool': {
-        return (
-          <Checkbox
-            key={setting.name}
-            label={t(setting.label)}
-            name={setting.name}
-            onChange={handleCheckboxChange}
-            value={value}
-          />
-        );
+      if (setting.visibleIf && !setting.visibleIf(settings)) {
+        return null;
       }
 
-      case 'enum': {
-        const { options } = setting;
-        return (
-          <Select
-            key={setting.name}
-            label={t(setting.label)}
-            name={setting.name}
-            onChange={handleSelectChange}
-            options={options}
-            value={value}
-          />
-        );
-      }
+      const value = settings[setting.name];
 
-      case 'number': {
-        if(directInput) {
+      switch (setting.type) {
+        case 'bool': {
           return (
-            <Number
+            <Checkbox
+              key={setting.name}
+              label={t(setting.label)}
+              name={setting.name}
+              onChange={handleCheckboxChange}
+              value={value}
+            />
+          );
+        }
+
+        case 'enum': {
+          const { options } = setting;
+          return (
+            <Select
+              key={setting.name}
+              label={t(setting.label)}
+              name={setting.name}
+              onChange={handleSelectChange}
+              options={options}
+              value={value}
+            />
+          );
+        }
+
+        case 'number': {
+          if(directInput) {
+            return (
+              <Number
+                factor={setting.factor}
+                key={setting.name}
+                label={t(setting.label)}
+                max={setting.max}
+                min={setting.min}
+                name={setting.name}
+                offset={setting.offset}
+                onChange={handleNumberChange}
+                round={false}
+                step={1}
+                value={value}
+              />
+            );
+          }
+
+          return (
+            <Slider
               factor={setting.factor}
               key={setting.name}
               label={t(setting.label)}
@@ -125,33 +142,16 @@ function Esc({
               offset={setting.offset}
               onChange={handleNumberChange}
               round={false}
-              step={1}
+              step={setting.step}
+              suffix={setting.suffix}
               value={value}
             />
           );
         }
 
-        return (
-          <Slider
-            factor={setting.factor}
-            key={setting.name}
-            label={t(setting.label)}
-            max={setting.max}
-            min={setting.min}
-            name={setting.name}
-            offset={setting.offset}
-            onChange={handleNumberChange}
-            round={false}
-            step={setting.step}
-            suffix={setting.suffix}
-            value={value}
-          />
-        );
+        default: return null;
       }
-
-      default: return null;
-    }
-  });
+    });
   }
 
   function FlashBox() {
