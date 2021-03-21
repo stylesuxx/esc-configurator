@@ -80,7 +80,6 @@ async function retry(func, maxRetries, iterationDelay = null) {
         }
 
         if(iterationDelay) {
-          console.debug(`Retrying: ${e.message}`);
           await delay(iterationDelay * retries);
         }
       }

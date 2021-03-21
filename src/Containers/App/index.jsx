@@ -316,6 +316,7 @@ class App extends Component {
         }
 
         this.serial.fourWayStart();
+        await delay(1000);
       } else {
         connected = this.lastConnected;
       }
@@ -331,7 +332,6 @@ class App extends Component {
     this.addLogMessage(message);
     console.debug(message);
 
-    await delay(1000);
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
