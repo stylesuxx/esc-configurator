@@ -88,16 +88,12 @@ function PortPicker({
   if(!hasSerial) {
     return (
       <div id="not-supported">
-        Sorry,
-        {' '}
-
         <b>
           Web Serial
         </b>
 
         {' '}
-        is not supported on this device,
-        make sure you&apos;re running the latest
+        is not supported on your browser. Make sure you&apos;re running an up to date Chromium based browser like
 
         {' '}
 
@@ -106,7 +102,27 @@ function PortPicker({
           rel="noreferrer"
           target="_blank"
         >
-          Chrome stable release
+          Chrome
+        </a>
+
+        {', '}
+
+        <a
+          href="https://vivaldi.com/download/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Vivaldi
+        </a>
+
+        {', '}
+
+        <a
+          href="https://www.microsoft.com/edge/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Edge
         </a>
 
         {' '}

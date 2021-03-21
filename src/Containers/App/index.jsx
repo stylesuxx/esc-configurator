@@ -107,6 +107,7 @@ class App extends Component {
   async componentDidMount() {
     const that = this;
     this.onMount(async() => {
+      window.console.log(navigator);
       const hasSerial = 'serial' in navigator;
 
       const language = localStorage.getItem('language');
