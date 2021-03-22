@@ -22,7 +22,19 @@
       }
 
       .input-range {
+        float: none;
         margin-left: 8px;
+      }
+    }
+
+    @media only screen and (max-width: 600px) {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+
+      .slider {
+        h3 {
+          padding-top: 10px;
+        }
       }
     }
   }

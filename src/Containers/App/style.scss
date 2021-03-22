@@ -138,6 +138,26 @@ body {
     margin-top: 12px;
     width: 120px;
     margin-right: 10px;
+
+    @media only screen and (max-width: 600px) {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      margin: 0px;
+      background: #3d3f3e;
+
+      & > * {
+        flex: 1;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 6px;
+      }
+
+      a {
+        margin: 0px;
+        width: 100%;
+      }
+    }
   }
 
   .default-btn {

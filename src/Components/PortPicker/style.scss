@@ -5,6 +5,10 @@
   padding-left: 10px;
   padding-bottom: 15px;
 
+  @media only screen and (max-width: 600px) {
+    width: 230px;
+  }
+
   button {
     cursor: pointer;
     margin-top: 0px;
@@ -51,6 +55,10 @@
   #portsinput {
     margin-top: 12px;
     margin-right: 20px;
+
+    @media only screen and (max-width: 600px) {
+      margin-right: 0px;
+    }
 
     .dropdown {
       margin-bottom: 5px;

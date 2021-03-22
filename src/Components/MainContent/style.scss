@@ -10,6 +10,10 @@
   -webkit-transform: rotateX(0deg); /* DO NOT REMOVE! this fixes the UI freezing bug on MAC OS X */
   transition: all 0.3s;
 
+  @media only screen and (max-width: 600px) {
+    padding-top: 170px
+  }
+
   .tab {
     position: relative;
     margin-bottom: 5px;
