@@ -35,6 +35,9 @@ class Msp {
 
     this.logCallback = null;
     this.packetErrorsCallback = null;
+
+    const speedBufferOut = new ArrayBuffer(16);
+    this.speedBufView = new Uint8Array(speedBufferOut);
   }
 
   setLogCallback(logCallback) {
@@ -246,26 +249,21 @@ class Msp {
   }
 
   spinAllMotors(speed) {
-    const bufferOut = new ArrayBuffer(16);
-    const bufView = new Uint8Array(bufferOut);
-
     for(let i = 0; i < 8; i += 2) {
-      bufView[i] = 0x00ff & speed;
-      bufView[i + 1] = speed >> 8;
+      this.speedBufView[i] = 0x00ff & speed;
+      this.speedBufView[i + 1] = speed >> 8;
     }
 
-    return this.send(MSP.MSP_SET_MOTOR, bufView);
+    return this.send(MSP.MSP_SET_MOTOR, this.speedBufView);
   }
 
   spinMotor(motor, speed) {
     const offset = (motor - 1) * 2;
-    const bufferOut = new ArrayBuffer(16);
-    const bufView = new Uint8Array(bufferOut);
 
-    bufView[offset] = 0x00ff & speed;
-    bufView[offset + 1] = speed >> 8;
+    this.speedBufView[offset] = 0x00ff & speed;
+    this.speedBufView[offset + 1] = speed >> 8;
 
-    return this.send(MSP.MSP_SET_MOTOR, bufView);
+    return this.send(MSP.MSP_SET_MOTOR, this.speedBufView);
   }
 
   processData(code, messageBuffer, messageLength) {
