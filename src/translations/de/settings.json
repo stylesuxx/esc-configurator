@@ -3,6 +3,6 @@
   "closeText": "Schließen",
   "directInput": "Direkteingabe",
   "directInputHint": "Direkte Eingabe für Zahlen statt Schieberegler.",
-  "printLogs": "Print logs",
-  "printLogsHint": "Will print logs to the console if enabled."
+  "printLogs": "Logs anzeigen",
+  "printLogsHint": "Zeigt Logs in der Browser Konsole an, wenn aktiviert."
 }
