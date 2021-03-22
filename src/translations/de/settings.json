@@ -2,5 +2,7 @@
   "settingsHeader": "Einstellungen",
   "closeText": "Schließen",
   "directInput": "Direkteingabe",
-  "directInputHint": "Direkte Eingabe für Zahlen statt Schieberegler."
+  "directInputHint": "Direkte Eingabe für Zahlen statt Schieberegler.",
+  "printLogs": "Print logs",
+  "printLogsHint": "Will print logs to the console if enabled."
 }
