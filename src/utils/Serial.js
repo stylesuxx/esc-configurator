@@ -7,6 +7,17 @@ import {
 
 /**
  * Abstraction layer for all serial communication
+ *
+ * Serial commands are added to the QueueProcessor, meaning that this is our
+ * only way for commands to be executed. They are executed in FIFO manner: the
+ * first command in, is the first one to be processed.
+ *
+ * The queue Processor is agnostic of the current protocol, not matter if it is
+ * a MSP, 4-Way interface or completyly custom command, they all go through
+ * this queue.
+ *
+ * This ensures that no race conditions can happen during serial communication.
+ * No command will be written until the previous one is finished processing.
  */
 class Serial {
   constructor(port) {

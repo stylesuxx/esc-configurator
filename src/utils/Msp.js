@@ -176,44 +176,54 @@ class Msp {
   }
 
   async send(code, data) {
-    let bufferOut;
-    let bufView;
+    const process = async (resolve, reject) => {
+      let bufferOut;
+      let bufView;
 
-    // Always reserve 6 bytes for protocol overhead !
-    if (data) {
-      const size = data.length + 6;
-      let checksum = 0;
+      // Always reserve 6 bytes for protocol overhead !
+      if (data) {
+        const size = data.length + 6;
+        let checksum = 0;
 
-      bufferOut = new ArrayBuffer(size);
-      bufView = new Uint8Array(bufferOut);
+        bufferOut = new ArrayBuffer(size);
+        bufView = new Uint8Array(bufferOut);
 
-      bufView[0] = 36; // $
-      bufView[1] = 77; // M
-      bufView[2] = 60; // <
-      bufView[3] = data.length;
-      bufView[4] = code;
+        bufView[0] = 36; // $
+        bufView[1] = 77; // M
+        bufView[2] = 60; // <
+        bufView[3] = data.length;
+        bufView[4] = code;
 
-      checksum = bufView[3] ^ bufView[4];
+        checksum = bufView[3] ^ bufView[4];
 
-      for (let i = 0; i < data.length; i += 1) {
-        bufView[i + 5] = data[i];
-        checksum ^= bufView[i + 5];
+        for (let i = 0; i < data.length; i += 1) {
+          bufView[i + 5] = data[i];
+          checksum ^= bufView[i + 5];
+        }
+
+        bufView[5 + data.length] = checksum;
+      } else {
+        bufferOut = new ArrayBuffer(6);
+        bufView = new Uint8Array(bufferOut);
+
+        bufView[0] = 36; // $
+        bufView[1] = 77; // M
+        bufView[2] = 60; // <
+        bufView[3] = 0; // Data length
+        bufView[4] = code; // Code
+        bufView[5] = bufView[3] ^ bufView[4]; // Checksum
       }
 
-      bufView[5 + data.length] = checksum;
-    } else {
-      bufferOut = new ArrayBuffer(6);
-      bufView = new Uint8Array(bufferOut);
+      try {
+        const result = await this.serial(bufferOut, this.read);
+        resolve(result);
+      } catch(e) {
+        console.debug('MSP command failed:', e.message);
+        reject(e);
+      }
+    };
 
-      bufView[0] = 36; // $
-      bufView[1] = 77; // M
-      bufView[2] = 60; // <
-      bufView[3] = 0; // Data length
-      bufView[4] = code; // Code
-      bufView[5] = bufView[3] ^ bufView[4]; // Checksum
-    }
-
-    return this.serial(bufferOut, this.read);
+    return new Promise((resolve, reject) => process(resolve, reject));
   }
 
   getApiVersion() {
@@ -279,7 +289,7 @@ class Msp {
     if (!this.unsupported) {
       switch (code) {
         case MSP.MSP_IDENT: {
-          console.log('Using deprecated msp command: MSP_IDENT');
+          console.debug('Using deprecated msp command: MSP_IDENT');
 
           // Deprecated
           config.version = parseFloat((data.getUint8(0) / 100).toFixed(2));
@@ -407,20 +417,17 @@ class Msp {
         }
 
         case MSP.MSP_SET_3D: {
-          console.log('3D settings saved');
+          console.debug('3D settings saved');
         } break;
 
         default: {
-          console.log(
-            'Unknown code detected:',
-            code
-          );
+          console.debug('Unknown code detected:', code);
         }
       }
     } else if (code === MSP.MSP_SET_PASSTHROUGH) {
       this.addLogMessage('BLHELI passthrough not supported');
     } else {
-      console.log('FC reports unsupported message error:', code);
+      console.debug('FC reports unsupported message error:', code);
     }
 
     return null;
