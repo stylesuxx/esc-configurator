@@ -1,8 +1,8 @@
 {
-  "settingsHeader": "设置",
-  "closeText": "关闭",
-  "directInput": "直接输入",
-  "directInputHint": "使用数值直接输入代替滑块。",
+  "settingsHeader": "Settings",
+  "closeText": "Close",
+  "directInput": "Direct Input",
+  "directInputHint": "Use direct input for numbers instead of sliders.",
   "printLogs": "Print logs",
   "printLogsHint": "Will print logs to the console if enabled."
 }
