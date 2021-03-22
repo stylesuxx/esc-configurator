@@ -13,8 +13,8 @@
   "portUsed": "Port wird möglicherweise schon von einer anderen Anwendung verwendet - bitte neu anstecken",
   "fourWayFailed": "4-way interface konnte nicht aktiviert werden - bitte neu anstecken",
   "readEscs": "Lese {{connected}} ESCs",
-  "readEscsSuccess": "ESC's gelesen",
-  "readEscsFailed": "ESC's lesen fehlgeschlagen",
+  "readEscsSuccess": "ESCs gelesen",
+  "readEscsFailed": "ESCs lesen fehlgeschlagen",
   "readEsc": "ESC {{index}} gelesen",
   "flashingEsc": "ESC {{index}} wird geflasht",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
@@ -24,8 +24,8 @@
   "escSettingsNoChange": "Keine Änderungen - ESC {{index}} nicht aktualisiert",
   "escUpdateSuccess": "ESC {{index}} erfolgreich aktualisiert",
   "escUpdateFailed": "ESC {{index}} Aktualisierung fehlgeschlagen",
-  "escSettingsLayoutMismatch": "Layout stimmt nicht überein, override nicht aktiv - abgebrochen",
-  "escSettingsMcuMismatch": "MCU stimmt nicht überein, override nicht aktiv - abgebrochen",
+  "escSettingsLayoutMismatch": "Layout stimmt nicht überein, Layout ignorieren nicht aktiv - abgebrochen",
+  "escSettingsMcuMismatch": "MCU stimmt nicht überein, ignorieren nicht aktiv - abgebrochen",
   "escFlashedInTime": "ESC {{index}} - in {{seconds}}s geflasht",
   "passthroughNotSupported": "BLHELI passthrough nicht unterstützt"
 }
