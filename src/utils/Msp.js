@@ -44,9 +44,9 @@ class Msp {
     this.logCallback = logCallback;
   }
 
-  addLogMessage(message) {
+  addLogMessage(message, params) {
     if(this.logCallback) {
-      this.logCallback(message);
+      this.logCallback(message, params);
     }
   }
 
@@ -425,7 +425,7 @@ class Msp {
         }
       }
     } else if (code === MSP.MSP_SET_PASSTHROUGH) {
-      this.addLogMessage('BLHELI passthrough not supported');
+      this.addLogMessage('passthroughNotSupported');
     } else {
       console.debug('FC reports unsupported message error:', code);
     }

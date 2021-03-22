@@ -13,6 +13,7 @@ import i18next from 'i18next';
 import CommonEn from './translations/en/common.json';
 import HintsEn from './translations/en/hints.json';
 import SettingsEn from './translations/en/settings.json';
+import LogEn from './translations/en/log.json';
 
 import CommonDe from './translations/de/common.json';
 import HintsDe from './translations/de/hints.json';
@@ -25,6 +26,7 @@ i18next.init({
     en: {
       common: CommonEn,
       hints: HintsEn,
+      log: LogEn,
       settings: SettingsEn,
     },
     de: {

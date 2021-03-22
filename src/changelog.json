@@ -5,7 +5,9 @@
       "Added netlify badge",
       "Improved compatibility wording",
       "Motor speed control",
-      "Improved documentation"
+      "Improved documentation",
+      "Translateable log messages",
+      "Setting for printing log messages"
     ]
   },
   {

@@ -33,7 +33,6 @@ function AppSettings({
   const settingKeys = Object.keys(settings);
   const settingElements = settingKeys.map((key) => {
     const setting = settings[key];
-    console.log(setting);
 
     switch(setting.type) {
       case 'boolean': {
