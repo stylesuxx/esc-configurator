@@ -168,7 +168,7 @@ class QueueProcessor {
    *          special case of rejection - not enough data. In this case the
    *          accoring error should be thrown
    */
-  addCommand(command, timeout = 500) {
+  addCommand(command, timeout = 1000) {
     return new Promise((resolve, reject) => {
       const resolveCallback = (result) => resolve(result);
       const rejectCallback = (error) => reject(error);
