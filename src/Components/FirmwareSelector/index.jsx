@@ -307,7 +307,6 @@ function FirmwareSelector({
           </div>
 
           <div className="spacer-box">
-
             <LabeledSelect
               firstLabel="Select Firmware"
               label="Firmware"

@@ -1,40 +1,7 @@
-.input-range {
-    width: 195px;
-    padding-left: 3px;
-    height: 20px;
-    line-height: 20px;
-    text-align: left;
-    margin: 0 14px 5px 0;
-    font-size: 12px;
-    font-weight: normal;
-    display: inline-block;
-    float: left;
-}
-
-.input-range__label--min,
-.input-range__label--max {
-    display: none;
-}
-
-.input-range__label--value {
-    margin-left: 1rem;
-}
-
-.input-range__slider {
-  background: var(--color-primary);
-  border: 1px solid var(--color-primary);
-}
-
-.input-range__track--active {
-  background: var(--color-primary);
-}
-
-.number {
+.number-text {
   margin-top: 5px;
   margin-bottom: 5px;
-  clear: left;
   width: 100%;
-  float: left;
 
   &:last-child {
     border-bottom: none;

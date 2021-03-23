@@ -163,9 +163,7 @@ body {
   .default-btn {
     width: 100%;
     position: relative;
-    margin-bottom: 10px;
     margin-top: 0px;
-    float: left;
 
     button,
     a {
@@ -221,7 +219,6 @@ body {
   }
 
   .half {
-    float: left;
     width: 50%;
   }
 
@@ -236,4 +233,33 @@ body {
 .content_wrapper {
   padding: 20px;
   position: relative;
+  margin-bottom: 50px;
+
+  @media only screen and (max-width: 600px) {
+    margin-bottom: 90px;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+#tab-landing {
+  .content_wrapper {
+    margin-bottom: 0px;
+  }
+}
+
+.mobile-show {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .mobile-hide {
+    display: none;
+  }
+
+  .mobile-show {
+    display: block;
+  }
 }

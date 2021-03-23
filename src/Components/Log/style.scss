@@ -20,6 +20,11 @@
     background-size: 100%;
     opacity: 0.0;
     transition: all ease 0.3s;
+
+    @media only screen and (max-width: 600px) {
+      top: 150px;
+      right: -40px;
+    }
   }
 
   &.expanded {
@@ -46,6 +51,12 @@
     -webkit-user-select: text;
     position: relative;
     bottom: 0px;
+
+    @media only screen and (max-width: 600px) {
+      .date {
+        display: none;
+      }
+    }
   }
 
   a {

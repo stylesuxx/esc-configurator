@@ -61,17 +61,19 @@ function Slider({
   return (
     <div className="number">
       <label>
-        <InputRange
-          formatLabel={format}
-          labelSuffix={suffix}
-          maxValue={max}
-          minValue={min}
-          name={name}
-          onChange={updateValue}
-          onChangeComplete={handleUpdate}
-          step={step}
-          value={inSync ? getDisplayValue() : 0}
-        />
+        <div className="input-wrapper">
+          <InputRange
+            formatLabel={format}
+            labelSuffix={suffix}
+            maxValue={max}
+            minValue={min}
+            name={name}
+            onChange={updateValue}
+            onChangeComplete={handleUpdate}
+            step={step}
+            value={inSync ? getDisplayValue() : 0}
+          />
+        </div>
 
         <Info
           hint={hint}

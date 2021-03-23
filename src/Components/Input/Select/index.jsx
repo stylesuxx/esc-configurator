@@ -26,19 +26,21 @@ function Select({
   return (
     <div className="select">
       <label>
-        <select
-          name={name}
-          onChange={onChange}
-          value={inSync ? value : -1}
-        >
-          <option
-            className="hidden"
-            disabled
-            value="-1"
-          />
+        <div className="input-wrapper">
+          <select
+            name={name}
+            onChange={onChange}
+            value={inSync ? value : -1}
+          >
+            <option
+              className="hidden"
+              disabled
+              value="-1"
+            />
 
-          {optionElements}
-        </select>
+            {optionElements}
+          </select>
+        </div>
 
         <Info
           hint={hint}

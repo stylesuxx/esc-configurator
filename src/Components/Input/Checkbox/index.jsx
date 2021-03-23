@@ -16,12 +16,14 @@ function Checkbox({
   return (
     <div className="checkbox">
       <label>
-        <input
-          checked={value === 1}
-          name={name}
-          onChange={onChange}
-          type="checkbox"
-        />
+        <div className="input-wrapper">
+          <input
+            checked={value === 1}
+            name={name}
+            onChange={onChange}
+            type="checkbox"
+          />
+        </div>
 
         <Info
           hint={hint}

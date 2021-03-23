@@ -1,8 +1,10 @@
 .select {
    margin-bottom: 5px;
-   clear: left;
    width: 100%;
-   float: left;
+
+   select {
+     flex: 0 0 198px;
+   }
 
   &:last-child {
     border-bottom: none;

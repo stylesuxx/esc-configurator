@@ -49,18 +49,20 @@ function Number({
   }
 
   return (
-    <div className="number">
+    <div className="number-text">
       <label>
-        <input
-          max={max}
-          min={min}
-          name={name}
-          onBlur={updateValue}
-          onChange={handleChange}
-          step={step}
-          type="number"
-          value={inSync ? displayValue : 0}
-        />
+        <div className="input-wrapper">
+          <input
+            max={max}
+            min={min}
+            name={name}
+            onBlur={updateValue}
+            onChange={handleChange}
+            step={step}
+            type="number"
+            value={inSync ? displayValue : 0}
+          />
+        </div>
 
         <Info
           hint={hint}
