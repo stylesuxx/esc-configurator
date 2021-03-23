@@ -4,10 +4,10 @@ import {
   useTranslation,
 } from 'react-i18next';
 
-import Checkbox from '../Input/Checkbox';
-import Select from '../Input/Select';
-import Slider from '../Input/Slider';
-import Number from '../Input/Number';
+import Checkbox from '../../../Input/Checkbox';
+import Select from '../../../Input/Select';
+import Slider from '../../../Input/Slider';
+import Number from '../../../Input/Number';
 
 import './style.scss';
 

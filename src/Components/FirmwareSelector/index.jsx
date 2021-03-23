@@ -11,7 +11,7 @@ import {
   getPossibleTypes,
 } from '../../utils/helpers/General';
 
-import LabeledSelect from '../LabeledSelect';
+import LabeledSelect from '../Input/LabeledSelect';
 
 import {
   BLHELI_TYPES,

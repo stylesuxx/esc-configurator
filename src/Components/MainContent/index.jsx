@@ -49,13 +49,9 @@ function MainContent({
   if (!open) {
     return (
       <>
-        <div id="content">
-          <Home />
-        </div>
+        <Home />
 
-        <Changelog
-          entries={changelogEntries}
-        />
+        <Changelog entries={changelogEntries} />
       </>
     );
   }
