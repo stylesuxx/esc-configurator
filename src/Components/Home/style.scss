@@ -12,6 +12,16 @@
     }
   }
 
+  a.discord-link {
+    width: 100%;
+    display: block;
+    text-align: center;
+    img.discord {
+      margin-top: 20px;
+      width: 200px;
+    }
+  }
+
   .content_wrapper {
     padding: 0;
     overflow-y: auto;
@@ -44,6 +54,10 @@
 
     .summary-section {
       margin-top: 20px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
 
       h3 {
         padding-bottom: 5px;
