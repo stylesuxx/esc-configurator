@@ -9,6 +9,7 @@ function Checkbox({
   name,
   value,
   label,
+  disabled,
   onChange,
   inSync,
   hint,
@@ -19,6 +20,7 @@ function Checkbox({
         <div className="input-wrapper">
           <input
             checked={value === 1}
+            disabled={disabled}
             name={name}
             onChange={onChange}
             type="checkbox"
@@ -38,12 +40,14 @@ function Checkbox({
 }
 
 Checkbox.defaultProps = {
+  disabled: false,
   hint: null,
   inSync: true,
   value: 0,
 };
 
 Checkbox.propTypes = {
+  disabled: PropTypes.bool,
   hint: PropTypes.string,
   inSync: PropTypes.bool,
   label: PropTypes.string.isRequired,

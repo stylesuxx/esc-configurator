@@ -23,6 +23,7 @@ function CommonSettings({
   directInput,
   escs,
   onSettingsUpdate,
+  disabled,
 }) {
   const {
     t,
@@ -125,6 +126,7 @@ function CommonSettings({
       case 'bool': {
         return (
           <Checkbox
+            disabled={disabled}
             hint={hint}
             inSync={inSync}
             key={setting.name}
@@ -140,6 +142,7 @@ function CommonSettings({
         const { options } = setting;
         return (
           <Select
+            disabled={disabled}
             hint={hint}
             inSync={inSync}
             key={setting.name}
@@ -156,6 +159,7 @@ function CommonSettings({
         if(directInput) {
           return (
             <Number
+              disabled={disabled}
               factor={setting.displayFactor}
               hint={hint}
               inSync={inSync}
@@ -175,6 +179,7 @@ function CommonSettings({
 
         return (
           <Slider
+            disabled={disabled}
             factor={setting.displayFactor}
             hint={hint}
             inSync={inSync}
@@ -211,6 +216,8 @@ function CommonSettings({
   );
 }
 
+CommonSettings.defaultProps = { disabled: false };
+
 CommonSettings.propTypes = {
   availableSettings: PropTypes.shape({
     LAYOUT_REVISION: PropTypes.number.isRequired,
@@ -219,6 +226,7 @@ CommonSettings.propTypes = {
     SUB_REVISION: PropTypes.number.isRequired,
   }).isRequired,
   directInput: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };

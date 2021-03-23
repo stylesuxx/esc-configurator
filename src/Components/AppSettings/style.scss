@@ -14,8 +14,12 @@
     padding: 10px;
     background: white;
     max-width: 500px;
-    width: 50%;
+    width: 80%;
     position: relative;
+
+    .checkbox {
+      display: flex;
+    }
 
     h3 {
       padding-bottom: 5px;

@@ -44,6 +44,7 @@ function Flash({
             <CommonSettings
               availableSettings={availableSettings}
               directInput={directInput}
+              disabled={!canFlash}
               escs={escs}
               onSettingsUpdate={onSettingsUpdate}
             />}

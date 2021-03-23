@@ -8,6 +8,7 @@ import './style.scss';
 function Select({
   name,
   value,
+  disabled,
   label,
   options,
   onChange,
@@ -28,6 +29,7 @@ function Select({
       <label>
         <div className="input-wrapper">
           <select
+            disabled={disabled}
             name={name}
             onChange={onChange}
             value={inSync ? value : -1}
@@ -54,12 +56,14 @@ function Select({
 }
 
 Select.defaultProps = {
+  disabled: false,
   hint: null,
   inSync: true,
   value: -1,
 };
 
 Select.propTypes = {
+  disabled: PropTypes.bool,
   hint: PropTypes.string,
   inSync: PropTypes.bool,
   label: PropTypes.oneOfType([
