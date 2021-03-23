@@ -177,7 +177,7 @@ PortPicker.propTypes = {
   onSetBaudRate: PropTypes.func.isRequired,
   onSetPort: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  ports: PropTypes.arrayOf(PropTypes.strings).isRequired,
+  ports: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default PortPicker;

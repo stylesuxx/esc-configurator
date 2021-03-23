@@ -22,6 +22,7 @@ function MotorControl({
 
   function toggleUnlock() {
     setUnlock(!unlock);
+    onAllUpdate(1000);
   }
 
   function displayValue() {
@@ -60,7 +61,7 @@ function MotorControl({
 
         <InputRange
           defaultValue={displayValue()}
-          disabled={!unlock}
+          disabled={!unlock || masterValue > 1000}
           maxValue={2000}
           minValue={1000}
           name={`speed-slider-${index}`}

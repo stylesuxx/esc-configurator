@@ -3,9 +3,11 @@
   width: 100%;
   margin-bottom: 65px;
 
-  .checkbox {
-    float: none;
+  .checkbox label {
+    flex: 0 0 10px !important;
+  }
 
+  .checkbox {
     span {
       margin-left: 5px;
     }
@@ -15,6 +17,12 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    #single-slider,
+    #master-slider {
+      flex: 1;
+      margin-right: 30px;
+    }
 
     .slider,
     #master-slider {
@@ -31,6 +39,11 @@
     @media only screen and (max-width: 600px) {
       flex-direction: column-reverse;
       align-items: flex-start;
+
+      #single-slider,
+      #master-slider {
+        width: 90%;
+      }
 
       .slider {
         h3 {
