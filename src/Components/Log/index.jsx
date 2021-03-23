@@ -39,13 +39,14 @@ function Log({ messages }) {
       id="log"
     >
       <div className="logswitch">
-        <a
+        <button
           href="#"
           id="showlog"
           onClick={toggleExpanded}
+          type="button"
         >
           {toggleText}
-        </a>
+        </button>
       </div>
 
       <div id="scrollicon" />

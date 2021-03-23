@@ -74,12 +74,14 @@
     z-index: 10;
     line-height: 27px;
 
-    a {
+    button {
+      background: transparent;
       color: #656565 !important;
       transition: all 0.3s;
+      cursor: pointer;
     }
 
-    a:hover {
+    button:hover {
       color: #959595 !important;
       text-decoration: none !important;
       transition: all 0.3s;
