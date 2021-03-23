@@ -21,6 +21,9 @@ const MSP = {
 
   // Additional baseflight commands that are not compatible with MultiWii
   MSP_UID: 160, // Unique device ID
+
+  // Betaflight specific
+  MSP2_SEND_DSHOT_COMMAND: 0x3003,
 };
 
 class Msp {
@@ -175,43 +178,76 @@ class Msp {
     return reject(new NotEnoughDataError());
   }
 
+  encodeV1(code, data = []) {
+    // Always reserve 6 bytes for protocol overhead !
+    const size = 6 + data.length;
+    const bufferOut = new ArrayBuffer(size);
+    const bufView = new Uint8Array(bufferOut);
+
+    bufView[0] = 36; // $
+    bufView[1] = 77; // M
+    bufView[2] = 60; // <
+    bufView[3] = data.length;
+    bufView[4] = code;
+
+    if (data.length > 0) {
+      let checksum = bufView[3] ^ bufView[4];
+
+      for (let i = 0; i < data.length; i += 1) {
+        bufView[i + 5] = data[i];
+        checksum ^= bufView[i + 5];
+      }
+
+      bufView[5 + data.length] = checksum;
+    } else {
+      bufView[5] = bufView[3] ^ bufView[4]; // Checksum
+    }
+
+    return bufferOut;
+  }
+
+  crc8_dvb_s2_data(data, start, end) {
+    let crc = 0;
+    for (let i = start; i < end; i += 1) {
+      crc = this.crc8_dvb_s2(crc, data[i]);
+    }
+
+    return crc;
+  }
+
+  encodeV2(code, data = []) {
+    // Always reserve 9 bytes for protocol overhead !
+    const dataLength = data.length;
+    const size = 9 + dataLength;
+    const bufferOut = new ArrayBuffer(size);
+    const bufView = new Uint8Array(bufferOut);
+
+    bufView[0] = 36; // $
+    bufView[1] = 88; // X
+    bufView[2] = 60; // <
+    bufView[3] = 0;  // flag
+    bufView[4] = code & 0xFF;
+    bufView[5] = (code >> 8) & 0xFF;
+    bufView[6] = dataLength & 0xFF;
+    bufView[7] = (dataLength >> 8) & 0xFF;
+
+    for (let i = 0; i < dataLength; i += 1) {
+      bufView[8 + i] = data[i];
+    }
+
+    bufView[size - 1] = this.crc8_dvb_s2_data(bufView, 3, size - 1);
+
+    return bufferOut;
+  }
+
   async send(code, data) {
     const process = async (resolve, reject) => {
       let bufferOut;
-      let bufView;
 
-      // Always reserve 6 bytes for protocol overhead !
-      if (data) {
-        const size = data.length + 6;
-        let checksum = 0;
-
-        bufferOut = new ArrayBuffer(size);
-        bufView = new Uint8Array(bufferOut);
-
-        bufView[0] = 36; // $
-        bufView[1] = 77; // M
-        bufView[2] = 60; // <
-        bufView[3] = data.length;
-        bufView[4] = code;
-
-        checksum = bufView[3] ^ bufView[4];
-
-        for (let i = 0; i < data.length; i += 1) {
-          bufView[i + 5] = data[i];
-          checksum ^= bufView[i + 5];
-        }
-
-        bufView[5 + data.length] = checksum;
+      if(code <= 254) {
+        bufferOut = this.encodeV1(code, data);
       } else {
-        bufferOut = new ArrayBuffer(6);
-        bufView = new Uint8Array(bufferOut);
-
-        bufView[0] = 36; // $
-        bufView[1] = 77; // M
-        bufView[2] = 60; // <
-        bufView[3] = 0; // Data length
-        bufView[4] = code; // Code
-        bufView[5] = bufView[3] ^ bufView[4]; // Checksum
+        bufferOut = this.encodeV2(code, data);
       }
 
       try {
