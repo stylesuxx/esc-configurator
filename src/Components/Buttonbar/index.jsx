@@ -22,7 +22,7 @@ function Buttonbar({
   function ResetDefaultButton() {
     return (
       <button
-        className={canResetDefaults ? "" : "disabled"}
+        disabled={!canResetDefaults}
         onClick={onResetDefaults}
         type="button"
       >
@@ -43,7 +43,7 @@ function Buttonbar({
           </button>
         </div>
 
-        <div className={`mobile-show ${canResetDefaults ? "btn" : "hidden"}`}>
+        <div className="mobile-show btn">
           <ResetDefaultButton />
         </div>
       </div>
@@ -51,7 +51,7 @@ function Buttonbar({
       <div className="buttons-right">
         <div className="btn">
           <button
-            className={canRead ? "" : "disabled"}
+            disabled={!canRead}
             onClick={onReadSetup}
             type="button"
           >
@@ -61,7 +61,7 @@ function Buttonbar({
 
         <div className="btn">
           <button
-            className={canWrite ? "" : "disabled"}
+            disabled={!canWrite}
             onClick={onWriteSetup}
             type="button"
           >
@@ -71,7 +71,7 @@ function Buttonbar({
 
         <div className="btn">
           <button
-            className={canFlash ? "" : "disabled"}
+            disabled={!canFlash}
             onClick={onSeletFirmwareForAll}
             type="button"
           >
@@ -79,7 +79,7 @@ function Buttonbar({
           </button>
         </div>
 
-        <div className={`mobile-hide ${canResetDefaults ? "btn" : "hidden"}`}>
+        <div className="mobile-hide btn">
           <ResetDefaultButton />
         </div>
       </div>

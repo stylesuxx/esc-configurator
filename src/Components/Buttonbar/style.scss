@@ -104,7 +104,7 @@
     box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
   }
 
-  .btn button.disabled {
+  .btn button[disabled] {
     cursor: default;
     color: #fff;
     background-color: #AFAFAF;
