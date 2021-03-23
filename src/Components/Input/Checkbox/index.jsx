@@ -24,14 +24,15 @@ function Checkbox({
             type="checkbox"
           />
         </div>
-
-        <Info
-          hint={hint}
-          inSync={inSync}
-          label={label}
-          name={name}
-        />
       </label>
+
+
+      <Info
+        hint={hint}
+        inSync={inSync}
+        label={label}
+        name={name}
+      />
     </div>
   );
 }

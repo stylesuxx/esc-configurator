@@ -97,6 +97,15 @@
       }
     }
 
+    .checkbox {
+      display: flex;
+      flex-direction: row;
+      label {
+        flex: 1;
+        flex: 0 0 195px;
+      }
+    }
+
     .number {
       margin-top: 20px;
 
