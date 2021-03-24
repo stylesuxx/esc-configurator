@@ -51,6 +51,54 @@ const getAllSettings = (escs) => escs.map((esc) => esc.settings);
 
 const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === BLHELI_MODES.MULTI);
 
+function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualSettingsDescriptions) {
+  if (from.MODE === to.MODE) {
+    if (!toSettingsDescriptions[from.LAYOUT_REVISION] ||
+        !toSettingsDescriptions[to.LAYOUT_REVISION] ||
+        !toIndividualSettingsDescriptions[from.LAYOUT_REVISION] ||
+        !toIndividualSettingsDescriptions[to.LAYOUT_REVISION]
+    ) {
+      return false;
+    }
+
+    const fromLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
+    const toLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
+
+    let fromCommons = null;
+    let toCommons = null;
+    if(fromLayout.MULTI && toLayout.MULTI) {
+      fromCommons = fromLayout.MULTI.base;
+      toCommons = toLayout.MULTI.base;
+    } else if(fromLayout.base && toLayout.base) {
+      fromCommons = fromLayout.base;
+      toCommons = toLayout.base;
+    }
+
+    if(!fromCommons || !toCommons) {
+      return false;
+    }
+
+    const fromCommon = fromCommons.find((setting) => setting.name === settingName);
+    const toCommon = toCommons.find((setting) => setting.name === settingName);
+
+    if (fromCommon && toCommon) {
+      return true;
+    }
+
+    const fromIndividuals = toIndividualSettingsDescriptions[from.LAYOUT_REVISION].base;
+    const toIndividuals = toIndividualSettingsDescriptions[to.LAYOUT_REVISION].base;
+
+    const fromIndividual = fromIndividuals.find((setting) => setting.name === settingName);
+    const toIndividual = toIndividuals.find((setting) => setting.name === settingName);
+
+    if (fromIndividual && toIndividual) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export {
   getAllSettings,
   getIndividualSettings,
@@ -58,4 +106,5 @@ export {
   getMaster,
   getMasterSettings,
   isMulti,
+  canMigrate,
 };

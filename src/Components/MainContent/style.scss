@@ -22,7 +22,6 @@
       padding: 10px;
       margin-bottom: 3px;
       padding-bottom: 10px;
-      float: left;
       width: calc(100% - 20px);
     }
 
@@ -31,13 +30,11 @@
       padding-right: 10px;
       padding-top: 4px;
       margin-bottom: 0px;
-      float: left;
       color: white;
     }
 
     .gui-box {
       margin-bottom: 10px;
-      float: left;
       font-weight: bold;
       font-family: 'open_sanssemibold', Arial;
       background-color: #FFFFFF;
@@ -57,7 +54,7 @@
         width: 100%;
         height: 27px;
         padding-bottom: 0px;
-        float: left;
+        //float: left;
         font-family: 'open_sanssemibold', Arial;
       }
 
@@ -70,14 +67,55 @@
       }
     }
 
-    .number input,
-    .select select {
-      float: left;
-      width: 200px;
-      height: 20px;
-      margin: 0 14px 5px 0;
-      border: 1px solid silver;
-      border-radius: 3px;
+    .checkbox,
+    .number,
+    .number-text,
+    .select {
+      margin-top: 7px;
+      margin-bottom: 7px;
+
+      label {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .input-wrapper {
+        flex: 0 0 195px;
+
+        input:not([type=checkbox]),
+        select {
+          width: 100%;
+          height: 20px;
+          border: 1px solid silver;
+          border-radius: 3px;
+        }
+      }
+
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+
+    .checkbox {
+      display: flex;
+      flex-direction: row;
+      label {
+        flex: 1;
+        flex: 0 0 195px;
+      }
+    }
+
+    .number {
+      margin-top: 20px;
+
+      &:first-child {
+        margin-top: 10px;
+      }
+
+      &:last-child {
+        margin-bottom: 0px;
+      }
     }
   }
 }

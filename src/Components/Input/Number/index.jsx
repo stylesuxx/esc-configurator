@@ -19,6 +19,7 @@ function Number({
   factor,
   step,
   hint,
+  disabled,
 }) {
   const [displayValue, setDisplayValue] = useState(value * factor + offset);
 
@@ -49,18 +50,21 @@ function Number({
   }
 
   return (
-    <div className="number">
+    <div className="number-text">
       <label>
-        <input
-          max={max}
-          min={min}
-          name={name}
-          onBlur={updateValue}
-          onChange={handleChange}
-          step={step}
-          type="number"
-          value={inSync ? displayValue : 0}
-        />
+        <div className="input-wrapper">
+          <input
+            disabled={disabled}
+            max={max}
+            min={min}
+            name={name}
+            onBlur={updateValue}
+            onChange={handleChange}
+            step={step}
+            type="number"
+            value={inSync ? displayValue : 0}
+          />
+        </div>
 
         <Info
           hint={hint}
@@ -74,6 +78,7 @@ function Number({
 }
 
 Number.defaultProps = {
+  disabled: false,
   factor: 1,
   hint: null,
   inSync: true,
@@ -85,6 +90,7 @@ Number.defaultProps = {
 };
 
 Number.propTypes = {
+  disabled: PropTypes.bool,
   factor: PropTypes.number,
   hint: PropTypes.string,
   inSync: PropTypes.bool,

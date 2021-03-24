@@ -12,6 +12,16 @@
     }
   }
 
+  a.discord-link {
+    width: 100%;
+    display: block;
+    text-align: center;
+    img.discord {
+      margin-top: 20px;
+      width: 200px;
+    }
+  }
+
   .content_wrapper {
     padding: 0;
     overflow-y: auto;
@@ -22,13 +32,18 @@
     background: var(--color-primary);
     padding: 20px;
     display: flex;
+
+    @media only screen and (max-width: 600px) {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
   }
 
   .content_mid {
     background-color: #eaeaea;
     overflow: hidden;
     display: flex;
-    padding-bottom: 30px;
+    padding-bottom: 45px;
     padding-top: 20px;
 
     @media only screen and (max-width: 991px) {
@@ -39,6 +54,10 @@
 
     .summary-section {
       margin-top: 20px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
 
       h3 {
         padding-bottom: 5px;
@@ -91,12 +110,6 @@
         font-size: 16px;
         margin-bottom: 2px;
     }
-  }
-
-  .content_foot {
-    clear: both;
-    padding: 20px;
-    padding-bottom: 5px;
   }
 
   .logowrapper {

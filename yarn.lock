@@ -11141,6 +11141,10 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
+web-serial-polyfill@stylesuxx/web-serial-polyfill#temporary-fix:
+  version "1.0.5"
+  resolved "https://codeload.github.com/stylesuxx/web-serial-polyfill/tar.gz/0a59f0dfb8adbf405283bbab53136b0e0f2d2c73"
+
 web-vitals@^0.2.4:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-0.2.4.tgz#ec3df43c834a207fd7cdefd732b2987896e08511"

@@ -31,6 +31,11 @@
     line-height: 28px;
   }
 
+  .disabled,
+  button[disabled] {
+    opacity: 0.5;
+  }
+
   .dropdown-dark .dropdown-select {
     padding-right: 20px;
   }
@@ -236,14 +241,13 @@
   }
 
   &.dropdown-dark {
-    background: #636363; /* NEW2 */
-    background: #3e403f; /* NEW */
-
-    border-color: #111 #0a0a0a black;
+    background: #3e403f;
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
     background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
     background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
     background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+
+    border-color: #111 #0a0a0a black;
     -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
     color:#a6a6a6;

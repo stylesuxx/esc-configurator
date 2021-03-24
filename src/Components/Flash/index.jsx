@@ -4,8 +4,8 @@ import {
   useTranslation,
 } from 'react-i18next';
 
-import Escs from '../Escs';
-import CommonSettings from '../CommonSettings';
+import Escs from './Escs';
+import CommonSettings from './CommonSettings';
 
 import './style.scss';
 
@@ -44,6 +44,7 @@ function Flash({
             <CommonSettings
               availableSettings={availableSettings}
               directInput={directInput}
+              disabled={!canFlash}
               escs={escs}
               onSettingsUpdate={onSettingsUpdate}
             />}

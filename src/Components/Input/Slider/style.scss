@@ -1,14 +1,12 @@
 .input-range {
-    width: 195px;
-    padding-left: 3px;
-    height: 20px;
-    line-height: 20px;
-    text-align: left;
-    margin: 0 14px 5px 0;
-    font-size: 12px;
-    font-weight: normal;
-    display: inline-block;
-    float: left;
+  padding-left: 3px;
+  height: 20px;
+  line-height: 20px;
+  text-align: left;
+  margin: 0 14px 0 0;
+  font-size: 12px;
+  font-weight: normal;
+  display: inline-block;
 }
 
 .input-range__label--min,
@@ -30,11 +28,9 @@
 }
 
 .number {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  clear: left;
-  width: 100%;
-  float: left;
+  &:first-child {
+    margin-top: 10px;
+  }
 
   &:last-child {
     border-bottom: none;

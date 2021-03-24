@@ -18,7 +18,6 @@ import BLUEJAY_ESCS from '../sources/Bluejay/escs.json';
 import AM32_ESCS from '../sources/AM32/escs.json';
 
 import {
-  canMigrate,
   fillImage,
   parseHex,
   buf2ascii,
@@ -26,6 +25,7 @@ import {
 } from './helpers/Flash';
 
 import {
+  canMigrate,
   getIndividualSettings,
 } from './helpers/Settings';
 

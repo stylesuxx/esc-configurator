@@ -20,6 +20,11 @@
     background-size: 100%;
     opacity: 0.0;
     transition: all ease 0.3s;
+
+    @media only screen and (max-width: 600px) {
+      top: 150px;
+      right: -40px;
+    }
   }
 
   &.expanded {
@@ -46,6 +51,12 @@
     -webkit-user-select: text;
     position: relative;
     bottom: 0px;
+
+    @media only screen and (max-width: 600px) {
+      .date {
+        display: none;
+      }
+    }
   }
 
   a {
@@ -63,12 +74,14 @@
     z-index: 10;
     line-height: 27px;
 
-    a {
+    button {
+      background: transparent;
       color: #656565 !important;
       transition: all 0.3s;
+      cursor: pointer;
     }
 
-    a:hover {
+    button:hover {
       color: #959595 !important;
       text-decoration: none !important;
       transition: all 0.3s;

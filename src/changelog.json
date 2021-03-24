@@ -7,7 +7,10 @@
       "Motor speed control",
       "Improved documentation",
       "Translateable log messages",
-      "Setting for printing log messages"
+      "Setting for printing log messages",
+      "Improved styling for mobile",
+      "Support Web USB - App now also works on Chrome for Android (mostly)",
+      "Testing via travis"
     ]
   },
   {

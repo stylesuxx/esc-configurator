@@ -24,6 +24,7 @@ function Slider({
   factor,
   round,
   hint,
+  disabled,
 }) {
   const [currentValue, setCurrentValue] = useState(value);
   useEffect(() => {
@@ -61,17 +62,20 @@ function Slider({
   return (
     <div className="number">
       <label>
-        <InputRange
-          formatLabel={format}
-          labelSuffix={suffix}
-          maxValue={max}
-          minValue={min}
-          name={name}
-          onChange={updateValue}
-          onChangeComplete={handleUpdate}
-          step={step}
-          value={inSync ? getDisplayValue() : 0}
-        />
+        <div className="input-wrapper">
+          <InputRange
+            disabled={disabled}
+            formatLabel={format}
+            labelSuffix={suffix}
+            maxValue={max}
+            minValue={min}
+            name={name}
+            onChange={updateValue}
+            onChangeComplete={handleUpdate}
+            step={step}
+            value={inSync ? getDisplayValue() : 0}
+          />
+        </div>
 
         <Info
           hint={hint}
@@ -85,6 +89,7 @@ function Slider({
 }
 
 Slider.defaultProps = {
+  disabled: false,
   factor: 1,
   hint: null,
   inSync: true,
@@ -96,6 +101,7 @@ Slider.defaultProps = {
 };
 
 Slider.propTypes = {
+  disabled: PropTypes.bool,
   factor: PropTypes.number,
   hint: PropTypes.string,
   inSync: PropTypes.bool,
