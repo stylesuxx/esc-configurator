@@ -10,6 +10,8 @@
       "Setting for printing log messages",
       "Improved styling for mobile",
       "Support Web USB - App now also works on Chrome for Android (mostly)",
+      "Added tests for helper utils",
+      "Added AM32 settings descriptions",
       "Testing via travis"
     ]
   },

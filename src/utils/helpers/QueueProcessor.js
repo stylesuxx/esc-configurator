@@ -149,8 +149,6 @@ class QueueProcessor {
           return command.rejectCallback(e);
         }
       }
-
-      this.processing = false;
     }
   }
 
