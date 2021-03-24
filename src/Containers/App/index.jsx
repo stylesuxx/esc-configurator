@@ -9,6 +9,10 @@ import {
 } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
+import {
+  serial as serialPolyfill,
+} from 'web-serial-polyfill';
+
 import changelogEntries from '../../changelog.json';
 
 import PortPicker from '../../Components/PortPicker';
@@ -121,7 +125,30 @@ class App extends Component {
     const { appSettings } = this.state;
     const that = this;
     this.onMount(async() => {
-      const hasSerial = 'serial' in navigator;
+      let hasSerial = 'serial' in navigator;
+      if(hasSerial) {
+        this.serialApi = navigator.serial;
+      }
+
+      /**
+       * If the Web Serial API is not available, we try to fall back to the
+       * Web USB polyfill for serial. This allows us to have (most of) the
+       * Web Serial API functionality on Android devices.
+       *
+       * Web USB has a couple of draw backs though:
+       * - getInfo can not be called before a port has been opened, so the
+       *   device names need to be mocked.
+       * - event listeners are not available, meaning we can not automatically
+       *   detect if a deive has been plugged in or disconnected. Connected is
+       *   not a big problem, since we trigger that manually by port selection.
+       *   Disconnecting is a bigger problem, since we can not clean up once
+       *   the user has unplugged his device.
+       */
+      if(!hasSerial && navigator.usb) {
+        this.serialApi = serialPolyfill;
+        hasSerial = true;
+        this.hasWebUsb = true;
+      }
 
       const language = localStorage.getItem('language');
       if(language) {
@@ -149,11 +176,15 @@ class App extends Component {
       window.console = console;
 
       if (hasSerial) {
-        navigator.serial.removeEventListener('connect', that.serialConnectHandler);
-        navigator.serial.removeEventListener('disconnect', that.serialDisconnectHandler);
+        /**
+         * TODO: Web USB listeners are a hack as long as pulled in from my
+         *       fork. Update once google updates their repository.
+         */
+        this.serialApi.removeEventListener('connect', that.serialConnectHandler);
+        this.serialApi.removeEventListener('disconnect', that.serialDisconnectHandler);
 
-        navigator.serial.addEventListener('connect', that.serialConnectHandler);
-        navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
+        this.serialApi.addEventListener('connect', that.serialConnectHandler);
+        this.serialApi.addEventListener('disconnect', that.serialDisconnectHandler);
 
         // Fetch the configs only once.
         this.setState({ configs: await this.fetchConfigs() });
@@ -179,6 +210,8 @@ class App extends Component {
   gtmActive = false;
   serial = null;
   lastConnected = 0;
+  serialApi = null;
+  hasWebUsb = false;
 
   languages = [
     {
@@ -291,12 +324,17 @@ class App extends Component {
 
   formatLogMessage(html) {
     const now = new Date();
-    const formatted = dateFormat(now, 'yyyy-mm-dd @ HH:MM:ss -- ');
+    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
+    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
 
     return (
       <div>
         <span className="date">
-          {formatted}
+          {formattedDate}
+        </span>
+
+        <span className="time">
+          {formattedTime}
         </span>
 
         {html}
@@ -569,7 +607,7 @@ class App extends Component {
      */
     let connected = false;
     this.serial = null;
-    const ports = await navigator.serial.getPorts();
+    const ports = await this.serialApi.getPorts();
     if(ports.length > 0) {
       TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
       this.addLogMessage('pluggedIn');
@@ -595,14 +633,14 @@ class App extends Component {
     this.addLogMessage('unplugged');
     this.lastConnected = 0;
 
-    const ports = await navigator.serial.getPorts();
+    const availablePorts = await this.serialApi.getPorts();
     this.setState({
       open: false,
       escs: [],
       serial: {
-        availablePorts: ports,
+        availablePorts,
         chosenPort: null,
-        connected: ports.length > 0 ? true : false,
+        connected: availablePorts.length > 0 ? true : false,
         fourWay: false,
       }
     });
@@ -612,7 +650,7 @@ class App extends Component {
 
   async handleSetPort() {
     try {
-      const port = await navigator.serial.requestPort();
+      const port = await this.serialApi.requestPort();
       this.serial = new Serial(port);
 
       this.addLogMessage('portSelected');
@@ -821,6 +859,13 @@ class App extends Component {
       </option>
     ));
 
+    const portNames = serial.availablePorts.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
     return (
       <div className="App">
         <div id="main-wrapper">
@@ -837,7 +882,7 @@ class App extends Component {
                 onSetBaudRate={this.handleSetBaudRate}
                 onSetPort={this.handleSetPort}
                 open={open}
-                ports={serial.availablePorts}
+                ports={portNames}
               />
 
               <div className="language-select ">
@@ -858,16 +903,6 @@ class App extends Component {
                   >
                     Settings
                   </button>
-                </div>
-
-                <div className="button-dark">
-                  <a
-                    href="https://discord.gg/QvSS5dk23C"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    Join Discord Chat
-                  </a>
                 </div>
 
               </div>
