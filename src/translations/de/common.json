@@ -80,5 +80,11 @@
   "whatsNextHeader": "Was kommt als nächstes?",
   "whatsNextText": "<p>Wenn du mitverfolgen willst welche Funktionen in Zukunft entstehen, kannst du dies im <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com\" target=\"_blank\">github-Repository</a>beobachten. Gerne kannst du auch eine Feature-Anfrage erstellen, wenn du eine Idee zu einem Feature hast, welches du gerne implementiert hättest.</p>",
   "openPortSelection": "Portauswahl öffnen",
-  "versionUnsupported": "{{name}} Version '{{version}}' (Layout {{layout}}) wird noch nicht unterstützt.<br/><br/>Lass es uns wissen indem du einen <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">Fehlerbericht erstellst</a>."
+  "versionUnsupported": "{{name}} Version '{{version}}' (Layout {{layout}}) wird noch nicht unterstützt.<br/><br/>Lass es uns wissen indem du einen <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">Fehlerbericht erstellst</a>.",
+  "motorControl": "Motorsteuerung",
+  "enableMotorControl": "Motorsteuerung aktivieren",
+  "masterSpeed": "Geschwindigkeit aller Motoren",
+  "motorNr": "Motor {{index}}",
+  "homeDiscordHeader": "Komm auf unseren Discord Server!",
+  "homeDiscordText": "Wenn du Fragen hast oder rasche Hilfe brauchst, schau bei uns am Discord Server vorbei:"
 }
