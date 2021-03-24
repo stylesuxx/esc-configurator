@@ -115,10 +115,13 @@ function PortPicker({
         </div>}
 
       <div id="portsinput">
-        <div className="dropdown dropdown-dark">
+        <div
+          className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
+          disabled={open}
+        >
           <select
             className="dropdown-select"
-            disabled={open ? true : false}
+            disabled={open}
             id="port"
             onChange={changePort}
             title={t('port')}
@@ -127,11 +130,14 @@ function PortPicker({
           </select>
         </div>
 
-        <div className="dropdown dropdown-dark">
+        <div
+          className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
+          disabled={open}
+        >
           <select
             className="dropdown-select"
             defaultValue="115200"
-            disabled={open ? true : false}
+            disabled={open}
             id="baud"
             onChange={changeBaudRate}
             title={t('baudRate')}
@@ -142,6 +148,7 @@ function PortPicker({
 
         <div className="button-dark">
           <button
+            disabled={open}
             onClick={onSetPort}
             type="button"
           >
