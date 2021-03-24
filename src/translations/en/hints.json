@@ -15,11 +15,11 @@
   "SINUSOIDAL_STARTUP": "During the first 10 percent of throttle the motor is stepped in sinusoidal open loop commutation.",
   "COMPLEMENTARY_PWM": "Enables active braking by using low side switches for current decay instead of MOSFET body diodes.",
   "VARIABLE_PWM_FREQUENCY": "Increases PWM frequency proportionally to motor rpm from 24-48khz to avoid thottle disturbances.",
-  "STUCK_ROTOR_PROTECTION": "Cuts power to the motor and stops tryign to restart after 10 failed start attempts.",
+  "STUCK_ROTOR_PROTECTION": "Cuts power to the motor and stops trying to restart after 10 failed start attempts.",
   "STALL_PROTECTION": "Increases throttle automatically below a rpm threshold to try and avoid stalling the motor, not reccomended for multirotors.",
   "TIMING_ADVANCE": "Motor commutation advance timing. Higher timing are less prone to desyncs and can provide more power at the cost of efficiency.",
   "MOTOR_KV": "The KV rating of the motor stated by the manufacturer. The value is used to set RPM limit for low rpm throttle protection.",
   "MOTOR_POLES": "Pole count of the motor. This value is used to adjust sinusoidal startup speed.",
-  "STARTUP_POWER": "Controls the intial power given to the motor during startup and minimum throttle level.",
+  "STARTUP_POWER": "Controls the initial power given to the motor during startup and minimum throttle level.",
   "PWM_FREQUENCY": "When variable PWM is disabled, this manually sets the switching frequency (PWM) to the chosen range.", 
 }
