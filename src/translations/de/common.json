@@ -85,6 +85,6 @@
   "enableMotorControl": "Motorsteuerung aktivieren",
   "masterSpeed": "Geschwindigkeit aller Motoren",
   "motorNr": "Motor {{index}}",
-  "homeDiscordHeader": "Join us on Discord!",
-  "homeDiscordText": "If you have any questions or need a quick helping hand, join us on our Discord server:"
+  "homeDiscordHeader": "Komm auf unseren Discord Server!",
+  "homeDiscordText": "Wenn du Fragen hast oder rasche Hilfe brauchst, schau bei uns am Discord Server vorbei:"
 }
