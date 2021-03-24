@@ -59,7 +59,7 @@ test('should fail filling an Image with address higher than length', () => {
   const parsed = parseHex(hexString);
   const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
   const flashOffset = 0;
-  const result = fillImage(parsed, endAddress - flashOffset - 1000000, flashOffset);
+  const result = fillImage(parsed, endAddress - flashOffset - 1000, flashOffset);
 
   expect(result).toBeNull();
 });
