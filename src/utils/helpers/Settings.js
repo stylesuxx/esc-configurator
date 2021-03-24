@@ -15,7 +15,7 @@ const getMasterSettings = (escs) => {
  * Return the individaul settings for each ESC - include fixed fields
  */
 const getIndividualSettingsDescriptions = (esc) => {
-  if(esc) {
+  if(esc && esc.individualSettingsDescriptions) {
     const descriptions = esc.individualSettingsDescriptions;
     const individualGroups = Object.keys(descriptions);
     const keep = ['MAIN_REVISION', 'SUB_REVISION', 'LAYOUT', 'LAYOUT_REVISION', 'NAME'];

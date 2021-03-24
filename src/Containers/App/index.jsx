@@ -380,7 +380,7 @@ class App extends Component {
         this.serial.fourWayStart();
 
         // This delay is needed to allow the ESC's to initialize
-        await delay(1500);
+        await delay(1200);
 
         serial.fourWay = true;
       } else {
