@@ -6,7 +6,7 @@ import {
   ascii2buf,
   parseHex,
   fillImage,
-} from '../helpers/Flash';
+} from '../Flash';
 
 test('buffer to ACSII', () => {
   const ascii = buf2ascii([0x0054, 0x0045, 0x0053, 0x0054]);
