@@ -11,8 +11,8 @@ import {
 
 class Source {
   constructor(name, platform, versions, escs, eeprom, localVersions, localEscs, pwm) {
-    if(!name || !versions || !escs || !localVersions || !localEscs || !pwm) {
-      throw new Error("Parameters required: name, platform, versions, escs, eeprom, localVersions, localEscs");
+    if(!name || platform === undefined || !versions || !escs || !eeprom || !localVersions || !localEscs || !pwm) {
+      throw new Error("Parameters required: name, platform, versions, escs, eeprom, localVersions, localEscs, pwm");
     }
 
     this.name = name;
