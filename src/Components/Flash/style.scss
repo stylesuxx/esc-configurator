@@ -1,6 +1,4 @@
 #flash-content {
-  margin-bottom: 50px;
-
   .note {
     margin-bottom: 20px;
     background-color: #fff7cd;
@@ -29,7 +27,7 @@
     }
   }
 
-  @media screen and (max-width: 967px) {
+  @media screen and (max-width: 768px) {
     .config-wrapper {
       flex-direction: column;
 

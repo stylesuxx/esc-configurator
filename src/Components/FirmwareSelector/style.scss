@@ -15,9 +15,21 @@
   .center-wrapper {
     width: 50%;
     margin: auto;
+
+    @media only screen and (max-width: 768px) {
+      width: 100%;
+    }
   }
 
   .red {
     color: red;
+  }
+
+  .default-btn {
+    margin-bottom: 10px;
+  }
+
+  .default-btn:last-child {
+    margin-bottom: 0px;
   }
 }

@@ -18,7 +18,6 @@ import BLUEJAY_ESCS from '../sources/Bluejay/escs.json';
 import AM32_ESCS from '../sources/AM32/escs.json';
 
 import {
-  canMigrate,
   fillImage,
   parseHex,
   buf2ascii,
@@ -26,6 +25,7 @@ import {
 } from './helpers/Flash';
 
 import {
+  canMigrate,
   getIndividualSettings,
 } from './helpers/Settings';
 
@@ -73,9 +73,9 @@ class FourWay {
     this.logCallback = logCallback;
   }
 
-  addLogMessage(message) {
+  addLogMessage(message, params) {
     if(this.logCallback) {
-      this.logCallback(message);
+      this.logCallback(message, params);
     }
   }
 
@@ -347,9 +347,7 @@ class FourWay {
             const descriptions = settingsDescriptions[layoutRevision][mode];
             flash.settingsDescriptions = descriptions;
           } catch(e) {
-            const error = `Layout revision ${layoutRevision} is not yet supported`;
-            this.addLogMessage(error);
-            console.debug(error);
+            this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
           }
         }
 
@@ -420,7 +418,7 @@ class FourWay {
       }
 
       if(compare(newSettingsArray, esc.settingsArray)) {
-        this.addLogMessage(`No changes - not updating ESC ${target + 1}`);
+        this.addLogMessage('escSettingsNoChange', { index: target + 1 });
       } else {
         let readbackSettings = null;
         if(esc.isSiLabs) {
@@ -455,13 +453,13 @@ class FourWay {
           throw new Error('Failed to verify settings');
         }
 
-        this.addLogMessage(`Updating ESC ${target + 1} - finished`);
+        this.addLogMessage('escUpdateSuccess', { index: target + 1 });
       }
 
       return newSettingsArray;
     }
 
-    this.addLogMessage(`Updating ESC ${target + 1} - failed`);
+    this.addLogMessage('escUpdateFailed', { index: target + 1 });
   }
 
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
@@ -612,7 +610,7 @@ class FourWay {
         }
 
         if(!force) {
-          this.addLogMessage('Layout mismatch, override not enabled - aborted');
+          this.addLogMessage('escSettingsLayoutMismatch');
           return esc;
         }
       }
@@ -630,7 +628,7 @@ class FourWay {
         }
 
         if(!force) {
-          this.addLogMessage('MCU mismatch, override not enabled - aborted');
+          this.addLogMessage('escSettingsMcuMismatch');
           return esc;
         }
       }
@@ -718,7 +716,10 @@ class FourWay {
 
       const elapsedSec = (Date.now() - startTimestamp) / 1000;
       const rounded = Math.round(elapsedSec * 10) / 10;
-      this.addLogMessage(`Flashed ESC ${target + 1} - ${rounded}s`);
+      this.addLogMessage('escFlashedInTime', {
+        index: target + 1,
+        seconds: rounded,
+      });
 
       let newEsc = await this.getInfo(target);
       if(migrate) {

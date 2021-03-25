@@ -11,9 +11,7 @@ function Info({
   name,
 }) {
   return (
-
-
-    <span className={!inSync ? 'not-in-sync' : ''} >
+    <span className={`info-wrapper-wrapper ${!inSync ? 'not-in-sync' : ''}`} >
       {label}
 
       {hint &&

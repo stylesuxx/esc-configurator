@@ -1,0 +1,55 @@
+#motor-control-wrapper {
+  max-width: 600px;
+  width: 100%;
+  // margin-bottom: 65px;
+
+  .checkbox label {
+    flex: 0 0 10px !important;
+  }
+
+  .checkbox {
+    span {
+      margin-left: 5px;
+    }
+  }
+
+  #slider-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    #single-slider,
+    #master-slider {
+      flex: 1;
+      margin-right: 30px;
+    }
+
+    .slider,
+    #master-slider {
+      h3 {
+        padding-bottom: 20px;
+      }
+
+      .input-range {
+        float: none;
+        margin-left: 8px;
+      }
+    }
+
+    @media only screen and (max-width: 600px) {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+
+      #single-slider,
+      #master-slider {
+        width: 90%;
+      }
+
+      .slider {
+        h3 {
+          padding-top: 10px;
+        }
+      }
+    }
+  }
+}

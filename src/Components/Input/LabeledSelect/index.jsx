@@ -20,22 +20,24 @@ function LabeledSelect({
   return (
     <div className="select">
       <label>
-        <select
-          onChange={onChange}
-          value={selected || -1}
-        >
-          <option
-            className="hidden"
-            disabled
-            value={-1}
+        <div className="input-wrapper">
+          <select
+            onChange={onChange}
+            value={selected || -1}
           >
-            {firstLabel}
-          </option>
+            <option
+              className="hidden"
+              disabled
+              value={-1}
+            >
+              {firstLabel}
+            </option>
 
-          {optionElements}
-        </select>
+            {optionElements}
+          </select>
+        </div>
 
-        <span>
+        <span className="info-wrapper-wrapper">
           {label}
         </span>
       </label>

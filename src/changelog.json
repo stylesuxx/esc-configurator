@@ -1,5 +1,22 @@
 [
   {
+    "title": "0.9.0",
+    "items": [
+      "Added netlify badge",
+      "Improved compatibility wording",
+      "Motor speed control",
+      "Improved documentation",
+      "Translateable log messages",
+      "Setting for printing log messages",
+      "Improved styling for mobile",
+      "Support Web USB - App now also works on Chrome for Android (mostly)",
+      "Added tests for helper utils",
+      "Added AM32 settings descriptions",
+      "Testing via travis",
+      "Improved serial queue"
+    ]
+  },
+  {
     "title": "0.8.3",
     "items": [
       "Updated OG image path"

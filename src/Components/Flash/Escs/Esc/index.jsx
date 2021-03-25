@@ -4,10 +4,10 @@ import {
   useTranslation,
 } from 'react-i18next';
 
-import Checkbox from '../Input/Checkbox';
-import Select from '../Input/Select';
-import Slider from '../Input/Slider';
-import Number from '../Input/Number';
+import Checkbox from '../../../Input/Checkbox';
+import Select from '../../../Input/Select';
+import Slider from '../../../Input/Slider';
+import Number from '../../../Input/Number';
 
 import './style.scss';
 
@@ -89,6 +89,7 @@ function Esc({
         case 'bool': {
           return (
             <Checkbox
+              disabled={!canFlash}
               key={setting.name}
               label={t(setting.label)}
               name={setting.name}
@@ -102,6 +103,7 @@ function Esc({
           const { options } = setting;
           return (
             <Select
+              disabled={!canFlash}
               key={setting.name}
               label={t(setting.label)}
               name={setting.name}
@@ -116,6 +118,7 @@ function Esc({
           if(directInput) {
             return (
               <Number
+                disabled={!canFlash}
                 factor={setting.factor}
                 key={setting.name}
                 label={t(setting.label)}
@@ -133,6 +136,7 @@ function Esc({
 
           return (
             <Slider
+              disabled={!canFlash}
               factor={setting.factor}
               key={setting.name}
               label={t(setting.label)}

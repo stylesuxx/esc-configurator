@@ -7,6 +7,17 @@ import {
 
 /**
  * Abstraction layer for all serial communication
+ *
+ * Serial commands are added to the QueueProcessor, meaning that this is our
+ * only way for commands to be executed. They are executed in FIFO manner: the
+ * first command in, is the first one to be processed.
+ *
+ * The queue Processor is agnostic of the current protocol, not matter if it is
+ * a MSP, 4-Way interface or completyly custom command, they all go through
+ * this queue.
+ *
+ * This ensures that no race conditions can happen during serial communication.
+ * No command will be written until the previous one is finished processing.
  */
 class Serial {
   constructor(port) {
@@ -17,7 +28,6 @@ class Serial {
     this.writer = null;
     this.reader = null;
 
-    this.write = this.write.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
     this.getUtilization = this.getUtilization.bind(this);
 
@@ -37,10 +47,11 @@ class Serial {
    * Send a buffer via serial and process response with the response handler
    */
   async executeCommand(buffer, responseHandler) {
-    await this.write(buffer);
-    if(responseHandler) {
-      return this.qp.addCommand(responseHandler);
-    }
+    const sendHandler = async function() {
+      await this.writeBuffer(buffer);
+    }.bind(this);
+
+    return this.qp.addCommand(sendHandler, responseHandler);
   }
 
   setLogCallback(logCallback) {
@@ -81,12 +92,24 @@ class Serial {
     return this.msp.getBoardInfo();
   }
 
+  async getMotorData() {
+    return this.msp.getMotorData();
+  }
+
   async getUid() {
     return this.msp.getUid();
   }
 
   async enable4WayInterface() {
     return this.msp.set4WayIf();
+  }
+
+  async spinMotor(index, speed) {
+    return this.msp.spinMotor(index, speed);
+  }
+
+  async spinAllMotors(speed) {
+    return this.msp.spinAllMotors(speed);
   }
 
   async fourWayWriteSettings(index, esc, settings) {
@@ -128,7 +151,7 @@ class Serial {
     return this.fourWay.getInfo(esc);
   }
 
-  async write(buffer) {
+  async writeBuffer(buffer) {
     if(this.writer) {
       this.sent += buffer.byteLength;
       await this.writer.write(buffer);

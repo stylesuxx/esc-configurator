@@ -2,5 +2,7 @@
   "settingsHeader": "Settings",
   "closeText": "Close",
   "directInput": "Direct Input",
-  "directInputHint": "Use direct input for numbers instead of sliders."
+  "directInputHint": "Use direct input for numbers instead of sliders.",
+  "printLogs": "Print logs",
+  "printLogsHint": "Will print logs to the console if enabled."
 }

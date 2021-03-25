@@ -9,6 +9,10 @@ import {
 } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
+import {
+  serial as serialPolyfill,
+} from 'web-serial-polyfill';
+
 import changelogEntries from '../../changelog.json';
 
 import PortPicker from '../../Components/PortPicker';
@@ -69,11 +73,13 @@ class App extends Component {
     this.handleCloseSettings = this.handleCloseSettings.bind(this);
     this.handleOpenSettings = this.handleOpenSettings.bind(this);
     this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
+    this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
+    this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
 
     this.state = {
       checked: false,
       hasSerial: false,
-      connected: false,
+      connected: 0,
       open: false,
       baudRate: 115200,
       serialLog: [],
@@ -85,6 +91,8 @@ class App extends Component {
       serial: {
         availablePorts: [],
         chosenPort: null,
+        connected: false,
+        fourWay: false,
       },
       configs: {
         versions: {},
@@ -100,14 +108,47 @@ class App extends Component {
       },
       language: 'en',
       showSettings: false,
-      appSettings: {},
+      appSettings: {
+        directInput: {
+          type: 'boolean',
+          value: false,
+        },
+        printLogs: {
+          type: 'boolean',
+          value: false,
+        },
+      },
     };
   }
 
   async componentDidMount() {
+    const { appSettings } = this.state;
     const that = this;
     this.onMount(async() => {
-      const hasSerial = 'serial' in navigator;
+      let hasSerial = 'serial' in navigator;
+      if(hasSerial) {
+        this.serialApi = navigator.serial;
+      }
+
+      /**
+       * If the Web Serial API is not available, we try to fall back to the
+       * Web USB polyfill for serial. This allows us to have (most of) the
+       * Web Serial API functionality on Android devices.
+       *
+       * Web USB has a couple of draw backs though:
+       * - getInfo can not be called before a port has been opened, so the
+       *   device names need to be mocked.
+       * - event listeners are not available, meaning we can not automatically
+       *   detect if a deive has been plugged in or disconnected. Connected is
+       *   not a big problem, since we trigger that manually by port selection.
+       *   Disconnecting is a bigger problem, since we can not clean up once
+       *   the user has unplugged his device.
+       */
+      if(!hasSerial && navigator.usb) {
+        this.serialApi = serialPolyfill;
+        hasSerial = true;
+        this.hasWebUsb = true;
+      }
 
       const language = localStorage.getItem('language');
       if(language) {
@@ -115,34 +156,35 @@ class App extends Component {
         this.setState({ language });
       }
 
-      const defaultSettings = {
-        directInput: {
-          type: 'boolean',
-          value: false,
-        },
-      };
       const settings = JSON.parse(localStorage.getItem('settings'));
-      const currentSettings = Object.assign({}, defaultSettings, settings);
+      const currentSettings = Object.assign({}, appSettings, settings);
       this.setState({ appSettings: currentSettings });
 
       // Redefine the console and tee logs
       var console = (function(old) {
         return Object.assign({}, old, {
           debug: (text, ...args) => {
+            const { appSettings } = that.state;
             const msg = [text, args.join(' ')].join(' ');
             that.log.push(msg);
-            old.debug(text, ...args);
+            if(appSettings.printLogs.value) {
+              console.log(text, ...args);
+            }
           },
         });
       }(window.console));
       window.console = console;
 
       if (hasSerial) {
-        navigator.serial.removeEventListener('connect', that.serialConnectHandler);
-        navigator.serial.removeEventListener('disconnect', that.serialDisconnectHandler);
+        /**
+         * TODO: Web USB listeners are a hack as long as pulled in from my
+         *       fork. Update once google updates their repository.
+         */
+        this.serialApi.removeEventListener('connect', that.serialConnectHandler);
+        this.serialApi.removeEventListener('disconnect', that.serialDisconnectHandler);
 
-        navigator.serial.addEventListener('connect', that.serialConnectHandler);
-        navigator.serial.addEventListener('disconnect', that.serialDisconnectHandler);
+        this.serialApi.addEventListener('connect', that.serialConnectHandler);
+        this.serialApi.addEventListener('disconnect', that.serialDisconnectHandler);
 
         // Fetch the configs only once.
         this.setState({ configs: await this.fetchConfigs() });
@@ -168,6 +210,8 @@ class App extends Component {
   gtmActive = false;
   serial = null;
   lastConnected = 0;
+  serialApi = null;
+  hasWebUsb = false;
 
   languages = [
     {
@@ -184,9 +228,22 @@ class App extends Component {
     cb();
   }
 
-  async addLogMessage(message) {
-    const { serialLog } = this.state;
-    serialLog.push(this.formatLogMessage(message));
+  async addLogMessage(message, params = {}) {
+    const {
+      serialLog,
+      appSettings
+    } = this.state;
+    const translation = i18next.t(`log:${message}`, params);
+
+    params.lng = 'en';
+    const translationEn = i18next.t(`log:${message}`, params);
+
+    serialLog.push(this.formatLogMessage(translation));
+    this.log.push(translationEn);
+
+    if(appSettings.printLogs.value) {
+      console.log(translationEn);
+    }
 
     await this.setState({ serialLog });
   }
@@ -267,12 +324,17 @@ class App extends Component {
 
   formatLogMessage(html) {
     const now = new Date();
-    const formatted = dateFormat(now, 'yyyy-mm-dd @ HH:MM:ss -- ');
+    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
+    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
 
     return (
       <div>
         <span className="date">
-          {formatted}
+          {formattedDate}
+        </span>
+
+        <span className="time">
+          {formattedTime}
         </span>
 
         {html}
@@ -298,7 +360,7 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      progress, actions
+      progress, actions, serial
     } = this.state;
 
     actions.isReading = true;
@@ -309,28 +371,26 @@ class App extends Component {
     try {
       if(this.lastConnected === 0) {
         const escs = await this.serial.enable4WayInterface();
+        connected = escs.connectedESCs;
 
-        connected = 0;
-        if(escs) {
-          connected = escs.connectedESCs;
-        }
+        await this.serial.fourWayStart();
 
-        this.serial.fourWayStart();
-        await delay(1000);
+        // This delay is needed to allow the ESC's to initialize
+        await delay(1200);
+
+        serial.fourWay = true;
       } else {
         connected = this.lastConnected;
       }
     } catch(e) {
+      this.addLogMessage('fourWayFailed');
       console.debug(e);
-      this.addLogMessage('Could not enable 4 way interface - reconnect flight controller');
     }
 
     const escFlash = [];
     let open = false;
 
-    const message = `Trying to read ${connected} ESC's`;
-    this.addLogMessage(message);
-    console.debug(message);
+    this.addLogMessage('readEscs', { connected });
 
     try {
       for (let i = 0; i < connected; i += 1) {
@@ -340,21 +400,17 @@ class App extends Component {
           settings.index = i;
           escFlash.push(settings);
 
-          const message = `Read ESC ${i + 1}`;
-          this.addLogMessage(message);
-          console.debug(message);
+          this.addLogMessage('readEsc', { index: i + 1 });
         } else {
-          const error = `Failed reading ESC ${i + 1}`;
-          this.addLogMessage(error);
-          console.debug(error);
+          this.addLogMessage('readEscFailed', { index: i + 1 });
         }
       }
       open = true;
 
-      this.addLogMessage('Done reading ESC\'s');
+      this.addLogMessage('readEscsSuccess');
     } catch(e) {
+      this.addLogMessage('readEscsFailed');
       console.debug(e);
-      this.addLogMessage('Failed reading ESC\'s');
     }
 
     const masterSettings = getMasterSettings(escFlash);
@@ -367,6 +423,8 @@ class App extends Component {
       settings: masterSettings,
       progress,
       actions,
+      connected,
+      serial,
     });
   }
 
@@ -487,9 +545,7 @@ class App extends Component {
     if(text) {
       await this.flash(text, force, migrate);
     } else {
-      const error = 'Could not get file for flashing.';
-      console.debug(error);
-      this.addLogMessage(error);
+      this.addLogMessage('getFileFailed');
     }
   }
 
@@ -506,9 +562,7 @@ class App extends Component {
     for(let i = 0; i < flashTargets.length; i += 1) {
       const target = flashTargets[i];
 
-      const message = `Flashing ESC ${target + 1}`;
-      console.debug(message);
-      this.addLogMessage(message);
+      this.addLogMessage('flashingEsc', { index: target + 1 });
 
       const esc = escs.find((esc) => esc.index === target);
       newProgress[target] = 0;
@@ -529,9 +583,7 @@ class App extends Component {
 
         await this.setState({ escs });
       } else {
-        const error = `Failed flashing ESC ${target + 1} - check file type`;
-        console.debug(error);
-        this.addLogMessage(error);
+        this.addLogMessage('flashingEscFailed', { index: target + 1 });
       }
     }
 
@@ -551,10 +603,10 @@ class App extends Component {
      */
     let connected = false;
     this.serial = null;
-    const ports = await navigator.serial.getPorts();
+    const ports = await this.serialApi.getPorts();
     if(ports.length > 0) {
       TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
-      this.addLogMessage('Plugged in');
+      this.addLogMessage('pluggedIn');
       connected = true;
 
       // Set the first  serial port as the active one
@@ -564,24 +616,28 @@ class App extends Component {
     this.setState({
       checked: true,
       hasSerial: true,
-      connected,
-      serial: { availablePorts: ports },
+      serial: {
+        availablePorts: ports,
+        connected,
+        fourWay: false,
+      },
     });
   }
 
   async serialDisconnectHandler() {
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
-    this.addLogMessage('Unplugged');
+    this.addLogMessage('unplugged');
     this.lastConnected = 0;
 
-    const ports = await navigator.serial.getPorts();
+    const availablePorts = await this.serialApi.getPorts();
     this.setState({
-      connected: ports.length > 0 ? true : false,
       open: false,
       escs: [],
       serial: {
-        availablePorts: ports,
+        availablePorts,
         chosenPort: null,
+        connected: availablePorts.length > 0 ? true : false,
+        fourWay: false,
       }
     });
 
@@ -590,14 +646,16 @@ class App extends Component {
 
   async handleSetPort() {
     try {
-      const port = await navigator.serial.requestPort();
+      const port = await this.serialApi.requestPort();
       this.serial = new Serial(port);
 
-      this.addLogMessage('Port selected');
+      this.addLogMessage('portSelected');
 
       this.setState({
-        connected: true,
-        serial: { availablePorts: [port] },
+        serial: {
+          availablePorts: [port],
+          connected: true,
+        },
       });
     } catch (e) {
       // No port selected, do nothing
@@ -610,7 +668,7 @@ class App extends Component {
     serial.chosenPort = serial.availablePorts[index];
     this.serial = new Serial(serial.chosenPort);
 
-    this.addLogMessage('Port changed');
+    this.addLogMessage('portChanged');
 
     this.setState({ serial });
   }
@@ -633,7 +691,7 @@ class App extends Component {
       await this.serial.open(baudRate);
       this.serial.setLogCallback(this.addLogMessage);
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
-      this.addLogMessage('Opened serial port');
+      this.addLogMessage('portOpened');
 
       // Send a reset of the 4 way interface, just in case it was not cleanly
       // disconnected before.
@@ -647,127 +705,65 @@ class App extends Component {
         console.debug(e);
       }
 
-      this.addLogMessage('Port already in use by another application - try re-connecting');
+      this.addLogMessage('portUsed');
 
       return;
     }
 
     const apiVersion = await this.serial.getApiVersion();
-    const apiVersionElement = (
-      <>
-        MultiWii API version
-        {' '}
-
-        <span className="message-positive">
-          received
-        </span>
-
-        {' '}
-        -
-
-        {' '}
-
-        <strong>
-          {apiVersion.apiVersion}
-        </strong>
-      </>
-    );
-    this.addLogMessage(apiVersionElement);
+    this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
     const fcVariant = await this.serial.getFcVariant();
     const fcVersion = await this.serial.getFcVersion();
-    const fcInfoElement = (
-      <>
-        Flight controller info, identifier:
-        {' '}
-
-        <strong>
-          {fcVariant.flightControllerIdentifier}
-        </strong>
-
-        {' '}
-
-        version:
-        <strong>
-          {fcVersion.flightControllerVersion}
-        </strong>
-      </>
-    );
-    this.addLogMessage(fcInfoElement);
+    this.addLogMessage('mspFcInfo', {
+      id: fcVariant.flightControllerIdentifier,
+      version: fcVersion.flightControllerVersion,
+    });
 
     const buildInfo = await this.serial.getBuildInfo();
-    const buildInfoElement = (
-      <>
-        Running firmware released on:
-
-        {' '}
-
-        <strong>
-          {buildInfo.buildInfo}
-        </strong>
-      </>
-    );
-    this.addLogMessage(buildInfoElement);
+    this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
 
     const boardInfo = await this.serial.getBoardInfo();
-    const boardInfoElement = (
-      <>
-        Board:
-
-        {' '}
-
-        <strong>
-          {boardInfo.boardIdentifier}
-        </strong>
-        ,
-
-        {' '}
-
-        version:
-        <strong>
-          {boardInfo.boardVersion}
-        </strong>
-      </>
-    );
-    this.addLogMessage(boardInfoElement);
+    this.addLogMessage('mspBoardInfo', {
+      identifier: boardInfo.boardIdentifier,
+      version: boardInfo.boardVersion,
+    });
 
     let uid = await this.serial.getUid();
+
+
     uid = uid.uid;
     let uidHex = 0;
     for (let i = 0; i < uid.length; i += 1) {
       uidHex += uid[i].toString(16);
     }
-    const uidElement = (
-      <>
-        Unique device ID
+    this.addLogMessage('mspUid', { id: uidHex });
 
-        {' '}
+    let motorData = await this.serial.getMotorData();
+    motorData = motorData.filter((motor) => motor > 0);
 
-        <span className="message-positive">
-          received
-        </span>
+    await this.setState({
+      open: true,
+      connected: motorData.length,
+    });
+  }
 
-        {' '}
-        -
+  async handleAllMotorSpeed(speed) {
+    await this.serial.spinAllMotors(speed);
+  }
 
-        {' '}
-
-        <strong>
-          0x
-          {uidHex}
-        </strong>
-      </>
-    );
-    this.addLogMessage(uidElement);
-
-    await this.setState({ open: true });
+  async handleSingleMotorSpeed(index, speed) {
+    await this.serial.spinMotor(index, speed);
   }
 
   async handleDisconnect(e) {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
-    const { escs } = this.state;
+    const {
+      escs,
+      serial,
+    } = this.state;
     if(this.serial) {
       for(let i = 0; i < escs.length; i += 1) {
         await this.serial.fourWayReset(i);
@@ -776,8 +772,10 @@ class App extends Component {
       this.serial.close();
     }
 
-    this.addLogMessage('Closed port');
+    this.addLogMessage('closedPort');
     this.lastConnected = 0;
+
+    serial.fourWay = false;
 
     this.setState({
       open: false,
@@ -788,6 +786,7 @@ class App extends Component {
         isSelecting: false,
         isFlashing: false,
       },
+      serial,
     });
   }
 
@@ -856,6 +855,13 @@ class App extends Component {
       </option>
     ));
 
+    const portNames = serial.availablePorts.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
     return (
       <div className="App">
         <div id="main-wrapper">
@@ -864,7 +870,7 @@ class App extends Component {
               <div id="logo" />
 
               <PortPicker
-                hasPort={connected}
+                hasPort={serial.connected}
                 hasSerial={hasSerial}
                 onChangePort={this.handleChangePort}
                 onConnect={this.handleConnect}
@@ -872,7 +878,7 @@ class App extends Component {
                 onSetBaudRate={this.handleSetBaudRate}
                 onSetPort={this.handleSetPort}
                 open={open}
-                ports={serial.availablePorts}
+                ports={portNames}
               />
 
               <div className="language-select ">
@@ -895,16 +901,6 @@ class App extends Component {
                   </button>
                 </div>
 
-                <div className="button-dark">
-                  <a
-                    href="https://discord.gg/QvSS5dk23C"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    Join Discord Chat
-                  </a>
-                </div>
-
               </div>
             </div>
 
@@ -920,8 +916,11 @@ class App extends Component {
             appSettings={appSettings}
             changelogEntries={changelogEntries}
             configs={configs}
+            connected={connected}
             escs={escs}
             flashTargets={flashTargets}
+            fourWay={serial.fourWay}
+            onAllMotorSpeed={this.handleAllMotorSpeed}
             onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
             onFlashUrl={this.handleFlashUrl}
             onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
@@ -932,6 +931,7 @@ class App extends Component {
             onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
             onSettingsUpdate={this.handleSettingsUpdate}
             onSingleFlash={this.handleSingleFlash}
+            onSingleMotorSpeed={this.handleSingleMotorSpeed}
             onWriteSetup={this.handleWriteSetup}
             open={open}
             progress={progress}

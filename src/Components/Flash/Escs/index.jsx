@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Esc from '../Esc';
+import Esc from './Esc';
 
 function Escs({
   canFlash,

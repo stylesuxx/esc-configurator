@@ -9,6 +9,9 @@ const MSP = {
   MSP_BOARD_INFO: 4,
   MSP_BUILD_INFO: 5,
 
+  MSP_SET_MOTOR: 214,
+  MSP_SET_PASSTHROUGH: 245,
+
   // Multiwii MSP commands
   MSP_IDENT: 100,
   MSP_STATUS: 101,
@@ -16,10 +19,11 @@ const MSP = {
   MSP_3D: 124,
   MSP_SET_3D: 217,
 
-  MSP_SET_4WAY_IF: 245,
-
   // Additional baseflight commands that are not compatible with MultiWii
   MSP_UID: 160, // Unique device ID
+
+  // Betaflight specific
+  MSP2_SEND_DSHOT_COMMAND: 0x3003,
 };
 
 class Msp {
@@ -34,15 +38,18 @@ class Msp {
 
     this.logCallback = null;
     this.packetErrorsCallback = null;
+
+    const speedBufferOut = new ArrayBuffer(16);
+    this.speedBufView = new Uint8Array(speedBufferOut);
   }
 
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
   }
 
-  addLogMessage(message) {
+  addLogMessage(message, params) {
     if(this.logCallback) {
-      this.logCallback(message);
+      this.logCallback(message, params);
     }
   }
 
@@ -155,9 +162,8 @@ class Msp {
             return resolve(response);
           }
 
-          return reject(new Error(`code: ${code} - crc failed`));
-
           this.increasePacketErrors(1);
+          return reject(new Error(`code: ${code} - crc failed`));
         } break;
 
         default: {
@@ -171,25 +177,20 @@ class Msp {
     return reject(new NotEnoughDataError());
   }
 
-  async send(code, data) {
-    let bufferOut;
-    let bufView;
-
+  encodeV1(code, data = []) {
     // Always reserve 6 bytes for protocol overhead !
-    if (data) {
-      const size = data.length + 6;
-      let checksum = 0;
+    const size = 6 + data.length;
+    const bufferOut = new ArrayBuffer(size);
+    const bufView = new Uint8Array(bufferOut);
 
-      bufferOut = new ArrayBuffer(size);
-      bufView = new Uint8Array(bufferOut);
+    bufView[0] = 36; // $
+    bufView[1] = 77; // M
+    bufView[2] = 60; // <
+    bufView[3] = data.length;
+    bufView[4] = code;
 
-      bufView[0] = 36; // $
-      bufView[1] = 77; // M
-      bufView[2] = 60; // <
-      bufView[3] = data.length;
-      bufView[4] = code;
-
-      checksum = bufView[3] ^ bufView[4];
+    if (data.length > 0) {
+      let checksum = bufView[3] ^ bufView[4];
 
       for (let i = 0; i < data.length; i += 1) {
         bufView[i + 5] = data[i];
@@ -198,18 +199,66 @@ class Msp {
 
       bufView[5 + data.length] = checksum;
     } else {
-      bufferOut = new ArrayBuffer(6);
-      bufView = new Uint8Array(bufferOut);
-
-      bufView[0] = 36; // $
-      bufView[1] = 77; // M
-      bufView[2] = 60; // <
-      bufView[3] = 0; // Data length
-      bufView[4] = code; // Code
       bufView[5] = bufView[3] ^ bufView[4]; // Checksum
     }
 
-    return this.serial(bufferOut, this.read);
+    return bufferOut;
+  }
+
+  crc8_dvb_s2_data(data, start, end) {
+    let crc = 0;
+    for (let i = start; i < end; i += 1) {
+      crc = this.crc8_dvb_s2(crc, data[i]);
+    }
+
+    return crc;
+  }
+
+  encodeV2(code, data = []) {
+    // Always reserve 9 bytes for protocol overhead !
+    const dataLength = data.length;
+    const size = 9 + dataLength;
+    const bufferOut = new ArrayBuffer(size);
+    const bufView = new Uint8Array(bufferOut);
+
+    bufView[0] = 36; // $
+    bufView[1] = 88; // X
+    bufView[2] = 60; // <
+    bufView[3] = 0;  // flag
+    bufView[4] = code & 0xFF;
+    bufView[5] = (code >> 8) & 0xFF;
+    bufView[6] = dataLength & 0xFF;
+    bufView[7] = (dataLength >> 8) & 0xFF;
+
+    for (let i = 0; i < dataLength; i += 1) {
+      bufView[8 + i] = data[i];
+    }
+
+    bufView[size - 1] = this.crc8_dvb_s2_data(bufView, 3, size - 1);
+
+    return bufferOut;
+  }
+
+  async send(code, data) {
+    const process = async (resolve, reject) => {
+      let bufferOut;
+
+      if(code <= 254) {
+        bufferOut = this.encodeV1(code, data);
+      } else {
+        bufferOut = this.encodeV2(code, data);
+      }
+
+      try {
+        const result = await this.serial(bufferOut, this.read);
+        resolve(result);
+      } catch(e) {
+        console.debug('MSP command failed:', e.message);
+        reject(e);
+      }
+    };
+
+    return new Promise((resolve, reject) => process(resolve, reject));
   }
 
   getApiVersion() {
@@ -236,8 +285,30 @@ class Msp {
     return this.send(MSP.MSP_UID);
   }
 
+  getMotorData() {
+    return this.send(MSP.MSP_MOTOR);
+  }
+
   set4WayIf() {
-    return this.send(MSP.MSP_SET_4WAY_IF);
+    return this.send(MSP.MSP_SET_PASSTHROUGH);
+  }
+
+  spinAllMotors(speed) {
+    for(let i = 0; i < 8; i += 2) {
+      this.speedBufView[i] = 0x00ff & speed;
+      this.speedBufView[i + 1] = speed >> 8;
+    }
+
+    return this.send(MSP.MSP_SET_MOTOR, this.speedBufView);
+  }
+
+  spinMotor(motor, speed) {
+    const offset = (motor - 1) * 2;
+
+    this.speedBufView[offset] = 0x00ff & speed;
+    this.speedBufView[offset + 1] = speed >> 8;
+
+    return this.send(MSP.MSP_SET_MOTOR, this.speedBufView);
   }
 
   processData(code, messageBuffer, messageLength) {
@@ -253,7 +324,7 @@ class Msp {
     if (!this.unsupported) {
       switch (code) {
         case MSP.MSP_IDENT: {
-          console.log('Using deprecated msp command: MSP_IDENT');
+          console.debug('Using deprecated msp command: MSP_IDENT');
 
           // Deprecated
           config.version = parseFloat((data.getUint8(0) / 100).toFixed(2));
@@ -286,14 +357,14 @@ class Msp {
           return motorData;
         }
 
-        case MSP.MSP_SET_4WAY_IF: {
+        case MSP.MSP_SET_PASSTHROUGH: {
           escConfig.connectedESCs = data.getUint8(0);
 
           return escConfig;
         }
 
         case MSP.MSP_SET_MOTOR: {
-          console.log('Motor Speeds Updated');
+          // Motor speeds updated
         } break;
 
         // Additional baseflight commands that are not compatible with MultiWii
@@ -381,20 +452,17 @@ class Msp {
         }
 
         case MSP.MSP_SET_3D: {
-          console.log('3D settings saved');
+          console.debug('3D settings saved');
         } break;
 
         default: {
-          console.log(
-            'Unknown code detected:',
-            code
-          );
+          console.debug('Unknown code detected:', code);
         }
       }
-    } else if (code === MSP.MSP_SET_4WAY_IF) {
-      this.addLogMessage('BLHELI passthrough not supported');
+    } else if (code === MSP.MSP_SET_PASSTHROUGH) {
+      this.addLogMessage('passthroughNotSupported');
     } else {
-      console.log('FC reports unsupported message error:', code);
+      console.debug('FC reports unsupported message error:', code);
     }
 
     return null;

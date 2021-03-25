@@ -19,55 +19,69 @@ function Buttonbar({
 }) {
   const { t } = useTranslation('common');
 
+  function ResetDefaultButton() {
+    return (
+      <button
+        disabled={!canResetDefaults}
+        onClick={onResetDefaults}
+        type="button"
+      >
+        {t('resetDefaults')}
+      </button>
+    );
+  }
+
   return (
     <div id="button-bar">
-      <div className="btn log">
-        <button
-          onClick={onSaveLog}
-          type="button"
-        >
-          {t('escButtonSaveLog')}
-        </button>
+      <div className="buttons-left">
+        <div className="btn log">
+          <button
+            onClick={onSaveLog}
+            type="button"
+          >
+            {t('escButtonSaveLog')}
+          </button>
+        </div>
+
+        <div className="mobile-show btn">
+          <ResetDefaultButton />
+        </div>
       </div>
 
-      <div className="btn">
-        <button
-          className={canRead ? "" : "disabled"}
-          onClick={onReadSetup}
-          type="button"
-        >
-          {t('escButtonRead')}
-        </button>
-      </div>
+      <div className="buttons-right">
+        <div className="btn">
+          <button
+            disabled={!canRead}
+            onClick={onReadSetup}
+            type="button"
+          >
+            {t('escButtonRead')}
+          </button>
+        </div>
 
-      <div className="btn">
-        <button
-          className={canWrite ? "" : "disabled"}
-          onClick={onWriteSetup}
-          type="button"
-        >
-          {t('escButtonWrite')}
-        </button>
-      </div>
+        <div className="btn">
+          <button
+            disabled={!canWrite}
+            onClick={onWriteSetup}
+            type="button"
+          >
+            {t('escButtonWrite')}
+          </button>
+        </div>
 
-      <div className="btn">
-        <button
-          className={canFlash ? "" : "disabled"}
-          onClick={onSeletFirmwareForAll}
-          type="button"
-        >
-          {t('escButtonFlashAll')}
-        </button>
-      </div>
+        <div className="btn">
+          <button
+            disabled={!canFlash}
+            onClick={onSeletFirmwareForAll}
+            type="button"
+          >
+            {t('escButtonFlashAll')}
+          </button>
+        </div>
 
-      <div className={canResetDefaults ? "btn" : "hidden"}>
-        <button
-          className={canResetDefaults ? "" : "disabled"}
-          onClick={onResetDefaults}
-          type="button"
-        >
-          {t('resetDefaults')}
-        </button>
+        <div className="mobile-hide btn">
+          <ResetDefaultButton />
+        </div>
       </div>
     </div>
   );

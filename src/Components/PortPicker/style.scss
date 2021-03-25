@@ -3,7 +3,11 @@
   float: right;
   display: flex;
   padding-left: 10px;
-  padding-bottom: 14px;
+  padding-bottom: 8px;
+
+  @media only screen and (max-width: 600px) {
+    width: 230px;
+  }
 
   button {
     cursor: pointer;
@@ -25,6 +29,11 @@
     padding-left: 9px;
     padding-right: 9px;
     line-height: 28px;
+  }
+
+  .disabled,
+  button[disabled] {
+    opacity: 0.5;
   }
 
   .dropdown-dark .dropdown-select {
@@ -52,24 +61,16 @@
     margin-top: 12px;
     margin-right: 20px;
 
+    @media only screen and (max-width: 600px) {
+      margin-right: 0px;
+    }
+
     .dropdown {
       margin-bottom: 5px;
     }
   }
 
-  #connect-button-wrapper {
-    position: relative;
-    float: right;
-    left: 0px;
-    margin-top: 19px;
-    height: 70px;
-    width: 60px;
-    margin-right: 20px;
-    margin-left: 20px;
-  }
-
   .connect-state {
-    float: left;
     height: 20px;
     width: 100%;
     text-align: center;
@@ -80,45 +81,58 @@
     margin-top: -1px;
   }
 
+  #connect-button-wrapper {
+    position: relative;
+    left: 0px;
+    margin-top: 12px;
+    margin-right: 20px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
 
+    button {
+      background: none;
+      border: 0px;
+      margin: 0px;
 
-  .connect_b {
-    float: left;
+      .icon {
+        display: block;
+        height: 60px;
+        width: 60px;
+        border-radius: 50%;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
+        margin: 0px;
+        transition: none;
 
-    a {
-      height: 50px;
-      width: 50px;
-      border-radius: 100px;
-      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
-      float: left;
-      margin-left: 5px;
-      margin-bottom: 7px;
-      transition: none;
-    }
+        &.connect {
+          background-color: var(--color-secondary);
+          border: 1px solid var(--color-primary);
+          background-image: url(images/icons/cf_icon_usb2_white.svg);
+          background-repeat: no-repeat;
+          background-size: 44px;
+          background-position: center 6px;
+          transition: none;
+        }
+      }
 
-    a.connect {
-      background-color: var(--color-secondary);
-      border: 1px solid var(--color-primary);
-      background-image: url(images/icons/cf_icon_usb2_white.svg);
-      background-repeat: no-repeat;
-      background-size: 44px;
-      background-position: center 6px;
-      transition: none;
-    }
+      &:hover {
+        .connect {
+          background-color: var(--color-primary);
+        }
+      }
 
-    a.connect:hover {
-      background-color: var(--color-primary);
-    }
+      &.active {
+        .connect {
+          background-color: #e60000;
+          border: 1px solid #fe0000;
+          background-image: url(images/icons/cf_icon_usb1_white.svg);
+          transition: none;
+        }
 
-    a.connect.active {
-      background-color: #e60000;
-      border: 1px solid #fe0000;
-      background-image: url(images/icons/cf_icon_usb1_white.svg);
-      transition: none;
-    }
-
-    a.connect.active:hover {
-      background-color: #f21212;
+        .connect:hover {
+          background-color: #f21212;
+        }
+      }
     }
   }
 }
@@ -130,7 +144,7 @@
   border: 1px solid red;
   background: white;
   margin: 20px;
-  margin-top: 12px;
+  margin-top: 7px;
   margin-bottom: 0px;
   margin-left: 10px;
   padding: 10px;
@@ -227,14 +241,13 @@
   }
 
   &.dropdown-dark {
-    background: #636363; /* NEW2 */
-    background: #3e403f; /* NEW */
-
-    border-color: #111 #0a0a0a black;
+    background: #3e403f;
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
     background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
     background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
     background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+
+    border-color: #111 #0a0a0a black;
     -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
     color:#a6a6a6;

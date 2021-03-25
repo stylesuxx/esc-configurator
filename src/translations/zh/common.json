@@ -1,11 +1,11 @@
 {
-  "port": "Port",
-  "baudRate": "Baud Rate",
-  "connect": "Connect",
-  "disconnect": "Disconnect",
+  "port": "埠號",
+  "baudRate": "鮑率",
+  "connect": "連接",
+  "disconnect": "中斷連接",
   "serialPermission": "Select Serial Port",
-  "showLog": "Show Log",
-  "hideLog": "Hide Log",
+  "showLog": "顯示日誌",
+  "hideLog": "隱藏日誌",
   "notePropsOff": "<strong>Note:</strong> Make sure you've taken the propellers <strong>OFF</strong> before doing anything on this tab.",
   "noteConnectPower": "<strong>Note:</strong> Connect power to the ESCs.",
   "commonParameters": "Common Parameters",
@@ -80,5 +80,11 @@
   "whatsNextHeader": "What's next?",
   "whatsNextText": "<p>If you want to see which features are upcoming, drop by in the <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com\" target=\"_blank\">github repository</a>. Also feel free to add a feature request if you have an idea that you want to see implemented.</p>",
   "openPortSelection": "Open Port Selection",
-  "versionUnsupported": "{{name}} version '{{version}}' (Layout {{layout}}) is not yet supported.<br/><br/>Let us know by opening an <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">issue</a>."
+  "versionUnsupported": "{{name}} version '{{version}}' (Layout {{layout}}) is not yet supported.<br/><br/>Let us know by opening an <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">issue</a>.",
+  "motorControl": "Motor Control",
+  "enableMotorControl": "Enable motor control",
+  "masterSpeed": "Master Speed",
+  "motorNr": "Motor {{index}}",
+  "homeDiscordHeader": "Join us on Discord!",
+  "homeDiscordText": "If you have any questions or need a quick helping hand, join us on our Discord server:"
 }

@@ -18,18 +18,14 @@ function PortPicker({
 }) {
   const { t } = useTranslation('common');
 
-  const portOptions = ports.map((item, index) => {
-    const info = item.getInfo();
-    const name = `${info.usbVendorId}:${info.usbProductId}`;
-    return (
-      <option
-        key={name}
-        value={index}
-      >
-        {name}
-      </option>
-    );
-  });
+  const portOptions = ports.map((name, index) => (
+    <option
+      key={name}
+      value={index}
+    >
+      {name}
+    </option>
+  ));
 
   const rates = [115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200];
   const rateElements = rates.map((rate) => (
@@ -49,55 +45,15 @@ function PortPicker({
     onChangePort(e.target.value);
   }
 
-  function ConnectionButton() {
-    if (open) {
-      return (
-        <>
-          <div className="connect_b">
-            <a
-              className="connect active"
-              href="#"
-              onClick={onDisconnect}
-            />
-          </div>
-
-          <a className="connect-state">
-            {t('disconnect')}
-          </a>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <div className="connect_b">
-          <a
-            className="connect"
-            href="#"
-            onClick={onConnect}
-          />
-        </div>
-
-        <a className="connect-state">
-          {t('connect')}
-        </a>
-      </>
-    );
-  }
-
   if(!hasSerial) {
     return (
       <div id="not-supported">
-        Sorry,
-        {' '}
-
         <b>
           Web Serial
         </b>
 
         {' '}
-        is not supported on this device,
-        make sure you&apos;re running the latest
+        is not supported on your browser. Make sure you&apos;re running an up to date Chromium based browser like
 
         {' '}
 
@@ -106,7 +62,27 @@ function PortPicker({
           rel="noreferrer"
           target="_blank"
         >
-          Chrome stable release
+          Chrome
+        </a>
+
+        {', '}
+
+        <a
+          href="https://vivaldi.com/download/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Vivaldi
+        </a>
+
+        {', '}
+
+        <a
+          href="https://www.microsoft.com/edge/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Edge
         </a>
 
         {' '}
@@ -139,10 +115,13 @@ function PortPicker({
         </div>}
 
       <div id="portsinput">
-        <div className="dropdown dropdown-dark">
+        <div
+          className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
+          disabled={open}
+        >
           <select
             className="dropdown-select"
-            disabled={open ? true : false}
+            disabled={open}
             id="port"
             onChange={changePort}
             title={t('port')}
@@ -151,11 +130,14 @@ function PortPicker({
           </select>
         </div>
 
-        <div className="dropdown dropdown-dark">
+        <div
+          className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
+          disabled={open}
+        >
           <select
             className="dropdown-select"
             defaultValue="115200"
-            disabled={open ? true : false}
+            disabled={open}
             id="baud"
             onChange={changeBaudRate}
             title={t('baudRate')}
@@ -166,6 +148,7 @@ function PortPicker({
 
         <div className="button-dark">
           <button
+            disabled={open}
             onClick={onSetPort}
             type="button"
           >
@@ -174,11 +157,19 @@ function PortPicker({
         </div>
       </div>
 
-      <div
-        className="connect_controls"
-        id="connect-button-wrapper"
-      >
-        <ConnectionButton />
+      <div id="connect-button-wrapper">
+        <button
+          className={`${open ? 'active' : ''}`}
+          name="connect"
+          onClick={open ? onDisconnect : onConnect}
+          type="button"
+        >
+          <span className="icon connect" />
+
+          <span className="connect-state">
+            {open ? t('disconnect') : t('connect')}
+          </span>
+        </button>
       </div>
     </div>
   );
@@ -193,7 +184,7 @@ PortPicker.propTypes = {
   onSetBaudRate: PropTypes.func.isRequired,
   onSetPort: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  ports: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  ports: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default PortPicker;

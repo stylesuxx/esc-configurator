@@ -46,6 +46,8 @@ function Statusbar({
           {t('statusbarPortUtilization')}
         </span>
 
+        {' '}
+
         <span>
           {downString}
         </span>
@@ -59,6 +61,8 @@ function Statusbar({
         <span>
           {t('statusbarPacketError')}
         </span>
+
+        {' '}
 
         <span>
           {packetErrors}
