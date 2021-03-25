@@ -66,30 +66,33 @@ class QueueProcessor {
     const timeout = this.currentCommand.timeout;
     await this.currentCommand.transmit();
 
-    // if there is no receive handler, just return. There is only one case in
-    // which no receive handler is needed and this is when nod data is expected
-    // to be sent back.
-    if(!this.currentCommand.receive) {
-      this.currentCommand.resolveCallback(true);
-      this.cleanUp();
-      this.processCommands();
+    // At this point the command might already have resolved
+    if(this.currentCommand) {
+      // if there is no receive handler, just return. There is only one case in
+      // which no receive handler is needed and this is when nod data is expected
+      // to be sent back.
+      if(!this.currentCommand.receive) {
+        this.currentCommand.resolveCallback(true);
+        this.cleanUp();
+        this.processCommands();
 
-      return;
-    }
-
-    this.currentCommand.timeoutFunct = setTimeout(() => {
-      /*
-       * If we are not currently processing, we can Immediately handle the
-       * timeout. Ohterwise we mark the command to be quit and it will
-       * timout after processing is done, in case not enough data was
-       * available.
-       */
-      if(!this.processing) {
-        this.resolveTimeout();
+        return;
       }
 
-      this.quit = true;
-    }, timeout);
+      this.currentCommand.timeoutFunct = setTimeout(() => {
+        /*
+         * If we are not currently processing, we can Immediately handle the
+         * timeout. Ohterwise we mark the command to be quit and it will
+         * timout after processing is done, in case not enough data was
+         * available.
+         */
+        if(!this.processing) {
+          this.resolveTimeout();
+        }
+
+        this.quit = true;
+      }, timeout);
+    }
   }
 
   async processCommand() {
