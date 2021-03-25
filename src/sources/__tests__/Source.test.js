@@ -17,10 +17,6 @@ test('Source without parameters', () => {
 test('blheliSource get versions', async() => {
   let versions = await blheliSource.getVersions();
   expect(versions).not.toBe({});
-
-  navigator.onLine = false;
-  versions = await blheliSource.getVersions();
-  expect(versions).not.toBe({});
 });
 
 test('blheliSource get escs', async() => {
