@@ -371,13 +371,9 @@ class App extends Component {
     try {
       if(this.lastConnected === 0) {
         const escs = await this.serial.enable4WayInterface();
+        connected = escs.connectedESCs;
 
-        connected = 0;
-        if(escs) {
-          connected = escs.connectedESCs;
-        }
-
-        this.serial.fourWayStart();
+        await this.serial.fourWayStart();
 
         // This delay is needed to allow the ESC's to initialize
         await delay(1200);

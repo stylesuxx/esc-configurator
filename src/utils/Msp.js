@@ -162,9 +162,8 @@ class Msp {
             return resolve(response);
           }
 
-          return reject(new Error(`code: ${code} - crc failed`));
-
           this.increasePacketErrors(1);
+          return reject(new Error(`code: ${code} - crc failed`));
         } break;
 
         default: {
