@@ -86,5 +86,7 @@
   "masterSpeed": "Geschwindigkeit aller Motoren",
   "motorNr": "Motor {{index}}",
   "homeDiscordHeader": "Komm auf unseren Discord Server!",
-  "homeDiscordText": "Wenn du Fragen hast oder rasche Hilfe brauchst, schau bei uns am Discord Server vorbei:"
+  "homeDiscordText": "Wenn du Fragen hast oder rasche Hilfe brauchst, schau bei uns am Discord Server vorbei:",
+  "homeChinaHeader": "For our Chinese Visiotors",
+  "homeChinaText": "Tell your friends behind the great firewall of China, that they can reach us via a local <a href=\"https://esc-configurator.pitronic.top/\">mirror directly in China<a>."
 }
