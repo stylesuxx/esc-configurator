@@ -139,6 +139,14 @@ function Home() {
 
           <div className="summary-section">
             <h2>
+              {t('homeChinaHeader')}
+            </h2>
+
+            <div dangerouslySetInnerHTML={{ __html: t('homeChinaText') }} />
+          </div>
+
+          <div className="summary-section">
+            <h2>
               {t('homeContributionHeader')}
             </h2>
 
