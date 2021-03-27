@@ -9109,6 +9109,11 @@ react-gtm-module@^2.0.11:
   resolved "https://registry.yarnpkg.com/react-gtm-module/-/react-gtm-module-2.0.11.tgz#14484dac8257acd93614e347c32da9c5ac524206"
   integrity sha512-8gyj4TTxeP7eEyc2QKawEuQoAZdjKvMY4pgWfycGmqGByhs17fR+zEBs0JUDq4US/l+vbTl+6zvUIx27iDo/Vw==
 
+react-highlight-within-textarea@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-highlight-within-textarea/-/react-highlight-within-textarea-1.0.1.tgz#18bce2d58ddf5d851adc6d56bdc543ec6a7904dc"
+  integrity sha512-jUeCsZK/8nH/bZSJ6mim6pHJDaU6a8KuOs714q6MvTgliCTO6UPkYvPZ7orCzTmbmyxdFBYHUjJe0oHTORJPaQ==
+
 react-i18next@^11.8.8:
   version "11.8.8"
   resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.8.8.tgz#23d34518c784f2ada7cec41cfe439ac4ae51875c"

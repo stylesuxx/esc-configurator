@@ -21,6 +21,7 @@ import Statusbar from '../../Components/Statusbar';
 import CookieConsent from '../../Components/CookieConsent';
 import MainContent from '../../Components/MainContent';
 import AppSettings from '../../Components/AppSettings';
+import MelodyEditor from '../../Components/MelodyEditor';
 
 import Serial from '../../utils/Serial';
 
@@ -71,6 +72,7 @@ class App extends Component {
     this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
     this.handleChangePort = this.handleChangePort.bind(this);
     this.handleCloseSettings = this.handleCloseSettings.bind(this);
+    this.handleCloseMelodyEditor = this.handleCloseMelodyEditor.bind(this);
     this.handleOpenSettings = this.handleOpenSettings.bind(this);
     this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
@@ -108,6 +110,7 @@ class App extends Component {
       },
       language: 'en',
       showSettings: false,
+      showMelodyEditor: true,
       appSettings: {
         directInput: {
           type: 'boolean',
@@ -810,6 +813,10 @@ class App extends Component {
     this.setState({ showSettings: false });
   }
 
+  handleCloseMelodyEditor() {
+    this.setState({ showMelodyEditor: false });
+  }
+
   handleOpenSettings() {
     this.setState({ showSettings: true });
   }
@@ -840,6 +847,7 @@ class App extends Component {
       serial,
       showSettings,
       appSettings,
+      showMelodyEditor,
     } = this.state;
 
     if (!checked) {
@@ -954,6 +962,18 @@ class App extends Component {
             onClose={this.handleCloseSettings}
             onUpdate={this.handleUpdateSettings}
             settings={appSettings}
+          />}
+
+        {showMelodyEditor &&
+          <MelodyEditor
+            melodies={[
+              "Melody:o=3,b=900,d=4:32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.",
+              "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.",
+              "Melody:o=3,b=900,d=4:32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.,32c4#.,32d5#.",
+              "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#."
+            ]}
+            onClose={this.handleCloseMelodyEditor}
+            onSave={this.handleMelodySave}
           />}
 
         <ToastContainer />

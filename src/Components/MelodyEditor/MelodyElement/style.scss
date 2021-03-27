@@ -1,0 +1,57 @@
+.esc-melody-wrapper {
+  width: 50%;
+
+  .esc-melody {
+    flex: 1;
+    margin: 10px;
+    position: relative;
+
+    header {
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid silver;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .default-btn {
+        width: auto;
+        display: flex;
+
+        button {
+          margin-left: 10px;
+          width: 100px;
+        }
+
+        button.accepted {
+          background: var(--color-tertiary);
+          color: white;
+        }
+      }
+
+      .index {
+        flex: 1;
+        h3 {
+          padding-top: 5px;
+        }
+      }
+    }
+
+    .editor-wrapper {
+      border: 1px solid silver;
+      padding: 5px;
+      display: flex;
+
+      .editor {
+        width: 100%;
+        font-family: monospace;
+
+        textarea {
+          width: 100%;
+          resize: none;
+          border: 0px;
+        }
+      }
+    }
+  }
+}
