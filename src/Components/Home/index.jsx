@@ -13,11 +13,21 @@ function Home() {
     return(
       <div className="column third_left text1">
         <div className="wrap">
-          <h2>
-            {t('homeDisclaimerHeader')}
-          </h2>
+          <div className="summary-section">
+            <h2>
+              {t('homeDisclaimerHeader')}
+            </h2>
 
-          <div dangerouslySetInnerHTML={{ __html: t('homeDisclamierText') }} />
+            <div dangerouslySetInnerHTML={{ __html: t('homeDisclamierText') }} />
+          </div>
+
+          <div className="summary-section">
+            <h2>
+              {t('homeAttributionHeader')}
+            </h2>
+
+            <div dangerouslySetInnerHTML={{ __html: t('homeAttributionText') }} />
+          </div>
         </div>
       </div>
     );
