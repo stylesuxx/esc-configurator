@@ -89,8 +89,7 @@ function MelodyEditor({
   }
 
   function handleSave() {
-    console.log('Save all melodies', validMelodies);
-    //onSave();
+    onSave(validMelodies);
   }
 
   function handlePlay() {
@@ -249,6 +248,7 @@ function MelodyEditor({
         <div className="default-btn button-wrapper">
           { !sync &&
             <button
+              disabled={writing}
               onClick={isAnyPlaying ? handleStopAll : handlePlayAll}
               type="button"
             >
@@ -256,7 +256,7 @@ function MelodyEditor({
             </button>}
 
           <button
-            disabled={!allAccepted || isAnyPlaying}
+            disabled={!allAccepted || isAnyPlaying || writing}
             onClick={handleSave}
             type="button"
           >

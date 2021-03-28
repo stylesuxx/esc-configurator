@@ -791,6 +791,7 @@ class App extends Component {
 
     this.setState({
       open: false,
+      settings: {},
       escs: [],
       actions: {
         isReading: false,
@@ -826,8 +827,14 @@ class App extends Component {
     this.setState({ showSettings: true });
   }
 
-  handleMelodySave() {
-    console.log('Save melodies');
+  handleMelodySave(melodies) {
+    const { escs } = this.state;
+    const converted = melodies.map((melody) => Rtttl.toBluejayStartupMelody(melody));
+    for(let i = 0; i < converted.length; i += 1) {
+      escs[i].individualSettings.STARTUP_MELODY = converted[i].startupMelodyData;
+    }
+    this.setState({ escs });
+    this.handleWriteSetup();
   }
 
   handleOpenMelodyEditor() {
@@ -997,7 +1004,7 @@ class App extends Component {
             melodies={escMelodies}
             onClose={this.handleCloseMelodyEditor}
             onSave={this.handleMelodySave}
-            writing={false}
+            writing={actions.isWriting}
           />}
 
         <ToastContainer />
