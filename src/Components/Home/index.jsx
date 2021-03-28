@@ -18,7 +18,7 @@ function Home() {
               {t('homeDisclaimerHeader')}
             </h2>
 
-            <div dangerouslySetInnerHTML={{ __html: t('homeDisclamierText') }} />
+            <div dangerouslySetInnerHTML={{ __html: t('homeDisclaimerText') }} />
           </div>
 
           <div className="summary-section">
