@@ -27,6 +27,7 @@ function MelodyElement({
   const [isValid, setIsValid] = useState(false);
   const [isAccepted, setIsAccepted] = useState(accepted);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     if(currentMelody) {
@@ -79,6 +80,34 @@ function MelodyElement({
     onAccept(true);
   }
 
+  function playMelody() {
+    setDisabled(true);
+    const parsedRtttl = Rtttl.parse(currentMelody);
+    const audioContext = new AudioContext();
+    play(parsedRtttl.melody, audioContext);
+  }
+
+  function play(melody, audioContext) {
+    if (melody.length === 0) {
+      setDisabled(false);
+      return;
+    }
+
+    const osc = audioContext.createOscillator();
+    osc.type = 'square';
+    osc.start(0);
+
+    const note = melody[0];
+    console.log(note);
+    osc.frequency.value = note.frequency;
+    osc.connect(audioContext.destination);
+
+    setTimeout(() => {
+      osc.disconnect(audioContext.destination);
+      play(melody.slice(1), audioContext, osc);
+    }, note.duration);
+  }
+
   return (
     <div className="esc-melody-wrapper">
       <div
@@ -95,6 +124,8 @@ function MelodyElement({
           <div className="default-btn">
             <button
               className="play"
+              disabled={disabled}
+              onClick={playMelody}
               type="button"
             >
               {t('common:melodyEditorPlay')}
@@ -102,7 +133,7 @@ function MelodyElement({
 
             <button
               className={`accept ${isAccepted ? 'accepted' : ''}`}
-              disabled={!isValid}
+              disabled={!isValid || disabled}
               onClick={acceptMelody}
               type="button"
             >
@@ -114,6 +145,7 @@ function MelodyElement({
         <div className="editor-wrapper">
           <HighlightWithinTextarea
             containerClassName="editor"
+            disabled={disabled}
             highlight={highlight}
             onChange={validateMelody}
             rows={10}

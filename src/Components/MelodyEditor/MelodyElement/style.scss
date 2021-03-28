@@ -50,6 +50,10 @@
           width: 100%;
           resize: none;
           border: 0px;
+
+          &[disabled] {
+            opacity: 0.75;
+          }
         }
       }
     }
