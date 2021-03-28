@@ -3,6 +3,8 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useImperativeHandle,
+  forwardRef,
 } from 'react';
 import {
   HighlightWithinTextarea
@@ -23,7 +25,7 @@ function MelodyElement({
   onValid,
   onPlay,
   onStop,
-}) {
+}, ref) {
   const { t } = useTranslation();
   const [currentMelody, setCurrentMelody] = useState(melody);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
@@ -33,6 +35,12 @@ function MelodyElement({
   const [isPlayable, setIsPlayable] = useState(false);
   const [playing, setPlaying] = useState(false);
   const stop = useRef(false);
+
+  useImperativeHandle(ref, () => ({
+    play() {
+      playMelody();
+    }
+  }));
 
   useEffect(() => {
     if(currentMelody) {
@@ -187,4 +195,4 @@ MelodyElement.propTypes = {
   onValid: PropTypes.func.isRequired,
 };
 
-export default MelodyElement;
+export default forwardRef(MelodyElement);

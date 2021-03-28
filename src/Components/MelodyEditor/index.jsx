@@ -22,6 +22,8 @@ function MelodyEditor({
 }) {
   const defaultMelodies = melodies.map(() => null);
   const defaultAccepted = melodies.map(() => null);
+  const references = melodies.map(() => useRef());
+
   const { t } = useTranslation();
   const [currentMelodies, setCurrentMelodies] = useState(melodies);
   const [allAccepted, setAllAccepted] = useState(false);
@@ -77,7 +79,6 @@ function MelodyEditor({
   }
 
   function handleValid(index, melody) {
-    console.log('Set valid', index, melody);
     validMelodies[index] = melody;
     const newValidMelodies = [...validMelodies];
     setValidMelodies(newValidMelodies);
@@ -105,7 +106,11 @@ function MelodyEditor({
   }
 
   function handlePlayAll() {
-    console.log('Play all');
+    setIsAnyPlaying(true);
+    for(let i = 0; i < references.length; i += 1) {
+      const child = references[i];
+      child.current.play();
+    }
   }
 
   function toggleSync() {
@@ -138,6 +143,7 @@ function MelodyEditor({
         onPlay={handlePlay}
         onStop={handleStop}
         onValid={handleValidMelody}
+        ref={references[index]}
       />
     );
   }
@@ -185,9 +191,6 @@ function MelodyEditor({
       />
     )), [currentMelodies]
   );
-
-  console.log(validMelodies);
-
 
   const melodyElement = useMemo(
     () => (
