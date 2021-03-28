@@ -18,6 +18,7 @@ function MainContent({
   progress,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
+  onOpenMelodyEditor,
   onSelectFirmwareForAll,
   onSettingsUpdate,
   onReadEscs,
@@ -45,6 +46,7 @@ function MainContent({
   const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
+  const showMelodyEditor = settings.STARTUP_MELODY ? true : false;
 
   if (!open) {
     return (
@@ -108,11 +110,13 @@ function MainContent({
         canRead={canRead}
         canResetDefaults={canWrite}
         canWrite={canWrite}
+        onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
         onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
+        showMelodyEditor={showMelodyEditor}
       />
     </>
   );
@@ -141,6 +145,7 @@ MainContent.propTypes = {
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
+  onOpenMelodyEditor: PropTypes.func.isRequired,
   onReadEscs: PropTypes.func.isRequired,
   onResetDefaultls: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,

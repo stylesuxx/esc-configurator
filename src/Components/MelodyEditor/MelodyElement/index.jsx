@@ -17,7 +17,7 @@ import {
 } from 'react-i18next';
 import './style.scss';
 
-function MelodyElement({
+const MelodyElement = forwardRef(({
   label,
   melody,
   accepted,
@@ -25,7 +25,7 @@ function MelodyElement({
   onValid,
   onPlay,
   onStop,
-}, ref) {
+}, ref) => {
   const { t } = useTranslation();
   const [currentMelody, setCurrentMelody] = useState(melody);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
@@ -186,7 +186,9 @@ function MelodyElement({
       </div>
     </div>
   );
-}
+});
+
+MelodyElement.displayName = 'MelodyElement';
 
 MelodyElement.propTypes = {
   accepted: PropTypes.bool.isRequired,
@@ -198,4 +200,4 @@ MelodyElement.propTypes = {
   onValid: PropTypes.func.isRequired,
 };
 
-export default forwardRef(MelodyElement);
+export default MelodyElement;

@@ -46,6 +46,10 @@
         width: 100%;
         font-family: monospace;
 
+        mark {
+          background: #FFCCCB;
+        }
+
         textarea {
           width: 100%;
           resize: none;

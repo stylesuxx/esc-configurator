@@ -188,7 +188,7 @@ function MelodyEditor({
   const melodyElements = useMemo(
     () => currentMelodies.map((melody, index) => (
       <MelodyElementSingle
-        accepted={acceptedMelodies[index]}
+        accepted={acceptedMelodies[index] ? true : false}
         index={index}
         key={index}
         label={`ESC ${index + 1}`}
@@ -202,7 +202,7 @@ function MelodyEditor({
   const melodyElement = useMemo(
     () => (
       <MelodyElementAll
-        accepted={acceptedMelodies[0]}
+        accepted={acceptedMelodies[0] ? true : false}
         label={t("common:allEscs")}
         melody={currentMelodies[0]}
       />
