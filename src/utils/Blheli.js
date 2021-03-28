@@ -32,14 +32,14 @@ class Blheli {
           object[prop] = settingsUint8Array[setting.offset] << 8 |
             settingsUint8Array[setting.offset + 1];
         } else if (setting.size > 2) {
-          object[prop] = String.fromCharCode.apply(
-            undefined,
-            settingsUint8Array.subarray(setting.offset).
-              subarray(
-                0,
-                setting.size
-              )
-          ).trim();
+          if(prop === 'STARTUP_MELODY') {
+            object[prop] = settingsUint8Array.subarray(setting.offset).subarray(0, setting.size);
+          } else {
+            object[prop] = String.fromCharCode.apply(
+              undefined,
+              settingsUint8Array.subarray(setting.offset).subarray(0, setting.size)
+            ).trim();
+          }
         } else {
           throw new Error('Logic error');
         }
@@ -67,9 +67,11 @@ class Blheli {
         } else if (setting.size > 2) {
           const { length } = settingsObject[prop];
           for (let i = 0; i < setting.size; i += 1) {
-            array[setting.offset + i] = i < length ?
-              settingsObject[prop].charCodeAt(i) :
-              ' '.charCodeAt(0);
+            if(prop === 'STARTUP_MELODY') {
+              array[setting.offset + i] = i < length ? settingsObject[prop][i] % 256 : 0;
+            } else {
+              array[setting.offset + i] = i < length ? settingsObject[prop].charCodeAt(i) : ' '.charCodeAt(0);
+            }
           }
         } else {
           throw new Error('Logic error');

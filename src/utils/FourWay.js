@@ -400,6 +400,7 @@ class FourWay {
       delete flash.checksum;
     }
 
+    console.log(flash);
     return flash;
   }
 
@@ -412,6 +413,7 @@ class FourWay {
 
     if (flash) {
       const blheli = new Blheli();
+      console.log(settings);
       const newSettingsArray = blheli.settingsArray(settings, esc.layout, esc.layoutSize);
       if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new Error('byteLength of buffers do not match');
