@@ -3,6 +3,7 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  useRef,
 } from 'react';
 
 import {
@@ -20,17 +21,19 @@ function MelodyEditor({
   writing,
 }) {
   const defaultMelodies = melodies.map(() => null);
-  const defaultAccepted = melodies.map(() => false);
+  const defaultAccepted = melodies.map(() => null);
   const { t } = useTranslation();
   const [currentMelodies, setCurrentMelodies] = useState(melodies);
   const [allAccepted, setAllAccepted] = useState(false);
   const [sync, setSync] = useState(false);
   const [validMelodies, setValidMelodies] = useState(defaultMelodies);
-  const [accepted, setAccepted] = useState(defaultAccepted);
+  const [acceptedMelodies, setAcceptedMelodies] = useState(defaultAccepted);
+  const [isAnyPlaying, setIsAnyPlaying] = useState(false);
+  const totalPlaying = useRef(0);
 
   useEffect(() => {
     checkAllAccepted();
-  }, [accepted, validMelodies]);
+  }, [acceptedMelodies]);
 
   function handleClose() {
     onClose();
@@ -38,16 +41,15 @@ function MelodyEditor({
 
   function checkAllAccepted() {
     let allAccepted = true;
-    for(let i = 0; i < accepted.length; i += 1) {
-      if(!accepted[i]) {
+    for(let i = 0; i < acceptedMelodies.length; i += 1) {
+      if(!acceptedMelodies[i]) {
         allAccepted = false;
         break;
       }
     }
 
-    console.log("all accepted", allAccepted, accepted);
     if(allAccepted) {
-      const currentMelodies = [...validMelodies];
+      const currentMelodies = [...acceptedMelodies];
       setCurrentMelodies(currentMelodies);
     }
 
@@ -55,12 +57,11 @@ function MelodyEditor({
   }
 
   function handleAcceptAll(accept) {
-    const acceptedNew = accepted.map(() => accept);
-    setAccepted(acceptedNew);
+    const acceptedMelodiesNew = acceptedMelodies.map(() => accept);
+    setAcceptedMelodies(acceptedMelodiesNew);
   }
 
   function handleValidAll(melody) {
-    console.log('all', melody);
     const validMelodies = [];
     for (let i = 0; i < melodies.length; i += 1) {
       validMelodies.push(melody);
@@ -70,12 +71,13 @@ function MelodyEditor({
   }
 
   function handleAccept(index, accept) {
-    accepted[index] = accept;
-    const newAccepted = [...accepted];
-    setAccepted(newAccepted);
+    acceptedMelodies[index] = accept;
+    const newAccepted = [...acceptedMelodies];
+    setAcceptedMelodies(newAccepted);
   }
 
   function handleValid(index, melody) {
+    console.log('Set valid', index, melody);
     validMelodies[index] = melody;
     const newValidMelodies = [...validMelodies];
     setValidMelodies(newValidMelodies);
@@ -88,6 +90,18 @@ function MelodyEditor({
   function handleSave() {
     console.log('Save all melodies', validMelodies);
     //onSave();
+  }
+
+  function handlePlay() {
+    totalPlaying.current += 1;
+    setIsAnyPlaying(true);
+  }
+
+  function handleStop() {
+    totalPlaying.current -= 1;
+    if(totalPlaying.current === 0) {
+      setIsAnyPlaying(false);
+    }
   }
 
   function handlePlayAll() {
@@ -121,6 +135,8 @@ function MelodyEditor({
         label={label}
         melody={melody}
         onAccept={handleAcceptMelody}
+        onPlay={handlePlay}
+        onStop={handleStop}
         onValid={handleValidMelody}
       />
     );
@@ -144,6 +160,8 @@ function MelodyEditor({
         label={label}
         melody={melody}
         onAccept={handleAcceptAll}
+        onPlay={handlePlay}
+        onStop={handleStop}
         onValid={handleValidAll}
       />
     );
@@ -157,7 +175,7 @@ function MelodyEditor({
   const melodyElements = useMemo(
     () => currentMelodies.map((melody, index) => (
       <MelodyElementSingle
-        accepted={accepted[index]}
+        accepted={acceptedMelodies[index]}
         index={index}
         key={index}
         label={`ESC ${index + 1}`}
@@ -174,7 +192,7 @@ function MelodyEditor({
   const melodyElement = useMemo(
     () => (
       <MelodyElementAll
-        accepted={accepted[0]}
+        accepted={acceptedMelodies[0]}
         label={t("common:allEscs")}
         melody={currentMelodies[0]}
       />
@@ -203,6 +221,7 @@ function MelodyEditor({
 
         <div className="sync-wrapper">
           <Checkbox
+            disabled={isAnyPlaying}
             hint={t("common:syncMelodiesHint")}
             label={t("common:syncMelodies")}
             name="syncMelodies"
@@ -220,6 +239,7 @@ function MelodyEditor({
         <div className="default-btn button-wrapper">
           { !sync &&
             <button
+              disabled={isAnyPlaying}
               onClick={handlePlayAll}
               type="button"
             >
@@ -227,7 +247,7 @@ function MelodyEditor({
             </button>}
 
           <button
-            disabled={!allAccepted}
+            disabled={!allAccepted || isAnyPlaying}
             onClick={handleSave}
             type="button"
           >

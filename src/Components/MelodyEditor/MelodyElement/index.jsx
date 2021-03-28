@@ -21,14 +21,16 @@ function MelodyElement({
   accepted,
   onAccept,
   onValid,
+  onPlay,
+  onStop,
 }) {
   const { t } = useTranslation();
   const [currentMelody, setCurrentMelody] = useState(melody);
-  const [highlight, setHighlight] = useState(/[ae]/g);
+  const [acceptedMelody, setAcceptedMelody] = useState(null);
+  const [highlight, setHighlight] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const [isAccepted, setIsAccepted] = useState(accepted);
   const [isPlayable, setIsPlayable] = useState(false);
-  const [acceptedMelody, setAcceptedMelody] = useState(null);
   const [playing, setPlaying] = useState(false);
   const stop = useRef(false);
 
@@ -64,9 +66,8 @@ function MelodyElement({
     }
   }, [currentMelody]);
 
-  function validateMelody(e) {
+  function updateMelody(e) {
     const melody = e.target.value;
-
     setCurrentMelody(melody);
 
     // If an accepted melody changes
@@ -86,7 +87,7 @@ function MelodyElement({
     setCurrentMelody(convertedMelody);
     setIsAccepted(true);
 
-    onAccept(true);
+    onAccept(convertedMelody);
   }
 
   function stopMelody() {
@@ -98,6 +99,7 @@ function MelodyElement({
     try {
       const parsedRtttl = Rtttl.parse(currentMelody);
       const audioContext = new AudioContext();
+      onPlay();
       play(parsedRtttl.melody, audioContext);
     } catch(e) {
       setIsValid(false);
@@ -110,6 +112,7 @@ function MelodyElement({
     if (melody.length === 0 || stop.current) {
       stop.current = false;
       setPlaying(false);
+      onStop();
       return;
     }
 
@@ -129,10 +132,7 @@ function MelodyElement({
 
   return (
     <div className="esc-melody-wrapper">
-      <div
-        className="esc-melody"
-        onChange={validateMelody}
-      >
+      <div className="esc-melody">
         <header>
           <div className="index">
             <h3>
@@ -166,7 +166,7 @@ function MelodyElement({
             containerClassName="editor"
             disabled={playing}
             highlight={highlight}
-            onChange={validateMelody}
+            onChange={updateMelody}
             rows={10}
             spellCheck="false"
             value={currentMelody}
@@ -182,6 +182,8 @@ MelodyElement.propTypes = {
   label: PropTypes.string.isRequired,
   melody: PropTypes.string.isRequired,
   onAccept: PropTypes.func.isRequired,
+  onPlay: PropTypes.func.isRequired,
+  onStop: PropTypes.func.isRequired,
   onValid: PropTypes.func.isRequired,
 };
 
