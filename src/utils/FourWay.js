@@ -311,12 +311,8 @@ class FourWay {
 
         if(newLayout) {
           layout = newLayout;
-
           flash.settingsArray = settingsArray;
-          flash.settings = blheli.settingsObject(
-            settingsArray,
-            layout
-          );
+          flash.settings = blheli.settingsObject(settingsArray, layout);
         }
 
         const layoutRevision = flash.settings.LAYOUT_REVISION.toString();

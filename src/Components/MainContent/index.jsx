@@ -46,7 +46,7 @@ function MainContent({
   const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
-  const showMelodyEditor = settings.STARTUP_MELODY ? true : false;
+  const showMelodyEditor = escs.length > 0 && escs[0].individualSettings.STARTUP_MELODY ? true : false;
 
   if (!open) {
     return (
