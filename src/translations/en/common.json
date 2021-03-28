@@ -40,6 +40,7 @@
   "escButtonSelect": "Flash",
   "defaultChangelogTitle": "Changelog",
   "changelogClose": "Close",
+  "_Damping mode (Complementary PWM)": "Damping mode (Complementary PWM)",
   "homeExperimental": "This is an experimental web app to configure ESC firmware online.",
   "homeVersionInfo": "You will always find the latest stable version here. Currently the following firmwares are supported:",
   "homeContributionHeader": "Contributing",
