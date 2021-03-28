@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.9.1",
     "items": [
       "Add attribution to original project",
       "Properly display ESCs, even if their settings can not be read",
