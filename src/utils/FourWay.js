@@ -305,6 +305,7 @@ class FourWay {
             newLayout = BLUEJAY_EEPROM.LAYOUT;
             layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
             defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
+            settingsArray = (await this.read(BLUEJAY_EEPROM.EEPROM_OFFSET, layoutSize)).params;
           } break;
         }
 
@@ -400,7 +401,6 @@ class FourWay {
       delete flash.checksum;
     }
 
-    console.log(flash);
     return flash;
   }
 
@@ -413,7 +413,6 @@ class FourWay {
 
     if (flash) {
       const blheli = new Blheli();
-      console.log(settings);
       const newSettingsArray = blheli.settingsArray(settings, esc.layout, esc.layoutSize);
       if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new Error('byteLength of buffers do not match');

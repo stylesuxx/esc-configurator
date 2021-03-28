@@ -50,6 +50,12 @@
           background: #FFCCCB;
         }
 
+        &.playing {
+          mark {
+            background: #CCFFCB;
+          }
+        }
+
         textarea {
           width: 100%;
           resize: none;

@@ -35,6 +35,7 @@ const MelodyElement = forwardRef(({
   const [isPlayable, setIsPlayable] = useState(false);
   const [playing, setPlaying] = useState(false);
   const stop = useRef(false);
+  const highlighted = useRef(null);
 
   useImperativeHandle(ref, () => ({
     play() {
@@ -77,6 +78,19 @@ const MelodyElement = forwardRef(({
     }
   }, [currentMelody]);
 
+  function highlightNote(index) {
+    const elements = currentMelody.split(':');
+    const notes = elements[2].split(',');
+
+    let from = elements[0].length + elements[1].length + 2;
+    for(let i = 0; i < index; i += 1) {
+      from += notes[i].length + 1;
+    }
+    const to = from + notes[index].length;
+
+    setHighlight([from, to]);
+  }
+
   function updateMelody(e) {
     const melody = e.target.value;
     setCurrentMelody(melody);
@@ -107,11 +121,17 @@ const MelodyElement = forwardRef(({
 
   function playMelody() {
     setPlaying(true);
+    highlighted.current = highlight;
     try {
       const parsedRtttl = Rtttl.parse(currentMelody);
       const audioContext = new AudioContext();
       onPlay();
-      play(parsedRtttl.melody, audioContext);
+
+      const osc = audioContext.createOscillator();
+      osc.type = 'square';
+      osc.start(0);
+
+      play(parsedRtttl.melody, audioContext, osc, 0);
     } catch(e) {
       setIsValid(false);
       setIsPlayable(false);
@@ -119,17 +139,16 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function play(melody, audioContext) {
+  function play(melody, audioContext, osc, index) {
     if (melody.length === 0 || stop.current) {
       stop.current = false;
       setPlaying(false);
+      setHighlight(highlighted.current);
       onStop();
       return;
     }
 
-    const osc = audioContext.createOscillator();
-    osc.type = 'square';
-    osc.start(0);
+    highlightNote(index);
 
     const note = melody[0];
     osc.frequency.value = note.frequency;
@@ -137,7 +156,7 @@ const MelodyElement = forwardRef(({
 
     setTimeout(() => {
       osc.disconnect(audioContext.destination);
-      play(melody.slice(1), audioContext, osc);
+      play(melody.slice(1), audioContext, osc, index += 1);
     }, note.duration);
   }
 
@@ -174,7 +193,7 @@ const MelodyElement = forwardRef(({
 
         <div className="editor-wrapper">
           <HighlightWithinTextarea
-            containerClassName="editor"
+            containerClassName={`editor ${playing ? 'playing' : ''}`}
             disabled={playing}
             highlight={highlight}
             onChange={updateMelody}

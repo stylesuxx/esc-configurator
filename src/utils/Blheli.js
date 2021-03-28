@@ -20,25 +20,18 @@ class Blheli {
     const object = {};
 
     for (const prop in layout) {
-      if (Object.prototype.hasOwnProperty.call(
-        layout,
-        prop
-      )) {
+      if (Object.prototype.hasOwnProperty.call(layout, prop)) {
         const setting = layout[prop];
 
         if (setting.size === 1) {
           object[prop] = settingsUint8Array[setting.offset];
         } else if (setting.size === 2) {
-          object[prop] = settingsUint8Array[setting.offset] << 8 |
-            settingsUint8Array[setting.offset + 1];
+          object[prop] = settingsUint8Array[setting.offset] << 8 | settingsUint8Array[setting.offset + 1];
         } else if (setting.size > 2) {
           if(prop === 'STARTUP_MELODY') {
             object[prop] = settingsUint8Array.subarray(setting.offset).subarray(0, setting.size);
           } else {
-            object[prop] = String.fromCharCode.apply(
-              undefined,
-              settingsUint8Array.subarray(setting.offset).subarray(0, setting.size)
-            ).trim();
+            object[prop] = String.fromCharCode.apply(undefined, settingsUint8Array.subarray(setting.offset).subarray(0, setting.size)).trim();
           }
         } else {
           throw new Error('Logic error');

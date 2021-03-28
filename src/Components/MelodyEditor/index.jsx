@@ -37,7 +37,7 @@ function MelodyEditor({
     checkAllAccepted();
   }, [acceptedMelodies]);
 
-  function handleClose() {
+  function handleClose(e) {
     onClose();
   }
 
