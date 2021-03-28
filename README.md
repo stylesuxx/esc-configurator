@@ -7,7 +7,7 @@ A progressive web-app to flash your BLHELI_S capable ESC's directly from the web
 
 > The latest state of the master branch can be [viewed in the browser](https://esc-configurator.com)
 
-This is basically a complete re-write of the original BLHELI_S configurator. Some bits and pieces have been re-used - mainly the ones concerning the actual flashing part.
+This project is basically a re-write and clean up of the original [Blheli configurator](https://github.com/blheli-configurator/blheli-configurator). Some bits and pieces have been re-used - mainly the ones concerning the actual flashing part.
 
 I did this since I was interested in having this as an web app, but also because the original BLHELI_S configurator code was too much for me to re-factor and I thought I might be able to re-write it in the same amount of time.
 

@@ -87,5 +87,10 @@
   "masterSpeed": "Master Speed",
   "motorNr": "Motor {{index}}",
   "homeDiscordHeader": "Join us on Discord!",
-  "homeDiscordText": "If you have any questions or need a quick helping hand, join us on our Discord server:"
+  "homeDiscordText": "If you have any questions or need a quick helping hand, join us on our Discord server:",
+  "homeChinaHeader": "For our Chinese Visiotors",
+  "homeChinaText": "Tell your friends behind the great firewall of China, that they can reach us via a local <a href=\"https://esc-configurator.pitronic.top/\">mirror directly in China<a>.",
+  "melodyEditor": "Melody Editor",
+  "homeAttributionHeader": "Attribution",
+  "homeAttributionText": "This project was heavily inspired by the <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">Blheli Configurator</a>. Most of the UI has been re-written from scratch but a lot of the low level stuff related to flashing and firmware handling have been re-used - so a big shout out to everyone involved in the original Blheli Configurator."
 }

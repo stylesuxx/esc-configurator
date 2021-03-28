@@ -13,11 +13,21 @@ function Home() {
     return(
       <div className="column third_left text1">
         <div className="wrap">
-          <h2>
-            {t('homeDisclaimerHeader')}
-          </h2>
+          <div className="summary-section">
+            <h2>
+              {t('homeDisclaimerHeader')}
+            </h2>
 
-          <div dangerouslySetInnerHTML={{ __html: t('homeDisclamierText') }} />
+            <div dangerouslySetInnerHTML={{ __html: t('homeDisclamierText') }} />
+          </div>
+
+          <div className="summary-section">
+            <h2>
+              {t('homeAttributionHeader')}
+            </h2>
+
+            <div dangerouslySetInnerHTML={{ __html: t('homeAttributionText') }} />
+          </div>
         </div>
       </div>
     );
@@ -135,6 +145,14 @@ function Home() {
                 src="https://camo.githubusercontent.com/74d2e4746c6f20a2cf36068cd18d092724801f7ccd17e6bdce62e94d31f9ccb2/68747470733a2f2f696d672e736869656c64732e696f2f646973636f72642f3832323935323731353934343436303336382e7376673f6c6162656c3d266c6f676f3d646973636f7264266c6f676f436f6c6f723d66666666666626636f6c6f723d373338394438266c6162656c436f6c6f723d364137454332"
               />
             </a>
+          </div>
+
+          <div className="summary-section">
+            <h2>
+              {t('homeChinaHeader')}
+            </h2>
+
+            <div dangerouslySetInnerHTML={{ __html: t('homeChinaText') }} />
           </div>
 
           <div className="summary-section">
