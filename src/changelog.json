@@ -1,5 +1,13 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Add attribution to original project",
+      "Properly display ESCs, even if their settings can not be read",
+      "Link to chinese mirror"
+    ]
+  },
+  {
     "title": "0.9.0",
     "items": [
       "Added netlify badge",

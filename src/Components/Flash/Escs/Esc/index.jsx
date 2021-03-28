@@ -25,16 +25,23 @@ function Esc({
   const settings = esc.individualSettings;
   const currentSettings = settings;
   const settingsDescriptions = esc.individualSettingsDescriptions;
-  const revision = settings ? `${settings.MAIN_REVISION}.${settings.SUB_REVISION}` : 'UNSUPPORTED';
+
+  let revision = 'Unsupported/Unrecognized';
+  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+  }
 
   let make = '';
   if (esc.make) {
     make = `${esc.make}, `;
   }
 
-  let name = settings ? (settings.NAME).trim() : '';
-  if (name.length > 0) {
-    name = `, ${name}`;
+  let name = '';
+  if(settings.NAME) {
+    name = settings ? (settings.NAME).trim() : '';
+    if (name.length > 0) {
+      name = `, ${name}`;
+    }
   }
 
   let bootloader = '';
