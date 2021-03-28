@@ -29,7 +29,7 @@ function MelodyElement({
   const { t } = useTranslation();
   const [currentMelody, setCurrentMelody] = useState(melody);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
-  const [highlight, setHighlight] = useState(null);
+  const [highlight, setHighlight] = useState([]);
   const [isValid, setIsValid] = useState(false);
   const [isAccepted, setIsAccepted] = useState(accepted);
   const [isPlayable, setIsPlayable] = useState(false);
@@ -39,6 +39,9 @@ function MelodyElement({
   useImperativeHandle(ref, () => ({
     play() {
       playMelody();
+    },
+    stop() {
+      stop.current = true;
     }
   }));
 

@@ -113,6 +113,13 @@ function MelodyEditor({
     }
   }
 
+  function handleStopAll() {
+    for(let i = 0; i < references.length; i += 1) {
+      const child = references[i];
+      child.current.stop();
+    }
+  }
+
   function toggleSync() {
     handleAcceptAll(false);
     setCurrentMelodies(validMelodies);
@@ -242,11 +249,10 @@ function MelodyEditor({
         <div className="default-btn button-wrapper">
           { !sync &&
             <button
-              disabled={isAnyPlaying}
-              onClick={handlePlayAll}
+              onClick={isAnyPlaying ? handleStopAll : handlePlayAll}
               type="button"
             >
-              {t('common:melodyEditorPlayAll')}
+              {isAnyPlaying ? t('common:melodyEditorStopAll') : t('common:melodyEditorPlayAll')}
             </button>}
 
           <button
