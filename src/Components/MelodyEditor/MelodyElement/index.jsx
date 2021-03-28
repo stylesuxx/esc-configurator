@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {
   useState,
   useEffect,
+  useRef,
 } from 'react';
 import {
   HighlightWithinTextarea
@@ -26,31 +27,39 @@ function MelodyElement({
   const [highlight, setHighlight] = useState(/[ae]/g);
   const [isValid, setIsValid] = useState(false);
   const [isAccepted, setIsAccepted] = useState(accepted);
+  const [isPlayable, setIsPlayable] = useState(false);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
-  const [disabled, setDisabled] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const stop = useRef(false);
 
   useEffect(() => {
     if(currentMelody) {
-      const response = Rtttl.toBluejayStartupMelody(currentMelody);
-      const errors = response.errorCodes;
-      const notes = currentMelody.split(':')[2].split(',');
+      try {
+        const response = Rtttl.toBluejayStartupMelody(currentMelody);
+        const errors = response.errorCodes;
+        const notes = currentMelody.split(':')[2].split(',');
 
-      const wrongNotes = [];
-      for(let i = 0; i < errors.length; i += 1) {
-        switch(errors[i]) {
-          case 1: {
-            wrongNotes.push(notes[i].replace(',', ''));
+        const wrongNotes = [];
+        for(let i = 0; i < errors.length; i += 1) {
+          switch(errors[i]) {
+            case 1: {
+              wrongNotes.push(notes[i].replace(',', ''));
+            }
           }
         }
-      }
-      const uniqueWrongNotes = [ ...new Set(wrongNotes)];
-      setHighlight(uniqueWrongNotes);
+        const uniqueWrongNotes = [ ...new Set(wrongNotes)];
+        setHighlight(uniqueWrongNotes);
 
-      const isValid = uniqueWrongNotes.length === 0;
-      setIsValid(isValid);
+        const isValid = uniqueWrongNotes.length === 0;
+        setIsValid(isValid);
+        setIsPlayable(true);
 
-      if(isValid) {
-        onValid(melody);
+        if(isValid) {
+          onValid(melody);
+        }
+      } catch(e) {
+        setIsPlayable(false);
+        setIsValid(false);
       }
     }
   }, [currentMelody]);
@@ -80,16 +89,27 @@ function MelodyElement({
     onAccept(true);
   }
 
+  function stopMelody() {
+    stop.current = true;
+  }
+
   function playMelody() {
-    setDisabled(true);
-    const parsedRtttl = Rtttl.parse(currentMelody);
-    const audioContext = new AudioContext();
-    play(parsedRtttl.melody, audioContext);
+    setPlaying(true);
+    try {
+      const parsedRtttl = Rtttl.parse(currentMelody);
+      const audioContext = new AudioContext();
+      play(parsedRtttl.melody, audioContext);
+    } catch(e) {
+      setIsValid(false);
+      setIsPlayable(false);
+      setPlaying(false);
+    }
   }
 
   function play(melody, audioContext) {
-    if (melody.length === 0) {
-      setDisabled(false);
+    if (melody.length === 0 || stop.current) {
+      stop.current = false;
+      setPlaying(false);
       return;
     }
 
@@ -98,7 +118,6 @@ function MelodyElement({
     osc.start(0);
 
     const note = melody[0];
-    console.log(note);
     osc.frequency.value = note.frequency;
     osc.connect(audioContext.destination);
 
@@ -124,16 +143,16 @@ function MelodyElement({
           <div className="default-btn">
             <button
               className="play"
-              disabled={disabled}
-              onClick={playMelody}
+              disabled={!isPlayable}
+              onClick={playing ? stopMelody : playMelody}
               type="button"
             >
-              {t('common:melodyEditorPlay')}
+              {playing ? t('common:melodyEditorStop') : t('common:melodyEditorPlay')}
             </button>
 
             <button
               className={`accept ${isAccepted ? 'accepted' : ''}`}
-              disabled={!isValid || disabled}
+              disabled={!isValid || playing}
               onClick={acceptMelody}
               type="button"
             >
@@ -145,7 +164,7 @@ function MelodyElement({
         <div className="editor-wrapper">
           <HighlightWithinTextarea
             containerClassName="editor"
-            disabled={disabled}
+            disabled={playing}
             highlight={highlight}
             onChange={validateMelody}
             rows={10}
