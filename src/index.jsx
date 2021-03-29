@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React, {
   Suspense,
 } from 'react';
