@@ -75,7 +75,7 @@
   "escLowVoltageThreshold": "Wert für Abschaltung bei niedriger Spannung",
   "escRcCarReversing": "Motorendrehrichtung umkehren wie bei RC Autos",
   "bluejayText": "<p>Bluejay ist eine auf BLHeli_S basierende Firmware die bi-direktionales DShot unterstützt - eine gute Wahl falls du RPM Filter verwenden möchtest. Dieses Projekt beschäftigt sich damit BLHeli_S zu vereinfachen und zu verbessern.</p><p>Als Bonus bekommst du noch einen Startmelodie Editor dazu.</p>",
-  "blheli32ToAM32": "<p>Die aufstrebende Firmware für ARM-basierte ESCs. Obwohl es relativ neu in der Szene ist, hat es viel Interesse, sowohl bei Anwendern als auch bei Herstellern erregt. AM32 ESC's werden in Kürze von verschiedenen Herstellern erhältlich sein.</p><p><strong>AM32 kann auf BLHELI_32 ESC's</strong>geflashed werden. Aber du musst zuerst den AM32 Bootloader über <a href=\\\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\\\" target=\\\"_blank\\\">STM32 Cube Programmierer</a> und ST Link V2 flashen. Der erforderliche Bootloader befindet sich im <a href=\\\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\\\" target=\\\"_blank\\\">AM32 Bootloader Repository</a>.</p>",
+  "blheli32ToAM32": "<p>Die aufstrebende Firmware für ARM-basierte ESCs. Obwohl diese relativ neu in der Szene ist, hat sie viel Interesse, sowohl bei Anwendern als auch bei Herstellern erregt. AM32 ESCs werden in Kürze von diversen Herstellern erhältlich sein.</p><p><strong>AM32 kann auf BLHELI_32 ESCs</strong>geflashed werden. Aber du musst zuerst den AM32 Bootloader über <a href=\\\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\\\" target=\\\"_blank\\\">STM32 Cube Programmierer</a> und ST Link V2 flashen. Der erforderliche Bootloader befindet sich im <a href=\\\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\\\" target=\\\"_blank\\\">AM32 Bootloader Repository</a>.</p>",
   "blhelisText": "<p>BLHeli_S benötigt wahrscheinlich keine Einführung - die beliebte ESC-Firmware für fast jeden EFM8-basierten ESC im Quadrocopter-Hobby.</p><p>Erprobt und getestet, unterstützt es alle analogen und digitalen Protokolle die in Betaflight existieren</p>",
   "whatsNextHeader": "Was kommt als nächstes?",
   "whatsNextText": "<p>Wenn du mitverfolgen willst welche Funktionen in Zukunft entstehen, kannst du dies im <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com\" target=\"_blank\">github-Repository</a>beobachten. Gerne kannst du auch eine Feature-Anfrage erstellen, wenn du eine Idee zu einem Feature hast, welches du gerne implementiert hättest.</p>",
@@ -87,9 +87,9 @@
   "motorNr": "Motor {{index}}",
   "homeDiscordHeader": "Komm auf unseren Discord Server!",
   "homeDiscordText": "Wenn du Fragen hast oder rasche Hilfe brauchst, schau bei uns am Discord Server vorbei:",
-  "homeChinaHeader": "Für unsere chinesischen Gäste",
+  "homeChinaHeader": "Für unsere chinesischen Besucher",
   "homeChinaText": "Sag deinen Freunden hinter der großen chinesischen Firewall, dass sie uns über einen lokalen <a href=\"https://esc-configurator.pitronic.top/\">Spiegel direkt in China erreichen können<a>.",
   "melodyEditor": "Melodie Editor",
   "homeAttributionHeader": "Beteiligung",
-  "homeAttributionText": "Dieses Projekt wurde stark vom <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a>inspiriert. Der Großteil der Benutzeroberfläche wurde von Grund auf neu geschrieben, aber viele der mit dem Flashen und Firmware-Handling zusammenhängenden Low-Level-Sachen wurden wiederverwendet - also ein großer Shout an alle, die am ursprünglichen BLHeli Configurator beteiligt waren."
+  "homeAttributionText": "Dieses Projekt wurde stark vom <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a>inspiriert. Der Großteil der Benutzeroberfläche wurde von Grund auf neu geschrieben, aber viele der mit dem Flashen und Firmware-Handling zusammenhängenden Low-Level-Funktionen wurden wiederverwendet - also großes Lob an alle, die am ursprünglichen BLHeli Configurator beteiligt waren."
 }
