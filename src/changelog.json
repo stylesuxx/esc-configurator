@@ -1,5 +1,12 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Improved translations",
+      "Added coverage"
+    ]
+  },
+  {
     "title": "0.9.1",
     "items": [
       "Add attribution to original project",

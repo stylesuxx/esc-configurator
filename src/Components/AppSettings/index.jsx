@@ -46,7 +46,7 @@ function AppSettings({
             value={setting.value ? 1 : 0}
           />
         );
-      } break;
+      }
     }
   });
 
@@ -62,6 +62,7 @@ function AppSettings({
         <div
           className="close"
           onClick={handleClose}
+          type="button"
         >
           {t('closeText')}
         </div>
