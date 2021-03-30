@@ -65,11 +65,11 @@ function MainContent({
           <div className="content_wrapper">
             <FirmwareSelector
               configs={configs}
-              escHint={esc.settings.LAYOUT}
+              escHint={esc ? esc.settings.LAYOUT : null}
               onCancel={onCancelFirmwareSelection}
               onLocalSubmit={onLocalSubmit}
               onSubmit={onFlashUrl}
-              signatureHint={esc.meta.signature}
+              signatureHint={esc ? esc.meta.signature : null}
             />
           </div>
         </div>
@@ -118,6 +118,18 @@ function MainContent({
   );
 }
 
+MainContent.defaultProps = {
+  appSettings: { directInput: { value: false } },
+  changelogEntries: [],
+  connected: 0,
+  escs: [],
+  flashTargets: [],
+  fourWay: false,
+  open: false,
+  progress: [],
+  settings: {},
+};
+
 MainContent.propTypes = {
   actions: PropTypes.shape({
     isFlashing: PropTypes.bool.isRequired,
@@ -125,17 +137,17 @@ MainContent.propTypes = {
     isSelecting: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
-  appSettings: PropTypes.shape({ directInput: PropTypes.shape({ value: PropTypes.bool.isRequired }).isRequired }).isRequired,
-  changelogEntries: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  appSettings: PropTypes.shape({}),
+  changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
   }).isRequired,
-  connected: PropTypes.number.isRequired,
-  escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  flashTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
-  fourWay: PropTypes.bool.isRequired,
+  connected: PropTypes.number,
+  escs: PropTypes.arrayOf(PropTypes.shape()),
+  flashTargets: PropTypes.arrayOf(PropTypes.number),
+  fourWay: PropTypes.bool,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
@@ -149,9 +161,9 @@ MainContent.propTypes = {
   onSingleFlash: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  progress: PropTypes.arrayOf(PropTypes.number).isRequired,
-  settings: PropTypes.shape().isRequired,
+  open: PropTypes.bool,
+  progress: PropTypes.arrayOf(PropTypes.number),
+  settings: PropTypes.shape(),
 };
 
 export default MainContent;
