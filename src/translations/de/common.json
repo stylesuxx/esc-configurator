@@ -92,5 +92,11 @@
   "melodyEditor": "Melodie Editor",
   "homeAttributionHeader": "Beteiligung",
   "homeAttributionText": "Dieses Projekt wurde stark vom <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a>inspiriert. Der Großteil der Benutzeroberfläche wurde von Grund auf neu geschrieben, aber viele der mit dem Flashen und Firmware-Handling zusammenhängenden Low-Level-Funktionen wurden wiederverwendet - also großes Lob an alle, die am ursprünglichen BLHeli Configurator beteiligt waren.",
-  "multiOnly": "Nur der MULTI-Modus wird derzeit unterstützt"
+  "multiOnly": "Nur der MULTI-Modus wird derzeit unterstützt",
+  "selectFirmware": "Select Firmware",
+  "selectEsc": "Select ESC",
+  "selectMode": "Select Mode",
+  "selectVersion": "Select Version",
+  "selectPwmFrequency": "Select PWM Frequency",
+  "selectTarget": "Select Target"
 }
