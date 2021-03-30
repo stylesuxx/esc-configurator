@@ -91,5 +91,6 @@
   "homeChinaText": "Sag deinen Freunden hinter der großen chinesischen Firewall, dass sie uns über einen lokalen <a href=\"https://esc-configurator.pitronic.top/\">Spiegel direkt in China erreichen können<a>.",
   "melodyEditor": "Melodie Editor",
   "homeAttributionHeader": "Beteiligung",
-  "homeAttributionText": "Dieses Projekt wurde stark vom <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a>inspiriert. Der Großteil der Benutzeroberfläche wurde von Grund auf neu geschrieben, aber viele der mit dem Flashen und Firmware-Handling zusammenhängenden Low-Level-Funktionen wurden wiederverwendet - also großes Lob an alle, die am ursprünglichen BLHeli Configurator beteiligt waren."
+  "homeAttributionText": "Dieses Projekt wurde stark vom <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a>inspiriert. Der Großteil der Benutzeroberfläche wurde von Grund auf neu geschrieben, aber viele der mit dem Flashen und Firmware-Handling zusammenhängenden Low-Level-Funktionen wurden wiederverwendet - also großes Lob an alle, die am ursprünglichen BLHeli Configurator beteiligt waren.",
+  "multiOnly": "Only MULTI mode currently supported"
 }
