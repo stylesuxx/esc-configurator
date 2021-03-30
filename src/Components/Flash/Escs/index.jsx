@@ -31,13 +31,17 @@ function Escs({
   );
 }
 
-Escs.defaultProps = { escs: [] };
+Escs.defaultProps = {
+  directInput: false,
+  escs: [],
+  flashProgress: [],
+};
 
 Escs.propTypes = {
   canFlash: PropTypes.bool.isRequired,
-  directInput: PropTypes.bool.isRequired,
+  directInput: PropTypes.bool,
   escs: PropTypes.arrayOf(PropTypes.shape()),
-  flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
+  flashProgress: PropTypes.arrayOf(PropTypes.number),
   onFlash: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };

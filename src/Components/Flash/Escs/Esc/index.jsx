@@ -37,15 +37,12 @@ function Esc({
   }
 
   let name = '';
-  if(settings.NAME) {
-    name = settings ? (settings.NAME).trim() : '';
-    if (name.length > 0) {
-      name = `, ${name}`;
-    }
+  if(settings.NAME !== undefined && settings.NAME !== '') {
+    name = `, ${settings.NAME.trim()}`;
   }
 
   let bootloader = '';
-  if (esc.bootloaderRevision !== null) {
+  if (esc.bootloaderRevision !== undefined) {
     bootloader = ` (bootloader revision ${esc.bootloaderRevision})`;
   }
 
