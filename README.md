@@ -1,6 +1,6 @@
 <img align="right" src="./public/logo512.png" alt="ESC Configurator" width="250">
 
-[![Build Status](https://travis-ci.org/stylesuxx/esc-configurator.svg?branch=develop)](https://travis-ci.org/stylesuxx/esc-configurator) [![codecov](https://codecov.io/gh/stylesuxx/esc-configurator/branch/master/graph/badge.svg?token=WLZXIOEDP7)](https://codecov.io/gh/stylesuxx/esc-configurator)
+[![Build Status](https://travis-ci.org/stylesuxx/esc-configurator.svg?branch=develop)](https://travis-ci.org/stylesuxx/esc-configurator) [![codecov](https://codecov.io/gh/stylesuxx/esc-configurator/branch/develop/graph/badge.svg?token=WLZXIOEDP7)](https://codecov.io/gh/stylesuxx/esc-configurator)
  [![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom) [![Netlify Status](https://api.netlify.com/api/v1/badges/d297f59c-7496-49fb-9803-1cf2876aaad4/deploy-status)](https://app.netlify.com/sites/sad-goodall-6b6045/deploys) [![Discord](https://img.shields.io/discord/822952715944460368.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/QvSS5dk23C)
 
 # ESC Configurator - PWA (Progressive Web App)
