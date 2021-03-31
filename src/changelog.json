@@ -3,7 +3,9 @@
     "title": "Unreleased",
     "items": [
       "Improved translations",
-      "Added coverage"
+      "Added coverage",
+      "Improved rendering of some components",
+      "Refactored to pure functions"
     ]
   },
   {

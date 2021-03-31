@@ -196,4 +196,4 @@ PortPicker.propTypes = {
   ports: PropTypes.arrayOf(PropTypes.string),
 };
 
-export default PortPicker;
+export default React.memo(PortPicker);

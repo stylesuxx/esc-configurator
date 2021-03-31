@@ -80,6 +80,7 @@ class App extends Component {
         chosenPort: null,
         connected: false,
         fourWay: false,
+        portNames: [],
       },
       configs: {
         versions: {},
@@ -600,6 +601,13 @@ class App extends Component {
       this.serial = new Serial(ports[0]);
     }
 
+    const portNames = ports.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
     this.setState({
       checked: true,
       hasSerial: true,
@@ -607,6 +615,7 @@ class App extends Component {
         availablePorts: ports,
         connected,
         fourWay: false,
+        portNames,
       },
     });
   }
@@ -617,6 +626,13 @@ class App extends Component {
     this.lastConnected = 0;
 
     const availablePorts = await this.serialApi.getPorts();
+    const portNames = availablePorts.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
     this.setState({
       open: false,
       escs: [],
@@ -625,6 +641,7 @@ class App extends Component {
         chosenPort: null,
         connected: availablePorts.length > 0 ? true : false,
         fourWay: false,
+        portNames,
       }
     });
 
@@ -638,10 +655,19 @@ class App extends Component {
 
       this.addLogMessage('portSelected');
 
+
+      const portNames = [port].map((item) => {
+        const info = item.getInfo();
+        const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+        return name;
+      });
+
       this.setState({
         serial: {
           availablePorts: [port],
           connected: true,
+          portNames,
         },
       });
     } catch (e) {
@@ -833,13 +859,6 @@ class App extends Component {
       return null;
     }
 
-    const portNames = serial.availablePorts.map((item) => {
-      const info = item.getInfo();
-      const name = `${info.usbVendorId}:${info.usbProductId}`;
-
-      return name;
-    });
-
     return (
       <MainApp
         actions={actions}
@@ -878,7 +897,7 @@ class App extends Component {
         onWriteSetup={this.handleWriteSetup}
         open={open}
         packetErrors={packetErrors}
-        portNames={portNames}
+        portNames={serial.portNames}
         progress={progress}
         serial={this.serial || undefined}
         serialLog={serialLog}
