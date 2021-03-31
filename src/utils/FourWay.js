@@ -355,9 +355,18 @@ class FourWay {
             displayName = blheliBuildDisplayName(flash, make);
           }
         } else if (isArm) {
-          flash.bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
-          flash.settings.LAYOUT = flash.settings.NAME;
-          make = flash.settings.NAME;
+          // Read version information direct from EEPROM istead of using the  settings array
+          const version = (await this.read(AM32_EEPROM.VERSION_OFFSET, AM32_EEPROM.VERSION_SIZE)).params;
+          const mainRevision = version[0];
+          const subRevision = version[1];
+          const deviceName = buf2ascii(version.subarray(2));
+
+          flash.settings.MAIN_REVISION = mainRevision;
+          flash.settings.SUB_REVISION = subRevision;
+          flash.settings.LAYOUT = deviceName;
+          flash.settings.NAME = deviceName;
+
+          flash.bootloaderRevision = (await this.read(AM32_EEPROM.BOOT_LOADER_OFFSET, AM32_EEPROM.BOOT_LOADER_VERSION_SIZE)).params[0];
 
           displayName = am32BuildDisplayName(flash, make);
         } else {
