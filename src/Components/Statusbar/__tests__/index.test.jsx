@@ -30,6 +30,13 @@ test('loads and displays StatusBar', () => {
   expect(screen.getByText('battery')).toBeInTheDocument();
   expect(screen.getByText('1S @ 4.2V')).toBeInTheDocument();
 
+  ref.current.updateBatteryState({
+    cellCount: 1,
+    voltage: 3.5,
+  });
+  expect(screen.getByText('battery')).toBeInTheDocument();
+  expect(screen.getByText('1S @ 3.5V')).toBeInTheDocument();
+
   ref.current.updateBatteryState(null);
   expect(screen.queryByText('battery')).not.toBeInTheDocument();
   expect(screen.queryByText('1S @ 4.2V')).not.toBeInTheDocument();
