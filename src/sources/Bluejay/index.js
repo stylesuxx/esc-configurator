@@ -2,7 +2,9 @@ import Source, {
   PLATFORMS,
 } from '../Source';
 
-import EEPROM from './eeprom';
+import EEPROM, {
+  buildDisplayName,
+} from './eeprom';
 
 import VERSIONS_LOCAL from './versions.json';
 import ESCS_LOCAL from './escs.json';
@@ -23,6 +25,7 @@ const bluejayConfig = new Source(
 );
 
 export {
+  buildDisplayName,
   EEPROM,
 };
 

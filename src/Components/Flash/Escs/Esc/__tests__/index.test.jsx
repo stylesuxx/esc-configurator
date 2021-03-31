@@ -32,7 +32,7 @@ test('loads and displays Esc', () => {
 test('displays name, version and bootloader', () => {
   const esc = {
     bootloaderRevision: 'bl 23',
-    make: 'make 1234',
+    displayName: 'displayName 1234',
     individualSettings: {
       MAIN_REVISION: 1,
       SUB_REVISION: 200,
@@ -54,16 +54,13 @@ test('displays name, version and bootloader', () => {
     />
   );
 
-  expect(screen.getByText(/make 1234/i)).toBeInTheDocument();
-  expect(screen.getByText(/1.200/i)).toBeInTheDocument();
-  expect(screen.getByText(/FW Name/i)).toBeInTheDocument();
-  expect(screen.getByText(/bl 23/i)).toBeInTheDocument();
+  expect(screen.getByText(/displayName 1234/i)).toBeInTheDocument();
 });
 
 test('handles empty name', () => {
   const esc = {
     bootloaderRevision: 'bl 23',
-    make: 'make 1234',
+    displayName: 'displayName 1234',
     individualSettings: {
       MAIN_REVISION: 1,
       SUB_REVISION: 200,
@@ -84,9 +81,7 @@ test('handles empty name', () => {
     />
   );
 
-  expect(screen.getByText(/make 1234/i)).toBeInTheDocument();
-  expect(screen.getByText(/1.200/i)).toBeInTheDocument();
-  expect(screen.getByText(/bl 23/i)).toBeInTheDocument();
+  expect(screen.getByText(/displayName 1234/i)).toBeInTheDocument();
 });
 
 test('does not trigger onFlash when disabled', () => {

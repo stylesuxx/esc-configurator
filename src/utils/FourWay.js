@@ -8,8 +8,12 @@ import {
   AM32_RESET_DELAY_MS,
 } from '../sources/AM32/eeprom';
 
-import blheliSource from '../sources/Blheli';
-import bluejaySource from '../sources/Bluejay';
+import blheliSource, {
+  buildDisplayName as blheliBuildDisplayName,
+}  from '../sources/Blheli';
+import bluejaySource, {
+  buildDisplayName as bluejayBuildDisplayName,
+} from '../sources/Bluejay';
 import am32Source from '../sources/AM32';
 
 // TODO: We might use the ones from the source here...
@@ -295,6 +299,7 @@ class FourWay {
          * was correct, if not, we need to build a new settings object.
          */
         const name = flash.settings.NAME;
+        console.log(name);
         let newLayout = null;
         switch(name) {
           case 'Bluejay':
@@ -347,17 +352,21 @@ class FourWay {
         const layoutName = (flash.settings.LAYOUT || '').trim();
         let bootloaderRevision = null;
         let make = null;
+        let displayName = 'UNKNOWN';
         if (isSiLabs) {
           const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.SILABS];
           const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS];
           const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_EEPROM.TYPES.EFM8];
 
-          if (layoutName in blheliLayouts) {
+          if (BLUEJAY_EEPROM.NAMES.includes(name) && layoutName in bluejayLayouts) {
+            make = bluejayLayouts[layoutName].name;
+            displayName = bluejayBuildDisplayName(flash, make);
+          }
+          else if (layoutName in blheliLayouts) {
             make = blheliLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
             make = blheliSLayouts[layoutName].name;
-          } else if (layoutName in bluejayLayouts) {
-            make = bluejayLayouts[layoutName].name;
+            displayName = blheliBuildDisplayName(flash, make);
           }
         } else if (isArm) {
           bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
@@ -371,6 +380,7 @@ class FourWay {
 
         flash.defaultSettings = defaultSettings[layoutRevision];
         flash.bootloaderRevision = bootloaderRevision;
+        flash.displayName = displayName;
         flash.layoutSize = layoutSize;
         flash.layout = layout;
         flash.make = make;

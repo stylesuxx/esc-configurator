@@ -1,4 +1,6 @@
-import EEPROM from '../eeprom';
+import EEPROM, {
+  buildDisplayName,
+} from '../eeprom';
 
 test('visibleIf MOTOR_DIRECTION 3', () => {
   const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);
@@ -38,4 +40,30 @@ test('individual visibleIf MOTOR_DIRECTION 3', () => {
       expect(visibleIf[i](settings)).toBeTruthy();
     }
   }
+});
+
+test('build display Name', () => {
+  const flash = {
+    settings: {
+      MAIN_REVISION: 1,
+      SUB_REVISION: 100,
+      __PWM_FREQUENCY: 24,
+      NAME: 'Bluejay',
+    },
+  };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - Bluejay, 1.100, 24kHz');
+});
+
+test('build display Name with missing revisions', () => {
+  const flash = {
+    settings: {
+      __PWM_FREQUENCY: 24,
+      NAME: 'Bluejay',
+    },
+  };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized, 24kHz');
 });
