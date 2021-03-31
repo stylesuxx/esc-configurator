@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, {
   useState,
-  useEffect
+  useEffect,
+  useRef,
 } from 'react';
 import {
   useTranslation,

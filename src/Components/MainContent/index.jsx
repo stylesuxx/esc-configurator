@@ -137,7 +137,7 @@ MainContent.propTypes = {
     isSelecting: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
-  appSettings: PropTypes.shape({}),
+  appSettings: PropTypes.shape({ directInput: PropTypes.shape() }),
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,

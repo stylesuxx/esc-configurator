@@ -42,7 +42,7 @@ function Esc({
   }
 
   let bootloader = '';
-  if (esc.bootloaderRevision !== undefined) {
+  if (esc.bootloaderRevision && esc.bootloaderRevision !== undefined) {
     bootloader = ` (bootloader revision ${esc.bootloaderRevision})`;
   }
 
