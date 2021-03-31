@@ -4,23 +4,12 @@ import React, {
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 import i18next from 'i18next';
-import {
-  ToastContainer,
-} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+
+import MainApp from '../../Components/App';
 
 import {
   serial as serialPolyfill,
 } from 'web-serial-polyfill';
-
-import changelogEntries from '../../changelog.json';
-
-import PortPicker from '../../Components/PortPicker';
-import Log from '../../Components/Log';
-import Statusbar from '../../Components/Statusbar';
-import CookieConsent from '../../Components/CookieConsent';
-import MainContent from '../../Components/MainContent';
-import AppSettings from '../../Components/AppSettings';
 
 import Serial from '../../utils/Serial';
 
@@ -33,8 +22,6 @@ import {
 import {
   delay,
 } from '../../utils/helpers/General';
-
-import './style.scss';
 
 import settings from '../../settings.json';
 const {
@@ -846,15 +833,6 @@ class App extends Component {
       return null;
     }
 
-    const languageElements = this.languages.map((item) => (
-      <option
-        key={item.value}
-        value={item.value}
-      >
-        {item.label}
-      </option>
-    ));
-
     const portNames = serial.availablePorts.map((item) => {
       const info = item.getInfo();
       const name = `${info.usbVendorId}:${info.usbProductId}`;
@@ -863,101 +841,51 @@ class App extends Component {
     });
 
     return (
-      <div className="App">
-        <div id="main-wrapper">
-          <div className="header-wrapper">
-            <div className="headerbar">
-              <div id="logo" />
-
-              <PortPicker
-                hasPort={serial.connected}
-                hasSerial={hasSerial}
-                onChangePort={this.handleChangePort}
-                onConnect={this.handleConnect}
-                onDisconnect={this.handleDisconnect}
-                onSetBaudRate={this.handleSetBaudRate}
-                onSetPort={this.handleSetPort}
-                open={open}
-                ports={portNames}
-              />
-
-              <div className="language-select ">
-                <div className="dropdown dropdown-dark">
-                  <select
-                    className="dropdown-select"
-                    defaultValue={language}
-                    onChange={this.handleLanguageSelection}
-                  >
-                    {languageElements}
-                  </select>
-                </div>
-
-                <div className="button-dark">
-                  <button
-                    onClick={this.handleOpenSettings}
-                    type="button"
-                  >
-                    Settings
-                  </button>
-                </div>
-
-              </div>
-            </div>
-
-            <div className="clear-both" />
-
-            <Log
-              messages={serialLog}
-            />
-          </div>
-
-          <MainContent
-            actions={actions}
-            appSettings={appSettings}
-            changelogEntries={changelogEntries}
-            configs={configs}
-            connected={connected}
-            escs={escs}
-            flashTargets={flashTargets}
-            fourWay={serial.fourWay}
-            onAllMotorSpeed={this.handleAllMotorSpeed}
-            onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
-            onFlashUrl={this.handleFlashUrl}
-            onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
-            onLocalSubmit={this.handleLocalSubmit}
-            onReadEscs={this.handleReadEscs}
-            onResetDefaultls={this.handleResetDefaultls}
-            onSaveLog={this.handleSaveLog}
-            onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
-            onSettingsUpdate={this.handleSettingsUpdate}
-            onSingleFlash={this.handleSingleFlash}
-            onSingleMotorSpeed={this.handleSingleMotorSpeed}
-            onWriteSetup={this.handleWriteSetup}
-            open={open}
-            progress={progress}
-            settings={settings}
-          />
-
-          <Statusbar
-            getUtilization={this.serial ? this.serial.getUtilization : null}
-            packetErrors={packetErrors}
-            version={version}
-          />
-        </div>
-
-        <CookieConsent
-          onCookieAccept={this.handleCookieAccept}
-        />
-
-        {showSettings &&
-          <AppSettings
-            onClose={this.handleCloseSettings}
-            onUpdate={this.handleUpdateSettings}
-            settings={appSettings}
-          />}
-
-        <ToastContainer />
-      </div>
+      <MainApp
+        actions={actions}
+        appSettings={appSettings}
+        configs={configs}
+        connected={connected}
+        escs={escs}
+        flashTargets={flashTargets}
+        fourWay={serial.fourWay}
+        hasPort={serial.connected}
+        hasSerial={hasSerial}
+        language={language}
+        languages={this.languages}
+        onAllMotorSpeed={this.handleAllMotorSpeed}
+        onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
+        onChangePort={this.handleChangePort}
+        onClose={this.handleCloseSettings}
+        onConnect={this.handleConnect}
+        onCookieAccept={this.handleCookieAccept}
+        onDisconnect={this.handleDisconnect}
+        onFlashUrl={this.handleFlashUrl}
+        onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
+        onLanguageSelection={this.handleLanguageSelection}
+        onLocalSubmit={this.handleLocalSubmit}
+        onOpenSettings={this.handleOpenSettings}
+        onReadEscs={this.handleReadEscs}
+        onResetDefaultls={this.handleResetDefaultls}
+        onSaveLog={this.handleSaveLog}
+        onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
+        onSetBaudRate={this.handleSetBaudRate}
+        onSetPort={this.handleSetPort}
+        onSettingsUpdate={this.handleSettingsUpdate}
+        onSingleFlash={this.handleSingleFlash}
+        onSingleMotorSpeed={this.handleSingleMotorSpeed}
+        onUpdate={this.handleUpdateSettings}
+        onWriteSetup={this.handleWriteSetup}
+        open={open}
+        packetErrors={packetErrors}
+        portNames={portNames}
+        progress={progress}
+        serial={this.serial || undefined}
+        serialLog={serialLog}
+        settings={settings}
+        showSettings={showSettings}
+        version={version}
+      />
     );
   }
 }
