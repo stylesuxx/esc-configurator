@@ -14,7 +14,9 @@ import blheliSource, {
 import bluejaySource, {
   buildDisplayName as bluejayBuildDisplayName,
 } from '../sources/Bluejay';
-import am32Source from '../sources/AM32';
+import am32Source, {
+  buildDisplayName as am32BuildDisplayName,
+} from '../sources/AM32';
 
 // TODO: We might use the ones from the source here...
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
@@ -371,6 +373,9 @@ class FourWay {
         } else if (isArm) {
           bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
           flash.settings.LAYOUT = flash.settings.NAME;
+
+          //TODO: Needs to be rebased
+          displayName = am32BuildDisplayName(flash, make);
         } else {
           const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.ATMEL];
           if (layoutName in blheliAtmelLayouts) {

@@ -1,5 +1,6 @@
 import {
   AM32_SETTINGS_DESCRIPTIONS,
+  buildDisplayName,
 } from '../eeprom';
 
 test('visibleIf VARIABLE_PWM_FREQUENCY 0', () => {
@@ -20,4 +21,27 @@ test('visibleIf VARIABLE_PWM_FREQUENCY 0', () => {
       expect(visibleIf[i](settings)).toBeTruthy();
     }
   }
+});
+
+test('build display Name', () => {
+  const flash = {
+    settings: {
+      MAIN_REVISION: 1,
+      SUB_REVISION: 100,
+    },
+    bootloaderRevision: 23,
+  };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - AM32, 1.100, Bootloader: 23');
+});
+
+test('build display Name with missing revisions', () => {
+  const flash = {
+    settings: {},
+    bootloaderRevision: 23,
+  };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader: 23');
 });

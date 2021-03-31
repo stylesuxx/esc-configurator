@@ -22,6 +22,4 @@ const am32Config = new Source(
   pwmOptions
 );
 
-
-
 export default am32Config;
