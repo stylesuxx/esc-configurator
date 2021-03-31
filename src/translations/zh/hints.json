@@ -3,7 +3,7 @@
   "BRAKE_ON_STOP": "Brake when motors are stopped.",
   "BEACON_DELAY": "After how much time of inactivity the beacon should start to go off.",
   "TEMPERATURE_PROTECTION": "At which temperature the ESC will shut down.",
-  "BEEP_STRENGTH": "The volume of the startup beeps. Setting this too high might damage the motors.",
+  "BEEP_STRENGTH": "启动时电调的音调。此数值设置过高会伤害电机。",
   "BEACON_STRENGTH": "The volume of the beacon. Setting this too high might damage the motors.",
   "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to start up with low throttle input.",
   "DITHERING": "Increases the effective pwm resolution 2000 steps. It is generally recommended to leave this on especially with pwm frequencies above 24kHz.",
