@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {
   useState,
-  useEffect,
   useImperativeHandle,
   forwardRef,
 } from 'react';

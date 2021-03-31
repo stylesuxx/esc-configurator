@@ -1,4 +1,4 @@
-import Blheli from './Blheli';
+import Convert from './helpers/Convert';
 
 import {
   BLHELI_SILABS,
@@ -256,7 +256,6 @@ class FourWay {
       flash.meta = {};
 
       try {
-        const blheli = new Blheli();
         const interfaceMode = flash.params[3];
 
         flash.meta.signature = flash.params[1] << 8 | flash.params[0];
@@ -288,10 +287,8 @@ class FourWay {
         flash.isAtmel = isAtmel;
 
         flash.settingsArray = settingsArray;
-        flash.settings = blheli.settingsObject(
-          settingsArray,
-          layout
-        );
+        flash.settings = Convert.settingsObject(settingsArray, layout);
+        console.log(settingsArray);
 
         /**
          * Baased on the name we can decide if the initially guessed layout
@@ -310,11 +307,7 @@ class FourWay {
 
         if(newLayout) {
           layout = newLayout;
-
-          flash.settings = blheli.settingsObject(
-            settingsArray,
-            layout
-          );
+          flash.settings = Convert.settingsObject(settingsArray, layout);
         }
 
         const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
@@ -342,7 +335,7 @@ class FourWay {
         flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
 
         if (interfaceMode !== MODES.ARMBLB) {
-          const mode = blheli.modeToString(flash.settings.MODE);
+          const mode = Convert.modeToString(flash.settings.MODE);
           try {
             const descriptions = settingsDescriptions[layoutRevision][mode];
             flash.settingsDescriptions = descriptions;
@@ -411,8 +404,7 @@ class FourWay {
     const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
-      const blheli = new Blheli();
-      const newSettingsArray = blheli.settingsArray(settings, esc.layout, esc.layoutSize);
+      const newSettingsArray = Convert.settingsArray(settings, esc.layout, esc.layoutSize);
       if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new Error('byteLength of buffers do not match');
       }
