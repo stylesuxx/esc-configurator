@@ -19,14 +19,24 @@ const Statusbar = forwardRef(({
     up: 0,
     down: 0,
   });
-  const [batteryState, setBatteryState] = useState();
+  const [batteryState, setBatteryState] = useState({
+    text: null,
+    danger: false,
+  });
 
   useImperativeHandle(ref, () => ({
     updateBatteryState(state) {
       if(state && state.cellCount > 0) {
-        setBatteryState(`${state.cellCount}S @ ${state.voltage}V`);
+        const danger = (state.voltage / state.cellCount) < 3.7;
+        setBatteryState({
+          text: `${state.cellCount}S @ ${state.voltage}V`,
+          danger,
+        });
       } else {
-        setBatteryState(null);
+        setBatteryState({
+          text: null,
+          danger: false,
+        });
       }
     },
     updateUtilization(utilization) {
@@ -68,8 +78,8 @@ const Statusbar = forwardRef(({
         </span>
       </div>
 
-      {batteryState &&
-        <div>
+      {batteryState.text &&
+        <div className={batteryState.danger ? 'danger' : ''}>
           <span>
             {t('battery')}
           </span>
@@ -77,7 +87,7 @@ const Statusbar = forwardRef(({
           {' '}
 
           <span>
-            {batteryState}
+            {batteryState.text}
           </span>
         </div>}
 

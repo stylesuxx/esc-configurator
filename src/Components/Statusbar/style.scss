@@ -13,6 +13,11 @@
     padding-right: 10px;
     margin-right: 10px;
     border-right: 1px solid #7d7d79;
+
+    &.danger {
+      font-weight: bold;
+      color: red;
+    }
   }
 
   .version {
