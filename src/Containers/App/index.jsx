@@ -743,8 +743,6 @@ class App extends Component {
     });
 
     let uid = await this.serial.getUid();
-
-
     uid = uid.uid;
     let uidHex = 0;
     for (let i = 0; i < uid.length; i += 1) {

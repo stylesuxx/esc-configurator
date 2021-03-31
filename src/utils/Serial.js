@@ -100,6 +100,10 @@ class Serial {
     return this.msp.getUid();
   }
 
+  async getBatteryState() {
+    return this.msp.getBatteryState();
+  }
+
   async enable4WayInterface() {
     return this.msp.set4WayIf();
   }

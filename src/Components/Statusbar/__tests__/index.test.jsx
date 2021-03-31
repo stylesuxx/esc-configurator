@@ -9,9 +9,12 @@ import StatusBar from '../';
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
 test('loads and displays StatusBar', () => {
+  const ref = React.createRef();
+
   render(
     <StatusBar
       packetErrors={0}
+      ref={ref}
       version="version"
     />
   );
@@ -19,41 +22,22 @@ test('loads and displays StatusBar', () => {
   expect(screen.getByText('statusbarPortUtilization')).toBeInTheDocument();
   expect(screen.getByText('statusbarPacketError')).toBeInTheDocument();
   expect(screen.getByText('version')).toBeInTheDocument();
-});
 
+  ref.current.updateBatteryState({
+    cellCount: 1,
+    voltage: 4.2,
+  });
+  expect(screen.getByText('battery')).toBeInTheDocument();
+  expect(screen.getByText('1S @ 4.2V')).toBeInTheDocument();
 
-test('update utilization', async() => {
-  const getUtilization = jest.fn();
-  const getUtilization1 = jest.fn();
-  getUtilization.mockReturnValueOnce({
+  ref.current.updateBatteryState(null);
+  expect(screen.queryByText('battery')).not.toBeInTheDocument();
+  expect(screen.queryByText('1S @ 4.2V')).not.toBeInTheDocument();
+
+  ref.current.updateUtilization({
     up: 10,
-    down: 10,
+    down: 20,
   });
-
-  const { rerender } = render(
-    <StatusBar
-      getUtilization={getUtilization}
-      packetErrors={0}
-      version="version"
-    />
-  );
-
-  expect(screen.getByText('statusbarPortUtilization')).toBeInTheDocument();
-  expect(screen.getByText('statusbarPacketError')).toBeInTheDocument();
-  expect(screen.getByText('version')).toBeInTheDocument();
-
-  await act(async() => {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    expect(getUtilization).toHaveBeenCalled();
-  });
-
-  // Re-render with new utilization function
-  rerender(
-    <StatusBar
-      getUtilization={getUtilization1}
-      packetErrors={0}
-      version="version"
-    />
-  );
+  expect(screen.getByText('D: 20%')).toBeInTheDocument();
+  expect(screen.getByText('U: 10%')).toBeInTheDocument();
 });
