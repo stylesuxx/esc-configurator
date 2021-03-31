@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {
+  useRef,
+  useState,
+} from 'react';
 import {
   ToastContainer,
 } from 'react-toastify';
@@ -11,6 +14,10 @@ import Statusbar from '../Statusbar';
 import CookieConsent from '../CookieConsent';
 import MainContent from '../MainContent';
 import AppSettings from '../AppSettings';
+
+import {
+  useInterval
+} from '../../utils/helpers/React';
 
 import changelogEntries from '../../changelog.json';
 import './style.scss';
@@ -60,6 +67,26 @@ function App({
   showSettings,
   version
 }) {
+  const statusbarRef = useRef();
+
+  useInterval(async() => {
+    if(open && !actions.isReading && !fourWay) {
+      if(serial.getBatteryState) {
+        const batteryState = await serial.getBatteryState();
+        statusbarRef.current.updateBatteryState(batteryState);
+      }
+    } else {
+      statusbarRef.current.updateBatteryState(null);
+    }
+  }, 1000);
+
+  useInterval(async() => {
+    if(serial.getUtilization) {
+      const utilization = await serial.getUtilization();
+      statusbarRef.current.updateUtilization(utilization);
+    }
+  }, 1000);
+
   const languageElements = languages.map((item) => (
     <option
       key={item.value}
@@ -146,8 +173,8 @@ function App({
         />
 
         <Statusbar
-          getUtilization={serial.getUtilization}
           packetErrors={packetErrors}
+          ref={statusbarRef}
           version={version}
         />
       </div>
@@ -168,10 +195,15 @@ function App({
   );
 }
 
-App.defaultProps = { serial: { getUtilization: null } };
+App.defaultProps = {
+  serial: {
+    getBatteryState: null,
+    getUtilization: null,
+  }
+};
 
 App.propTypes = {
-  actions: PropTypes.shape({}).isRequired,
+  actions: PropTypes.shape({ isReading: PropTypes.bool.isRequired }).isRequired,
   appSettings: PropTypes.shape({}).isRequired,
   configs: PropTypes.shape({}).isRequired,
   connected: PropTypes.number.isRequired,
@@ -209,7 +241,10 @@ App.propTypes = {
   packetErrors: PropTypes.number.isRequired,
   portNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   progress: PropTypes.arrayOf(PropTypes.number).isRequired,
-  serial: PropTypes.shape({ getUtilization:PropTypes.func }),
+  serial: PropTypes.shape({
+    getBatteryState:PropTypes.func,
+    getUtilization:PropTypes.func,
+  }),
   serialLog: PropTypes.arrayOf(PropTypes.any).isRequired,
   settings: PropTypes.shape({}).isRequired,
   showSettings: PropTypes.bool.isRequired,

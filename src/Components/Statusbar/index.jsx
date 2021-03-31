@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, {
   useState,
   useEffect,
-  useRef,
+  useImperativeHandle,
+  forwardRef,
 } from 'react';
 import {
   useTranslation,
@@ -10,31 +11,28 @@ import {
 
 import './style.scss';
 
-function Statusbar({
+const Statusbar = forwardRef(({
   packetErrors,
-  getUtilization,
   version,
-}) {
+}, ref) => {
   const [utilization, setUtilization] = useState({
     up: 0,
     down: 0,
   });
-  const [timeout, setTimeout] = useState(null);
+  const [batteryState, setBatteryState] = useState();
 
-  useEffect(() => {
-    if(getUtilization) {
-      if(timeout) {
-        clearTimeout(timeout);
+  useImperativeHandle(ref, () => ({
+    updateBatteryState(state) {
+      if(state && state.cellCount > 0) {
+        setBatteryState(`${state.cellCount}S @ ${state.voltage}V`);
+      } else {
+        setBatteryState(null);
       }
-
-      const to = setInterval(() => {
-        const current = getUtilization();
-        setUtilization(current);
-      }, 1000);
-
-      setTimeout(to);
+    },
+    updateUtilization(utilization) {
+      setUtilization(utilization);
     }
-  }, [getUtilization]);
+  }));
 
   const { t } = useTranslation('common');
   const upString = `U: ${utilization.up}%`;
@@ -70,17 +68,27 @@ function Statusbar({
         </span>
       </div>
 
+      {batteryState &&
+        <div>
+          <span>
+            {t('battery')}
+          </span>
+
+          {' '}
+
+          <span>
+            {batteryState}
+          </span>
+        </div>}
+
       <div className="version">
         {version}
       </div>
     </div>
   );
-}
-
-Statusbar.defaultProps = { getUtilization: null };
+});
 
 Statusbar.propTypes = {
-  getUtilization: PropTypes.func,
   packetErrors: PropTypes.number.isRequired,
   version: PropTypes.string.isRequired,
 };
