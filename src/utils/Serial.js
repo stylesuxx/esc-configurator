@@ -212,18 +212,18 @@ class Serial {
     this.startReader();
   }
 
-  disconnect() {
+  async disconnect() {
     this.running = false;
     this.reader = null;
     this.writer = null;
-  }
-
-  async close() {
-    this.running = false;
 
     if(this.fourWay) {
       await this.fourWay.exit();
     }
+  }
+
+  async close() {
+    this.running = false;
 
     if(this.reader) {
       this.reader.cancel();
@@ -239,6 +239,8 @@ class Serial {
     } catch(e) {
       // we tried...
     }
+
+    this.disconnect();
   }
 }
 

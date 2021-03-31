@@ -5,7 +5,8 @@
       "Improved translations",
       "Added coverage",
       "Improved rendering of some components",
-      "Refactored to pure functions"
+      "Refactored to pure functions",
+      "Show battery charge if in Motor tab"
     ]
   },
   {

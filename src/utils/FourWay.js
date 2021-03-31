@@ -936,9 +936,7 @@ class FourWay {
   }
 
   exit() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
+    clearInterval(this.interval);
 
     return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
   }
