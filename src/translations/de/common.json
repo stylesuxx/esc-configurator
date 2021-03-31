@@ -98,5 +98,6 @@
   "selectMode": "Modus auswählen",
   "selectVersion": "Version auswählen",
   "selectPwmFrequency": "PWM Frequenz auswählen",
-  "selectTarget": "Ziel wählen"
+  "selectTarget": "Ziel wählen",
+  "battery": "Battery:"
 }
