@@ -138,12 +138,6 @@ class App extends Component {
         this.hasWebUsb = true;
       }
 
-      const language = localStorage.getItem('language');
-      if(language) {
-        i18next.changeLanguage(language);
-        this.setState({ language });
-      }
-
       const settings = JSON.parse(localStorage.getItem('settings'));
       const currentSettings = Object.assign({}, appSettings, settings);
       this.setState({ appSettings: currentSettings });
@@ -162,6 +156,35 @@ class App extends Component {
         });
       }(window.console));
       window.console = console;
+
+      let language = localStorage.getItem('language');
+      if(!language) {
+        const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
+        if(browserLanguage) {
+          for(let [key, value] of Object.entries(this.languages)) {
+            if(value.value === browserLanguage) {
+              language = browserLanguage;
+              break;
+            }
+          }
+
+          if(!language && browserLanguage.split('-').length > 1) {
+            const part = browserLanguage.split('-')[0];
+            for(let [key, value] of Object.entries(this.languages)) {
+              if(value.value === part) {
+                language = part;
+                break;
+              }
+            }
+          }
+        }
+      }
+      console.log(language);
+
+      if(language) {
+        i18next.changeLanguage(language);
+        this.setState({ language });
+      }
 
       if (hasSerial) {
         /**
@@ -207,8 +230,12 @@ class App extends Component {
       value: "en",
     },
     {
-      label: "German",
+      label: "Detusch",
       value: "de",
+    },
+    {
+      label: "简体中文",
+      value: 'zh-CN',
     }
   ];
 

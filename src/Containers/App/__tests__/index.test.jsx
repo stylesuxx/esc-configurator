@@ -7,6 +7,7 @@ import userEvent from '@testing-library/user-event';
 import App from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
+jest.mock('i18next', () => ({ changeLanguage: () => null }));
 
 test('loads and displays home', () => {
   render(<App />);
