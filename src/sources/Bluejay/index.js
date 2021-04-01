@@ -17,10 +17,13 @@ function buildDisplayName(flash, make) {
     revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
   }
 
-  const pwm = settings.__PWM_FREQUENCY;
+  let pwm = '';
+  if(settings.__PWM_FREQUENCY && settings.__PWM_FREQUENCY !== 0xFF) {
+    pwm = `, ${settings.__PWM_FREQUENCY}kHz`;
+  }
   const name = `${settings.NAME.trim()}`;
 
-  return `${make} - ${name}, ${revision}, ${pwm}kHz`;
+  return `${make} - ${name}, ${revision}${pwm}`;
 }
 
 const pwmOptions = [24, 48, 96];

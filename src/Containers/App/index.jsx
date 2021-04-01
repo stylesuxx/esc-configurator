@@ -179,7 +179,6 @@ class App extends Component {
           }
         }
       }
-      console.log(language);
 
       if(language) {
         i18next.changeLanguage(language);
