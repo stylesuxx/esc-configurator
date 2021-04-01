@@ -8,7 +8,8 @@
       "Refactored to pure functions",
       "Show battery charge if in Motor tab",
       "Sources generate display names",
-      "Added simplified Chinese"
+      "Added simplified Chinese",
+      "Show PWM frequency with Bluejay"
     ]
   },
   {
