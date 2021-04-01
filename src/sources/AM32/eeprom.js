@@ -323,6 +323,18 @@ const AM32_DEFAULTS = {
   }
 };
 
+function buildDisplayName(flash, make) {
+  const settings = flash.settings;
+  let revision = 'Unsupported/Unrecognized';
+  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+  }
+
+  const bootloader = flash.bootloaderRevision;
+
+  return `${make} - AM32, ${revision}, Bootloader: ${bootloader}`;
+}
+
 const EEPROM = {
   DEFAULTS: AM32_DEFAULTS,
   EEPROM_OFFSET: AM32_EEPROM_OFFSET,
@@ -345,6 +357,7 @@ export {
   AM32_RESET_DELAY_MS,
   AM32_SETTINGS_DESCRIPTIONS,
   AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
+  buildDisplayName,
 };
 
 export default EEPROM;

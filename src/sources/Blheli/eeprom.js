@@ -1376,6 +1376,16 @@ var BLHELI_S_DEFAULTS = {
   }
 };
 
+function buildDisplayName(flash, make) {
+  const settings = flash.settings;
+  let revision = 'Unsupported/Unrecognized';
+  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+  }
+
+  return `${make} - BlHeli_S, ${revision}`;
+}
+
 const EEPROM = {
   DEFAULTS: BLHELI_S_DEFAULTS,
   EEPROM_OFFSET: BLHELI_SILABS_EEPROM_OFFSET,
@@ -1400,6 +1410,7 @@ export {
   BLHELI_SILABS_EEPROM_OFFSET,
   BLHELI_SETTINGS_DESCRIPTIONS,
   BLHELI_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
+  buildDisplayName,
 };
 
 export default EEPROM;

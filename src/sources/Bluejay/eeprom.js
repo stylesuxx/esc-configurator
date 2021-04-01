@@ -955,4 +955,21 @@ const EEPROM = {
   TYPES,
 };
 
+function buildDisplayName(flash, make) {
+  const settings = flash.settings;
+  let revision = 'Unsupported/Unrecognized';
+  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+  }
+
+  const pwm = settings.__PWM_FREQUENCY;
+  const name = `${settings.NAME.trim()}`;
+
+  return `${make} - ${name}, ${revision}, ${pwm}kHz`;
+}
+
+export {
+  buildDisplayName,
+};
+
 export default EEPROM;

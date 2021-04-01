@@ -1,4 +1,6 @@
-import EEPROM from '../eeprom';
+import EEPROM, {
+  buildDisplayName
+} from '../eeprom';
 
 test('general settings visibleIf GOVERNOR_MODE 3', () => {
   const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);
@@ -41,4 +43,23 @@ test('individual settings visibleIf GOVERNOR_MODE 3, MOTOR_DIRECTION 3', () => {
       expect(visibleIf[i](settings)).toBeTruthy();
     }
   }
+});
+
+test('build display Name', () => {
+  const flash = {
+    settings: {
+      MAIN_REVISION: 1,
+      SUB_REVISION: 100,
+    },
+  };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - BlHeli_S, 1.100');
+});
+
+test('build display Name with missing revisions', () => {
+  const flash = { settings: {} };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - BlHeli_S, Unsupported/Unrecognized');
 });

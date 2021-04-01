@@ -2,7 +2,9 @@ import Source, {
   PLATFORMS,
 } from '../Source';
 
-import EEPROM from './eeprom';
+import EEPROM, {
+  buildDisplayName
+} from './eeprom';
 
 import VERSIONS_LOCAL from './versions.json';
 import ESCS_LOCAL from './escs.json';
@@ -22,6 +24,9 @@ const am32Config = new Source(
   pwmOptions
 );
 
-
+export {
+  buildDisplayName,
+  EEPROM
+};
 
 export default am32Config;
