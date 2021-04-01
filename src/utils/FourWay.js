@@ -1,22 +1,18 @@
 import Convert from './helpers/Convert';
 
 import {
-  BLHELI_SILABS,
-} from '../sources/Blheli/eeprom';
+  buildDisplayName as blheliBuildDisplayName,
+  EEPROM as BLHELI_EEPROM,
+} from '../sources/Blheli';
 
 import {
-  AM32_RESET_DELAY_MS,
-} from '../sources/AM32/eeprom';
+  buildDisplayName as am32BuildDisplayName,
+  EEPROM as AM32_EEPROM,
+} from '../sources/AM32';
 
-import blheliSource, {
-  buildDisplayName as blheliBuildDisplayName,
-}  from '../sources/Blheli';
 import bluejaySource, {
   buildDisplayName as bluejayBuildDisplayName,
 } from '../sources/Bluejay';
-import am32Source, {
-  buildDisplayName as am32BuildDisplayName,
-} from '../sources/AM32';
 
 // TODO: We might use the ones from the source here...
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
@@ -55,9 +51,7 @@ import {
   NotEnoughDataError,
 } from './helpers/QueueProcessor';
 
-const BLHELI_EEPROM = blheliSource.getEeprom();
 const BLUEJAY_EEPROM = bluejaySource.getEeprom();
-const AM32_EEPROM = am32Source.getEeprom();
 
 class FourWay {
   constructor(serial) {
@@ -278,7 +272,7 @@ class FourWay {
 
         if (isSiLabs) {
           layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
-          settingsArray = (await this.read(BLHELI_SILABS.EEPROM_OFFSET, layoutSize)).params;
+          settingsArray = (await this.read(BLHELI_EEPROM.SILABS.EEPROM_OFFSET, layoutSize)).params;
         } else if (isArm) {
           layoutSize = AM32_EEPROM.LAYOUT_SIZE;
           layout = AM32_EEPROM.LAYOUT;
@@ -294,14 +288,12 @@ class FourWay {
 
         flash.settingsArray = settingsArray;
         flash.settings = Convert.settingsObject(settingsArray, layout);
-        console.log(settingsArray);
 
         /**
          * Baased on the name we can decide if the initially guessed layout
          * was correct, if not, we need to build a new settings object.
          */
         const name = flash.settings.NAME;
-        console.log(name);
         let newLayout = null;
         switch(name) {
           case 'Bluejay':
@@ -481,7 +473,7 @@ class FourWay {
 
       switch(interfaceMode) {
         case MODES.SiLC2: {
-          return BLHELI_SILABS.FLASH_SIZE;
+          return BLHELI_EEPROM.SILABS.FLASH_SIZE;
         }
 
         case MODES.SiLBLB: {
@@ -595,7 +587,7 @@ class FourWay {
       this.totalBytes = BLHELI_EEPROM.PAGE_SIZE * 14 * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(BLHELI_SILABS.EEPROM_OFFSET, BLHELI_EEPROM.LAYOUT_SIZE);
+      const message = await this.read(BLHELI_EEPROM.SILABS.EEPROM_OFFSET, BLHELI_EEPROM.LAYOUT_SIZE);
 
       // checkESCAndMCU
       const escSettingArrayTmp = message.params;
@@ -713,7 +705,7 @@ class FourWay {
 
           // Reset after flashing to update name and settings
           await this.reset(target);
-          await delay(AM32_RESET_DELAY_MS);
+          await delay(AM32_EEPROM.RESET_DELAY);
         } break;
 
         default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
@@ -764,7 +756,7 @@ class FourWay {
 
         // Check pseudo-eeprom page for BLHELI signature
         const mcu = buf2ascii(
-          flash.subarray(BLHELI_SILABS.EEPROM_OFFSET)
+          flash.subarray(BLHELI_EEPROM.SILABS.EEPROM_OFFSET)
             .subarray(BLHELI_EEPROM.LAYOUT.MCU.offset)
             .subarray(0, BLHELI_EEPROM.LAYOUT.MCU.size));
 

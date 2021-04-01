@@ -1,6 +1,7 @@
-import EEPROM, {
+import {
+  EEPROM,
   buildDisplayName,
-} from '../eeprom';
+} from '../';
 
 test('visibleIf MOTOR_DIRECTION 3', () => {
   const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);

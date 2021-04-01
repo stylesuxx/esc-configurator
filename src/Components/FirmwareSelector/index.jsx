@@ -14,9 +14,11 @@ import {
 import LabeledSelect from '../Input/LabeledSelect';
 
 import {
-  BLHELI_TYPES,
-  BLHELI_MODES,
-} from '../../sources/Blheli/eeprom';
+  EEPROM as BLHELI_EEPROM,
+} from '../../sources/Blheli';
+
+const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
+const BLHELI_MODES = BLHELI_EEPROM.MODES;
 
 import {
   EEPROM as BLUEJAY_EEPROM

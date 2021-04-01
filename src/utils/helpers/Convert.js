@@ -1,10 +1,10 @@
 import {
-  BLHELI_MODES,
-} from '../../sources/Blheli/eeprom';
+  EEPROM,
+} from '../../sources/Blheli';
 
 class Convert {
   static modeToString(mode) {
-    for (const [key, value] of Object.entries(BLHELI_MODES)) {
+    for (const [key, value] of Object.entries(EEPROM.MODES)) {
       if (value === mode) {
         return key;
       }

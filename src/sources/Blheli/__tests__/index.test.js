@@ -1,6 +1,7 @@
-import EEPROM, {
+import {
+  EEPROM,
   buildDisplayName
-} from '../eeprom';
+} from '../';
 
 test('general settings visibleIf GOVERNOR_MODE 3', () => {
   const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);

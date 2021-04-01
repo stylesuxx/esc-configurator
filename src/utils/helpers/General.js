@@ -1,20 +1,21 @@
 import {
-  EEPROM as BLUEJAY_EEPROM
-} from '../../sources/Bluejay';
-
-const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
-
-import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
-
-import {
-  BLHELI_TYPES,
-} from '../../sources/Blheli/eeprom';
+  EEPROM as BLHELI_EEPROM,
+} from '../../sources/Blheli';
 import BLHELI_ESCS from '../../sources/Blheli/escs.json';
 
 import {
-  AM32_TYPES,
-} from '../../sources/AM32/eeprom';
+  EEPROM as BLUEJAY_EEPROM
+} from '../../sources/Bluejay';
+import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
+
+import {
+  EEPROM as AM32_EEPROM,
+} from '../../sources/AM32';
 import AM32_ESCS from '../../sources/AM32/escs.json';
+
+const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
+const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
+const AM32_TYPES = AM32_EEPROM.TYPES;
 
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
