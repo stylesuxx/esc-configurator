@@ -352,7 +352,6 @@ class FourWay {
         }
 
         const layoutName = (flash.settings.LAYOUT || '').trim();
-        let bootloaderRevision = null;
         let make = null;
         let displayName = 'UNKNOWN';
         if (isSiLabs) {
@@ -371,10 +370,10 @@ class FourWay {
             displayName = blheliBuildDisplayName(flash, make);
           }
         } else if (isArm) {
-          bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
+          flash.bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
           flash.settings.LAYOUT = flash.settings.NAME;
+          make = flash.settings.NAME;
 
-          //TODO: Needs to be rebased
           displayName = am32BuildDisplayName(flash, make);
         } else {
           const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.ATMEL];
@@ -384,7 +383,6 @@ class FourWay {
         }
 
         flash.defaultSettings = defaultSettings[layoutRevision];
-        flash.bootloaderRevision = bootloaderRevision;
         flash.displayName = displayName;
         flash.layoutSize = layoutSize;
         flash.layout = layout;
