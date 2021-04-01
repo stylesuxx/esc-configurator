@@ -10,7 +10,7 @@ import {
   HighlightWithinTextarea
 } from 'react-highlight-within-textarea';
 
-import Rtttl from '../../../utils/Rtttl';
+import Rtttl from 'bluejay-rtttl-parse';
 
 import {
   useTranslation,
