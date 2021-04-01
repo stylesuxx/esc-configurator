@@ -230,7 +230,7 @@ class App extends Component {
       value: "en",
     },
     {
-      label: "Detusch",
+      label: "Deutsch",
       value: "de",
     },
     {
