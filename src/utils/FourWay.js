@@ -359,14 +359,18 @@ class FourWay {
           const version = (await this.read(AM32_EEPROM.VERSION_OFFSET, AM32_EEPROM.VERSION_SIZE)).params;
           const mainRevision = version[0];
           const subRevision = version[1];
-          const deviceName = buf2ascii(version.subarray(2));
+          const make = buf2ascii(version.subarray(2));
 
           flash.settings.MAIN_REVISION = mainRevision;
           flash.settings.SUB_REVISION = subRevision;
-          flash.settings.LAYOUT = deviceName;
-          flash.settings.NAME = deviceName;
+          flash.settings.LAYOUT = make;
+          flash.settings.NAME = make;
 
-          flash.bootloaderRevision = (await this.read(AM32_EEPROM.BOOT_LOADER_OFFSET, AM32_EEPROM.BOOT_LOADER_VERSION_SIZE)).params[0];
+          try {
+            flash.bootloaderRevision = (await this.read(AM32_EEPROM.BOOT_LOADER_OFFSET, AM32_EEPROM.BOOT_LOADER_VERSION_SIZE, 2)).params[0];
+          } catch(e) {
+            console.debug('Could not read bootloader version from firmware');
+          }
 
           displayName = am32BuildDisplayName(flash, make);
         } else {
@@ -906,11 +910,12 @@ class FourWay {
     return this.sendMessagePromised(COMMANDS.cmd_DevicePageErase, [page]);
   }
 
-  read(address, bytes) {
+  read(address, bytes, retries = 10) {
     return this.sendMessagePromised(
       COMMANDS.cmd_DeviceRead,
       [bytes === 256 ? 0 : bytes],
-      address
+      address,
+      retries
     );
   }
 

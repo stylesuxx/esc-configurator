@@ -33,7 +33,7 @@ test('build display Name', () => {
   };
 
   const name = buildDisplayName(flash, 'MAKE');
-  expect(name).toEqual('MAKE - AM32, 1.100, Bootloader: 23');
+  expect(name).toEqual('MAKE - AM32, 1.100, Bootloader v23');
 });
 
 test('build display Name with missing revisions', () => {
@@ -43,5 +43,5 @@ test('build display Name with missing revisions', () => {
   };
 
   const name = buildDisplayName(flash, 'MAKE');
-  expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader: 23');
+  expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader v23');
 });
