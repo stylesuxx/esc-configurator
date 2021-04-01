@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, {
   useState,
-  useEffect
+  useImperativeHandle,
+  forwardRef,
 } from 'react';
 import {
   useTranslation,
@@ -9,31 +10,38 @@ import {
 
 import './style.scss';
 
-function Statusbar({
+const Statusbar = forwardRef(({
   packetErrors,
-  getUtilization,
   version,
-}) {
+}, ref) => {
   const [utilization, setUtilization] = useState({
     up: 0,
     down: 0,
   });
-  const [timeout, setTimeout] = useState(null);
+  const [batteryState, setBatteryState] = useState({
+    text: null,
+    danger: false,
+  });
 
-  useEffect(() => {
-    if(getUtilization) {
-      if(timeout) {
-        clearTimeout(timeout);
+  useImperativeHandle(ref, () => ({
+    updateBatteryState(state) {
+      if(state && state.cellCount > 0) {
+        const danger = (state.voltage / state.cellCount) < 3.7;
+        setBatteryState({
+          text: `${state.cellCount}S @ ${state.voltage}V`,
+          danger,
+        });
+      } else {
+        setBatteryState({
+          text: null,
+          danger: false,
+        });
       }
-
-      const to = setInterval(() => {
-        const current = getUtilization();
-        setUtilization(current);
-      }, 1000);
-
-      setTimeout(to);
+    },
+    updateUtilization(utilization) {
+      setUtilization(utilization);
     }
-  }, [getUtilization]);
+  }));
 
   const { t } = useTranslation('common');
   const upString = `U: ${utilization.up}%`;
@@ -69,17 +77,27 @@ function Statusbar({
         </span>
       </div>
 
+      {batteryState.text &&
+        <div className={batteryState.danger ? 'danger' : ''}>
+          <span>
+            {t('battery')}
+          </span>
+
+          {' '}
+
+          <span>
+            {batteryState.text}
+          </span>
+        </div>}
+
       <div className="version">
         {version}
       </div>
     </div>
   );
-}
-
-Statusbar.defaultProps = { getUtilization: null };
+});
 
 Statusbar.propTypes = {
-  getUtilization: PropTypes.func,
   packetErrors: PropTypes.number.isRequired,
   version: PropTypes.string.isRequired,
 };

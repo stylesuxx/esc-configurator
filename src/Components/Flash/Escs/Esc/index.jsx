@@ -25,24 +25,9 @@ function Esc({
   const settings = esc.individualSettings;
   const currentSettings = settings;
   const settingsDescriptions = esc.individualSettingsDescriptions;
-  const revision = settings ? `${settings.MAIN_REVISION}.${settings.SUB_REVISION}` : 'UNSUPPORTED';
 
-  let make = '';
-  if (esc.make) {
-    make = `${esc.make}, `;
-  }
-
-  let name = settings ? (settings.NAME).trim() : '';
-  if (name.length > 0) {
-    name = `, ${name}`;
-  }
-
-  let bootloader = '';
-  if (esc.bootloaderRevision !== null) {
-    bootloader = ` (bootloader revision ${esc.bootloaderRevision})`;
-  }
-
-  const title = `ESC ${(index + 1)}: ${make} ${revision}${name}${bootloader}`;
+  const name = esc.displayName ? esc.displayName : 'Unsupported/Unrecognized';
+  const title = `ESC ${(index + 1)}: ${name}`;
 
   function flashFirmware() {
     onFlash(index);

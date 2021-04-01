@@ -14,9 +14,11 @@ import {
 import LabeledSelect from '../Input/LabeledSelect';
 
 import {
-  BLHELI_TYPES,
-  BLHELI_MODES,
-} from '../../sources/Blheli/eeprom';
+  EEPROM as BLHELI_EEPROM,
+} from '../../sources/Blheli';
+
+const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
+const BLHELI_MODES = BLHELI_EEPROM.MODES;
 
 import {
   EEPROM as BLUEJAY_EEPROM
@@ -215,9 +217,12 @@ function FirmwareSelector({
     onLocalSubmit(e, force, migrate);
   }
 
+  /*
+  // TODO: Not yet implemented - this might only be needed for ATMEL
   function updateMode(e) {
     setMode(e.target.value);
   }
+  */
 
   function updateVersion(e) {
     const newSelection = Object.assign({}, selection, { url: e.target.value });
@@ -302,13 +307,13 @@ function FirmwareSelector({
         <div className="gui-box grey">
           <div className="gui-box-titlebar">
             <div className="spacer-box-title">
-              Select Target
+              {t('selectTarget')}
             </div>
           </div>
 
           <div className="spacer-box">
             <LabeledSelect
-              firstLabel="Select Firmware"
+              firstLabel={t('selectFirmware')}
               label="Firmware"
               onChange={updateFirmware}
               options={options.firmwares}
@@ -318,24 +323,26 @@ function FirmwareSelector({
             {selection.firmware &&
               <>
                 <LabeledSelect
-                  firstLabel="Select ESC"
+                  firstLabel={t('selectEsc')}
                   label="ESC"
                   onChange={updateEsc}
                   options={options.escs}
                   selected={esc}
                 />
 
+                {/*
                 {type === BLHELI_TYPES.SILABS || type === BLHELI_TYPES.ATMEL &&
                   <LabeledSelect
-                    firstLabel="Select Mode"
+                    firstLabel={t('selectMode')}
                     label="Mode"
                     onChange={updateMode}
                     options={options.modes}
                     selected={mode}
                   />}
+                */}
 
                 <LabeledSelect
-                  firstLabel="Select Version"
+                  firstLabel={t('selectVersion')}
                   label="Version"
                   onChange={updateVersion}
                   options={options.versions}
@@ -344,7 +351,7 @@ function FirmwareSelector({
 
                 {options.frequencies.length > 0 &&
                   <LabeledSelect
-                    firstLabel="Select PWM Frequency"
+                    firstLabel={t('selectPwmFrequency')}
                     label="PWM Frequency"
                     onChange={updatePwm}
                     options={options.frequencies}
@@ -394,7 +401,11 @@ function FirmwareSelector({
   );
 }
 
-FirmwareSelector.defaultProps = { selectedMode: null };
+FirmwareSelector.defaultProps = {
+  escHint: null,
+  selectedMode: null,
+  signatureHint: null,
+};
 
 FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
@@ -403,12 +414,12 @@ FirmwareSelector.propTypes = {
     platforms: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,
   }).isRequired,
-  escHint: PropTypes.string.isRequired,
+  escHint: PropTypes.string,
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
-  signatureHint: PropTypes.number.isRequired,
+  signatureHint: PropTypes.number,
 };
 
 export default FirmwareSelector;

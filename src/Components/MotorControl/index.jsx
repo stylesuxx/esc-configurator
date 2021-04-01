@@ -29,11 +29,15 @@ function MotorControl({
     return masterValue;
   }
 
+  // Makes no sense to test, component has its own test, we just assume that
+  // the slider actually slides.
+  /* istanbul ignore next */
   function updateValue(value) {
     setMasterValue(value);
     onAllUpdate(value);
   }
 
+  /* istanbul ignore next */
   function updateSingleValue(index, speed) {
     onSingleUpdate(index, speed);
   }
@@ -44,6 +48,7 @@ function MotorControl({
   }) {
     const [value, setValue] = useState(1000);
 
+    /* istanbul ignore next */
     function update(value) {
       setValue(value);
       onChange(index + 1, value);
@@ -136,8 +141,10 @@ function MotorControl({
   );
 }
 
+MotorControl.defaultProps = { motorCount: 0 };
+
 MotorControl.propTypes = {
-  motorCount: PropTypes.number.isRequired,
+  motorCount: PropTypes.number,
   onAllUpdate: PropTypes.func.isRequired,
   onSingleUpdate: PropTypes.func.isRequired,
 };

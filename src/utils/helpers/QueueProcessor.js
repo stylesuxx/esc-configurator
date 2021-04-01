@@ -18,9 +18,8 @@ class QueueProcessor {
     this.commands = [];
     this.newData = false;
     this.processing = false;
-
-    this.timeout = null;
     this.quit = false;
+    this.currentCommand = null;
   }
 
   appendBuffer(buffer1, buffer2) {
@@ -42,82 +41,84 @@ class QueueProcessor {
     this.processCommands();
   }
 
+  cleanUp() {
+    this.buffer = new Uint8Array([]);
+    this.newData = false;
+    this.quit = false;
+    this.processing = false;
+    this.currentCommand = null;
+  }
+
   /**
    * Timeout reached, reject the command, clear the buffer and reset states
    */
   resolveTimeout() {
-    const command = this.commands.shift();
-    this.buffer = new Uint8Array([]);
-    this.newData = false;
-    this.timeout = null;
-    this.quit = false;
+    const error = `Timed out after ${this.currentCommand.timeout}ms`;
+    this.currentCommand.rejectCallback(new TimeoutError(error));
 
-    const error = `Timed out after ${command.timeout}ms`;
-    command.rejectCallback(new TimeoutError(error));
+    this.cleanUp();
+    this.processCommands();
   }
 
-  /**
-   * Processes the command queue while new data and commands are present.
-   */
-  async processCommands() {
-    while(this.newData && !this.processing && this.commands.length > 0) {
-      this.processing = true;
-      this.newData = false;
+  async startCommand() {
+    this.cleanUp();
+    this.currentCommand = this.commands.shift();
+    const timeout = this.currentCommand.timeout;
+    await this.currentCommand.transmit();
 
-      // Empty the current buffer
-      const currentBuffer = this.buffer;
-      this.buffer = new Uint8Array();
-      const command = this.commands[0];
+    // At this point the command might already have resolved
+    if(this.currentCommand) {
+      // if there is no receive handler, just return. There is only one case in
+      // which no receive handler is needed and this is when nod data is expected
+      // to be sent back.
+      if(!this.currentCommand.receive) {
+        this.currentCommand.resolveCallback(true);
+        this.cleanUp();
+        this.processCommands();
 
-      /**
-       * If a timeout is not yet active, set it.
-       */
-      const timeout = command.timeout;
-      if(!this.timeout) {
-        this.timeout = setTimeout(() => {
-          /*
-           * If we are not currently processing, we can Immediately handle the
-           * timeout. Ohterwise we mark the command to be quit and it will
-           * timout after processing is done, in case not enough data was
-           * available.
-           */
-          if(!this.processing) {
-            this.resolveTimeout();
-          }
-
-          this.quit = true;
-        }, timeout);
+        return;
       }
 
-      /**
-       * Get the first command int he pipe and start processing it - this can
-       * have three outcomes:
-       * resolve: The resolve Callback is called and we are done.
-       * reject:  - NotEnoughDataError: We neiter resolve nor reject,  just
-       *            wait for more data to come in - the command is kept in
-       *            the pipe for the next invokation.
-       *          - Any other error: we reject passing on the error from the
-       *            command.
-       */
+      this.currentCommand.timeoutFunct = setTimeout(() => {
+        /*
+         * If we are not currently processing, we can Immediately handle the
+         * timeout. Ohterwise we mark the command to be quit and it will
+         * timout after processing is done, in case not enough data was
+         * available.
+         */
+        if(!this.processing) {
+          this.resolveTimeout();
+        }
+
+        this.quit = true;
+      }, timeout);
+    }
+  }
+
+  async processCommand() {
+    while(!this.processing && this.newData) {
+      this.processing = true;
+
+      // this.currentCommand available or just set
+      const currentBuffer = this.buffer;
+      this.buffer = new Uint8Array();
+      this.newData = false;
+
       const promise = new Promise((resolve, reject) => {
-        command.command(currentBuffer, resolve, reject);
+        this.currentCommand.receive(currentBuffer, resolve, reject);
       });
 
       try {
         const result = await promise;
 
-        /**
-         * At this point we are done - the command can be removed from the
-         * command can be remove from the queue and the promise can be
-         * resolved.
-         */
-        clearTimeout(this.timeout);
-        this.timeout = null;
-        this.commands.shift();
+        clearTimeout(this.currentCommand.timeoutFunct);
+        this.currentCommand.resolveCallback(result);
+
+        this.currentCommand = null;
         this.quit = false;
         this.processing = false;
 
-        return command.resolveCallback(result);
+        this.processCommands();
       } catch(e) {
         if(e instanceof NotEnoughDataError) {
           /**
@@ -132,23 +133,35 @@ class QueueProcessor {
           if(this.quit) {
             this.resolveTimeout();
           }
-          return;
         } else {
           /**
            * The command failed on its own terms - not for lack of data.
            * Remove it from the queue.
            */
-          clearTimeout(this.timeout);
-          this.timeout = null;
-          this.commands.shift();
-          this.quit = false;
-          this.processing = false;
-          this.buffer = new Uint8Array([]);
-          this.newData = false;
+          clearTimeout(this.currentCommand.timeoutFunct);
+          this.currentCommand.rejectCallback(e);
 
-          return command.rejectCallback(e);
+          this.cleanUp();
+          this.processCommands();
         }
       }
+
+      this.processing = false;
+    }
+  }
+
+  /**
+   * Processes the command queue while new data and commands are present.
+   */
+  async processCommands() {
+    // If there is no current command, we are definetly not processing
+    if(!this.currentCommand && this.commands.length > 0) {
+      await this.startCommand();
+    }
+
+    // Process the current commannd
+    if(this.currentCommand && this.currentCommand.receive) {
+      await this.processCommand();
     }
   }
 
@@ -166,13 +179,14 @@ class QueueProcessor {
    *          special case of rejection - not enough data. In this case the
    *          accoring error should be thrown
    */
-  addCommand(command, timeout = 1000) {
+  addCommand(transmit, receive = null, timeout = 1000) {
     return new Promise((resolve, reject) => {
       const resolveCallback = (result) => resolve(result);
       const rejectCallback = (error) => reject(error);
 
       const newCommand = {
-        command,
+        transmit,
+        receive,
         timeout,
         resolveCallback,
         rejectCallback,

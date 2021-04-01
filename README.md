@@ -1,13 +1,14 @@
 <img align="right" src="./public/logo512.png" alt="ESC Configurator" width="250">
 
-[![Build Status](https://travis-ci.org/stylesuxx/esc-configurator.svg?branch=develop)](https://travis-ci.org/stylesuxx/esc-configurator) [![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom) [![Netlify Status](https://api.netlify.com/api/v1/badges/d297f59c-7496-49fb-9803-1cf2876aaad4/deploy-status)](https://app.netlify.com/sites/sad-goodall-6b6045/deploys) [![Discord](https://img.shields.io/discord/822952715944460368.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/QvSS5dk23C)
+[![Build Status](https://travis-ci.org/stylesuxx/esc-configurator.svg?branch=develop)](https://travis-ci.org/stylesuxx/esc-configurator) [![codecov](https://codecov.io/gh/stylesuxx/esc-configurator/branch/develop/graph/badge.svg?token=WLZXIOEDP7)](https://codecov.io/gh/stylesuxx/esc-configurator)
+ [![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom) [![Netlify Status](https://api.netlify.com/api/v1/badges/d297f59c-7496-49fb-9803-1cf2876aaad4/deploy-status)](https://app.netlify.com/sites/sad-goodall-6b6045/deploys) [![Discord](https://img.shields.io/discord/822952715944460368.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/QvSS5dk23C)
 
 # ESC Configurator - PWA (Progressive Web App)
 A progressive web-app to flash your BLHELI_S capable ESC's directly from the web using the [Web Serial API](https://wicg.github.io/serial/) or the [Web USB API](https://wicg.github.io/webusb/) as a fallback for Chrome on Android. The Web USB solution will work on a majority of android devices, but not all. Unfortunately it is not possible to detect if it will work, you will simply have to try. Also see this [SO thread](https://stackoverflow.com/questions/66771484/webusb-can-not-claim-device-on-some-android-devices) and this [Chromium issue](https://bugs.chromium.org/p/chromium/issues/detail?id=1099521).
 
 > The latest state of the master branch can be [viewed in the browser](https://esc-configurator.com)
 
-This is basically a complete re-write of the original BLHELI_S configurator. Some bits and pieces have been re-used - mainly the ones concerning the actual flashing part.
+This project is basically a re-write and clean up of the original [Blheli configurator](https://github.com/blheli-configurator/blheli-configurator). Some bits and pieces have been re-used - mainly the ones concerning the actual flashing part.
 
 I did this since I was interested in having this as an web app, but also because the original BLHELI_S configurator code was too much for me to re-factor and I thought I might be able to re-write it in the same amount of time.
 

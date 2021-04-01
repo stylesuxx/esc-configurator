@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React, {
   Suspense,
 } from 'react';
@@ -18,6 +20,7 @@ import LogEn from './translations/en/log.json';
 import CommonDe from './translations/de/common.json';
 import HintsDe from './translations/de/hints.json';
 import SettingsDe from './translations/de/settings.json';
+import LogDe from './translations/de/log.json';
 
 i18next.init({
   interpolation: { excapeValue: false },
@@ -32,6 +35,7 @@ i18next.init({
     de: {
       common: CommonDe,
       hints: HintsDe,
+      log: LogDe,
       settings: SettingsDe,
     },
   },

@@ -10,6 +10,18 @@ import ESCS_LOCAL from './escs.json';
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/versions.json';
 const ESCS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/escs.json';
 
+function buildDisplayName(flash, make) {
+  const settings = flash.settings;
+  let revision = 'Unsupported/Unrecognized';
+  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+  }
+
+  const bootloader = flash.bootloaderRevision;
+
+  return `${make} - AM32, ${revision}, Bootloader: ${bootloader}`;
+}
+
 const pwmOptions = [];
 const am32Config = new Source(
   'AM32',
@@ -22,6 +34,9 @@ const am32Config = new Source(
   pwmOptions
 );
 
-
+export {
+  buildDisplayName,
+  EEPROM
+};
 
 export default am32Config;

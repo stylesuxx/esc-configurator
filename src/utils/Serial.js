@@ -28,7 +28,6 @@ class Serial {
     this.writer = null;
     this.reader = null;
 
-    this.write = this.write.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
     this.getUtilization = this.getUtilization.bind(this);
 
@@ -48,10 +47,11 @@ class Serial {
    * Send a buffer via serial and process response with the response handler
    */
   async executeCommand(buffer, responseHandler) {
-    await this.write(buffer);
-    if(responseHandler) {
-      return this.qp.addCommand(responseHandler);
-    }
+    const sendHandler = async function() {
+      await this.writeBuffer(buffer);
+    }.bind(this);
+
+    return this.qp.addCommand(sendHandler, responseHandler);
   }
 
   setLogCallback(logCallback) {
@@ -98,6 +98,10 @@ class Serial {
 
   async getUid() {
     return this.msp.getUid();
+  }
+
+  async getBatteryState() {
+    return this.msp.getBatteryState();
   }
 
   async enable4WayInterface() {
@@ -151,7 +155,7 @@ class Serial {
     return this.fourWay.getInfo(esc);
   }
 
-  async write(buffer) {
+  async writeBuffer(buffer) {
     if(this.writer) {
       this.sent += buffer.byteLength;
       await this.writer.write(buffer);
@@ -208,18 +212,18 @@ class Serial {
     this.startReader();
   }
 
-  disconnect() {
+  async disconnect() {
     this.running = false;
     this.reader = null;
     this.writer = null;
-  }
-
-  async close() {
-    this.running = false;
 
     if(this.fourWay) {
       await this.fourWay.exit();
     }
+  }
+
+  async close() {
+    this.running = false;
 
     if(this.reader) {
       this.reader.cancel();
@@ -235,6 +239,8 @@ class Serial {
     } catch(e) {
       // we tried...
     }
+
+    this.disconnect();
   }
 }
 

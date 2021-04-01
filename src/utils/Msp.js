@@ -1,3 +1,5 @@
+import compareVersions from 'compare-versions';
+
 import {
   NotEnoughDataError,
 } from './helpers/QueueProcessor';
@@ -8,6 +10,8 @@ const MSP = {
   MSP_FC_VERSION: 3,
   MSP_BOARD_INFO: 4,
   MSP_BUILD_INFO: 5,
+
+  MSP_BATTERY_STATE: 130,
 
   MSP_SET_MOTOR: 214,
   MSP_SET_PASSTHROUGH: 245,
@@ -41,6 +45,8 @@ class Msp {
 
     const speedBufferOut = new ArrayBuffer(16);
     this.speedBufView = new Uint8Array(speedBufferOut);
+
+    this.version = null;
   }
 
   setLogCallback(logCallback) {
@@ -162,9 +168,8 @@ class Msp {
             return resolve(response);
           }
 
-          return reject(new Error(`code: ${code} - crc failed`));
-
           this.increasePacketErrors(1);
+          return reject(new Error(`code: ${code} - crc failed`));
         } break;
 
         default: {
@@ -290,6 +295,10 @@ class Msp {
     return this.send(MSP.MSP_MOTOR);
   }
 
+  getBatteryState() {
+    return this.send(MSP.MSP_BATTERY_STATE);
+  }
+
   set4WayIf() {
     return this.send(MSP.MSP_SET_PASSTHROUGH);
   }
@@ -389,6 +398,8 @@ class Msp {
           config.apiVersion = `${data.getUint8(offset++)}.`;
           config.apiVersion += `${data.getUint8(offset++)}.0`;
 
+          this.version = config.apiVersion;
+
           return config;
         }
 
@@ -450,6 +461,23 @@ class Msp {
           // Offset += 2; // ???
 
           return config;
+        }
+
+        case MSP.MSP_BATTERY_STATE: {
+          const battery = {
+            cellCount: data.getUint8(0),
+            capacity: data.getUint16(1, 1),     // mAh
+            voltage: data.getUint8(3) / 10.0,   // V
+            drawn: data.getUint16(4, 1),        // mAh
+            amps: data.getUint16(6, 1) / 100,   // A
+            state: data.getUint8(8),
+          };
+
+          if(compareVersions.compare(this.version, '1.41.0', '>=')) {
+            battery.voltage = data.getUint16(9, 1) / 100.0; // V
+          }
+
+          return battery;
         }
 
         case MSP.MSP_SET_3D: {

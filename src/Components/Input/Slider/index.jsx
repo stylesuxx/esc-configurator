@@ -41,11 +41,15 @@ function Slider({
     return value;
   };
 
+  /* istanbul ignore next */
   function updateValue(value) {
     value = Math.floor((value - offset) / factor);
     setCurrentValue(value);
   }
 
+  // Makes no sense to test, component has its own test, we just assume that
+  // the slider actually slides.
+  /* istanbul ignore next */
   function handleUpdate(value) {
     value = Math.floor((value - offset) / factor);
 
@@ -96,6 +100,8 @@ Slider.defaultProps = {
   max: 100,
   min: 0,
   offset: 0,
+  round: null,
+  step: 1,
   suffix: '',
   value: 0,
 };
@@ -111,8 +117,8 @@ Slider.propTypes = {
   name: PropTypes.string.isRequired,
   offset: PropTypes.number,
   onChange: PropTypes.func.isRequired,
-  round: PropTypes.bool.isRequired,
-  step: PropTypes.number.isRequired,
+  round: PropTypes.bool,
+  step: PropTypes.number,
   suffix: PropTypes.string,
   value: PropTypes.number,
 };

@@ -65,10 +65,15 @@ function Flash({
   );
 }
 
+Flash.defaultProps = {
+  canFlash: false,
+  directInput: false,
+};
+
 Flash.propTypes = {
   availableSettings: PropTypes.shape().isRequired,
-  canFlash: PropTypes.bool.isRequired,
-  directInput: PropTypes.bool.isRequired,
+  canFlash: PropTypes.bool,
+  directInput: PropTypes.bool,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
   onFlash: PropTypes.func.isRequired,
