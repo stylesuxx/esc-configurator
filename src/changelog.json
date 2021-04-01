@@ -7,7 +7,8 @@
       "Improved rendering of some components",
       "Refactored to pure functions",
       "Show battery charge if in Motor tab",
-      "Sources generate display names"
+      "Sources generate display names",
+      "Added simplified Chinese"
     ]
   },
   {

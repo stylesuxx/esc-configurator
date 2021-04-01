@@ -22,6 +22,11 @@ import HintsDe from './translations/de/hints.json';
 import SettingsDe from './translations/de/settings.json';
 import LogDe from './translations/de/log.json';
 
+import CommonChCN from './translations/zh-CN/common.json';
+import HintsChCN from './translations/zh-CN/hints.json';
+import SettingsChCN from './translations/zh-CN/settings.json';
+import LogChCN from './translations/zh-CN/log.json';
+
 i18next.init({
   interpolation: { excapeValue: false },
   lng: 'en',
@@ -37,6 +42,12 @@ i18next.init({
       hints: HintsDe,
       log: LogDe,
       settings: SettingsDe,
+    },
+    'zh-CN': {
+      common: CommonChCN,
+      hints: HintsChCN,
+      log: LogChCN,
+      settings: SettingsChCN,
     },
   },
 });
