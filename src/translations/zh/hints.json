@@ -1,8 +1,8 @@
 {
-  "STARTUP_BEEP": "Enable beep melody when the ESC is powered up.",
-  "BRAKE_ON_STOP": "Brake when motors are stopped.",
-  "BEACON_DELAY": "After how much time of inactivity the beacon should start to go off.",
-  "TEMPERATURE_PROTECTION": "At which temperature the ESC will shut down.",
+  "STARTUP_BEEP": "当 ESC 上电时启动蜂鸣旋律。",
+  "BRAKE_ON_STOP": "当电机停转时快速刹停。",
+  "BEACON_DELAY": "在多长时间无有效输入后，信标开始响起。",
+  "TEMPERATURE_PROTECTION": "当温度高于多少时 ESC 停止工作。",
   "BEEP_STRENGTH": "启动时电调的音调。此数值设置过高会伤害电机。",
   "BEACON_STRENGTH": "The volume of the beacon. Setting this too high might damage the motors.",
   "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to start up with low throttle input.",
