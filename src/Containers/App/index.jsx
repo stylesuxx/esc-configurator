@@ -24,7 +24,7 @@ import AppSettings from '../../Components/AppSettings';
 import MelodyEditor from '../../Components/MelodyEditor';
 
 import Serial from '../../utils/Serial';
-import Rtttl from '../../utils/Rtttl';
+import Rtttl from 'bluejay-rtttl-parse';
 
 import sources from '../../sources';
 
