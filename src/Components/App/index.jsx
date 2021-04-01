@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import React, {
   useRef,
-  useState,
 } from 'react';
 import {
   ToastContainer,
 } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+
+import {
+  useTranslation,
+} from 'react-i18next';
 
 import PortPicker from '../PortPicker';
 import Log from '../Log';
@@ -67,6 +70,7 @@ function App({
   showSettings,
   version
 }) {
+  const { t } = useTranslation('settings');
   const statusbarRef = useRef();
 
   useInterval(async() => {
@@ -131,7 +135,7 @@ function App({
                   onClick={onOpenSettings}
                   type="button"
                 >
-                  Settings
+                  {t('settings')}
                 </button>
               </div>
 
