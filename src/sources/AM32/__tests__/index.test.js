@@ -29,19 +29,55 @@ test('build display Name', () => {
       MAIN_REVISION: 1,
       SUB_REVISION: 100,
     },
-    bootloaderRevision: 23,
+    bootloader: {
+      valid: true,
+      pin: 'PB2',
+      version: 8,
+    },
   };
 
   const name = buildDisplayName(flash, 'MAKE');
-  expect(name).toEqual('MAKE - AM32, 1.100, Bootloader: 23');
+  expect(name).toEqual('MAKE - AM32, 1.100, Bootloader v8 (PB2)');
 });
 
 test('build display Name with missing revisions', () => {
   const flash = {
     settings: {},
-    bootloaderRevision: 23,
+    bootloader: {
+      valid: true,
+      pin: 'PB2',
+      version: 8,
+    },
   };
 
   const name = buildDisplayName(flash, 'MAKE');
-  expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader: 23');
+  expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader v8 (PB2)');
+});
+
+test('invalid bootloader', () => {
+  const flash = {
+    settings: {},
+    bootloader: {
+      valid: false,
+      pin: 'PB2',
+      version: 8,
+    },
+  };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader unknown');
+});
+
+test('no firmware flashed', () => {
+  const flash = {
+    settings: {},
+    bootloader: {
+      valid: true,
+      pin: 'PB2',
+      version: 8,
+    },
+  };
+
+  const name = buildDisplayName(flash, 'NOT READY');
+  expect(name).toEqual('NOT READY - AM32, FLASH FIRMWARE, Bootloader v8 (PB2)');
 });

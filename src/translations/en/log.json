@@ -27,5 +27,7 @@
   "escSettingsLayoutMismatch": "Layout mismatch, override not enabled - aborted",
   "escSettingsMcuMismatch": "MCU mismatch, override not enabled - aborted",
   "escFlashedInTime": "Flashed ESC {{index}} - {{seconds}}s",
-  "passthroughNotSupported": "BLHELI passthrough not supported"
+  "passthroughNotSupported": "BLHELI passthrough not supported",
+  "firmwareMismatch": "Firmware mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
+  "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}"
 }

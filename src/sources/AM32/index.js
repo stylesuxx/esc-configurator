@@ -17,9 +17,13 @@ function buildDisplayName(flash, make) {
     revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
   }
 
-  const bootloader = flash.bootloaderRevision;
+  if(make === 'NOT READY') {
+    revision = 'FLASH FIRMWARE';
+  }
 
-  return `${make} - AM32, ${revision}, Bootloader: ${bootloader}`;
+  const bootloader = flash.bootloader.valid ? `, Bootloader v${flash.bootloader.version} (${flash.bootloader.pin})` : ', Bootloader unknown';
+
+  return `${make} - AM32, ${revision}${bootloader}`;
 }
 
 const pwmOptions = [];

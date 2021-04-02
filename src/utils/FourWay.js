@@ -250,7 +250,7 @@ class FourWay {
 
       try {
         const interfaceMode = flash.params[3];
-
+        flash.meta.input = flash.params[2];
         flash.meta.signature = flash.params[1] << 8 | flash.params[0];
         flash.meta.interfaceMode = interfaceMode;
         flash.meta.available = true;
@@ -355,11 +355,45 @@ class FourWay {
             displayName = blheliBuildDisplayName(flash, make);
           }
         } else if (isArm) {
-          flash.bootloaderRevision = flash.settings.BOOT_LOADER_REVISION;
-          flash.settings.LAYOUT = flash.settings.NAME;
-          make = flash.settings.NAME;
+          /* Read version information direct from EEPROM so we can later
+           * compare to the settings object. This allows us to verify, that
+           * everything went well after flashing.
+           */
+          const [mainRevision, subRevision] = (await this.read(AM32_EEPROM.VERSION_OFFSET, AM32_EEPROM.VERSION_SIZE)).params;
 
-          displayName = am32BuildDisplayName(flash, make);
+          if(
+            flash.settings.MAIN_REVISION !== mainRevision ||
+            flash.settings.SUB_REVISION !== subRevision
+          ) {
+            const flashFirmware = `${flash.settings.MAIN_REVISION}.${flash.settings.SUB_REVISION}`;
+            const eepromFirmware = `${mainRevision}.${subRevision}`;
+            this.addLogMessage('firmwareMismatch', {
+              flash: flashFirmware,
+              eeprom: eepromFirmware,
+            });
+          }
+
+          flash.bootloader = {};
+          if(flash.meta.input) {
+            flash.bootloader.input = flash.meta.input;
+            flash.bootloader.valid = false;
+          }
+
+          /* Bootloader input pins are limited. If something different is set,
+           * then the user probably has an old fw flashed.
+           */
+          for(let [key, value] of Object.entries(AM32_EEPROM.BOOT_LOADER_PINS)) {
+            if(value === flash.bootloader.input) {
+              flash.bootloader.valid = true;
+              flash.bootloader.pin = key;
+              flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
+            }
+          }
+
+          flash.settings.MAIN_REVISION = mainRevision;
+          flash.settings.SUB_REVISION = subRevision;
+
+          displayName = am32BuildDisplayName(flash, flash.settings.NAME);
         } else {
           const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.ATMEL];
           if (layoutName in blheliAtmelLayouts) {
@@ -897,11 +931,12 @@ class FourWay {
     return this.sendMessagePromised(COMMANDS.cmd_DevicePageErase, [page]);
   }
 
-  read(address, bytes) {
+  read(address, bytes, retries = 10) {
     return this.sendMessagePromised(
       COMMANDS.cmd_DeviceRead,
       [bytes === 256 ? 0 : bytes],
-      address
+      address,
+      retries
     );
   }
 

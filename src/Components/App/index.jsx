@@ -70,7 +70,7 @@ function App({
   showSettings,
   version
 }) {
-  const { t } = useTranslation('settings');
+  const { t } = useTranslation('common');
   const statusbarRef = useRef();
 
   useInterval(async() => {
