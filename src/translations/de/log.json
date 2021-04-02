@@ -27,5 +27,7 @@
   "escSettingsLayoutMismatch": "Layout stimmt nicht überein, Layout ignorieren nicht aktiv - abgebrochen",
   "escSettingsMcuMismatch": "MCU stimmt nicht überein, ignorieren nicht aktiv - abgebrochen",
   "escFlashedInTime": "ESC {{index}} - in {{seconds}}s geflasht",
-  "passthroughNotSupported": "BLHELI passthrough nicht unterstützt"
+  "passthroughNotSupported": "BLHELI passthrough nicht unterstützt",
+  "firmwareMismatch": "Firmware mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
+  "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}"
 }
