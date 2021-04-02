@@ -99,5 +99,6 @@
   "selectVersion": "选择版本",
   "selectPwmFrequency": "选择 PWM 频率",
   "selectTarget": "选择目标",
-  "battery": "电池:"
+  "battery": "电池:",
+  "settings": "Settings"
 }
