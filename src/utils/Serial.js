@@ -33,7 +33,6 @@ class Serial {
 
     this.logCallback = null;
     this.packetErrorsCallback = null;
-    this.utilizationCallback = null;
 
     this.qp = new QueueProcessor();
 
@@ -41,6 +40,41 @@ class Serial {
     this.sentTotal = 0;
     this.received = 0;
     this.receivedTotal = 0;
+  }
+
+  /* MSP commands */
+  enable4WayInterface = () => this.msp.set4WayIf();
+  getApiVersion = () => this.msp.getApiVersion();
+  getBatteryState = () => this.msp.getBatteryState();
+  getBoardInfo = () => this.msp.getBoardInfo();
+  getBuildInfo = () => this.msp.getBuildInfo();
+  getFcVariant = () => this.msp.getFcVariant();
+  getFcVersion = () => this.msp.getFcVersion();
+  getMotorData = () => this.msp.getMotorData();
+  getUid = () => this.msp.getUid();
+  spinAllMotors = (speed) => this.msp.spinAllMotors(speed);
+  spinMotor = (index, speed) => this.msp.spinMotor(index, speed);
+
+  /* 4 Way interface commands */
+  exitFourWayInterface = () => this.fourWay.exit();
+  getFourWayInterfaceInfo = (esc) => this.fourWay.getInfo(esc);
+  resetFourWayInterface = (esc) => this.fourWay.reset(esc);
+  startFourWayInterface = () => this.fourWay.start();
+  writeHex = (index, esc, hex, force, migrate, cbProgress) => this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
+  writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
+
+  setLogCallback(logCallback) {
+    this.logCallback = logCallback;
+
+    this.fourWay.setLogCallback(logCallback);
+    this.msp.setLogCallback(logCallback);
+  }
+
+  setPacketErrorsCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
+
+    this.fourWay.setPacketErrorsCallback(packetErrorsCallback);
+    this.msp.setPacketErrorsCallback(packetErrorsCallback);
   }
 
   /**
@@ -52,107 +86,6 @@ class Serial {
     }.bind(this);
 
     return this.qp.addCommand(sendHandler, responseHandler);
-  }
-
-  setLogCallback(logCallback) {
-    this.logCallback = logCallback;
-
-    this.fourWay.setLogCallback(logCallback);
-    this.msp.setLogCallback(logCallback);
-  }
-
-  setUtilizationCallback(utilizationCallback) {
-    this.utilizationCallback = utilizationCallback;
-  }
-
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-
-    this.fourWay.setPacketErrorsCallback(packetErrorsCallback);
-    this.msp.setPacketErrorsCallback(packetErrorsCallback);
-  }
-
-  async getApiVersion() {
-    return this.msp.getApiVersion();
-  }
-
-  async getFcVariant() {
-    return this.msp.getFcVariant();
-  }
-
-  async getFcVersion() {
-    return this.msp.getFcVersion();
-  }
-
-  async getBuildInfo() {
-    return this.msp.getBuildInfo();
-  }
-
-  async getBoardInfo() {
-    return this.msp.getBoardInfo();
-  }
-
-  async getMotorData() {
-    return this.msp.getMotorData();
-  }
-
-  async getUid() {
-    return this.msp.getUid();
-  }
-
-  async getBatteryState() {
-    return this.msp.getBatteryState();
-  }
-
-  async enable4WayInterface() {
-    return this.msp.set4WayIf();
-  }
-
-  async spinMotor(index, speed) {
-    return this.msp.spinMotor(index, speed);
-  }
-
-  async spinAllMotors(speed) {
-    return this.msp.spinAllMotors(speed);
-  }
-
-  async fourWayWriteSettings(index, esc, settings) {
-    return this.fourWay.writeSettings(index, esc, settings);
-  }
-
-  async fourWayWriteHex(index, esc, hex, force, migrate, cbProgress) {
-    return this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
-  }
-
-  async fourWayStart() {
-    this.fourWay.start();
-  }
-
-  async fourWayExit() {
-    return this.fourWay.exit();
-  }
-
-  async fourWayReset(esc) {
-    return this.fourWay.reset(esc);
-  }
-
-  async fourWayTestAlive() {
-    return this.fourWay.testAlive();
-  }
-
-  async fourWayReadEEprom(address, bytes) {
-    return this.fourWay.readEEprom(
-      address,
-      bytes
-    );
-  }
-
-  async fourWayInitFlash(esc) {
-    return this.fourWay.initFlash(esc);
-  }
-
-  async fourWayGetInfo(esc) {
-    return this.fourWay.getInfo(esc);
   }
 
   async writeBuffer(buffer) {
@@ -193,7 +126,7 @@ class Serial {
     };
   }
 
-  async open(baudRate) {
+  async open(baudRate = 115200) {
     this.baudRate = baudRate;
     await this.port.open({ baudRate });
 

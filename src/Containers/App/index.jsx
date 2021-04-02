@@ -318,7 +318,7 @@ class App extends Component {
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
-      await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
+      await this.serial.writeSettings(target, esc, mergedSettings);
     }
 
     actions.isWriting = false;
@@ -387,7 +387,7 @@ class App extends Component {
         const escs = await this.serial.enable4WayInterface();
         connected = escs.connectedESCs;
 
-        await this.serial.fourWayStart();
+        await this.serial.startFourWayInterface();
 
         // This delay is needed to allow the ESC's to initialize
         await delay(1200);
@@ -409,7 +409,7 @@ class App extends Component {
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
-        const settings = await this.serial.fourWayGetInfo(i);
+        const settings = await this.serial.getFourWayInterfaceInfo(i);
         if(settings) {
           settings.index = i;
           escFlash.push(settings);
@@ -462,7 +462,7 @@ class App extends Component {
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
-      const newSettingsArray = await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
+      const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
 
       escs[i].settingsArray = newSettingsArray;
     }
@@ -588,7 +588,7 @@ class App extends Component {
 
       updateProgress(0.1);
 
-      const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
+      const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
       result.index = target;
 
       if(result) {
@@ -734,7 +734,7 @@ class App extends Component {
 
       // Send a reset of the 4 way interface, just in case it was not cleanly
       // disconnected before.
-      await this.serial.fourWayExit();
+      await this.serial.exitFourWayInterface();
     } catch (e) {
       console.debug(e);
 
@@ -803,7 +803,7 @@ class App extends Component {
     } = this.state;
     if(this.serial) {
       for(let i = 0; i < escs.length; i += 1) {
-        await this.serial.fourWayReset(i);
+        await this.serial.resetFourWayInterface(i);
       }
 
       this.serial.close();
