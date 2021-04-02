@@ -28,6 +28,6 @@
   "escSettingsMcuMismatch": "MCU stimmt nicht überein, ignorieren nicht aktiv - abgebrochen",
   "escFlashedInTime": "ESC {{index}} - in {{seconds}}s geflasht",
   "passthroughNotSupported": "BLHELI passthrough nicht unterstützt",
-  "firmwareMismatch": "Firmware mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
-  "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}"
+  "firmwareMismatch": "Firmware stimmt nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
+  "bootloaderMismatch": "Bootloader stimmt nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}"
 }
