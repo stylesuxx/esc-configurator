@@ -250,7 +250,7 @@ class FourWay {
 
       try {
         const interfaceMode = flash.params[3];
-
+        flash.meta.input = flash.params[2];
         flash.meta.signature = flash.params[1] << 8 | flash.params[0];
         flash.meta.interfaceMode = interfaceMode;
         flash.meta.available = true;
@@ -355,24 +355,45 @@ class FourWay {
             displayName = blheliBuildDisplayName(flash, make);
           }
         } else if (isArm) {
-          // Read version information direct from EEPROM istead of using the  settings array
-          const version = (await this.read(AM32_EEPROM.VERSION_OFFSET, AM32_EEPROM.VERSION_SIZE)).params;
-          const mainRevision = version[0];
-          const subRevision = version[1];
-          const make = buf2ascii(version.subarray(2));
+          /* Read version information direct from EEPROM so we can later
+           * compare to the settings object. This allows us to verify, that
+           * everything went well after flashing.
+           */
+          const [mainRevision, subRevision] = (await this.read(AM32_EEPROM.VERSION_OFFSET, AM32_EEPROM.VERSION_SIZE)).params;
+
+          if(
+            flash.settings.MAIN_REVISION !== mainRevision ||
+            flash.settings.SUB_REVISION !== subRevision
+          ) {
+            const flashFirmware = `${flash.settings.MAIN_REVISION}.${flash.settings.SUB_REVISION}`;
+            const eepromFirmware = `${mainRevision}.${subRevision}`;
+            this.addLogMessage('firmwareMismatch', {
+              flash: flashFirmware,
+              eeprom: eepromFirmware,
+            });
+          }
+
+          flash.bootloader = {};
+          if(flash.meta.input) {
+            flash.bootloader.input = flash.meta.input;
+            flash.bootloader.valid = false;
+          }
+
+          /* Bootloader input pins are limited. If something different is set,
+           * then the user probably has an old fw flashed.
+           */
+          for(let [key, value] of Object.entries(AM32_EEPROM.BOOT_LOADER_PINS)) {
+            if(value === flash.bootloader.input) {
+              flash.bootloader.valid = true;
+              flash.bootloader.pin = key;
+              flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
+            }
+          }
 
           flash.settings.MAIN_REVISION = mainRevision;
           flash.settings.SUB_REVISION = subRevision;
-          flash.settings.LAYOUT = make;
-          flash.settings.NAME = make;
 
-          try {
-            flash.bootloaderRevision = (await this.read(AM32_EEPROM.BOOT_LOADER_OFFSET, AM32_EEPROM.BOOT_LOADER_VERSION_SIZE, 2)).params[0];
-          } catch(e) {
-            console.debug('Could not read bootloader version from firmware');
-          }
-
-          displayName = am32BuildDisplayName(flash, make);
+          displayName = am32BuildDisplayName(flash, flash.settings.NAME);
         } else {
           const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.ATMEL];
           if (layoutName in blheliAtmelLayouts) {
