@@ -10,8 +10,9 @@ import {
   EEPROM as AM32_EEPROM,
 } from '../sources/AM32';
 
-import bluejaySource, {
+import {
   buildDisplayName as bluejayBuildDisplayName,
+  EEPROM as BLUEJAY_EEPROM,
 } from '../sources/Bluejay';
 
 // TODO: We might use the ones from the source here...
@@ -22,8 +23,6 @@ import AM32_ESCS from '../sources/AM32/escs.json';
 import {
   fillImage,
   parseHex,
-  buf2ascii,
-  ascii2buf,
 } from './helpers/Flash';
 
 import {
@@ -50,8 +49,6 @@ import {
 import {
   NotEnoughDataError,
 } from './helpers/QueueProcessor';
-
-const BLUEJAY_EEPROM = bluejaySource.getEeprom();
 
 class FourWay {
   constructor(serial) {
@@ -287,7 +284,7 @@ class FourWay {
         flash.isAtmel = isAtmel;
 
         flash.settingsArray = settingsArray;
-        flash.settings = Convert.settingsObject(settingsArray, layout);
+        flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
 
         /**
          * Baased on the name we can decide if the initially guessed layout
@@ -306,7 +303,7 @@ class FourWay {
 
         if(newLayout) {
           layout = newLayout;
-          flash.settings = Convert.settingsObject(settingsArray, layout);
+          flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
         }
 
         const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
@@ -409,7 +406,7 @@ class FourWay {
     const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
-      const newSettingsArray = Convert.settingsArray(settings, esc.layout, esc.layoutSize);
+      const newSettingsArray = Convert.objectToSettingsArray(settings, esc.layout, esc.layoutSize);
       if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new Error('byteLength of buffers do not match');
       }
@@ -601,7 +598,7 @@ class FourWay {
         BLHELI_EEPROM.LAYOUT.LAYOUT.offset + BLHELI_EEPROM.LAYOUT.LAYOUT.size);
 
       if (!compare(target_layout, fw_layout)) {
-        var target_layout_str = buf2ascii(target_layout).trim();
+        var target_layout_str = Convert.bufferToAscii(target_layout).trim();
         if (target_layout_str.length === 0) {
           target_layout_str = 'EMPTY';
         }
@@ -619,7 +616,7 @@ class FourWay {
         BLHELI_EEPROM.LAYOUT.MCU.offset,
         BLHELI_EEPROM.LAYOUT.MCU.offset + BLHELI_EEPROM.LAYOUT.MCU.size);
       if (!compare(target_mcu, fw_mcu)) {
-        var target_mcu_str = buf2ascii(target_mcu).trim();
+        var target_mcu_str = Convert.bufferToAscii(target_mcu).trim();
         if (target_mcu_str.length === 0) {
           target_mcu_str = 'EMPTY';
         }
@@ -675,7 +672,7 @@ class FourWay {
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
       eepromInfo.set([originalSettings[1], originalSettings[2]], 1);
-      eepromInfo.set(ascii2buf('FLASH FAIL  '), 5);
+      eepromInfo.set(Convert.asciiToBuffer('FLASH FAIL  '), 5);
 
       await this.write(AM32_EEPROM.EEPROM_OFFSET, eepromInfo);
 
@@ -684,7 +681,7 @@ class FourWay {
 
       originalSettings[0] = 0x01;
       originalSettings.fill(0x00, 3, 5);
-      originalSettings.set(ascii2buf('NOT READY   '), 5);
+      originalSettings.set(Convert.asciiToBuffer('NOT READY   '), 5);
 
       await this.write(AM32_EEPROM.EEPROM_OFFSET, originalSettings);
     };
@@ -755,7 +752,7 @@ class FourWay {
         const flash = fillImage(parsed, flashSize, flashOffset);
 
         // Check pseudo-eeprom page for BLHELI signature
-        const mcu = buf2ascii(
+        const mcu = Convert.bufferToAscii(
           flash.subarray(BLHELI_EEPROM.SILABS.EEPROM_OFFSET)
             .subarray(BLHELI_EEPROM.LAYOUT.MCU.offset)
             .subarray(0, BLHELI_EEPROM.LAYOUT.MCU.size));
@@ -825,7 +822,7 @@ class FourWay {
   }
 
   async writeEEpromSafeguard(settings) {
-    settings.set(ascii2buf('**FLASH*FAILED**'), BLHELI_EEPROM.LAYOUT.NAME.offset);
+    settings.set(Convert.asciiToBuffer('**FLASH*FAILED**'), BLHELI_EEPROM.LAYOUT.NAME.offset);
     const response = await this.write(BLHELI_EEPROM.EEPROM_OFFSET, settings);
 
     const verifySafeguard = async (resolve, reject) => {

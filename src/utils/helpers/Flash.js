@@ -121,23 +121,7 @@ function parseHex(string) {
   return null;
 }
 
-function buf2ascii(buffer) {
-  return String.fromCharCode.apply(null, buffer);
-}
-
-function ascii2buf(ascii) {
-  const buffer = new Uint8Array(ascii.length);
-
-  for (var i = 0; i < ascii.length; i += 1) {
-    buffer[i] = ascii.charCodeAt(i);
-  }
-
-  return buffer;
-}
-
 export {
   fillImage,
   parseHex,
-  buf2ascii,
-  ascii2buf,
 };

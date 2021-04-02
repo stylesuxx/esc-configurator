@@ -11,7 +11,7 @@ class Convert {
     }
   }
 
-  static settingsObject(settingsUint8Array, layout) {
+  static arrayToSettingsObject(settingsUint8Array, layout) {
     const object = {};
 
     for (const [prop, setting] of Object.entries(layout)) {
@@ -34,7 +34,7 @@ class Convert {
     return object;
   }
 
-  static settingsArray(settingsObject, layout, layoutSize) {
+  static objectToSettingsArray(settingsObject, layout, layoutSize) {
     const array = new Uint8Array(layoutSize).fill(0xff);
 
     for (const [prop, setting] of Object.entries(layout)) {
@@ -56,6 +56,20 @@ class Convert {
     }
 
     return array;
+  }
+
+  static bufferToAscii(buffer) {
+    return String.fromCharCode.apply(null, buffer);
+  }
+
+  static asciiToBuffer(ascii) {
+    const buffer = new Uint8Array(ascii.length);
+
+    for (var i = 0; i < ascii.length; i += 1) {
+      buffer[i] = ascii.charCodeAt(i);
+    }
+
+    return buffer;
   }
 }
 

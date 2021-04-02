@@ -1,22 +1,9 @@
 import fs from 'fs';
-import path from 'path';
 
 import {
-  buf2ascii,
-  ascii2buf,
   parseHex,
   fillImage,
 } from '../Flash';
-
-test('buffer to ACSII', () => {
-  const ascii = buf2ascii([0x0054, 0x0045, 0x0053, 0x0054]);
-  expect(ascii).toEqual('TEST');
-});
-
-test('ASCII to buffer', () => {
-  const buffer = ascii2buf('TEST');
-  expect(buffer).toEqual(new Uint8Array([0x0054, 0x0045, 0x0053, 0x0054]));
-});
 
 test('should parse a valid hex file', () => {
   const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);

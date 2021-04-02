@@ -27,6 +27,7 @@ const BLHELI_SILABS = {
   ADDRESS_SPACE_SIZE: 0x1C00,
 };
 
+/*
 const BLHELI_ATMEL = {
   BLB_SIZE: 0x0200,
   SK_SIZE: 0x0400,
@@ -36,6 +37,7 @@ const BLHELI_ATMEL = {
   SK_ADDRESS_16: 0x3C00,
   EEPROM_SIZE: 0x0200,
 };
+*/
 
 const BLHELI_LAYOUT = {
   MAIN_REVISION: {
