@@ -1,4 +1,5 @@
 import Convert from './helpers/Convert';
+import Flash from './helpers/Flash';
 
 import {
   buildDisplayName as blheliBuildDisplayName,
@@ -19,11 +20,6 @@ import {
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
 import BLUEJAY_ESCS from '../sources/Bluejay/escs.json';
 import AM32_ESCS from '../sources/AM32/escs.json';
-
-import {
-  fillImage,
-  parseHex,
-} from './helpers/Flash';
 
 import {
   canMigrate,
@@ -725,9 +721,9 @@ class FourWay {
 
     if(esc.isArm) {
       try {
-        const parsed = parseHex(hex);
+        const parsed = Flash.parseHex(hex);
         const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
-        const flash = fillImage(parsed, endAddress - flashOffset, flashOffset);
+        const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
         //TODO: Also check for the firmware name
         // But we first need to get this moved to a fixed location
@@ -748,8 +744,8 @@ class FourWay {
       }
     } else if(!esc.isAtmel) {
       try {
-        const parsed = parseHex(hex);
-        const flash = fillImage(parsed, flashSize, flashOffset);
+        const parsed = Flash.parseHex(hex);
+        const flash = Flash.fillImage(parsed, flashSize, flashOffset);
 
         // Check pseudo-eeprom page for BLHELI signature
         const mcu = Convert.bufferToAscii(

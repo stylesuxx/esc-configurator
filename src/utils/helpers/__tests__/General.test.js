@@ -1,10 +1,6 @@
 import fs from 'fs';
-import path from 'path';
 
-import {
-  parseHex,
-  fillImage
-} from '../Flash';
+import Flash from '../Flash';
 
 import {
   retry,
@@ -45,10 +41,10 @@ test('delay', async() => {
 test('valid Flash', () => {
   const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);
   const hexString = hexContent.toString();
-  const parsed = parseHex(hexString);
+  const parsed = Flash.parseHex(hexString);
   const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
   const flashOffset = 0;
-  const flash = fillImage(parsed, endAddress - flashOffset, flashOffset);
+  const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
   expect(isValidFlash('#BLHELI$EFM8B21#', flash)).toBeTruthy();
 });
