@@ -15,7 +15,7 @@
   "readEscs": "正在尝试读取 {{connected}} 个 ESC",
   "readEscsSuccess": "ESC 读取完成",
   "readEscsFailed": "ESC 读取失败",
-  "readEsc": "读取 ESC {{index}}",
+  "readEsc": "Read ESC {{index}}: {{name}}",
   "flashingEsc": "正在刷入 ESC {{index}}",
   "flashingEscFailed": "刷写 ESC {{index}} 失败 - 请检查文件类型",
   "readEscFailed": "读取 ESC {{index}} 失败",
