@@ -12,7 +12,8 @@
       "Show PWM frequency with Bluejay",
       "Display AM32 bootloader version",
       "Motor control via cursors",
-      "Store logs in local storage"
+      "Store logs in local storage",
+      "Fixed issue where flashing through EMU would lead to firmware loss"
     ]
   },
   {

@@ -737,9 +737,13 @@ class App extends Component {
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('portOpened');
 
-      // Send a reset of the 4 way interface, just in case it was not cleanly
-      // disconnected before.
-      await this.serial.exitFourWayInterface();
+      /* Send a reset of the 4 way interface, just in case it was not cleanly
+       * disconnected before.
+       *
+       * Unfortunately this convenience feature can not be used, since on EMU
+       * it might lead to the ESC's being wiped.
+       */
+      // await this.serial.exitFourWayInterface();
     } catch (e) {
       console.debug(e);
 
@@ -754,40 +758,44 @@ class App extends Component {
       return;
     }
 
-    const apiVersion = await this.serial.getApiVersion();
-    this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
+    try {
+      const apiVersion = await this.serial.getApiVersion();
+      this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
-    const fcVariant = await this.serial.getFcVariant();
-    const fcVersion = await this.serial.getFcVersion();
-    this.addLogMessage('mspFcInfo', {
-      id: fcVariant.flightControllerIdentifier,
-      version: fcVersion.flightControllerVersion,
-    });
+      const fcVariant = await this.serial.getFcVariant();
+      const fcVersion = await this.serial.getFcVersion();
+      this.addLogMessage('mspFcInfo', {
+        id: fcVariant.flightControllerIdentifier,
+        version: fcVersion.flightControllerVersion,
+      });
 
-    const buildInfo = await this.serial.getBuildInfo();
-    this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
+      const buildInfo = await this.serial.getBuildInfo();
+      this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
 
-    const boardInfo = await this.serial.getBoardInfo();
-    this.addLogMessage('mspBoardInfo', {
-      identifier: boardInfo.boardIdentifier,
-      version: boardInfo.boardVersion,
-    });
+      const boardInfo = await this.serial.getBoardInfo();
+      this.addLogMessage('mspBoardInfo', {
+        identifier: boardInfo.boardIdentifier,
+        version: boardInfo.boardVersion,
+      });
 
-    let uid = await this.serial.getUid();
-    uid = uid.uid;
-    let uidHex = 0;
-    for (let i = 0; i < uid.length; i += 1) {
-      uidHex += uid[i].toString(16);
+      const uid = (await this.serial.getUid()).uid;
+      let uidHex = 0;
+      for (let i = 0; i < uid.length; i += 1) {
+        uidHex += uid[i].toString(16);
+      }
+      this.addLogMessage('mspUid', { id: uidHex });
+
+      let motorData = await this.serial.getMotorData();
+      motorData = motorData.filter((motor) => motor > 0);
+
+      await this.setState({
+        open: true,
+        connected: motorData.length,
+      });
+    } catch(e) {
+      this.serial.close();
+      this.addLogMessage('portUsed');
     }
-    this.addLogMessage('mspUid', { id: uidHex });
-
-    let motorData = await this.serial.getMotorData();
-    motorData = motorData.filter((motor) => motor > 0);
-
-    await this.setState({
-      open: true,
-      connected: motorData.length,
-    });
   }
 
   async handleAllMotorSpeed(speed) {
@@ -810,6 +818,7 @@ class App extends Component {
       for(let i = 0; i < escs.length; i += 1) {
         await this.serial.resetFourWayInterface(i);
       }
+      await this.serial.exitFourWayInterface();
 
       this.serial.close();
     }
