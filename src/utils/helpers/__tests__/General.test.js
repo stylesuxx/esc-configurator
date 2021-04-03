@@ -1,18 +1,12 @@
 import fs from 'fs';
-import path from 'path';
 
-import {
-  parseHex,
-  fillImage
-} from '../Flash';
+import Flash from '../Flash';
 
 import {
   retry,
   delay,
   compare,
-  isValidFlash,
-  isValidLayout,
-  getPossibleTypes,
+  isValidFlash, isValidLayout, getPossibleTypes,
 } from '../General';
 
 test('compare same buffers', () => {
@@ -45,10 +39,10 @@ test('delay', async() => {
 test('valid Flash', () => {
   const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);
   const hexString = hexContent.toString();
-  const parsed = parseHex(hexString);
+  const parsed = Flash.parseHex(hexString);
   const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
   const flashOffset = 0;
-  const flash = fillImage(parsed, endAddress - flashOffset, flashOffset);
+  const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
   expect(isValidFlash('#BLHELI$EFM8B21#', flash)).toBeTruthy();
 });
@@ -62,11 +56,7 @@ test('retry failing each time', async() => {
     reject(new Error('Fail'));
   }
 
-  try {
-    await retry(test, 5, 10);
-  } catch(e) {
-    expect();
-  }
+  await expect(retry(test, 5, 10)).rejects.toThrow();
 });
 
 test('retry failing each time without delay', async() => {
@@ -74,15 +64,11 @@ test('retry failing each time without delay', async() => {
     reject(new Error('Fail'));
   }
 
-  try {
-    await retry(test, 5);
-  } catch(e) {
-    expect();
-  }
+  await expect(retry(test, 5)).rejects.toThrow();
 });
 
 test('retry succeeds at first try', async() => {
-  function test(resolve, reject) {
+  function test(resolve) {
     resolve(true);
   }
 

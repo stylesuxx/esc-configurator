@@ -1,6 +1,4 @@
-import Source, {
-  PLATFORMS,
-} from '../Source';
+import Source, { PLATFORMS } from '../Source.js';
 
 import EEPROM from './eeprom';
 
@@ -9,6 +7,22 @@ import ESCS_LOCAL from './escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 const ESCS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_escs.json';
+
+function buildDisplayName(flash, make) {
+  const settings = flash.settings;
+  let revision = 'Unsupported/Unrecognized';
+  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+  }
+
+  let pwm = '';
+  if(settings.__PWM_FREQUENCY && settings.__PWM_FREQUENCY !== 0xFF) {
+    pwm = `, ${settings.__PWM_FREQUENCY}kHz`;
+  }
+  const name = `${settings.NAME.trim()}`;
+
+  return `${make} - ${name}, ${revision}${pwm}`;
+}
 
 const pwmOptions = [24, 48, 96];
 const bluejayConfig = new Source(
@@ -23,6 +37,7 @@ const bluejayConfig = new Source(
 );
 
 export {
+  buildDisplayName,
   EEPROM,
 };
 

@@ -1,5 +1,23 @@
 [
   {
+    "title": "0.10.0",
+    "items": [
+      "Show battery charge if in Motor tab",
+      "Motor control via cursors",
+      "Added simplified Chinese",
+      "Improved translations",
+      "Set language to browser language if possible",
+      "Store logs in local storage",
+      "Sources generate display names",
+      "Show PWM frequency with Bluejay",
+      "Display AM32 bootloader version",
+      "Added coverage and lots of tests",
+      "Improved rendering of some components",
+      "Refactored to pure functions",
+      "Fixed issue where flashing through EMU would lead to firmware loss"
+    ]
+  },
+  {
     "title": "0.9.1",
     "items": [
       "Add attribution to original project",

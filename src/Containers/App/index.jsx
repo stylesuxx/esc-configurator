@@ -1,40 +1,20 @@
-import React, {
-  Component,
-} from 'react';
+import React, { Component } from 'react';
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 import i18next from 'i18next';
-import {
-  ToastContainer,
-} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import { format as formatDate } from 'date-fns';
 
-import {
-  serial as serialPolyfill,
-} from 'web-serial-polyfill';
+import MainApp from '../../Components/App';
 
-import changelogEntries from '../../changelog.json';
-
-import PortPicker from '../../Components/PortPicker';
-import Log from '../../Components/Log';
-import Statusbar from '../../Components/Statusbar';
-import CookieConsent from '../../Components/CookieConsent';
-import MainContent from '../../Components/MainContent';
-import AppSettings from '../../Components/AppSettings';
+import { serial as serialPolyfill } from 'web-serial-polyfill';
 
 import Serial from '../../utils/Serial';
 
 import sources from '../../sources';
 
-import {
-  getMasterSettings,
-} from '../../utils/helpers/Settings';
+import { getMasterSettings } from '../../utils/helpers/Settings';
 
-import {
-  delay,
-} from '../../utils/helpers/General';
-
-import './style.scss';
+import { delay } from '../../utils/helpers/General';
 
 import settings from '../../settings.json';
 const {
@@ -43,7 +23,6 @@ const {
 } = settings;
 
 class App extends Component {
-
   constructor() {
     super();
 
@@ -75,6 +54,7 @@ class App extends Component {
     this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
+    this.updateLog = this.updateLog.bind(this);
 
     this.state = {
       checked: false,
@@ -93,6 +73,7 @@ class App extends Component {
         chosenPort: null,
         connected: false,
         fourWay: false,
+        portNames: [],
       },
       configs: {
         versions: {},
@@ -150,15 +131,15 @@ class App extends Component {
         this.hasWebUsb = true;
       }
 
-      const language = localStorage.getItem('language');
-      if(language) {
-        i18next.changeLanguage(language);
-        this.setState({ language });
-      }
-
       const settings = JSON.parse(localStorage.getItem('settings'));
       const currentSettings = Object.assign({}, appSettings, settings);
       this.setState({ appSettings: currentSettings });
+
+      // Load previously stored log messages and sanitize to a max line count
+      const log = JSON.parse(localStorage.getItem('log'));
+      if(log) {
+        this.log = log.slice(-10000);
+      }
 
       // Redefine the console and tee logs
       var console = (function(old) {
@@ -166,7 +147,7 @@ class App extends Component {
           debug: (text, ...args) => {
             const { appSettings } = that.state;
             const msg = [text, args.join(' ')].join(' ');
-            that.log.push(msg);
+            that.updateLog(msg);
             if(appSettings.printLogs.value) {
               console.log(text, ...args);
             }
@@ -174,6 +155,34 @@ class App extends Component {
         });
       }(window.console));
       window.console = console;
+
+      let language = localStorage.getItem('language');
+      if(!language) {
+        const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
+        if(browserLanguage) {
+          for(let [key, value] of Object.entries(this.languages)) {
+            if(value.value === browserLanguage) {
+              language = browserLanguage;
+              break;
+            }
+          }
+
+          if(!language && browserLanguage.split('-').length > 1) {
+            const part = browserLanguage.split('-')[0];
+            for(let [key, value] of Object.entries(this.languages)) {
+              if(value.value === part) {
+                language = part;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      if(language) {
+        i18next.changeLanguage(language);
+        this.setState({ language });
+      }
 
       if (hasSerial) {
         /**
@@ -219,27 +228,37 @@ class App extends Component {
       value: "en",
     },
     {
-      label: "German",
+      label: "Deutsch",
       value: "de",
-    }
+    },
+    {
+      label: "简体中文",
+      value: 'zh-CN',
+    },
   ];
 
   onMount(cb){
     cb();
   }
 
+  updateLog(message) {
+    const now = formatDate(new Date(), 'yyy/MM/dd HH:MM:ss');
+    this.log.push(`${now}: ${message}`);
+    localStorage.setItem('log', JSON.stringify(this.log));
+  }
+
   async addLogMessage(message, params = {}) {
     const {
       serialLog,
-      appSettings
+      appSettings,
     } = this.state;
     const translation = i18next.t(`log:${message}`, params);
 
     params.lng = 'en';
     const translationEn = i18next.t(`log:${message}`, params);
+    this.updateLog(translationEn);
 
     serialLog.push(this.formatLogMessage(translation));
-    this.log.push(translationEn);
 
     if(appSettings.printLogs.value) {
       console.log(translationEn);
@@ -304,7 +323,7 @@ class App extends Component {
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
-      await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
+      await this.serial.writeSettings(target, esc, mergedSettings);
     }
 
     actions.isWriting = false;
@@ -360,7 +379,7 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      progress, actions, serial
+      progress, actions, serial,
     } = this.state;
 
     actions.isReading = true;
@@ -373,7 +392,7 @@ class App extends Component {
         const escs = await this.serial.enable4WayInterface();
         connected = escs.connectedESCs;
 
-        await this.serial.fourWayStart();
+        await this.serial.startFourWayInterface();
 
         // This delay is needed to allow the ESC's to initialize
         await delay(1200);
@@ -395,12 +414,15 @@ class App extends Component {
     try {
       for (let i = 0; i < connected; i += 1) {
         progress[i] = 0;
-        const settings = await this.serial.fourWayGetInfo(i);
+        const settings = await this.serial.getFourWayInterfaceInfo(i);
         if(settings) {
           settings.index = i;
           escFlash.push(settings);
 
-          this.addLogMessage('readEsc', { index: i + 1 });
+          this.addLogMessage('readEsc', {
+            index: i + 1,
+            name: settings.displayName,
+          });
         } else {
           this.addLogMessage('readEscFailed', { index: i + 1 });
         }
@@ -448,7 +470,7 @@ class App extends Component {
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
-      const newSettingsArray = await this.serial.fourWayWriteSettings(target, esc, mergedSettings);
+      const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
 
       escs[i].settingsArray = newSettingsArray;
     }
@@ -510,19 +532,20 @@ class App extends Component {
         force,
       },
     });
+    console.debug(`Chosen firmware: ${url}`);
 
     let text = null;
     if (typeof Storage !== "undefined") {
       text = localStorage.getItem(url);
 
       if(text) {
-        console.debug('Got file from local storage');
+        console.debug('Got firmware from local storage');
       }
     }
 
     if(!text) {
       try {
-        console.debug(`Fetching firmware from ${url} `);
+        console.debug('Fetching firmware from repository');
         // TODO: In case of ATMEL an eep needs to be fetched
 
         // Proxy is needed to bypass CORS on github
@@ -551,7 +574,7 @@ class App extends Component {
 
   async flash(text, force, migrate) {
     const {
-      flashTargets, escs, progress, actions
+      flashTargets, escs, progress, actions,
     } = this.state;
 
     actions.isSelecting = false;
@@ -574,7 +597,7 @@ class App extends Component {
 
       updateProgress(0.1);
 
-      const result = await this.serial.fourWayWriteHex(target, esc, text, force, migrate, updateProgress);
+      const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
       result.index = target;
 
       if(result) {
@@ -592,7 +615,7 @@ class App extends Component {
     await this.setState({
       settings: getMasterSettings(escs),
       progress: newProgress,
-      actions
+      actions,
     });
   }
 
@@ -613,6 +636,13 @@ class App extends Component {
       this.serial = new Serial(ports[0]);
     }
 
+    const portNames = ports.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
     this.setState({
       checked: true,
       hasSerial: true,
@@ -620,6 +650,7 @@ class App extends Component {
         availablePorts: ports,
         connected,
         fourWay: false,
+        portNames,
       },
     });
   }
@@ -630,6 +661,13 @@ class App extends Component {
     this.lastConnected = 0;
 
     const availablePorts = await this.serialApi.getPorts();
+    const portNames = availablePorts.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
     this.setState({
       open: false,
       escs: [],
@@ -638,7 +676,8 @@ class App extends Component {
         chosenPort: null,
         connected: availablePorts.length > 0 ? true : false,
         fourWay: false,
-      }
+        portNames,
+      },
     });
 
     this.serial.disconnect();
@@ -651,10 +690,19 @@ class App extends Component {
 
       this.addLogMessage('portSelected');
 
+
+      const portNames = [port].map((item) => {
+        const info = item.getInfo();
+        const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+        return name;
+      });
+
       this.setState({
         serial: {
           availablePorts: [port],
           connected: true,
+          portNames,
         },
       });
     } catch (e) {
@@ -673,10 +721,6 @@ class App extends Component {
     this.setState({ serial });
   }
 
-  delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   handleSetBaudRate(rate) {
     this.setState({ baudRate: rate });
   }
@@ -693,9 +737,13 @@ class App extends Component {
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('portOpened');
 
-      // Send a reset of the 4 way interface, just in case it was not cleanly
-      // disconnected before.
-      await this.serial.fourWayExit();
+      /* Send a reset of the 4 way interface, just in case it was not cleanly
+       * disconnected before.
+       *
+       * Unfortunately this convenience feature can not be used, since on EMU
+       * it might lead to the ESC's being wiped.
+       */
+      // await this.serial.exitFourWayInterface();
     } catch (e) {
       console.debug(e);
 
@@ -710,42 +758,44 @@ class App extends Component {
       return;
     }
 
-    const apiVersion = await this.serial.getApiVersion();
-    this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
+    try {
+      const apiVersion = await this.serial.getApiVersion();
+      this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
-    const fcVariant = await this.serial.getFcVariant();
-    const fcVersion = await this.serial.getFcVersion();
-    this.addLogMessage('mspFcInfo', {
-      id: fcVariant.flightControllerIdentifier,
-      version: fcVersion.flightControllerVersion,
-    });
+      const fcVariant = await this.serial.getFcVariant();
+      const fcVersion = await this.serial.getFcVersion();
+      this.addLogMessage('mspFcInfo', {
+        id: fcVariant.flightControllerIdentifier,
+        version: fcVersion.flightControllerVersion,
+      });
 
-    const buildInfo = await this.serial.getBuildInfo();
-    this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
+      const buildInfo = await this.serial.getBuildInfo();
+      this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
 
-    const boardInfo = await this.serial.getBoardInfo();
-    this.addLogMessage('mspBoardInfo', {
-      identifier: boardInfo.boardIdentifier,
-      version: boardInfo.boardVersion,
-    });
+      const boardInfo = await this.serial.getBoardInfo();
+      this.addLogMessage('mspBoardInfo', {
+        identifier: boardInfo.boardIdentifier,
+        version: boardInfo.boardVersion,
+      });
 
-    let uid = await this.serial.getUid();
+      const uid = (await this.serial.getUid()).uid;
+      let uidHex = 0;
+      for (let i = 0; i < uid.length; i += 1) {
+        uidHex += uid[i].toString(16);
+      }
+      this.addLogMessage('mspUid', { id: uidHex });
 
+      let motorData = await this.serial.getMotorData();
+      motorData = motorData.filter((motor) => motor > 0);
 
-    uid = uid.uid;
-    let uidHex = 0;
-    for (let i = 0; i < uid.length; i += 1) {
-      uidHex += uid[i].toString(16);
+      await this.setState({
+        open: true,
+        connected: motorData.length,
+      });
+    } catch(e) {
+      this.serial.close();
+      this.addLogMessage('portUsed');
     }
-    this.addLogMessage('mspUid', { id: uidHex });
-
-    let motorData = await this.serial.getMotorData();
-    motorData = motorData.filter((motor) => motor > 0);
-
-    await this.setState({
-      open: true,
-      connected: motorData.length,
-    });
   }
 
   async handleAllMotorSpeed(speed) {
@@ -766,8 +816,9 @@ class App extends Component {
     } = this.state;
     if(this.serial) {
       for(let i = 0; i < escs.length; i += 1) {
-        await this.serial.fourWayReset(i);
+        await this.serial.resetFourWayInterface(i);
       }
+      await this.serial.exitFourWayInterface();
 
       this.serial.close();
     }
@@ -846,118 +897,52 @@ class App extends Component {
       return null;
     }
 
-    const languageElements = this.languages.map((item) => (
-      <option
-        key={item.value}
-        value={item.value}
-      >
-        {item.label}
-      </option>
-    ));
-
-    const portNames = serial.availablePorts.map((item) => {
-      const info = item.getInfo();
-      const name = `${info.usbVendorId}:${info.usbProductId}`;
-
-      return name;
-    });
-
     return (
-      <div className="App">
-        <div id="main-wrapper">
-          <div className="header-wrapper">
-            <div className="headerbar">
-              <div id="logo" />
-
-              <PortPicker
-                hasPort={serial.connected}
-                hasSerial={hasSerial}
-                onChangePort={this.handleChangePort}
-                onConnect={this.handleConnect}
-                onDisconnect={this.handleDisconnect}
-                onSetBaudRate={this.handleSetBaudRate}
-                onSetPort={this.handleSetPort}
-                open={open}
-                ports={portNames}
-              />
-
-              <div className="language-select ">
-                <div className="dropdown dropdown-dark">
-                  <select
-                    className="dropdown-select"
-                    defaultValue={language}
-                    onChange={this.handleLanguageSelection}
-                  >
-                    {languageElements}
-                  </select>
-                </div>
-
-                <div className="button-dark">
-                  <button
-                    onClick={this.handleOpenSettings}
-                    type="button"
-                  >
-                    Settings
-                  </button>
-                </div>
-
-              </div>
-            </div>
-
-            <div className="clear-both" />
-
-            <Log
-              messages={serialLog}
-            />
-          </div>
-
-          <MainContent
-            actions={actions}
-            appSettings={appSettings}
-            changelogEntries={changelogEntries}
-            configs={configs}
-            connected={connected}
-            escs={escs}
-            flashTargets={flashTargets}
-            fourWay={serial.fourWay}
-            onAllMotorSpeed={this.handleAllMotorSpeed}
-            onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
-            onFlashUrl={this.handleFlashUrl}
-            onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
-            onLocalSubmit={this.handleLocalSubmit}
-            onReadEscs={this.handleReadEscs}
-            onResetDefaultls={this.handleResetDefaultls}
-            onSaveLog={this.handleSaveLog}
-            onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
-            onSettingsUpdate={this.handleSettingsUpdate}
-            onSingleFlash={this.handleSingleFlash}
-            onSingleMotorSpeed={this.handleSingleMotorSpeed}
-            onWriteSetup={this.handleWriteSetup}
-            open={open}
-            progress={progress}
-            settings={settings}
-          />
-
-          <Statusbar
-            getUtilization={this.serial ? this.serial.getUtilization : null}
-            packetErrors={packetErrors}
-            version={version}
-          />
-        </div>
-
-        <CookieConsent
-          onCookieAccept={this.handleCookieAccept}
-        />
-
-        {showSettings &&
-          <AppSettings
-            onClose={this.handleCloseSettings}
-            onUpdate={this.handleUpdateSettings}
-            settings={appSettings}
-          />}
-
-        <ToastContainer />
-      </div>
+      <MainApp
+        actions={actions}
+        appSettings={appSettings}
+        configs={configs}
+        connected={connected}
+        escs={escs}
+        flashTargets={flashTargets}
+        fourWay={serial.fourWay}
+        hasPort={serial.connected}
+        hasSerial={hasSerial}
+        language={language}
+        languages={this.languages}
+        onAllMotorSpeed={this.handleAllMotorSpeed}
+        onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
+        onChangePort={this.handleChangePort}
+        onClose={this.handleCloseSettings}
+        onConnect={this.handleConnect}
+        onCookieAccept={this.handleCookieAccept}
+        onDisconnect={this.handleDisconnect}
+        onFlashUrl={this.handleFlashUrl}
+        onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
+        onLanguageSelection={this.handleLanguageSelection}
+        onLocalSubmit={this.handleLocalSubmit}
+        onOpenSettings={this.handleOpenSettings}
+        onReadEscs={this.handleReadEscs}
+        onResetDefaultls={this.handleResetDefaultls}
+        onSaveLog={this.handleSaveLog}
+        onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
+        onSetBaudRate={this.handleSetBaudRate}
+        onSetPort={this.handleSetPort}
+        onSettingsUpdate={this.handleSettingsUpdate}
+        onSingleFlash={this.handleSingleFlash}
+        onSingleMotorSpeed={this.handleSingleMotorSpeed}
+        onUpdate={this.handleUpdateSettings}
+        onWriteSetup={this.handleWriteSetup}
+        open={open}
+        packetErrors={packetErrors}
+        portNames={serial.portNames}
+        progress={progress}
+        serial={this.serial || undefined}
+        serialLog={serialLog}
+        settings={settings}
+        showSettings={showSettings}
+        version={version}
+      />
     );
   }
 }

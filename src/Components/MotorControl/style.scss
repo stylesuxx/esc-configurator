@@ -3,6 +3,47 @@
   width: 100%;
   // margin-bottom: 65px;
 
+  .rc-slider {
+    margin-left: 8px;
+    height: 30px;
+  }
+
+  .rc-slider-tooltip {
+    .rc-slider-tooltip-content {
+      margin-bottom: -15px;
+    }
+
+    .rc-slider-tooltip-arrow {
+      display: none;
+    }
+    .rc-slider-tooltip-inner {
+      background-color: transparent;
+      color: black;
+      font-weight: normal;
+      box-shadow: none;
+    }
+  }
+
+  .rc-slider-track {
+    background: var(--color-primary);
+  }
+
+  .rc-slider-handle {
+    margin-top: -7px;
+    width: 19px;
+    height: 19px;
+    border: 0px;
+    background: var(--color-primary);
+  }
+
+  .rc-slider-disabled {
+    background: transparent;
+
+    .rc-slider-handle {
+      background: #cccccc;
+    }
+  }
+
   .checkbox label {
     flex: 0 0 10px !important;
   }

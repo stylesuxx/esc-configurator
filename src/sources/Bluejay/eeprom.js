@@ -42,28 +42,36 @@ const SETTINGS_DESCRIPTIONS = {
           label: 'escTemperatureProtection',
           options: [
             {
-              value: '0', label: 'Disabled',
+              value: '0',
+              label: 'Disabled',
             },
             {
-              value: '1', label: '80 C',
+              value: '1',
+              label: '80 C',
             },
             {
-              value: '2', label: '90 C',
+              value: '2',
+              label: '90 C',
             },
             {
-              value: '3', label: '100 C',
+              value: '3',
+              label: '100 C',
             },
             {
-              value: '4', label: '110 C',
+              value: '4',
+              label: '110 C',
             },
             {
-              value: '5', label: '120 C',
+              value: '5',
+              label: '120 C',
             },
             {
-              value: '6', label: '130 C',
+              value: '6',
+              label: '130 C',
             },
             {
-              value: '7', label: '140 C',
+              value: '7',
+              label: '140 C',
             },
           ],
         },
@@ -73,19 +81,24 @@ const SETTINGS_DESCRIPTIONS = {
           label: 'escMotorTiming',
           options: [
             {
-              value: '1', label: '0° (Low)',
+              value: '1',
+              label: '0° (Low)',
             },
             {
-              value: '2', label: '7.5° (MediumLow)',
+              value: '2',
+              label: '7.5° (MediumLow)',
             },
             {
-              value: '3', label: '15° (Medium)',
+              value: '3',
+              label: '15° (Medium)',
             },
             {
-              value: '4', label: '22.5° (MediumHigh)',
+              value: '4',
+              label: '22.5° (MediumHigh)',
             },
             {
-              value: '5',label: '30° (High)',
+              value: '5',
+              label: '30° (High)',
             },
           ],
         },
@@ -95,13 +108,16 @@ const SETTINGS_DESCRIPTIONS = {
           label: 'escDemagCompensation',
           options: [
             {
-              value: '1', label: 'Off',
+              value: '1',
+              label: 'Off',
             },
             {
-              value: '2', label: 'Low',
+              value: '2',
+              label: 'Low',
             },
             {
-              value: '3', label: 'High',
+              value: '3',
+              label: 'High',
             },
           ],
         },
@@ -110,46 +126,60 @@ const SETTINGS_DESCRIPTIONS = {
           type: 'enum',
           options: [
             {
-              value: '1', label: '1x (More protection)',
+              value: '1',
+              label: '1x (More protection)',
             },
             {
-              value: '2', label: '2x',
+              value: '2',
+              label: '2x',
             },
             {
-              value: '3', label: '3x',
+              value: '3',
+              label: '3x',
             },
             {
-              value: '4', label: '4x',
+              value: '4',
+              label: '4x',
             },
             {
-              value: '5', label: '5x',
+              value: '5',
+              label: '5x',
             },
             {
-              value: '6', label: '6x',
+              value: '6',
+              label: '6x',
             },
             {
-              value: '7', label: '7x',
+              value: '7',
+              label: '7x',
             },
             {
-              value: '8', label: '8x',
+              value: '8',
+              label: '8x',
             },
             {
-              value: '9', label: '9x',
+              value: '9',
+              label: '9x',
             },
             {
-              value: '10', label: '10x',
+              value: '10',
+              label: '10x',
             },
             {
-              value: '11', label: '11x',
+              value: '11',
+              label: '11x',
             },
             {
-              value: '12', label: '12x',
+              value: '12',
+              label: '12x',
             },
             {
-              value: '13', label: '13x (Less protection)',
+              value: '13',
+              label: '13x (Less protection)',
             },
             {
-              value: '0', label: 'Off',
+              value: '0',
+              label: 'Off',
             },
           ],
           label: '_RPM Power Protection (Rampup)',
@@ -176,19 +206,24 @@ const SETTINGS_DESCRIPTIONS = {
           label: 'escBeaconDelay',
           options: [
             {
-              value: '1', label: '1 minute',
+              value: '1',
+              label: '1 minute',
             },
             {
-              value: '2', label: '2 minutes',
+              value: '2',
+              label: '2 minutes',
             },
             {
-              value: '3', label: '5 minutes',
+              value: '3',
+              label: '5 minutes',
             },
             {
-              value: '4', label: '10 minutes',
+              value: '4',
+              label: '10 minutes',
             },
             {
-              value: '5', label: 'Infinite',
+              value: '5',
+              label: 'Infinite',
             },
           ],
         },
@@ -221,7 +256,8 @@ const SETTINGS_DESCRIPTIONS = {
           type: 'enum',
           options: [
             {
-              value: '1', label: '0.5% (0.031)',
+              value: '1',
+              label: '0.5% (0.031)',
             },
 
             /*
@@ -232,25 +268,32 @@ const SETTINGS_DESCRIPTIONS = {
              *{ value:  '6', label: '3.5% (0.188)' },
              */
             {
-              value: '7', label: '5%  (0.25)',
+              value: '7',
+              label: '5%  (0.25)',
             },
             {
-              value: '8', label: '7%  (0.38)',
+              value: '8',
+              label: '7%  (0.38)',
             },
             {
-              value: '9', label: '10%  (0.50)',
+              value: '9',
+              label: '10%  (0.50)',
             },
             {
-              value: '10', label: '15%  (0.75)',
+              value: '10',
+              label: '15%  (0.75)',
             },
             {
-              value: '11', label: '20%  (1.00)',
+              value: '11',
+              label: '20%  (1.00)',
             },
             {
-              value: '12', label: '24%  (1.25)',
+              value: '12',
+              label: '24%  (1.25)',
             },
             {
-              value: '13', label: '29%  (1.50)',
+              value: '13',
+              label: '29%  (1.50)',
             },
           ],
           label: '_Rampup Start Power',
@@ -788,20 +831,25 @@ const LAYOUT = {
     size: 1,
   },
   BRAKE_ON_STOP: {
-    offset: 0x27, size: 1,
+    offset: 0x27,
+    size: 1,
   },
   LED_CONTROL: {
-    offset: 0x28, size: 1,
+    offset: 0x28,
+    size: 1,
   },
 
   LAYOUT: {
-    offset: 0x40, size: 16,
+    offset: 0x40,
+    size: 16,
   },
   MCU: {
-    offset: 0x50, size: 16,
+    offset: 0x50,
+    size: 16,
   },
   NAME: {
-    offset: 0x60, size: 16,
+    offset: 0x60,
+    size: 16,
   },
 };
 
@@ -812,16 +860,20 @@ const INDIVIDUAL_SETTINGS = [
     label: 'escMotorDirection',
     options: [
       {
-        value: '1', label: 'Normal',
+        value: '1',
+        label: 'Normal',
       },
       {
-        value: '2', label: 'Reversed',
+        value: '2',
+        label: 'Reversed',
       },
       {
-        value: '3', label: 'Bidirectional',
+        value: '3',
+        label: 'Bidirectional',
       },
       {
-        value: '4', label: 'Bidirectional Reversed',
+        value: '4',
+        label: 'Bidirectional Reversed',
       },
     ],
   },
@@ -829,19 +881,25 @@ const INDIVIDUAL_SETTINGS = [
 
 const BLHELI_S_INDIVIDUAL_SETTINGS_BACKWARD = [
   {
-    name: 'MOTOR_DIRECTION', type: 'enum', label: 'escMotorDirection',
+    name: 'MOTOR_DIRECTION',
+    type: 'enum',
+    label: 'escMotorDirection',
     options: [
       {
-        value: '1', label: 'Normal',
+        value: '1',
+        label: 'Normal',
       },
       {
-        value: '2', label: 'Reversed',
+        value: '2',
+        label: 'Reversed',
       },
       {
-        value: '3', label: 'Bidirectional',
+        value: '3',
+        label: 'Bidirectional',
       },
       {
-        value: '4', label: 'Bidirectional Reversed',
+        value: '4',
+        label: 'Bidirectional Reversed',
       },
     ],
   },
@@ -939,7 +997,7 @@ var DEFAULTS = {
     TEMPERATURE_PROTECTION: 7,
     _LOW_RPM_POWER_PROTECTION: 1, // Backward
     BRAKE_ON_STOP: 0,
-    LED_CONTROL: 0
+    LED_CONTROL: 0,
   },
 };
 

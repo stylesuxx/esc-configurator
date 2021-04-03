@@ -1,14 +1,17 @@
 {
   "name": "esc-configurator",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "private": true,
   "dependencies": {
     "@palmabit/react-cookie-law": "^0.6.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "compare-versions": "^3.6.0",
+    "date-fns": "^2.19.0",
     "dateformat": "^4.5.1",
     "i18next": "^19.9.0",
+    "rc-slider": "^9.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-gtm-module": "^2.0.11",
@@ -39,7 +42,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "coverage": "react-scripts test --coverage --watchAll=false",
+    "test-once": "yarn test --coverage --watchAll=false",
+    "coverage": "yarn test-once && codecov",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --ext .jsx,.js"
   },
@@ -65,12 +69,19 @@
     "@typescript-eslint/eslint-plugin": "^4.0.0",
     "@typescript-eslint/parser": "^4.0.0",
     "babel-eslint": "^10.0.0",
+    "codecov": "^3.8.1",
     "eslint": "^7.5.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.3.2",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.3",
-    "eslint-plugin-react-hooks": "^4.0.8"
-  }
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "pre-commit": "^1.2.2"
+  },
+  "pre-commit": [
+    "lint",
+    "test-once"
+  ]
 }

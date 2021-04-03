@@ -1,8 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
 
 import {
   getMasterSettings,
@@ -80,17 +78,16 @@ function CommonSettings({
             version: unsupported,
             name: availableSettings.NAME,
             layout: availableSettings.LAYOUT_REVISION,
-          })
+          }),
         }}
       />
     );
   }
 
-
   if (!allMulti) {
     return (
       <h3>
-        Only MULTI mode currently supported
+        {t('multiOnly')}
       </h3>
     );
   }
@@ -105,7 +102,7 @@ function CommonSettings({
       return null;
     }
 
-    // Check all settings against
+    // Check all settings against each other
     let inSync = true;
     for(let i = 0; i < allSettings.length; i += 1) {
       const current = allSettings[i];
@@ -117,7 +114,10 @@ function CommonSettings({
 
     let setting = description;
     if (overrides) {
-      setting = overrides.find((override) => override.name === description.name);
+      const settingOverride = overrides.find((override) => override.name === description.name);
+      if(settingOverride) {
+        setting = settingOverride;
+      }
     }
     const value = availableSettings[setting.name];
     const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
@@ -216,7 +216,10 @@ function CommonSettings({
   );
 }
 
-CommonSettings.defaultProps = { disabled: false };
+CommonSettings.defaultProps = {
+  directInput: false,
+  disabled: false,
+};
 
 CommonSettings.propTypes = {
   availableSettings: PropTypes.shape({
@@ -225,9 +228,12 @@ CommonSettings.propTypes = {
     NAME: PropTypes.string.isRequired,
     SUB_REVISION: PropTypes.number.isRequired,
   }).isRequired,
-  directInput: PropTypes.bool.isRequired,
+  directInput: PropTypes.bool,
   disabled: PropTypes.bool,
-  escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  escs: PropTypes.arrayOf(PropTypes.shape({
+    meta: PropTypes.shape({ available: PropTypes.bool.isRequired }).isRequired,
+    settings: PropTypes.shape({ MODE: PropTypes.number.isRequired }).isRequired,
+  })).isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };
 

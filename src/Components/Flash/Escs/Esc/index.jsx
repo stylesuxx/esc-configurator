@@ -1,8 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
 
 import Checkbox from '../../../Input/Checkbox';
 import Select from '../../../Input/Select';
@@ -26,30 +24,8 @@ function Esc({
   const currentSettings = settings;
   const settingsDescriptions = esc.individualSettingsDescriptions;
 
-  let revision = 'Unsupported/Unrecognized';
-  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
-  }
-
-  let make = '';
-  if (esc.make) {
-    make = `${esc.make}, `;
-  }
-
-  let name = '';
-  if(settings.NAME) {
-    name = settings ? (settings.NAME).trim() : '';
-    if (name.length > 0) {
-      name = `, ${name}`;
-    }
-  }
-
-  let bootloader = '';
-  if (esc.bootloaderRevision !== null) {
-    bootloader = ` (bootloader revision ${esc.bootloaderRevision})`;
-  }
-
-  const title = `ESC ${(index + 1)}: ${make} ${revision}${name}${bootloader}`;
+  const name = esc.displayName ? esc.displayName : 'Unsupported/Unrecognized';
+  const title = `ESC ${(index + 1)}: ${name}`;
 
   function flashFirmware() {
     onFlash(index);

@@ -68,11 +68,11 @@ Select.propTypes = {
   inSync: PropTypes.bool,
   label: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.number
+    PropTypes.number,
   ]).isRequired,
   name: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.number
+    PropTypes.number,
   ]).isRequired,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.shape({
@@ -81,7 +81,7 @@ Select.propTypes = {
   })).isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.number
+    PropTypes.number,
   ]),
 };
 

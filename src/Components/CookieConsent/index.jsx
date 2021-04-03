@@ -1,10 +1,7 @@
-import PropTypes from 'prop-types';import {
-  CookieBanner
-} from '@palmabit/react-cookie-law';
+import { CookieBanner } from '@palmabit/react-cookie-law';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
 
 function CookieConsent({ onCookieAccept }) {
   const { t } = useTranslation('common');
@@ -40,8 +37,8 @@ function CookieConsent({ onCookieAccept }) {
         policy: {
           display: 'inline-block',
           lineHeight: '30px',
-          fontSize: '14px'
-        }
+          fontSize: '14px',
+        },
       }}
     />
   );

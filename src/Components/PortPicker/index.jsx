@@ -1,8 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
+
 import './style.scss';
 
 function PortPicker({
@@ -123,6 +122,7 @@ function PortPicker({
             className="dropdown-select"
             disabled={open}
             id="port"
+            name={t('port')}
             onChange={changePort}
             title={t('port')}
           >
@@ -139,6 +139,7 @@ function PortPicker({
             defaultValue="115200"
             disabled={open}
             id="baud"
+            name={t('baudRate')}
             onChange={changeBaudRate}
             title={t('baudRate')}
           >
@@ -175,16 +176,23 @@ function PortPicker({
   );
 }
 
+PortPicker.defaultProps = {
+  hasPort: false,
+  hasSerial: false,
+  open: false,
+  ports: [],
+};
+
 PortPicker.propTypes = {
-  hasPort: PropTypes.bool.isRequired,
-  hasSerial: PropTypes.bool.isRequired,
+  hasPort: PropTypes.bool,
+  hasSerial: PropTypes.bool,
   onChangePort: PropTypes.func.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnect: PropTypes.func.isRequired,
   onSetBaudRate: PropTypes.func.isRequired,
   onSetPort: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  ports: PropTypes.arrayOf(PropTypes.string).isRequired,
+  open: PropTypes.bool,
+  ports: PropTypes.arrayOf(PropTypes.string),
 };
 
-export default PortPicker;
+export default React.memo(PortPicker);
