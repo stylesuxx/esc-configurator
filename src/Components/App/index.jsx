@@ -1,15 +1,10 @@
+import { ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import React, {
-  useRef,
-} from 'react';
-import {
-  ToastContainer,
-} from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import {
-  useTranslation,
-} from 'react-i18next';
 
 import PortPicker from '../PortPicker';
 import Log from '../Log';
@@ -18,9 +13,7 @@ import CookieConsent from '../CookieConsent';
 import MainContent from '../MainContent';
 import AppSettings from '../AppSettings';
 
-import {
-  useInterval
-} from '../../utils/helpers/React';
+import { useInterval } from '../../utils/helpers/React';
 
 import changelogEntries from '../../changelog.json';
 import './style.scss';
@@ -68,7 +61,7 @@ function App({
   serialLog,
   settings,
   showSettings,
-  version
+  version,
 }) {
   const { t } = useTranslation('common');
   const statusbarRef = useRef();
@@ -205,7 +198,7 @@ App.defaultProps = {
   serial: {
     getBatteryState: null,
     getUtilization: null,
-  }
+  },
 };
 
 App.propTypes = {

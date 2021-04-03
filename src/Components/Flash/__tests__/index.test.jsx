@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  render, screen, fireEvent,
+  render,
+  screen,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import Flash from '../';
 
@@ -16,9 +16,9 @@ jest.mock('react-i18next', () => ({
         }
 
         return true;
-      }
+      },
     },
-  })
+  }),
 }));
 
 test('loads and displays unsupported CustomSettings', () => {
@@ -43,16 +43,20 @@ test('loads and displays unsupported CustomSettings', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -94,9 +98,9 @@ test('loads and displays unsupported CustomSettings', () => {
       individualSettings: {
         MAIN_REVISION: 0,
         SUB_REVISION: 201,
-        NAME: 'Bluejay (Beta)'
-      }
-    }
+        NAME: 'Bluejay (Beta)',
+      },
+    },
   ];
 
   const onFlash = jest.fn();

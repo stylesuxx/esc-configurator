@@ -281,7 +281,7 @@ const AM32_SETTINGS_LAYOUT_1 = [
   {
     name: 'BRAKE_ON_STOP',
     type: 'bool',
-    label: 'escBrakeOnStop'
+    label: 'escBrakeOnStop',
   },
   {
     name: 'BEEP_VOLUME',
@@ -294,7 +294,7 @@ const AM32_SETTINGS_LAYOUT_1 = [
   {
     name: 'INTERVAL_TELEMETRY',
     type: 'bool',
-    label: 'escIntervalTelemetry'
+    label: 'escIntervalTelemetry',
   },
   {
     name: 'SERVO_LOW_THRESHOLD',
@@ -337,7 +337,7 @@ const AM32_SETTINGS_LAYOUT_1 = [
   {
     name: 'LOW_VOLTAGE_CUTOFF',
     type: 'bool',
-    label: 'escLowVoltageCutoff'
+    label: 'escLowVoltageCutoff',
   },
   {
     name: 'LOW_VOLTAGE_THRESHOLD',
@@ -376,7 +376,7 @@ const AM32_INDIVIDUAL_SETTINGS = [
 
 const AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
   '0': { base: AM32_INDIVIDUAL_SETTINGS },
-  '1': { base: AM32_INDIVIDUAL_SETTINGS }
+  '1': { base: AM32_INDIVIDUAL_SETTINGS },
 };
 
 const AM32_DEFAULTS = {
@@ -418,7 +418,7 @@ const AM32_DEFAULTS = {
     LOW_VOLTAGE_CUTOFF: 0,
     LOW_VOLTAGE_THRESHOLD: 50,
     RC_CAR_REVERSING: 0,
-  }
+  },
 };
 
 const EEPROM = {

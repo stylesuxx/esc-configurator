@@ -29,8 +29,8 @@ test('loads and displays with Escs', () => {
     individualSettings: {
       MAIN_REVISION: 1,
       SUB_REVISION: 200,
-      NAME: 'FW Name'
-    }
+      NAME: 'FW Name',
+    },
   };
   const escs = [];
   const flashProgress = [];

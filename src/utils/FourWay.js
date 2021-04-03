@@ -41,10 +41,7 @@ import {
   MODES,
   SILABS_MODES,
 } from './FourWayConstants';
-
-import {
-  NotEnoughDataError,
-} from './helpers/QueueProcessor';
+import { NotEnoughDataError } from './helpers/QueueProcessor';
 
 class FourWay {
   constructor(serial) {

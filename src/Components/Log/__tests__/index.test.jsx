@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  render, screen,
+  render,
+  screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -11,7 +12,7 @@ jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) 
 test('loads and displays Log', () => {
   const messages = [
     'line1',
-    'line2'
+    'line2',
   ];
 
   render(
@@ -28,7 +29,7 @@ test('loads and displays Log', () => {
 test('expands Log', () => {
   const messages = [
     'line1',
-    'line2'
+    'line2',
   ];
 
   render(

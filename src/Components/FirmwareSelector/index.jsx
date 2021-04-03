@@ -1,10 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
   useState, useEffect, useRef,
 } from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
 
 import {
   isValidLayout,
@@ -13,16 +11,11 @@ import {
 
 import LabeledSelect from '../Input/LabeledSelect';
 
-import {
-  EEPROM as BLHELI_EEPROM,
-} from '../../sources/Blheli';
+import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
+import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
 
 const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
 const BLHELI_MODES = BLHELI_EEPROM.MODES;
-
-import {
-  EEPROM as BLUEJAY_EEPROM
-} from '../../sources/Bluejay';
 const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
 
 import {
@@ -149,7 +142,7 @@ function FirmwareSelector({
         versionOptions.push({
           key: current.key,
           value: url,
-          name: current.name
+          name: current.name,
         });
       }
 
@@ -253,7 +246,7 @@ function FirmwareSelector({
     const formattedUrl = format(
       selection.url,
       `${name}${pwmSuffix}`,
-      mode,
+      mode
     );
 
     onSubmit(formattedUrl, force, migrate);

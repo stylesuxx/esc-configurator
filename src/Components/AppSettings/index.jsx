@@ -1,11 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import Checkbox from '../Input/Checkbox';
 
-import {
-  useTranslation,
-} from 'react-i18next';
 import './style.scss';
 
 function AppSettings({

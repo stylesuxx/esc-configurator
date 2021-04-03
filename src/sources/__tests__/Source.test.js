@@ -1,8 +1,5 @@
 import Source from '../Source';
-
-import {
-  blheliSource,
-} from '../index';
+import { blheliSource } from '../index';
 
 test('Source without parameters', () => {
   expect(() => new Source()).toThrow();

@@ -1,9 +1,6 @@
 import Msp from './Msp';
 import FourWay from './FourWay';
-
-import {
-  QueueProcessor,
-} from './helpers/QueueProcessor';
+import { QueueProcessor } from './helpers/QueueProcessor';
 
 /**
  * Abstraction layer for all serial communication

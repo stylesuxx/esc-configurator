@@ -1,6 +1,4 @@
-import {
-  EEPROM as BLHELI_EEPROM,
-} from '../../sources/Blheli';
+import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
 
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);

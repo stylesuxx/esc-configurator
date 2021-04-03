@@ -24,7 +24,7 @@ test('loads and displays Number', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: 1250,
-      name: 'test'
+      name: 'test',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));
@@ -32,7 +32,7 @@ test('loads and displays Number', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: -10,
-      name: 'test'
+      name: 'test',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));
@@ -40,7 +40,7 @@ test('loads and displays Number', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: 'Nan',
-      name: 'test'
+      name: 'test',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));
@@ -63,7 +63,7 @@ test('out of sync', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: 1250,
-      name: 'test'
+      name: 'test',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));
@@ -71,7 +71,7 @@ test('out of sync', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: -10,
-      name: 'test'
+      name: 'test',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));
@@ -79,7 +79,7 @@ test('out of sync', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: 'Nan',
-      name: 'test'
+      name: 'test',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));

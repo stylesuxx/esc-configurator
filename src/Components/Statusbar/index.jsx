@@ -1,12 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
   useState,
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
 
 import './style.scss';
 
@@ -40,7 +38,7 @@ const Statusbar = forwardRef(({
     },
     updateUtilization(utilization) {
       setUtilization(utilization);
-    }
+    },
   }));
 
   const { t } = useTranslation('common');

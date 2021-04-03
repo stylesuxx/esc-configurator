@@ -1,16 +1,10 @@
-import {
-  EEPROM as BLHELI_EEPROM,
-} from '../../sources/Blheli';
+import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
 import BLHELI_ESCS from '../../sources/Blheli/escs.json';
 
-import {
-  EEPROM as BLUEJAY_EEPROM
-} from '../../sources/Bluejay';
+import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
 import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
 
-import {
-  EEPROM as AM32_EEPROM,
-} from '../../sources/AM32';
+import { EEPROM as AM32_EEPROM } from '../../sources/AM32';
 import AM32_ESCS from '../../sources/AM32/escs.json';
 
 const BLHELI_TYPES = BLHELI_EEPROM.TYPES;

@@ -6,9 +6,7 @@ import {
   retry,
   delay,
   compare,
-  isValidFlash,
-  isValidLayout,
-  getPossibleTypes,
+  isValidFlash, isValidLayout, getPossibleTypes,
 } from '../General';
 
 test('compare same buffers', () => {
@@ -58,11 +56,7 @@ test('retry failing each time', async() => {
     reject(new Error('Fail'));
   }
 
-  try {
-    await retry(test, 5, 10);
-  } catch(e) {
-    expect();
-  }
+  await expect(retry(test, 5, 10)).rejects.toThrow();
 });
 
 test('retry failing each time without delay', async() => {
@@ -70,15 +64,11 @@ test('retry failing each time without delay', async() => {
     reject(new Error('Fail'));
   }
 
-  try {
-    await retry(test, 5);
-  } catch(e) {
-    expect();
-  }
+  await expect(retry(test, 5)).rejects.toThrow();
 });
 
 test('retry succeeds at first try', async() => {
-  function test(resolve, reject) {
+  function test(resolve) {
     resolve(true);
   }
 

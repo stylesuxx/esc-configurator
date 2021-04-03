@@ -1,6 +1,4 @@
-import {
-  EEPROM,
-} from '../../sources/Blheli';
+import { EEPROM } from '../../sources/Blheli';
 
 class Convert {
   static modeToString(mode) {

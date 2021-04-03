@@ -16,9 +16,9 @@ jest.mock('react-i18next', () => ({
         }
 
         return true;
-      }
+      },
     },
-  })
+  }),
 }));
 
 test('loads and displays unsupported CustomSettings', () => {
@@ -33,7 +33,7 @@ test('loads and displays unsupported CustomSettings', () => {
     {
       meta: { available: true },
       settings: { MODE: 1 },
-    }
+    },
   ];
 
   const onFlash = jest.fn();
@@ -74,16 +74,20 @@ test('loads and displays CustomSettings', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -125,9 +129,9 @@ test('loads and displays CustomSettings', () => {
       individualSettings: {
         MAIN_REVISION: 0,
         SUB_REVISION: 201,
-        NAME: 'Bluejay (Beta)'
-      }
-    }
+        NAME: 'Bluejay (Beta)',
+      },
+    },
   ];
 
   const onFlash = jest.fn();
@@ -178,16 +182,20 @@ test('handles setting adjustments', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -200,16 +208,20 @@ test('handles setting adjustments', () => {
           label: 'escMotorDirection',
           options: [
             {
-              value: '1', label: 'Normal',
+              value: '1',
+              label: 'Normal',
             },
             {
-              value: '2', label: 'Reversed',
+              value: '2',
+              label: 'Reversed',
             },
             {
-              value: '3', label: 'Bidirectional',
+              value: '3',
+              label: 'Bidirectional',
             },
             {
-              value: '4', label: 'Bidirectional Reversed',
+              value: '4',
+              label: 'Bidirectional Reversed',
             },
           ],
         },
@@ -251,8 +263,8 @@ test('handles setting adjustments', () => {
     individualSettings: {
       MAIN_REVISION: 0,
       SUB_REVISION: 201,
-      NAME: 'Bluejay (Beta)'
-    }
+      NAME: 'Bluejay (Beta)',
+    },
   };
 
   const escs = [];
@@ -308,16 +320,20 @@ test('handles setting adjustments with direct input', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -359,9 +375,9 @@ test('handles setting adjustments with direct input', () => {
       individualSettings: {
         MAIN_REVISION: 0,
         SUB_REVISION: 201,
-        NAME: 'Bluejay (Beta)'
-      }
-    }
+        NAME: 'Bluejay (Beta)',
+      },
+    },
   ];
 
   const onFlash = jest.fn();
@@ -384,7 +400,7 @@ test('handles setting adjustments with direct input', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: 1250,
-      name: '_PPM_MIN_THROTTLE'
+      name: '_PPM_MIN_THROTTLE',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));
@@ -411,16 +427,20 @@ test('shows error if not all MULTI', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -462,9 +482,9 @@ test('shows error if not all MULTI', () => {
       individualSettings: {
         MAIN_REVISION: 0,
         SUB_REVISION: 201,
-        NAME: 'Bluejay (Beta)'
-      }
-    }
+        NAME: 'Bluejay (Beta)',
+      },
+    },
   ];
 
   const onFlash = jest.fn();
@@ -507,16 +527,20 @@ test('handles out of sync settings', () => {
           label: 'escMotorDirection',
           options: [
             {
-              value: '1', label: 'Normal',
+              value: '1',
+              label: 'Normal',
             },
             {
-              value: '2', label: 'Reversed',
+              value: '2',
+              label: 'Reversed',
             },
             {
-              value: '3', label: 'Bidirectional',
+              value: '3',
+              label: 'Bidirectional',
             },
             {
-              value: '4', label: 'Bidirectional Reversed',
+              value: '4',
+              label: 'Bidirectional Reversed',
             },
           ],
         },
@@ -558,8 +582,8 @@ test('handles out of sync settings', () => {
     individualSettings: {
       MAIN_REVISION: 0,
       SUB_REVISION: 201,
-      NAME: 'Bluejay (Beta)'
-    }
+      NAME: 'Bluejay (Beta)',
+    },
   };
 
   const escs = [];
@@ -624,16 +648,20 @@ test('handles setting overrides', () => {
             label: 'escMotorDirectionOverride',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -646,16 +674,20 @@ test('handles setting overrides', () => {
           label: 'escMotorDirection',
           options: [
             {
-              value: '1', label: 'Normal',
+              value: '1',
+              label: 'Normal',
             },
             {
-              value: '2', label: 'Reversed',
+              value: '2',
+              label: 'Reversed',
             },
             {
-              value: '3', label: 'Bidirectional',
+              value: '3',
+              label: 'Bidirectional',
             },
             {
-              value: '4', label: 'Bidirectional Reversed',
+              value: '4',
+              label: 'Bidirectional Reversed',
             },
           ],
         },
@@ -697,8 +729,8 @@ test('handles setting overrides', () => {
     individualSettings: {
       MAIN_REVISION: 0,
       SUB_REVISION: 201,
-      NAME: 'Bluejay (Beta)'
-    }
+      NAME: 'Bluejay (Beta)',
+    },
   };
 
   const escs = [];

@@ -1,6 +1,6 @@
 import {
   EEPROM,
-  buildDisplayName
+  buildDisplayName,
 } from '../';
 
 test('general settings visibleIf GOVERNOR_MODE 3', () => {

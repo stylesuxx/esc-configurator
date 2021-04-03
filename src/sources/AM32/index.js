@@ -1,6 +1,4 @@
-import Source, {
-  PLATFORMS,
-} from '../Source';
+import Source, { PLATFORMS } from '../Source';
 
 import EEPROM from './eeprom';
 
@@ -40,7 +38,7 @@ const am32Config = new Source(
 
 export {
   buildDisplayName,
-  EEPROM
+  EEPROM,
 };
 
 export default am32Config;

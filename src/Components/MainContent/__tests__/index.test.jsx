@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  render, screen, fireEvent,
+  render,
+  screen,
 } from '@testing-library/react';
 
 import MainContent from '../';
@@ -431,16 +432,20 @@ test('isReading with ESC', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -564,16 +569,20 @@ test('isWriting with ESC', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },
@@ -697,16 +706,20 @@ test('isSelecting with ESC', () => {
             label: 'escMotorDirection',
             options: [
               {
-                value: '1', label: 'Normal',
+                value: '1',
+                label: 'Normal',
               },
               {
-                value: '2', label: 'Reversed',
+                value: '2',
+                label: 'Reversed',
               },
               {
-                value: '3', label: 'Bidirectional',
+                value: '3',
+                label: 'Bidirectional',
               },
               {
-                value: '4', label: 'Bidirectional Reversed',
+                value: '4',
+                label: 'Bidirectional Reversed',
               },
             ],
           },

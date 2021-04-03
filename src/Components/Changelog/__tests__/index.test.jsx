@@ -13,9 +13,9 @@ test('loads and displays Changelog', () => {
     {
       title: 'title',
       items: [
-        'item'
-      ]
-    }
+        'item',
+      ],
+    },
   ];
 
   render(
@@ -35,9 +35,9 @@ test('expands and close Changelog', () => {
     {
       title: 'title',
       items: [
-        'item'
-      ]
-    }
+        'item',
+      ],
+    },
   ];
 
   render(

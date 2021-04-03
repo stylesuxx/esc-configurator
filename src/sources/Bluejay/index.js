@@ -1,6 +1,4 @@
-import Source, {
-  PLATFORMS,
-} from '../Source.js';
+import Source, { PLATFORMS } from '../Source.js';
 
 import EEPROM from './eeprom';
 

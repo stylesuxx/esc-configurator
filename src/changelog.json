@@ -9,7 +9,10 @@
       "Show battery charge if in Motor tab",
       "Sources generate display names",
       "Added simplified Chinese",
-      "Show PWM frequency with Bluejay"
+      "Show PWM frequency with Bluejay",
+      "Display AM32 bootloader version",
+      "Motor control via cursors",
+      "Store logs in local storage"
     ]
   },
   {

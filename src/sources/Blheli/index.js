@@ -1,7 +1,5 @@
 import EEPROM from './eeprom';
-import Source, {
-  PLATFORMS,
-} from '../Source';
+import Source, { PLATFORMS } from '../Source';
 
 import VERSIONS_LOCAL from './versions.json';
 import ESCS_LOCAL from './escs.json';

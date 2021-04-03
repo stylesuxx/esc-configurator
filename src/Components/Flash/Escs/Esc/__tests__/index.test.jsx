@@ -36,8 +36,8 @@ test('displays name, version and bootloader', () => {
     individualSettings: {
       MAIN_REVISION: 1,
       SUB_REVISION: 200,
-      NAME: 'FW Name'
-    }
+      NAME: 'FW Name',
+    },
   };
 
   const onFlash = jest.fn();
@@ -64,8 +64,8 @@ test('handles empty name', () => {
     individualSettings: {
       MAIN_REVISION: 1,
       SUB_REVISION: 200,
-      NAME: ''
-    }
+      NAME: '',
+    },
   };
 
   const onFlash = jest.fn();
@@ -90,8 +90,8 @@ test('does not trigger onFlash when disabled', () => {
     individualSettings: {
       MAIN_REVISION: 1,
       SUB_REVISION: 200,
-      NAME: 'FW Name'
-    }
+      NAME: 'FW Name',
+    },
   };
 
   const onFlash = jest.fn();
@@ -118,8 +118,8 @@ test('does trigger onFlash when enabled', () => {
     individualSettings: {
       MAIN_REVISION: 1,
       SUB_REVISION: 200,
-      NAME: 'FW Name'
-    }
+      NAME: 'FW Name',
+    },
   };
 
   const onFlash = jest.fn();
@@ -159,16 +159,20 @@ test('shows and handles settings when available', () => {
           label: 'escMotorDirection',
           options: [
             {
-              value: '1', label: 'Normal',
+              value: '1',
+              label: 'Normal',
             },
             {
-              value: '2', label: 'Reversed',
+              value: '2',
+              label: 'Reversed',
             },
             {
-              value: '3', label: 'Bidirectional',
+              value: '3',
+              label: 'Bidirectional',
             },
             {
-              value: '4', label: 'Bidirectional Reversed',
+              value: '4',
+              label: 'Bidirectional Reversed',
             },
           ],
         },
@@ -258,16 +262,20 @@ test('shows and handles settings with direct input', () => {
           label: 'escMotorDirection',
           options: [
             {
-              value: '1', label: 'Normal',
+              value: '1',
+              label: 'Normal',
             },
             {
-              value: '2', label: 'Reversed',
+              value: '2',
+              label: 'Reversed',
             },
             {
-              value: '3', label: 'Bidirectional',
+              value: '3',
+              label: 'Bidirectional',
             },
             {
-              value: '4', label: 'Bidirectional Reversed',
+              value: '4',
+              label: 'Bidirectional Reversed',
             },
           ],
         },
@@ -332,7 +340,7 @@ test('shows and handles settings with direct input', () => {
   fireEvent.change(screen.getByRole(/spinbutton/i), {
     target: {
       value: 1250,
-      name: '_PPM_MIN_THROTTLE'
+      name: '_PPM_MIN_THROTTLE',
     },
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));

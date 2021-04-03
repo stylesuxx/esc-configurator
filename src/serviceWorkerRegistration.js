@@ -1,8 +1,6 @@
 /* istanbul ignore file */
 
-import {
-  toast
-} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 /*
  * This optional code is used to register a service worker.
@@ -29,7 +27,7 @@ const isLocalhost = Boolean(window.location.hostname === 'localhost' ||
   window.
     location.
     hostname.
-    match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),);
+    match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/));
 
 /**
  * @param {Object} config Service worker cnfiguration
@@ -71,7 +69,7 @@ export function register(config) {
            */
           navigator.serviceWorker.ready.then(() => {
             console.log('This web app is being served cache-first by a service ' +
-            'worker. To learn more, visit https://cra.link/PWA',);
+            'worker. To learn more, visit https://cra.link/PWA');
           });
         } else {
           // Is not localhost. Just register service worker
@@ -114,12 +112,12 @@ function registerValidSW(swUrl, config) {
                * content until all client tabs are closed.
                */
               console.log('New content is available and will be used when all ' +
-                'tabs for this page are closed. See https://cra.link/PWA.',);
+                'tabs for this page are closed. See https://cra.link/PWA.');
 
               registration.waiting.postMessage({ type: 'SKIP_WAITING' });
               toast.info('Update available! To update the app, refresh this tab.', {
                 toastId: 'appUpdateAvailable',
-                autoClose: false
+                autoClose: false,
               });
 
               // Execute callback
@@ -184,7 +182,7 @@ function checkValidServiceWorker(swUrl, config) {
     }).
     catch(() => {
       console.log('No internet connection found.' +
-        'App is running in offline mode.',);
+        'App is running in offline mode.');
     });
 }
 

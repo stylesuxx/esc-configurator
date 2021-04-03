@@ -1,7 +1,5 @@
 import Convert from '../Convert';
-import {
-  EEPROM
-} from '../../../sources/Bluejay';
+import { EEPROM } from '../../../sources/Bluejay';
 
 const settingsArray = new Uint8Array(Object.values({
   "0":0,
@@ -115,7 +113,7 @@ const settingsArray = new Uint8Array(Object.values({
   "108":65,
   "109":41,
   "110":32,
-  "111":32
+  "111":32,
 }));
 
 test('modeToString', () => {

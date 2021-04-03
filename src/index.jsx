@@ -1,15 +1,11 @@
 /* istanbul ignore file */
 
-import React, {
-  Suspense,
-} from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import App from './Containers/App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import {
-  I18nextProvider,
-} from 'react-i18next';
+import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
 
 import CommonEn from './translations/en/common.json';
@@ -60,7 +56,7 @@ ReactDOM.render(
       </Suspense>
     </I18nextProvider>
   </React.StrictMode>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
 
 /*

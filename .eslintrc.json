@@ -1,5 +1,6 @@
 {
   "extends": ["eslint:recommended", "plugin:react/all", "plugin:jest/recommended"],
+  "ignorePatterns": ["service-worker.js"],
   "plugins": [
     "react"
   ],
@@ -32,9 +33,17 @@
     "object-curly-newline": ["error", {
       "ObjectExpression": { "multiline": true, "minProperties": 2 },
       "ObjectPattern": { "multiline": true, "minProperties": 2 },
-      "ImportDeclaration": { "multiline": true, "minProperties": 1 },
+      "ImportDeclaration": { "multiline": true, "minProperties": 2 },
       "ExportDeclaration": { "multiline": true, "minProperties": 1 }
-    }]
+    }],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "never"
+    }],
+    "object-property-newline": "error"
   },
   "settings": {
     "react": {
@@ -59,7 +68,8 @@
     "Promise": false,
     "FileReader": false,
     "Blob": false,
-    "localStorage": false
+    "localStorage": false,
+    "__dirname": false
   },
   "parser": "babel-eslint"
 }

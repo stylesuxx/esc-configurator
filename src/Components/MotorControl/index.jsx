@@ -1,15 +1,10 @@
+import Slider, { createSliderWithTooltip } from 'rc-slider';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
   useState,
   useMemo,
 } from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
-
-import Slider, {
-  createSliderWithTooltip,
-} from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import Checkbox from '../Input/Checkbox';
@@ -56,7 +51,7 @@ function MotorControl({
 
   function MotorSlider({
     disabled,
-    onChange
+    onChange,
   }) {
     const [value, setValue] = useState(minValue);
     /* istanbul ignore next */
@@ -75,7 +70,7 @@ function MotorControl({
         step={10}
         tipProps={{
           visible: true,
-          placement: 'top'
+          placement: 'top',
         }}
       />
     );
@@ -97,7 +92,7 @@ function MotorControl({
 
   function IndividualMotorSlider({
     index,
-    onChange
+    onChange,
   }) {
     /* istanbul ignore next */
     function update(value) {

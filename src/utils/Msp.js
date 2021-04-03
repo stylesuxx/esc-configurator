@@ -1,8 +1,6 @@
 import compareVersions from 'compare-versions';
 
-import {
-  NotEnoughDataError,
-} from './helpers/QueueProcessor';
+import { NotEnoughDataError } from './helpers/QueueProcessor';
 
 const MSP = {
   MSP_API_VERSION: 1,

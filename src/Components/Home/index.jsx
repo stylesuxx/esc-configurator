@@ -1,10 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import React from 'react';
+
 import bluejay from './images/bluejay_logo.png';
 import './style.scss';
-
-import {
-  useTranslation,
-} from 'react-i18next';
 
 function Home() {
   const { t } = useTranslation('common');

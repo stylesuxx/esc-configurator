@@ -1,30 +1,20 @@
-import React, {
-  Component,
-} from 'react';
+import React, { Component } from 'react';
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 import i18next from 'i18next';
-import {
-  format as formatDate,
-} from 'date-fns';
+import { format as formatDate } from 'date-fns';
 
 import MainApp from '../../Components/App';
 
-import {
-  serial as serialPolyfill,
-} from 'web-serial-polyfill';
+import { serial as serialPolyfill } from 'web-serial-polyfill';
 
 import Serial from '../../utils/Serial';
 
 import sources from '../../sources';
 
-import {
-  getMasterSettings,
-} from '../../utils/helpers/Settings';
+import { getMasterSettings } from '../../utils/helpers/Settings';
 
-import {
-  delay,
-} from '../../utils/helpers/General';
+import { delay } from '../../utils/helpers/General';
 
 import settings from '../../settings.json';
 const {
@@ -244,7 +234,7 @@ class App extends Component {
     {
       label: "简体中文",
       value: 'zh-CN',
-    }
+    },
   ];
 
   onMount(cb){
@@ -260,7 +250,7 @@ class App extends Component {
   async addLogMessage(message, params = {}) {
     const {
       serialLog,
-      appSettings
+      appSettings,
     } = this.state;
     const translation = i18next.t(`log:${message}`, params);
 
@@ -389,7 +379,7 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
 
     const {
-      progress, actions, serial
+      progress, actions, serial,
     } = this.state;
 
     actions.isReading = true;
@@ -584,7 +574,7 @@ class App extends Component {
 
   async flash(text, force, migrate) {
     const {
-      flashTargets, escs, progress, actions
+      flashTargets, escs, progress, actions,
     } = this.state;
 
     actions.isSelecting = false;
@@ -625,7 +615,7 @@ class App extends Component {
     await this.setState({
       settings: getMasterSettings(escs),
       progress: newProgress,
-      actions
+      actions,
     });
   }
 
@@ -687,7 +677,7 @@ class App extends Component {
         connected: availablePorts.length > 0 ? true : false,
         fourWay: false,
         portNames,
-      }
+      },
     });
 
     this.serial.disconnect();

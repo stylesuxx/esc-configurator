@@ -1,8 +1,5 @@
 import escs from './escs.json';
 
-import blheliSource from '../../../sources/Blheli';
-const BLHELI_EEPROM = blheliSource.getEeprom();
-
 import bluejaySource from '../../../sources/Bluejay';
 const BLUEJAY_EEPROM = bluejaySource.getEeprom();
 
