@@ -15,7 +15,7 @@
   "readEscs": "Lese {{connected}} ESCs",
   "readEscsSuccess": "ESCs gelesen",
   "readEscsFailed": "ESCs lesen fehlgeschlagen",
-  "readEsc": "ESC {{index}} gelesen",
+  "readEsc": "Read ESC {{index}}: {{name}}",
   "flashingEsc": "ESC {{index}} wird geflasht",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
