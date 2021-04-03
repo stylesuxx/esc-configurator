@@ -1,39 +1,51 @@
 import PropTypes from 'prop-types';
 import React, {
   useState,
+  useMemo,
 } from 'react';
 import {
   useTranslation,
 } from 'react-i18next';
-import InputRange from 'react-input-range';
+
+import Slider, {
+  createSliderWithTooltip,
+} from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 import Checkbox from '../Input/Checkbox';
 
 import './style.scss';
+
+const SliderWithTooltip = createSliderWithTooltip(Slider);
 
 function MotorControl({
   motorCount,
   onAllUpdate,
   onSingleUpdate,
 }) {
+  const maxValue = 2000;
+  const minValue = 1000;
   const { t } = useTranslation('common');
   const [unlock, setUnlock] = useState(false);
-  const [masterValue, setMasterValue] = useState(1000);
+  const [unlockIndividual, setUnlockIndividual] = useState(true);
 
   function toggleUnlock() {
     setUnlock(!unlock);
-    onAllUpdate(1000);
-  }
-
-  function displayValue() {
-    return masterValue;
+    onAllUpdate(minValue);
   }
 
   // Makes no sense to test, component has its own test, we just assume that
   // the slider actually slides.
   /* istanbul ignore next */
   function updateValue(value) {
-    setMasterValue(value);
+    if(value > minValue && unlockIndividual) {
+      setUnlockIndividual(false);
+    }
+
+    if(value === minValue) {
+      setUnlockIndividual(true);
+    }
+
     onAllUpdate(value);
   }
 
@@ -43,19 +55,53 @@ function MotorControl({
   }
 
   function MotorSlider({
-    index,
+    disabled,
     onChange
   }) {
-    const [value, setValue] = useState(1000);
-
+    const [value, setValue] = useState(minValue);
     /* istanbul ignore next */
     function update(value) {
       setValue(value);
-      onChange(index + 1, value);
+      onChange(value);
     }
 
-    function displayValue() {
-      return value;
+    return(
+      <SliderWithTooltip
+        defaultValue={value}
+        disabled={disabled}
+        max={maxValue}
+        min={minValue}
+        onChange={update}
+        step={10}
+        tipProps={{
+          visible: true,
+          placement: 'top'
+        }}
+      />
+    );
+  }
+  MotorSlider.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+  };
+
+
+  function MasterSlider() {
+    return(
+      <MotorSlider
+        disabled={!unlock}
+        onChange={updateValue}
+      />
+    );
+  }
+
+  function IndividualMotorSlider({
+    index,
+    onChange
+  }) {
+    /* istanbul ignore next */
+    function update(value) {
+      onChange(index + 1, value);
     }
 
     return(
@@ -64,22 +110,14 @@ function MotorControl({
           {t("motorNr", { index: index + 1 })}
         </h3>
 
-        <InputRange
-          defaultValue={displayValue()}
-          disabled={!unlock || masterValue > 1000}
-          maxValue={2000}
-          minValue={1000}
-          name={`speed-slider-${index}`}
+        <MotorSlider
+          disabled={!unlock || !unlockIndividual}
           onChange={update}
-          step={1}
-          value={displayValue()}
         />
-
       </div>
     );
   }
-
-  MotorSlider.propTypes = {
+  IndividualMotorSlider.propTypes = {
     index: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
   };
@@ -87,13 +125,17 @@ function MotorControl({
   const singleSliderElements = [];
   for(let i = 0; i < motorCount; i += 1) {
     singleSliderElements.push(
-      <MotorSlider
+      <IndividualMotorSlider
         index={i}
         key={i}
         onChange={updateSingleValue}
       />
     );
   }
+
+  const memoizedMasterSlider = useMemo(() => (
+    <MasterSlider />
+  ), [unlock]);
 
   return (
     <div id="motor-control-wrapper">
@@ -124,15 +166,7 @@ function MotorControl({
                 {t('masterSpeed')}
               </h3>
 
-              <InputRange
-                disabled={!unlock}
-                maxValue={2000}
-                minValue={1000}
-                name="master-speed"
-                onChange={updateValue}
-                step={1}
-                value={displayValue()}
-              />
+              {memoizedMasterSlider}
             </div>
           </div>
         </div>
