@@ -62,7 +62,7 @@ function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualS
     }
 
     const fromLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
-    const toLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
+    const toLayout = toSettingsDescriptions[to.LAYOUT_REVISION];
 
     let fromCommons = null;
     let toCommons = null;

@@ -1,7 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-
 import escs from './escs.json';
+
+import blheliSource from '../../../sources/Blheli';
+const BLHELI_EEPROM = blheliSource.getEeprom();
 
 import bluejaySource from '../../../sources/Bluejay';
 const BLUEJAY_EEPROM = bluejaySource.getEeprom();
@@ -91,4 +91,126 @@ test('can migrate from different platforms', () => {
   const result = canMigrate('MOTOR_DIRECTION', escs[0].settings, escs[1].settings, settingsDescriptions, individualSettingsDescriptions);
 
   expect(result).not.toBeTruthy();
+});
+
+test('no multi valid', () => {
+  const settingsDescriptions = {
+    1: {
+      base: [
+        { name: 'MOTOR_DIRECTION' },
+      ],
+    },
+    2: {
+      base: [
+        { name: 'MOTOR_DIRECTION' },
+      ],
+    },
+  };
+
+  const individualSettingsDescriptions = {
+    1: {},
+    2: {},
+  };
+
+  const from = {
+    MODE: 1,
+    LAYOUT_REVISION: 1,
+  };
+
+  const to = {
+    MODE: 1,
+    LAYOUT_REVISION: 2,
+  };
+
+  const result = canMigrate('MOTOR_DIRECTION', from, to, settingsDescriptions, individualSettingsDescriptions);
+  expect(result).toBeTruthy();
+});
+
+test('no multi invalid', () => {
+  const settingsDescriptions = {
+    1: {
+      base: [
+        { name: 'MOTOR_DIRECTION' },
+      ],
+    },
+    2: {},
+  };
+
+  const individualSettingsDescriptions = {
+    1: {},
+    2: {},
+  };
+
+  const from = {
+    MODE: 1,
+    LAYOUT_REVISION: 1,
+  };
+
+  const to = {
+    MODE: 1,
+    LAYOUT_REVISION: 2,
+  };
+
+  const result = canMigrate('MOTOR_DIRECTION', from, to, settingsDescriptions, individualSettingsDescriptions);
+  expect(result).toBeFalsy();
+});
+
+test('individual settings valid', () => {
+  const settingsDescriptions = {
+    1: { base: [] },
+    2: { base: [] },
+  };
+
+  const individualSettingsDescriptions = {
+    1: {
+      base: [
+        { name: 'MOTOR_DIRECTION' },
+      ],
+    },
+    2: {
+      base: [
+        { name: 'MOTOR_DIRECTION' },
+      ],
+    },
+  };
+  const from = {
+    MODE: 1,
+    LAYOUT_REVISION: 1,
+  };
+
+  const to = {
+    MODE: 1,
+    LAYOUT_REVISION: 2,
+  };
+
+  const result = canMigrate('MOTOR_DIRECTION', from, to, settingsDescriptions, individualSettingsDescriptions);
+  expect(result).toBeTruthy();
+});
+
+test('individual settings invalid', () => {
+  const settingsDescriptions = {
+    1: { base: [] },
+    2: { base: [] },
+  };
+
+  const individualSettingsDescriptions = {
+    1: {
+      base: [
+        { name: 'MOTOR_DIRECTION' },
+      ],
+    },
+    2: { base: [] },
+  };
+  const from = {
+    MODE: 1,
+    LAYOUT_REVISION: 1,
+  };
+
+  const to = {
+    MODE: 1,
+    LAYOUT_REVISION: 2,
+  };
+
+  const result = canMigrate('MOTOR_DIRECTION', from, to, settingsDescriptions, individualSettingsDescriptions);
+  expect(result).toBeFalsy();
 });

@@ -33,7 +33,6 @@ const {
 } = settings;
 
 class App extends Component {
-
   constructor() {
     super();
 
@@ -730,10 +729,6 @@ class App extends Component {
     this.addLogMessage('portChanged');
 
     this.setState({ serial });
-  }
-
-  delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   handleSetBaudRate(rate) {

@@ -73,6 +73,7 @@ function App({
   const { t } = useTranslation('common');
   const statusbarRef = useRef();
 
+  /* istanbul ignore next */
   useInterval(async() => {
     if(open && !actions.isReading && !fourWay) {
       if(serial.getBatteryState) {
@@ -84,6 +85,7 @@ function App({
     }
   }, 1000);
 
+  /* istanbul ignore next */
   useInterval(async() => {
     if(serial.getUtilization) {
       const utilization = await serial.getUtilization();

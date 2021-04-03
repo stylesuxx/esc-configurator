@@ -68,3 +68,15 @@ test('build display Name with missing revisions', () => {
   const name = buildDisplayName(flash, 'MAKE');
   expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized, 24kHz');
 });
+
+test('build display Name without PWM', () => {
+  const flash = {
+    settings: {
+      __PWM_FREQUENCY: 0xFF,
+      NAME: 'Bluejay',
+    },
+  };
+
+  const name = buildDisplayName(flash, 'MAKE');
+  expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized');
+});
