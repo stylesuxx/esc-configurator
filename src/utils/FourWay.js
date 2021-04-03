@@ -203,9 +203,11 @@ class FourWay {
       const message = self.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
+      /*
       if (command !== COMMANDS.cmd_InterfaceTestAlive) {
         console.debug('sending', this.commandToString(command), address.toString(0x10));
       }
+      */
 
       const processMessage = async(resolve, reject) => {
         /**
@@ -223,7 +225,7 @@ class FourWay {
             return resolve(msg);
           }
         } catch(e) {
-          console.debug('Command failed:', e.message);
+          console.debug(`Command ${this.commandToString(command)} failed: ${e.message}`);
           return reject(e);
         }
 

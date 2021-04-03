@@ -4,6 +4,9 @@ import React, {
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 import i18next from 'i18next';
+import {
+  format as formatDate,
+} from 'date-fns';
 
 import MainApp from '../../Components/App';
 
@@ -62,6 +65,7 @@ class App extends Component {
     this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
+    this.updateLog = this.updateLog.bind(this);
 
     this.state = {
       checked: false,
@@ -142,13 +146,19 @@ class App extends Component {
       const currentSettings = Object.assign({}, appSettings, settings);
       this.setState({ appSettings: currentSettings });
 
+      // Load previously stored log messages and sanitize to a max line count
+      const log = JSON.parse(localStorage.getItem('log'));
+      if(log) {
+        this.log = log.slice(-10000);
+      }
+
       // Redefine the console and tee logs
       var console = (function(old) {
         return Object.assign({}, old, {
           debug: (text, ...args) => {
             const { appSettings } = that.state;
             const msg = [text, args.join(' ')].join(' ');
-            that.log.push(msg);
+            that.updateLog(msg);
             if(appSettings.printLogs.value) {
               console.log(text, ...args);
             }
@@ -242,6 +252,12 @@ class App extends Component {
     cb();
   }
 
+  updateLog(message) {
+    const now = formatDate(new Date(), 'yyy/MM/dd HH:MM:ss');
+    this.log.push(`${now}: ${message}`);
+    localStorage.setItem('log', JSON.stringify(this.log));
+  }
+
   async addLogMessage(message, params = {}) {
     const {
       serialLog,
@@ -251,9 +267,9 @@ class App extends Component {
 
     params.lng = 'en';
     const translationEn = i18next.t(`log:${message}`, params);
+    this.updateLog(translationEn);
 
     serialLog.push(this.formatLogMessage(translation));
-    this.log.push(translationEn);
 
     if(appSettings.printLogs.value) {
       console.log(translationEn);
@@ -414,7 +430,10 @@ class App extends Component {
           settings.index = i;
           escFlash.push(settings);
 
-          this.addLogMessage('readEsc', { index: i + 1 });
+          this.addLogMessage('readEsc', {
+            index: i + 1,
+            name: settings.displayName,
+          });
         } else {
           this.addLogMessage('readEscFailed', { index: i + 1 });
         }
@@ -524,19 +543,20 @@ class App extends Component {
         force,
       },
     });
+    console.debug(`Chosen firmware: ${url}`);
 
     let text = null;
     if (typeof Storage !== "undefined") {
       text = localStorage.getItem(url);
 
       if(text) {
-        console.debug('Got file from local storage');
+        console.debug('Got firmware from local storage');
       }
     }
 
     if(!text) {
       try {
-        console.debug(`Fetching firmware from ${url} `);
+        console.debug('Fetching firmware from repository');
         // TODO: In case of ATMEL an eep needs to be fetched
 
         // Proxy is needed to bypass CORS on github

@@ -15,7 +15,7 @@
   "readEscs": "Trying to read {{connected}} ESC's",
   "readEscsSuccess": "Done reading ESC's",
   "readEscsFailed": "Failed reading ESC's",
-  "readEsc": "Read ESC {{index}}",
+  "readEsc": "Read ESC {{index}}: {{name}}",
   "flashingEsc": "Flashing ESC {{index}}",
   "flashingEscFailed": "Failed flashing ESC {{index}} - check file type",
   "readEscFailed": "Failed reading ESC {{index}}",
