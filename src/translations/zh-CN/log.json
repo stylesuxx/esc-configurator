@@ -28,6 +28,6 @@
   "escSettingsMcuMismatch": "MCU 不匹配，覆盖未启用 - 中止",
   "escFlashedInTime": "已刷入电调 {{index}} - {{seconds}}s",
   "passthroughNotSupported": "不支持 BLHELI 透传协议",
-  "firmwareMismatch": "Firmware mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
-  "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}"
+  "firmwareMismatch": "固件不匹配！刷入: {{flash}} vs. EEEPROM: {{eeprom}}",
+  "bootloaderMismatch": "引导程序不匹配！刷入: {{flash}} vs. EEEPROM: {{eeprom}}"
 }
