@@ -147,21 +147,7 @@ const SETTINGS_DESCRIPTIONS = {
         },
         {
           name: 'BRAKE_ON_STOP', type: 'bool', label: 'escBrakeOnStop'
-        },
-        {
-          name: 'DAMPING_MODE', type: 'enum', label: '_Damping mode (Complementary PWM)',
-          options: [
-            {
-              value: '0', label: 'Off'
-            },
-            {
-              value: '1', label: 'Not during startup'
-            },
-            {
-              value: '2', label: 'On'
-            },
-          ],
-        },
+        }
       ],
     },
   },

@@ -34,7 +34,7 @@ const MelodyElement = forwardRef(({
   const [isAccepted, setIsAccepted] = useState(accepted);
   const [isPlayable, setIsPlayable] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const stop = useRef(false);
+  const oscillator = useRef(null);
   const highlighted = useRef(null);
 
   useImperativeHandle(ref, () => ({
@@ -42,7 +42,7 @@ const MelodyElement = forwardRef(({
       playMelody();
     },
     stop() {
-      stop.current = true;
+      stopMelody();
     }
   }));
 
@@ -116,7 +116,10 @@ const MelodyElement = forwardRef(({
   }
 
   function stopMelody() {
-    stop.current = true;
+    if (oscillator.current) {
+      oscillator.current.stop();
+      oscillator.current = null;
+    } 
   }
 
   function playMelody() {
@@ -124,14 +127,9 @@ const MelodyElement = forwardRef(({
     highlighted.current = highlight;
     try {
       const parsedRtttl = Rtttl.parse(currentMelody);
-      const audioContext = new AudioContext();
       onPlay();
 
-      const osc = audioContext.createOscillator();
-      osc.type = 'square';
-      osc.start(0);
-
-      play(parsedRtttl.melody, audioContext, osc, 0);
+      play(parsedRtttl.melody);
     } catch(e) {
       setIsValid(false);
       setIsPlayable(false);
@@ -139,25 +137,42 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function play(melody, audioContext, osc, index) {
-    if (melody.length === 0 || stop.current) {
-      stop.current = false;
+  function play(melody) {
+    const audioCtx = new window.AudioContext();
+
+    const osc = oscillator.current = audioCtx.createOscillator();
+    osc.type = 'square';
+
+    const volume = audioCtx.createGain();
+    osc.connect(volume);
+    volume.connect(audioCtx.destination);
+    volume.gain.value = 0.05;
+
+    osc.onended = () => {
+      volume.disconnect(audioCtx.destination);
+      oscillator.current = null;
       setPlaying(false);
       setHighlight(highlighted.current);
       onStop();
-      return;
+    };
+
+    let t = audioCtx.currentTime;
+    for (const note of melody) {
+      osc.frequency.setValueAtTime(note.frequency, t);
+      t += note.duration / 1000;
     }
 
-    highlightNote(index);
-
-    const note = melody[0];
-    osc.frequency.value = note.frequency;
-    osc.connect(audioContext.destination);
-
-    setTimeout(() => {
-      osc.disconnect(audioContext.destination);
-      play(melody.slice(1), audioContext, osc, index += 1);
-    }, note.duration);
+    // highlight node
+    const hl = (i) => {
+      if(oscillator.current && melody[i]) {
+        setTimeout(() => hl(i + 1), melody[i].duration);
+        highlightNote(i);
+      } 
+    };
+    
+    hl(0);
+    osc.start(0);
+    osc.stop(t);
   }
 
   return (
