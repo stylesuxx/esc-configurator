@@ -36,7 +36,6 @@ class App extends Component {
     this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
     this.handleSaveLog = this.handleSaveLog.bind(this);
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
-    this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
     this.updateLog = this.updateLog.bind(this);
@@ -280,8 +279,8 @@ class App extends Component {
 
   handlePacketErrors(count) {
     const { stats } = this.state;
-    stats.packetErrors += count;
-    this.setState({ stats });
+    const newStats = Object.assign({}, stats, { packetErrors: stats.packetErrors + count });
+    this.setState({ stats: newStats });
   }
 
   handleSettingsUpdate(settings) {
@@ -886,6 +885,7 @@ class App extends Component {
 
   handleLanguageSelection(e) {
     const language = e.target.value;
+
     localStorage.setItem('language', language);
     i18next.changeLanguage(language);
     this.setState({ language });
@@ -948,14 +948,16 @@ class App extends Component {
         connected={connected}
         escs={escs}
         flashTargets={flashTargets}
-        language={language}
-        languages={this.languages}
+        language={{
+          actions: { handleChange: this.handleLanguageSelection.bind(this) },
+          current: language,
+          available: this.languages,
+        }}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
         onCookieAccept={this.handleCookieAccept}
         onFlashUrl={this.handleFlashUrl}
         onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
-        onLanguageSelection={this.handleLanguageSelection}
         onLocalSubmit={this.handleLocalSubmit}
         onReadEscs={this.handleReadEscs}
         onResetDefaultls={this.handleResetDefaultls}

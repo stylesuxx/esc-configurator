@@ -29,7 +29,6 @@ function App({
   escs,
   flashTargets,
   language,
-  languages,
   onAllMotorSpeed,
   onCancelFirmwareSelection,
   onCookieAccept,
@@ -73,15 +72,6 @@ function App({
     }
   }, 1000);
 
-  const languageElements = languages.map((item) => (
-    <option
-      key={item.value}
-      value={item.value}
-    >
-      {item.label}
-    </option>
-  ));
-
   const memoizedPortPicker = useMemo(() => (
     <PortPicker
       hasPort={serial.connected}
@@ -104,6 +94,29 @@ function App({
     />
   ), [stats]);
 
+  const memoizedLanguageSelection = useMemo(() => {
+    const languageElements = language.available.map((item) => (
+      <option
+        key={item.value}
+        value={item.value}
+      >
+        {item.label}
+      </option>
+    ));
+
+    return (
+      <div className="dropdown dropdown-dark">
+        <select
+          className="dropdown-select"
+          defaultValue={language.current}
+          onChange={language.actions.handleChange}
+        >
+          {languageElements}
+        </select>
+      </div>
+    );
+  }, [language]);
+
   return (
     <div className="App">
       <div id="main-wrapper">
@@ -114,15 +127,7 @@ function App({
             {memoizedPortPicker}
 
             <div className="language-select ">
-              <div className="dropdown dropdown-dark">
-                <select
-                  className="dropdown-select"
-                  defaultValue={language}
-                  onChange={onLanguageSelection}
-                >
-                  {languageElements}
-                </select>
-              </div>
+              {memoizedLanguageSelection}
 
               <div className="button-dark">
                 <button
@@ -211,8 +216,11 @@ App.propTypes = {
   connected: PropTypes.number.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   flashTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
-  language: PropTypes.string.isRequired,
-  languages: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  language: PropTypes.shape({
+    actions: PropTypes.shape({ handleChange: PropTypes.func.isRequired }).isRequired,
+    available: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    current: PropTypes.string.isRequired,
+  }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
