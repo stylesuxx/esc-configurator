@@ -20,6 +20,10 @@ class App extends Component {
     super();
 
     // Action handlers passed down to components and triggered by them.
+    this.handleAppSettingsClose = this.handleAppSettingsClose.bind(this);
+    this.handleAppSettingsOpen = this.handleAppSettingsOpen.bind(this);
+    this.handleAppSettingsUpdate = this.handleAppSettingsUpdate.bind(this);
+
     this.handleSetPort = this.handleSetPort.bind(this);
     this.handleConnect = this.handleConnect.bind(this);
     this.handleDisconnect = this.handleDisconnect.bind(this);
@@ -42,9 +46,6 @@ class App extends Component {
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
     this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
     this.handleChangePort = this.handleChangePort.bind(this);
-    this.handleCloseSettings = this.handleCloseSettings.bind(this);
-    this.handleOpenSettings = this.handleOpenSettings.bind(this);
-    this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
     this.updateLog = this.updateLog.bind(this);
@@ -81,7 +82,7 @@ class App extends Component {
         isFlashing: false,
       },
       language: 'en',
-      showSettings: false,
+      showAppSettings: false,
       appSettings: {
         directInput: {
           type: 'boolean',
@@ -354,25 +355,11 @@ class App extends Component {
     );
   }
 
-  handleLocalSubmit(e, force, migrate) {
-    e.preventDefault();
-    TagManager.dataLayer({ dataLayer: { event: "Flashing local file" } });
-
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      console.debug(`Flashing local file`);
-
-      const text = (e.target.result);
-      this.flash(text, force, migrate);
-    };
-    reader.readAsText(e.target.files[0]);
-  }
-
   async handleReadEscs() {
-    TagManager.dataLayer({ dataLayer: { event: "Reading ESC's" } });
-
     const {
-      progress, actions, serial,
+      progress,
+      actions,
+      serial,
     } = this.state;
 
     actions.isReading = true;
@@ -421,6 +408,18 @@ class App extends Component {
         }
       }
       open = true;
+
+      console.log(escFlash[0]);
+      TagManager.dataLayer({
+        dataLayer: {
+          event: "ESCs",
+          escs: {
+            name: escFlash[0].displayName,
+            layout: escFlash[0].make,
+            count: escFlash.length,
+          },
+        },
+      });
 
       this.addLogMessage('readEscsSuccess');
     } catch(e) {
@@ -512,26 +511,46 @@ class App extends Component {
     });
   }
 
+  handleLocalSubmit(e, force, migrate) {
+    const { flashTargets } = this.state;
+    e.preventDefault();
+    TagManager.dataLayer({
+      dataLayer: {
+        event: 'Flashing',
+        firmwareNew: {
+          type: 'local',
+          force,
+          count: flashTargets.length,
+        },
+      },
+    });
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      console.debug(`Flashing local file`);
+
+      const text = (e.target.result);
+      this.flash(text, force, migrate);
+    };
+    reader.readAsText(e.target.files[0]);
+  }
+
   /**
    * Acquires the hex file from an URL. Before doing so, the local storage is
    * checked if the file already exists there, it is used, otherwise it is
    * downloaded and put into local storage for later use.
    */
   async handleFlashUrl(url, force, migrate) {
-    TagManager.dataLayer({
-      dataLayer: {
-        event: "Flashing ESC's",
-        hex: url,
-        force,
-      },
-    });
+    const { flashTargets } = this.state;
     console.debug(`Chosen firmware: ${url}`);
 
+    let type = 'remote';
     let text = null;
     if (typeof Storage !== "undefined") {
       text = localStorage.getItem(url);
 
       if(text) {
+        type = 'localStorage';
         console.debug('Got firmware from local storage');
       }
     }
@@ -559,6 +578,18 @@ class App extends Component {
     }
 
     if(text) {
+      TagManager.dataLayer({
+        dataLayer: {
+          event: 'Flashing',
+          firmwareNew: {
+            type,
+            url,
+            force,
+            count: flashTargets.length,
+          },
+        },
+      });
+
       await this.flash(text, force, migrate);
     } else {
       this.addLogMessage('getFileFailed');
@@ -720,8 +751,6 @@ class App extends Component {
 
   async handleConnect(e) {
     e.preventDefault();
-    TagManager.dataLayer({ dataLayer: { event: "Connect" } });
-
     const { baudRate } = this.state;
 
     try {
@@ -780,6 +809,18 @@ class App extends Component {
 
       let motorData = await this.serial.getMotorData();
       motorData = motorData.filter((motor) => motor > 0);
+
+      TagManager.dataLayer({
+        dataLayer: {
+          event: "FlightController",
+          flightController: {
+            mspVersion: apiVersion.apiVersion,
+            firmwareName: fcVariant.flightControllerIdentifier,
+            firmwareVersion: fcVersion.flightControllerVersion,
+            firmwareBuild: buildInfo.buildInfo,
+          },
+        },
+      });
 
       await this.setState({
         open: true,
@@ -850,15 +891,21 @@ class App extends Component {
     this.setState({ language });
   }
 
-  handleCloseSettings() {
-    this.setState({ showSettings: false });
+  handleAppSettings = {
+    close: () => this.handleAppSettingsClose().bind(this),
+    open: () => this.handleAppSettingsOpen().bind(this),
+    update: () => this.handleAppSettingsUpdate().bind(this),
+  };
+
+  handleAppSettingsClose() {
+    this.setState({ showAppSettings: false });
   }
 
-  handleOpenSettings() {
-    this.setState({ showSettings: true });
+  handleAppSettingsOpen() {
+    this.setState({ showAppSettings: true });
   }
 
-  handleUpdateSettings(name, value) {
+  handleAppSettingsUpdate(name, value) {
     const { appSettings } = this.state;
 
     appSettings[name].value = value;
@@ -882,7 +929,7 @@ class App extends Component {
       flashTargets,
       language,
       serial,
-      showSettings,
+      showAppSettings,
       appSettings,
     } = this.state;
 
@@ -906,7 +953,7 @@ class App extends Component {
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
         onChangePort={this.handleChangePort}
-        onClose={this.handleCloseSettings}
+        onClose={this.handleAppSettingsClose}
         onConnect={this.handleConnect}
         onCookieAccept={this.handleCookieAccept}
         onDisconnect={this.handleDisconnect}
@@ -914,7 +961,7 @@ class App extends Component {
         onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
         onLanguageSelection={this.handleLanguageSelection}
         onLocalSubmit={this.handleLocalSubmit}
-        onOpenSettings={this.handleOpenSettings}
+        onOpenSettings={this.handleAppSettingsOpen}
         onReadEscs={this.handleReadEscs}
         onResetDefaultls={this.handleResetDefaultls}
         onSaveLog={this.handleSaveLog}
@@ -924,7 +971,7 @@ class App extends Component {
         onSettingsUpdate={this.handleSettingsUpdate}
         onSingleFlash={this.handleSingleFlash}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
-        onUpdate={this.handleUpdateSettings}
+        onUpdate={this.handleAppSettingsUpdate}
         onWriteSetup={this.handleWriteSetup}
         open={open}
         packetErrors={packetErrors}
@@ -933,7 +980,7 @@ class App extends Component {
         serial={this.serial || undefined}
         serialLog={serialLog}
         settings={settings}
-        showSettings={showSettings}
+        showSettings={showAppSettings}
         version={version}
       />
     );
