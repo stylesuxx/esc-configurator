@@ -245,6 +245,12 @@ class App extends Component {
     this.setState({ escs: newEscs });
   }
 
+  setActions(settings) {
+    const { actions } = this.state;
+    const newActions = Object.assign({}, actions, settings);
+    this.setState({ actions: newActions });
+  }
+
   updateLog(message) {
     const now = dateFormat(new Date(), 'yyyy/MM/dd HH:MM:ss');
     this.log.push(`${now}: ${message}`);
@@ -312,13 +318,9 @@ class App extends Component {
   async handleResetDefaultls() {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
 
-    const {
-      escs,
-      actions,
-    } = this.state;
+    const { escs } = this.state;
 
-    actions.isWriting = true;
-    this.setState({ actions });
+    this.setActions({ isWriting: true });
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
@@ -330,9 +332,7 @@ class App extends Component {
       const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
       await this.serial.writeSettings(target, esc, mergedSettings);
     }
-
-    actions.isWriting = false;
-    this.setState({ actions });
+    this.setActions({ isWriting: false });
 
     this.handleReadEscs();
   }
@@ -369,14 +369,12 @@ class App extends Component {
   async handleReadEscs() {
     const {
       escs,
-      actions,
       serial,
     } = this.state;
     const newEscs = Object.assign({}, escs);
     const newSerial = Object.assign({}, serial);
 
-    actions.isReading = true;
-    this.setState({ actions });
+    this.setActions({ isReading: true });
 
     // Enable 4way if
     let connected = 0;
@@ -449,23 +447,16 @@ class App extends Component {
     newSerial.open = open;
     this.setSerial(newSerial);
 
-    actions.isReading = false;
-    this.setState({ actions });
+    this.setActions({ isReading: false });
   }
 
   async handleWriteSetup() {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
-    const {
-      escs,
-      actions,
-    } = this.state;
-
+    const { escs } = this.state;
     const newEscs = Object.assign({}, escs);
-    const newActions = Object.assign({}, actions);
 
-    newActions.isWriting = true;
-    this.setState({ actions: newActions });
+    this.setActions({ isWriting: true });
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
@@ -479,24 +470,18 @@ class App extends Component {
 
       newEscs.individual[i].settingsArray = newSettingsArray;
     }
+    this.setActions({ isWriting: false });
 
-    newActions.isWriting = false;
     this.setEscs(newEscs);
-    this.setState({ actions: newActions });
   }
 
   handleSingleFlash(index) {
-    const { actions } = this.state;
-    const newActions = Object.assign({}, actions, { isSelecting: true });
     this.setEscs({ targets: [index] });
-    this.setState({ actions: newActions });
+    this.setActions({ isSelecting: true });
   }
 
   handleSelectFirmwareForAll() {
-    const {
-      escs,
-      actions,
-    } = this.state;
+    const { escs } = this.state;
 
     const targets = [];
     for (let i = 0; i < escs.individual.length; i += 1) {
@@ -504,15 +489,12 @@ class App extends Component {
       targets.push(esc.index);
     }
 
-    const newActions = Object.assign({}, actions, { isSelecting: true });
-    this.setState({ actions: newActions });
+    this.setActions({ isSelecting: true });
     this.setEscs({ targets });
   }
 
   handleCancelFirmwareSelection() {
-    const { actions } = this.state;
-    const newActions = Object.assign({}, actions, { isSelecting: false });
-    this.setState({ actions: newActions });
+    this.setActions({ isSelecting: false });
     this.setEscs({ targets: [] });
   }
 
@@ -602,14 +584,12 @@ class App extends Component {
   }
 
   async flash(text, force, migrate) {
-    const {
-      escs,
-      actions,
-    } = this.state;
+    const { escs } = this.state;
 
-    actions.isSelecting = false;
-    actions.isFlashing = true;
-    this.setState({ actions });
+    this.setActions({
+      isSelecting: false,
+      isFlashing: true,
+    });
 
     const newEscs = Object.assign({}, escs);
     for(let i = 0; i < escs.targets.length; i += 1) {
@@ -643,11 +623,7 @@ class App extends Component {
     newEscs.master = getMasterSettings(newEscs.individual);
     this.setEscs(newEscs);
 
-    const newActions = Object.assign({}, actions, {
-      isSelecting: false,
-      isFlashing: false,
-    });
-    this.setState({ actions: newActions });
+    this.setActions({ isFlashing: false });
   }
 
   async serialConnectHandler() {
@@ -862,13 +838,11 @@ class App extends Component {
 
     this.setEscs({ individual: [] });
 
-    this.setState({
-      actions: {
-        isReading: false,
-        isWriting: false,
-        isSelecting: false,
-        isFlashing: false,
-      },
+    this.setActions({
+      isReading: false,
+      isWriting: false,
+      isSelecting: false,
+      isFlashing: false,
     });
   }
 
