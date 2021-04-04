@@ -287,14 +287,11 @@ class FourWay {
          */
         const name = flash.settings.NAME;
         let newLayout = null;
-        switch(name) {
-          case 'Bluejay':
-          case 'Bluejay (BETA)': {
-            newLayout = BLUEJAY_EEPROM.LAYOUT;
-            layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
-            defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
-            settingsArray = (await this.read(BLUEJAY_EEPROM.EEPROM_OFFSET, layoutSize)).params;
-          } break;
+        if(BLUEJAY_EEPROM.NAMES.includes(name)) {
+          newLayout = BLUEJAY_EEPROM.LAYOUT;
+          layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
+          defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
+          settingsArray = (await this.read(BLUEJAY_EEPROM.EEPROM_OFFSET, layoutSize)).params;
         }
 
         if(newLayout) {

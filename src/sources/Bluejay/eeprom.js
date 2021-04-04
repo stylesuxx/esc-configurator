@@ -2,7 +2,7 @@ const EEPROM_OFFSET = 0x1A00;
 const PAGE_SIZE = 0x0200;
 const LAYOUT_SIZE = 0xF0;
 const TYPES = { EFM8: 'EFM8' };
-const NAMES = ['Bluejay', 'Bluejay (BETA)'];
+const NAMES = ['Bluejay', 'Bluejay (BETA)', 'Bluejay (TEST)'];
 
 const SETTINGS_DESCRIPTIONS = {
   //  With Bluejay startup tunes
@@ -467,6 +467,7 @@ const SETTINGS_DESCRIPTIONS = {
       ],
     },
   },
+
   // V0.10
   '201': {
     MULTI: {
