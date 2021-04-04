@@ -209,11 +209,6 @@ const SETTINGS_DESCRIPTIONS = {
           ],
         },
         {
-          name: 'STARTUP_BEEP',
-          type: 'bool',
-          label: 'escStartupBeep',
-        },
-        {
           name: 'DITHERING',
           type: 'bool',
           label: 'escDithering',
@@ -1462,7 +1457,6 @@ var DEFAULTS = {
     LED_CONTROL: 0,
 
     STARTUP_POWER_MIN: 51,
-    STARTUP_BEEP: 1,
     DITHERING: 1,
 
     STARTUP_POWER_MAX: 25,
