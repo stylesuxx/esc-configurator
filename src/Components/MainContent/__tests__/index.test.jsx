@@ -697,6 +697,7 @@ test('isSelecting with ESC', () => {
         MOTOR_DIRECTION: 1,
         _PPM_MIN_THROTTLE: 125,
         STARTUP_BEEP: 1,
+        STARTUP_MELODY: [],
       },
       individualSettingsDescriptions: {
         base: [
