@@ -20,14 +20,6 @@ class App extends Component {
     super();
 
     // Action handlers passed down to components and triggered by them.
-    this.handleAppSettingsClose = this.handleAppSettingsClose.bind(this);
-    this.handleAppSettingsOpen = this.handleAppSettingsOpen.bind(this);
-    this.handleAppSettingsUpdate = this.handleAppSettingsUpdate.bind(this);
-
-    this.handleSetPort = this.handleSetPort.bind(this);
-    this.handleConnect = this.handleConnect.bind(this);
-    this.handleDisconnect = this.handleDisconnect.bind(this);
-    this.handleSetBaudRate = this.handleSetBaudRate.bind(this);
     this.serialConnectHandler = this.serialConnectHandler.bind(this);
     this.serialDisconnectHandler = this.serialDisconnectHandler.bind(this);
     this.addLogMessage = this.addLogMessage.bind(this);
@@ -45,29 +37,44 @@ class App extends Component {
     this.handleSaveLog = this.handleSaveLog.bind(this);
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
     this.handleLanguageSelection = this.handleLanguageSelection.bind(this);
-    this.handleChangePort = this.handleChangePort.bind(this);
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
     this.updateLog = this.updateLog.bind(this);
 
     this.state = {
-      checked: false,
-      hasSerial: false,
+      appSettings: {
+        show: false,
+        settings: {
+          directInput: {
+            type: 'boolean',
+            value: false,
+          },
+          printLogs: {
+            type: 'boolean',
+            value: false,
+          },
+        },
+      },
       connected: 0,
-      open: false,
-      baudRate: 115200,
-      serialLog: [],
       settings: {},
       escs: [],
       flashTargets: [],
       progress: [],
-      packetErrors: 0,
       serial: {
         availablePorts: [],
+        baudRate: 115200,
+        checked: false,
         chosenPort: null,
         connected: false,
         fourWay: false,
+        hasSerial: false,
+        log: [],
+        open: false,
         portNames: [],
+      },
+      stats: {
+        packetErrors: 0,
+        version,
       },
       configs: {
         versions: {},
@@ -82,17 +89,6 @@ class App extends Component {
         isFlashing: false,
       },
       language: 'en',
-      showAppSettings: false,
-      appSettings: {
-        directInput: {
-          type: 'boolean',
-          value: false,
-        },
-        printLogs: {
-          type: 'boolean',
-          value: false,
-        },
-      },
     };
   }
 
@@ -126,8 +122,9 @@ class App extends Component {
       }
 
       const settings = JSON.parse(localStorage.getItem('settings'));
-      const currentSettings = Object.assign({}, appSettings, settings);
-      this.setState({ appSettings: currentSettings });
+      const currentSettings = Object.assign({}, appSettings.settings, settings);
+      appSettings.settings = currentSettings;
+      this.setState({ appSettings });
 
       // Load previously stored log messages and sanitize to a max line count
       const log = JSON.parse(localStorage.getItem('log'));
@@ -142,7 +139,7 @@ class App extends Component {
             const { appSettings } = that.state;
             const msg = [text, args.join(' ')].join(' ');
             that.updateLog(msg);
-            if(appSettings.printLogs.value) {
+            if(appSettings.settings.printLogs.value) {
               console.log(text, ...args);
             }
           },
@@ -194,7 +191,7 @@ class App extends Component {
 
         await that.serialConnectHandler();
       } else {
-        this.setState({ checked: true });
+        this.setSerial({ checked: true });
       }
     });
   }
@@ -211,9 +208,9 @@ class App extends Component {
    */
   log = [];
   gtmActive = false;
-  serial = null;
+  serial = undefined;
   lastConnected = 0;
-  serialApi = null;
+  serialApi = undefined;
   hasWebUsb = false;
 
   languages = [
@@ -235,6 +232,12 @@ class App extends Component {
     cb();
   }
 
+  setSerial(settings) {
+    const { serial } = this.state;
+    const newSerial = Object.assign({}, serial, settings);
+    this.setState({ serial: newSerial });
+  }
+
   updateLog(message) {
     const now = dateFormat(new Date(), 'yyyy/MM/dd HH:MM:ss');
     this.log.push(`${now}: ${message}`);
@@ -243,7 +246,7 @@ class App extends Component {
 
   async addLogMessage(message, params = {}) {
     const {
-      serialLog,
+      serial,
       appSettings,
     } = this.state;
     const translation = i18next.t(`log:${message}`, params);
@@ -252,13 +255,12 @@ class App extends Component {
     const translationEn = i18next.t(`log:${message}`, params);
     this.updateLog(translationEn);
 
-    serialLog.push(this.formatLogMessage(translation));
-
-    if(appSettings.printLogs.value) {
+    if(appSettings.settings.printLogs.value) {
       console.log(translationEn);
     }
 
-    await this.setState({ serialLog });
+    serial.log.push(this.formatLogMessage(translation));
+    this.setSerial({ log: serial.log });
   }
 
   async fetchConfigs() {
@@ -277,8 +279,9 @@ class App extends Component {
   }
 
   handlePacketErrors(count) {
-    const { packetErrors } = this.state;
-    this.setState({ packetErrors: packetErrors + count });
+    const { stats } = this.state;
+    stats.packetErrors += count;
+    this.setState({ stats });
   }
 
   handleSettingsUpdate(settings) {
@@ -361,6 +364,7 @@ class App extends Component {
       actions,
       serial,
     } = this.state;
+    const newSerial = Object.assign({}, serial);
 
     actions.isReading = true;
     this.setState({ actions });
@@ -377,7 +381,7 @@ class App extends Component {
         // This delay is needed to allow the ESC's to initialize
         await delay(1200);
 
-        serial.fourWay = true;
+        newSerial.fourWay = true;
       } else {
         connected = this.lastConnected;
       }
@@ -409,7 +413,6 @@ class App extends Component {
       }
       open = true;
 
-      console.log(escFlash[0]);
       TagManager.dataLayer({
         dataLayer: {
           event: "ESCs",
@@ -431,14 +434,14 @@ class App extends Component {
 
     this.lastConnected = connected;
     actions.isReading = false;
+    newSerial.open = open;
     this.setState({
-      open,
       escs: escFlash,
       settings: masterSettings,
       progress,
       actions,
       connected,
-      serial,
+      serial: newSerial,
     });
   }
 
@@ -649,7 +652,7 @@ class App extends Component {
      * device - mark  conncted
      */
     let connected = false;
-    this.serial = null;
+    this.serial = undefined;
     const ports = await this.serialApi.getPorts();
     if(ports.length > 0) {
       TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
@@ -667,15 +670,13 @@ class App extends Component {
       return name;
     });
 
-    this.setState({
+    this.setSerial({
+      availablePorts: ports,
       checked: true,
+      connected: connected,
+      fourWay: false,
       hasSerial: true,
-      serial: {
-        availablePorts: ports,
-        connected,
-        fourWay: false,
-        portNames,
-      },
+      portNames: portNames,
     });
   }
 
@@ -692,22 +693,29 @@ class App extends Component {
       return name;
     });
 
-    this.setState({
+    this.setSerial({
+      availablePorts,
+      chosenPort: null,
+      connected: availablePorts.length > 0 ? true : false,
+      fourWay: false,
       open: false,
-      escs: [],
-      serial: {
-        availablePorts,
-        chosenPort: null,
-        connected: availablePorts.length > 0 ? true : false,
-        fourWay: false,
-        portNames,
-      },
+      portNames,
     });
+    this.setState({ escs: [] });
 
     this.serial.disconnect();
   }
 
+  serialActions = {
+    handleChangePort: this.handleChangePort.bind(this),
+    handleConnect: this.handleConnect.bind(this),
+    handleDisconnect: this.handleDisconnect.bind(this),
+    handleSetBaudRate: this.handleSetBaudRate.bind(this),
+    handleSetPort: this.handleSetPort.bind(this),
+  }
+
   async handleSetPort() {
+    const { serial } = this.state;
     try {
       const port = await this.serialApi.requestPort();
       this.serial = new Serial(port);
@@ -722,12 +730,10 @@ class App extends Component {
         return name;
       });
 
-      this.setState({
-        serial: {
-          availablePorts: [port],
-          connected: true,
-          portNames,
-        },
+      this.setSerial({
+        availablePorts: [port],
+        connected: true,
+        portNames,
       });
     } catch (e) {
       // No port selected, do nothing
@@ -737,24 +743,22 @@ class App extends Component {
 
   handleChangePort(index) {
     const { serial } = this.state;
-    serial.chosenPort = serial.availablePorts[index];
-    this.serial = new Serial(serial.chosenPort);
+    this.serial = new Serial(serial.availablePorts[index]);
 
     this.addLogMessage('portChanged');
-
-    this.setState({ serial });
+    this.setSerial({ chosenPort: serial.availablePorts[index] });
   }
 
   handleSetBaudRate(rate) {
-    this.setState({ baudRate: rate });
+    this.setSerial({ baudRate: rate });
   }
 
   async handleConnect(e) {
     e.preventDefault();
-    const { baudRate } = this.state;
+    const { serial } = this.state;
 
     try {
-      await this.serial.open(baudRate);
+      await this.serial.open(serial.baudRate);
       this.serial.setLogCallback(this.addLogMessage);
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('portOpened');
@@ -822,32 +826,19 @@ class App extends Component {
         },
       });
 
-      await this.setState({
-        open: true,
-        connected: motorData.length,
-      });
+      this.setSerial({ open: true });
+      this.setState({ connected: motorData.length });
     } catch(e) {
       this.serial.close();
       this.addLogMessage('portUsed');
     }
   }
 
-  async handleAllMotorSpeed(speed) {
-    await this.serial.spinAllMotors(speed);
-  }
-
-  async handleSingleMotorSpeed(index, speed) {
-    await this.serial.spinMotor(index, speed);
-  }
-
   async handleDisconnect(e) {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
-    const {
-      escs,
-      serial,
-    } = this.state;
+    const { escs } = this.state;
     if(this.serial) {
       for(let i = 0; i < escs.length; i += 1) {
         await this.serial.resetFourWayInterface(i);
@@ -860,10 +851,12 @@ class App extends Component {
     this.addLogMessage('closedPort');
     this.lastConnected = 0;
 
-    serial.fourWay = false;
+    this.setSerial({
+      fourWay: false,
+      open: false,
+    });
 
     this.setState({
-      open: false,
       escs: [],
       actions: {
         isReading: false,
@@ -871,8 +864,15 @@ class App extends Component {
         isSelecting: false,
         isFlashing: false,
       },
-      serial,
     });
+  }
+
+  async handleAllMotorSpeed(speed) {
+    await this.serial.spinAllMotors(speed);
+  }
+
+  async handleSingleMotorSpeed(index, speed) {
+    await this.serial.spinMotor(index, speed);
   }
 
   handleCookieAccept() {
@@ -891,36 +891,35 @@ class App extends Component {
     this.setState({ language });
   }
 
-  handleAppSettings = {
-    close: () => this.handleAppSettingsClose().bind(this),
-    open: () => this.handleAppSettingsOpen().bind(this),
-    update: () => this.handleAppSettingsUpdate().bind(this),
+  appSettingsActions = {
+    handleClose: this.handleAppSettingsClose.bind(this),
+    handleOpen: this.handleAppSettingsOpen.bind(this),
+    handleUpdate: this.handleAppSettingsUpdate.bind(this),
   };
 
   handleAppSettingsClose() {
-    this.setState({ showAppSettings: false });
+    const { appSettings } = this.state;
+    appSettings.show = false;
+    this.setState({ appSettings });
   }
 
   handleAppSettingsOpen() {
-    this.setState({ showAppSettings: true });
+    const { appSettings } = this.state;
+    appSettings.show = true;
+    this.setState({ appSettings });
   }
 
   handleAppSettingsUpdate(name, value) {
     const { appSettings } = this.state;
 
-    appSettings[name].value = value;
-    localStorage.setItem('settings', JSON.stringify(appSettings));
+    appSettings.settings[name].value = value;
+    localStorage.setItem('settings', JSON.stringify(appSettings.settings));
     this.setState({ appSettings });
   }
 
   render() {
     const {
-      checked,
-      hasSerial,
       connected,
-      open,
-      serialLog,
-      packetErrors,
       escs,
       settings,
       actions,
@@ -929,59 +928,51 @@ class App extends Component {
       flashTargets,
       language,
       serial,
-      showAppSettings,
+      stats,
       appSettings,
     } = this.state;
 
-    if (!checked) {
+    if (!serial.checked) {
       return null;
     }
 
     return (
       <MainApp
         actions={actions}
-        appSettings={appSettings}
+        appSettings={{
+          actions: this.appSettingsActions,
+          settings: appSettings.settings,
+          show: appSettings.show,
+        }}
         configs={configs}
         connected={connected}
         escs={escs}
         flashTargets={flashTargets}
-        fourWay={serial.fourWay}
-        hasPort={serial.connected}
-        hasSerial={hasSerial}
         language={language}
         languages={this.languages}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
-        onChangePort={this.handleChangePort}
-        onClose={this.handleAppSettingsClose}
-        onConnect={this.handleConnect}
         onCookieAccept={this.handleCookieAccept}
-        onDisconnect={this.handleDisconnect}
         onFlashUrl={this.handleFlashUrl}
         onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
         onLanguageSelection={this.handleLanguageSelection}
         onLocalSubmit={this.handleLocalSubmit}
-        onOpenSettings={this.handleAppSettingsOpen}
         onReadEscs={this.handleReadEscs}
         onResetDefaultls={this.handleResetDefaultls}
         onSaveLog={this.handleSaveLog}
         onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
-        onSetBaudRate={this.handleSetBaudRate}
-        onSetPort={this.handleSetPort}
         onSettingsUpdate={this.handleSettingsUpdate}
         onSingleFlash={this.handleSingleFlash}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
-        onUpdate={this.handleAppSettingsUpdate}
         onWriteSetup={this.handleWriteSetup}
-        open={open}
-        packetErrors={packetErrors}
-        portNames={serial.portNames}
         progress={progress}
-        serial={this.serial || undefined}
-        serialLog={serialLog}
+        serial={{
+          actions: this.serialActions,
+          port: this.serial,
+          ...serial,
+        }}
         settings={settings}
-        showSettings={showAppSettings}
-        version={version}
+        stats={stats}
       />
     );
   }
