@@ -1,13 +1,6 @@
-import {
-  BLHELI_TYPES,
-} from './Blheli/eeprom';
-
+import BLHELI_EEPROM from './Blheli/eeprom';
 import BLUEJAY_EEPROM from './Bluejay/eeprom';
-const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
-
-import {
-  AM32_TYPES,
-} from './AM32/eeprom';
+import AM32_EEPROM from './AM32/eeprom';
 
 class Source {
   constructor(name, platform, versions, escs, eeprom, localVersions, localEscs, pwm) {
@@ -87,12 +80,12 @@ const PLATFORMS = {
 };
 
 const SILABS_TYPES = [
-  BLHELI_TYPES.BLHELI_S_SILABS,
-  BLUEJAY_TYPES.EFM8,
+  BLHELI_EEPROM.TYPES.BLHELI_S_SILABS,
+  BLUEJAY_EEPROM.TYPES.EFM8,
 ];
 
 const ARM_TYPES = [
-  AM32_TYPES.ARM,
+  AM32_EEPROM.TYPES.ARM,
 ];
 
 export {

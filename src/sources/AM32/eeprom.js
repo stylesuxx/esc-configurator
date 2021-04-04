@@ -1,10 +1,20 @@
 const AM32_TYPES = { ARM: 'Arm' };
+const BOOT_LOADER_PINS = {
+  PA2: 0x02,
+  PB4: 0x14,
+};
 
 const AM32_RESET_DELAY_MS = 1000;
 
 const AM32_PAGE_SIZE = 0x0400;
 const AM32_EEPROM_OFFSET = 0x7c00;
 const AM32_LAYOUT_SIZE = 0x30;
+
+const AM32_FLASH_VERSION_OFFSET = 0x10C0;
+const AM32_FLASH_VERSION_SIZE = 14;
+
+const AM32_BOOT_LOADER_VERSION_OFFSET = 0x00C0;
+const AM32_BOOT_LOADER_VERSION_SIZE = 1;
 
 const AM32_LAYOUT = {
   BOOT_BYTE: {
@@ -200,65 +210,149 @@ const AM32_SETTINGS_LAYOUT_0 = [
 
 const AM32_SETTINGS_LAYOUT_1 = [
   {
-    name: 'SINUSOIDAL_STARTUP', type: 'bool', label: 'escSinusoidalStartup'
+    name: 'SINUSOIDAL_STARTUP',
+    type: 'bool',
+    label: 'escSinusoidalStartup',
   },
   {
-    name: 'COMPLEMENTARY_PWM', type: 'bool', label: 'escComplementaryPwm'
+    name: 'COMPLEMENTARY_PWM',
+    type: 'bool',
+    label: 'escComplementaryPwm',
   },
   {
-    name: 'VARIABLE_PWM_FREQUENCY', type: 'bool', label: 'escVariablePwmFrequency'
+    name: 'VARIABLE_PWM_FREQUENCY',
+    type: 'bool',
+    label: 'escVariablePwmFrequency',
   },
   {
-    name: 'STUCK_ROTOR_PROTECTION', type: 'bool', label: 'escStuckRotorProtection'
+    name: 'STUCK_ROTOR_PROTECTION',
+    type: 'bool',
+    label: 'escStuckRotorProtection',
   },
   {
-    name: 'STALL_PROTECTION', type: 'bool', label: 'escStallProtection'
+    name: 'STALL_PROTECTION',
+    type: 'bool',
+    label: 'escStallProtection',
   },
   {
-    name: 'TIMING_ADVANCE', type: 'number', min: 0, max: 22.5, step: 7.5, label: 'escTimingAdvance', displayFactor: 7.5
+    name: 'TIMING_ADVANCE',
+    type: 'number',
+    label: 'escTimingAdvance',
+    min: 0,
+    max: 22.5,
+    step: 7.5,
+    displayFactor: 7.5,
   },
   {
-    name: 'MOTOR_KV', type: 'number', min: 20, max: 10220, step: 40, label: 'escMotorKv', displayFactor: 40, displayOffset: 20
+    name: 'MOTOR_KV',
+    type: 'number',
+    label: 'escMotorKv',
+    min: 20,
+    max: 10220,
+    step: 40,
+    displayFactor: 40,
+    displayOffset: 20,
   },
   {
-    name: 'MOTOR_POLES', type: 'number', min: 2, max: 36, step: 1, label: 'escMotorPoles'
+    name: 'MOTOR_POLES',
+    type: 'number',
+    label: 'escMotorPoles',
+    min: 2,
+    max: 36,
+    step: 1,
   },
   {
-    name: 'STARTUP_POWER', type: 'number', min: 50, max: 150, step: 1, label: 'escStartupPower'
+    name: 'STARTUP_POWER',
+    type: 'number',
+    label: 'escStartupPower',
+    min: 50,
+    max: 150,
+    step: 1,
   },
   {
-    name: 'PWM_FREQUENCY', type: 'number', min: 24, max: 48, step: 1, label: 'escPwmFrequency',
-    visibleIf: (settings) => settings.VARIABLE_PWM_FREQUENCY === 0
+    name: 'PWM_FREQUENCY',
+    type: 'number',
+    label: 'escPwmFrequency',
+    min: 24,
+    max: 48,
+    step: 1,
+    visibleIf: (settings) => settings.VARIABLE_PWM_FREQUENCY === 0,
   },
   {
-    name: 'BRAKE_ON_STOP', type: 'bool', label: 'escBrakeOnStop'
+    name: 'BRAKE_ON_STOP',
+    type: 'bool',
+    label: 'escBrakeOnStop',
   },
   {
-    name: 'BEEP_VOLUME', type: 'number', min: 0, max: 11, step: 1, label: 'escBeepVolume'
+    name: 'BEEP_VOLUME',
+    type: 'number',
+    label: 'escBeepVolume',
+    min: 0,
+    max: 11,
+    step: 1,
   },
   {
-    name: 'INTERVAL_TELEMETRY', type: 'bool', label: 'escIntervalTelemetry'
+    name: 'INTERVAL_TELEMETRY',
+    type: 'bool',
+    label: 'escIntervalTelemetry',
   },
   {
-    name: 'SERVO_LOW_THRESHOLD', type: 'number', min: 750, max: 1250, step: 1, label: 'escServoLowThreshold', displayFactor: 2, displayOffset: 750
+    name: 'SERVO_LOW_THRESHOLD',
+    type: 'number',
+    label: 'escServoLowThreshold',
+    min: 750,
+    max: 1250,
+    step: 1,
+    displayFactor: 2,
+    displayOffset: 750,
   },
   {
-    name: 'SERVO_HIGH_THRESHOLD',type: 'number', min: 1750, max: 2250, step: 1, label: 'escServoHighThreshold', displayFactor: 2, displayOffset: 1750
+    name: 'SERVO_HIGH_THRESHOLD',
+    type: 'number',
+    label: 'escServoHighThreshold',
+    min: 1750,
+    max: 2250,
+    step: 1,
+    displayFactor: 2,
+    displayOffset: 1750,
   },
   {
-    name: 'SERVO_NEUTRAL', type: 'number', min: 1374, max: 1630, step: 1, label: 'escServoNeutral' , displayFactor: 1, displayOffset: 1374
+    name: 'SERVO_NEUTRAL',
+    type: 'number',
+    label: 'escServoNeutral',
+    min: 1374,
+    max: 1630,
+    step: 1,
+    displayFactor: 1,
+    displayOffset: 1374,
   },
   {
-    name: 'SERVO_DEAD_BAND', type: 'number', min: 0, max: 100, step: 1, label: 'escServoDeadBand'
+    name: 'SERVO_DEAD_BAND',
+    type: 'number',
+    label: 'escServoDeadBand',
+    min: 0,
+    max: 100,
+    step: 1,
   },
   {
-    name: 'LOW_VOLTAGE_CUTOFF', type: 'bool', label: 'escLowVoltageCutoff'
+    name: 'LOW_VOLTAGE_CUTOFF',
+    type: 'bool',
+    label: 'escLowVoltageCutoff',
   },
   {
-    name: 'LOW_VOLTAGE_THRESHOLD', type: 'number', min: 250, max: 350, step: 1, label: 'escLowVoltageThreshold' ,displayFactor: 1,  displayOffset: 250
+    name: 'LOW_VOLTAGE_THRESHOLD',
+    type: 'number',
+    label: 'escLowVoltageThreshold',
+    min: 250,
+    max: 350,
+    step: 1,
+    displayFactor: 1,
+    displayOffset: 250,
   },
   {
-    name: 'RC_CAR_REVERSING', type: 'bool', label: 'escRcCarReversing'
+    name: 'RC_CAR_REVERSING',
+    type: 'bool',
+    label: 'escRcCarReversing',
   },
 ];
 
@@ -269,16 +363,20 @@ const AM32_SETTINGS_DESCRIPTIONS = {
 
 const AM32_INDIVIDUAL_SETTINGS = [
   {
-    name: 'MOTOR_DIRECTION', type: 'bool', label: 'escDirectionReversed',
+    name: 'MOTOR_DIRECTION',
+    type: 'bool',
+    label: 'escDirectionReversed',
   },
   {
-    name: 'BIDIRECTIONAL_MODE', type: 'bool', label: 'escBidirectionalMode',
+    name: 'BIDIRECTIONAL_MODE',
+    type: 'bool',
+    label: 'escBidirectionalMode',
   },
 ];
 
 const AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
   '0': { base: AM32_INDIVIDUAL_SETTINGS },
-  '1': { base: AM32_INDIVIDUAL_SETTINGS }
+  '1': { base: AM32_INDIVIDUAL_SETTINGS },
 };
 
 const AM32_DEFAULTS = {
@@ -320,7 +418,7 @@ const AM32_DEFAULTS = {
     LOW_VOLTAGE_CUTOFF: 0,
     LOW_VOLTAGE_THRESHOLD: 50,
     RC_CAR_REVERSING: 0,
-  }
+  },
 };
 
 const EEPROM = {
@@ -331,20 +429,14 @@ const EEPROM = {
   LAYOUT_SIZE: AM32_LAYOUT_SIZE,
   NAMES: [''],
   PAGE_SIZE: AM32_PAGE_SIZE,
+  RESET_DELAY: AM32_RESET_DELAY_MS,
   SETTINGS_DESCRIPTIONS: AM32_SETTINGS_DESCRIPTIONS,
   TYPES: AM32_TYPES,
-};
-
-export {
-  AM32_TYPES,
-  AM32_LAYOUT,
-  AM32_DEFAULTS,
-  AM32_PAGE_SIZE,
-  AM32_LAYOUT_SIZE,
-  AM32_EEPROM_OFFSET,
-  AM32_RESET_DELAY_MS,
-  AM32_SETTINGS_DESCRIPTIONS,
-  AM32_INDIVIDUAL_SETTINGS_DESCRIPTIONS,
+  VERSION_OFFSET: AM32_FLASH_VERSION_OFFSET,
+  VERSION_SIZE: AM32_FLASH_VERSION_SIZE,
+  BOOT_LOADER_OFFSET: AM32_BOOT_LOADER_VERSION_OFFSET,
+  BOOT_LOADER_SIZE: AM32_BOOT_LOADER_VERSION_SIZE,
+  BOOT_LOADER_PINS,
 };
 
 export default EEPROM;

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
+import ErrorBoundary from '../../ErrorBoundary';
 
 import './style.scss';
 
@@ -24,13 +25,15 @@ function Info({
             ?
           </span>
 
-          <ReactTooltip
-            className="tooltip"
-            effect="solid"
-            id={`hint-${name}`}
-          >
-            {hint}
-          </ReactTooltip>
+          <ErrorBoundary>
+            <ReactTooltip
+              className="tooltip"
+              effect="solid"
+              id={`hint-${name}`}
+            >
+              {hint}
+            </ReactTooltip>
+          </ErrorBoundary>
         </div>}
     </span>
   );

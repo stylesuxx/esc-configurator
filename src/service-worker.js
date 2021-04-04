@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable no-restricted-globals */
 
 /*
@@ -9,21 +10,14 @@
  * service worker, and the Workbox build step will be skipped.
  */
 
+import { clientsClaim } from 'workbox-core';
+import { ExpirationPlugin } from 'workbox-expiration';
 import {
-  clientsClaim,
-} from 'workbox-core';
-import {
-  ExpirationPlugin,
-} from 'workbox-expiration';
-import {
-  createHandlerBoundToURL, precacheAndRoute,
+  createHandlerBoundToURL,
+  precacheAndRoute,
 } from 'workbox-precaching';
-import {
-  registerRoute,
-} from 'workbox-routing';
-import {
-  StaleWhileRevalidate,
-} from 'workbox-strategies';
+import { registerRoute } from 'workbox-routing';
+import { StaleWhileRevalidate } from 'workbox-strategies';
 
 clientsClaim();
 

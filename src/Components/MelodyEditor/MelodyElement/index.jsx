@@ -6,15 +6,11 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import {
-  HighlightWithinTextarea
-} from 'react-highlight-within-textarea';
+import { HighlightWithinTextarea } from 'react-highlight-within-textarea';
 
 import Rtttl from 'bluejay-rtttl-parse';
 
-import {
-  useTranslation,
-} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import './style.scss';
 
 const MelodyElement = forwardRef(({
@@ -43,7 +39,7 @@ const MelodyElement = forwardRef(({
     },
     stop() {
       stopMelody();
-    }
+    },
   }));
 
   useEffect(() => {
@@ -105,7 +101,7 @@ const MelodyElement = forwardRef(({
   }
 
   function acceptMelody() {
-    let convertedMelody = Rtttl.toBluejayStartupMelody(currentMelody).startupMelodyData;
+    let convertedMelody = Rtttl.toBluejayStartupMelody(currentMelody).data;
     convertedMelody = Rtttl.fromBluejayStartupMelody(convertedMelody);
 
     setAcceptedMelody(convertedMelody);
@@ -119,7 +115,7 @@ const MelodyElement = forwardRef(({
     if (oscillator.current) {
       oscillator.current.stop();
       oscillator.current = null;
-    } 
+    }
   }
 
   function playMelody() {
@@ -167,9 +163,9 @@ const MelodyElement = forwardRef(({
       if(oscillator.current && melody[i]) {
         setTimeout(() => hl(i + 1), melody[i].duration);
         highlightNote(i);
-      } 
+      }
     };
-    
+
     hl(0);
     osc.start(0);
     osc.stop(t);

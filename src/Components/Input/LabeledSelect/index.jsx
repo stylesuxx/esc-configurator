@@ -22,6 +22,7 @@ function LabeledSelect({
       <label>
         <div className="input-wrapper">
           <select
+            name={label}
             onChange={onChange}
             value={selected || -1}
           >

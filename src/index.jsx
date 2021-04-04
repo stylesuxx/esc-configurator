@@ -1,13 +1,11 @@
-import React, {
-  Suspense,
-} from 'react';
+/* istanbul ignore file */
+
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import App from './Containers/App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import {
-  I18nextProvider,
-} from 'react-i18next';
+import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
 
 import CommonEn from './translations/en/common.json';
@@ -19,6 +17,11 @@ import CommonDe from './translations/de/common.json';
 import HintsDe from './translations/de/hints.json';
 import SettingsDe from './translations/de/settings.json';
 import LogDe from './translations/de/log.json';
+
+import CommonChCN from './translations/zh-CN/common.json';
+import HintsChCN from './translations/zh-CN/hints.json';
+import SettingsChCN from './translations/zh-CN/settings.json';
+import LogChCN from './translations/zh-CN/log.json';
 
 i18next.init({
   interpolation: { excapeValue: false },
@@ -36,6 +39,12 @@ i18next.init({
       log: LogDe,
       settings: SettingsDe,
     },
+    'zh-CN': {
+      common: CommonChCN,
+      hints: HintsChCN,
+      log: LogChCN,
+      settings: SettingsChCN,
+    },
   },
 });
 
@@ -47,7 +56,7 @@ ReactDOM.render(
       </Suspense>
     </I18nextProvider>
   </React.StrictMode>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
 
 /*

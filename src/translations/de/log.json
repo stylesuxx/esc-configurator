@@ -15,7 +15,7 @@
   "readEscs": "Lese {{connected}} ESCs",
   "readEscsSuccess": "ESCs gelesen",
   "readEscsFailed": "ESCs lesen fehlgeschlagen",
-  "readEsc": "ESC {{index}} gelesen",
+  "readEsc": "ESC {{index}}: {{name}}",
   "flashingEsc": "ESC {{index}} wird geflasht",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
@@ -27,5 +27,7 @@
   "escSettingsLayoutMismatch": "Layout stimmt nicht überein, Layout ignorieren nicht aktiv - abgebrochen",
   "escSettingsMcuMismatch": "MCU stimmt nicht überein, ignorieren nicht aktiv - abgebrochen",
   "escFlashedInTime": "ESC {{index}} - in {{seconds}}s geflasht",
-  "passthroughNotSupported": "BLHELI passthrough nicht unterstützt"
+  "passthroughNotSupported": "BLHELI passthrough nicht unterstützt",
+  "firmwareMismatch": "Firmware stimmt nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
+  "bootloaderMismatch": "Bootloader Versionen stimmen nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}"
 }

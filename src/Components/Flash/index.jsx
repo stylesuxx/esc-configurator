@@ -1,14 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  useTranslation,
-} from 'react-i18next';
 
-import Escs from './Escs';
 import CommonSettings from './CommonSettings';
+import Escs from './Escs';
 
 import './style.scss';
-
 
 /**
  * @param {Object} {escs} Parameters
@@ -65,10 +62,15 @@ function Flash({
   );
 }
 
+Flash.defaultProps = {
+  canFlash: false,
+  directInput: false,
+};
+
 Flash.propTypes = {
   availableSettings: PropTypes.shape().isRequired,
-  canFlash: PropTypes.bool.isRequired,
-  directInput: PropTypes.bool.isRequired,
+  canFlash: PropTypes.bool,
+  directInput: PropTypes.bool,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
   onFlash: PropTypes.func.isRequired,

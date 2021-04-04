@@ -1,6 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-
 import {
   NotEnoughDataError,
   TimeoutError,
@@ -17,11 +14,7 @@ test('command times out', async() => {
     qp.addData(new Uint8Array([1, 2, 3]));
   };
 
-  try {
-    const result = await qp.addCommand(transmit, receive);
-  } catch(e) {
-    expect(e).not.toBeNull();
-  }
+  await expect(qp.addCommand(transmit, receive)).rejects.toThrow(TimeoutError);
 });
 
 test('command times out while processing', async() => {
@@ -39,11 +32,7 @@ test('command times out while processing', async() => {
     }, 2000);
   };
 
-  try {
-    const result = await qp.addCommand(transmit, command);
-  } catch(e) {
-    expect(e).not.toBeNull();
-  }
+  await expect(qp.addCommand(transmit, command)).rejects.toThrow(TimeoutError);
 });
 
 test('command fails', async() => {
@@ -58,16 +47,12 @@ test('command fails', async() => {
     }, 200);
   };
 
-  try {
-    const result = await qp.addCommand(transmit, command);
-  } catch(e) {
-    expect(e).not.toBeNull();
-  }
+  await expect(qp.addCommand(transmit, command)).rejects.toThrow(Error);
 });
 
 test('command resolves', async() => {
   const qp = new QueueProcessor();
-  const command = (buffer, resolve, reject) => {
+  const command = (buffer, resolve) => {
     resolve(true);
   };
 
@@ -96,7 +81,7 @@ test('command no receive handler', async() => {
 
 test('command has Data instantly', async() => {
   const qp = new QueueProcessor();
-  const command = (buffer, resolve, reject) => {
+  const command = (buffer, resolve) => {
     resolve(true);
   };
 
