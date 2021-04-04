@@ -19,26 +19,17 @@ class App extends Component {
   constructor() {
     super();
 
-    // Action handlers passed down to components and triggered by them.
     this.serialConnectHandler = this.serialConnectHandler.bind(this);
     this.serialDisconnectHandler = this.serialDisconnectHandler.bind(this);
+
     this.addLogMessage = this.addLogMessage.bind(this);
-    this.handleReadEscs = this.handleReadEscs.bind(this);
-    this.handleWriteSetup = this.handleWriteSetup.bind(this);
-    this.handleSelectFirmwareForAll = this.handleSelectFirmwareForAll.bind(this);
-    this.handleFlashUrl = this.handleFlashUrl.bind(this);
-    this.handleResetDefaultls = this.handleResetDefaultls.bind(this);
-    this.handleSettingsUpdate = this.handleSettingsUpdate.bind(this);
-    this.handleSingleFlash = this.handleSingleFlash.bind(this);
-    this.handleCancelFirmwareSelection = this.handleCancelFirmwareSelection.bind(this);
-    this.handleIndividualSettingsUpdate = this.handleIndividualSettingsUpdate.bind(this);
+    this.updateLog = this.updateLog.bind(this);
+
     this.handlePacketErrors = this.handlePacketErrors.bind(this);
-    this.handleLocalSubmit = this.handleLocalSubmit.bind(this);
     this.handleSaveLog = this.handleSaveLog.bind(this);
     this.handleCookieAccept = this.handleCookieAccept.bind(this);
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
-    this.updateLog = this.updateLog.bind(this);
 
     this.state = {
       appSettings: {
@@ -251,8 +242,68 @@ class App extends Component {
     this.setState({ actions: newActions });
   }
 
+  async serialConnectHandler() {
+    /**
+     * If we are here, the user has already given permission to access the
+     * device - mark  conncted
+     */
+    let connected = false;
+    this.serial = undefined;
+    const ports = await this.serialApi.getPorts();
+    if(ports.length > 0) {
+      TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
+      this.addLogMessage('pluggedIn');
+      connected = true;
+
+      // Set the first  serial port as the active one
+      this.serial = new Serial(ports[0]);
+    }
+
+    const portNames = ports.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
+    this.setSerial({
+      availablePorts: ports,
+      checked: true,
+      connected: connected,
+      fourWay: false,
+      hasSerial: true,
+      portNames: portNames,
+    });
+  }
+
+  async serialDisconnectHandler() {
+    TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
+    this.addLogMessage('unplugged');
+    this.lastConnected = 0;
+
+    const availablePorts = await this.serialApi.getPorts();
+    const portNames = availablePorts.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
+    this.setSerial({
+      availablePorts,
+      chosenPort: null,
+      connected: availablePorts.length > 0 ? true : false,
+      fourWay: false,
+      open: false,
+      portNames,
+    });
+    this.setEscs({ individual: [] });
+
+    this.serial.disconnect();
+  }
+
   updateLog(message) {
-    const now = dateFormat(new Date(), 'yyyy/MM/dd HH:MM:ss');
+    const now = dateFormat(new Date(), 'yyyy/mm/dd HH:MM:ss');
     this.log.push(`${now}: ${message}`);
     localStorage.setItem('log', JSON.stringify(this.log));
   }
@@ -297,6 +348,48 @@ class App extends Component {
     this.setState({ stats: newStats });
   }
 
+  handleSaveLog() {
+    const element = document.createElement("a");
+    const file = new Blob([this.log.join("\n")], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = "esc-configurator-log.txt";
+    document.body.appendChild(element);
+    element.click();
+  }
+
+  formatLogMessage(html) {
+    const now = new Date();
+    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
+    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
+
+    return (
+      <div>
+        <span className="date">
+          {formattedDate}
+        </span>
+
+        <span className="time">
+          {formattedTime}
+        </span>
+
+        {html}
+      </div>
+    );
+  }
+
+  escsActions = {
+    handleMasterUpdate: this.handleSettingsUpdate.bind(this),
+    handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate.bind(this),
+    handleResetDefaultls: this.handleResetDefaultls.bind(this),
+    handleReadEscs: this.handleReadEscs.bind(this),
+    handleWriteSetup: this.handleWriteSetup.bind(this),
+    handleSingleFlash: this.handleSingleFlash.bind(this),
+    handleSelectFirmwareForAll: this.handleSelectFirmwareForAll.bind(this),
+    handleCancelFirmwareSelection: this.handleCancelFirmwareSelection.bind(this),
+    handleLocalSubmit: this.handleLocalSubmit.bind(this),
+    handleFlashUrl: this.handleFlashUrl.bind(this),
+  };
+
   handleSettingsUpdate(master) {
     this.setEscs({ master });
   }
@@ -335,35 +428,6 @@ class App extends Component {
     this.setActions({ isWriting: false });
 
     this.handleReadEscs();
-  }
-
-  handleSaveLog() {
-    const element = document.createElement("a");
-    const file = new Blob([this.log.join("\n")], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = "esc-configurator-log.txt";
-    document.body.appendChild(element);
-    element.click();
-  }
-
-  formatLogMessage(html) {
-    const now = new Date();
-    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
-    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
-
-    return (
-      <div>
-        <span className="date">
-          {formattedDate}
-        </span>
-
-        <span className="time">
-          {formattedTime}
-        </span>
-
-        {html}
-      </div>
-    );
   }
 
   async handleReadEscs() {
@@ -626,66 +690,6 @@ class App extends Component {
     this.setActions({ isFlashing: false });
   }
 
-  async serialConnectHandler() {
-    /**
-     * If we are here, the user has already given permission to access the
-     * device - mark  conncted
-     */
-    let connected = false;
-    this.serial = undefined;
-    const ports = await this.serialApi.getPorts();
-    if(ports.length > 0) {
-      TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
-      this.addLogMessage('pluggedIn');
-      connected = true;
-
-      // Set the first  serial port as the active one
-      this.serial = new Serial(ports[0]);
-    }
-
-    const portNames = ports.map((item) => {
-      const info = item.getInfo();
-      const name = `${info.usbVendorId}:${info.usbProductId}`;
-
-      return name;
-    });
-
-    this.setSerial({
-      availablePorts: ports,
-      checked: true,
-      connected: connected,
-      fourWay: false,
-      hasSerial: true,
-      portNames: portNames,
-    });
-  }
-
-  async serialDisconnectHandler() {
-    TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
-    this.addLogMessage('unplugged');
-    this.lastConnected = 0;
-
-    const availablePorts = await this.serialApi.getPorts();
-    const portNames = availablePorts.map((item) => {
-      const info = item.getInfo();
-      const name = `${info.usbVendorId}:${info.usbProductId}`;
-
-      return name;
-    });
-
-    this.setSerial({
-      availablePorts,
-      chosenPort: null,
-      connected: availablePorts.length > 0 ? true : false,
-      fourWay: false,
-      open: false,
-      portNames,
-    });
-    this.setEscs({ individual: [] });
-
-    this.serial.disconnect();
-  }
-
   serialActions = {
     handleChangePort: this.handleChangePort.bind(this),
     handleConnect: this.handleConnect.bind(this),
@@ -695,7 +699,6 @@ class App extends Component {
   }
 
   async handleSetPort() {
-    const { serial } = this.state;
     try {
       const port = await this.serialApi.requestPort();
       this.serial = new Serial(port);
@@ -912,8 +915,6 @@ class App extends Component {
       return null;
     }
 
-    console.log(escs);
-
     return (
       <MainApp
         actions={actions}
@@ -923,35 +924,24 @@ class App extends Component {
           show: appSettings.show,
         }}
         configs={configs}
-        connected={escs.connected}
-        escs={escs.individual}
-        flashTargets={escs.targets}
+        escs={{
+          actions: this.escsActions,
+          ...escs,
+        }}
         language={{
           actions: { handleChange: this.handleLanguageSelection.bind(this) },
           current: language,
           available: this.languages,
         }}
         onAllMotorSpeed={this.handleAllMotorSpeed}
-        onCancelFirmwareSelection={this.handleCancelFirmwareSelection}
         onCookieAccept={this.handleCookieAccept}
-        onFlashUrl={this.handleFlashUrl}
-        onIndividualSettingsUpdate={this.handleIndividualSettingsUpdate}
-        onLocalSubmit={this.handleLocalSubmit}
-        onReadEscs={this.handleReadEscs}
-        onResetDefaultls={this.handleResetDefaultls}
         onSaveLog={this.handleSaveLog}
-        onSelectFirmwareForAll={this.handleSelectFirmwareForAll}
-        onSettingsUpdate={this.handleSettingsUpdate}
-        onSingleFlash={this.handleSingleFlash}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
-        onWriteSetup={this.handleWriteSetup}
-        progress={escs.progress}
         serial={{
           actions: this.serialActions,
           port: this.serial,
           ...serial,
         }}
-        settings={escs.master}
         stats={stats}
       />
     );

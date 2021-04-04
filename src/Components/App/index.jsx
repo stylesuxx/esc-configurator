@@ -25,27 +25,13 @@ function App({
   actions,
   appSettings,
   configs,
-  connected,
   escs,
-  flashTargets,
   language,
   onAllMotorSpeed,
-  onCancelFirmwareSelection,
   onCookieAccept,
-  onFlashUrl,
-  onIndividualSettingsUpdate,
-  onLocalSubmit,
-  onReadEscs,
-  onResetDefaultls,
   onSaveLog,
-  onSelectFirmwareForAll,
-  onSettingsUpdate,
-  onSingleFlash,
   onSingleMotorSpeed,
-  onWriteSetup,
-  progress,
   serial,
-  settings,
   stats,
 }) {
   const { t } = useTranslation('common');
@@ -150,26 +136,26 @@ function App({
           appSettings={appSettings.settings}
           changelogEntries={changelogEntries}
           configs={configs}
-          connected={connected}
-          escs={escs}
-          flashTargets={flashTargets}
+          connected={escs.connected}
+          escs={escs.individual}
+          flashTargets={escs.targets}
           fourWay={serial.fourWay}
           onAllMotorSpeed={onAllMotorSpeed}
-          onCancelFirmwareSelection={onCancelFirmwareSelection}
-          onFlashUrl={onFlashUrl}
-          onIndividualSettingsUpdate={onIndividualSettingsUpdate}
-          onLocalSubmit={onLocalSubmit}
-          onReadEscs={onReadEscs}
-          onResetDefaultls={onResetDefaultls}
+          onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
+          onFlashUrl={escs.actions.handleFlashUrl}
+          onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
+          onLocalSubmit={escs.actions.handleLocalSubmit}
+          onReadEscs={escs.actions.handleReadEscs}
+          onResetDefaultls={escs.actions.handleResetDefaultls}
           onSaveLog={onSaveLog}
-          onSelectFirmwareForAll={onSelectFirmwareForAll}
-          onSettingsUpdate={onSettingsUpdate}
-          onSingleFlash={onSingleFlash}
+          onSelectFirmwareForAll={escs.actions.handleSelectFirmwareForAll}
+          onSettingsUpdate={escs.actions.handleMasterUpdate}
+          onSingleFlash={escs.actions.handleSingleFlash}
           onSingleMotorSpeed={onSingleMotorSpeed}
-          onWriteSetup={onWriteSetup}
+          onWriteSetup={escs.actions.handleWriteSetup}
           open={serial.open}
-          progress={progress}
-          settings={settings}
+          progress={escs.progress}
+          settings={escs.master}
         />
 
         {memoizedStatusBar}
@@ -212,29 +198,34 @@ App.propTypes = {
     show: PropTypes.bool.isRequired,
   }).isRequired,
   configs: PropTypes.shape({}).isRequired,
-  connected: PropTypes.number.isRequired,
-  escs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  flashTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
+  escs: PropTypes.shape({
+    actions: PropTypes.shape({
+      handleMasterUpdate: PropTypes.func.isRequired,
+      handleIndividualSettingsUpdate: PropTypes.func.isRequired,
+      handleResetDefaultls: PropTypes.func.isRequired,
+      handleReadEscs: PropTypes.func.isRequired,
+      handleWriteSetup: PropTypes.func.isRequired,
+      handleSingleFlash: PropTypes.func.isRequired,
+      handleSelectFirmwareForAll: PropTypes.func.isRequired,
+      handleCancelFirmwareSelection: PropTypes.func.isRequired,
+      handleLocalSubmit: PropTypes.func.isRequired,
+      handleFlashUrl: PropTypes.func.isRequired,
+    }),
+    connected: PropTypes.number.isRequired,
+    individual: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    master: PropTypes.shape({}).isRequired,
+    progress: PropTypes.arrayOf(PropTypes.number).isRequired,
+    targets: PropTypes.arrayOf(PropTypes.number).isRequired,
+  }).isRequired,
   language: PropTypes.shape({
     actions: PropTypes.shape({ handleChange: PropTypes.func.isRequired }).isRequired,
     available: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     current: PropTypes.string.isRequired,
   }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
-  onCancelFirmwareSelection: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
-  onFlashUrl: PropTypes.func.isRequired,
-  onIndividualSettingsUpdate: PropTypes.func.isRequired,
-  onLocalSubmit: PropTypes.func.isRequired,
-  onReadEscs: PropTypes.func.isRequired,
-  onResetDefaultls: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,
-  onSelectFirmwareForAll: PropTypes.func.isRequired,
-  onSettingsUpdate: PropTypes.func.isRequired,
-  onSingleFlash: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
-  onWriteSetup: PropTypes.func.isRequired,
-  progress: PropTypes.arrayOf(PropTypes.number).isRequired,
   serial: PropTypes.shape({
     actions: PropTypes.shape({
       handleChangePort: PropTypes.func.isRequired,
@@ -254,7 +245,6 @@ App.propTypes = {
     }),
     portNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   }),
-  settings: PropTypes.shape({}).isRequired,
   stats: PropTypes.shape({
     packetErrors: PropTypes.number.isRequired,
     version: PropTypes.string.isRequired,
