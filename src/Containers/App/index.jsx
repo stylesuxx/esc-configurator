@@ -54,11 +54,13 @@ class App extends Component {
           },
         },
       },
-      connected: 0,
-      settings: {},
-      escs: [],
-      flashTargets: [],
-      progress: [],
+      escs: {
+        connected: 0,
+        master: {},
+        progress: [],
+        targets: [],
+        individual: [],
+      },
       serial: {
         availablePorts: [],
         baudRate: 115200,
@@ -237,6 +239,12 @@ class App extends Component {
     this.setState({ serial: newSerial });
   }
 
+  setEscs(settings) {
+    const { escs } = this.state;
+    const newEscs = Object.assign({}, escs, settings);
+    this.setState({ escs: newEscs });
+  }
+
   updateLog(message) {
     const now = dateFormat(new Date(), 'yyyy/MM/dd HH:MM:ss');
     this.log.push(`${now}: ${message}`);
@@ -283,21 +291,22 @@ class App extends Component {
     this.setState({ stats: newStats });
   }
 
-  handleSettingsUpdate(settings) {
-    this.setState({ settings });
+  handleSettingsUpdate(master) {
+    this.setEscs({ master });
   }
 
   handleIndividualSettingsUpdate(index, individualSettings) {
     const  { escs } = this.state;
-    for(let i = 0; i < escs.length; i += 1) {
-      if(escs[i].index === index) {
-        escs[i].individualSettings = individualSettings;
+    const newEscs = Object.assign({}, escs);
+    for(let i = 0; i < newEscs.individual.length; i += 1) {
+      if(newEscs.individual[i].index === index) {
+        newEscs.individual[i].individualSettings = individualSettings;
 
         break;
       }
     }
 
-    this.setState({ escs });
+    this.setEscs(newEscs);
   }
 
   async handleResetDefaultls() {
@@ -310,8 +319,8 @@ class App extends Component {
 
     actions.isWriting = true;
     this.setState({ actions });
-    for(let i = 0; i < escs.length; i += 1) {
-      const esc = escs[i];
+    for(let i = 0; i < escs.individual.length; i += 1) {
+      const esc = escs.individual[i];
       const target = esc.index;
 
       console.debug(`Restoring default settings on ESC ${target + 1} `);
@@ -359,10 +368,11 @@ class App extends Component {
 
   async handleReadEscs() {
     const {
-      progress,
+      escs,
       actions,
       serial,
     } = this.state;
+    const newEscs = Object.assign({}, escs);
     const newSerial = Object.assign({}, serial);
 
     actions.isReading = true;
@@ -396,7 +406,7 @@ class App extends Component {
 
     try {
       for (let i = 0; i < connected; i += 1) {
-        progress[i] = 0;
+        newEscs.progress[i] = 0;
         const settings = await this.serial.getFourWayInterfaceInfo(i);
         if(settings) {
           settings.index = i;
@@ -429,19 +439,18 @@ class App extends Component {
       console.debug(e);
     }
 
-    const masterSettings = getMasterSettings(escFlash);
-
     this.lastConnected = connected;
-    actions.isReading = false;
+
+    newEscs.connected = connected;
+    newEscs.master = getMasterSettings(escFlash);
+    newEscs.individual = escFlash;
+    this.setEscs(newEscs);
+
     newSerial.open = open;
-    this.setState({
-      escs: escFlash,
-      settings: masterSettings,
-      progress,
-      actions,
-      connected,
-      serial: newSerial,
-    });
+    this.setSerial(newSerial);
+
+    actions.isReading = false;
+    this.setState({ actions });
   }
 
   async handleWriteSetup() {
@@ -449,40 +458,38 @@ class App extends Component {
 
     const {
       escs,
-      settings,
       actions,
     } = this.state;
 
-    actions.isWriting = true;
-    this.setState({ actions });
-    for(let i = 0; i < escs.length; i += 1) {
-      const esc = escs[i];
+    const newEscs = Object.assign({}, escs);
+    const newActions = Object.assign({}, actions);
+
+    newActions.isWriting = true;
+    this.setState({ actions: newActions });
+    for(let i = 0; i < escs.individual.length; i += 1) {
+      const esc = escs.individual[i];
       const target = esc.index;
 
       console.debug(`Writing settings to ESC ${target + 1}`);
 
       const currentEscSettings = esc.settings;
       const individualEscSettings = esc.individualSettings;
-      const mergedSettings = Object.assign({}, currentEscSettings, settings, individualEscSettings);
+      const mergedSettings = Object.assign({}, currentEscSettings, escs.master, individualEscSettings);
       const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
 
-      escs[i].settingsArray = newSettingsArray;
+      newEscs.individual[i].settingsArray = newSettingsArray;
     }
 
-    actions.isWriting = false;
-    this.setState({
-      actions,
-      escs,
-    });
+    newActions.isWriting = false;
+    this.setEscs(newEscs);
+    this.setState({ actions: newActions });
   }
 
   handleSingleFlash(index) {
     const { actions } = this.state;
-    actions.isSelecting = true;
-    this.setState({
-      actions,
-      flashTargets: [index],
-    });
+    const newActions = Object.assign({}, actions, { isSelecting: true });
+    this.setEscs({ targets: [index] });
+    this.setState({ actions: newActions });
   }
 
   handleSelectFirmwareForAll() {
@@ -491,30 +498,26 @@ class App extends Component {
       actions,
     } = this.state;
 
-    const flashTargets = [];
-    for (let i = 0; i < escs.length; i += 1) {
-      const esc = escs[i];
-      flashTargets.push(esc.index);
+    const targets = [];
+    for (let i = 0; i < escs.individual.length; i += 1) {
+      const esc = escs.individual[i];
+      targets.push(esc.index);
     }
 
-    actions.isSelecting = true;
-    this.setState({
-      flashTargets,
-      actions,
-    });
+    const newActions = Object.assign({}, actions, { isSelecting: true });
+    this.setState({ actions: newActions });
+    this.setEscs({ targets });
   }
 
   handleCancelFirmwareSelection() {
     const { actions } = this.state;
-    actions.isSelecting = false,
-    this.setState({
-      flashTargets: [],
-      actions,
-    });
+    const newActions = Object.assign({}, actions, { isSelecting: false });
+    this.setState({ actions: newActions });
+    this.setEscs({ targets: [] });
   }
 
   handleLocalSubmit(e, force, migrate) {
-    const { flashTargets } = this.state;
+    const { escs } = this.state;
     e.preventDefault();
     TagManager.dataLayer({
       dataLayer: {
@@ -522,7 +525,7 @@ class App extends Component {
         firmwareNew: {
           type: 'local',
           force,
-          count: flashTargets.length,
+          count: escs.targets.length,
         },
       },
     });
@@ -543,7 +546,7 @@ class App extends Component {
    * downloaded and put into local storage for later use.
    */
   async handleFlashUrl(url, force, migrate) {
-    const { flashTargets } = this.state;
+    const { escs } = this.state;
     console.debug(`Chosen firmware: ${url}`);
 
     let type = 'remote';
@@ -587,7 +590,7 @@ class App extends Component {
             type,
             url,
             force,
-            count: flashTargets.length,
+            count: escs.targets.length,
           },
         },
       });
@@ -600,25 +603,26 @@ class App extends Component {
 
   async flash(text, force, migrate) {
     const {
-      flashTargets, escs, progress, actions,
+      escs,
+      actions,
     } = this.state;
 
     actions.isSelecting = false;
     actions.isFlashing = true;
     this.setState({ actions });
 
-    let newProgress = progress;
-    for(let i = 0; i < flashTargets.length; i += 1) {
-      const target = flashTargets[i];
+    const newEscs = Object.assign({}, escs);
+    for(let i = 0; i < escs.targets.length; i += 1) {
+      const target = escs.targets[i];
 
       this.addLogMessage('flashingEsc', { index: target + 1 });
 
-      const esc = escs.find((esc) => esc.index === target);
-      newProgress[target] = 0;
+      const esc = escs.individual.find((esc) => esc.index === target);
+      newEscs.progress[target] = 0;
 
       const updateProgress = async(progress) => {
-        newProgress[target] = progress;
-        await this.setState({ progress: newProgress });
+        newEscs.progress[target] = progress;
+        this.setEscs(newEscs);
       };
 
       updateProgress(0.1);
@@ -627,22 +631,23 @@ class App extends Component {
       result.index = target;
 
       if(result) {
-        escs[i] = result;
-        newProgress[target] = 0;
+        newEscs.individual[i] = result;
+        newEscs.progress[target] = 0;
 
-        await this.setState({ escs });
+        await this.setEscs(newEscs);
       } else {
         this.addLogMessage('flashingEscFailed', { index: target + 1 });
       }
     }
 
-    actions.isSelecting = false;
-    actions.isFlashing = false;
-    await this.setState({
-      settings: getMasterSettings(escs),
-      progress: newProgress,
-      actions,
+    newEscs.master = getMasterSettings(newEscs.individual);
+    this.setEscs(newEscs);
+
+    const newActions = Object.assign({}, actions, {
+      isSelecting: false,
+      isFlashing: false,
     });
+    this.setState({ actions: newActions });
   }
 
   async serialConnectHandler() {
@@ -700,7 +705,7 @@ class App extends Component {
       open: false,
       portNames,
     });
-    this.setState({ escs: [] });
+    this.setEscs({ individual: [] });
 
     this.serial.disconnect();
   }
@@ -826,7 +831,7 @@ class App extends Component {
       });
 
       this.setSerial({ open: true });
-      this.setState({ connected: motorData.length });
+      this.setEscs({ connected: motorData.length });
     } catch(e) {
       this.serial.close();
       this.addLogMessage('portUsed');
@@ -839,7 +844,7 @@ class App extends Component {
 
     const { escs } = this.state;
     if(this.serial) {
-      for(let i = 0; i < escs.length; i += 1) {
+      for(let i = 0; i < escs.individual.length; i += 1) {
         await this.serial.resetFourWayInterface(i);
       }
       await this.serial.exitFourWayInterface();
@@ -855,8 +860,9 @@ class App extends Component {
       open: false,
     });
 
+    this.setEscs({ individual: [] });
+
     this.setState({
-      escs: [],
       actions: {
         isReading: false,
         isWriting: false,
@@ -919,13 +925,9 @@ class App extends Component {
 
   render() {
     const {
-      connected,
       escs,
-      settings,
       actions,
-      progress,
       configs,
-      flashTargets,
       language,
       serial,
       stats,
@@ -936,6 +938,8 @@ class App extends Component {
       return null;
     }
 
+    console.log(escs);
+
     return (
       <MainApp
         actions={actions}
@@ -945,9 +949,9 @@ class App extends Component {
           show: appSettings.show,
         }}
         configs={configs}
-        connected={connected}
-        escs={escs}
-        flashTargets={flashTargets}
+        connected={escs.connected}
+        escs={escs.individual}
+        flashTargets={escs.targets}
         language={{
           actions: { handleChange: this.handleLanguageSelection.bind(this) },
           current: language,
@@ -967,13 +971,13 @@ class App extends Component {
         onSingleFlash={this.handleSingleFlash}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
         onWriteSetup={this.handleWriteSetup}
-        progress={progress}
+        progress={escs.progress}
         serial={{
           actions: this.serialActions,
           port: this.serial,
           ...serial,
         }}
-        settings={settings}
+        settings={escs.master}
         stats={stats}
       />
     );
