@@ -50,17 +50,37 @@ const MelodyElement = forwardRef(({
         const notes = currentMelody.split(':')[2].split(',');
 
         const wrongNotes = [];
+        const tooLongNotes = [];
         for(let i = 0; i < errors.length; i += 1) {
           switch(errors[i]) {
             case 1: {
               wrongNotes.push(notes[i].replace(',', ''));
-            }
+            } break;
+
+            case 2: {
+              tooLongNotes.push(i);
+            } break;
           }
         }
-        const uniqueWrongNotes = [ ...new Set(wrongNotes)];
-        setHighlight(uniqueWrongNotes);
 
-        const isValid = uniqueWrongNotes.length === 0;
+        const highlight = [];
+        const uniqueWrongNotes = [ ...new Set(wrongNotes)];
+        highlight.push(uniqueWrongNotes);
+
+        if(tooLongNotes.length > 0) {
+          const elements = currentMelody.split(':');
+          const notes = elements[2].split(',');
+          let offset = elements[0].length + elements[1].length + 2;
+          for(let i = 0; i < tooLongNotes[0]; i += 1) {
+            offset += notes[i].length + 1;
+          }
+
+          highlight.push([offset - 1, currentMelody.length]);
+        }
+
+        setHighlight(highlight);
+
+        const isValid = uniqueWrongNotes.length === 0 && tooLongNotes.length === 0;
         setIsValid(isValid);
         setIsPlayable(true);
 
