@@ -26,18 +26,14 @@ function App({
   actions,
   appSettings,
   configs,
-  escMelodies,
+  melodies,
   escs,
   language,
   onAllMotorSpeed,
-  onCloseMelodyEditor,
   onCookieAccept,
-  onMelodySave,
-  onOpenMelodyEditor,
   onSaveLog,
   onSingleMotorSpeed,
   serial,
-  showMelodyEditor,
   stats,
 }) {
   const { t } = useTranslation('common');
@@ -151,7 +147,7 @@ function App({
           onFlashUrl={escs.actions.handleFlashUrl}
           onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
           onLocalSubmit={escs.actions.handleLocalSubmit}
-          onOpenMelodyEditor={onOpenMelodyEditor}
+          onOpenMelodyEditor={melodies.actions.handleOpen}
           onReadEscs={escs.actions.handleReadEscs}
           onResetDefaultls={escs.actions.handleResetDefaultls}
           onSaveLog={onSaveLog}
@@ -179,11 +175,11 @@ function App({
           settings={appSettings.settings}
         />}
 
-      {showMelodyEditor &&
+      {melodies.show &&
         <MelodyEditor
-          melodies={escMelodies}
-          onClose={onCloseMelodyEditor}
-          onSave={onMelodySave}
+          melodies={melodies.escs}
+          onClose={melodies.actions.handleClose}
+          onSave={melodies.actions.handleSave}
           writing={actions.isWriting}
         />}
 
@@ -216,7 +212,6 @@ App.propTypes = {
     show: PropTypes.bool.isRequired,
   }).isRequired,
   configs: PropTypes.shape({}).isRequired,
-  escMelodies: PropTypes.arrayOf(PropTypes.string).isRequired,
   escs: PropTypes.shape({
     actions: PropTypes.shape({
       handleMasterUpdate: PropTypes.func.isRequired,
@@ -241,11 +236,17 @@ App.propTypes = {
     available: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     current: PropTypes.string.isRequired,
   }).isRequired,
+  melodies: PropTypes.shape({
+    actions: PropTypes.shape({
+      handleSave: PropTypes.func.isRequired,
+      handleOpen: PropTypes.func.isRequired,
+      handleClose: PropTypes.func.isRequired,
+    }),
+    escs: PropTypes.arrayOf(PropTypes.string).isRequired,
+    show: PropTypes.bool.isRequired,
+  }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
-  onCloseMelodyEditor: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
-  onMelodySave: PropTypes.func.isRequired,
-  onOpenMelodyEditor: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   serial: PropTypes.shape({
@@ -267,7 +268,6 @@ App.propTypes = {
     }),
     portNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   }),
-  showMelodyEditor: PropTypes.bool.isRequired,
   stats: PropTypes.shape({
     packetErrors: PropTypes.number.isRequired,
     version: PropTypes.string.isRequired,

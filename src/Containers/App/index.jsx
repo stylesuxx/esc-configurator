@@ -32,10 +32,6 @@ class App extends Component {
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
 
-    this.handleOpenMelodyEditor = this.handleOpenMelodyEditor.bind(this);
-    this.handleCloseMelodyEditor = this.handleCloseMelodyEditor.bind(this);
-    this.handleMelodySave = this.handleMelodySave.bind(this);
-
     this.state = {
       appSettings: {
         show: false,
@@ -86,13 +82,15 @@ class App extends Component {
         isFlashing: false,
       },
       language: 'en',
-      escMelodies: [
-        "LeaveHerAlone:d=8,o=5,b=100:4g#6,4c#6,c6,c#6,d#6,4c#.6,p,b,b,d#6,f#6,4e.6,p,b,f#6,g#6,f#6,4e.6,p,g#6,f#6,e6,c#6,c6,4g#6,4c#6,c6,c#6,d#6,16e6,16d#6,4c#6,p,16b,16b,b,d#6,f#6,4a6,4g#6,4f#6,e6,p,e6,4g#6,4g#6,f#6,e6,4c#6",
-        "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.",
-        "YouKnowIt:d=4,o=5,b=125:32p,2a#,2f,p,8a#,8c6,8d6,8d#6,2f6,2p,f6,f6,8f#6,8g#6,2a#6,2p,a#6,8a#6,8p,8g#6,8f#6,g#6,8f#6,2f6,2p,2f6,d#6,8d#6,8f6,2f#6,2p,f6,d#6,c#6,8c#6,8d#6,2f6,2p,d#6,c#6,c6,8c6,8d6,2e6,2p,2g6,1f6",
-        "GuessIt:d=4,o=5,b=125:32p,16g#,16g#,16g#,16g#,8g#,8a#,8g#,f,16c#,16d#,16c#,8d#,8d#,8c#,2f,8g#,8g#,8g#,8a#,8g#,f,c#6,8c#6,8c6,8g#,8a#,16c6,16a#,g#",
-      ],
-      showMelodyEditor: false,
+      melodies: {
+        escs: [
+          "LeaveHerAlone:d=8,o=5,b=100:4g#6,4c#6,c6,c#6,d#6,4c#.6,p,b,b,d#6,f#6,4e.6,p,b,f#6,g#6,f#6,4e.6,p,g#6,f#6,e6,c#6,c6,4g#6,4c#6,c6,c#6,d#6,16e6,16d#6,4c#6,p,16b,16b,b,d#6,f#6,4a6,4g#6,4f#6,e6,p,e6,4g#6,4g#6,f#6,e6,4c#6",
+          "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.",
+          "YouKnowIt:d=4,o=5,b=125:32p,2a#,2f,p,8a#,8c6,8d6,8d#6,2f6,2p,f6,f6,8f#6,8g#6,2a#6,2p,a#6,8a#6,8p,8g#6,8f#6,g#6,8f#6,2f6,2p,2f6,d#6,8d#6,8f6,2f#6,2p,f6,d#6,c#6,8c#6,8d#6,2f6,2p,d#6,c#6,c6,8c6,8d6,2e6,2p,2g6,1f6",
+          "GuessIt:d=4,o=5,b=125:32p,16g#,16g#,16g#,16g#,8g#,8a#,8g#,f,16c#,16d#,16c#,8d#,8d#,8c#,2f,8g#,8g#,8g#,8a#,8g#,f,c#6,8c#6,8c6,8g#,8a#,16c6,16a#,g#",
+        ],
+        show: false,
+      },
     };
   }
 
@@ -252,6 +250,12 @@ class App extends Component {
     const { actions } = this.state;
     const newActions = Object.assign({}, actions, settings);
     this.setState({ actions: newActions });
+  }
+
+  setMelodies(settings) {
+    const { melodies } = this.state;
+    const newMelodies = Object.assign({}, melodies, settings);
+    this.setState({ melodies: newMelodies });
   }
 
   async serialConnectHandler() {
@@ -904,6 +908,20 @@ class App extends Component {
     this.setState({ appSettings });
   }
 
+  handleAppSettingsUpdate(name, value) {
+    const { appSettings } = this.state;
+
+    appSettings.settings[name].value = value;
+    localStorage.setItem('settings', JSON.stringify(appSettings.settings));
+    this.setState({ appSettings });
+  }
+
+  melodyActions = {
+    handleSave: this.handleMelodySave.bind(this),
+    handleOpen: this.handleMelodyEditorOpen.bind(this),
+    handleClose: this.handleMelodyEditorClose.bind(this),
+  };
+
   handleMelodySave(melodies) {
     const { escs } = this.state;
     const newEscs = Object.assign({}, escs);
@@ -915,29 +933,21 @@ class App extends Component {
     this.handleWriteSetup();
   }
 
-  handleOpenMelodyEditor() {
+  handleMelodyEditorOpen() {
     const { escs } = this.state;
-    const escMelodies = escs.individual.map((esc) => {
+    const melodies = escs.individual.map((esc) => {
       const melody = esc.individualSettings.STARTUP_MELODY;
       return Rtttl.fromBluejayStartupMelody(melody);
     });
 
-    this.setState({
-      escMelodies,
-      showMelodyEditor: true,
+    this.setMelodies({
+      escs: melodies,
+      show: true,
     });
   }
 
-  handleCloseMelodyEditor() {
-    this.setState({ showMelodyEditor: false });
-  }
-
-  handleAppSettingsUpdate(name, value) {
-    const { appSettings } = this.state;
-
-    appSettings.settings[name].value = value;
-    localStorage.setItem('settings', JSON.stringify(appSettings.settings));
-    this.setState({ appSettings });
+  handleMelodyEditorClose() {
+    this.setMelodies({ show: false });
   }
 
   render() {
@@ -946,11 +956,10 @@ class App extends Component {
       actions,
       configs,
       language,
+      melodies,
       serial,
       stats,
       appSettings,
-      showMelodyEditor,
-      escMelodies,
     } = this.state;
 
     if (!serial.checked) {
@@ -966,7 +975,6 @@ class App extends Component {
           show: appSettings.show,
         }}
         configs={configs}
-        escMelodies={escMelodies}
         escs={{
           actions: this.escsActions,
           ...escs,
@@ -976,11 +984,12 @@ class App extends Component {
           current: language,
           available: this.languages,
         }}
+        melodies={{
+          actions: this.melodyActions,
+          ...melodies,
+        }}
         onAllMotorSpeed={this.handleAllMotorSpeed}
-        onCloseMelodyEditor={this.handleCloseMelodyEditor}
         onCookieAccept={this.handleCookieAccept}
-        onMelodySave={this.handleMelodySave}
-        onOpenMelodyEditor={this.handleOpenMelodyEditor}
         onSaveLog={this.handleSaveLog}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
         serial={{
@@ -988,7 +997,6 @@ class App extends Component {
           port: this.serial,
           ...serial,
         }}
-        showMelodyEditor={showMelodyEditor}
         stats={stats}
       />
     );
