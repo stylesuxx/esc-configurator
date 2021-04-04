@@ -9,7 +9,6 @@
     "@testing-library/user-event": "^12.1.10",
     "bluejay-rtttl-parse": "^2.0.1",
     "compare-versions": "^3.6.0",
-    "date-fns": "^2.19.0",
     "dateformat": "^4.5.1",
     "i18next": "^19.9.0",
     "rc-slider": "^9.7.2",
