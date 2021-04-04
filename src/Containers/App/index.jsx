@@ -2,20 +2,13 @@ import React, { Component } from 'react';
 import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
 import i18next from 'i18next';
-import { format as formatDate } from 'date-fns';
-
-import MainApp from '../../Components/App';
-
 import { serial as serialPolyfill } from 'web-serial-polyfill';
 
+import MainApp from '../../Components/App';
 import Serial from '../../utils/Serial';
-
 import sources from '../../sources';
-
 import { getMasterSettings } from '../../utils/helpers/Settings';
-
 import { delay } from '../../utils/helpers/General';
-
 import settings from '../../settings.json';
 const {
   version,
@@ -242,7 +235,7 @@ class App extends Component {
   }
 
   updateLog(message) {
-    const now = formatDate(new Date(), 'yyy/MM/dd HH:MM:ss');
+    const now = dateFormat(new Date(), 'yyyy/MM/dd HH:MM:ss');
     this.log.push(`${now}: ${message}`);
     localStorage.setItem('log', JSON.stringify(this.log));
   }
