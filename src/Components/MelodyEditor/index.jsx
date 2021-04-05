@@ -5,7 +5,6 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-
 import { useTranslation } from 'react-i18next';
 import './style.scss';
 
@@ -30,6 +29,7 @@ function MelodyEditor({
   const [acceptedMelodies, setAcceptedMelodies] = useState(defaultAccepted);
   const [isAnyPlaying, setIsAnyPlaying] = useState(false);
   const totalPlaying = useRef(0);
+  const audioContext = useRef(0);
 
   useEffect(() => {
     checkAllAccepted();
@@ -99,14 +99,20 @@ function MelodyEditor({
     totalPlaying.current -= 1;
     if(totalPlaying.current === 0) {
       setIsAnyPlaying(false);
+      if(audioContext.current) {
+        audioContext.current.close();
+        audioContext.current = null;
+      }
     }
   }
 
   function handlePlayAll() {
     setIsAnyPlaying(true);
+
+    audioContext.current = new window.AudioContext();
     for(let i = 0; i < references.length; i += 1) {
       const child = references[i];
-      child.current.play();
+      child.current.play(audioContext.current);
     }
   }
 

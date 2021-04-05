@@ -7,7 +7,6 @@ import React, {
   forwardRef,
 } from 'react';
 import { HighlightWithinTextarea } from 'react-highlight-within-textarea';
-
 import Rtttl from 'bluejay-rtttl-parse';
 
 import { useTranslation } from 'react-i18next';
@@ -34,8 +33,8 @@ const MelodyElement = forwardRef(({
   const highlighted = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    play() {
-      playMelody();
+    play(externalContext) {
+      playMelody(null, externalContext);
     },
     stop() {
       stopMelody();
@@ -138,14 +137,14 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function playMelody() {
+  function playMelody(e, externalContext = null) {
     setPlaying(true);
     highlighted.current = highlight;
     try {
       const parsedRtttl = Rtttl.parse(currentMelody);
       onPlay();
 
-      play(parsedRtttl.melody);
+      play(parsedRtttl.melody, externalContext);
     } catch(e) {
       setIsValid(false);
       setIsPlayable(false);
@@ -153,20 +152,25 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function play(melody) {
-    const audioCtx = new window.AudioContext();
+  function play(melody, externalContext = null) {
+    let audioContext = new window.AudioContext();
+    if(externalContext) {
+      audioContext = externalContext;
+    }
 
-    const osc = oscillator.current = audioCtx.createOscillator();
+    const osc = oscillator.current = audioContext.createOscillator();
     osc.type = 'square';
 
-    const volume = audioCtx.createGain();
+    const volume = audioContext.createGain();
     osc.connect(volume);
-    volume.connect(audioCtx.destination);
+    volume.connect(audioContext.destination);
     volume.gain.value = 0.05;
 
     osc.onended = () => {
-      volume.disconnect(audioCtx.destination);
-      audioCtx.close();
+      volume.disconnect(audioContext.destination);
+      if(!externalContext) {
+        audioContext.close();
+      }
       oscillator.current = null;
 
       setPlaying(false);
@@ -174,7 +178,7 @@ const MelodyElement = forwardRef(({
       onStop();
     };
 
-    let t = audioCtx.currentTime;
+    let t = 0;
     for (const note of melody) {
       osc.frequency.setValueAtTime(note.frequency, t);
       t += note.duration / 1000;
@@ -189,7 +193,7 @@ const MelodyElement = forwardRef(({
     };
 
     hl(0);
-    osc.start(0);
+    osc.start(audioContext.currentTime);
     osc.stop(t);
   }
 
