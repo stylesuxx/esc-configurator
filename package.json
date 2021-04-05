@@ -11,6 +11,7 @@
     "compare-versions": "^3.6.0",
     "dateformat": "^4.5.1",
     "i18next": "^19.9.0",
+    "pre-push": "^0.1.1",
     "rc-slider": "^9.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
