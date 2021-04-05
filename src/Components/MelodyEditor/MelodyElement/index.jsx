@@ -157,7 +157,6 @@ const MelodyElement = forwardRef(({
     const audioCtx = new window.AudioContext();
 
     const osc = oscillator.current = audioCtx.createOscillator();
-    let hltm = null;
     osc.type = 'square';
 
     const volume = audioCtx.createGain();
@@ -168,8 +167,7 @@ const MelodyElement = forwardRef(({
     osc.onended = () => {
       volume.disconnect(audioCtx.destination);
       audioCtx.close();
-      clearTimeout(hltm);
-      oscillator.current = hltm = null;
+      oscillator.current = null;
 
       setPlaying(false);
       setHighlight(highlighted.current);
@@ -182,10 +180,10 @@ const MelodyElement = forwardRef(({
       t += note.duration / 1000;
     }
 
-    // highlight node
     const hl = (i) => {
-      if(oscillator.current && melody[i]) {
-        hltm = setTimeout(() => hl(i + 1), melody[i].duration);
+      // highlight note if this oscillator is still playing
+      if(oscillator.current === osc && melody[i]) {
+        setTimeout(() => hl(i + 1), melody[i].duration);
         highlightNote(i);
       }
     };
