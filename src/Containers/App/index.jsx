@@ -90,6 +90,7 @@ class App extends Component {
           "GuessIt:d=4,o=5,b=125:32p,16g#,16g#,16g#,16g#,8g#,8a#,8g#,f,16c#,16d#,16c#,8d#,8d#,8c#,2f,8g#,8g#,8g#,8a#,8g#,f,c#6,8c#6,8c6,8g#,8a#,16c6,16a#,g#",
         ],
         show: false,
+        allowSave: true,
       },
     };
   }
@@ -935,15 +936,24 @@ class App extends Component {
 
   handleMelodyEditorOpen() {
     const { escs } = this.state;
-    const melodies = escs.individual.map((esc) => {
-      const melody = esc.individualSettings.STARTUP_MELODY;
-      return Rtttl.fromBluejayStartupMelody(melody);
-    });
+    if(escs.individual.length > 0) {
+      const melodies = escs.individual.map((esc) => {
+        const melody = esc.individualSettings.STARTUP_MELODY;
+        return Rtttl.fromBluejayStartupMelody(melody);
+      });
 
-    this.setMelodies({
-      escs: melodies,
-      show: true,
-    });
+      this.setMelodies({
+        allowSave: true,
+        escs: melodies,
+        show: true,
+      });
+    } else {
+      // No ESCs connected - editor triggered from home, do not allow saving
+      this.setMelodies({
+        allowSave: false,
+        show: true,
+      });
+    }
   }
 
   handleMelodyEditorClose() {

@@ -111,5 +111,6 @@
   "selectPwmFrequency": "Select PWM Frequency",
   "selectTarget": "Select Target",
   "battery": "Battery:",
-  "settings": "Settings"
+  "settings": "Settings",
+  "openMelodyEditor": "Open Melody Editor"
 }

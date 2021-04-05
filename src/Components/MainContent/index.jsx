@@ -51,7 +51,9 @@ function MainContent({
   if (!open) {
     return (
       <>
-        <Home />
+        <Home
+          onOpenMelodyEditor={onOpenMelodyEditor}
+        />
 
         <Changelog entries={changelogEntries} />
       </>
