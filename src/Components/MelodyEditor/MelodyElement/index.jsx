@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import './style.scss';
 
 const MelodyElement = forwardRef(({
+  dummy,
   label,
   melody,
   accepted,
@@ -21,6 +22,7 @@ const MelodyElement = forwardRef(({
   onPlay,
   onStop,
 }, ref) => {
+  console.log(dummy);
   const { t } = useTranslation();
   const [currentMelody, setCurrentMelody] = useState(melody);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
@@ -216,14 +218,15 @@ const MelodyElement = forwardRef(({
               {playing ? t('common:melodyEditorStop') : t('common:melodyEditorPlay')}
             </button>
 
-            <button
-              className={`accept ${isAccepted ? 'accepted' : ''}`}
-              disabled={!isValid || playing}
-              onClick={acceptMelody}
-              type="button"
-            >
-              {t('common:melodyEditorAccept')}
-            </button>
+            { !dummy &&
+              <button
+                className={`accept ${isAccepted ? 'accepted' : ''}`}
+                disabled={!isValid || playing}
+                onClick={acceptMelody}
+                type="button"
+              >
+                {t('common:melodyEditorAccept')}
+              </button>}
           </div>
         </header>
 
@@ -247,6 +250,7 @@ MelodyElement.displayName = 'MelodyElement';
 
 MelodyElement.propTypes = {
   accepted: PropTypes.bool.isRequired,
+  dummy: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,
   melody: PropTypes.string.isRequired,
   onAccept: PropTypes.func.isRequired,

@@ -12,6 +12,7 @@ import Checkbox from '../Input/Checkbox';
 import MelodyElement from './MelodyElement';
 
 function MelodyEditor({
+  dummy,
   melodies,
   onClose,
   onSave,
@@ -147,6 +148,7 @@ function MelodyEditor({
     return(
       <MelodyElement
         accepted={accepted}
+        dummy={dummy}
         label={label}
         melody={melody}
         onAccept={handleAcceptMelody}
@@ -173,6 +175,7 @@ function MelodyEditor({
     return(
       <MelodyElement
         accepted={accepted}
+        dummy={dummy}
         label={label}
         melody={melody}
         onAccept={handleAcceptAll}
@@ -259,13 +262,14 @@ function MelodyEditor({
               {isAnyPlaying ? t('common:melodyEditorStopAll') : t('common:melodyEditorPlayAll')}
             </button>}
 
-          <button
-            disabled={!allAccepted || isAnyPlaying || writing}
-            onClick={handleSave}
-            type="button"
-          >
-            {t('common:melodyEditorSave')}
-          </button>
+          { !dummy &&
+            <button
+              disabled={!allAccepted || isAnyPlaying || writing}
+              onClick={handleSave}
+              type="button"
+            >
+              {t('common:melodyEditorSave')}
+            </button>}
         </div>
       </div>
     </div>
@@ -273,6 +277,7 @@ function MelodyEditor({
 }
 
 MelodyEditor.propTypes = {
+  dummy: PropTypes.bool.isRequired,
   melodies: PropTypes.arrayOf(PropTypes.string).isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,

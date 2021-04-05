@@ -177,6 +177,7 @@ function App({
 
       {melodies.show &&
         <MelodyEditor
+          dummy={melodies.dummy}
           melodies={melodies.escs}
           onClose={melodies.actions.handleClose}
           onSave={melodies.actions.handleSave}
@@ -242,6 +243,7 @@ App.propTypes = {
       handleOpen: PropTypes.func.isRequired,
       handleClose: PropTypes.func.isRequired,
     }),
+    dummy: PropTypes.bool.isRequired,
     escs: PropTypes.arrayOf(PropTypes.string).isRequired,
     show: PropTypes.bool.isRequired,
   }).isRequired,
