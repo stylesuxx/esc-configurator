@@ -1,12 +1,50 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {
+  useRef,
+  useState,
+} from 'react';
 
 import bluejay from './images/bluejay_logo.png';
 import './style.scss';
 
 function Home({ onOpenMelodyEditor }) {
   const { t } = useTranslation('common');
+  const deferredPrompt = useRef(null);
+  const [showInstall, setShowInstall]  = useState(false);
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    deferredPrompt.current = e;
+    setShowInstall(true);
+  });
+
+  function Install() {
+    function handleInstallToHomescreen() {
+      if(deferredPrompt.current) {
+        deferredPrompt.prompt();
+      }
+    }
+
+    return(
+      <div className="install-wrapper">
+        <div className="install">
+          <div
+            className="description"
+            dangerouslySetInnerHTML={{ __html: t('homeInstall') }}
+          />
+
+          <div className="default-btn">
+            <button
+              onClick={handleInstallToHomescreen}
+              type="button"
+            >
+              {t('addToHomeScreen')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   function HomeColumnLeft() {
     return(
@@ -196,8 +234,11 @@ function Home({ onOpenMelodyEditor }) {
             >
               <div
                 align="center"
+                className="line-1"
                 dangerouslySetInnerHTML={{ __html: t('homeWelcome') }}
               />
+
+              { showInstall && <Install /> }
 
               <div
                 align="center"

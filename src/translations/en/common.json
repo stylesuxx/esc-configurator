@@ -112,5 +112,7 @@
   "selectTarget": "Select Target",
   "battery": "Battery:",
   "settings": "Settings",
-  "openMelodyEditor": "Open Melody Editor"
+  "openMelodyEditor": "Open Melody Editor",
+  "addToHomeScreen": "Add to Homescreen",
+  "homeInstall": "<p>ESC-Configurator <strong>can also be used offline when added to the homescreen</strong>. Once flashed, firmware files are available offline.</p><p>Settings can always be adjusted when offline.</p>"
 }

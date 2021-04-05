@@ -2,6 +2,32 @@
   min-height: 100%;
   overflow: hidden;
 
+  .line-1 {
+    margin-bottom: 20px;
+  }
+
+  .install {
+    max-width: 400px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(211, 211, 211, 0.25);
+
+    .description {
+      text-align: center;
+
+      p {
+        padding-bottom: 10px;
+      }
+    }
+
+    .default-btn {
+      margin: auto;
+      button {
+        max-width: 200px;
+      }
+    }
+  }
+
   .melody-editor-button {
     display: flex;
     justify-content: center;
@@ -38,7 +64,7 @@
   }
 
   .content_top {
-    height: 140px;
+    min-height: 140px;
     background: var(--color-primary);
     padding: 20px;
     display: flex;
