@@ -22,7 +22,6 @@ const MelodyElement = forwardRef(({
   onPlay,
   onStop,
 }, ref) => {
-  console.log(dummy);
   const { t } = useTranslation();
   const [currentMelody, setCurrentMelody] = useState(melody);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
