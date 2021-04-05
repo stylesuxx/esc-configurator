@@ -3,8 +3,10 @@ import React from 'react';
 
 class ErrorBoundary extends React.Component {
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
+    return {
+      error: error,
+      hasError: true,
+    };
   }
 
   static propTypes = { children: PropTypes.element.isRequired };
@@ -19,16 +21,13 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
-    //logErrorToMyService(error, errorInfo);
-    console.log(error);
+    console.log(error, errorInfo);
   }
 
   render() {
     const { hasError } = this.state;
     const { children } = this.props;
     if (hasError) {
-      // You can render any custom fallback UI
       return (
         <div>
           Something went wrong.

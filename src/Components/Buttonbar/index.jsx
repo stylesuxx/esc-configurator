@@ -5,6 +5,7 @@ import React from 'react';
 import './style.scss';
 
 function Buttonbar({
+  onOpenMelodyEditor,
   onReadSetup,
   onWriteSetup,
   onSeletFirmwareForAll,
@@ -14,6 +15,7 @@ function Buttonbar({
   canWrite,
   canFlash,
   canResetDefaults,
+  showMelodyEditor,
 }) {
   const { t } = useTranslation('common');
 
@@ -80,6 +82,17 @@ function Buttonbar({
         <div className="mobile-hide btn">
           <ResetDefaultButton />
         </div>
+
+        {showMelodyEditor &&
+          <div className="btn">
+            <button
+              disabled={!canRead}
+              onClick={onOpenMelodyEditor}
+              type="button"
+            >
+              {t('escButtonOpenMelodyEditor')}
+            </button>
+          </div>}
       </div>
     </div>
   );
@@ -90,11 +103,13 @@ Buttonbar.propTypes = {
   canRead: PropTypes.bool.isRequired,
   canResetDefaults: PropTypes.bool.isRequired,
   canWrite: PropTypes.bool.isRequired,
+  onOpenMelodyEditor: PropTypes.func.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,
   onSeletFirmwareForAll: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
+  showMelodyEditor: PropTypes.bool.isRequired,
 };
 
 export default Buttonbar;

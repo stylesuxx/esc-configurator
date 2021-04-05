@@ -27,6 +27,7 @@ test('loads and displays Buttonbar', () => {
       onSaveLog={onSaveLog}
       onSeletFirmwareForAll={onSeletFirmwareForAll}
       onWriteSetup={onWriteSetup}
+      showMelodyEditor
     />
   );
 
@@ -35,6 +36,7 @@ test('loads and displays Buttonbar', () => {
   expect(screen.getByText(/escButtonWrite/i)).toBeInTheDocument();
   expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   expect(screen.getByText(/escButtonSaveLog/i)).toBeInTheDocument();
+  expect(screen.getByText(/escButtonOpenMelodyEditor/i)).toBeInTheDocument();
 });
 
 test('trigger onSaveLog', () => {

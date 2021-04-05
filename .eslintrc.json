@@ -69,7 +69,8 @@
     "FileReader": false,
     "Blob": false,
     "localStorage": false,
-    "__dirname": false
+    "__dirname": false,
+    "Set": false
   },
   "parser": "babel-eslint"
 }

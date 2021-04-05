@@ -15,6 +15,7 @@ import Statusbar from '../Statusbar';
 import CookieConsent from '../CookieConsent';
 import MainContent from '../MainContent';
 import AppSettings from '../AppSettings';
+import MelodyEditor from '../../Components/MelodyEditor';
 
 import { useInterval } from '../../utils/helpers/React';
 
@@ -25,6 +26,7 @@ function App({
   actions,
   appSettings,
   configs,
+  melodies,
   escs,
   language,
   onAllMotorSpeed,
@@ -145,6 +147,7 @@ function App({
           onFlashUrl={escs.actions.handleFlashUrl}
           onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
           onLocalSubmit={escs.actions.handleLocalSubmit}
+          onOpenMelodyEditor={melodies.actions.handleOpen}
           onReadEscs={escs.actions.handleReadEscs}
           onResetDefaultls={escs.actions.handleResetDefaultls}
           onSaveLog={onSaveLog}
@@ -172,6 +175,15 @@ function App({
           settings={appSettings.settings}
         />}
 
+      {melodies.show &&
+        <MelodyEditor
+          dummy={melodies.dummy}
+          melodies={melodies.escs}
+          onClose={melodies.actions.handleClose}
+          onSave={melodies.actions.handleSave}
+          writing={actions.isWriting}
+        />}
+
       <ToastContainer />
     </div>
   );
@@ -187,7 +199,10 @@ App.defaultProps = {
 };
 
 App.propTypes = {
-  actions: PropTypes.shape({ isReading: PropTypes.bool.isRequired }).isRequired,
+  actions: PropTypes.shape({
+    isReading: PropTypes.bool.isRequired,
+    isWriting: PropTypes.bool.isRequired,
+  }).isRequired,
   appSettings: PropTypes.shape({
     actions: PropTypes.shape({
       handleClose: PropTypes.func.isRequired,
@@ -221,6 +236,16 @@ App.propTypes = {
     actions: PropTypes.shape({ handleChange: PropTypes.func.isRequired }).isRequired,
     available: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     current: PropTypes.string.isRequired,
+  }).isRequired,
+  melodies: PropTypes.shape({
+    actions: PropTypes.shape({
+      handleSave: PropTypes.func.isRequired,
+      handleOpen: PropTypes.func.isRequired,
+      handleClose: PropTypes.func.isRequired,
+    }),
+    dummy: PropTypes.bool.isRequired,
+    escs: PropTypes.arrayOf(PropTypes.string).isRequired,
+    show: PropTypes.bool.isRequired,
   }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,

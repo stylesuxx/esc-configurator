@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import bluejay from './images/bluejay_logo.png';
 import './style.scss';
 
-function Home() {
+function Home({ onOpenMelodyEditor }) {
   const { t } = useTranslation('common');
 
   function HomeColumnLeft() {
@@ -101,6 +102,15 @@ function Home() {
 
               <div>
                 <div dangerouslySetInnerHTML={{ __html: t('bluejayText') }} />
+
+                <div className="default-btn melody-editor-button">
+                  <button
+                    onClick={onOpenMelodyEditor}
+                    type="button"
+                  >
+                    {t('openMelodyEditor')}
+                  </button>
+                </div>
               </div>
             </section>
           </div>
@@ -208,5 +218,7 @@ function Home() {
     </div>
   );
 }
+
+Home.propTypes = { onOpenMelodyEditor: PropTypes.func.isRequired };
 
 export default Home;

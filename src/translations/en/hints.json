@@ -21,7 +21,7 @@
   "MOTOR_KV": "The KV rating of the motor stated by the manufacturer. The value is used to set RPM limit for low rpm throttle protection.",
   "MOTOR_POLES": "Pole count of the motor. This value is used to adjust sinusoidal startup speed.",
   "STARTUP_POWER": "Controls the initial power given to the motor during startup and minimum throttle level.",
-  "PWM_FREQUENCY": "When variable PWM is disabled, this manually sets the switching frequency (PWM) to the chosen range.", 
+  "PWM_FREQUENCY": "When variable PWM is disabled, this manually sets the switching frequency (PWM) to the chosen range.",
   "BEEP_VOLUME": "The level of power for the audible beeps made by the motor. Settings too high might damage the motors.",
   "INTERVAL_TELEMETRY": "Outputs telemetry data on a 30ms interval.",
   "SERVO_LOW_THRESHOLD": "Any signal below this point is considered zero throttle.",
@@ -30,5 +30,5 @@
   "SERVO_DEAD_BAND": "Applied to either side of Servo Neutral, anything in this range is considered zero throttle.",
   "LOW_VOLTAGE_CUTOFF": "When enabled will cut power to the motor when the voltage drops below the low voltage threshold.",
   "LOW_VOLTAGE_THRESHOLD": "Voltage level per cell where power is cut. Units in volts * 10. To cut off at 3.3v enter 330 for example.",
-  "RC_CAR_REVERSING" : "For ground vehicles only. Overrides user settings and places ESC into bi-directional mode with double tap to reverse type control." 
+  "RC_CAR_REVERSING" : "For ground vehicles only. Overrides user settings and places ESC into bi-directional mode with double tap to reverse type control."
 }
