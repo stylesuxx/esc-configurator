@@ -126,7 +126,6 @@ function MelodyEditor({
 
   function toggleSync() {
     handleAcceptAll(false);
-    setCurrentMelodies(validMelodies);
     setSync(!sync);
   }
 
