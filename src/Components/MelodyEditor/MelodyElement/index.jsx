@@ -180,9 +180,9 @@ const MelodyElement = forwardRef(({
       t += note.duration / 1000;
     }
 
-    // highlight node
     const hl = (i) => {
-      if(oscillator.current && melody[i]) {
+      // highlight note if this oscillator is still playing
+      if(oscillator.current === osc && melody[i]) {
         setTimeout(() => hl(i + 1), melody[i].duration);
         highlightNote(i);
       }
