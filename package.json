@@ -87,7 +87,9 @@
     ]
   },
   "pre-commit": [
-    "lint",
+    "lint"
+  ],
+  "pre-push": [
     "test-once"
   ]
 }
