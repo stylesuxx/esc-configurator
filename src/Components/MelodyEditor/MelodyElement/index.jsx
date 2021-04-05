@@ -157,6 +157,7 @@ const MelodyElement = forwardRef(({
     const audioCtx = new window.AudioContext();
 
     const osc = oscillator.current = audioCtx.createOscillator();
+    let hltm = null;
     osc.type = 'square';
 
     const volume = audioCtx.createGain();
@@ -167,7 +168,8 @@ const MelodyElement = forwardRef(({
     osc.onended = () => {
       volume.disconnect(audioCtx.destination);
       audioCtx.close();
-      oscillator.current = null;
+      clearTimeout(hltm);
+      oscillator.current = hltm = null;
 
       setPlaying(false);
       setHighlight(highlighted.current);
@@ -183,7 +185,7 @@ const MelodyElement = forwardRef(({
     // highlight node
     const hl = (i) => {
       if(oscillator.current && melody[i]) {
-        setTimeout(() => hl(i + 1), melody[i].duration);
+        hltm = setTimeout(() => hl(i + 1), melody[i].duration);
         highlightNote(i);
       }
     };
