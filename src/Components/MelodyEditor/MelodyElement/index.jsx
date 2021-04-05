@@ -33,8 +33,8 @@ const MelodyElement = forwardRef(({
   const highlighted = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    play(externalContext) {
-      playMelody(null, externalContext);
+    play(externalContext, externalVolume) {
+      playMelody(null, externalContext, externalVolume);
     },
     stop() {
       stopMelody();
@@ -137,14 +137,14 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function playMelody(e, externalContext = null) {
+  function playMelody(e, externalContext = null, externalVolume = null) {
     setPlaying(true);
     highlighted.current = highlight;
     try {
       const parsedRtttl = Rtttl.parse(currentMelody);
       onPlay();
 
-      play(parsedRtttl.melody, externalContext);
+      play(parsedRtttl.melody, externalContext, externalVolume);
     } catch(e) {
       setIsValid(false);
       setIsPlayable(false);
@@ -152,22 +152,30 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function play(melody, externalContext = null) {
+  function play(melody, externalContext = null, externalVolume = null) {
     let audioContext = new window.AudioContext();
+    let volume = audioContext.createGain();
+    volume.gain.value = 0.05;
+
     if(externalContext) {
       audioContext = externalContext;
     }
 
-    const osc = oscillator.current = audioContext.createOscillator();
-    osc.type = 'square';
+    if(externalVolume) {
+      volume = externalVolume;
+    }
 
-    const volume = audioContext.createGain();
+    const osc = oscillator.current = audioContext.createOscillator();
+
+    osc.type = 'square';
     osc.connect(volume);
     volume.connect(audioContext.destination);
-    volume.gain.value = 0.05;
 
     osc.onended = () => {
-      volume.disconnect(audioContext.destination);
+      if(!externalVolume) {
+        volume.disconnect(audioContext.destination);
+      }
+
       if(!externalContext) {
         audioContext.close();
       }

@@ -30,6 +30,7 @@ function MelodyEditor({
   const [isAnyPlaying, setIsAnyPlaying] = useState(false);
   const totalPlaying = useRef(0);
   const audioContext = useRef(0);
+  const volume = useRef(0);
 
   useEffect(() => {
     checkAllAccepted();
@@ -100,6 +101,7 @@ function MelodyEditor({
     if(totalPlaying.current === 0) {
       setIsAnyPlaying(false);
       if(audioContext.current) {
+        volume.current.disconnect(audioContext.destination);
         audioContext.current.close();
         audioContext.current = null;
       }
@@ -110,9 +112,14 @@ function MelodyEditor({
     setIsAnyPlaying(true);
 
     audioContext.current = new window.AudioContext();
+
+    // Normalize volume
+    volume.current = audioContext.current.createGain();
+    volume.current.gain.value = 0.05 / references.length;
+
     for(let i = 0; i < references.length; i += 1) {
       const child = references[i];
-      child.current.play(audioContext.current);
+      child.current.play(audioContext.current, volume.current);
     }
   }
 
