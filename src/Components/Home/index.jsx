@@ -26,7 +26,7 @@ function Home({ onOpenMelodyEditor }) {
     }
 
     return(
-      <div className="install-wrapper">
+      <div className={`install-wrapper ${showInstall ? 'active' : ''}`}>
         <div className="install">
           <div
             className="description"
@@ -238,7 +238,7 @@ function Home({ onOpenMelodyEditor }) {
                 dangerouslySetInnerHTML={{ __html: t('homeWelcome') }}
               />
 
-              { showInstall && <Install /> }
+              <Install />
 
               <div
                 align="center"
