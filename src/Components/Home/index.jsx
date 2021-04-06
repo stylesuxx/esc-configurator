@@ -21,7 +21,7 @@ function Home({ onOpenMelodyEditor }) {
   function Install() {
     function handleInstallToHomescreen() {
       if(deferredPrompt.current) {
-        deferredPrompt.prompt();
+        deferredPrompt.current.prompt();
       }
     }
 
