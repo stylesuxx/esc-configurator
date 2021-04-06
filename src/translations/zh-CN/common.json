@@ -39,7 +39,7 @@
   "escButtonSelect": "烧录",
   "defaultChangelogTitle": "更新日志",
   "changelogClose": "关闭",
-  "_Damping mode (Complementary PWM)": "Damping mode (Complementary PWM)",
+  "_Damping mode (Complementary PWM)": "阻尼模式 (互补 PWM)",
   "homeExperimental": "这是一个实验性的 web 应用程序，可以在线配置 ESC 固件。",
   "homeVersionInfo": "您可以在这里找到最新的稳定版本。目前支持以下固件：",
   "homeContributionHeader": "贡献",
@@ -90,7 +90,7 @@
   "homeDiscordText": "如果你有任何问题或需要快速的帮助，加入我们的 Discord 服务器：",
   "homeChinaHeader": "对于我们的中国用户",
   "homeChinaText": "告诉你的朋友们，在GFW下，他们可以在中国通过直接访问 <a href=\"https://esc-configurator.pitronic.top/\">内地的镜像站<a> 来使用我们的应用程序。",
-  "melodyEditorHeader": "Melody Editor",
+  "melodyEditorHeader": "旋律编辑器",
   "melodyEditorSave": "保存",
   "melodyEditorPlay": "播放",
   "melodyEditorStop": "停止",
@@ -101,8 +101,8 @@
   "homeAttributionText": "此项目受 <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a> 的强烈启发。 大多数用户界面都是从零开始重写的，但大量与刷新和固件处理有关的低级物品已被重新使用 - 所以对所有参与原来的 BLHeli Configurator 的人致以最高敬意。",
   "syncMelodies": "同步的旋律",
   "syncMelodiesHint": "如果开启，所有的 ESC 都将使用相同的旋律。",
-  "allEscs": "All ESCs",
-  "escButtonOpenMelodyEditor": "Open Melody Editor",
+  "allEscs": "全部 ESC",
+  "escButtonOpenMelodyEditor": "打开旋律编辑器",
   "multiOnly": "目前只支持 MULTI 模式",
   "selectFirmware": "选择固件",
   "selectEsc": "选择 ESC",
@@ -112,5 +112,5 @@
   "selectTarget": "选择目标",
   "battery": "电池:",
   "settings": "设置",
-  "openMelodyEditor": "Open Melody Editor"
+  "openMelodyEditor": "打开旋律编辑器"
 }
