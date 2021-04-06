@@ -24,12 +24,16 @@ function CookieConsent({ onCookieAccept }) {
           zIndex: 2,
         },
         message: {
+          marginLeft: '20px',
+          marginRight: '20px',
           fontSize: '16px',
           marginBottom: '10px',
         },
         button: {
           padding: '7px',
           margin: '5px',
+          marginTop: '10px',
+          marginRight: '20px',
           cursor: 'pointer',
           background: 'black',
           color: 'white',

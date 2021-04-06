@@ -12,6 +12,8 @@ const Statusbar = forwardRef(({
   packetErrors,
   version,
 }, ref) => {
+  const { t } = useTranslation('common');
+  const cellLimit = 3.7;
   const [utilization, setUtilization] = useState({
     up: 0,
     down: 0,
@@ -24,7 +26,7 @@ const Statusbar = forwardRef(({
   useImperativeHandle(ref, () => ({
     updateBatteryState(state) {
       if(state && state.cellCount > 0) {
-        const danger = (state.voltage / state.cellCount) < 3.7;
+        const danger = (state.voltage / state.cellCount) < cellLimit;
         setBatteryState({
           text: `${state.cellCount}S @ ${state.voltage}V`,
           danger,
@@ -41,56 +43,33 @@ const Statusbar = forwardRef(({
     },
   }));
 
-  const { t } = useTranslation('common');
-  const upString = `U: ${utilization.up}%`;
-  const downString = `D: ${utilization.down}% `;
+  function BatteryState() {
+    if(batteryState.text) {
+      return (
+        <span className={batteryState.danger ? 'danger' : ''}>
+          {`${t('battery')} ${batteryState.text}`}
+        </span>
+      );
+    }
+
+    return null;
+  }
 
   return (
     <div id="status-bar">
-      <div>
-        <span>
-          {t('statusbarPortUtilization')}
-        </span>
+      <span>
+        {`${t('statusbarPortUtilization')} D: ${utilization.down}% U: ${utilization.up}%`}
+      </span>
 
-        {' '}
+      <span>
+        {`${t('statusbarPacketError')} ${packetErrors}`}
+      </span>
 
-        <span>
-          {downString}
-        </span>
+      <BatteryState />
 
-        <span>
-          {upString}
-        </span>
-      </div>
-
-      <div>
-        <span>
-          {t('statusbarPacketError')}
-        </span>
-
-        {' '}
-
-        <span>
-          {packetErrors}
-        </span>
-      </div>
-
-      {batteryState.text &&
-        <div className={batteryState.danger ? 'danger' : ''}>
-          <span>
-            {t('battery')}
-          </span>
-
-          {' '}
-
-          <span>
-            {batteryState.text}
-          </span>
-        </div>}
-
-      <div className="version">
+      <span className="version">
         {version}
-      </div>
+      </span>
     </div>
   );
 });

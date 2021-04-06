@@ -31,6 +31,24 @@ function Buttonbar({
     );
   }
 
+  function MelodyEditorButton() {
+    if(showMelodyEditor) {
+      return (
+        <div className="btn">
+          <button
+            disabled={!canRead}
+            onClick={onOpenMelodyEditor}
+            type="button"
+          >
+            {t('escButtonOpenMelodyEditor')}
+          </button>
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   return (
     <div id="button-bar">
       <div className="buttons-left">
@@ -83,16 +101,7 @@ function Buttonbar({
           <ResetDefaultButton />
         </div>
 
-        {showMelodyEditor &&
-          <div className="btn">
-            <button
-              disabled={!canRead}
-              onClick={onOpenMelodyEditor}
-              type="button"
-            >
-              {t('escButtonOpenMelodyEditor')}
-            </button>
-          </div>}
+        <MelodyEditorButton />
       </div>
     </div>
   );

@@ -64,7 +64,6 @@ function Changelog({ entries }) {
         <div className="log">
           <ChangelogContent />
         </div>
-
       </div>
     </div>
   );

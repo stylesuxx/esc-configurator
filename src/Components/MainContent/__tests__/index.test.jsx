@@ -22,6 +22,7 @@ test('loads and displays MainContent', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: false,
@@ -46,6 +47,7 @@ test('loads and displays MainContent', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -95,6 +97,7 @@ test('open', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: false,
@@ -119,6 +122,7 @@ test('open', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -154,6 +158,7 @@ test('isSelecting', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: false,
@@ -178,6 +183,7 @@ test('isSelecting', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -218,6 +224,7 @@ test('isFlashing', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: false,
@@ -242,6 +249,7 @@ test('isFlashing', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -277,6 +285,7 @@ test('isWriting', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: false,
@@ -301,6 +310,7 @@ test('isWriting', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -336,6 +346,7 @@ test('isReading', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: true,
@@ -360,6 +371,7 @@ test('isReading', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -392,12 +404,20 @@ test('isReading with ESC', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: true,
     isWriting: false,
     isSelecting: false,
     isFlashing: false,
+  };
+
+  const settings = {
+    LAYOUT_REVISION: 0,
+    MAIN_REVISION: 1,
+    SUB_REVISION: 2,
+    NAME: 'NAME',
   };
 
   const configs = {
@@ -412,11 +432,13 @@ test('isReading with ESC', () => {
       index: 0,
       meta: { available: true },
       settings: {
+        LAYOUT_REVISION: 0,
         MODE: 0,
         STARTUP_BEEP: 0,
       },
       bootloaderRevision: 'bl 23',
       individualSettings: {
+        LAYOUT_REVISION: 0,
         MAIN_REVISION: 1,
         SUB_REVISION: 200,
         NAME: 'FW Name',
@@ -497,6 +519,7 @@ test('isReading with ESC', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -506,6 +529,7 @@ test('isReading with ESC', () => {
       onSingleMotorSpeed={onSingleMotorSpeed}
       onWriteSetup={onWriteSetup}
       open
+      settings={settings}
     />
   );
 
@@ -529,6 +553,7 @@ test('isWriting with ESC', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: false,
@@ -624,6 +649,13 @@ test('isWriting with ESC', () => {
     },
   ];
 
+  const settings = {
+    LAYOUT_REVISION: 0,
+    MAIN_REVISION: 1,
+    SUB_REVISION: 2,
+    NAME: 'NAME',
+  };
+
   render(
     <MainContent
       actions={actions}
@@ -634,6 +666,7 @@ test('isWriting with ESC', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}
@@ -643,6 +676,7 @@ test('isWriting with ESC', () => {
       onSingleMotorSpeed={onSingleMotorSpeed}
       onWriteSetup={onWriteSetup}
       open
+      settings={settings}
     />
   );
 
@@ -666,6 +700,7 @@ test('isSelecting with ESC', () => {
   const onFlashUrl = jest.fn();
   const onCancelFirmwareSelection = jest.fn();
   const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   const actions = {
     isReading: false,
@@ -773,6 +808,7 @@ test('isSelecting with ESC', () => {
       onFlashUrl={onFlashUrl}
       onIndividualSettingsUpdate={onIndividualSettingsUpdate}
       onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadEscs={onReadEscs}
       onResetDefaultls={onResetDefaultls}
       onSaveLog={onSaveLog}

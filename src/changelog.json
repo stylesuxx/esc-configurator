@@ -1,5 +1,15 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Bluejay melody editor",
+      "PWA Infobox",
+      "Tracking improvements",
+      "Styling improvements",
+      "Some refactoring"
+    ]
+  },
+  {
     "title": "0.10.0",
     "items": [
       "Show battery charge if in Motor tab",

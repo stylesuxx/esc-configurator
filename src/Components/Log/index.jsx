@@ -15,32 +15,22 @@ function Log({ messages }) {
       </div>
     ));
 
-  function toggleExpanded(e) {
-    e.preventDefault();
-
+  function toggleExpanded() {
     setExpanded(!expanded);
-  }
-
-  let expandedClass = '';
-  let toggleText = t('showLog');
-  if (expanded) {
-    expandedClass = 'expanded';
-    toggleText = t('hideLog');
   }
 
   return (
     <div
-      className={expandedClass}
+      className={expanded ? 'expanded' : ''}
       id="log"
     >
       <div className="logswitch">
         <button
-          href="#"
           id="showlog"
           onClick={toggleExpanded}
           type="button"
         >
-          {toggleText}
+          {expanded ? t('hideLog') : t('showLog')}
         </button>
       </div>
 
