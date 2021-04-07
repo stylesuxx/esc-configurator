@@ -20,6 +20,93 @@ class App extends Component {
   constructor() {
     super();
 
+    const defaultSettings = {
+      directInput: {
+        type: 'boolean',
+        value: false,
+      },
+      printLogs: {
+        type: 'boolean',
+        value: false,
+      },
+    };
+
+    const loadSettings = () => {
+      const settings = JSON.parse(localStorage.getItem('settings')) || {};
+      return {
+        ...defaultSettings,
+        ...settings,
+      };
+    };
+
+    const loadLanguage = () => {
+      let storedLanguage = localStorage.getItem('language');
+      if(!storedLanguage) {
+        const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
+        if(browserLanguage) {
+          for(let [key, value] of Object.entries(this.languages)) {
+            if(value.value === browserLanguage) {
+              storedLanguage = browserLanguage;
+              break;
+            }
+          }
+
+          if(!storedLanguage && browserLanguage.split('-').length > 1) {
+            const part = browserLanguage.split('-')[0];
+            for(let [key, value] of Object.entries(this.languages)) {
+              if(value.value === part) {
+                storedLanguage = part;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      if(storedLanguage) {
+        i18next.changeLanguage(storedLanguage);
+      }
+
+      return(storedLanguage || 'en');
+    };
+
+    const loadLog = () => {
+      // Load previously stored log messages and sanitize to a max line count
+      const storedLog = JSON.parse(localStorage.getItem('log'));
+      if(storedLog) {
+        return storedLog.slice(-10000);
+      }
+
+      return [];
+    };
+
+    const getSerialApi = () => {
+      if('serial' in navigator) {
+        return navigator.serial;
+      }
+
+      if('usb' in navigator) {
+        return serialPolyfill;
+      }
+
+      return null;
+    };
+
+    this.languages = [
+      {
+        label: "English",
+        value: "en",
+      },
+      {
+        label: "Deutsch",
+        value: "de",
+      },
+      {
+        label: "简体中文",
+        value: 'zh-CN',
+      },
+    ];
+
     this.serialConnectHandler = this.serialConnectHandler.bind(this);
     this.serialDisconnectHandler = this.serialDisconnectHandler.bind(this);
 
@@ -32,19 +119,17 @@ class App extends Component {
     this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
     this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
 
+    this.log = loadLog();
+    this.serialApi = getSerialApi();
+
+    this.gtmActive = false;
+    this.serial = undefined;
+    this.lastConnected = 0;
+
     this.state = {
       appSettings: {
         show: false,
-        settings: {
-          directInput: {
-            type: 'boolean',
-            value: false,
-          },
-          printLogs: {
-            type: 'boolean',
-            value: false,
-          },
-        },
+        settings: loadSettings(),
       },
       escs: {
         connected: 0,
@@ -81,7 +166,7 @@ class App extends Component {
         isSelecting: false,
         isFlashing: false,
       },
-      language: 'en',
+      language: loadLanguage(),
       melodies: {
         escs: [
           "LeaveHerAlone:d=8,o=5,b=100:4g#6,4c#6,c6,c#6,d#6,4c#.6,p,b,b,d#6,f#6,4e.6,p,b,f#6,g#6,f#6,4e.6,p,g#6,f#6,e6,c#6,c6,4g#6,4c#6,c6,c#6,d#6,16e6,16d#6,4c#6,p,16b,16b,b,d#6,f#6,4a6,4g#6,4f#6,e6,p,e6,4g#6,4g#6,f#6,e6,4c#6",
@@ -93,106 +178,29 @@ class App extends Component {
         dummy: true,
       },
     };
+
+    // Redefine the console and tee logs
+    window.console.debug = (text, ...args) => {
+      const { appSettings } = this.state;
+      const msg = [text, args.join(' ')].join(' ');
+      this.updateLog(msg);
+      if(appSettings.settings.printLogs.value) {
+        console.log(text, ...args);
+      }
+    };
   }
 
   async componentDidMount() {
-    const { appSettings } = this.state;
-    const that = this;
     this.onMount(async() => {
-      let hasSerial = 'serial' in navigator;
-      if(hasSerial) {
-        this.serialApi = navigator.serial;
-      }
+      if (this.serialApi) {
+        this.serialApi.removeEventListener('connect', this.serialConnectHandler);
+        this.serialApi.removeEventListener('disconnect', this.serialDisconnectHandler);
 
-      /**
-       * If the Web Serial API is not available, we try to fall back to the
-       * Web USB polyfill for serial. This allows us to have (most of) the
-       * Web Serial API functionality on Android devices.
-       *
-       * Web USB has a couple of draw backs though:
-       * - getInfo can not be called before a port has been opened, so the
-       *   device names need to be mocked.
-       * - event listeners are not available, meaning we can not automatically
-       *   detect if a deive has been plugged in or disconnected. Connected is
-       *   not a big problem, since we trigger that manually by port selection.
-       *   Disconnecting is a bigger problem, since we can not clean up once
-       *   the user has unplugged his device.
-       */
-      if(!hasSerial && navigator.usb) {
-        this.serialApi = serialPolyfill;
-        hasSerial = true;
-        this.hasWebUsb = true;
-      }
+        this.serialApi.addEventListener('connect', this.serialConnectHandler);
+        this.serialApi.addEventListener('disconnect', this.serialDisconnectHandler);
 
-      const settings = JSON.parse(localStorage.getItem('settings'));
-      const currentSettings = Object.assign({}, appSettings.settings, settings);
-      appSettings.settings = currentSettings;
-      this.setState({ appSettings });
-
-      // Load previously stored log messages and sanitize to a max line count
-      const log = JSON.parse(localStorage.getItem('log'));
-      if(log) {
-        this.log = log.slice(-10000);
-      }
-
-      // Redefine the console and tee logs
-      var console = (function(old) {
-        return Object.assign({}, old, {
-          debug: (text, ...args) => {
-            const { appSettings } = that.state;
-            const msg = [text, args.join(' ')].join(' ');
-            that.updateLog(msg);
-            if(appSettings.settings.printLogs.value) {
-              console.log(text, ...args);
-            }
-          },
-        });
-      }(window.console));
-      window.console = console;
-
-      let language = localStorage.getItem('language');
-      if(!language) {
-        const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
-        if(browserLanguage) {
-          for(let [key, value] of Object.entries(this.languages)) {
-            if(value.value === browserLanguage) {
-              language = browserLanguage;
-              break;
-            }
-          }
-
-          if(!language && browserLanguage.split('-').length > 1) {
-            const part = browserLanguage.split('-')[0];
-            for(let [key, value] of Object.entries(this.languages)) {
-              if(value.value === part) {
-                language = part;
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      if(language) {
-        i18next.changeLanguage(language);
-        this.setState({ language });
-      }
-
-      if (hasSerial) {
-        /**
-         * TODO: Web USB listeners are a hack as long as pulled in from my
-         *       fork. Update once google updates their repository.
-         */
-        this.serialApi.removeEventListener('connect', that.serialConnectHandler);
-        this.serialApi.removeEventListener('disconnect', that.serialDisconnectHandler);
-
-        this.serialApi.addEventListener('connect', that.serialConnectHandler);
-        this.serialApi.addEventListener('disconnect', that.serialDisconnectHandler);
-
-        // Fetch the configs only once.
         this.setState({ configs: await this.fetchConfigs() });
-
-        await that.serialConnectHandler();
+        this.serialConnectHandler();
       } else {
         this.setSerial({ checked: true });
       }
@@ -203,69 +211,54 @@ class App extends Component {
     return true;
   }
 
-  /**
-   * All console.log output will be appended here.
-   * It is not part of the state since we do not want to trigger updates
-   * due to this being changed, it is only needed when the "Save Log" button
-   * is clicked.
-   */
-  log = [];
-  gtmActive = false;
-  serial = undefined;
-  lastConnected = 0;
-  serialApi = undefined;
-  hasWebUsb = false;
-
-  languages = [
-    {
-      label: "English",
-      value: "en",
-    },
-    {
-      label: "Deutsch",
-      value: "de",
-    },
-    {
-      label: "简体中文",
-      value: 'zh-CN',
-    },
-  ];
-
   onMount(cb){
     cb();
   }
 
   setSerial(settings) {
     const { serial } = this.state;
-    const newSerial = Object.assign({}, serial, settings);
-    this.setState({ serial: newSerial });
+    this.setState({
+      serial: {
+        ...serial,
+        ...settings,
+      },
+    });
   }
 
-  setEscs(settings) {
+  setEscs(settings, cb = null) {
     const { escs } = this.state;
-    const newEscs = Object.assign({}, escs, settings);
-    this.setState({ escs: newEscs });
+    this.setState({
+      escs: {
+        ...escs,
+        ...settings,
+      },
+    }, cb);
   }
 
   setActions(settings) {
     const { actions } = this.state;
-    const newActions = Object.assign({}, actions, settings);
-    this.setState({ actions: newActions });
+    this.setState({
+      actions: {
+        ...actions,
+        ...settings,
+      },
+    });
   }
 
   setMelodies(settings) {
     const { melodies } = this.state;
-    const newMelodies = Object.assign({}, melodies, settings);
-    this.setState({ melodies: newMelodies });
+    this.setState({
+      melodies: {
+        ...melodies,
+        ...settings,
+      },
+    });
   }
 
   async serialConnectHandler() {
-    /**
-     * If we are here, the user has already given permission to access the
-     * device - mark  conncted
-     */
     let connected = false;
     this.serial = undefined;
+
     const ports = await this.serialApi.getPorts();
     if(ports.length > 0) {
       TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
@@ -306,6 +299,8 @@ class App extends Component {
       return name;
     });
 
+    this.serial.disconnect();
+
     this.setSerial({
       availablePorts,
       chosenPort: null,
@@ -314,9 +309,8 @@ class App extends Component {
       open: false,
       portNames,
     });
-    this.setEscs({ individual: [] });
 
-    this.serial.disconnect();
+    this.setEscs({ individual: [] });
   }
 
   updateLog(message) {
@@ -340,8 +334,9 @@ class App extends Component {
       console.log(translationEn);
     }
 
-    serial.log.push(this.formatLogMessage(translation));
-    this.setSerial({ log: serial.log });
+    const log = [ ...serial.log ];
+    log.push(this.formatLogMessage(translation));
+    this.setSerial({ log });
   }
 
   async fetchConfigs() {
@@ -361,8 +356,12 @@ class App extends Component {
 
   handlePacketErrors(count) {
     const { stats } = this.state;
-    const newStats = Object.assign({}, stats, { packetErrors: stats.packetErrors + count });
-    this.setState({ stats: newStats });
+    this.setState({
+      stats: {
+        ...stats,
+        packetErrors: stats.packetErrors + count,
+      },
+    });
   }
 
   handleSaveLog() {
@@ -394,43 +393,29 @@ class App extends Component {
     );
   }
 
-  escsActions = {
-    handleMasterUpdate: this.handleSettingsUpdate.bind(this),
-    handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate.bind(this),
-    handleResetDefaultls: this.handleResetDefaultls.bind(this),
-    handleReadEscs: this.handleReadEscs.bind(this),
-    handleWriteSetup: this.handleWriteSetup.bind(this),
-    handleSingleFlash: this.handleSingleFlash.bind(this),
-    handleSelectFirmwareForAll: this.handleSelectFirmwareForAll.bind(this),
-    handleCancelFirmwareSelection: this.handleCancelFirmwareSelection.bind(this),
-    handleLocalSubmit: this.handleLocalSubmit.bind(this),
-    handleFlashUrl: this.handleFlashUrl.bind(this),
-  };
-
   handleSettingsUpdate(master) {
     this.setEscs({ master });
   }
 
   handleIndividualSettingsUpdate(index, individualSettings) {
     const  { escs } = this.state;
-    const newEscs = Object.assign({}, escs);
-    for(let i = 0; i < newEscs.individual.length; i += 1) {
-      if(newEscs.individual[i].index === index) {
-        newEscs.individual[i].individualSettings = individualSettings;
+    const individual = [ ...escs.individual ];
+    for(let i = 0; i < individual.length; i += 1) {
+      if(individual[i].index === index) {
+        individual[i].individualSettings = individualSettings;
 
         break;
       }
     }
 
-    this.setEscs(newEscs);
+    this.setEscs({ individual });
   }
 
   async handleResetDefaultls() {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
 
-    const { escs } = this.state;
-
     this.setActions({ isWriting: true });
+    const { escs } = this.state;
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
@@ -448,17 +433,14 @@ class App extends Component {
   }
 
   async handleReadEscs() {
-    const {
-      escs,
-      serial,
-    } = this.state;
-    const newEscs = Object.assign({}, escs);
-    const newSerial = Object.assign({}, serial);
+    const { escs } = this.state;
+    const newEscs = { ...escs };
+    const individual = [];
+
+    let fourWay = true;
+    let connected = 0;
 
     this.setActions({ isReading: true });
-
-    // Enable 4way if
-    let connected = 0;
     try {
       if(this.lastConnected === 0) {
         const escs = await this.serial.enable4WayInterface();
@@ -468,18 +450,15 @@ class App extends Component {
 
         // This delay is needed to allow the ESC's to initialize
         await delay(1200);
-
-        newSerial.fourWay = true;
       } else {
         connected = this.lastConnected;
       }
     } catch(e) {
+      fourWay = false;
+
       this.addLogMessage('fourWayFailed');
       console.debug(e);
     }
-
-    const escFlash = [];
-    let open = false;
 
     this.addLogMessage('readEscs', { connected });
 
@@ -489,7 +468,7 @@ class App extends Component {
         const settings = await this.serial.getFourWayInterfaceInfo(i);
         if(settings) {
           settings.index = i;
-          escFlash.push(settings);
+          individual.push(settings);
 
           this.addLogMessage('readEsc', {
             index: i + 1,
@@ -499,15 +478,14 @@ class App extends Component {
           this.addLogMessage('readEscFailed', { index: i + 1 });
         }
       }
-      open = true;
 
       TagManager.dataLayer({
         dataLayer: {
           event: "ESCs",
           escs: {
-            name: escFlash[0].displayName,
-            layout: escFlash[0].make,
-            count: escFlash.length,
+            name: individual[0].displayName,
+            layout: individual[0].make,
+            count: individual.length,
           },
         },
       });
@@ -519,27 +497,26 @@ class App extends Component {
     }
 
     this.lastConnected = connected;
-
-    newEscs.connected = connected;
-    newEscs.master = getMasterSettings(escFlash);
-    newEscs.individual = escFlash;
-    this.setEscs(newEscs);
-
-    newSerial.open = open;
-    this.setSerial(newSerial);
-
     this.setActions({ isReading: false });
+
+    this.setSerial({ fourWay });
+
+    this.setEscs({
+      ...newEscs,
+      connected,
+      individual,
+      master: getMasterSettings(individual),
+    });
   }
 
   async handleWriteSetup() {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
-    const { escs } = this.state;
-    const newEscs = Object.assign({}, escs);
-
     this.setActions({ isWriting: true });
-    for(let i = 0; i < escs.individual.length; i += 1) {
-      const esc = escs.individual[i];
+    const { escs } = this.state;
+    const individual = [ ...escs.individual ];
+    for(let i = 0; i < individual.length; i += 1) {
+      const esc = individual[i];
       const target = esc.index;
 
       console.debug(`Writing settings to ESC ${target + 1}`);
@@ -549,11 +526,11 @@ class App extends Component {
       const mergedSettings = Object.assign({}, currentEscSettings, escs.master, individualEscSettings);
       const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
 
-      newEscs.individual[i].settingsArray = newSettingsArray;
+      individual[i].settingsArray = newSettingsArray;
     }
     this.setActions({ isWriting: false });
 
-    this.setEscs(newEscs);
+    this.setEscs({ individual });
   }
 
   handleSingleFlash(index) {
@@ -580,8 +557,9 @@ class App extends Component {
   }
 
   handleLocalSubmit(e, force, migrate) {
-    const { escs } = this.state;
     e.preventDefault();
+    const { escs } = this.state;
+
     TagManager.dataLayer({
       dataLayer: {
         event: 'Flashing',
@@ -595,7 +573,7 @@ class App extends Component {
 
     const reader = new FileReader();
     reader.onload = async (e) => {
-      console.debug(`Flashing local file`);
+      console.debug('Flashing local file');
 
       const text = (e.target.result);
       this.flash(text, force, migrate);
@@ -666,24 +644,25 @@ class App extends Component {
 
   async flash(text, force, migrate) {
     const { escs } = this.state;
+    const progress = [ ...escs.progress ];
+    const individual = [ ...escs.individual ];
 
     this.setActions({
       isSelecting: false,
       isFlashing: true,
     });
 
-    const newEscs = Object.assign({}, escs);
     for(let i = 0; i < escs.targets.length; i += 1) {
       const target = escs.targets[i];
 
       this.addLogMessage('flashingEsc', { index: target + 1 });
 
       const esc = escs.individual.find((esc) => esc.index === target);
-      newEscs.progress[target] = 0;
+      progress[target] = 0;
 
-      const updateProgress = async(progress) => {
-        newEscs.progress[target] = progress;
-        this.setEscs(newEscs);
+      const updateProgress = async(percent) => {
+        progress[target] = percent;
+        this.setEscs({ progress });
       };
 
       updateProgress(0.1);
@@ -692,27 +671,20 @@ class App extends Component {
       result.index = target;
 
       if(result) {
-        newEscs.individual[i] = result;
-        newEscs.progress[target] = 0;
+        individual[i] = result;
+        progress[target] = 0;
 
-        await this.setEscs(newEscs);
+        await this.setEscs({
+          individual,
+          progress,
+        });
       } else {
         this.addLogMessage('flashingEscFailed', { index: target + 1 });
       }
     }
 
-    newEscs.master = getMasterSettings(newEscs.individual);
-    this.setEscs(newEscs);
-
+    this.setEscs({ master: getMasterSettings(individual) });
     this.setActions({ isFlashing: false });
-  }
-
-  serialActions = {
-    handleChangePort: this.handleChangePort.bind(this),
-    handleConnect: this.handleConnect.bind(this),
-    handleDisconnect: this.handleDisconnect.bind(this),
-    handleSetBaudRate: this.handleSetBaudRate.bind(this),
-    handleSetPort: this.handleSetPort.bind(this),
   }
 
   async handleSetPort() {
@@ -721,7 +693,6 @@ class App extends Component {
       this.serial = new Serial(port);
 
       this.addLogMessage('portSelected');
-
 
       const portNames = [port].map((item) => {
         const info = item.getInfo();
@@ -891,47 +862,52 @@ class App extends Component {
     this.setState({ language });
   }
 
-  appSettingsActions = {
-    handleClose: this.handleAppSettingsClose.bind(this),
-    handleOpen: this.handleAppSettingsOpen.bind(this),
-    handleUpdate: this.handleAppSettingsUpdate.bind(this),
-  };
-
   handleAppSettingsClose() {
     const { appSettings } = this.state;
-    appSettings.show = false;
-    this.setState({ appSettings });
+    this.setState({
+      appSettings: {
+        ...appSettings,
+        show: false,
+      },
+    });
   }
 
   handleAppSettingsOpen() {
     const { appSettings } = this.state;
-    appSettings.show = true;
-    this.setState({ appSettings });
+    this.setState({
+      appSettings: {
+        ...appSettings,
+        show: true,
+      },
+    });
   }
 
   handleAppSettingsUpdate(name, value) {
     const { appSettings } = this.state;
+    const settings = { ...appSettings.settings };
 
-    appSettings.settings[name].value = value;
-    localStorage.setItem('settings', JSON.stringify(appSettings.settings));
-    this.setState({ appSettings });
+    settings[name].value = value;
+    localStorage.setItem('settings', JSON.stringify(settings));
+    this.setState({
+      appSettings: {
+        ...appSettings,
+        settings,
+      },
+    });
   }
-
-  melodyActions = {
-    handleSave: this.handleMelodySave.bind(this),
-    handleOpen: this.handleMelodyEditorOpen.bind(this),
-    handleClose: this.handleMelodyEditorClose.bind(this),
-  };
 
   handleMelodySave(melodies) {
     const { escs } = this.state;
-    const newEscs = Object.assign({}, escs);
+    const individual = [ ...escs.individual ];
     const converted = melodies.map((melody) => Rtttl.toBluejayStartupMelody(melody));
     for(let i = 0; i < converted.length; i += 1) {
-      newEscs.individual[i].individualSettings.STARTUP_MELODY = converted[i].data;
+      individual[i].individualSettings.STARTUP_MELODY = converted[i].data;
     }
-    this.setEscs(newEscs);
-    this.handleWriteSetup();
+
+    // Update individual settings, then write them.
+    this.setEscs({ individual }, () => {
+      this.handleWriteSetup();
+    });
   }
 
   handleMelodyEditorOpen() {
@@ -980,13 +956,28 @@ class App extends Component {
       <MainApp
         actions={actions}
         appSettings={{
-          actions: this.appSettingsActions,
+          actions: {
+            handleClose: this.handleAppSettingsClose.bind(this),
+            handleOpen: this.handleAppSettingsOpen.bind(this),
+            handleUpdate: this.handleAppSettingsUpdate.bind(this),
+          },
           settings: appSettings.settings,
           show: appSettings.show,
         }}
         configs={configs}
         escs={{
-          actions: this.escsActions,
+          actions: {
+            handleMasterUpdate: this.handleSettingsUpdate.bind(this),
+            handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate.bind(this),
+            handleResetDefaultls: this.handleResetDefaultls.bind(this),
+            handleReadEscs: this.handleReadEscs.bind(this),
+            handleWriteSetup: this.handleWriteSetup.bind(this),
+            handleSingleFlash: this.handleSingleFlash.bind(this),
+            handleSelectFirmwareForAll: this.handleSelectFirmwareForAll.bind(this),
+            handleCancelFirmwareSelection: this.handleCancelFirmwareSelection.bind(this),
+            handleLocalSubmit: this.handleLocalSubmit.bind(this),
+            handleFlashUrl: this.handleFlashUrl.bind(this),
+          },
           ...escs,
         }}
         language={{
@@ -995,7 +986,11 @@ class App extends Component {
           available: this.languages,
         }}
         melodies={{
-          actions: this.melodyActions,
+          actions: {
+            handleSave: this.handleMelodySave.bind(this),
+            handleOpen: this.handleMelodyEditorOpen.bind(this),
+            handleClose: this.handleMelodyEditorClose.bind(this),
+          },
           ...melodies,
         }}
         onAllMotorSpeed={this.handleAllMotorSpeed}
@@ -1003,7 +998,13 @@ class App extends Component {
         onSaveLog={this.handleSaveLog}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
         serial={{
-          actions: this.serialActions,
+          actions: {
+            handleChangePort: this.handleChangePort.bind(this),
+            handleConnect: this.handleConnect.bind(this),
+            handleDisconnect: this.handleDisconnect.bind(this),
+            handleSetBaudRate: this.handleSetBaudRate.bind(this),
+            handleSetPort: this.handleSetPort.bind(this),
+          },
           port: this.serial,
           ...serial,
         }}
