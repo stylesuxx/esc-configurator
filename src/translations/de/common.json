@@ -113,6 +113,6 @@
   "battery": "Akku:",
   "settings": "Einstellungen",
   "openMelodyEditor": "Melodie Editor öffnen",
-  "addToHomeScreen": "Add to Homescreen",
-  "homeInstall": "<p>ESC-Configurator <strong>can also be used offline when added to the homescreen</strong>. Once flashed, firmware files are available offline.</p><p>Settings can always be adjusted when offline.</p>"
+  "addToHomeScreen": "Zum Startbildschirm hinzufügen",
+  "homeInstall": "<p>Der ESC-Konfigurator <strong>funktioniert auch offline, sobald dieser zum Homescreen hinzugefügt wurde</strong>. Firmware-Dateien welche einmal geflashed wurden, sind danach auch offline verfügbar.</p><p>Einstellungen können offline jederzeit angepasst werden.</p>"
 }
