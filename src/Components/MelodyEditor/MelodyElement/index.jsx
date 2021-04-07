@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import './style.scss';
 
 const MelodyElement = forwardRef(({
+  disabled,
   dummy,
   label,
   melody,
@@ -210,7 +211,7 @@ const MelodyElement = forwardRef(({
           <div className="default-btn">
             <button
               className="play"
-              disabled={!isPlayable}
+              disabled={!isPlayable || disabled}
               onClick={playing ? stopMelody : playMelody}
               type="button"
             >
@@ -220,7 +221,7 @@ const MelodyElement = forwardRef(({
             { !dummy &&
               <button
                 className={`accept ${isAccepted ? 'accepted' : ''}`}
-                disabled={!isValid || playing}
+                disabled={!isValid || playing || disabled}
                 onClick={acceptMelody}
                 type="button"
               >
@@ -232,7 +233,7 @@ const MelodyElement = forwardRef(({
         <div className="editor-wrapper">
           <HighlightWithinTextarea
             containerClassName={`editor ${playing ? 'playing' : ''}`}
-            disabled={playing}
+            disabled={playing || disabled}
             highlight={highlight}
             onChange={updateMelody}
             rows={10}
@@ -249,6 +250,7 @@ MelodyElement.displayName = 'MelodyElement';
 
 MelodyElement.propTypes = {
   accepted: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
   dummy: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,
   melody: PropTypes.string.isRequired,

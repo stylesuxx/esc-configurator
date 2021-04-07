@@ -26,6 +26,11 @@
         button.accepted {
           background: var(--color-tertiary);
           color: white;
+
+          &[disabled] {
+            cursor: default;
+            opacity: 0.5;
+          }
         }
       }
 

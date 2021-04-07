@@ -147,6 +147,7 @@ function MelodyEditor({
     return(
       <MelodyElement
         accepted={accepted}
+        disabled={writing}
         dummy={dummy}
         label={label}
         melody={melody}
@@ -174,6 +175,7 @@ function MelodyEditor({
     return(
       <MelodyElement
         accepted={accepted}
+        disabled={writing}
         dummy={dummy}
         label={label}
         melody={melody}
@@ -201,7 +203,7 @@ function MelodyEditor({
         onAccept={handleAccept}
         onValid={handleValid}
       />
-    )), [currentMelodies]
+    )), [currentMelodies, writing]
   );
 
   const melodyElement = useMemo(
@@ -211,7 +213,7 @@ function MelodyEditor({
         label={t("common:allEscs")}
         melody={currentMelodies[0]}
       />
-    ), [currentMelodies]
+    ), [currentMelodies, writing]
   );
 
   return (
@@ -236,7 +238,7 @@ function MelodyEditor({
 
         <div className="sync-wrapper">
           <Checkbox
-            disabled={isAnyPlaying}
+            disabled={isAnyPlaying || writing}
             hint={t("common:syncMelodiesHint")}
             label={t("common:syncMelodies")}
             name="syncMelodies"

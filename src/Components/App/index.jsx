@@ -1,13 +1,9 @@
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import React, {
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import 'react-toastify/dist/ReactToastify.min.css';
-
 
 import PortPicker from '../PortPicker';
 import Log from '../Log';
@@ -16,7 +12,6 @@ import CookieConsent from '../CookieConsent';
 import MainContent from '../MainContent';
 import AppSettings from '../AppSettings';
 import MelodyEditor from '../../Components/MelodyEditor';
-
 import { useInterval } from '../../utils/helpers/React';
 
 import changelogEntries from '../../changelog.json';
@@ -59,29 +54,7 @@ function App({
     }
   }, 1000);
 
-  const memoizedPortPicker = useMemo(() => (
-    <PortPicker
-      hasPort={serial.connected}
-      hasSerial={serial.hasSerial}
-      onChangePort={serial.actions.handleChangePort}
-      onConnect={serial.actions.handleConnect}
-      onDisconnect={serial.actions.handleDisconnect}
-      onSetBaudRate={serial.actions.handleSetBaudRate}
-      onSetPort={serial.actions.handleSetPort}
-      open={serial.open}
-      ports={serial.portNames}
-    />
-  ), [serial]);
-
-  const memoizedStatusBar = useMemo(() => (
-    <Statusbar
-      packetErrors={stats.packetErrors}
-      ref={statusbarRef}
-      version={stats.version}
-    />
-  ), [stats]);
-
-  const memoizedLanguageSelection = useMemo(() => {
+  function LanguageSelection() {
     const languageElements = language.available.map((item) => (
       <option
         key={item.value}
@@ -102,7 +75,21 @@ function App({
         </select>
       </div>
     );
-  }, [language]);
+  }
+
+  function AppSettingsWrapper() {
+    if(appSettings.show) {
+      return(
+        <AppSettings
+          onClose={appSettings.actions.handleClose}
+          onUpdate={appSettings.actions.handleUpdate}
+          settings={appSettings.settings}
+        />
+      );
+    }
+
+    return null;
+  }
 
   return (
     <div className="App">
@@ -111,10 +98,20 @@ function App({
           <div className="headerbar">
             <div id="logo" />
 
-            {memoizedPortPicker}
+            <PortPicker
+              hasPort={serial.connected}
+              hasSerial={serial.hasSerial}
+              onChangePort={serial.actions.handleChangePort}
+              onConnect={serial.actions.handleConnect}
+              onDisconnect={serial.actions.handleDisconnect}
+              onSetBaudRate={serial.actions.handleSetBaudRate}
+              onSetPort={serial.actions.handleSetPort}
+              open={serial.open}
+              ports={serial.portNames}
+            />
 
             <div className="language-select ">
-              {memoizedLanguageSelection}
+              <LanguageSelection />
 
               <div className="button-dark">
                 <button
@@ -161,19 +158,18 @@ function App({
           settings={escs.master}
         />
 
-        {memoizedStatusBar}
+        <Statusbar
+          packetErrors={stats.packetErrors}
+          ref={statusbarRef}
+          version={stats.version}
+        />
       </div>
 
       <CookieConsent
         onCookieAccept={onCookieAccept}
       />
 
-      {appSettings.show &&
-        <AppSettings
-          onClose={appSettings.actions.handleClose}
-          onUpdate={appSettings.actions.handleUpdate}
-          settings={appSettings.settings}
-        />}
+      <AppSettingsWrapper />
 
       {melodies.show &&
         <MelodyEditor

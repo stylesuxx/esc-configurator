@@ -107,18 +107,6 @@ class App extends Component {
       },
     ];
 
-    this.serialConnectHandler = this.serialConnectHandler.bind(this);
-    this.serialDisconnectHandler = this.serialDisconnectHandler.bind(this);
-
-    this.addLogMessage = this.addLogMessage.bind(this);
-    this.updateLog = this.updateLog.bind(this);
-
-    this.handlePacketErrors = this.handlePacketErrors.bind(this);
-    this.handleSaveLog = this.handleSaveLog.bind(this);
-    this.handleCookieAccept = this.handleCookieAccept.bind(this);
-    this.handleAllMotorSpeed = this.handleAllMotorSpeed.bind(this);
-    this.handleSingleMotorSpeed = this.handleSingleMotorSpeed.bind(this);
-
     this.log = loadLog();
     this.serialApi = getSerialApi();
 
@@ -215,7 +203,7 @@ class App extends Component {
     cb();
   }
 
-  setSerial(settings) {
+  setSerial = (settings) => {
     const { serial } = this.state;
     this.setState({
       serial: {
@@ -225,7 +213,7 @@ class App extends Component {
     });
   }
 
-  setEscs(settings, cb = null) {
+  setEscs = (settings, cb = null) => {
     const { escs } = this.state;
     this.setState({
       escs: {
@@ -235,7 +223,7 @@ class App extends Component {
     }, cb);
   }
 
-  setActions(settings) {
+  setActions = (settings) => {
     const { actions } = this.state;
     this.setState({
       actions: {
@@ -245,7 +233,7 @@ class App extends Component {
     });
   }
 
-  setMelodies(settings) {
+  setMelodies = (settings) => {
     const { melodies } = this.state;
     this.setState({
       melodies: {
@@ -255,7 +243,113 @@ class App extends Component {
     });
   }
 
-  async serialConnectHandler() {
+  updateLog = (message) => {
+    const now = dateFormat(new Date(), 'yyyy/mm/dd HH:MM:ss');
+    this.log.push(`${now}: ${message}`);
+    localStorage.setItem('log', JSON.stringify(this.log));
+  }
+
+  addLogMessage = async(message, params = {}) => {
+    const {
+      serial,
+      appSettings,
+    } = this.state;
+    const translation = i18next.t(`log:${message}`, params);
+
+    params.lng = 'en';
+    const translationEn = i18next.t(`log:${message}`, params);
+    this.updateLog(translationEn);
+
+    if(appSettings.settings.printLogs.value) {
+      console.log(translationEn);
+    }
+
+    const log = [ ...serial.log ];
+    log.push(this.formatLogMessage(translation));
+    this.setSerial({ log });
+  }
+
+  fetchConfigs = async() => {
+    const { configs } = this.state;
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = await source.getEscs();
+      configs.platforms[name] = source.getPlatform();
+      configs.pwm[name] = source.getPwm();
+    }
+
+    return configs;
+  }
+
+  formatLogMessage = (html) => {
+    const now = new Date();
+    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
+    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
+
+    return (
+      <div>
+        <span className="date">
+          {formattedDate}
+        </span>
+
+        <span className="time">
+          {formattedTime}
+        </span>
+
+        {html}
+      </div>
+    );
+  }
+
+  flash = async(text, force, migrate) => {
+    const { escs } = this.state;
+    const progress = [ ...escs.progress ];
+    const individual = [ ...escs.individual ];
+
+    this.setActions({
+      isSelecting: false,
+      isFlashing: true,
+    });
+
+    for(let i = 0; i < escs.targets.length; i += 1) {
+      const target = escs.targets[i];
+
+      this.addLogMessage('flashingEsc', { index: target + 1 });
+
+      const esc = escs.individual.find((esc) => esc.index === target);
+      progress[target] = 0;
+
+      const updateProgress = async(percent) => {
+        progress[target] = percent;
+        this.setEscs({ progress });
+      };
+
+      updateProgress(0.1);
+
+      const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
+      result.index = target;
+
+      if(result) {
+        individual[i] = result;
+        progress[target] = 0;
+
+        await this.setEscs({
+          individual,
+          progress,
+        });
+      } else {
+        this.addLogMessage('flashingEscFailed', { index: target + 1 });
+      }
+    }
+
+    this.setEscs({ master: getMasterSettings(individual) });
+    this.setActions({ isFlashing: false });
+  }
+
+  serialConnectHandler = async() => {
     let connected = false;
     this.serial = undefined;
 
@@ -286,7 +380,7 @@ class App extends Component {
     });
   }
 
-  async serialDisconnectHandler() {
+  serialDisconnectHandler = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('unplugged');
     this.lastConnected = 0;
@@ -313,48 +407,7 @@ class App extends Component {
     this.setEscs({ individual: [] });
   }
 
-  updateLog(message) {
-    const now = dateFormat(new Date(), 'yyyy/mm/dd HH:MM:ss');
-    this.log.push(`${now}: ${message}`);
-    localStorage.setItem('log', JSON.stringify(this.log));
-  }
-
-  async addLogMessage(message, params = {}) {
-    const {
-      serial,
-      appSettings,
-    } = this.state;
-    const translation = i18next.t(`log:${message}`, params);
-
-    params.lng = 'en';
-    const translationEn = i18next.t(`log:${message}`, params);
-    this.updateLog(translationEn);
-
-    if(appSettings.settings.printLogs.value) {
-      console.log(translationEn);
-    }
-
-    const log = [ ...serial.log ];
-    log.push(this.formatLogMessage(translation));
-    this.setSerial({ log });
-  }
-
-  async fetchConfigs() {
-    const { configs } = this.state;
-    for(let i = 0; i < sources.length; i += 1) {
-      const source = sources[i];
-      const name = source.getName();
-
-      configs.versions[name] = await source.getVersions();
-      configs.escs[name] = await source.getEscs();
-      configs.platforms[name] = source.getPlatform();
-      configs.pwm[name] = source.getPwm();
-    }
-
-    return configs;
-  }
-
-  handlePacketErrors(count) {
+  handlePacketErrors = (count) => {
     const { stats } = this.state;
     this.setState({
       stats: {
@@ -364,7 +417,7 @@ class App extends Component {
     });
   }
 
-  handleSaveLog() {
+  handleSaveLog = () => {
     const element = document.createElement("a");
     const file = new Blob([this.log.join("\n")], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
@@ -373,31 +426,11 @@ class App extends Component {
     element.click();
   }
 
-  formatLogMessage(html) {
-    const now = new Date();
-    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
-    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
-
-    return (
-      <div>
-        <span className="date">
-          {formattedDate}
-        </span>
-
-        <span className="time">
-          {formattedTime}
-        </span>
-
-        {html}
-      </div>
-    );
-  }
-
-  handleSettingsUpdate(master) {
+  handleSettingsUpdate = (master) => {
     this.setEscs({ master });
   }
 
-  handleIndividualSettingsUpdate(index, individualSettings) {
+  handleIndividualSettingsUpdate = (index, individualSettings) => {
     const  { escs } = this.state;
     const individual = [ ...escs.individual ];
     for(let i = 0; i < individual.length; i += 1) {
@@ -411,7 +444,7 @@ class App extends Component {
     this.setEscs({ individual });
   }
 
-  async handleResetDefaultls() {
+  handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
 
     this.setActions({ isWriting: true });
@@ -432,7 +465,7 @@ class App extends Component {
     this.handleReadEscs();
   }
 
-  async handleReadEscs() {
+  handleReadEscs = async() => {
     const { escs } = this.state;
     const newEscs = { ...escs };
     const individual = [];
@@ -509,7 +542,7 @@ class App extends Component {
     });
   }
 
-  async handleWriteSetup() {
+  handleWriteSetup = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     this.setActions({ isWriting: true });
@@ -533,12 +566,12 @@ class App extends Component {
     this.setEscs({ individual });
   }
 
-  handleSingleFlash(index) {
+  handleSingleFlash = (index) => {
     this.setEscs({ targets: [index] });
     this.setActions({ isSelecting: true });
   }
 
-  handleSelectFirmwareForAll() {
+  handleSelectFirmwareForAll = () => {
     const { escs } = this.state;
 
     const targets = [];
@@ -551,12 +584,12 @@ class App extends Component {
     this.setEscs({ targets });
   }
 
-  handleCancelFirmwareSelection() {
+  handleCancelFirmwareSelection = () => {
     this.setActions({ isSelecting: false });
     this.setEscs({ targets: [] });
   }
 
-  handleLocalSubmit(e, force, migrate) {
+  handleLocalSubmit = (e, force, migrate) => {
     e.preventDefault();
     const { escs } = this.state;
 
@@ -586,7 +619,7 @@ class App extends Component {
    * checked if the file already exists there, it is used, otherwise it is
    * downloaded and put into local storage for later use.
    */
-  async handleFlashUrl(url, force, migrate) {
+  handleFlashUrl = async(url, force, migrate) => {
     const { escs } = this.state;
     console.debug(`Chosen firmware: ${url}`);
 
@@ -642,52 +675,7 @@ class App extends Component {
     }
   }
 
-  async flash(text, force, migrate) {
-    const { escs } = this.state;
-    const progress = [ ...escs.progress ];
-    const individual = [ ...escs.individual ];
-
-    this.setActions({
-      isSelecting: false,
-      isFlashing: true,
-    });
-
-    for(let i = 0; i < escs.targets.length; i += 1) {
-      const target = escs.targets[i];
-
-      this.addLogMessage('flashingEsc', { index: target + 1 });
-
-      const esc = escs.individual.find((esc) => esc.index === target);
-      progress[target] = 0;
-
-      const updateProgress = async(percent) => {
-        progress[target] = percent;
-        this.setEscs({ progress });
-      };
-
-      updateProgress(0.1);
-
-      const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
-      result.index = target;
-
-      if(result) {
-        individual[i] = result;
-        progress[target] = 0;
-
-        await this.setEscs({
-          individual,
-          progress,
-        });
-      } else {
-        this.addLogMessage('flashingEscFailed', { index: target + 1 });
-      }
-    }
-
-    this.setEscs({ master: getMasterSettings(individual) });
-    this.setActions({ isFlashing: false });
-  }
-
-  async handleSetPort() {
+  handleSetPort = async() => {
     try {
       const port = await this.serialApi.requestPort();
       this.serial = new Serial(port);
@@ -712,7 +700,7 @@ class App extends Component {
     }
   }
 
-  handleChangePort(index) {
+  handleChangePort = (index) => {
     const { serial } = this.state;
     this.serial = new Serial(serial.availablePorts[index]);
 
@@ -720,11 +708,11 @@ class App extends Component {
     this.setSerial({ chosenPort: serial.availablePorts[index] });
   }
 
-  handleSetBaudRate(rate) {
+  handleSetBaudRate = (rate) => {
     this.setSerial({ baudRate: rate });
   }
 
-  async handleConnect(e) {
+  handleConnect = async(e) => {
     e.preventDefault();
     const { serial } = this.state;
 
@@ -805,7 +793,7 @@ class App extends Component {
     }
   }
 
-  async handleDisconnect(e) {
+  handleDisconnect = async(e) => {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
@@ -837,15 +825,15 @@ class App extends Component {
     });
   }
 
-  async handleAllMotorSpeed(speed) {
+  handleAllMotorSpeed = async(speed) => {
     await this.serial.spinAllMotors(speed);
   }
 
-  async handleSingleMotorSpeed(index, speed) {
+  handleSingleMotorSpeed = async(index, speed) => {
     await this.serial.spinMotor(index, speed);
   }
 
-  handleCookieAccept() {
+  handleCookieAccept = () => {
     if(!this.gtmActive) {
       const tagManagerArgs = { gtmId: process.env.REACT_APP_GTM_ID };
       TagManager.initialize(tagManagerArgs);
@@ -854,7 +842,7 @@ class App extends Component {
     }
   }
 
-  handleLanguageSelection(e) {
+  handleLanguageSelection = (e) => {
     const language = e.target.value;
 
     localStorage.setItem('language', language);
@@ -862,7 +850,7 @@ class App extends Component {
     this.setState({ language });
   }
 
-  handleAppSettingsClose() {
+  handleAppSettingsClose = () => {
     const { appSettings } = this.state;
     this.setState({
       appSettings: {
@@ -872,7 +860,7 @@ class App extends Component {
     });
   }
 
-  handleAppSettingsOpen() {
+  handleAppSettingsOpen = () => {
     const { appSettings } = this.state;
     this.setState({
       appSettings: {
@@ -882,7 +870,7 @@ class App extends Component {
     });
   }
 
-  handleAppSettingsUpdate(name, value) {
+  handleAppSettingsUpdate = (name, value) => {
     const { appSettings } = this.state;
     const settings = { ...appSettings.settings };
 
@@ -896,7 +884,7 @@ class App extends Component {
     });
   }
 
-  handleMelodySave(melodies) {
+  handleMelodySave = (melodies) => {
     const { escs } = this.state;
     const individual = [ ...escs.individual ];
     const converted = melodies.map((melody) => Rtttl.toBluejayStartupMelody(melody));
@@ -910,7 +898,7 @@ class App extends Component {
     });
   }
 
-  handleMelodyEditorOpen() {
+  handleMelodyEditorOpen = () => {
     const { escs } = this.state;
     if(escs.individual.length > 0) {
       const melodies = escs.individual.map((esc) => {
@@ -932,7 +920,7 @@ class App extends Component {
     }
   }
 
-  handleMelodyEditorClose() {
+  handleMelodyEditorClose = () => {
     this.setMelodies({ show: false });
   }
 
@@ -957,9 +945,9 @@ class App extends Component {
         actions={actions}
         appSettings={{
           actions: {
-            handleClose: this.handleAppSettingsClose.bind(this),
-            handleOpen: this.handleAppSettingsOpen.bind(this),
-            handleUpdate: this.handleAppSettingsUpdate.bind(this),
+            handleClose: this.handleAppSettingsClose,
+            handleOpen: this.handleAppSettingsOpen,
+            handleUpdate: this.handleAppSettingsUpdate,
           },
           settings: appSettings.settings,
           show: appSettings.show,
@@ -967,29 +955,29 @@ class App extends Component {
         configs={configs}
         escs={{
           actions: {
-            handleMasterUpdate: this.handleSettingsUpdate.bind(this),
-            handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate.bind(this),
-            handleResetDefaultls: this.handleResetDefaultls.bind(this),
-            handleReadEscs: this.handleReadEscs.bind(this),
-            handleWriteSetup: this.handleWriteSetup.bind(this),
-            handleSingleFlash: this.handleSingleFlash.bind(this),
-            handleSelectFirmwareForAll: this.handleSelectFirmwareForAll.bind(this),
-            handleCancelFirmwareSelection: this.handleCancelFirmwareSelection.bind(this),
-            handleLocalSubmit: this.handleLocalSubmit.bind(this),
-            handleFlashUrl: this.handleFlashUrl.bind(this),
+            handleMasterUpdate: this.handleSettingsUpdate,
+            handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate,
+            handleResetDefaultls: this.handleResetDefaultls,
+            handleReadEscs: this.handleReadEscs,
+            handleWriteSetup: this.handleWriteSetup,
+            handleSingleFlash: this.handleSingleFlash,
+            handleSelectFirmwareForAll: this.handleSelectFirmwareForAll,
+            handleCancelFirmwareSelection: this.handleCancelFirmwareSelection,
+            handleLocalSubmit: this.handleLocalSubmit,
+            handleFlashUrl: this.handleFlashUrl,
           },
           ...escs,
         }}
         language={{
-          actions: { handleChange: this.handleLanguageSelection.bind(this) },
+          actions: { handleChange: this.handleLanguageSelection },
           current: language,
           available: this.languages,
         }}
         melodies={{
           actions: {
-            handleSave: this.handleMelodySave.bind(this),
-            handleOpen: this.handleMelodyEditorOpen.bind(this),
-            handleClose: this.handleMelodyEditorClose.bind(this),
+            handleSave: this.handleMelodySave,
+            handleOpen: this.handleMelodyEditorOpen,
+            handleClose: this.handleMelodyEditorClose,
           },
           ...melodies,
         }}
@@ -999,11 +987,11 @@ class App extends Component {
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
         serial={{
           actions: {
-            handleChangePort: this.handleChangePort.bind(this),
-            handleConnect: this.handleConnect.bind(this),
-            handleDisconnect: this.handleDisconnect.bind(this),
-            handleSetBaudRate: this.handleSetBaudRate.bind(this),
-            handleSetPort: this.handleSetPort.bind(this),
+            handleChangePort: this.handleChangePort,
+            handleConnect: this.handleConnect,
+            handleDisconnect: this.handleDisconnect,
+            handleSetBaudRate: this.handleSetBaudRate,
+            handleSetPort: this.handleSetPort,
           },
           port: this.serial,
           ...serial,
