@@ -1,10 +1,468 @@
 const EEPROM_OFFSET = 0x1A00;
 const PAGE_SIZE = 0x0200;
-const LAYOUT_SIZE = 0x70;
+const LAYOUT_SIZE = 0xF0;
 const TYPES = { EFM8: 'EFM8' };
-const NAMES = ['Bluejay', 'Bluejay (BETA)'];
+const NAMES = ['Bluejay', 'Bluejay (BETA)', 'Bluejay (TEST)'];
 
 const SETTINGS_DESCRIPTIONS = {
+  //  With Bluejay startup tunes
+  '203': {
+    MULTI: {
+      base: [
+        {
+          name: 'STARTUP_POWER_MIN',
+          type: 'number',
+          label: '_Minimum Startup Power (Boost)',
+          min: 1000,
+          max: 1125,
+          step: 5,
+          displayFactor: 1000 / 2047,
+          displayOffset: 1000,
+          displayPrecision: 0,
+        },
+        {
+          name: 'STARTUP_POWER_MAX',
+          type: 'number',
+          label: '_Maximum Startup Power (Protection)',
+          // Note: The real displayFactor is 1000 / 255 but 250 makes the slider nicer to work with minimal loss of accuracy
+          min: 1004,
+          max: 1300,
+          step: 4,
+          displayFactor: 1000 / 250,
+          displayOffset: 1000,
+          displayPrecision: 0,
+        },
+        {
+          name: 'TEMPERATURE_PROTECTION',
+          type: 'enum',
+          label: 'escTemperatureProtection',
+          options: [
+            {
+              value: '0',
+              label: 'Disabled',
+            }, {
+              value: '1',
+              label: '80 C',
+            },
+            {
+              value: '2',
+              label: '90 C',
+            }, {
+              value: '3',
+              label: '100 C',
+            },
+            {
+              value: '4',
+              label: '110 C',
+            }, {
+              value: '5',
+              label: '120 C',
+            },
+            {
+              value: '6',
+              label: '130 C',
+            }, {
+              value: '7',
+              label: '140 C',
+            },
+          ],
+        },
+        {
+          name: 'COMMUTATION_TIMING',
+          type: 'enum',
+          label: 'escMotorTiming',
+          options: [
+            {
+              value: '1',
+              label: '0° (Low)',
+            }, {
+              value: '2',
+              label: '7.5° (MediumLow)',
+            },
+            {
+              value: '3',
+              label: '15° (Medium)',
+            }, {
+              value: '4',
+              label: '22.5° (MediumHigh)',
+            },
+            {
+              value: '5',
+              label: '30° (High)',
+            },
+          ],
+        },
+        {
+          name: 'DEMAG_COMPENSATION',
+          type: 'enum',
+          label: 'escDemagCompensation',
+          options: [
+            {
+              value: '1',
+              label: 'Off',
+            }, {
+              value: '2',
+              label: 'Low',
+            },
+            {
+              value: '3',
+              label: 'High',
+            },
+          ],
+        },
+        {
+          name: 'RPM_POWER_SLOPE',
+          type: 'enum',
+          options: [
+            {
+              value:  '1',
+              label: '1x (More protection)',
+            },
+            {
+              value:  '2',
+              label: '2x',
+            }, {
+              value: '3',
+              label: '3x',
+            },
+            {
+              value:  '4',
+              label: '4x',
+            }, {
+              value: '5',
+              label: '5x',
+            },
+            {
+              value:  '6',
+              label: '6x',
+            },
+            {
+              value:  '7',
+              label: '7x',
+            }, {
+              value: '8',
+              label:  '8x',
+            },
+            {
+              value:  '9',
+              label: '9x',
+            }, {
+              value: '10',
+              label: '10x',
+            },
+            {
+              value: '11',
+              label: '11x',
+            }, {
+              value: '12',
+              label: '12x',
+            },
+            {
+              value: '13',
+              label: '13x (Less protection)',
+            }, {
+              value: '0',
+              label: 'Off',
+            },
+          ],
+          label: '_RPM Power Protection (Rampup)',
+        },
+        {
+          name: 'BEEP_STRENGTH',
+          type: 'number',
+          min: 0,
+          max: 255,
+          step: 1,
+          label: 'escBeepStrength',
+        },
+        {
+          name: 'BEACON_STRENGTH',
+          type: 'number',
+          min: 0,
+          max: 255,
+          step: 1,
+          label: 'escBeaconStrength',
+        },
+        {
+          name: 'BEACON_DELAY',
+          type: 'enum',
+          label: 'escBeaconDelay',
+          options: [
+            {
+              value: '1',
+              label: '1 minute',
+            }, {
+              value: '2',
+              label: '2 minutes',
+            },
+            {
+              value: '3',
+              label: '5 minutes',
+            }, {
+              value: '4',
+              label: '10 minutes',
+            },
+            {
+              value: '5',
+              label: 'Infinite',
+            },
+          ],
+        },
+        {
+          name: 'DITHERING',
+          type: 'bool',
+          label: 'escDithering',
+        },
+        {
+          name: 'BRAKE_ON_STOP',
+          type: 'bool',
+          label: 'escBrakeOnStop',
+        },
+      ],
+    },
+  },
+
+  //  only adds damping mode
+  '202': {
+    MULTI: {
+      base: [
+        {
+          name: 'STARTUP_POWER_MIN',
+          type: 'number',
+          label: '_Minimum Startup Power (Boost)',
+          min: 1000,
+          max: 1125,
+          step: 5,
+          displayFactor: 1000 / 2047,
+          displayOffset: 1000,
+          displayPrecision: 0,
+        },
+        {
+          name: 'STARTUP_POWER_MAX',
+          type: 'number',
+          label: '_Maximum Startup Power (Protection)',
+          // Note: The real displayFactor is 1000 / 255 but 250 makes the slider nicer to work with minimal loss of accuracy
+          min: 1004,
+          max: 1300,
+          step: 4,
+          displayFactor: 1000 / 250,
+          displayOffset: 1000,
+          displayPrecision: 0,
+        },
+        {
+          name: 'TEMPERATURE_PROTECTION',
+          type: 'enum',
+          label: 'escTemperatureProtection',
+          options: [
+            {
+              value: '0',
+              label: 'Disabled',
+            }, {
+              value: '1',
+              label: '80 C',
+            },
+            {
+              value: '2',
+              label: '90 C',
+            }, {
+              value: '3',
+              label: '100 C',
+            },
+            {
+              value: '4',
+              label: '110 C',
+            }, {
+              value: '5',
+              label: '120 C',
+            },
+            {
+              value: '6',
+              label: '130 C',
+            }, {
+              value: '7',
+              label: '140 C',
+            },
+          ],
+        },
+        {
+          name: 'COMMUTATION_TIMING',
+          type: 'enum',
+          label: 'escMotorTiming',
+          options: [
+            {
+              value: '1',
+              label: '0° (Low)',
+            }, {
+              value: '2',
+              label: '7.5° (MediumLow)',
+            },
+            {
+              value: '3',
+              label: '15° (Medium)',
+            }, {
+              value: '4',
+              label: '22.5° (MediumHigh)',
+            },
+            {
+              value: '5',
+              label: '30° (High)',
+            },
+          ],
+        },
+        {
+          name: 'DEMAG_COMPENSATION',
+          type: 'enum',
+          label: 'escDemagCompensation',
+          options: [
+            {
+              value: '1',
+              label: 'Off',
+            }, {
+              value: '2',
+              label: 'Low',
+            },
+            {
+              value: '3',
+              label: 'High',
+            },
+          ],
+        },
+        {
+          name: 'RPM_POWER_SLOPE',
+          type: 'enum',
+          options: [
+            {
+              value:  '1',
+              label: '1x (More protection)',
+            },
+            {
+              value:  '2',
+              label: '2x',
+            }, {
+              value: '3',
+              label: '3x',
+            },
+            {
+              value:  '4',
+              label: '4x',
+            }, {
+              value: '5',
+              label: '5x',
+            },
+            {
+              value:  '6',
+              label: '6x',
+            },
+            {
+              value:  '7',
+              label: '7x',
+            }, {
+              value: '8',
+              label:  '8x',
+            },
+            {
+              value:  '9',
+              label: '9x',
+            }, {
+              value: '10',
+              label: '10x',
+            },
+            {
+              value: '11',
+              label: '11x',
+            }, {
+              value: '12',
+              label: '12x',
+            },
+            {
+              value: '13',
+              label: '13x (Less protection)',
+            }, {
+              value: '0',
+              label: 'Off',
+            },
+          ],
+          label: '_RPM Power Protection (Rampup)',
+        },
+        {
+          name: 'BEEP_STRENGTH',
+          type: 'number',
+          min: 0,
+          max: 255,
+          step: 1,
+          label: 'escBeepStrength',
+        },
+        {
+          name: 'BEACON_STRENGTH',
+          type: 'number',
+          min: 0,
+          max: 255,
+          step: 1,
+          label: 'escBeaconStrength',
+        },
+        {
+          name: 'BEACON_DELAY',
+          type: 'enum',
+          label: 'escBeaconDelay',
+          options: [
+            {
+              value: '1',
+              label: '1 minute',
+            }, {
+              value: '2',
+              label: '2 minutes',
+            },
+            {
+              value: '3',
+              label: '5 minutes',
+            }, {
+              value: '4',
+              label: '10 minutes',
+            },
+            {
+              value: '5',
+              label: 'Infinite',
+            },
+          ],
+        },
+        {
+          name: 'STARTUP_BEEP',
+          type: 'bool',
+          label: 'escStartupBeep',
+        },
+        {
+          name: 'DITHERING',
+          type: 'bool',
+          label: 'escDithering',
+        },
+        {
+          name: 'BRAKE_ON_STOP',
+          type: 'bool',
+          label: 'escBrakeOnStop',
+        },
+        {
+          name: 'DAMPING_MODE',
+          type: 'enum',
+          label: '_Damping mode (Complementary PWM)',
+          options: [
+            {
+              value: '0',
+              label: 'Off',
+            },
+            {
+              value: '1',
+              label: 'Not during startup',
+            },
+            {
+              value: '2',
+              label: 'On',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // V0.10
   '201': {
     MULTI: {
@@ -851,6 +1309,11 @@ const LAYOUT = {
     offset: 0x60,
     size: 16,
   },
+
+  STARTUP_MELODY: {
+    offset: 0x70,
+    size: 128,
+  },
 };
 
 const INDIVIDUAL_SETTINGS = [
@@ -876,6 +1339,39 @@ const INDIVIDUAL_SETTINGS = [
         label: 'Bidirectional Reversed',
       },
     ],
+  },
+];
+
+const INDIVIDUAL_SETTINGS_203 = [
+  {
+    name: 'MOTOR_DIRECTION',
+    type: 'enum',
+    label: 'escMotorDirection',
+    options: [
+      {
+        value: '1',
+        label: 'Normal',
+      },
+      {
+        value: '2',
+        label: 'Reversed',
+      },
+      {
+        value: '3',
+        label: 'Bidirectional',
+      },
+      {
+        value: '4',
+        label: 'Bidirectional Reversed',
+      },
+    ],
+  },
+  {
+    name: 'STARTUP_MELODY',
+    type: 'melody',
+    label: 'startupMelody',
+    value: [53, 66, 5, 0, 77, 45, 5, 0, 53, 66, 5, 0, 92, 38, 200, 0, 77, 45, 140,  25, 140, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    melodyLength: 128,
   },
 ];
 
@@ -940,12 +1436,51 @@ const BLHELI_S_INDIVIDUAL_SETTINGS_BACKWARD = [
 ];
 
 const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
+  '203': { base: INDIVIDUAL_SETTINGS_203 },
+  '202': { base: INDIVIDUAL_SETTINGS },
   '201': { base: INDIVIDUAL_SETTINGS },
   '200': { base: INDIVIDUAL_SETTINGS },
   '33': { base: BLHELI_S_INDIVIDUAL_SETTINGS_BACKWARD },
 };
 
 var DEFAULTS = {
+  '203': { // 201 with STARTUP_MELODY
+    RPM_POWER_SLOPE: 9,
+    MOTOR_DIRECTION: 1,
+    COMMUTATION_TIMING: 4,
+    BEEP_STRENGTH: 40,
+    BEACON_STRENGTH: 80,
+    BEACON_DELAY: 4,
+    DEMAG_COMPENSATION: 2,
+    TEMPERATURE_PROTECTION: 7,
+    BRAKE_ON_STOP: 0,
+    LED_CONTROL: 0,
+
+    STARTUP_POWER_MIN: 51,
+    DITHERING: 1,
+
+    STARTUP_POWER_MAX: 25,
+    STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+  '202': { // only adds damping mode
+    RPM_POWER_SLOPE: 9,
+    MOTOR_DIRECTION: 1,
+    COMMUTATION_TIMING: 4,
+    BEEP_STRENGTH: 40,
+    BEACON_STRENGTH: 80,
+    BEACON_DELAY: 4,
+    DEMAG_COMPENSATION: 2,
+    TEMPERATURE_PROTECTION: 7,
+    BRAKE_ON_STOP: 0,
+    LED_CONTROL: 0,
+
+    STARTUP_POWER_MIN: 51,
+    STARTUP_BEEP: 1,
+    DITHERING: 1,
+
+    STARTUP_POWER_MAX: 25,
+    DAMPING_MODE: 2,
+  },
   '201': { // v0.10
     RPM_POWER_SLOPE: 9,
     MOTOR_DIRECTION: 1,

@@ -13,10 +13,6 @@ function AppSettings({
 }) {
   const { t } = useTranslation('settings');
 
-  function handleClose() {
-    onClose();
-  }
-
   function handleChildClick(e) {
     e.stopPropagation();
   }
@@ -51,7 +47,7 @@ function AppSettings({
   return (
     <div
       id="app-settings"
-      onClick={handleClose}
+      onClick={onClose}
     >
       <div
         className="settings-wrapper"
@@ -59,7 +55,7 @@ function AppSettings({
       >
         <div
           className="close"
-          onClick={handleClose}
+          onClick={onClose}
           type="button"
         >
           {t('closeText')}

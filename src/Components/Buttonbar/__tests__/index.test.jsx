@@ -14,6 +14,7 @@ test('loads and displays Buttonbar', () => {
   const onResetDefaults = jest.fn();
   const onSaveLog = jest.fn();
   const onSeletFirmwareForAll = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   render(
     <Buttonbar
@@ -22,11 +23,13 @@ test('loads and displays Buttonbar', () => {
       canReadDefaults={false}
       canResetDefaults={false}
       canWrite={false}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadSetup={onReadSetup}
       onResetDefaults={onResetDefaults}
       onSaveLog={onSaveLog}
       onSeletFirmwareForAll={onSeletFirmwareForAll}
       onWriteSetup={onWriteSetup}
+      showMelodyEditor
     />
   );
 
@@ -35,6 +38,7 @@ test('loads and displays Buttonbar', () => {
   expect(screen.getByText(/escButtonWrite/i)).toBeInTheDocument();
   expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   expect(screen.getByText(/escButtonSaveLog/i)).toBeInTheDocument();
+  expect(screen.getByText(/escButtonOpenMelodyEditor/i)).toBeInTheDocument();
 });
 
 test('trigger onSaveLog', () => {
@@ -43,6 +47,7 @@ test('trigger onSaveLog', () => {
   const onResetDefaults = jest.fn();
   const onSaveLog = jest.fn();
   const onSeletFirmwareForAll = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   render(
     <Buttonbar
@@ -51,11 +56,13 @@ test('trigger onSaveLog', () => {
       canReadDefaults={false}
       canResetDefaults={false}
       canWrite={false}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadSetup={onReadSetup}
       onResetDefaults={onResetDefaults}
       onSaveLog={onSaveLog}
       onSeletFirmwareForAll={onSeletFirmwareForAll}
       onWriteSetup={onWriteSetup}
+      showMelodyEditor
     />
   );
 
@@ -69,6 +76,7 @@ test('does not trigger handlers when inactive', () => {
   const onResetDefaults = jest.fn();
   const onSaveLog = jest.fn();
   const onSelectFirmwareForAll = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   render(
     <Buttonbar
@@ -77,11 +85,13 @@ test('does not trigger handlers when inactive', () => {
       canReadDefaults={false}
       canResetDefaults={false}
       canWrite={false}
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadSetup={onReadSetup}
       onResetDefaults={onResetDefaults}
       onSaveLog={onSaveLog}
       onSeletFirmwareForAll={onSelectFirmwareForAll}
       onWriteSetup={onWriteSetup}
+      showMelodyEditor
     />
   );
 
@@ -104,6 +114,7 @@ test('does trigger handlers when enabled', () => {
   const onResetDefaults = jest.fn();
   const onSaveLog = jest.fn();
   const onSelectFirmwareForAll = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
 
   render(
     <Buttonbar
@@ -112,11 +123,13 @@ test('does trigger handlers when enabled', () => {
       canReadDefaults
       canResetDefaults
       canWrite
+      onOpenMelodyEditor={onOpenMelodyEditor}
       onReadSetup={onReadSetup}
       onResetDefaults={onResetDefaults}
       onSaveLog={onSaveLog}
       onSeletFirmwareForAll={onSelectFirmwareForAll}
       onWriteSetup={onWriteSetup}
+      showMelodyEditor
     />
   );
 

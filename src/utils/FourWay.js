@@ -287,17 +287,16 @@ class FourWay {
          */
         const name = flash.settings.NAME;
         let newLayout = null;
-        switch(name) {
-          case 'Bluejay':
-          case 'Bluejay (BETA)': {
-            newLayout = BLUEJAY_EEPROM.LAYOUT;
-            layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
-            defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
-          } break;
+        if(BLUEJAY_EEPROM.NAMES.includes(name)) {
+          newLayout = BLUEJAY_EEPROM.LAYOUT;
+          layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
+          defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
+          settingsArray = (await this.read(BLUEJAY_EEPROM.EEPROM_OFFSET, layoutSize)).params;
         }
 
         if(newLayout) {
           layout = newLayout;
+          flash.settingsArray = settingsArray;
           flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
         }
 
@@ -447,10 +446,10 @@ class FourWay {
         if(esc.isSiLabs) {
           await this.pageErase(BLHELI_EEPROM.EEPROM_OFFSET / BLHELI_EEPROM.PAGE_SIZE);
           await this.write(BLHELI_EEPROM.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(BLHELI_EEPROM.EEPROM_OFFSET, BLHELI_EEPROM.LAYOUT_SIZE)).params;
+          readbackSettings = (await this.read(BLHELI_EEPROM.EEPROM_OFFSET, esc.layoutSize)).params;
         } else if (esc.isArm) {
           await this.write(AM32_EEPROM.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(AM32_EEPROM.EEPROM_OFFSET, AM32_EEPROM.LAYOUT_SIZE)).params;
+          readbackSettings = (await this.read(AM32_EEPROM.EEPROM_OFFSET, esc.layoutSize)).params;
         } else {
           // write only changed bytes for Atmel
           for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
@@ -468,7 +467,7 @@ class FourWay {
 
             // write span
             await this.writeEEprom(offset, newSettingsArray.subarray(offset, pos));
-            readbackSettings = (await this.readEEprom(0, BLHELI_EEPROM.LAYOUT_SIZE)).params;
+            readbackSettings = (await this.readEEprom(0, esc.layoutSize)).params;
           }
         }
 

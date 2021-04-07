@@ -15,33 +15,39 @@ function Select({
   inSync,
   hint,
 }) {
-  const optionElements = options.map((option) => (
-    <option
-      key={option.value}
-      value={option.value}
-    >
-      {option.label}
-    </option>
-  ));
+  function Select() {
+    const optionElements = options.map((option) => (
+      <option
+        key={option.value}
+        value={option.value}
+      >
+        {option.label}
+      </option>
+    ));
+
+    return (
+      <select
+        disabled={disabled}
+        name={name}
+        onChange={onChange}
+        value={inSync ? value : -1}
+      >
+        <option
+          className="hidden"
+          disabled
+          value="-1"
+        />
+
+        {optionElements}
+      </select>
+    );
+  }
 
   return (
     <div className="select">
       <label>
         <div className="input-wrapper">
-          <select
-            disabled={disabled}
-            name={name}
-            onChange={onChange}
-            value={inSync ? value : -1}
-          >
-            <option
-              className="hidden"
-              disabled
-              value="-1"
-            />
-
-            {optionElements}
-          </select>
+          <Select />
         </div>
 
         <Info

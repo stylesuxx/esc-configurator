@@ -21,8 +21,6 @@ body {
   padding: 0px 0px 0 0px;
   height: calc(100% - 7px);
 
-
-
   .button-dark {
     a,
     button {
@@ -159,65 +157,6 @@ body {
       }
     }
   }
-
-  .default-btn {
-    width: 100%;
-    position: relative;
-    margin-top: 0px;
-
-    button,
-    a {
-      cursor: pointer;
-      padding: 5px 0px 5px 0px;
-      text-align: center;
-      background-color: #fff;
-      border-radius: 4px;
-      border: 1px solid var(--color-tertiary);
-      color: var(--color-tertiary);
-      font-family: 'open_sanssemibold', Arial;
-      font-size: 12px;
-      line-height: 13px;
-      display: block;
-      width: 100%;
-      transition: all ease 0.2s;
-      text-decoration:none;
-      font-weight: bold;
-    }
-
-    button:hover,
-    a:hover {
-      background-color: var(--color-tertiary);
-      color: #fff;
-      text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
-      transition: all ease 0.2s;
-      text-decoration:none;
-    }
-
-    button[disabled],
-    button[disabled]:hover,
-    a.disabled,
-    a.disabled:hover {
-      background-color: #fff;
-      text-shadow: none;
-      border: 1px solid #ccc;
-      color: #ccc;
-      cursor:  aliasdefault;
-    }
-
-    button:active,
-    a:active {
-      background-color: var(--color-tertiary);
-      transition: all ease 0.0s;
-      box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
-    }
-
-
-
-    .red {
-      color: red;
-    }
-  }
-
   .half {
     width: 50%;
 
@@ -231,6 +170,65 @@ body {
       padding-right: 7px;
       width: calc(100% - 14px);
       float: left;
+  }
+}
+
+.default-btn {
+  width: 100%;
+  position: relative;
+  margin-top: 0px;
+
+  &button,
+  button,
+  a {
+    cursor: pointer;
+    padding: 5px 0px 5px 0px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid var(--color-tertiary);
+    color: var(--color-tertiary);
+    font-family: 'open_sanssemibold', Arial;
+    font-size: 12px;
+    line-height: 13px;
+    display: block;
+    width: 100%;
+    transition: all ease 0.2s;
+    text-decoration:none;
+    font-weight: bold;
+  }
+
+  button:hover,
+  a:hover {
+    background-color: var(--color-tertiary);
+    color: #fff;
+    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
+    transition: all ease 0.2s;
+    text-decoration:none;
+  }
+
+  button[disabled],
+  button[disabled]:hover,
+  a.disabled,
+  a.disabled:hover {
+    background-color: #fff;
+    text-shadow: none;
+    border: 1px solid #ccc;
+    color: #ccc;
+    cursor:  aliasdefault;
+  }
+
+  button:active,
+  a:active {
+    background-color: var(--color-tertiary);
+    transition: all ease 0.0s;
+    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+  }
+
+
+
+  .red {
+    color: red;
   }
 }
 

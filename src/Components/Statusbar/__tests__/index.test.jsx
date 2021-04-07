@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  act,
   render,
   screen,
 } from '@testing-library/react';
@@ -19,32 +20,36 @@ test('loads and displays StatusBar', () => {
     />
   );
 
-  expect(screen.getByText('statusbarPortUtilization')).toBeInTheDocument();
-  expect(screen.getByText('statusbarPacketError')).toBeInTheDocument();
+  expect(screen.getByText(/statusbarPortUtilization/i)).toBeInTheDocument();
+  expect(screen.getByText(/statusbarPacketError 0/i)).toBeInTheDocument();
   expect(screen.getByText('version')).toBeInTheDocument();
 
-  ref.current.updateBatteryState({
-    cellCount: 1,
-    voltage: 4.2,
+  act(()=> {
+    ref.current.updateBatteryState({
+      cellCount: 1,
+      voltage: 4.2,
+    });
   });
-  expect(screen.getByText('battery')).toBeInTheDocument();
-  expect(screen.getByText('1S @ 4.2V')).toBeInTheDocument();
+  expect(screen.getByText('battery 1S @ 4.2V')).toBeInTheDocument();
 
-  ref.current.updateBatteryState({
-    cellCount: 1,
-    voltage: 3.5,
+  act(()=> {
+    ref.current.updateBatteryState({
+      cellCount: 1,
+      voltage: 3.5,
+    });
   });
-  expect(screen.getByText('battery')).toBeInTheDocument();
-  expect(screen.getByText('1S @ 3.5V')).toBeInTheDocument();
+  expect(screen.getByText('battery 1S @ 3.5V')).toBeInTheDocument();
 
-  ref.current.updateBatteryState(null);
-  expect(screen.queryByText('battery')).not.toBeInTheDocument();
-  expect(screen.queryByText('1S @ 4.2V')).not.toBeInTheDocument();
-
-  ref.current.updateUtilization({
-    up: 10,
-    down: 20,
+  act(()=> {
+    ref.current.updateBatteryState(null);
   });
-  expect(screen.getByText('D: 20%')).toBeInTheDocument();
-  expect(screen.getByText('U: 10%')).toBeInTheDocument();
+  expect(screen.queryByText(/battery/i)).not.toBeInTheDocument();
+
+  act(()=> {
+    ref.current.updateUtilization({
+      up: 10,
+      down: 20,
+    });
+  });
+  expect(screen.getByText('statusbarPortUtilization D: 20% U: 10%')).toBeInTheDocument();
 });

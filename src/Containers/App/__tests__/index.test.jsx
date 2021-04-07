@@ -24,4 +24,8 @@ test('loads and displays home', () => {
   // Click the Settings
   userEvent.click(screen.getByRole('button', { name: /settings/i }));
   expect(screen.getByText(/settingsHeader/i)).toBeInTheDocument();
+
+  // Open Melody editor
+  userEvent.click(screen.getByRole('button', { name: /openMelodyEditor/i }));
+  expect(screen.getByText(/melodyEditorHeader/i)).toBeInTheDocument();
 });

@@ -16,25 +16,73 @@ function PortPicker({
   onChangePort,
 }) {
   const { t } = useTranslation('common');
+  const baudRates = [115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200];
 
-  const portOptions = ports.map((name, index) => (
-    <option
-      key={name}
-      value={index}
-    >
-      {name}
-    </option>
-  ));
+  function BaudRates() {
+    const rateElements = baudRates.map((rate) => (
+      <option
+        key={rate}
+        value={rate}
+      >
+        {rate}
+      </option>
+    ));
 
-  const rates = [115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200];
-  const rateElements = rates.map((rate) => (
-    <option
-      key={rate}
-      value={rate}
-    >
-      {rate}
-    </option>
-  ));
+    return (
+      <select
+        className="dropdown-select"
+        defaultValue="115200"
+        disabled={open}
+        id="baud"
+        name={t('baudRate')}
+        onChange={changeBaudRate}
+        title={t('baudRate')}
+      >
+        {rateElements}
+      </select>
+    );
+  }
+
+  function Ports() {
+    const portOptions = ports.map((name, index) => (
+      <option
+        key={name}
+        value={index}
+      >
+        {name}
+      </option>
+    ));
+
+    return(
+      <select
+        className="dropdown-select"
+        disabled={open}
+        id="port"
+        name={t('port')}
+        onChange={changePort}
+        title={t('port')}
+      >
+        {portOptions}
+      </select>
+    );
+  }
+
+  function PermissionOverlay() {
+    if(!hasPort) {
+      return(
+        <div id="serial-permission-overlay">
+          <button
+            onClick={onSetPort}
+            type="button"
+          >
+            {t('serialPermission')}
+          </button>
+        </div>
+      );
+    }
+
+    return null;
+  }
 
   function changeBaudRate(e) {
     onSetBaudRate(e.target.value);
@@ -103,48 +151,21 @@ function PortPicker({
 
   return (
     <div id="port-picker">
-      { !hasPort &&
-        <div id="serial-permission-overlay">
-          <button
-            onClick={onSetPort}
-            type="button"
-          >
-            {t('serialPermission')}
-          </button>
-        </div>}
+      <PermissionOverlay />
 
       <div id="portsinput">
         <div
           className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
           disabled={open}
         >
-          <select
-            className="dropdown-select"
-            disabled={open}
-            id="port"
-            name={t('port')}
-            onChange={changePort}
-            title={t('port')}
-          >
-            {portOptions}
-          </select>
+          <Ports />
         </div>
 
         <div
           className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
           disabled={open}
         >
-          <select
-            className="dropdown-select"
-            defaultValue="115200"
-            disabled={open}
-            id="baud"
-            name={t('baudRate')}
-            onChange={changeBaudRate}
-            title={t('baudRate')}
-          >
-            {rateElements}
-          </select>
+          <BaudRates />
         </div>
 
         <div className="button-dark">

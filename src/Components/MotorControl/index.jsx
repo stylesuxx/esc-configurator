@@ -18,9 +18,11 @@ function MotorControl({
   onAllUpdate,
   onSingleUpdate,
 }) {
-  const maxValue = 2000;
-  const minValue = 1000;
   const { t } = useTranslation('common');
+
+  const minValue = 1000;
+  const maxValue = 2000;
+
   const [unlock, setUnlock] = useState(false);
   const [unlockIndividual, setUnlockIndividual] = useState(true);
 
@@ -79,7 +81,6 @@ function MotorControl({
     disabled: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
   };
-
 
   function MasterSlider() {
     return(

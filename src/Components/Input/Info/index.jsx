@@ -11,11 +11,9 @@ function Info({
   label,
   name,
 }) {
-  return (
-    <span className={`info-wrapper-wrapper ${!inSync ? 'not-in-sync' : ''}`} >
-      {label}
-
-      {hint &&
+  function Hint() {
+    if(hint) {
+      return (
         <div className="info-wrapper">
           <span
             className="info-icon"
@@ -34,7 +32,18 @@ function Info({
               {hint}
             </ReactTooltip>
           </ErrorBoundary>
-        </div>}
+        </div>
+      );
+    }
+
+    return null;
+  }
+
+  return (
+    <span className={`info-wrapper-wrapper ${!inSync ? 'not-in-sync' : ''}`} >
+      {label}
+
+      <Hint />
     </span>
   );
 }

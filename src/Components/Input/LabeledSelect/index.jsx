@@ -8,34 +8,40 @@ function LabeledSelect({
   selected,
   onChange,
 }) {
-  const optionElements = options.map((item) => (
-    <option
-      key={item.key}
-      value={item.value}
-    >
-      {item.name}
-    </option>
-  ));
+  function Select() {
+    const optionElements = options.map((item) => (
+      <option
+        key={item.key}
+        value={item.value}
+      >
+        {item.name}
+      </option>
+    ));
+
+    return (
+      <select
+        name={label}
+        onChange={onChange}
+        value={selected || -1}
+      >
+        <option
+          className="hidden"
+          disabled
+          value={-1}
+        >
+          {firstLabel}
+        </option>
+
+        {optionElements}
+      </select>
+    );
+  }
 
   return (
     <div className="select">
       <label>
         <div className="input-wrapper">
-          <select
-            name={label}
-            onChange={onChange}
-            value={selected || -1}
-          >
-            <option
-              className="hidden"
-              disabled
-              value={-1}
-            >
-              {firstLabel}
-            </option>
-
-            {optionElements}
-          </select>
+          <Select />
         </div>
 
         <span className="info-wrapper-wrapper">
