@@ -18,15 +18,13 @@ function MelodyEditor({
   onSave,
   writing,
 }) {
-  const defaultMelodies = melodies.map(() => null);
   const defaultAccepted = melodies.map(() => null);
   const references = melodies.map(() => useRef());
 
   const { t } = useTranslation();
-  const [currentMelodies, setCurrentMelodies] = useState(melodies);
   const [allAccepted, setAllAccepted] = useState(false);
   const [sync, setSync] = useState(false);
-  const [validMelodies, setValidMelodies] = useState(defaultMelodies);
+  const [currentMelodies, setCurrentMelodies] = useState(melodies);
   const [acceptedMelodies, setAcceptedMelodies] = useState(defaultAccepted);
   const [isAnyPlaying, setIsAnyPlaying] = useState(false);
   const totalPlaying = useRef(0);
@@ -37,7 +35,9 @@ function MelodyEditor({
   }, [acceptedMelodies]);
 
   function handleClose() {
-    onClose();
+    if(!isAnyPlaying) {
+      onClose();
+    }
   }
 
   function checkAllAccepted() {
@@ -49,11 +49,6 @@ function MelodyEditor({
       }
     }
 
-    if(allAccepted) {
-      const currentMelodies = [...acceptedMelodies];
-      setCurrentMelodies(currentMelodies);
-    }
-
     setAllAccepted(allAccepted);
   }
 
@@ -62,25 +57,9 @@ function MelodyEditor({
     setAcceptedMelodies(acceptedMelodiesNew);
   }
 
-  function handleValidAll(melody) {
-    const validMelodies = [];
-    for (let i = 0; i < melodies.length; i += 1) {
-      validMelodies.push(melody);
-    }
-
-    setValidMelodies(validMelodies);
-  }
-
   function handleAccept(index, accept) {
     acceptedMelodies[index] = accept;
-    const newAccepted = [...acceptedMelodies];
-    setAcceptedMelodies(newAccepted);
-  }
-
-  function handleValid(index, melody) {
-    validMelodies[index] = melody;
-    const newValidMelodies = [...validMelodies];
-    setValidMelodies(newValidMelodies);
+    setAcceptedMelodies([...acceptedMelodies]);
   }
 
   function handleChildClick(e) {
@@ -88,7 +67,8 @@ function MelodyEditor({
   }
 
   function handleSave() {
-    onSave(validMelodies);
+    setCurrentMelodies([...acceptedMelodies]);
+    onSave(acceptedMelodies);
   }
 
   function handlePlay() {
@@ -136,10 +116,6 @@ function MelodyEditor({
     melody,
     onAccept,
   }) {
-    function handleValidMelody(melody) {
-      handleValid(index, melody);
-    }
-
     function handleAcceptMelody(accept) {
       onAccept(index, accept);
     }
@@ -154,7 +130,6 @@ function MelodyEditor({
         onAccept={handleAcceptMelody}
         onPlay={handlePlay}
         onStop={handleStop}
-        onValid={handleValidMelody}
         ref={references[index]}
       />
     );
@@ -182,7 +157,6 @@ function MelodyEditor({
         onAccept={handleAcceptAll}
         onPlay={handlePlay}
         onStop={handleStop}
-        onValid={handleValidAll}
       />
     );
   }
@@ -201,7 +175,6 @@ function MelodyEditor({
         label={`ESC ${index + 1}`}
         melody={melody}
         onAccept={handleAccept}
-        onValid={handleValid}
       />
     )), [currentMelodies, writing]
   );

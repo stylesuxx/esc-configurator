@@ -19,7 +19,6 @@ const MelodyElement = forwardRef(({
   melody,
   accepted,
   onAccept,
-  onValid,
   onPlay,
   onStop,
 }, ref) => {
@@ -84,10 +83,6 @@ const MelodyElement = forwardRef(({
         const isValid = uniqueWrongNotes.length === 0 && tooLongNotes.length === 0;
         setIsValid(isValid);
         setIsPlayable(true);
-
-        if(isValid) {
-          onValid(melody);
-        }
       } catch(e) {
         setIsPlayable(false);
         setIsValid(false);
@@ -257,7 +252,6 @@ MelodyElement.propTypes = {
   onAccept: PropTypes.func.isRequired,
   onPlay: PropTypes.func.isRequired,
   onStop: PropTypes.func.isRequired,
-  onValid: PropTypes.func.isRequired,
 };
 
 export default MelodyElement;
