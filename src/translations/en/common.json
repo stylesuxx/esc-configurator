@@ -114,5 +114,11 @@
   "settings": "Settings",
   "openMelodyEditor": "Open Melody Editor",
   "addToHomeScreen": "Add to Homescreen",
-  "homeInstall": "<p>ESC-Configurator <strong>can also be used offline when added to the homescreen</strong>. Once flashed, firmware files are available offline.</p><p>Settings can always be adjusted when offline.</p>"
+  "homeInstall": "<p>ESC-Configurator <strong>can also be used offline when added to the homescreen</strong>. Once flashed, firmware files are available offline.</p><p>Settings can always be adjusted when offline.</p>",
+  "escMissingHeader": "Missing an ESC?",
+  "escMissingText": "The amount of available ESCs does not match what the flight controller is reporting. This can have multiple reasons:",
+  "escMissingHint": "If the result is not what you are expecting, try clicking the <b>'Read Setup'</b> button again.",
+  "escMissing1": "The ESC was not ready yet. This can for example happen if it is <b>playing a melody</b>. Also a previous flash could have gone wrong and it needs longer to boot up than usual.",
+  "escMissing2": "There are simply <b>not more ESCs connected.</b>",
+  "escMissing3": "The <b>MCU of the ESC is defective.</b>"
 }
