@@ -113,6 +113,6 @@
   "battery": "电池:",
   "settings": "设置",
   "openMelodyEditor": "打开旋律编辑器",
-  "addToHomeScreen": "Add to Homescreen",
-  "homeInstall": "<p>ESC-Configurator <strong>can also be used offline when added to the homescreen</strong>. Once flashed, firmware files are available offline.</p><p>Settings can always be adjusted when offline.</p>"
+  "addToHomeScreen": "添加到主屏幕",
+  "homeInstall": "<p>ESC 配置程序<strong> 当被添加到主屏幕之后即可被离线使用</strong>。 烧录一次固件后，固件文件即可被保存到本地。</p><p>您始终可以在离线状态下配置您的设置。</p>"
 }
