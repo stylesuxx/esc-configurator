@@ -11,6 +11,8 @@ import sources from '../../sources';
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import settings from '../../settings.json';
+import melodies from '../../melodies.json';
+
 const {
   version,
   corsProxy,
@@ -165,6 +167,7 @@ class App extends Component {
         ],
         show: false,
         dummy: true,
+        melodies,
       },
     };
 

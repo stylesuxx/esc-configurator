@@ -179,6 +179,7 @@ function App({
           melodies={melodies.escs}
           onClose={melodies.actions.handleClose}
           onSave={melodies.actions.handleSave}
+          presets={melodies.melodies}
           writing={actions.isWriting}
         />}
 
@@ -243,6 +244,7 @@ App.propTypes = {
     }),
     dummy: PropTypes.bool.isRequired,
     escs: PropTypes.arrayOf(PropTypes.string).isRequired,
+    melodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     show: PropTypes.bool.isRequired,
   }).isRequired,
   msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,

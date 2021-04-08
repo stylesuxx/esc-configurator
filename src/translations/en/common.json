@@ -98,6 +98,7 @@
   "melodyEditorAccept": "Accept",
   "melodyEditorPlayAll": "Play all",
   "melodyEditorStopAll": "Stop all",
+  "melodyPresetsLabel": "Select a melody",
   "homeAttributionHeader": "Attribution",
   "homeAttributionText": "This project was heavily inspired by the <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">Blheli Configurator</a>. Most of the UI has been re-written from scratch but a lot of the low level stuff related to flashing and firmware handling have been re-used - so a big shout out to everyone involved in the original Blheli Configurator.",
   "syncMelodies": "Synchronize Melodies",

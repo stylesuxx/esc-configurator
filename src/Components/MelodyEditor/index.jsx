@@ -8,6 +8,7 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import './style.scss';
 
+import LabeledSelect from '../Input/LabeledSelect';
 import Checkbox from '../Input/Checkbox';
 import MelodyElement from './MelodyElement';
 
@@ -16,18 +17,20 @@ function MelodyEditor({
   melodies,
   onClose,
   onSave,
+  presets,
   writing,
 }) {
+  const { t } = useTranslation();
+
   const defaultAccepted = melodies.map(() => null);
   const references = melodies.map(() => useRef());
   const uniqueMelodies = [...new Set(melodies)];
-
-  const { t } = useTranslation();
   const [allAccepted, setAllAccepted] = useState(false);
   const [sync, setSync] = useState(uniqueMelodies.length <= 1);
   const [currentMelodies, setCurrentMelodies] = useState(melodies);
   const [acceptedMelodies, setAcceptedMelodies] = useState(defaultAccepted);
   const [isAnyPlaying, setIsAnyPlaying] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState(-1);
   const totalPlaying = useRef(0);
   const audioContext = useRef(0);
 
@@ -108,6 +111,44 @@ function MelodyEditor({
   function toggleSync() {
     handleAcceptAll(false);
     setSync(!sync);
+  }
+
+  function updateMelodies(e) {
+    const value = e.target.value;
+    const selected = JSON.parse(value);
+    const newMelodies = [];
+
+    let currentTrack = 0;
+    while(newMelodies.length < melodies.length) {
+      newMelodies[currentTrack] = selected[currentTrack % selected.length];
+      currentTrack += 1;
+    }
+
+    setSelectedPreset(value);
+    setSync(selected.length === 1);
+    setCurrentMelodies(newMelodies);
+  }
+
+  function PresetSelect() {
+    const possibilities = presets.filter((item) => item.tracks.length <= melodies.length );
+    const options = possibilities.map((melody) => {
+      if(melody.tracks.length <= melodies.length) {
+        return {
+          key: melody.name,
+          name: melody.name,
+          value: JSON.stringify(melody.tracks),
+        };
+      }
+    });
+
+    return(
+      <LabeledSelect
+        firstLabel={t('common:melodyPresetsLabel')}
+        onChange={updateMelodies}
+        options={options}
+        selected={selectedPreset}
+      />
+    );
   }
 
   function MelodyElementSingle({
@@ -221,6 +262,8 @@ function MelodyEditor({
           />
         </div>
 
+        <PresetSelect />
+
         <div className={`melody-editor-escs ${sync ? 'all' : ''}`}>
           {!sync && melodyElements}
 
@@ -256,6 +299,7 @@ MelodyEditor.propTypes = {
   melodies: PropTypes.arrayOf(PropTypes.string).isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  presets: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   writing: PropTypes.bool.isRequired,
 };
 

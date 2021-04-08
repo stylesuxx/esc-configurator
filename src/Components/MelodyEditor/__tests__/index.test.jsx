@@ -2,8 +2,10 @@ import React from 'react';
 import {
   render,
   screen,
+  fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import presets from '../../../melodies.json';
 
 import MelodyEditor from '../';
 
@@ -19,6 +21,7 @@ test('loads and displays MelodyEditor without melodies', () => {
       melodies={melodies}
       onClose={onClose}
       onSave={onSave}
+      presets={[]}
       writing={false}
     />
   );
@@ -49,6 +52,7 @@ test('loads and displays MelodyEditor with different melodies', () => {
       melodies={melodies}
       onClose={onClose}
       onSave={onSave}
+      presets={[]}
       writing={false}
     />
   );
@@ -88,6 +92,7 @@ test('loads and displays MelodyEditor with different play all', () => {
       melodies={melodies}
       onClose={onClose}
       onSave={onSave}
+      presets={[]}
       writing={false}
     />
   );
@@ -132,6 +137,7 @@ test('loads and displays MelodyEditor with melodies while writing', () => {
       melodies={melodies}
       onClose={onClose}
       onSave={onSave}
+      presets={[]}
       writing
     />
   );
@@ -167,6 +173,7 @@ test('loads and displays MelodyEditor with synced', () => {
       melodies={melodies}
       onClose={onClose}
       onSave={onSave}
+      presets={[]}
       writing={false}
     />
   );
@@ -203,4 +210,30 @@ test('loads and displays MelodyEditor with synced', () => {
   userEvent.click(screen.getByText(/close/i));
   expect(onClose).toHaveBeenCalled();
   */
+});
+
+test('update preset', () => {
+  const onClose = jest.fn();
+  const onSave = jest.fn();
+
+  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
+  const melodies = [melody, melody, melody, melody];
+
+  render(
+    <MelodyEditor
+      melodies={melodies}
+      onClose={onClose}
+      onSave={onSave}
+      presets={presets}
+      writing={false}
+    />
+  );
+
+  fireEvent.change(screen.getByRole('combobox'), {
+    target: {
+      name: "",
+      value: "[\"bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5\"]",
+    },
+  });
+  expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(2);
 });

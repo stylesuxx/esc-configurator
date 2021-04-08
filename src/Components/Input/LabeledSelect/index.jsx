@@ -20,7 +20,7 @@ function LabeledSelect({
 
     return (
       <select
-        name={label}
+        name={label || firstLabel}
         onChange={onChange}
         value={selected || -1}
       >
@@ -53,7 +53,7 @@ function LabeledSelect({
 }
 
 LabeledSelect.defaultProps = {
-  label: "",
+  label: null,
   selected: null,
 };
 
