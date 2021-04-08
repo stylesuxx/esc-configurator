@@ -144,6 +144,10 @@ function MotorControl({
         </div>
 
         <div className="spacer-box">
+          <div
+            dangerouslySetInnerHTML={{ __html: t('motorControlText') }}
+          />
+
           <div>
             <Checkbox
               label={t('enableMotorControl')}
