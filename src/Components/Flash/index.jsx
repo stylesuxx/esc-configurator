@@ -50,7 +50,7 @@ function Flash({
             </ul>
 
             <p
-            dangerouslySetInnerHTML={{ __html: t('escMissingHint') }}
+              dangerouslySetInnerHTML={{ __html: t('escMissingHint') }}
             />
           </div>
         </div>
