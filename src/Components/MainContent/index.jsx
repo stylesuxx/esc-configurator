@@ -17,6 +17,7 @@ function MainContent({
   escs,
   settings,
   progress,
+  mspFeatures,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
   onOpenMelodyEditor,
@@ -90,6 +91,7 @@ function MainContent({
           motorCount={connected}
           onAllUpdate={onAllMotorSpeed}
           onSingleUpdate={onSingleMotorSpeed}
+          startValue={mspFeatures['3D'] ? 1500 : 1000}
         />
       );
     }
@@ -170,6 +172,7 @@ MainContent.defaultProps = {
   escs: [],
   flashTargets: [],
   fourWay: false,
+  mspFeatures: { '3D': false },
   open: false,
   progress: [],
   settings: {},
@@ -193,6 +196,7 @@ MainContent.propTypes = {
   escs: PropTypes.arrayOf(PropTypes.shape()),
   flashTargets: PropTypes.arrayOf(PropTypes.number),
   fourWay: PropTypes.bool,
+  mspFeatures: PropTypes.shape({ '3D': PropTypes.bool }),
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,

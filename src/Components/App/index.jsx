@@ -24,6 +24,7 @@ function App({
   melodies,
   escs,
   language,
+  msp,
   onAllMotorSpeed,
   onCookieAccept,
   onSaveLog,
@@ -139,6 +140,7 @@ function App({
           escs={escs.individual}
           flashTargets={escs.targets}
           fourWay={serial.fourWay}
+          mspFeatures={msp.features}
           onAllMotorSpeed={onAllMotorSpeed}
           onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
           onFlashUrl={escs.actions.handleFlashUrl}
@@ -243,6 +245,7 @@ App.propTypes = {
     escs: PropTypes.arrayOf(PropTypes.string).isRequired,
     show: PropTypes.bool.isRequired,
   }).isRequired,
+  msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,

@@ -115,6 +115,7 @@ class App extends Component {
     this.lastConnected = 0;
 
     this.state = {
+      msp: { features: {} },
       appSettings: {
         show: false,
         settings: loadSettings(),
@@ -773,6 +774,8 @@ class App extends Component {
       let motorData = await this.serial.getMotorData();
       motorData = motorData.filter((motor) => motor > 0);
 
+      const features = await this.serial.getFeatures();
+
       TagManager.dataLayer({
         dataLayer: {
           event: "FlightController",
@@ -785,6 +788,7 @@ class App extends Component {
         },
       });
 
+      this.setState({ msp: { features } });
       this.setSerial({ open: true });
       this.setEscs({ connected: motorData.length });
     } catch(e) {
@@ -931,6 +935,7 @@ class App extends Component {
       configs,
       language,
       melodies,
+      msp,
       serial,
       stats,
       appSettings,
@@ -981,6 +986,7 @@ class App extends Component {
           },
           ...melodies,
         }}
+        msp={msp}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onCookieAccept={this.handleCookieAccept}
         onSaveLog={this.handleSaveLog}

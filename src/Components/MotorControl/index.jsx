@@ -17,6 +17,7 @@ function MotorControl({
   motorCount,
   onAllUpdate,
   onSingleUpdate,
+  startValue,
 }) {
   const { t } = useTranslation('common');
 
@@ -28,18 +29,18 @@ function MotorControl({
 
   function toggleUnlock() {
     setUnlock(!unlock);
-    onAllUpdate(minValue);
+    onAllUpdate(startValue);
   }
 
   // Makes no sense to test, component has its own test, we just assume that
   // the slider actually slides.
   /* istanbul ignore next */
   function updateValue(value) {
-    if(value > minValue && unlockIndividual) {
+    if(value !== startValue && unlockIndividual) {
       setUnlockIndividual(false);
     }
 
-    if(value === minValue) {
+    if(value === startValue) {
       setUnlockIndividual(true);
     }
 
@@ -55,7 +56,7 @@ function MotorControl({
     disabled,
     onChange,
   }) {
-    const [value, setValue] = useState(minValue);
+    const [value, setValue] = useState(startValue);
     /* istanbul ignore next */
     function update(value) {
       setValue(value);
@@ -171,12 +172,16 @@ function MotorControl({
   );
 }
 
-MotorControl.defaultProps = { motorCount: 0 };
+MotorControl.defaultProps = {
+  motorCount: 0,
+  startValue: 1000,
+};
 
 MotorControl.propTypes = {
   motorCount: PropTypes.number,
   onAllUpdate: PropTypes.func.isRequired,
   onSingleUpdate: PropTypes.func.isRequired,
+  startValue: PropTypes.number,
 };
 
 export default MotorControl;

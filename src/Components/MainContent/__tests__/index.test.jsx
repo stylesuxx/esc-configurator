@@ -301,10 +301,13 @@ test('isWriting', () => {
     platforms: {},
   };
 
+  const mspFeatures = { '3D': true };
+
   render(
     <MainContent
       actions={actions}
       configs={configs}
+      mspFeatures={mspFeatures}
       onAllMotorSpeed={onAllMotorSpeed}
       onCancelFirmwareSelection={onCancelFirmwareSelection}
       onFlashUrl={onFlashUrl}

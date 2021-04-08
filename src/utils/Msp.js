@@ -9,6 +9,9 @@ const MSP = {
   MSP_BOARD_INFO: 4,
   MSP_BUILD_INFO: 5,
 
+  MSP_FEATURE_CONFIG: 36,
+  MSP_MOTOR_3D_CONFIG: 124,
+
   MSP_BATTERY_STATE: 130,
 
   MSP_SET_MOTOR: 214,
@@ -27,6 +30,30 @@ const MSP = {
   // Betaflight specific
   MSP2_SEND_DSHOT_COMMAND: 0x3003,
 };
+
+/* Features that are valid across all MSP versions.
+ * Basically only used to check if 3D mode is enabled.
+ */
+const FEATURES = [
+  'RX_PPM',
+  null,
+  'INFLIGHT_ACC_CAL',
+  'RX_SERIAL',
+  'MOTOR_STOP',
+  'SERVO_TILT',
+  'SOFTSERIAL',
+  'GPS',
+  null,
+  'SONAR',
+  'TELEMETRY',
+  null,
+  '3D',
+  'RX_PARALLEL_PWM',
+  'RX_MSP',
+  'RSSI_ADC',
+  'LED_STRIP',
+  'DISPLAY',
+];
 
 class Msp {
   constructor(serial) {
@@ -297,6 +324,10 @@ class Msp {
     return this.send(MSP.MSP_BATTERY_STATE);
   }
 
+  getFeatures() {
+    return this.send(MSP.MSP_FEATURE_CONFIG);
+  }
+
   set4WayIf() {
     return this.send(MSP.MSP_SET_PASSTHROUGH);
   }
@@ -459,6 +490,24 @@ class Msp {
           // Offset += 2; // ???
 
           return config;
+        }
+
+        case MSP.MSP_FEATURE_CONFIG: {
+          const featureBits = data.getUint32(0, 1);
+          const features = {};
+          FEATURES.map((key, index) => {
+            if(key) {
+              const mask = 1 << index;
+              const item = {
+                key,
+                enabled: (featureBits & mask) !== 0,
+              };
+
+              features[key] = item.enabled;
+            }
+          });
+
+          return features;
         }
 
         case MSP.MSP_BATTERY_STATE: {
