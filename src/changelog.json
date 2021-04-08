@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unpublished",
+    "items": [
+      "Show synced screen when all melodies are the same"
+    ]
+  },
+  {
     "title": "0.11.0",
     "items": [
       "Bluejay melody editor",

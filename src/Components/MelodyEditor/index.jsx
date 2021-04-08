@@ -20,10 +20,11 @@ function MelodyEditor({
 }) {
   const defaultAccepted = melodies.map(() => null);
   const references = melodies.map(() => useRef());
+  const uniqueMelodies = [...new Set(melodies)];
 
   const { t } = useTranslation();
   const [allAccepted, setAllAccepted] = useState(false);
-  const [sync, setSync] = useState(false);
+  const [sync, setSync] = useState(uniqueMelodies.length <= 1);
   const [currentMelodies, setCurrentMelodies] = useState(melodies);
   const [acceptedMelodies, setAcceptedMelodies] = useState(defaultAccepted);
   const [isAnyPlaying, setIsAnyPlaying] = useState(false);
