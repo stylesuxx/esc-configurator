@@ -115,7 +115,7 @@
   "openMelodyEditor": "打开旋律编辑器",
   "addToHomeScreen": "添加到主屏幕",
   "homeInstall": "<p>ESC 配置程序<strong> 当被添加到主屏幕之后即可被离线使用</strong>。 烧录一次固件后，固件文件即可被保存到本地。</p><p>您始终可以在离线状态下配置您的设置。</p>",
-  "escMissingHeader": "Missing an ESC?",
+  "escMissingHeader": "缺少某个 ESC ？",
   "escMissingText": "The amount of available ESCs does not match what the flight controller is reporting. This can have multiple reasons:",
   "escMissingHint": "If the result is not what you are expecting, try clicking the <b>'Read Setup'</b> button again.",
   "escMissing1": "The ESC was not ready yet. This can for example happen if it is <b>playing a melody</b>. Also a previous flash could have gone wrong and it needs longer to boot up than usual.",
