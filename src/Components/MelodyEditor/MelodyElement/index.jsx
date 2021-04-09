@@ -43,6 +43,10 @@ const MelodyElement = forwardRef(({
   }));
 
   useEffect(() => {
+    setCurrentMelody(melody);
+  }, [melody]);
+
+  useEffect(() => {
     if(currentMelody) {
       try {
         const response = Rtttl.toBluejayStartupMelody(currentMelody);

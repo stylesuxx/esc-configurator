@@ -10,6 +10,20 @@
   justify-content: center;
   align-items: center;
 
+  .save-melody-wrapper {
+    display: flex;
+    flex-direction: row;
+
+    input {
+      width: 210px;
+    }
+
+    button {
+      margin-left: 10px;
+      width: 200px;
+    }
+  }
+
   .melody-editor-wrapper {
     padding: 10px;
     background: white;

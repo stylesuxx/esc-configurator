@@ -73,7 +73,7 @@ test('loads and displays MelodyEditor with different melodies', () => {
   for(let i = 0; i < acceptButtons.length; i += 1) {
     userEvent.click(acceptButtons[i]);
   }
-  userEvent.click(screen.getByText(/save/i));
+  userEvent.click(screen.getByText(/write/i));
   expect(onSave).toHaveBeenCalled();
 
   userEvent.click(screen.getByText(/close/i));
@@ -193,14 +193,14 @@ test('loads and displays MelodyEditor with synced', () => {
   expect(screen.getByText(/ESC 3/i)).toBeInTheDocument();
   expect(screen.getByText(/ESC 4/i)).toBeInTheDocument();
 
-  userEvent.click(screen.getByText(/common:melodyEditorSave/i));
+  userEvent.click(screen.getByText(/common:melodyEditorWrite/i));
   expect(onSave).not.toHaveBeenCalled();
 
   const acceptButtons = screen.getAllByText(/common:melodyEditorAccept/i);
   for(let i = 0; i < acceptButtons.length; i += 1) {
     userEvent.click(acceptButtons[i]);
   }
-  userEvent.click(screen.getByText(/common:melodyEditorSave/i));
+  userEvent.click(screen.getByText(/common:melodyEditorWrite/i));
   expect(onSave).toHaveBeenCalled();
 
   /*
