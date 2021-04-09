@@ -180,6 +180,7 @@ function App({
           dummy={melodies.dummy}
           melodies={melodies.escs}
           onClose={melodies.actions.handleClose}
+          onDelete={melodies.actions.handleDelete}
           onSave={melodies.actions.handleSave}
           onWrite={melodies.actions.handleWrite}
           writing={actions.isWriting}
@@ -244,6 +245,7 @@ App.propTypes = {
       handleOpen: PropTypes.func.isRequired,
       handleWrite: PropTypes.func.isRequired,
       handleClose: PropTypes.func.isRequired,
+      handleDelete: PropTypes.func.isRequired,
     }),
     customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     defaultMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

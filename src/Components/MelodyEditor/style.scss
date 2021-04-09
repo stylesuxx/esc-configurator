@@ -10,14 +10,44 @@
   justify-content: center;
   align-items: center;
 
+  .line-wrapper {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+
+    .info-wrapper-wrapper {
+      white-space: nowrap;
+    }
+
+    select {
+      margin-left: 10px;
+      height: 20px;
+      border: 1px solid silver;
+      border-radius: 3px;
+    }
+
+    .melody-selection-wrapper {
+      display: flex;
+      flex-direction: row;
+      .default-btn {
+        margin-top: -2px;
+        margin-left: 10px;
+        button {
+          width: 100px;
+        }
+      }
+    }
+  }
+
   .save-melody-wrapper {
     display: flex;
     flex-direction: row;
 
     input {
       border: 1px solid silver;
-      padding: 5px;
-      width: 210px;
+      padding-left: 5px;
+      padding-right: 5px;
+      line-height: 23px;
     }
 
     button {
@@ -34,7 +64,6 @@
     position: relative;
 
     .sync-wrapper {
-      margin-top: 20px;
 
       .checkbox {
         display: flex;

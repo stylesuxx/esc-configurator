@@ -3,9 +3,11 @@
     "title": "Unpublished",
     "items": [
       "Show synced screen when all melodies are the same",
-      "Show info when esc connected count does not match what MSP is reporting",
+      "Show info when ESC connected count does not match what MSP is reporting",
       "Melody preset selection",
-      "Save melodies for later"
+      "Save melodies for later",
+      "Load previously saved melodies",
+      "Updated dependencies"
     ]
   },
   {

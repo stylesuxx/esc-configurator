@@ -921,6 +921,16 @@ class App extends Component {
     this.setMelodies({ customMelodies: this.loadMelodies() });
   }
 
+  handleMelodyDelete = (name) => {
+    const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
+    const match = storedMelodies.findIndex((melody) => melody.name === name);
+    if(match >= 0) {
+      storedMelodies.splice(match, 1);
+      localStorage.setItem('melodies', JSON.stringify(storedMelodies));
+      this.setMelodies({ customMelodies: this.loadMelodies() });
+    }
+  }
+
   handleMelodyWrite = (melodies) => {
     const { escs } = this.state;
     const individual = [ ...escs.individual ];
@@ -1017,6 +1027,7 @@ class App extends Component {
             handleWrite: this.handleMelodyWrite,
             handleOpen: this.handleMelodyEditorOpen,
             handleClose: this.handleMelodyEditorClose,
+            handleDelete: this.handleMelodyDelete,
           },
           ...melodies,
         }}

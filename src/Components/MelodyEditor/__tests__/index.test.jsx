@@ -250,7 +250,7 @@ test('update preset', () => {
   fireEvent.change(screen.getByRole('combobox'), {
     target: {
       name: "",
-      value: "[\"bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5\"]",
+      value: "preset-Bluejay Default",
     },
   });
   expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(2);
@@ -260,6 +260,7 @@ test('saves melody', () => {
   const onClose = jest.fn();
   const onWrite = jest.fn();
   const onSave = jest.fn();
+  const onDelete = jest.fn();
 
   const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
   const melodies = [melody, melody, melody, melody];
@@ -270,6 +271,7 @@ test('saves melody', () => {
       defaultMelodies={defaultMelodies}
       melodies={melodies}
       onClose={onClose}
+      onDelete={onDelete}
       onSave={onSave}
       onWrite={onWrite}
       writing={false}
@@ -287,4 +289,6 @@ test('saves melody', () => {
   });
   userEvent.click(screen.getByText(/common:melodyEditorSave/i));
   expect(onSave).toHaveBeenCalled();
+
+  userEvent.click(screen.getByText(/melodyDelete/i));
 });

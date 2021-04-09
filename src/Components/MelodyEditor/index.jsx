@@ -50,30 +50,64 @@ SaveMelody.propTypes = { onSave: PropTypes.func.isRequired };
 
 function PresetSelect({
   escs,
+  onDelete,
   onUpdateMelodies,
   customMelodies,
   defaultMelodies,
+  selected,
 }) {
   const { t } = useTranslation('common');
 
-  const [selectedPreset, setSelectedPreset] = useState(-1);
+  const [selectedPreset, setSelectedPreset] = useState(selected);
+  const [canDelete, setCanDelete] = useState(false);
 
+  useEffect(() => {
+    setSelectedPreset(selected);
+  }, [selected]);
+
+  useEffect(() => {
+    let canDelete = false;
+    const match = customMelodies.find((item) => item.name === selectedPreset);
+    if(match) {
+      canDelete = true;
+    }
+
+    setCanDelete(canDelete);
+  }, [selectedPreset]);
 
   function handleUpdate(e) {
     const value = e.target.value;
-    const selected = JSON.parse(value);
+    let selected = [];
+    let match = null;
+    if(value.startsWith('preset-')) {
+      const name = value.split('preset-')[1];
+      match = defaultMelodies.find((item) => item.name === name);
+    } else {
+      match = customMelodies.find((item) => item.name === value);
+    }
 
-    setSelectedPreset(value);
+    if(match) {
+      selected = match.tracks;
+    }
+
+    setSelectedPreset(e.target.value);
     onUpdateMelodies(selected);
+  }
+
+  function handleDelete() {
+    setSelectedPreset(defaultMelodies[0].name);
+    onUpdateMelodies(defaultMelodies[0].tracks);
+
+    onDelete(selectedPreset);
   }
 
   const defaultPossibilities = defaultMelodies.filter((item) => item.tracks.length <= escs );
   const defaultOptions = defaultPossibilities.map((melody) => {
     if(melody.tracks.length <= escs) {
       return {
-        key: melody.name,
+        key: `preset-${melody.name}`,
         name: melody.name,
-        value: JSON.stringify(melody.tracks),
+        value: `preset-${melody.name}`,
       };
     }
   });
@@ -84,7 +118,7 @@ function PresetSelect({
       return {
         key: melody.name,
         name: melody.name,
-        value: JSON.stringify(melody.tracks),
+        value: melody.name,
       };
     }
   });
@@ -100,25 +134,43 @@ function PresetSelect({
   ];
 
   return(
-    <LabeledSelect
-      firstLabel={t('melodyPresetsLabel')}
-      onChange={handleUpdate}
-      options={options}
-      selected={selectedPreset}
-    />
+    <div className="melody-selection-wrapper">
+      <LabeledSelect
+        firstLabel={t('melodyPresetsLabel')}
+        onChange={handleUpdate}
+        options={options}
+        selected={selectedPreset}
+      />
+
+      <div className="default-btn">
+        <button
+          disabled={!canDelete}
+          onClick={handleDelete}
+          type="button"
+        >
+          {t('melodyDelete')}
+        </button>
+      </div>
+    </div>
   );
 }
 PresetSelect.propTypes = {
   customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  defaultMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  defaultMelodies: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    tracks: PropTypes.arrayOf(PropTypes.string).isRequired,
+  })).isRequired,
   escs: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired,
   onUpdateMelodies: PropTypes.func.isRequired,
+  selected: PropTypes.string.isRequired,
 };
 
 function MelodyEditor({
   dummy,
   melodies,
   onClose,
+  onDelete,
   onSave,
   onWrite,
   customMelodies,
@@ -136,6 +188,7 @@ function MelodyEditor({
   const [acceptedMelodies, setAcceptedMelodies] = useState(defaultAccepted);
   const [isAnyPlaying, setIsAnyPlaying] = useState(false);
   const latestMelodies = useRef(melodies);
+  const selectedMelody = useRef(-1);
   const totalPlaying = useRef(0);
   const audioContext = useRef(0);
 
@@ -219,7 +272,9 @@ function MelodyEditor({
   }
 
   function handleMelodiesSave(name) {
-    onSave(name, latestMelodies.current);
+    selectedMelody.current = name;
+    const unique = [...new Set(latestMelodies.current)];
+    onSave(name, unique);
   }
 
   function handleMelodiesSelected(selected) {
@@ -290,23 +345,27 @@ function MelodyEditor({
           {t('common:melodyEditorHeader')}
         </h3>
 
-        <div className="sync-wrapper">
-          <Checkbox
-            disabled={isAnyPlaying || writing}
-            hint={t("common:syncMelodiesHint")}
-            label={t("common:syncMelodies")}
-            name="syncMelodies"
-            onChange={toggleSync}
-            value={sync ? 1 : 0}
+        <div className="line-wrapper">
+          <div className="sync-wrapper">
+            <Checkbox
+              disabled={isAnyPlaying || writing}
+              hint={t("common:syncMelodiesHint")}
+              label={t("common:syncMelodies")}
+              name="syncMelodies"
+              onChange={toggleSync}
+              value={sync ? 1 : 0}
+            />
+          </div>
+
+          <PresetSelect
+            customMelodies={customMelodies}
+            defaultMelodies={defaultMelodies}
+            escs={melodies.length}
+            onDelete={onDelete}
+            onUpdateMelodies={handleMelodiesSelected}
+            selected={selectedMelody.current}
           />
         </div>
-
-        <PresetSelect
-          customMelodies={customMelodies}
-          defaultMelodies={defaultMelodies}
-          escs={melodies.length}
-          onUpdateMelodies={handleMelodiesSelected}
-        />
 
         <SaveMelody
           onSave={handleMelodiesSave}
@@ -359,6 +418,7 @@ MelodyEditor.propTypes = {
   dummy: PropTypes.bool.isRequired,
   melodies: PropTypes.arrayOf(PropTypes.string).isRequired,
   onClose: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onWrite: PropTypes.func.isRequired,
   writing: PropTypes.bool.isRequired,
