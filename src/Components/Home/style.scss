@@ -8,7 +8,7 @@
 
   .install-wrapper {
     position: absolute;
-    top: 32px;
+    top: 17px;
     right: 60px;
     height: 0;
     overflow: hidden;
@@ -22,7 +22,7 @@
 
   @keyframes slide {
     from {height: 0;}
-    to {height: 128px;}
+    to {height: 150px;}
   }
 
   .install {
