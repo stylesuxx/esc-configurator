@@ -175,11 +175,13 @@ function App({
 
       {melodies.show &&
         <MelodyEditor
+          customMelodies={melodies.customMelodies}
+          defaultMelodies={melodies.defaultMelodies}
           dummy={melodies.dummy}
           melodies={melodies.escs}
           onClose={melodies.actions.handleClose}
           onSave={melodies.actions.handleSave}
-          presets={melodies.melodies}
+          onWrite={melodies.actions.handleWrite}
           writing={actions.isWriting}
         />}
 
@@ -240,11 +242,13 @@ App.propTypes = {
     actions: PropTypes.shape({
       handleSave: PropTypes.func.isRequired,
       handleOpen: PropTypes.func.isRequired,
+      handleWrite: PropTypes.func.isRequired,
       handleClose: PropTypes.func.isRequired,
     }),
+    customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    defaultMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     dummy: PropTypes.bool.isRequired,
     escs: PropTypes.arrayOf(PropTypes.string).isRequired,
-    melodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     show: PropTypes.bool.isRequired,
   }).isRequired,
   msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,

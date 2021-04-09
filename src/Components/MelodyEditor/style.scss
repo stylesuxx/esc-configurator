@@ -15,12 +15,14 @@
     flex-direction: row;
 
     input {
+      border: 1px solid silver;
+      padding: 5px;
       width: 210px;
     }
 
     button {
       margin-left: 10px;
-      width: 200px;
+      width: 100px;
     }
   }
 
