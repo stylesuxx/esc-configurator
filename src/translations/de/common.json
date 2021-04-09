@@ -117,8 +117,8 @@
   "homeInstall": "<p>Der ESC-Konfigurator <strong>funktioniert auch offline, sobald dieser zum Homescreen hinzugefügt wurde</strong>. Firmware-Dateien welche einmal geflashed wurden, sind danach auch offline verfügbar.</p><p>Einstellungen können offline jederzeit angepasst werden.</p>",
   "escMissingHeader": "Fehlt ein ESC?",
   "escMissingText": "Die Anzahl der verfügbaren ESCs stimmt nicht mit der Anzahl welche der Flugcontroller meldet überein. Dies kann mehrere Gründe haben:",
-  "escMissingHint": "If the result is not what you are expecting, try clicking the <b>'Read Setup'</b> button again.",
-  "escMissing1": "The ESC was not ready yet. This can for example happen if it is <b>playing a melody</b>. Also a previous flash could have gone wrong and it needs longer to boot up than usual.",
-  "escMissing2": "There are simply <b>not more ESCs connected.</b>",
-  "escMissing3": "The <b>MCU of the ESC is defective.</b>"
+  "escMissingHint": "Manchmal kann es notwendig sein den <b>'Einstellungen lesen'<b> Knopf erneut zu drücken um das korrekte Ergebnis zu erhalten.",
+  "escMissing1": "Der ESC war noch nicht bereit. Dies kann zum Beispiel passieren, wenn er <b>eine Melodie abspielt</b>. Auch ein vorheriges Flashen kann schief gelaufen sein, dadurch braucht der ESC länger zum Starten als üblich.",
+  "escMissing2": "Es sind tatsächlich <b>keine weiteren ESCs verbunden.</b>",
+  "escMissing3": "Die <b>MCU des ESC ist defekt.</b>"
 }
