@@ -21,8 +21,10 @@ const MelodyElement = forwardRef(({
   onAccept,
   onPlay,
   onStop,
+  onUpdate,
 }, ref) => {
   const { t } = useTranslation();
+
   const [currentMelody, setCurrentMelody] = useState(melody);
   const [acceptedMelody, setAcceptedMelody] = useState(null);
   const [highlight, setHighlight] = useState([]);
@@ -41,6 +43,10 @@ const MelodyElement = forwardRef(({
       stopMelody();
     },
   }));
+
+  useEffect(() => {
+    setCurrentMelody(melody);
+  }, [melody]);
 
   useEffect(() => {
     if(currentMelody) {
@@ -87,6 +93,8 @@ const MelodyElement = forwardRef(({
         setIsPlayable(false);
         setIsValid(false);
       }
+
+      onUpdate(currentMelody);
     }
   }, [currentMelody]);
 
@@ -252,6 +260,7 @@ MelodyElement.propTypes = {
   onAccept: PropTypes.func.isRequired,
   onPlay: PropTypes.func.isRequired,
   onStop: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };
 
 export default MelodyElement;
