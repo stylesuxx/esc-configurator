@@ -634,6 +634,11 @@ class App extends Component {
    * downloaded and put into local storage for later use.
    */
   handleFlashUrl = async(url, force, migrate) => {
+    this.setActions({
+      isFlashing: true,
+      isSelecting: false,
+    });
+
     const { escs } = this.state;
     console.debug(`Chosen firmware: ${url}`);
 
