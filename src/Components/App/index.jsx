@@ -37,18 +37,6 @@ function App({
 
   /* istanbul ignore next */
   useInterval(async() => {
-    if(serial.open && !actions.isReading && !serial.fourWay) {
-      if(serial.port.getBatteryState) {
-        const batteryState = await serial.port.getBatteryState();
-        statusbarRef.current.updateBatteryState(batteryState);
-      }
-    } else {
-      statusbarRef.current.updateBatteryState(null);
-    }
-  }, 1000);
-
-  /* istanbul ignore next */
-  useInterval(async() => {
     if(serial.port && serial.port.getUtilization) {
       const utilization = await serial.port.getUtilization();
       statusbarRef.current.updateUtilization(utilization);
@@ -156,6 +144,7 @@ function App({
           onSingleMotorSpeed={onSingleMotorSpeed}
           onWriteSetup={escs.actions.handleWriteSetup}
           open={serial.open}
+          port={serial.port}
           progress={escs.progress}
           settings={escs.master}
         />

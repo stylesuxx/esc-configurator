@@ -3,10 +3,28 @@
   width: 100%;
   // margin-bottom: 65px;
 
-  .spacer-box {
-    p {
-      font-weight: normal;
-      padding-bottom: 10px;
+  .gui-box {
+    .spacer-box {
+      p {
+        font-weight: normal;
+        padding-bottom: 10px;
+      }
+    }
+
+    .line-wrapper {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3px;
+
+      &>* {
+        flex: 1;
+        padding: 0px;
+        margin-bottom: 7px;
+      }
+
+      .battery-state {
+        font-weight: bold;
+      }
     }
   }
 
