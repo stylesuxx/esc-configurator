@@ -301,10 +301,13 @@ test('isWriting', () => {
     platforms: {},
   };
 
+  const mspFeatures = { '3D': true };
+
   render(
     <MainContent
       actions={actions}
       configs={configs}
+      mspFeatures={mspFeatures}
       onAllMotorSpeed={onAllMotorSpeed}
       onCancelFirmwareSelection={onCancelFirmwareSelection}
       onFlashUrl={onFlashUrl}
@@ -826,4 +829,64 @@ test('isSelecting with ESC', () => {
   expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
   expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
   expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
+});
+
+test('fourWay', () => {
+  const onWriteSetup = jest.fn();
+  const onSettingsUpdate = jest.fn();
+  const onSingleMotorSpeed = jest.fn();
+  const onSingleFlash = jest.fn();
+  const onSelectFirmwareForAll = jest.fn();
+  const onSaveLog = jest.fn();
+  const onResetDefaultls = jest.fn();
+  const onReadEscs = jest.fn();
+  const onLocalSubmit = jest.fn();
+  const onIndividualSettingsUpdate = jest.fn();
+  const onFlashUrl = jest.fn();
+  const onCancelFirmwareSelection = jest.fn();
+  const onAllMotorSpeed = jest.fn();
+  const onOpenMelodyEditor = jest.fn();
+
+  const actions = {
+    isReading: false,
+    isWriting: false,
+    isSelecting: false,
+    isFlashing: false,
+  };
+
+  const configs = {
+    versions: {},
+    escs: {},
+    pwm: {},
+    platforms: {},
+  };
+
+  render(
+    <MainContent
+      actions={actions}
+      configs={configs}
+      fourWay
+      onAllMotorSpeed={onAllMotorSpeed}
+      onCancelFirmwareSelection={onCancelFirmwareSelection}
+      onFlashUrl={onFlashUrl}
+      onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+      onLocalSubmit={onLocalSubmit}
+      onOpenMelodyEditor={onOpenMelodyEditor}
+      onReadEscs={onReadEscs}
+      onResetDefaultls={onResetDefaultls}
+      onSaveLog={onSaveLog}
+      onSelectFirmwareForAll={onSelectFirmwareForAll}
+      onSettingsUpdate={onSettingsUpdate}
+      onSingleFlash={onSingleFlash}
+      onSingleMotorSpeed={onSingleMotorSpeed}
+      onWriteSetup={onWriteSetup}
+      open
+    />
+  );
+
+  expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
+  expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
+  expect(screen.queryByText('motorControl')).not.toBeInTheDocument();
+  expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
+  expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
 });

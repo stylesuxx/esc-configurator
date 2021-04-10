@@ -10,6 +10,80 @@
   justify-content: center;
   align-items: center;
 
+  .line-wrapper {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+
+    .info-wrapper-wrapper {
+      white-space: nowrap;
+    }
+
+    select {
+      margin-left: 10px;
+      height: 20px;
+      border: 1px solid silver;
+      border-radius: 3px;
+    }
+
+    .melody-selection-wrapper {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 6px;
+
+      .info-wrapper-wrapper {
+        display: none;
+      }
+
+      .default-btn {
+        margin-top: -2px;
+        margin-left: 10px;
+
+        button {
+          width: 100px;
+        }
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
+
+      select {
+        margin-left: 0px;
+      }
+
+      .melody-selection-wrapper {
+        .default-btn button {
+          width: inherit;
+        }
+      }
+    }
+  }
+
+  .save-melody-wrapper {
+    display: flex;
+    flex-direction: row;
+
+    input {
+      border: 1px solid silver;
+      padding-left: 5px;
+      padding-right: 5px;
+      line-height: 23px;
+    }
+
+    .default-btn {
+      margin-left: 10px;
+
+      button {
+        width: 100px;
+
+        @media screen and (max-width: 768px) {
+          width: inherit;
+        }
+      }
+    }
+  }
+
   .melody-editor-wrapper {
     padding: 10px;
     background: white;
@@ -17,8 +91,11 @@
     width: 80%;
     position: relative;
 
+    @media screen and (max-width: 600px) {
+      width: 90%;
+    }
+
     .sync-wrapper {
-      margin-top: 20px;
 
       .checkbox {
         display: flex;
@@ -31,11 +108,36 @@
       margin-left: -10px;
       margin-right: -10px;
 
-
-
       &.all {
         .esc-melody-wrapper {
           width: 100%;
+        }
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .melody-editor-escs.single {
+        .esc-melody {
+          margin-top: 5px;
+          margin-bottom: 5px;
+
+          header {
+            flex-direction: column;
+            border: 0px;
+            padding-bottom: 0px;
+            margin-bottom: 4px;
+
+            .default-btn {
+              margin-top: 2px;
+              margin-left: -2px;
+              margin-right: -2px;
+
+              button {
+                margin-left: 2px;
+                margin-right: 2px;
+              }
+            }
+          }
         }
       }
     }

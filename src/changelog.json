@@ -1,5 +1,18 @@
 [
   {
+    "title": "0.12.0",
+    "items": [
+      "Show synced screen when all melodies are the same",
+      "Show info when ESC connected count does not match what MSP is reporting",
+      "Melody preset selection",
+      "Save melodies for later",
+      "Load previously saved melodies",
+      "Styling improvements for mobile",
+      "Updated dependencies",
+      "Refactoring"
+    ]
+  },
+  {
     "title": "0.11.0",
     "items": [
       "Bluejay melody editor",

@@ -8,15 +8,59 @@ import React, {
 import 'rc-slider/assets/index.css';
 
 import Checkbox from '../Input/Checkbox';
+import { useInterval } from '../../utils/helpers/React';
 
 import './style.scss';
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
+function BatteryState({ getBatteryState }) {
+  const { t } = useTranslation('common');
+
+  const cellLimit = 3.7;
+  const [batteryState, setBatteryState] = useState({
+    text: null,
+    danger: false,
+  });
+
+  /* istanbul ignore next */
+  useInterval(async() => {
+    if(getBatteryState) {
+      const state = await getBatteryState();
+
+      if(state && state.cellCount > 0) {
+        const danger = (state.voltage / state.cellCount) < cellLimit;
+        setBatteryState({
+          text: `${state.cellCount}S @ ${state.voltage}V`,
+          danger,
+        });
+      } else {
+        setBatteryState({
+          text: null,
+          danger: false,
+        });
+      }
+    }
+  }, 1000);
+
+  if(batteryState.text) {
+    return (
+      <span className={`battery-state ${batteryState.danger ? 'danger' : ''}`}>
+        {`${t('battery')} ${batteryState.text}`}
+      </span>
+    );
+  }
+
+  return null;
+}
+BatteryState.propTypes = { getBatteryState: PropTypes.func.isRequired };
+
 function MotorControl({
+  getBatteryState,
   motorCount,
   onAllUpdate,
   onSingleUpdate,
+  startValue,
 }) {
   const { t } = useTranslation('common');
 
@@ -28,18 +72,18 @@ function MotorControl({
 
   function toggleUnlock() {
     setUnlock(!unlock);
-    onAllUpdate(minValue);
+    onAllUpdate(startValue);
   }
 
   // Makes no sense to test, component has its own test, we just assume that
   // the slider actually slides.
   /* istanbul ignore next */
   function updateValue(value) {
-    if(value > minValue && unlockIndividual) {
+    if(value !== startValue && unlockIndividual) {
       setUnlockIndividual(false);
     }
 
-    if(value === minValue) {
+    if(value === startValue) {
       setUnlockIndividual(true);
     }
 
@@ -55,7 +99,7 @@ function MotorControl({
     disabled,
     onChange,
   }) {
-    const [value, setValue] = useState(minValue);
+    const [value, setValue] = useState(startValue);
     /* istanbul ignore next */
     function update(value) {
       setValue(value);
@@ -143,12 +187,20 @@ function MotorControl({
         </div>
 
         <div className="spacer-box">
-          <div>
+          <div
+            dangerouslySetInnerHTML={{ __html: t('motorControlText') }}
+          />
+
+          <div className="line-wrapper">
             <Checkbox
               label={t('enableMotorControl')}
               name="enable-motor-control"
               onChange={toggleUnlock}
               value={unlock ? 1 : 0}
+            />
+
+            <BatteryState
+              getBatteryState={getBatteryState}
             />
           </div>
 
@@ -170,13 +222,16 @@ function MotorControl({
     </div>
   );
 }
-
-MotorControl.defaultProps = { motorCount: 0 };
-
+MotorControl.defaultProps = {
+  motorCount: 0,
+  startValue: 1000,
+};
 MotorControl.propTypes = {
+  getBatteryState: PropTypes.func.isRequired,
   motorCount: PropTypes.number,
   onAllUpdate: PropTypes.func.isRequired,
   onSingleUpdate: PropTypes.func.isRequired,
+  startValue: PropTypes.number,
 };
 
 export default MotorControl;

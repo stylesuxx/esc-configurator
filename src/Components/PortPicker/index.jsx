@@ -4,6 +4,102 @@ import React from 'react';
 
 import './style.scss';
 
+function BaudRates({
+  handleChange,
+  disabled,
+}) {
+  const { t } = useTranslation('common');
+  const baudRates = [115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200];
+
+  const rateElements = baudRates.map((rate) => (
+    <option
+      key={rate}
+      value={rate}
+    >
+      {rate}
+    </option>
+  ));
+
+  return (
+    <select
+      className="dropdown-select"
+      defaultValue="115200"
+      disabled={disabled}
+      id="baud"
+      name={t('baudRate')}
+      onChange={handleChange}
+      title={t('baudRate')}
+    >
+      {rateElements}
+    </select>
+  );
+}
+BaudRates.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  handleChange: PropTypes.func.isRequired,
+};
+
+function PermissionOverlay({
+  handleSetPort,
+  show,
+}) {
+  const { t } = useTranslation('common');
+
+  if(!show) {
+    return(
+      <div id="serial-permission-overlay">
+        <button
+          onClick={handleSetPort}
+          type="button"
+        >
+          {t('serialPermission')}
+        </button>
+      </div>
+    );
+  }
+
+  return null;
+}
+PermissionOverlay.propTypes = {
+  handleSetPort: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
+};
+
+function Ports({
+  disabled,
+  ports,
+  handleChange,
+}) {
+  const { t } = useTranslation('common');
+
+  const portOptions = ports.map((name, index) => (
+    <option
+      key={name}
+      value={index}
+    >
+      {name}
+    </option>
+  ));
+
+  return(
+    <select
+      className="dropdown-select"
+      disabled={disabled}
+      id="port"
+      name={t('port')}
+      onChange={handleChange}
+      title={t('port')}
+    >
+      {portOptions}
+    </select>
+  );
+}
+Ports.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  ports: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+};
+
 function PortPicker({
   hasPort,
   hasSerial,
@@ -16,79 +112,12 @@ function PortPicker({
   onChangePort,
 }) {
   const { t } = useTranslation('common');
-  const baudRates = [115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200];
 
-  function BaudRates() {
-    const rateElements = baudRates.map((rate) => (
-      <option
-        key={rate}
-        value={rate}
-      >
-        {rate}
-      </option>
-    ));
-
-    return (
-      <select
-        className="dropdown-select"
-        defaultValue="115200"
-        disabled={open}
-        id="baud"
-        name={t('baudRate')}
-        onChange={changeBaudRate}
-        title={t('baudRate')}
-      >
-        {rateElements}
-      </select>
-    );
-  }
-
-  function Ports() {
-    const portOptions = ports.map((name, index) => (
-      <option
-        key={name}
-        value={index}
-      >
-        {name}
-      </option>
-    ));
-
-    return(
-      <select
-        className="dropdown-select"
-        disabled={open}
-        id="port"
-        name={t('port')}
-        onChange={changePort}
-        title={t('port')}
-      >
-        {portOptions}
-      </select>
-    );
-  }
-
-  function PermissionOverlay() {
-    if(!hasPort) {
-      return(
-        <div id="serial-permission-overlay">
-          <button
-            onClick={onSetPort}
-            type="button"
-          >
-            {t('serialPermission')}
-          </button>
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  function changeBaudRate(e) {
+  function handleBaudRateChange(e) {
     onSetBaudRate(e.target.value);
   }
 
-  function changePort(e) {
+  function handlePortChange(e) {
     onChangePort(e.target.value);
   }
 
@@ -151,21 +180,31 @@ function PortPicker({
 
   return (
     <div id="port-picker">
-      <PermissionOverlay />
+      <PermissionOverlay
+        handleSetPort={onSetPort}
+        show={hasPort}
+      />
 
       <div id="portsinput">
         <div
           className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
           disabled={open}
         >
-          <Ports />
+          <Ports
+            disabled={open}
+            handleChange={handlePortChange}
+            ports={ports}
+          />
         </div>
 
         <div
           className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
           disabled={open}
         >
-          <BaudRates />
+          <BaudRates
+            disabled={open}
+            handleChange={handleBaudRateChange}
+          />
         </div>
 
         <div className="button-dark">
@@ -196,14 +235,12 @@ function PortPicker({
     </div>
   );
 }
-
 PortPicker.defaultProps = {
   hasPort: false,
   hasSerial: false,
   open: false,
   ports: [],
 };
-
 PortPicker.propTypes = {
   hasPort: PropTypes.bool,
   hasSerial: PropTypes.bool,

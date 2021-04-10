@@ -1,10 +1,11 @@
-import React from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import Home from '../Home';
 import Flash from '../Flash';
 import Buttonbar from '../Buttonbar';
-import FirmwareSelector from '..//FirmwareSelector';
+import FirmwareSelector from '../FirmwareSelector';
 import Changelog from '../../Components/Changelog';
 import MotorControl from '../../Components/MotorControl';
 
@@ -16,6 +17,7 @@ function MainContent({
   escs,
   settings,
   progress,
+  mspFeatures,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
   onOpenMelodyEditor,
@@ -36,7 +38,10 @@ function MainContent({
   onSingleMotorSpeed,
   connected,
   fourWay,
+  port,
 }) {
+  const { t } = useTranslation('common');
+
   const {
     isSelecting,
     isFlashing,
@@ -57,6 +62,56 @@ function MainContent({
 
         <Changelog entries={changelogEntries} />
       </>
+    );
+  }
+
+  function FlashWrapper() {
+    if(fourWay) {
+      return (
+        <Flash
+          availableSettings={settings}
+          canFlash={canFlash}
+          directInput={appSettings.directInput.value}
+          escCount={connected}
+          escs={escs}
+          flashProgress={progress}
+          onFlash={onSingleFlash}
+          onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+          onSettingsUpdate={onSettingsUpdate}
+        />
+      );
+    }
+
+    return null;
+  }
+
+  function MotorControlWrapper() {
+    if(!fourWay && !actions.isReading) {
+      return (
+        <MotorControl
+          getBatteryState={port.getBatteryState}
+          motorCount={connected}
+          onAllUpdate={onAllMotorSpeed}
+          onSingleUpdate={onSingleMotorSpeed}
+          startValue={mspFeatures['3D'] ? 1500 : 1000}
+        />
+      );
+    }
+
+    return null;
+  }
+
+  function WarningWrapper() {
+    return (
+      <div className="note">
+        <p>
+          <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
+
+          <br />
+
+          <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
+        </p>
+      </div>
     );
   }
 
@@ -86,23 +141,11 @@ function MainContent({
       <div id="content">
         <div className="tab toolbar_fixed_bottom">
           <div className="content_wrapper">
-            <Flash
-              availableSettings={settings}
-              canFlash={canFlash}
-              directInput={appSettings.directInput.value}
-              escs={escs}
-              flashProgress={progress}
-              onFlash={onSingleFlash}
-              onIndividualSettingsUpdate={onIndividualSettingsUpdate}
-              onSettingsUpdate={onSettingsUpdate}
-            />
+            <WarningWrapper />
 
-            {!fourWay && !actions.isReading &&
-              <MotorControl
-                motorCount={connected}
-                onAllUpdate={onAllMotorSpeed}
-                onSingleUpdate={onSingleMotorSpeed}
-              />}
+            <FlashWrapper />
+
+            <MotorControlWrapper />
           </div>
         </div>
       </div>
@@ -131,7 +174,9 @@ MainContent.defaultProps = {
   escs: [],
   flashTargets: [],
   fourWay: false,
+  mspFeatures: { '3D': false },
   open: false,
+  port: { getBatteryState: null },
   progress: [],
   settings: {},
 };
@@ -154,6 +199,7 @@ MainContent.propTypes = {
   escs: PropTypes.arrayOf(PropTypes.shape()),
   flashTargets: PropTypes.arrayOf(PropTypes.number),
   fourWay: PropTypes.bool,
+  mspFeatures: PropTypes.shape({ '3D': PropTypes.bool }),
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
@@ -169,6 +215,7 @@ MainContent.propTypes = {
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  port: PropTypes.shape({ getBatteryState:PropTypes.func }),
   progress: PropTypes.arrayOf(PropTypes.number),
   settings: PropTypes.shape(),
 };

@@ -14,11 +14,6 @@
     padding-right: 10px;
     margin-right: 10px;
     border-right: 1px solid #7d7d79;
-
-    &.danger {
-      font-weight: bold;
-      color: red;
-    }
   }
 
   .version {
@@ -26,5 +21,15 @@
     margin: 0;
     padding: 0;
     border: 0;
+  }
+
+  @media only screen and (max-width: 600px) {
+    & {
+      display: flex;
+      justify-content: center;
+      span {
+        float: none;
+      }
+    }
   }
 }

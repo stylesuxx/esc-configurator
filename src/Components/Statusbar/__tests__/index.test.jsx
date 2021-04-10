@@ -25,27 +25,6 @@ test('loads and displays StatusBar', () => {
   expect(screen.getByText('version')).toBeInTheDocument();
 
   act(()=> {
-    ref.current.updateBatteryState({
-      cellCount: 1,
-      voltage: 4.2,
-    });
-  });
-  expect(screen.getByText('battery 1S @ 4.2V')).toBeInTheDocument();
-
-  act(()=> {
-    ref.current.updateBatteryState({
-      cellCount: 1,
-      voltage: 3.5,
-    });
-  });
-  expect(screen.getByText('battery 1S @ 3.5V')).toBeInTheDocument();
-
-  act(()=> {
-    ref.current.updateBatteryState(null);
-  });
-  expect(screen.queryByText(/battery/i)).not.toBeInTheDocument();
-
-  act(()=> {
     ref.current.updateUtilization({
       up: 10,
       down: 20,

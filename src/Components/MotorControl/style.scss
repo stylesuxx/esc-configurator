@@ -3,6 +3,36 @@
   width: 100%;
   // margin-bottom: 65px;
 
+  .gui-box {
+    .spacer-box {
+      p {
+        font-weight: normal;
+        padding-bottom: 10px;
+      }
+    }
+
+    .line-wrapper {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3px;
+
+      &>* {
+        flex: 1;
+        padding: 0px;
+        margin-bottom: 7px;
+      }
+
+      .battery-state {
+        font-weight: bold;
+
+        &.danger {
+          font-weight: bold;
+          color: red;
+        }
+      }
+    }
+  }
+
   .rc-slider {
     margin-left: 8px;
     height: 30px;

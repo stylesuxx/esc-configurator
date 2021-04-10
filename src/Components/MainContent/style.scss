@@ -10,6 +10,22 @@
   -webkit-transform: rotateX(0deg); /* DO NOT REMOVE! this fixes the UI freezing bug on MAC OS X */
   transition: all 0.3s;
 
+  .note {
+    margin-bottom: 20px;
+    background-color: #fff7cd;
+    border: 1px solid #ffe55f;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: 'open_sansregular', Arial;
+    padding: 5px 7px 5px 7px;
+
+    @media screen and (max-width: 768px) {
+      margin-bottom: 18px;
+    }
+  }
+
   @media only screen and (max-width: 600px) {
     padding-top: 170px
   }

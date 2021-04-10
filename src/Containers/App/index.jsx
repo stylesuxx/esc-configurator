@@ -11,6 +11,8 @@ import sources from '../../sources';
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import settings from '../../settings.json';
+import melodies from '../../melodies.json';
+
 const {
   version,
   corsProxy,
@@ -92,6 +94,15 @@ class App extends Component {
       return null;
     };
 
+    this.loadMelodies = () => {
+      const storedMelodies = JSON.parse(localStorage.getItem('melodies'));
+      if(storedMelodies) {
+        return storedMelodies;
+      }
+
+      return [];
+    };
+
     this.languages = [
       {
         label: "English",
@@ -115,6 +126,7 @@ class App extends Component {
     this.lastConnected = 0;
 
     this.state = {
+      msp: { features: {} },
       appSettings: {
         show: false,
         settings: loadSettings(),
@@ -164,6 +176,8 @@ class App extends Component {
         ],
         show: false,
         dummy: true,
+        defaultMelodies: melodies,
+        customMelodies: this.loadMelodies(),
       },
     };
 
@@ -773,6 +787,8 @@ class App extends Component {
       let motorData = await this.serial.getMotorData();
       motorData = motorData.filter((motor) => motor > 0);
 
+      const features = await this.serial.getFeatures();
+
       TagManager.dataLayer({
         dataLayer: {
           event: "FlightController",
@@ -785,6 +801,7 @@ class App extends Component {
         },
       });
 
+      this.setState({ msp: { features } });
       this.setSerial({ open: true });
       this.setEscs({ connected: motorData.length });
     } catch(e) {
@@ -884,7 +901,37 @@ class App extends Component {
     });
   }
 
-  handleMelodySave = (melodies) => {
+  handleMelodySave = (name, tracks) => {
+    const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
+    const match = storedMelodies.findIndex((melody) => melody.name === name);
+
+    // Override melody if a custom melody with this name is available.
+    if(match >= 0) {
+      storedMelodies[match].tracks = tracks;
+    } else {
+      storedMelodies.push(
+        {
+          name,
+          tracks,
+        }
+      );
+    }
+
+    localStorage.setItem('melodies', JSON.stringify(storedMelodies));
+    this.setMelodies({ customMelodies: this.loadMelodies() });
+  }
+
+  handleMelodyDelete = (name) => {
+    const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
+    const match = storedMelodies.findIndex((melody) => melody.name === name);
+    if(match >= 0) {
+      storedMelodies.splice(match, 1);
+      localStorage.setItem('melodies', JSON.stringify(storedMelodies));
+      this.setMelodies({ customMelodies: this.loadMelodies() });
+    }
+  }
+
+  handleMelodyWrite = (melodies) => {
     const { escs } = this.state;
     const individual = [ ...escs.individual ];
     const converted = melodies.map((melody) => Rtttl.toBluejayStartupMelody(melody));
@@ -931,6 +978,7 @@ class App extends Component {
       configs,
       language,
       melodies,
+      msp,
       serial,
       stats,
       appSettings,
@@ -976,11 +1024,14 @@ class App extends Component {
         melodies={{
           actions: {
             handleSave: this.handleMelodySave,
+            handleWrite: this.handleMelodyWrite,
             handleOpen: this.handleMelodyEditorOpen,
             handleClose: this.handleMelodyEditorClose,
+            handleDelete: this.handleMelodyDelete,
           },
           ...melodies,
         }}
+        msp={msp}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onCookieAccept={this.handleCookieAccept}
         onSaveLog={this.handleSaveLog}

@@ -24,6 +24,7 @@ function App({
   melodies,
   escs,
   language,
+  msp,
   onAllMotorSpeed,
   onCookieAccept,
   onSaveLog,
@@ -33,18 +34,6 @@ function App({
 }) {
   const { t } = useTranslation('common');
   const statusbarRef = useRef();
-
-  /* istanbul ignore next */
-  useInterval(async() => {
-    if(serial.open && !actions.isReading && !serial.fourWay) {
-      if(serial.port.getBatteryState) {
-        const batteryState = await serial.port.getBatteryState();
-        statusbarRef.current.updateBatteryState(batteryState);
-      }
-    } else {
-      statusbarRef.current.updateBatteryState(null);
-    }
-  }, 1000);
 
   /* istanbul ignore next */
   useInterval(async() => {
@@ -139,6 +128,7 @@ function App({
           escs={escs.individual}
           flashTargets={escs.targets}
           fourWay={serial.fourWay}
+          mspFeatures={msp.features}
           onAllMotorSpeed={onAllMotorSpeed}
           onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
           onFlashUrl={escs.actions.handleFlashUrl}
@@ -154,6 +144,7 @@ function App({
           onSingleMotorSpeed={onSingleMotorSpeed}
           onWriteSetup={escs.actions.handleWriteSetup}
           open={serial.open}
+          port={serial.port}
           progress={escs.progress}
           settings={escs.master}
         />
@@ -173,10 +164,14 @@ function App({
 
       {melodies.show &&
         <MelodyEditor
+          customMelodies={melodies.customMelodies}
+          defaultMelodies={melodies.defaultMelodies}
           dummy={melodies.dummy}
           melodies={melodies.escs}
           onClose={melodies.actions.handleClose}
+          onDelete={melodies.actions.handleDelete}
           onSave={melodies.actions.handleSave}
+          onWrite={melodies.actions.handleWrite}
           writing={actions.isWriting}
         />}
 
@@ -237,12 +232,17 @@ App.propTypes = {
     actions: PropTypes.shape({
       handleSave: PropTypes.func.isRequired,
       handleOpen: PropTypes.func.isRequired,
+      handleWrite: PropTypes.func.isRequired,
       handleClose: PropTypes.func.isRequired,
+      handleDelete: PropTypes.func.isRequired,
     }),
+    customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    defaultMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     dummy: PropTypes.bool.isRequired,
     escs: PropTypes.arrayOf(PropTypes.string).isRequired,
     show: PropTypes.bool.isRequired,
   }).isRequired,
+  msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,

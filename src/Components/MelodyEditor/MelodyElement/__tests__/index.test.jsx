@@ -13,6 +13,7 @@ test('loads and displays MelodyElement without melody', () => {
   const onAccept = jest.fn();
   const onPlay = jest.fn();
   const onStop = jest.fn();
+  const onUpdate = jest.fn();
 
   render(
     <MelodyElement
@@ -21,6 +22,7 @@ test('loads and displays MelodyElement without melody', () => {
       onAccept={onAccept}
       onPlay={onPlay}
       onStop={onStop}
+      onUpdate={onUpdate}
     />
   );
 
@@ -41,6 +43,7 @@ test('loads and displays with unplayable melody', async() => {
   const onAccept = jest.fn();
   const onPlay = jest.fn();
   const onStop = jest.fn();
+  const onUpdate = jest.fn();
 
   const melody = "UNPLAYABLE";
 
@@ -52,6 +55,7 @@ test('loads and displays with unplayable melody', async() => {
       onAccept={onAccept}
       onPlay={onPlay}
       onStop={onStop}
+      onUpdate={onUpdate}
     />
   );
 
@@ -72,6 +76,7 @@ test('loads and displays with unsupported note', async() => {
   const onAccept = jest.fn();
   const onPlay = jest.fn();
   const onStop = jest.fn();
+  const onUpdate = jest.fn();
 
   const melody = "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.";
 
@@ -83,6 +88,7 @@ test('loads and displays with unsupported note', async() => {
       onAccept={onAccept}
       onPlay={onPlay}
       onStop={onStop}
+      onUpdate={onUpdate}
     />
   );
 
@@ -104,6 +110,7 @@ test('loads and displays with too long melody', async() => {
   const onAccept = jest.fn();
   const onPlay = jest.fn();
   const onStop = jest.fn();
+  const onUpdate = jest.fn();
 
   const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
@@ -115,6 +122,7 @@ test('loads and displays with too long melody', async() => {
       onAccept={onAccept}
       onPlay={onPlay}
       onStop={onStop}
+      onUpdate={onUpdate}
     />
   );
 
@@ -136,6 +144,7 @@ test('loads and displays with valid melody', async() => {
   const onAccept = jest.fn();
   const onPlay = jest.fn();
   const onStop = jest.fn();
+  const onUpdate = jest.fn();
 
   const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
@@ -147,6 +156,7 @@ test('loads and displays with valid melody', async() => {
       onAccept={onAccept}
       onPlay={onPlay}
       onStop={onStop}
+      onUpdate={onUpdate}
     />
   );
 

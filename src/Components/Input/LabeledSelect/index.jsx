@@ -11,6 +11,7 @@ function LabeledSelect({
   function Select() {
     const optionElements = options.map((item) => (
       <option
+        disabled={item.disabled}
         key={item.key}
         value={item.value}
       >
@@ -20,7 +21,7 @@ function LabeledSelect({
 
     return (
       <select
-        name={label}
+        name={label || firstLabel}
         onChange={onChange}
         value={selected || -1}
       >
@@ -53,7 +54,7 @@ function LabeledSelect({
 }
 
 LabeledSelect.defaultProps = {
-  label: "",
+  label: null,
   selected: null,
 };
 
@@ -62,6 +63,7 @@ LabeledSelect.propTypes = {
   label: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.shape({
+    disabled: PropTypes.bool,
     key: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,

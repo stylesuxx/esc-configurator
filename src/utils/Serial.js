@@ -47,6 +47,7 @@ class Serial {
   getBuildInfo = () => this.msp.getBuildInfo();
   getFcVariant = () => this.msp.getFcVariant();
   getFcVersion = () => this.msp.getFcVersion();
+  getFeatures = () => this.msp.getFeatures();
   getMotorData = () => this.msp.getMotorData();
   getUid = () => this.msp.getUid();
   spinAllMotors = (speed) => this.msp.spinAllMotors(speed);

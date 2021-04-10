@@ -7,15 +7,11 @@ import Escs from './Escs';
 
 import './style.scss';
 
-/**
- * @param {Object} {escs} Parameters
- *
- * @return {Component} The Component
- */
 function Flash({
   availableSettings,
   canFlash,
   directInput,
+  escCount,
   escs,
   flashProgress,
   onFlash,
@@ -23,18 +19,49 @@ function Flash({
   onSettingsUpdate,
 }) {
   const { t } = useTranslation('common');
+
+  function CountWarning() {
+    if(escCount !== escs.length) {
+      return (
+        <div className="gui-box grey missing-esc">
+          <div className="gui-box-titlebar">
+            <div className="spacer-box-title">
+              {t('escMissingHeader')}
+            </div>
+          </div>
+
+          <div className="spacer-box">
+            <p>
+              {t('escMissingText')}
+            </p>
+
+            <ul>
+              <li
+                dangerouslySetInnerHTML={{ __html: t('escMissing1') }}
+              />
+
+              <li
+                dangerouslySetInnerHTML={{ __html: t('escMissing2') }}
+              />
+
+              <li
+                dangerouslySetInnerHTML={{ __html: t('escMissing3') }}
+              />
+            </ul>
+
+            <p
+              dangerouslySetInnerHTML={{ __html: t('escMissingHint') }}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   return (
     <div id="flash-content">
-      <div className="note">
-        <p>
-          <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
-
-          <br />
-
-          <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
-        </p>
-      </div>
-
       <div className="config-wrapper">
         <div className="common-config">
           {escs.length > 0 &&
@@ -56,6 +83,8 @@ function Flash({
             onFlash={onFlash}
             onSettingsUpdate={onIndividualSettingsUpdate}
           />
+
+          <CountWarning />
         </div>
       </div>
     </div>
@@ -71,6 +100,7 @@ Flash.propTypes = {
   availableSettings: PropTypes.shape().isRequired,
   canFlash: PropTypes.bool,
   directInput: PropTypes.bool,
+  escCount: PropTypes.number.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
   onFlash: PropTypes.func.isRequired,
