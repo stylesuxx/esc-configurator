@@ -38,7 +38,7 @@ test('loads and displays Buttonbar', () => {
   expect(screen.getByText(/escButtonWrite/i)).toBeInTheDocument();
   expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   expect(screen.getByText(/escButtonSaveLog/i)).toBeInTheDocument();
-  expect(screen.getByText(/escButtonOpenMelodyEditor/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/escButtonOpenMelodyEditor/i).length).toEqual(2);
 });
 
 test('trigger onSaveLog', () => {
