@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.12.1",
+    "items": [
+      "Fixed button misalignement"
+    ]
+  },
+  {
     "title": "0.12.0",
     "items": [
       "Show synced screen when all melodies are the same",
