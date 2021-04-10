@@ -371,7 +371,7 @@ function MelodyEditor({
           onSave={handleMelodiesSave}
         />
 
-        <div className={`melody-editor-escs ${sync ? 'all' : ''}`}>
+        <div className={`melody-editor-escs ${sync ? 'all' : 'single'}`}>
           {!sync && melodyElements}
 
           {sync &&

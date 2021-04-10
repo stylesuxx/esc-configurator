@@ -20,6 +20,10 @@
     font-size: 11px;
     font-family: 'open_sansregular', Arial;
     padding: 5px 7px 5px 7px;
+
+    @media screen and (max-width: 768px) {
+      margin-bottom: 18px;
+    }
   }
 
   @media only screen and (max-width: 600px) {

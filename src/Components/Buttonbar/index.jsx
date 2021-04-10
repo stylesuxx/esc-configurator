@@ -34,15 +34,13 @@ function Buttonbar({
   function MelodyEditorButton() {
     if(showMelodyEditor) {
       return (
-        <div className="btn">
-          <button
-            disabled={!canRead}
-            onClick={onOpenMelodyEditor}
-            type="button"
-          >
-            {t('escButtonOpenMelodyEditor')}
-          </button>
-        </div>
+        <button
+          disabled={!canRead}
+          onClick={onOpenMelodyEditor}
+          type="button"
+        >
+          {t('escButtonOpenMelodyEditor')}
+        </button>
       );
     }
 
@@ -51,6 +49,12 @@ function Buttonbar({
 
   return (
     <div id="button-bar">
+      <div className="buttons-bottom mobile-show">
+        <div className="btn">
+          <MelodyEditorButton />
+        </div>
+      </div>
+
       <div className="buttons-left">
         <div className="btn log">
           <button
@@ -101,7 +105,9 @@ function Buttonbar({
           <ResetDefaultButton />
         </div>
 
-        <MelodyEditorButton />
+        <div className="mobile-hide btn">
+          <MelodyEditorButton />
+        </div>
       </div>
     </div>
   );

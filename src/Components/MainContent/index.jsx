@@ -38,6 +38,7 @@ function MainContent({
   onSingleMotorSpeed,
   connected,
   fourWay,
+  port,
 }) {
   const { t } = useTranslation('common');
 
@@ -88,6 +89,7 @@ function MainContent({
     if(!fourWay && !actions.isReading) {
       return (
         <MotorControl
+          getBatteryState={port.getBatteryState}
           motorCount={connected}
           onAllUpdate={onAllMotorSpeed}
           onSingleUpdate={onSingleMotorSpeed}
@@ -174,6 +176,7 @@ MainContent.defaultProps = {
   fourWay: false,
   mspFeatures: { '3D': false },
   open: false,
+  port: { getBatteryState: null },
   progress: [],
   settings: {},
 };
@@ -212,6 +215,7 @@ MainContent.propTypes = {
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  port: PropTypes.shape({ getBatteryState:PropTypes.func }),
   progress: PropTypes.arrayOf(PropTypes.number),
   settings: PropTypes.shape(),
 };
