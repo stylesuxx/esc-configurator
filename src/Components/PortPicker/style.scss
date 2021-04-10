@@ -90,6 +90,10 @@
     display: flex;
     flex-direction: column;
 
+    @media only screen and (max-width: 600px) {
+      margin-right: 6px;
+    }
+
     button {
       background: none;
       border: 0px;

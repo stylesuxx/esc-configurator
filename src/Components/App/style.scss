@@ -125,6 +125,10 @@ body {
     background-size: contain;
     margin-left: 23px;
     margin-top: 10px;
+
+    @media only screen and (max-width: 600px) {
+      margin-left: 15px;
+    }
   }
 
   .hidden {
@@ -238,12 +242,13 @@ body {
   margin-bottom: 50px;
 
   @media only screen and (max-width: 600px) {
-    margin-bottom: 90px;
+    margin-bottom: 120px;
   }
 
   @media screen and (max-width: 768px) {
     padding-left: 10px;
     padding-right: 10px;
+    padding-top: 13px;
   }
 }
 

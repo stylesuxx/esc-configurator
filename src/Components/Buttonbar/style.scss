@@ -14,6 +14,11 @@
   flex-direction: row;
   justify-content: space-between;
 
+  @media only screen and (max-width: 600px) {
+    padding-bottom: 0px;
+    padding-top: 8px;
+  }
+
   & > div {
     display: flex;
 
@@ -37,24 +42,21 @@
     & > div {
       justify-content: flex-start;
 
+      &.buttons-bottom,
       &.buttons-left,
       &.buttons-right {
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         margin-left: 5px;
         margin-right: 5px;
 
         .btn {
           flex: 1;
-          margin-left: 5px;
-          margin-right: 5px;
+          margin-left: 2px;
+          margin-right: 2px;
           button {
             width: 100%;
           }
         }
-      }
-
-      &.buttons-left {
-        margin-bottom: 0px;
       }
     }
   }

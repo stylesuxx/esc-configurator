@@ -29,11 +29,32 @@
     .melody-selection-wrapper {
       display: flex;
       flex-direction: row;
+      margin-bottom: 6px;
+
+      .info-wrapper-wrapper {
+        display: none;
+      }
+
       .default-btn {
         margin-top: -2px;
         margin-left: 10px;
+
         button {
           width: 100px;
+        }
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
+
+      select {
+        margin-left: 0px;
+      }
+
+      .melody-selection-wrapper {
+        .default-btn button {
+          width: inherit;
         }
       }
     }
@@ -50,9 +71,16 @@
       line-height: 23px;
     }
 
-    button {
+    .default-btn {
       margin-left: 10px;
-      width: 100px;
+
+      button {
+        width: 100px;
+
+        @media screen and (max-width: 768px) {
+          width: inherit;
+        }
+      }
     }
   }
 
@@ -62,6 +90,10 @@
     max-width: 960px;
     width: 80%;
     position: relative;
+
+    @media screen and (max-width: 600px) {
+      width: 90%;
+    }
 
     .sync-wrapper {
 
@@ -76,11 +108,36 @@
       margin-left: -10px;
       margin-right: -10px;
 
-
-
       &.all {
         .esc-melody-wrapper {
           width: 100%;
+        }
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .melody-editor-escs.single {
+        .esc-melody {
+          margin-top: 5px;
+          margin-bottom: 5px;
+
+          header {
+            flex-direction: column;
+            border: 0px;
+            padding-bottom: 0px;
+            margin-bottom: 4px;
+
+            .default-btn {
+              margin-top: 2px;
+              margin-left: -2px;
+              margin-right: -2px;
+
+              button {
+                margin-left: 2px;
+                margin-right: 2px;
+              }
+            }
+          }
         }
       }
     }

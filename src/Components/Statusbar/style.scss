@@ -27,4 +27,14 @@
     padding: 0;
     border: 0;
   }
+
+  @media only screen and (max-width: 600px) {
+    & {
+      display: flex;
+      justify-content: center;
+      span {
+        float: none;
+      }
+    }
+  }
 }
