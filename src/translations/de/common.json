@@ -83,7 +83,7 @@
   "openPortSelection": "Portauswahl öffnen",
   "versionUnsupported": "{{name}} Version '{{version}}' (Layout {{layout}}) wird noch nicht unterstützt.<br/><br/>Lass es uns wissen indem du einen <a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">Fehlerbericht erstellst</a>.",
   "motorControl": "Motorsteuerung",
-  "motorControlText": "<p>Stelle sicher das deine ESCs entsprechend der Slider Positionen konfiguriert sind.</p><p>zB.: Wenn du den 3D Modus aktiviert hast, stelle sicher, dass deinen ESCs entsprechend konfiguriert sind, ansonsten können die Motoren mit voller Geschwindigkeit anlaufen. </p><p>Die Motoren werden nicht anlaufen wenn am Flugregler bi-directtinal Dshot aktiviert ist, aber nicht auf den ESCs, was beispielsweise passieren könnte wenn du von einer RPM firmware auf klassisches BlHeli_S zurück flasht.</p>",
+  "motorControlText": "<p>Make sure your ESCs are properly set up to reflect the state of the sliders.</p><p>Eg.: When you enabled 3D mode in your flight controller, make sure the ESCs are also set up for 3D mode, otherwise the motors might go off with full power.</p><p>Also be aware that the motors will not spin if you have bi-directional Dshot enabled on the Flight-controller, but the ESC does not support it. Which might be the case when flashing from RPM emabled firmware to BlHeli_S.</p>",
   "enableMotorControl": "Motorsteuerung aktivieren",
   "masterSpeed": "Geschwindigkeit aller Motoren",
   "motorNr": "Motor {{index}}",
