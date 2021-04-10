@@ -24,6 +24,11 @@
 
       .battery-state {
         font-weight: bold;
+
+        &.danger {
+          font-weight: bold;
+          color: red;
+        }
       }
     }
   }
