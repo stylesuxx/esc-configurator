@@ -323,11 +323,6 @@ class App extends Component {
     const progress = [ ...escs.progress ];
     const individual = [ ...escs.individual ];
 
-    this.setActions({
-      isSelecting: false,
-      isFlashing: true,
-    });
-
     for(let i = 0; i < escs.targets.length; i += 1) {
       const target = escs.targets[i];
 
@@ -605,6 +600,11 @@ class App extends Component {
 
   handleLocalSubmit = (e, force, migrate) => {
     e.preventDefault();
+    this.setActions({
+      isFlashing: true,
+      isSelecting: false,
+    });
+
     const { escs } = this.state;
 
     TagManager.dataLayer({
@@ -691,6 +691,7 @@ class App extends Component {
       await this.flash(text, force, migrate);
     } else {
       this.addLogMessage('getFileFailed');
+      this.setActions({ isFlashing: false });
     }
   }
 
