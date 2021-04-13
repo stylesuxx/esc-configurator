@@ -19,7 +19,7 @@
   "flashingEsc": "ESC {{index}} wird geflasht",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
-  "writeSettingsFailed": "Failed writing settings to ESC {{index}}",
+  "writeSettingsFailed": "Fehler beim Schreiben der Einstellungen auf ESC {{index}}",
   "getFileFailed": "Konnte Datei zum flashen nicht holen.",
   "layoutNotSupported": "Layout Revision {{revision}} wird noch nicht unterstützt",
   "escSettingsNoChange": "Keine Änderungen - ESC {{index}} nicht aktualisiert",
