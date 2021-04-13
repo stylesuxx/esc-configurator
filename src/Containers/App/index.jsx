@@ -560,18 +560,25 @@ class App extends Component {
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
       const target = esc.index;
-
-      console.debug(`Writing settings to ESC ${target + 1}`);
-
-      const currentEscSettings = esc.settings;
+      const commonEscSettings = esc.settings;
+      const masterEscSettings = escs.master;
       const individualEscSettings = esc.individualSettings;
-      const mergedSettings = Object.assign({}, currentEscSettings, escs.master, individualEscSettings);
-      const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
+      const mergedSettings = {
+        ...commonEscSettings,
+        ...masterEscSettings,
+        ...individualEscSettings,
+      };
 
-      individual[i].settingsArray = newSettingsArray;
+      try {
+        const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
+        individual[i].settingsArray = newSettingsArray;
+      } catch(e) {
+        this.addLogMessage('writeSettingsFailed', { index: i + 1 });
+        console.debug(e);
+      }
     }
-    this.setActions({ isWriting: false });
 
+    this.setActions({ isWriting: false });
     this.setEscs({ individual });
   }
 

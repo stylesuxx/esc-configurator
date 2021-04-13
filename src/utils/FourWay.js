@@ -1,5 +1,14 @@
 import Convert from './helpers/Convert';
 import Flash from './helpers/Flash';
+import {
+  BufferLengthMismatchError,
+  EscInitError,
+  InvalidHexFileError,
+  SettingsVerificationError,
+  TooManyParametersError,
+  UnknownInterfaceError,
+  UnknownPlatformError,
+} from './Errors';
 
 import {
   buildDisplayName as blheliBuildDisplayName,
@@ -119,7 +128,7 @@ class FourWay {
     if (params.length === 0) {
       params.push(0);
     } else if (params.length > 256) {
-      throw new Error(`4way interface supports maximum of 256 params, ${params.length} passed`);
+      throw new TooManyParametersError(params.length);
     }
 
     const bufferOut = new ArrayBuffer(7 + params.length);
@@ -271,7 +280,7 @@ class FourWay {
           defaultSettings = AM32_EEPROM.DEFAULTS;
           settingsArray = (await this.read(AM32_EEPROM.EEPROM_OFFSET, layoutSize)).params;
         } else {
-          throw new Error('Neither SiLabs nor Arm');
+          throw new UnknownPlatformError('Neither SiLabs nor Arm');
         }
 
         flash.isSiLabs = isSiLabs;
@@ -436,7 +445,7 @@ class FourWay {
     if (flash) {
       const newSettingsArray = Convert.objectToSettingsArray(settings, esc.layout, esc.layoutSize);
       if(newSettingsArray.length !== esc.settingsArray.length) {
-        throw new Error('byteLength of buffers do not match');
+        throw new BufferLengthMismatchError(newSettingsArray.length, esc.settingsArray.length);
       }
 
       if(compare(newSettingsArray, esc.settingsArray)) {
@@ -472,7 +481,7 @@ class FourWay {
         }
 
         if(!compare(newSettingsArray, readbackSettings)) {
-          throw new Error('Failed to verify settings');
+          throw new SettingsVerificationError(newSettingsArray, readbackSettings);
         }
 
         this.addLogMessage('escUpdateSuccess', { index: target + 1 });
@@ -481,7 +490,7 @@ class FourWay {
       return newSettingsArray;
     }
 
-    this.addLogMessage('escUpdateFailed', { index: target + 1 });
+    throw new EscInitError();
   }
 
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
@@ -517,7 +526,7 @@ class FourWay {
         } break;
 
         default: {
-          throw new Error(`unknown interfaceMode ${interfaceMode}`);
+          throw new UnknownInterfaceError(interfaceMode);
         }
       }
 
@@ -733,7 +742,7 @@ class FourWay {
           await delay(AM32_EEPROM.RESET_DELAY);
         } break;
 
-        default: throw new Error(`Flashing with ${interfaceMode} is not yet implemented`);
+        default: throw new UnknownInterfaceError(interfaceMode);
       }
 
       const elapsedSec = (Date.now() - startTimestamp) / 1000;
@@ -762,7 +771,7 @@ class FourWay {
         const firstBytes = flash.subarray(firmwareStart, firmwareStart + 4);
         const vecTabStart = new Uint8Array([ 0x00, 0x20, 0x00, 0x20 ]);
         if (!compare(firstBytes, vecTabStart)) {
-          throw new Error('Invalid hex file');
+          throw new InvalidHexFileError('Invalid hex file');
         }
 
         if (firmwareStart) {
@@ -786,7 +795,7 @@ class FourWay {
             .subarray(0, BLHELI_EEPROM.LAYOUT.MCU.size));
 
         if(!isValidFlash(mcu, flash)) {
-          throw new Error('Invalid hex file');
+          throw new InvalidHexFileError('Invalid hex file');
         }
 
         if (firmwareStart) {
@@ -799,7 +808,7 @@ class FourWay {
         return null;
       }
     } else {
-      throw new Error('Can not flash Atmel yet.');
+      throw new UnknownInterfaceError(interfaceMode);
     }
   }
 
