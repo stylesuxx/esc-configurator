@@ -444,6 +444,15 @@ class FourWay {
       } else {
         let readbackSettings = null;
         if(esc.isSiLabs) {
+          const mcu = esc.settings.MCU;
+          if (mcu && mcu.startsWith('#BLHELI$EFM8')) {
+            const CODE_LOCK_BYTE_OFFSET = mcu.endsWith('B21#') ? 0xFBFE : 0x1FFE;
+            const codeLockByte = (await this.read(CODE_LOCK_BYTE_OFFSET, 1)).params[0];
+            if (codeLockByte !== 0xFF) {
+              throw new Error(`ESC is locked (${codeLockByte})`);
+            }
+          }
+
           await this.pageErase(BLHELI_EEPROM.EEPROM_OFFSET / BLHELI_EEPROM.PAGE_SIZE);
           await this.write(BLHELI_EEPROM.EEPROM_OFFSET, newSettingsArray);
           readbackSettings = (await this.read(BLHELI_EEPROM.EEPROM_OFFSET, esc.layoutSize)).params;
