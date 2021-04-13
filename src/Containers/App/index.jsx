@@ -551,7 +551,7 @@ class App extends Component {
     });
   }
 
-  handleWriteSetup = async() => {
+  handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     this.setActions({ isWriting: true });
@@ -954,7 +954,7 @@ class App extends Component {
 
     // Update individual settings, then write them.
     this.setEscs({ individual }, () => {
-      this.handleWriteSetup();
+      this.handleWriteSettings();
     });
   }
 
@@ -1020,7 +1020,7 @@ class App extends Component {
             handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate,
             handleResetDefaultls: this.handleResetDefaultls,
             handleReadEscs: this.handleReadEscs,
-            handleWriteSetup: this.handleWriteSetup,
+            handleWriteSetup: this.handleWriteSettings,
             handleSingleFlash: this.handleSingleFlash,
             handleSelectFirmwareForAll: this.handleSelectFirmwareForAll,
             handleCancelFirmwareSelection: this.handleCancelFirmwareSelection,
