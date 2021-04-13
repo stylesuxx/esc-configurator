@@ -461,13 +461,16 @@ class App extends Component {
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
-
-      console.debug(`Restoring default settings on ESC ${target + 1} `);
-
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
-      await this.serial.writeSettings(target, esc, mergedSettings);
+
+      try {
+        await this.serial.writeSettings(target, esc, mergedSettings);
+      } catch(e) {
+        this.addLogMessage('restoreSettingsFailed', { index: i + 1 });
+        console.debug(e);
+      }
     }
     this.setActions({ isWriting: false });
 
@@ -577,8 +580,8 @@ class App extends Component {
         console.debug(e);
       }
     }
-
     this.setActions({ isWriting: false });
+
     this.setEscs({ individual });
   }
 
