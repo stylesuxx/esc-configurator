@@ -1,6 +1,7 @@
 import {
   BufferLengthMismatchError,
   EscInitError,
+  EscLockedError,
   InvalidHexFileError,
   SettingsVerificationError,
   TooManyParametersError,
@@ -36,4 +37,8 @@ test('custom errors are instance of Error', () => {
   error = new UnknownPlatformError('platform');
   expect(error instanceof Error).toBeTruthy();
   expect(error.message).toEqual('Unknown platform: platform');
+
+  error = new EscLockedError(0xDEAD);
+  expect(error instanceof Error).toBeTruthy();
+  expect(error.message).toEqual('ESC is locked (57005)');
 });

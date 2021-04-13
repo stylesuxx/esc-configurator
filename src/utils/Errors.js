@@ -54,9 +54,18 @@ class EscInitError extends Error {
   }
 }
 
+class EscLockedError extends Error {
+  constructor(codeLockByte) {
+    super(`ESC is locked (${codeLockByte})`);
+    this.codeLockByte = codeLockByte;
+    this.name = 'EscLockedError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   EscInitError,
+  EscLockedError,
   InvalidHexFileError,
   SettingsVerificationError,
   TooManyParametersError,

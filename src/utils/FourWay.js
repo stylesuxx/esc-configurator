@@ -3,6 +3,7 @@ import Flash from './helpers/Flash';
 import {
   BufferLengthMismatchError,
   EscInitError,
+  EscLockedError,
   InvalidHexFileError,
   SettingsVerificationError,
   TooManyParametersError,
@@ -458,7 +459,7 @@ class FourWay {
             const CODE_LOCK_BYTE_OFFSET = mcu.endsWith('B21#') ? 0xFBFE : 0x1FFE;
             const codeLockByte = (await this.read(CODE_LOCK_BYTE_OFFSET, 1)).params[0];
             if (codeLockByte !== 0xFF) {
-              throw new Error(`ESC is locked (${codeLockByte})`);
+              throw new EscLockedError(`ESC is locked (${codeLockByte})`);
             }
           }
 
