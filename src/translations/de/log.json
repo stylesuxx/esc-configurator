@@ -20,6 +20,7 @@
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
   "writeSettingsFailed": "Fehler beim Schreiben der Einstellungen auf ESC {{index}}",
+  "restoreSettingsFailed": "Failed restoring default settings on ESC {{index}}",
   "getFileFailed": "Konnte Datei zum flashen nicht holen.",
   "layoutNotSupported": "Layout Revision {{revision}} wird noch nicht unterstützt",
   "escSettingsNoChange": "Keine Änderungen - ESC {{index}} nicht aktualisiert",
