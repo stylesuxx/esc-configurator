@@ -20,6 +20,7 @@
   "flashingEscFailed": "Failed flashing ESC {{index}} - check file type",
   "readEscFailed": "Failed reading ESC {{index}}",
   "writeSettingsFailed": "Failed writing settings to ESC {{index}}",
+  "restoreSettingsFailed": "Failed restoring default settings on ESC {{index}}",
   "getFileFailed": "Could not get file for flashing.",
   "layoutNotSupported": "Layout revision {{revision}} is not yet supported",
   "escSettingsNoChange": "No changes - not updating ESC {{index}}",
