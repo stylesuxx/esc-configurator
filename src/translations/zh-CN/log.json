@@ -20,6 +20,7 @@
   "flashingEscFailed": "刷写 ESC {{index}} 失败 - 请检查文件类型",
   "readEscFailed": "读取 ESC {{index}} 失败",
   "writeSettingsFailed": "无法将设置写入到 ESC {{index}}",
+  "restoreSettingsFailed": "Failed restoring default settings on ESC {{index}}",
   "getFileFailed": "无法打开要烧录的文件",
   "layoutNotSupported": "布局版本 {{revision}} 尚不支持",
   "escSettingsNoChange": "无更改 - 未更新 ESC {{index}}",
