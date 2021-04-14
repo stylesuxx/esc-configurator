@@ -2,6 +2,8 @@ import React from 'react';
 import {
   render,
   screen,
+  fireEvent,
+  act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -178,4 +180,59 @@ test('loads and displays with valid melody', async() => {
   userEvent.click(screen.getByText(/common:melodyEditorStop/i));
   expect(onStop).toHaveBeenCalled();
   */
+});
+
+test('change melody', async() => {
+  const onAccept = jest.fn();
+  const onPlay = jest.fn();
+  const onStop = jest.fn();
+  const onUpdate = jest.fn();
+
+  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
+
+  render(
+    <MelodyElement
+      accepted={false}
+      label="Label comes here"
+      melody={melody}
+      onAccept={onAccept}
+      onPlay={onPlay}
+      onStop={onStop}
+      onUpdate={onUpdate}
+    />
+  );
+
+  userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
+
+  fireEvent.change(screen.getByRole(/textbox/i), { target: { value: 'simpsons:d=4,o=5,b=160:c.6' } });
+  expect(onAccept).toHaveBeenCalled();
+});
+
+test('imperative Handle', async() => {
+  const onAccept = jest.fn();
+  const onPlay = jest.fn();
+  const onStop = jest.fn();
+  const onUpdate = jest.fn();
+  const ref = React.createRef();
+
+  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
+
+  render(
+    <MelodyElement
+      accepted={false}
+      label="Label comes here"
+      melody={melody}
+      onAccept={onAccept}
+      onPlay={onPlay}
+      onStop={onStop}
+      onUpdate={onUpdate}
+      ref={ref}
+    />
+  );
+
+  act(()=> {
+    ref.current.play();
+    ref.current.stop();
+  });
+  expect(screen.getByText(/common:melodyEditorPlay/i)).toBeInTheDocument();
 });
