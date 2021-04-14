@@ -77,7 +77,10 @@ LabeledSelect.propTypes = {
       PropTypes.number,
     ]),
   })).isRequired,
-  selected: PropTypes.string,
+  selected: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
 };
 
 export default LabeledSelect;
