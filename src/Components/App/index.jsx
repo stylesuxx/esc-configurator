@@ -1,18 +1,17 @@
+import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
-import 'react-toastify/dist/ReactToastify.min.css';
-
-import PortPicker from '../PortPicker';
-import Log from '../Log';
-import Statusbar from '../Statusbar';
-import CookieConsent from '../CookieConsent';
-import MainContent from '../MainContent';
 import AppSettings from '../AppSettings';
+import CookieConsent from '../CookieConsent';
+import LanguageSelection from './LanguageSelection';
+import Log from '../Log';
+import MainContent from '../MainContent';
 import MelodyEditor from '../../Components/MelodyEditor';
-import { useInterval } from '../../utils/helpers/React';
+import PortPicker from '../PortPicker';
+import Statusbar from '../Statusbar';
 
 import changelogEntries from '../../changelog.json';
 import './style.scss';
@@ -33,52 +32,6 @@ function App({
   stats,
 }) {
   const { t } = useTranslation('common');
-  const statusbarRef = useRef();
-
-  /* istanbul ignore next */
-  useInterval(async() => {
-    if(serial.port && serial.port.getUtilization) {
-      const utilization = await serial.port.getUtilization();
-      statusbarRef.current.updateUtilization(utilization);
-    }
-  }, 1000);
-
-  function LanguageSelection() {
-    const languageElements = language.available.map((item) => (
-      <option
-        key={item.value}
-        value={item.value}
-      >
-        {item.label}
-      </option>
-    ));
-
-    return (
-      <div className="dropdown dropdown-dark">
-        <select
-          className="dropdown-select"
-          defaultValue={language.current}
-          onChange={language.actions.handleChange}
-        >
-          {languageElements}
-        </select>
-      </div>
-    );
-  }
-
-  function AppSettingsWrapper() {
-    if(appSettings.show) {
-      return(
-        <AppSettings
-          onClose={appSettings.actions.handleClose}
-          onUpdate={appSettings.actions.handleUpdate}
-          settings={appSettings.settings}
-        />
-      );
-    }
-
-    return null;
-  }
 
   return (
     <div className="App">
@@ -99,8 +52,12 @@ function App({
               ports={serial.portNames}
             />
 
-            <div className="language-select ">
-              <LanguageSelection />
+            <div className="settings-wrapper">
+              <LanguageSelection
+                current={language.current}
+                languages={language.available}
+                onChange={language.actions.handleChange}
+              />
 
               <div className="button-dark">
                 <button
@@ -113,8 +70,6 @@ function App({
 
             </div>
           </div>
-
-          <div className="clear-both" />
 
           <Log messages={serial.log} />
         </div>
@@ -150,17 +105,18 @@ function App({
         />
 
         <Statusbar
+          getUtilization={serial.port ? serial.port.getUtilization : undefined}
           packetErrors={stats.packetErrors}
-          ref={statusbarRef}
           version={stats.version}
         />
       </div>
 
-      <CookieConsent
-        onCookieAccept={onCookieAccept}
-      />
-
-      <AppSettingsWrapper />
+      {appSettings.show &&
+        <AppSettings
+          onClose={appSettings.actions.handleClose}
+          onUpdate={appSettings.actions.handleUpdate}
+          settings={appSettings.settings}
+        />}
 
       {melodies.show &&
         <MelodyEditor
@@ -174,6 +130,8 @@ function App({
           onWrite={melodies.actions.handleWrite}
           writing={actions.isWriting}
         />}
+
+      <CookieConsent onCookieAccept={onCookieAccept} />
 
       <ToastContainer />
     </div>

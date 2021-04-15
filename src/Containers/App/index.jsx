@@ -493,7 +493,9 @@ class App extends Component {
 
         await this.serial.startFourWayInterface();
 
-        // This delay is needed to allow the ESC's to initialize
+        /* Give the ESC's some time to boot - it might take longer if they
+         * are playing a startup melody.
+         */
         await delay(1200);
       } else {
         connected = this.lastConnected;

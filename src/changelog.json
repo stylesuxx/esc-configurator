@@ -1,5 +1,12 @@
 [
   {
+    "title": "Unpublished",
+    "items": [
+      "More tests",
+      "Refactoring"
+    ]
+  },
+  {
     "title": "0.12.1",
     "items": [
       "Fixed button misalignement"

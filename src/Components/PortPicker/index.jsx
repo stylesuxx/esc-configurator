@@ -22,7 +22,7 @@ function BaudRates({
 
   return (
     <select
-      className="dropdown-select"
+      className="dropdown__select"
       defaultValue="115200"
       disabled={disabled}
       id="baud"
@@ -83,7 +83,7 @@ function Ports({
 
   return(
     <select
-      className="dropdown-select"
+      className="dropdown__select"
       disabled={disabled}
       id="port"
       name={t('port')}
@@ -187,7 +187,7 @@ function PortPicker({
 
       <div id="portsinput">
         <div
-          className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
+          className={`dropdown dark ${open ? 'disabled' : ''}`}
           disabled={open}
         >
           <Ports
@@ -198,7 +198,7 @@ function PortPicker({
         </div>
 
         <div
-          className={`dropdown dropdown-dark ${open ? 'disabled' : ''}`}
+          className={`dropdown dark ${open ? 'disabled' : ''}`}
           disabled={open}
         >
           <BaudRates
