@@ -1,6 +1,6 @@
 @import '../../variables.scss';
 
-#button-bar {
+.button-bar {
   z-index: 1;
   position: fixed;
   bottom: 21px;
@@ -33,6 +33,11 @@
 
     &.buttons-left {
       justify-content: flex-start;
+      margin-left: 20px;
+
+      @media only screen and (max-width: 600px) {
+        margin-left: 10px;
+      }
     }
 
     &.mobile-show {
@@ -53,7 +58,7 @@
         margin-left: 5px;
         margin-right: 5px;
 
-        .btn {
+        .generic-button {
           flex: 1;
           margin-left: 2px;
           margin-right: 2px;
@@ -77,58 +82,9 @@
     }
   }
 
-  .btn button {
-    cursor: pointer;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-right: 20px;
-    border-radius: 3px;
-    background-color: var(--color-primary);
-    border: 1px solid var(--color-primary);
-    color: #fff;
-    font-family: 'open_sansbold', Arial;
-    font-size: 12px;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
-    display: block;
-    transition: all ease 0.2s;
-    padding: 0px;
-    padding-left: 9px;
-    padding-right: 9px;
-    line-height: 28px;
-  }
-
-  .log {
-    margin-left: 20px;
-  }
-
   @media only screen and (max-width: 600px) {
-    .btn button {
+    .generic-button button {
       margin-right: 10px;
     }
-
-    .log {
-      margin-left: 10px;
-    }
-  }
-
-  .btn button:hover {
-    background-color: var(--color-secondary);
-    transition: all ease 0.2s;
-  }
-
-  .btn button:active {
-    background-color: var(--color-primary);
-    transition: all ease 0.0s;
-    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
-  }
-
-  .btn button[disabled] {
-    cursor: default;
-    color: #fff;
-    background-color: #AFAFAF;
-    border: 1px solid #AFAFAF;
-    pointer-events: none;
-    text-shadow: none;
-    opacity: 0.5;
   }
 }

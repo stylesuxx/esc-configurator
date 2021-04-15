@@ -179,7 +179,7 @@ function PortPicker({
   }
 
   return (
-    <div id="port-picker">
+    <div className="port-picker">
       <PermissionOverlay
         handleSetPort={onSetPort}
         show={hasPort}
@@ -207,7 +207,7 @@ function PortPicker({
           />
         </div>
 
-        <div className="button-dark">
+        <div className="button button--dark">
           <button
             disabled={open}
             onClick={onSetPort}

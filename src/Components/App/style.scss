@@ -140,11 +140,69 @@ body {
   }
 }
 
-#main-wrapper {
+.main {
   padding: 0px 0px 0 0px;
   height: calc(100% - 7px);
 
-  .button-dark {
+  .main__header {
+    background: #3d3f3e;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .main__bar {
+    height:110px;
+    width:100%;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
+  }
+
+  .main__logo {
+    background: url('images/icon_128.png');
+    position: relative;
+    float: left;
+    height: 90px;
+    z-index: 0;
+    background-repeat: no-repeat;
+    width: 95px;
+    background-position: left center;
+    background-size: contain;
+    margin-left: 23px;
+    margin-top: 10px;
+
+    @media only screen and (max-width: 600px) {
+      margin-left: 15px;
+    }
+  }
+
+  .main__settings {
+    float: right;
+    margin-top: 12px;
+    width: 120px;
+    margin-right: 10px;
+
+    @media only screen and (max-width: 600px) {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      margin: 0px;
+      background: #3d3f3e;
+
+      & > * {
+        flex: 1;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 6px;
+      }
+
+      a {
+        margin: 0px;
+        width: 100%;
+      }
+    }
+  }
+
+  .button.button--dark {
     a,
     button {
       text-align: center;
@@ -176,13 +234,6 @@ body {
       margin-top: 8px;
       width: 118px;
     }
-  }
-
-  .header-wrapper {
-    background: #3d3f3e;
-    position: fixed;
-    width: 100%;
-    z-index: 1;
   }
 
   a {
@@ -230,60 +281,10 @@ body {
     float: right;
   }
 
-  .headerbar {
-    height:110px;
-    width:100%;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
-  }
-
-  #logo {
-    background: url('images/icon_128.png');
-    position: relative;
-    float: left;
-    height: 90px;
-    z-index: 0;
-    background-repeat: no-repeat;
-    width: 95px;
-    background-position: left center;
-    background-size: contain;
-    margin-left: 23px;
-    margin-top: 10px;
-
-    @media only screen and (max-width: 600px) {
-      margin-left: 15px;
-    }
-  }
-
   .hidden {
     display: none;
   }
 
-  .settings-wrapper {
-    float: right;
-    margin-top: 12px;
-    width: 120px;
-    margin-right: 10px;
-
-    @media only screen and (max-width: 600px) {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      margin: 0px;
-      background: #3d3f3e;
-
-      & > * {
-        flex: 1;
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 6px;
-      }
-
-      a {
-        margin: 0px;
-        width: 100%;
-      }
-    }
-  }
   .half {
     width: 50%;
 

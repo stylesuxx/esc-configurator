@@ -34,11 +34,11 @@ function App({
   const { t } = useTranslation('common');
 
   return (
-    <div className="App">
-      <div id="main-wrapper">
-        <div className="header-wrapper">
-          <div className="headerbar">
-            <div id="logo" />
+    <div>
+      <div className="main">
+        <header className="main__header">
+          <div className="main__bar">
+            <div className="main__logo" />
 
             <PortPicker
               hasPort={serial.connected}
@@ -52,14 +52,14 @@ function App({
               ports={serial.portNames}
             />
 
-            <div className="settings-wrapper">
+            <div className="main__settings">
               <LanguageSelection
                 current={language.current}
                 languages={language.available}
                 onChange={language.actions.handleChange}
               />
 
-              <div className="button-dark">
+              <div className="button button--dark">
                 <button
                   onClick={appSettings.actions.handleOpen}
                   type="button"
@@ -72,7 +72,7 @@ function App({
           </div>
 
           <Log messages={serial.log} />
-        </div>
+        </header>
 
         <MainContent
           actions={actions}
