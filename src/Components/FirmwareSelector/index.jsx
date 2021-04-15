@@ -42,11 +42,10 @@ function FirmwareSelector({
     pwm,
     platforms,
   } = configs;
-  const file = useRef(null);
 
   const [esc, setEsc] = useState(null);
   const [type, setType] = useState(null);
-  const [mode, setMode] = useState(selectedMode);
+  const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
   const [migrate, setMigrate] = useState(true);
   const [validFirmware, setValidFirmware] = useState([]);
@@ -58,12 +57,13 @@ function FirmwareSelector({
     escs: [],
     modes: [],
   });
-
   const [selection, setSelection] = useState({
     firmware: null,
     url: null,
     pwm: null,
   });
+
+  const file = useRef(null);
 
   // Pre select ESC if escHint is a valid layout
   useEffect(async () => {
@@ -90,6 +90,7 @@ function FirmwareSelector({
 
     setValidFirmware(validFirmware);
     setPossibleTypes(types);
+    setMode(selectedMode);
 
     if(isValidLayout(escHint)) {
       setEsc(escHint);
@@ -185,7 +186,18 @@ function FirmwareSelector({
     }
   }, [selection.firmware]);
 
-  function updateFirmware(e) {
+  function clickFile() {
+    file.current.click();
+  }
+
+  /*
+  // TODO: Not yet implemented - this might only be needed for ATMEL
+  function updateMode(e) {
+    setMode(e.target.value);
+  }
+  */
+
+  function handleFirmwareChange(e) {
     const firmware = e.target.value;
 
     const newSelection = {
@@ -197,45 +209,34 @@ function FirmwareSelector({
     setSelection(newSelection);
   }
 
-  function updateEsc(e) {
+  function handleEscChange(e) {
     setEsc(e.target.value);
   }
 
-  function clickFile() {
-    file.current.click();
-  }
-
-  function submitLocalFile(e) {
+  function handleLocalSubmit(e) {
     e.preventDefault();
     onLocalSubmit(e, force, migrate);
   }
 
-  /*
-  // TODO: Not yet implemented - this might only be needed for ATMEL
-  function updateMode(e) {
-    setMode(e.target.value);
-  }
-  */
-
-  function updateVersion(e) {
+  function handleVersionChange(e) {
     const newSelection = Object.assign({}, selection, { url: e.target.value });
     setSelection(newSelection);
   }
 
-  function updateForce(e) {
+  function handleForceChange(e) {
     setForce(e.target.checked);
   }
 
-  function updateMigrate(e) {
+  function handleMigrateChange(e) {
     setMigrate(e.target.checked);
   }
 
-  function updatePwm(e) {
+  function handlePwmChange(e) {
     const newSelection = Object.assign({}, selection, { pwm: e.target.value });
     setSelection(newSelection);
   }
 
-  function submit() {
+  function handleSubmit() {
     const escsAll = escs[selection.firmware].layouts[type];
 
     const format = (str2Format, ...args) =>
@@ -261,7 +262,7 @@ function FirmwareSelector({
           <label>
             <input
               defaultChecked={force}
-              onChange={updateForce}
+              onChange={handleForceChange}
               type="checkbox"
             />
 
@@ -281,7 +282,7 @@ function FirmwareSelector({
           <label>
             <input
               defaultChecked={migrate}
-              onChange={updateMigrate}
+              onChange={handleMigrateChange}
               type="checkbox"
             />
 
@@ -308,7 +309,7 @@ function FirmwareSelector({
             <LabeledSelect
               firstLabel={t('selectFirmware')}
               label="Firmware"
-              onChange={updateFirmware}
+              onChange={handleFirmwareChange}
               options={options.firmwares}
               selected={selection.firmware}
             />
@@ -318,7 +319,7 @@ function FirmwareSelector({
                 <LabeledSelect
                   firstLabel={t('selectEsc')}
                   label="ESC"
-                  onChange={updateEsc}
+                  onChange={handleEscChange}
                   options={options.escs}
                   selected={esc}
                 />
@@ -337,7 +338,7 @@ function FirmwareSelector({
                 <LabeledSelect
                   firstLabel={t('selectVersion')}
                   label="Version"
-                  onChange={updateVersion}
+                  onChange={handleVersionChange}
                   options={options.versions}
                   selected={selection.url}
                 />
@@ -346,7 +347,7 @@ function FirmwareSelector({
                   <LabeledSelect
                     firstLabel={t('selectPwmFrequency')}
                     label="PWM Frequency"
-                    onChange={updatePwm}
+                    onChange={handlePwmChange}
                     options={options.frequencies}
                     selected={selection.pwm}
                   />}
@@ -356,7 +357,7 @@ function FirmwareSelector({
               <button
                 className={disableFlashButton ? "disabled" : ""}
                 disabled={disableFlashButton}
-                onClick={submit}
+                onClick={handleSubmit}
                 type="button"
               >
                 {t('escButtonSelect')}
@@ -365,7 +366,7 @@ function FirmwareSelector({
 
             <div className="default-btn">
               <input
-                onChange={submitLocalFile}
+                onChange={handleLocalSubmit}
                 ref={file}
                 style={{ display: 'none' }}
                 type="file"
@@ -393,13 +394,11 @@ function FirmwareSelector({
     </div>
   );
 }
-
 FirmwareSelector.defaultProps = {
   escHint: null,
   selectedMode: null,
   signatureHint: null,
 };
-
 FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
