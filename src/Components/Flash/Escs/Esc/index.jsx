@@ -1,6 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from 'react';
 
 import Checkbox from '../../../Input/Checkbox';
 import Select from '../../../Input/Select';
@@ -9,15 +13,14 @@ import Number from '../../../Input/Number';
 
 import './style.scss';
 
-function Esc({
+const Esc = forwardRef(({
   canFlash,
   directInput,
   esc,
   index,
   onFlash,
   onSettingsUpdate,
-  progress,
-}) {
+}, ref) => {
   const { t } = useTranslation('common');
 
   const settings = esc.individualSettings;
@@ -26,8 +29,15 @@ function Esc({
 
   const name = esc.displayName ? esc.displayName : 'Unsupported/Unrecognized';
   const title = `ESC ${(index + 1)}: ${name}`;
+  const [progress, setProgress] = useState(0);
 
-  function flashFirmware() {
+  useImperativeHandle(ref, () => ({
+    setProgress(progress) {
+      setProgress(progress);
+    },
+  }));
+
+  function handleFirmwareFlash() {
     onFlash(index);
   }
 
@@ -153,10 +163,8 @@ function Esc({
           />
 
           <button
-            className={canFlash ? '' : 'disabled'}
             disabled={!canFlash}
-            href="#"
-            onClick={flashFirmware}
+            onClick={handleFirmwareFlash}
             type="button"
           >
             {t('escButtonFlash')}
@@ -181,13 +189,9 @@ function Esc({
       </div>
     </div>
   );
-}
-
-Esc.defaultProps = {
-  canFlash: true,
-  progress: 0,
-};
-
+});
+Esc.displayName = 'Esc';
+Esc.defaultProps = { canFlash: true };
 Esc.propTypes = {
   canFlash: PropTypes.bool,
   directInput: PropTypes.bool.isRequired,
@@ -195,7 +199,6 @@ Esc.propTypes = {
   index: PropTypes.number.isRequired,
   onFlash: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
-  progress: PropTypes.number,
 };
 
 export default Esc;

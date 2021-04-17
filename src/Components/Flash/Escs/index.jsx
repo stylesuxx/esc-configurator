@@ -7,7 +7,6 @@ function Escs({
   canFlash,
   directInput,
   escs,
-  flashProgress,
   onFlash,
   onSettingsUpdate,
 }) {
@@ -21,7 +20,7 @@ function Escs({
         key={esc.index}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
-        progress={flashProgress[esc.index]}
+        ref={esc.ref}
       />
     ));
   }
@@ -34,14 +33,12 @@ function Escs({
 Escs.defaultProps = {
   directInput: false,
   escs: [],
-  flashProgress: [],
 };
 
 Escs.propTypes = {
   canFlash: PropTypes.bool.isRequired,
   directInput: PropTypes.bool,
   escs: PropTypes.arrayOf(PropTypes.shape()),
-  flashProgress: PropTypes.arrayOf(PropTypes.number),
   onFlash: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };

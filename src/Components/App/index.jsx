@@ -100,7 +100,6 @@ function App({
           onWriteSetup={escs.actions.handleWriteSetup}
           open={serial.open}
           port={serial.port}
-          progress={escs.progress}
           settings={escs.master}
         />
 
@@ -178,7 +177,6 @@ App.propTypes = {
     connected: PropTypes.number.isRequired,
     individual: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     master: PropTypes.shape({}).isRequired,
-    progress: PropTypes.arrayOf(PropTypes.number).isRequired,
     targets: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
   language: PropTypes.shape({

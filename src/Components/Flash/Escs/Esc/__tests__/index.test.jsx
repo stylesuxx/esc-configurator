@@ -345,3 +345,99 @@ test('shows and handles settings with direct input', () => {
   });
   fireEvent.blur(screen.getByRole(/spinbutton/i));
 });
+
+test('updates progress bar', () => {
+  const esc = {
+    bootloaderRevision: 'bl 23',
+    individualSettings: {
+      MAIN_REVISION: 1,
+      SUB_REVISION: 200,
+      NAME: 'FW Name',
+      MOTOR_DIRECTION: 1,
+      _PPM_MIN_THROTTLE: 125,
+      STARTUP_BEEP: 1,
+    },
+    individualSettingsDescriptions: {
+      base: [
+        {
+          name: 'MOTOR_DIRECTION',
+          type: 'enum',
+          label: 'escMotorDirection',
+          options: [
+            {
+              value: '1',
+              label: 'Normal',
+            },
+            {
+              value: '2',
+              label: 'Reversed',
+            },
+            {
+              value: '3',
+              label: 'Bidirectional',
+            },
+            {
+              value: '4',
+              label: 'Bidirectional Reversed',
+            },
+          ],
+        },
+        {
+          name: '_PPM_MIN_THROTTLE',
+          type: 'number',
+          min: 1000,
+          max: 1500,
+          step: 4,
+          label: 'escPPMMinThrottle',
+          offset: 1000,
+          factor: 4,
+          suffix: ' μs',
+        },
+        {
+          name: 'STARTUP_BEEP',
+          type: 'bool',
+          label: 'escStartupBeep',
+        },
+        {
+          name: 'IVALID',
+          type: 'IVALID',
+          label: 'invalid',
+        },
+        {
+          name: '_PPM_CENTER_THROTTLE',
+          type: 'number',
+          min: 1000,
+          max: 2020,
+          step: 4,
+          label: 'escPPMCenterThrottle',
+          offset: 1000,
+          factor: 4,
+          suffix: ' μs',
+          visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
+        },
+      ],
+    },
+  };
+
+  const onFlash = jest.fn();
+  const onSettingsUpdate = jest.fn();
+
+  const ref = React.createRef();
+
+  render(
+    <Esc
+      canFlash
+      directInput
+      esc={esc}
+      index={0}
+      onFlash={onFlash}
+      onSettingsUpdate={onSettingsUpdate}
+      ref={ref}
+    />
+  );
+
+  ref.current.setProgress(50);
+  const progressbar = screen.getByRole(/progressbar/i);
+  expect(progressbar).toBeInTheDocument();
+  expect(progressbar.value).toEqual(50);
+});

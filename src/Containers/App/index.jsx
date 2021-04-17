@@ -134,7 +134,6 @@ class App extends Component {
       escs: {
         connected: 0,
         master: {},
-        progress: [],
         targets: [],
         individual: [],
       },
@@ -320,35 +319,28 @@ class App extends Component {
 
   flash = async(text, force, migrate) => {
     const { escs } = this.state;
-    const progress = [ ...escs.progress ];
     const individual = [ ...escs.individual ];
 
     for(let i = 0; i < escs.targets.length; i += 1) {
       const target = escs.targets[i];
-
-      this.addLogMessage('flashingEsc', { index: target + 1 });
-
       const esc = escs.individual.find((esc) => esc.index === target);
-      progress[target] = 0;
 
       const updateProgress = async(percent) => {
-        progress[target] = percent;
-        this.setEscs({ progress });
+        if(esc.ref && esc.ref.current) {
+          esc.ref.current.setProgress((percent));
+        }
       };
 
-      updateProgress(0.1);
-
+      this.addLogMessage('flashingEsc', { index: target + 1 });
       const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
-      result.index = target;
+      updateProgress(0);
 
       if(result) {
+        result.index = target;
+        result.ref = React.createRef();
         individual[i] = result;
-        progress[target] = 0;
 
-        await this.setEscs({
-          individual,
-          progress,
-        });
+        await this.setEscs({ individual });
       } else {
         this.addLogMessage('flashingEscFailed', { index: target + 1 });
       }
@@ -511,10 +503,10 @@ class App extends Component {
 
     try {
       for (let i = 0; i < connected; i += 1) {
-        newEscs.progress[i] = 0;
         const settings = await this.serial.getFourWayInterfaceInfo(i);
         if(settings) {
           settings.index = i;
+          settings.ref = React.createRef();
           individual.push(settings);
 
           this.addLogMessage('readEsc', {
