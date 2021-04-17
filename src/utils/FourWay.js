@@ -456,7 +456,7 @@ class FourWay {
         if(esc.isSiLabs) {
           const mcu = esc.settings.MCU;
           if (mcu && mcu.startsWith('#BLHELI$EFM8')) {
-            const CODE_LOCK_BYTE_OFFSET = mcu.endsWith('B21#') ? 0xFBFE : 0x1FFE;
+            const CODE_LOCK_BYTE_OFFSET = mcu.endsWith('B21#') ? 0xFBFF : 0x1FFF;
             const codeLockByte = (await this.read(CODE_LOCK_BYTE_OFFSET, 1)).params[0];
             if (codeLockByte !== 0xFF) {
               throw new EscLockedError(`ESC is locked (${codeLockByte})`);
