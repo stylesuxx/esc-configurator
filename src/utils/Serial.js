@@ -126,14 +126,14 @@ class Serial {
 
   async open(baudRate = 115200) {
     this.baudRate = baudRate;
-    await this.port.open({ baudRate });
 
     try {
+      await this.port.open({ baudRate });
       this.writer = await this.port.writable.getWriter();
       this.reader = await this.port.readable.getReader();
     } catch(e) {
-      console.debug('Port not read or writable');
-      throw new Error('Port not read or writable');
+      console.debug('Could not open serial port');
+      throw new Error('Could not open serial port');
     }
 
     this.msp = new Msp(this.executeCommand);
