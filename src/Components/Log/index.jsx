@@ -45,4 +45,4 @@ function Log({ messages }) {
 
 Log.propTypes = { messages: PropTypes.arrayOf(PropTypes.any).isRequired };
 
-export default Log;
+export default React.memo(Log);

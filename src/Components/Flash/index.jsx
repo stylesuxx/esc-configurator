@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import CommonSettings from './CommonSettings';
+import CountWarning from './CountWarning';
 import Escs from './Escs';
 
 import './style.scss';
@@ -18,52 +18,10 @@ function Flash({
   onIndividualSettingsUpdate,
   onSettingsUpdate,
 }) {
-  const { t } = useTranslation('common');
-
-  function CountWarning() {
-    if(escCount !== escs.length) {
-      return (
-        <div className="gui-box grey missing-esc">
-          <div className="gui-box-titlebar">
-            <div className="spacer-box-title">
-              {t('escMissingHeader')}
-            </div>
-          </div>
-
-          <div className="spacer-box">
-            <p>
-              {t('escMissingText')}
-            </p>
-
-            <ul>
-              <li
-                dangerouslySetInnerHTML={{ __html: t('escMissing1') }}
-              />
-
-              <li
-                dangerouslySetInnerHTML={{ __html: t('escMissing2') }}
-              />
-
-              <li
-                dangerouslySetInnerHTML={{ __html: t('escMissing3') }}
-              />
-            </ul>
-
-            <p
-              dangerouslySetInnerHTML={{ __html: t('escMissingHint') }}
-            />
-          </div>
-        </div>
-      );
-    }
-
-    return null;
-  }
-
   return (
-    <div id="flash-content">
-      <div className="config-wrapper">
-        <div className="common-config">
+    <div className="flash">
+      <div className="flash__wrapper">
+        <div className="flash__common">
           {escs.length > 0 &&
             <CommonSettings
               availableSettings={availableSettings}
@@ -74,7 +32,7 @@ function Flash({
             />}
         </div>
 
-        <div className="individual-config">
+        <div className="flash__individual">
           <Escs
             canFlash={canFlash}
             directInput={directInput}
@@ -84,7 +42,8 @@ function Flash({
             onSettingsUpdate={onIndividualSettingsUpdate}
           />
 
-          <CountWarning />
+          {escCount !== escs.length &&
+            <CountWarning />}
         </div>
       </div>
     </div>

@@ -220,4 +220,4 @@ MainContent.propTypes = {
   settings: PropTypes.shape(),
 };
 
-export default MainContent;
+export default React.memo(MainContent);

@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 
 import {
   getMasterSettings,
@@ -19,9 +22,9 @@ import './style.scss';
 function CommonSettings({
   availableSettings,
   directInput,
+  disabled,
   escs,
   onSettingsUpdate,
-  disabled,
 }) {
   const {
     t,
@@ -38,34 +41,39 @@ function CommonSettings({
   const subRevision = availableSettings.SUB_REVISION;
   const revision = `${mainRevision}.${subRevision}`;
 
-  const currentSettings = availableSettings;
+  const [settings, setSettings] = useState(null);
 
-  function updateSettings() {
-    onSettingsUpdate(currentSettings);
-  }
+  useEffect(() => {
+    if(settings) {
+      onSettingsUpdate(settings);
+    }
+  }, [settings]);
 
   function handleCheckboxChange(e) {
+    const newSettings = { ...availableSettings };
     const {
-      name, checked,
+      name,
+      checked,
     } = e.target;
-    currentSettings[name] = checked ? 1 : 0;
-
-    updateSettings();
+    newSettings[name] = checked ? 1 : 0;
+    setSettings(newSettings);
   }
 
   function handleSelectChange(e) {
+    const newSettings = { ...availableSettings };
     const {
-      name, value,
+      name,
+      value,
     } = e.target;
-    currentSettings[name] = value;
-
-    updateSettings();
+    newSettings[name] = value;
+    setSettings(newSettings);
   }
 
   function handleNumberChange(name, value) {
-    currentSettings[name] = value;
+    const newSettings = { ...availableSettings };
 
-    updateSettings();
+    newSettings[name] = value;
+    setSettings(newSettings);
   }
 
   if (!settingsDescriptions) {
@@ -237,4 +245,4 @@ CommonSettings.propTypes = {
   onSettingsUpdate: PropTypes.func.isRequired,
 };
 
-export default CommonSettings;
+export default React.memo(CommonSettings);
