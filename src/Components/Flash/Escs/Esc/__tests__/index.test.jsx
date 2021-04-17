@@ -6,7 +6,20 @@ import userEvent from '@testing-library/user-event';
 
 import Esc from '../';
 
-jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+    i18n: {
+      exists: (name) => {
+        if(name === 'hints:STARTUP_BEEP') {
+          return false;
+        }
+
+        return true;
+      },
+    },
+  }),
+}));
 
 test('loads and displays Esc', () => {
   const esc = { individualSettings: {} };
