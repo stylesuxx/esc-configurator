@@ -13,6 +13,13 @@
     ]
   },
   {
+    "name": "Blackheart - Two Steps From Hell",
+    "tracks": [
+      "tsfh_bh_m:b=180,o=5,d=8:4a4,d,f4,a4,f4,d,f4,d,f4,a4,f4,f,a4,a,c,f,c,a,c,a,c,f,c,a,c,g,a#4,d,a,g,a#4,d,a#4,d,a#4,d,a#4,f,f4,a4,f4,d,f4,d,f4,a4,f4,a4,f4",
+      "tsfh_bh_b:b=180,o=4,d=8:4p,d,p,d,p,d,p,d,p,d,p,d,p,f,p,f,p,f,p,f,p,f,p,f,p,g,p,g,p,g,p,g,p,g,p,g,p,d,p,d,p,d,p,d,p,d,p,4d"
+    ]
+  },
+  {
     "name": "Blue - Eifel65",
     "tracks": [
       "ei65_bl_m:b=128,o=5,d=1:4a,8a#,8d,8g,8a#,8c6,8f,8a,4a#,8g,8a#,8d6,8d#6,8g,8d6,8c6,8a#,8d,8g,8a#,8a,8c,8f,4g.",
@@ -39,6 +46,15 @@
     "name": "Never gonna give you up - Rick Astley",
     "tracks": [
       "never:d=4,o=3,b=210:8g3,8a3,8c4,8a3,4e4,8p,4e4,8p,4.d4,4p,8p,8g3,8a3,8c4,8a3,4d4,8p,4d4,8p,4c4,8b3,4.a3,8g3,8a3,8c4,8a3,2c4,4d4,4b3,4a3,4.g3,8p,4g3,2d4,2.c4,4p"
+    ]
+  },
+  {
+    "name": "Rick & Morty Theme",
+    "tracks": [
+      "Rick&Morty:d=2,o=2,b=349:1a#5,2p,2c#6,2c6,2d#6,2g#5,2f#5,1f5",
+      "Rick&Morty:d=2,o=2,b=349:1f5,2p,2c#6,2c6,2d#6,2g#5,2f#5,1f5",
+      "Rick&Morty:d=2,o=2,b=349:8a#6,4p,8a#6,4p,8a#6,2p,8p,8a#6,4p,8p,8a#6,4p,8a#6,4p,8a#6,4p,8p,8g#6,8p,8a#6,1p,4p,8p",
+      "Rick&Morty:d=2,o=2,b=349:8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8g#4,1f4"
     ]
   },
   {
