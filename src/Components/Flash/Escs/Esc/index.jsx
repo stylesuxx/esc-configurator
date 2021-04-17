@@ -6,10 +6,7 @@ import React, {
   useState,
 } from 'react';
 
-import Checkbox from '../../../Input/Checkbox';
-import Select from '../../../Input/Select';
-import Slider from '../../../Input/Slider';
-import Number from '../../../Input/Number';
+import Settings from './Settings';
 
 import './style.scss';
 
@@ -24,11 +21,10 @@ const Esc = forwardRef(({
   const { t } = useTranslation('common');
 
   const settings = esc.individualSettings;
-  const currentSettings = settings;
-  const settingsDescriptions = esc.individualSettingsDescriptions;
-
+  const descriptions = esc.individualSettingsDescriptions;
   const name = esc.displayName ? esc.displayName : 'Unsupported/Unrecognized';
   const title = `ESC ${(index + 1)}: ${name}`;
+
   const [progress, setProgress] = useState(0);
 
   useImperativeHandle(ref, () => ({
@@ -37,19 +33,19 @@ const Esc = forwardRef(({
     },
   }));
 
-  function handleFirmwareFlash() {
-    onFlash(index);
+  function updateSettings() {
+    onSettingsUpdate(index, settings);
   }
 
-  function updateSettings() {
-    onSettingsUpdate(index, currentSettings);
+  function handleFirmwareFlash() {
+    onFlash(index);
   }
 
   function handleCheckboxChange(e) {
     const {
       name, checked,
     } = e.target;
-    currentSettings[name] = checked ? 1 : 0;
+    settings[name] = checked ? 1 : 0;
 
     updateSettings();
   }
@@ -58,124 +54,19 @@ const Esc = forwardRef(({
     const {
       name, value,
     } = e.target;
-    currentSettings[name] = value;
+    settings[name] = value;
 
     updateSettings();
   }
 
   function handleNumberChange(name, value) {
-    currentSettings[name] = value;
+    settings[name] = value;
 
     updateSettings();
   }
 
-  let settingElements = null;
-  if(settingsDescriptions) {
-    settingElements = settingsDescriptions.base.map((setting) => {
-      if (setting.visibleIf && !setting.visibleIf(settings)) {
-        return null;
-      }
-
-      const value = settings[setting.name];
-
-      switch (setting.type) {
-        case 'bool': {
-          return (
-            <Checkbox
-              disabled={!canFlash}
-              key={setting.name}
-              label={t(setting.label)}
-              name={setting.name}
-              onChange={handleCheckboxChange}
-              value={value}
-            />
-          );
-        }
-
-        case 'enum': {
-          const { options } = setting;
-          return (
-            <Select
-              disabled={!canFlash}
-              key={setting.name}
-              label={t(setting.label)}
-              name={setting.name}
-              onChange={handleSelectChange}
-              options={options}
-              value={value}
-            />
-          );
-        }
-
-        case 'number': {
-          if(directInput) {
-            return (
-              <Number
-                disabled={!canFlash}
-                factor={setting.factor}
-                key={setting.name}
-                label={t(setting.label)}
-                max={setting.max}
-                min={setting.min}
-                name={setting.name}
-                offset={setting.offset}
-                onChange={handleNumberChange}
-                round={false}
-                step={1}
-                value={value}
-              />
-            );
-          }
-
-          return (
-            <Slider
-              disabled={!canFlash}
-              factor={setting.factor}
-              key={setting.name}
-              label={t(setting.label)}
-              max={setting.max}
-              min={setting.min}
-              name={setting.name}
-              offset={setting.offset}
-              onChange={handleNumberChange}
-              round={false}
-              step={setting.step}
-              suffix={setting.suffix}
-              value={value}
-            />
-          );
-        }
-
-        default: return null;
-      }
-    });
-  }
-
-  function FlashBox() {
-    return(
-      <div className="half flash-box">
-        <div className="default-btn flash-btn">
-          <progress
-            className={progress > 0 ? 'progress' : 'hidden'}
-            max="100"
-            min="0"
-            value={progress}
-          />
-
-          <button
-            disabled={!canFlash}
-            onClick={handleFirmwareFlash}
-            type="button"
-          >
-            {t('escButtonFlash')}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="gui-box grey">
+    <div className="esc gui-box grey">
       <div className="gui-box-titlebar">
         <div className="spacer-box-title">
           {title}
@@ -183,9 +74,35 @@ const Esc = forwardRef(({
       </div>
 
       <div className="spacer-box">
-        {settingElements}
+        {descriptions &&
+          <Settings
+            descriptions={descriptions.base}
+            directInput={directInput}
+            disabled={!canFlash}
+            handleCheckboxChange={handleCheckboxChange}
+            handleNumberChange={handleNumberChange}
+            handleSelectChange={handleSelectChange}
+            settings={settings}
+          />}
 
-        <FlashBox />
+        <div className="half">
+          <div className="default-btn flash-btn">
+            <progress
+              className={progress > 0 ? 'progress' : 'hidden'}
+              max="100"
+              min="0"
+              value={progress}
+            />
+
+            <button
+              disabled={!canFlash}
+              onClick={handleFirmwareFlash}
+              type="button"
+            >
+              {t('escButtonFlash')}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
