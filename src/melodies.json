@@ -6,10 +6,26 @@
     ]
   },
   {
+    "name": "1000 Miles - Vanessa Carlton",
+    "tracks": [
+      "vc_1000m_m:b=94,o=5,d=16:h4,h,h4,h,a#,h4,a#,4f#,8p,8d#,c#,h4,h,h4,h,a#,h4,a#,f#,h4,f#,h4,f#,h4,d#,e,d#,h4",
+      "vc_1000m_b:b=94,o=4,d=8:16p,e.,f#.,4d#,4p.,e.,f#.,4d#,4p."
+    ]
+  },
+  {
     "name": "Blue - Eifel65",
     "tracks": [
       "ei65_bl_m:b=128,o=5,d=1:4a,8a#,8d,8g,8a#,8c6,8f,8a,4a#,8g,8a#,8d6,8d#6,8g,8d6,8c6,8a#,8d,8g,8a#,8a,8c,8f,4g.",
       "ei65_bl_b:b=128,o=4,d=1:4p,2g,2f,2d#,2c,2g,4f.,4d#."
+    ]
+  },
+  {
+    "name": "Chiquitita - Abba",
+    "tracks": [
+      "ab_chiq_m1:b=104,o=5,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h4,c#,d,8f#,e6,e,e6,p,e6,e,e6,e,e6,e,e6,e,e6,e,g#6,g#,g#6,g#,g#6,g#,g#6,g#,a6,a,a6,a,a6,a,a6,a,g#6,g#,g#6,g#,a6,a,a6,a,h6,h,h6,h,8a6",
+      "ab_chiq_m2:b=104,o=6,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h5,c#,d,8f#,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,8d",
+      "ab_chiq_b1:b=104,o=4,d=16:a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,h3,p,c#,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,8a",
+      "ab_chiq_b2:b=104,o=4,d=16:a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a,p,a,p,h,p,c#5,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,8d5"
     ]
   },
   {
@@ -35,6 +51,14 @@
     "name": "Starwars Theme",
     "tracks": [
       "starwars:d=4,o=5,b=180:8f,8f,8f,2a#.,2f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8d#6,2c6"
+    ]
+  },
+  {
+    "name": "Super Mario Theme",
+    "tracks": [
+      "smw_ath_m:b=165,o=5,d=1:16e6,8p.,16c6,8p,16g,16a,16c6,16p,16c6,8p.,16a,16g,16p,16c6,16p,16c6,16p,16g6,16p,16e6,8p,16d6,8p.,16g,16e6,8p.,16c6,8p,16g,16a,16c6,16p,16c6,8p.,16a,16g,16p,16c6,16p,16f6,16e6,16d6,8c6.",
+      "smw_ath_b1:b=165,o=5,d=1:16c,16p,16g,16p,16g4,16p,16g,16p,16f4,16p,16f,16p,16f#4,16p,16f#,16p,16e4,16p,16e,16p,16d#4,16p,16d#,16p,16d4,16p,16f,16p,16g4,16p,16g,16p,16c,16p,16g,16p,16g4,16p,16g,16p,16f4,16p,16f,16p,16f#4,16p,16f#,16p,16d4,16p,16a,16p,16g4,16p,4g",
+      "smw_ath_b2:b=165,o=5,d=1:16c,16p,16e,16p,16g4,16p,16e,16p,16f4,16p,16c,16p,16f#4,16p,16c,16p,16e4,16p,16c,16p,16d#4,16p,16c,16p,16d4,16p,16d,16p,16g4,16p,16f,16p,16c,16p,16e,16p,16g4,16p,16e,16p,16f4,16p,16c,16p,16f#4,16p,16c,16p,16d4,16p,16f,16p,16g4,16p,4f"
     ]
   },
   {

@@ -3,7 +3,10 @@
     "title": "Unpublished",
     "items": [
       "More tests",
-      "Refactoring"
+      "Refactoring",
+      "Show hints on individual settings",
+      "Prevent double flashing while file is fetching",
+      "Added more melodies"
     ]
   },
   {
