@@ -40,7 +40,7 @@ Right now only SiLabs EFM8 MCU's are supported. But a lot of ARM and Atmel relat
 Translations are managed via [crowdin](https://crowdin.com/project/esc-configuratorcom) so head on over there and contribute to the translations. Should your language not be enabled yet, let me know in the issues and I will add it.
 
 ## Contributing
-Contributions are very welcome. Feel free to submit PR's and discuss feature requests - I am open for all suggestions.
+Contributions are very welcome. Feel free to submit PR's and discuss feature requests - I am open for all suggestions. If you submit a PR please also **provide tests** where it makes sense. Some tests can not (yet) be easily automated, like playing music or the actual flashing process without having to heavily mock those components.
 
 ### Dev Setup
 Simply clone the repository, install dependencies and run the dev server. Pull requests are more than welcome.
@@ -59,4 +59,13 @@ Search the codes for TODO or IMPROVEMENTS, there is a lot that still can be done
 
     yarn build
 
-The build is then available from the build directory and can be served by simply hosting the content of the directory.
+The build is then available from the build directory and can be served by simply hosting the content of the directory or via serve:
+
+    serve -s build -l 1234
+
+#### Linting and testing
+
+    yarn lint
+    yarn test
+    yarn test:watch
+    yarn test:coverage

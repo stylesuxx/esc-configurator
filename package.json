@@ -1,18 +1,14 @@
 {
   "name": "esc-configurator",
   "version": "0.12.1",
-  "private": true,
+  "private": false,
   "license": "AGPL-3.0",
   "dependencies": {
     "@palmabit/react-cookie-law": "^0.6.2",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "bluejay-rtttl-parse": "^2.0.2",
     "compare-versions": "^3.6.0",
     "dateformat": "^4.5.1",
     "i18next": "^19.9.0",
-    "pre-push": "^0.1.1",
     "rc-slider": "^9.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -23,7 +19,6 @@
     "react-scripts": "4.0.3",
     "react-toastify": "^7.0.3",
     "react-tooltip": "=4.2.8",
-    "sass": "^1.32.8",
     "scheduler": "0.14.0",
     "sleep": "^6.3.0",
     "web-serial-polyfill": "stylesuxx/web-serial-polyfill#temporary-fix",
@@ -44,9 +39,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test-once": "yarn test --coverage --watchAll=false",
-    "coverage": "yarn test-once && codecov",
+    "test": "react-scripts test --watchAll=false",
+    "test:watch": "react-scripts test",
+    "test:coverage": "yarn test --coverage --watchAll=false",
+    "codecov": "yarn test:coverage && codecov",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --ext .jsx,.js"
   },
@@ -70,6 +66,9 @@
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.0.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
     "@typescript-eslint/parser": "^4.0.0",
     "babel-eslint": "^10.0.0",
     "codecov": "^3.8.1",
@@ -81,7 +80,9 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "pre-commit": "^1.2.2"
+    "pre-commit": "^1.2.2",
+    "pre-push": "^0.1.1",
+    "sass": "^1.32.8"
   },
   "jest": {
     "transformIgnorePatterns": [
@@ -92,6 +93,6 @@
     "lint"
   ],
   "pre-push": [
-    "test-once"
+    "test:coverage"
   ]
 }
