@@ -259,7 +259,6 @@ class Msp {
   }
 
   encodeV2(code, data = []) {
-    console.log('V2', code, data);
     // Always reserve 9 bytes for protocol overhead !
     const dataLength = data.length;
     const size = 9 + dataLength;
