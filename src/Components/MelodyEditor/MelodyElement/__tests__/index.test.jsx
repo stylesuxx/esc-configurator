@@ -236,3 +236,61 @@ test('imperative Handle', async() => {
   });
   expect(screen.getByText(/common:melodyEditorPlay/i)).toBeInTheDocument();
 });
+
+test('play with external context', async() => {
+  jest.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);
+
+  const onAccept = jest.fn();
+  const onPlay = jest.fn();
+  const onStop = jest.fn();
+  const onUpdate = jest.fn();
+  const ref = React.createRef();
+  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
+
+  const oscStart = jest.fn();
+  const oscStop = jest.fn();
+  const oscClose = jest.fn();
+
+  const context = {
+    createGain: () => ({
+      gain: { value: 1 },
+      connect: () => ({}),
+      disconnect: () => ({}),
+    }),
+    createOscillator: () => ({
+      connect: () => ({}),
+      frequency: { setValueAtTime: () => ({}) },
+      onended: null,
+      start: oscStart,
+      stop: oscStop,
+    }),
+    close: oscClose,
+  };
+
+  render(
+    <MelodyElement
+      accepted={false}
+      label="Label comes here"
+      melody={melody}
+      onAccept={onAccept}
+      onPlay={onPlay}
+      onStop={onStop}
+      onUpdate={onUpdate}
+      ref={ref}
+    />
+  );
+
+  await act(async()=> {
+    ref.current.play(context, 1);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
+    });
+    console.log(ref.current);
+    ref.current.stop();
+  });
+
+  expect(onPlay).toHaveBeenCalled();
+  expect(oscStart).toHaveBeenCalled();
+  expect(oscStop).toHaveBeenCalled();
+  // expect(oscClose).toHaveBeenCalled();
+});
