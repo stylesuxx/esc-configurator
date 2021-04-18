@@ -1,8 +1,8 @@
 {
-  "settingsHeader": "Settings",
-  "closeText": "Close",
-  "directInput": "Direct Input",
-  "directInputHint": "Use direct input for numbers instead of sliders.",
-  "printLogs": "Print logs",
-  "printLogsHint": "Will print logs to the console if enabled."
+  "settingsHeader": "Ajustes",
+  "closeText": "Cerrar",
+  "directInput": "Entrada Directa",
+  "directInputHint": "Usar entrada directa para números en lugar de los deslizadores.",
+  "printLogs": "Imprimir registros",
+  "printLogsHint": "Imprimirá los registros en la consola si está habilitado."
 }
