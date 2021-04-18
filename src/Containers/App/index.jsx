@@ -827,7 +827,11 @@ class App extends Component {
     const { escs } = this.state;
     if(this.serial) {
       for(let i = 0; i < escs.individual.length; i += 1) {
-        await this.serial.resetFourWayInterface(i);
+        try {
+          await this.serial.resetFourWayInterface(i);
+        } catch(e) {
+          this.addLogMessage('resetEscFailed', { index: i + 1 });
+        }
       }
       await this.serial.exitFourWayInterface();
 

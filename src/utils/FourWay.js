@@ -205,7 +205,7 @@ class FourWay {
   sendMessagePromised(command, params = [0], address = 0, retries = 10) {
     const self = this;
 
-    const process = async (resolve) => {
+    const process = async (resolve, reject) => {
       this.lastCommandTimestamp = Date.now();
       const message = self.createMessage(command, params, address);
 
@@ -244,11 +244,11 @@ class FourWay {
         return resolve(result);
       } catch(e) {
         console.debug(`Failed processing command ${this.commandToString(command)} after ${retries} retries.`);
-        resolve(null);
+        reject(e);
       }
     };
 
-    return new Promise((resolve) => process(resolve));
+    return new Promise((resolve, reject) => process(resolve, reject));
   }
 
   async getInfo(target) {
