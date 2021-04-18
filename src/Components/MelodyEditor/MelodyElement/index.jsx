@@ -165,7 +165,6 @@ const MelodyElement = forwardRef(({
     volume.gain.value = 0.05 * gainModifier;
 
     const osc = oscillator.current = audioContext.createOscillator();
-    console.log(osc.frequency);
 
     osc.type = 'square';
     osc.connect(volume);
