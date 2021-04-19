@@ -104,6 +104,11 @@ const MelodyElement = forwardRef(({
 
     // If an accepted melody changes
     if(isAccepted) {
+      /* The next conditional should never fail, since we can not have an
+       * accepted melody and the new melody being the same as the accepted.
+       * It would mean we accepted twice.
+       */
+      /* istanbul ignore next */
       if(melody !== acceptedMelody) {
         setIsAccepted(false);
         onAccept(false);
@@ -158,7 +163,7 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function play(melody, externalContext = null, gainModifier = 1) {
+  function play(melody, externalContext, gainModifier) {
     const audioContext = externalContext || new window.AudioContext();
 
     const volume = audioContext.createGain();
