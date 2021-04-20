@@ -1,6 +1,6 @@
 {
   "name": "esc-configurator",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "private": false,
   "license": "AGPL-3.0",
   "dependencies": {
@@ -89,7 +89,7 @@
       "node_modules/(?!bluejay-rtttl-parse)/"
     ],
     "testMatch": [ "**/?(*.)+(test).[jt]s?(x)" ],
-    "coveragePathIgnorePatterns": [".*Mocked.*"] 
+    "coveragePathIgnorePatterns": [".*Mocked.*"]
   },
   "pre-commit": [
     "lint"
