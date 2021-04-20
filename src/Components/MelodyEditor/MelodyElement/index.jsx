@@ -103,16 +103,9 @@ const MelodyElement = forwardRef(({
     setCurrentMelody(melody);
 
     // If an accepted melody changes
-    if(isAccepted) {
-      /* The next conditional should never fail, since we can not have an
-       * accepted melody and the new melody being the same as the accepted.
-       * It would mean we accepted twice.
-       */
-      /* istanbul ignore next */
-      if(melody !== acceptedMelody) {
-        setIsAccepted(false);
-        onAccept(false);
-      }
+    if(isAccepted && melody !== acceptedMelody) {
+      setIsAccepted(false);
+      onAccept(false);
     }
   }
 

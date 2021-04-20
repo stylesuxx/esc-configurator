@@ -7,66 +7,10 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-class MockedContext {
-  constructor(contextClose, oscStart, oscStop, oscClose) {
-    this.close = contextClose;
-
-    this.createOscillator = () => new MockedOscillator(oscStart, oscStop, oscClose);
-  }
-
-  createGain() {
-    return({
-      gain: { value: 1 },
-      connect: () => ({}),
-      disconnect: () => ({}),
-    });
-  }
-}
-
-class MockedContextOnended extends MockedContext {
-  constructor(contextClose, oscStart, oscStop, oscClose) {
-    super();
-    this.close = contextClose;
-
-    this.createOscillator = () => new MockedOscillatorOnended(oscStart, oscStop, oscClose);
-  }
-}
-
-class MockedOscillator {
-  constructor(start, stop, close) {
-    this.mockedStart = start;
-    this.mockedStop = stop;
-    this.mockedClose = close;
-
-    this.frequency = { setValueAtTime: () => ({}) };
-  }
-
-  close() {
-    this.mockedClose();
-  }
-
-  connect() {}
-
-  onended() {
-    console.log('ended');
-  }
-
-  start() {
-    this.mockedStart();
-  }
-
-  stop() {
-    this.mockedStop();
-  }
-}
-
-class MockedOscillatorOnended extends MockedOscillator {
-  stop() {
-    this.onended();
-    this.mockedStop();
-  }
-}
-
+import {
+  MockedContext,
+  MockedContextOnended,
+} from './MockedAudioContext';
 import MelodyElement from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
@@ -235,7 +179,8 @@ test('loads and displays with valid melody', async() => {
   userEvent.click(screen.getByText(/common:melodyEditorPlay/i));
   expect(onPlay).toHaveBeenCalled();
 
-  // Since AudioContext is mitting in the tests, we can't test stopping
+  // Since playing is instantly over with the mocked class, we can not test
+  // stopping.
   // userEvent.click(screen.getByText(/common:melodyEditorStop/i));
   // expect(onStop).toHaveBeenCalled();
 });
@@ -274,7 +219,7 @@ test('change melody', async() => {
   const onStop = jest.fn();
   const onUpdate = jest.fn();
 
-  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
+  const melody = "Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6";
 
   render(
     <MelodyElement
@@ -290,7 +235,7 @@ test('change melody', async() => {
 
   userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
-  fireEvent.change(screen.getByRole(/textbox/i), { target: { value: 'Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6' } });
+  fireEvent.change(screen.getByRole(/textbox/i), { target: { value: 'Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g' } });
   userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
   expect(onAccept).toHaveBeenCalled();

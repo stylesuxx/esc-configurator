@@ -87,7 +87,9 @@
   "jest": {
     "transformIgnorePatterns": [
       "node_modules/(?!bluejay-rtttl-parse)/"
-    ]
+    ],
+    "testMatch": [ "**/?(*.)+(test).[jt]s?(x)" ],
+    "coveragePathIgnorePatterns": [".*Mocked.*"] 
   },
   "pre-commit": [
     "lint"
