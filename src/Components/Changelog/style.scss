@@ -1,4 +1,4 @@
-#changelog {
+.changelog {
   width: 250px;
   height: 100%;
   position: fixed;
@@ -7,12 +7,11 @@
   height: calc(100% - 137px - 21px);
 
   @media only screen and (max-width: 600px) {
-
     top: 170px;
     height: calc(100% - 170px - 21px);
   }
 
-  .wrapper {
+  .changelog__wrapper {
     height: 100%;
     padding: 0 20px;
     border-left: 5px solid var(--color-secondary);
@@ -24,7 +23,7 @@
     right: 0px;
     background: white;
 
-    .wrapper {
+    .changelog__wrapper {
       display: block;
     }
   }
@@ -45,12 +44,12 @@
     cursor: pointer;
   }
 
-  .title {
+  .changelog__title {
     margin: 20px 0;
     font-size: 16px;
   }
 
-  .log {
+  .changelog__content {
     line-height: 17px;
 
     span {

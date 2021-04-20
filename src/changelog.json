@@ -1,5 +1,15 @@
 [
   {
+    "title": "0.13.0",
+    "items": [
+      "More tests",
+      "Refactoring",
+      "Show hints on individual settings",
+      "Prevent double flashing while file is fetching",
+      "Added more melodies"
+    ]
+  },
+  {
     "title": "0.12.1",
     "items": [
       "Fixed button misalignement"

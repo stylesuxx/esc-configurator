@@ -11,6 +11,22 @@ import MotorControl from '../../Components/MotorControl';
 
 import './style.scss';
 
+function WarningWrapper() {
+  const { t } = useTranslation('common');
+
+  return (
+    <div className="note">
+      <p>
+        <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
+
+        <br />
+
+        <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
+      </p>
+    </div>
+  );
+}
+
 function MainContent({
   appSettings,
   open,
@@ -40,8 +56,6 @@ function MainContent({
   fourWay,
   port,
 }) {
-  const { t } = useTranslation('common');
-
   const {
     isSelecting,
     isFlashing,
@@ -99,20 +113,6 @@ function MainContent({
     }
 
     return null;
-  }
-
-  function WarningWrapper() {
-    return (
-      <div className="note">
-        <p>
-          <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
-
-          <br />
-
-          <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
-        </p>
-      </div>
-    );
   }
 
   if (isSelecting) {

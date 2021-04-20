@@ -6,9 +6,17 @@
     ]
   },
   {
-    "name": "Simpsons Theme",
+    "name": "1000 Miles - Vanessa Carlton",
     "tracks": [
-      "simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6,g.6,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6"
+      "vc_1000m_m:b=94,o=5,d=16:h4,h,h4,h,a#,h4,a#,4f#,8p,8d#,c#,h4,h,h4,h,a#,h4,a#,f#,h4,f#,h4,f#,h4,d#,e,d#,h4",
+      "vc_1000m_b:b=94,o=4,d=8:16p,e.,f#.,4d#,4p.,e.,f#.,4d#,4p."
+    ]
+  },
+  {
+    "name": "Blackheart - Two Steps From Hell",
+    "tracks": [
+      "tsfh_bh_m:b=180,o=5,d=8:4a4,d,f4,a4,f4,d,f4,d,f4,a4,f4,f,a4,a,c,f,c,a,c,a,c,f,c,a,c,g,a#4,d,a,g,a#4,d,a#4,d,a#4,d,a#4,f,f4,a4,f4,d,f4,d,f4,a4,f4,a4,f4",
+      "tsfh_bh_b:b=180,o=4,d=8:4p,d,p,d,p,d,p,d,p,d,p,d,p,f,p,f,p,f,p,f,p,f,p,f,p,g,p,g,p,g,p,g,p,g,p,g,p,d,p,d,p,d,p,d,p,d,p,4d"
     ]
   },
   {
@@ -19,21 +27,76 @@
     ]
   },
   {
-    "name": "Hall of Fame - The Script",
+    "name": "Chiquitita - Abba",
     "tracks": [
-      "TS_HOF_M:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
-      "TS_HOF_B:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4"
+      "ab_chiq_m1:b=104,o=5,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h4,c#,d,8f#,e6,e,e6,p,e6,e,e6,e,e6,e,e6,e,e6,e,g#6,g#,g#6,g#,g#6,g#,g#6,g#,a6,a,a6,a,a6,a,a6,a,g#6,g#,g#6,g#,a6,a,a6,a,h6,h,h6,h,8a6",
+      "ab_chiq_m2:b=104,o=6,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h5,c#,d,8f#,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,8d",
+      "ab_chiq_b1:b=104,o=4,d=16:a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,h3,p,c#,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,8a",
+      "ab_chiq_b2:b=104,o=4,d=16:a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a,p,a,p,h,p,c#5,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,8d5"
     ]
   },
   {
-    "name": "Too long test",
+    "name": "Hall of Fame - The Script",
     "tracks": [
-      "TS_HOF_M:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
-      "TS_HOF_B:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4",
-      "TS_HOF_M:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
-      "TS_HOF_B:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4",
-      "TS_HOF_M:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
-      "TS_HOF_B:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4"
+      "ts_hof_m:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
+      "ts_hof_b:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4"
+    ]
+  },
+  {
+    "name": "Never gonna give you up - Rick Astley",
+    "tracks": [
+      "never:d=4,o=3,b=210:8g3,8a3,8c4,8a3,4e4,8p,4e4,8p,4.d4,4p,8p,8g3,8a3,8c4,8a3,4d4,8p,4d4,8p,4c4,8b3,4.a3,8g3,8a3,8c4,8a3,2c4,4d4,4b3,4a3,4.g3,8p,4g3,2d4,2.c4,4p"
+    ]
+  },
+  {
+    "name": "Rick & Morty Theme",
+    "tracks": [
+      "Rick&Morty:d=2,o=2,b=349:1a#5,2p,2c#6,2c6,2d#6,2g#5,2f#5,1f5",
+      "Rick&Morty:d=2,o=2,b=349:1f5,2p,2c#6,2c6,2d#6,2g#5,2f#5,1f5",
+      "Rick&Morty:d=2,o=2,b=349:8a#6,4p,8a#6,4p,8a#6,2p,8p,8a#6,4p,8p,8a#6,4p,8a#6,4p,8a#6,4p,8p,8g#6,8p,8a#6,1p,4p,8p",
+      "Rick&Morty:d=2,o=2,b=349:8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8f5,8f4,8p,8a#4,8g#4,1f4"
+    ]
+  },
+  {
+    "name": "Simpsons Theme",
+    "tracks": [
+      "simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6,g.6,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6"
+    ]
+  },
+  {
+    "name": "Starwars Theme",
+    "tracks": [
+      "starwars:d=4,o=5,b=180:8f,8f,8f,2a#.,2f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8d#6,2c6"
+    ]
+  },
+  {
+    "name": "Super Mario Theme",
+    "tracks": [
+      "smw_ath_m:b=165,o=5,d=1:16e6,8p.,16c6,8p,16g,16a,16c6,16p,16c6,8p.,16a,16g,16p,16c6,16p,16c6,16p,16g6,16p,16e6,8p,16d6,8p.,16g,16e6,8p.,16c6,8p,16g,16a,16c6,16p,16c6,8p.,16a,16g,16p,16c6,16p,16f6,16e6,16d6,8c6.",
+      "smw_ath_b1:b=165,o=5,d=1:16c,16p,16g,16p,16g4,16p,16g,16p,16f4,16p,16f,16p,16f#4,16p,16f#,16p,16e4,16p,16e,16p,16d#4,16p,16d#,16p,16d4,16p,16f,16p,16g4,16p,16g,16p,16c,16p,16g,16p,16g4,16p,16g,16p,16f4,16p,16f,16p,16f#4,16p,16f#,16p,16d4,16p,16a,16p,16g4,16p,4g",
+      "smw_ath_b2:b=165,o=5,d=1:16c,16p,16e,16p,16g4,16p,16e,16p,16f4,16p,16c,16p,16f#4,16p,16c,16p,16e4,16p,16c,16p,16d#4,16p,16c,16p,16d4,16p,16d,16p,16g4,16p,16f,16p,16c,16p,16e,16p,16g4,16p,16e,16p,16f4,16p,16c,16p,16f#4,16p,16c,16p,16d4,16p,16f,16p,16g4,16p,4f"
+    ]
+  },
+  {
+    "name": "Till It's Over - Tristam",
+    "tracks": [
+      "tris_tio_m:b=110,o=5,d=1:8a#,16d,8a,16d,4g,8d,16a,8d,16g,8f,16a#4,8g,16a#4,8g,16p,16g,8a#4,16a,8a#4,16a#,8g,16a#4,8d#,16a#4,8g,16a4,16c,8d,16a#,16p,16a#,16a,8g,16d,8a,16d,8a#.,16a,8d,8f,8g",
+      "tris_tio_b:b=110,o=4,d=1:2a#,2a,2g.,8g,8p,2d#,2f,g"
+    ]
+  },
+  {
+    "name": "Turkish March - Mozart",
+    "tracks": [
+      "wam_trk_m:b=116,o=5,d=1:16h4,16a4,16g#4,16a4,4c,16d,16c,16h4,16c,4e,16f,16e,16d#,16e,16h,16a,16g#,16a,16h,16a,16g#,16a,4c6,8a,16c6,32f#,32a,8h,8a,8g,16a,32f#,32a,8h,8a,8g,16a,32f#,32a,8h,8a,8g,8f#,4e",
+      "wam_trk_b1:b=116,o=3,d=1:4p,8a,16e4,16p,16e4,16p,16e4,16p,8a,16e4,16p,16e4,16p,16e4,16p,8a,16e4,16p,8a,16e4,16p,8a,16e4,16p,16e4,16p,16e4,16p,8e,16e4,16p,16e4,16p,16e4,16p,8e,16e4,16p,16e4,16p,16e4,16p,8e,16e4,16p,8h,8d4,4e",
+      "wam_trk_b2:b=116,o=3,d=1:4p,8a,16c4,16p,16c4,16p,16c4,16p,8a,16c4,16p,16c4,16p,16c4,16p,8a,16c4,16p,8a,16c4,16p,8a,16c4,16p,16c4,16p,16c4,16p,8e,16h,16p,16h,16p,16h,16p,8e,16h,16p,16h,16p,16h,16p,8e,16h,16p,8h,8d4,4e"
+    ]
+  },
+  {
+    "name": "Una Mattina - Ludovico Einaudi",
+    "tracks": [
+      "le_unama_m:b=150,o=5,d=1:8h4,8c,8e,8g,8h,4a.,2e.,8e,8p,8h,8a,8h,8a,4h,4a,2e.,8e,8p,8h,8a,8h,8a,8h,4a.,2e.,8e,8p,16h,16p,16h,16p,16h,16p,8c6,16h,16p,8h,4a,2e,4e.",
+      "le_unama_b:b=150,o=4,d=1:2p,8p,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8c5,8e,8c5,8e,8c5,8e,4c5,2p.,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8a,8e,8a,8e,8a,8e,4a"
     ]
   }
 ]

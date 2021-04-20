@@ -47,7 +47,6 @@ function CookieConsent({ onCookieAccept }) {
     />
   );
 }
-
 CookieConsent.propTypes = { onCookieAccept: PropTypes.func.isRequired };
 
-export default CookieConsent;
+export default React.memo(CookieConsent);

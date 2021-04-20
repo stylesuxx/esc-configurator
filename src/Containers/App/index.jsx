@@ -134,7 +134,6 @@ class App extends Component {
       escs: {
         connected: 0,
         master: {},
-        progress: [],
         targets: [],
         individual: [],
       },
@@ -320,40 +319,28 @@ class App extends Component {
 
   flash = async(text, force, migrate) => {
     const { escs } = this.state;
-    const progress = [ ...escs.progress ];
     const individual = [ ...escs.individual ];
-
-    this.setActions({
-      isSelecting: false,
-      isFlashing: true,
-    });
 
     for(let i = 0; i < escs.targets.length; i += 1) {
       const target = escs.targets[i];
-
-      this.addLogMessage('flashingEsc', { index: target + 1 });
-
       const esc = escs.individual.find((esc) => esc.index === target);
-      progress[target] = 0;
 
       const updateProgress = async(percent) => {
-        progress[target] = percent;
-        this.setEscs({ progress });
+        if(esc.ref && esc.ref.current) {
+          esc.ref.current.setProgress((percent));
+        }
       };
 
-      updateProgress(0.1);
-
+      this.addLogMessage('flashingEsc', { index: target + 1 });
       const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
-      result.index = target;
+      updateProgress(0);
 
       if(result) {
+        result.index = target;
+        result.ref = React.createRef();
         individual[i] = result;
-        progress[target] = 0;
 
-        await this.setEscs({
-          individual,
-          progress,
-        });
+        await this.setEscs({ individual });
       } else {
         this.addLogMessage('flashingEscFailed', { index: target + 1 });
       }
@@ -466,13 +453,16 @@ class App extends Component {
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
-
-      console.debug(`Restoring default settings on ESC ${target + 1} `);
-
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
-      await this.serial.writeSettings(target, esc, mergedSettings);
+
+      try {
+        await this.serial.writeSettings(target, esc, mergedSettings);
+      } catch(e) {
+        this.addLogMessage('restoreSettingsFailed', { index: i + 1 });
+        console.debug(e);
+      }
     }
     this.setActions({ isWriting: false });
 
@@ -495,7 +485,9 @@ class App extends Component {
 
         await this.serial.startFourWayInterface();
 
-        // This delay is needed to allow the ESC's to initialize
+        /* Give the ESC's some time to boot - it might take longer if they
+         * are playing a startup melody.
+         */
         await delay(1200);
       } else {
         connected = this.lastConnected;
@@ -511,10 +503,10 @@ class App extends Component {
 
     try {
       for (let i = 0; i < connected; i += 1) {
-        newEscs.progress[i] = 0;
         const settings = await this.serial.getFourWayInterfaceInfo(i);
         if(settings) {
           settings.index = i;
+          settings.ref = React.createRef();
           individual.push(settings);
 
           this.addLogMessage('readEsc', {
@@ -556,7 +548,7 @@ class App extends Component {
     });
   }
 
-  handleWriteSetup = async() => {
+  handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     this.setActions({ isWriting: true });
@@ -565,15 +557,22 @@ class App extends Component {
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
       const target = esc.index;
-
-      console.debug(`Writing settings to ESC ${target + 1}`);
-
-      const currentEscSettings = esc.settings;
+      const commonEscSettings = esc.settings;
+      const masterEscSettings = escs.master;
       const individualEscSettings = esc.individualSettings;
-      const mergedSettings = Object.assign({}, currentEscSettings, escs.master, individualEscSettings);
-      const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
+      const mergedSettings = {
+        ...commonEscSettings,
+        ...masterEscSettings,
+        ...individualEscSettings,
+      };
 
-      individual[i].settingsArray = newSettingsArray;
+      try {
+        const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
+        individual[i].settingsArray = newSettingsArray;
+      } catch(e) {
+        this.addLogMessage('writeSettingsFailed', { index: i + 1 });
+        console.debug(e);
+      }
     }
     this.setActions({ isWriting: false });
 
@@ -605,6 +604,11 @@ class App extends Component {
 
   handleLocalSubmit = (e, force, migrate) => {
     e.preventDefault();
+    this.setActions({
+      isFlashing: true,
+      isSelecting: false,
+    });
+
     const { escs } = this.state;
 
     TagManager.dataLayer({
@@ -634,6 +638,11 @@ class App extends Component {
    * downloaded and put into local storage for later use.
    */
   handleFlashUrl = async(url, force, migrate) => {
+    this.setActions({
+      isFlashing: true,
+      isSelecting: false,
+    });
+
     const { escs } = this.state;
     console.debug(`Chosen firmware: ${url}`);
 
@@ -686,6 +695,7 @@ class App extends Component {
       await this.flash(text, force, migrate);
     } else {
       this.addLogMessage('getFileFailed');
+      this.setActions({ isFlashing: false });
     }
   }
 
@@ -817,7 +827,11 @@ class App extends Component {
     const { escs } = this.state;
     if(this.serial) {
       for(let i = 0; i < escs.individual.length; i += 1) {
-        await this.serial.resetFourWayInterface(i);
+        try {
+          await this.serial.resetFourWayInterface(i);
+        } catch(e) {
+          this.addLogMessage('resetEscFailed', { index: i + 1 });
+        }
       }
       await this.serial.exitFourWayInterface();
 
@@ -941,7 +955,7 @@ class App extends Component {
 
     // Update individual settings, then write them.
     this.setEscs({ individual }, () => {
-      this.handleWriteSetup();
+      this.handleWriteSettings();
     });
   }
 
@@ -1007,7 +1021,7 @@ class App extends Component {
             handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate,
             handleResetDefaultls: this.handleResetDefaultls,
             handleReadEscs: this.handleReadEscs,
-            handleWriteSetup: this.handleWriteSetup,
+            handleWriteSetup: this.handleWriteSettings,
             handleSingleFlash: this.handleSingleFlash,
             handleSelectFirmwareForAll: this.handleSelectFirmwareForAll,
             handleCancelFirmwareSelection: this.handleCancelFirmwareSelection,

@@ -46,15 +46,15 @@ function AppSettings({
 
   return (
     <div
-      id="app-settings"
+      className="settings"
       onClick={onClose}
     >
       <div
-        className="settings-wrapper"
+        className="settings__wrapper"
         onClick={handleChildClick}
       >
         <div
-          className="close"
+          className="settings__close"
           onClick={onClose}
           type="button"
         >

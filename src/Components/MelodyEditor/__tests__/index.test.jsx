@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  act,
   render,
   screen,
   fireEvent,
@@ -7,9 +8,13 @@ import {
 import userEvent from '@testing-library/user-event';
 import defaultMelodies from '../../../melodies.json';
 
+import { MockedContextOnended } from '../MelodyElement/__tests__/MockedAudioContext';
+
 import MelodyEditor from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
+
+const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
 test('loads and displays MelodyEditor without melodies', () => {
   const onClose = jest.fn();
@@ -48,7 +53,6 @@ test('loads and displays MelodyEditor with different melodies', () => {
   const onWrite = jest.fn();
   const onSave = jest.fn();
 
-  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
   const melodies = [melody, melody, melody, `${melody}, f#6`];
 
   render(
@@ -91,7 +95,6 @@ test('loads and displays MelodyEditor with different play all', () => {
   const onWrite = jest.fn();
   const onSave = jest.fn();
 
-  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
   const melodies = [melody, melody, melody, `${melody}, f#6`];
 
   render(
@@ -139,7 +142,6 @@ test('loads and displays MelodyEditor with melodies while writing', () => {
   const onWrite = jest.fn();
   const onSave = jest.fn();
 
-  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
   const melodies = [melody, melody, melody, `${melody}, f#6`];
 
   render(
@@ -178,7 +180,6 @@ test('loads and displays MelodyEditor with synced', () => {
   const onWrite = jest.fn();
   const onSave = jest.fn();
 
-  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
   const melodies = [melody, melody, melody, melody];
 
   render(
@@ -232,7 +233,6 @@ test('update preset', () => {
   const onWrite = jest.fn();
   const onSave = jest.fn();
 
-  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
   const melodies = [melody, melody, melody, melody];
 
   render(
@@ -256,13 +256,74 @@ test('update preset', () => {
   expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(2);
 });
 
+test('custom melody selected', () => {
+  const onClose = jest.fn();
+  const onWrite = jest.fn();
+  const onSave = jest.fn();
+
+  const melodies = [melody, melody, melody, melody];
+
+  render(
+    <MelodyEditor
+      customMelodies={defaultMelodies}
+      defaultMelodies={[]}
+      melodies={melodies}
+      onClose={onClose}
+      onSave={onSave}
+      onWrite={onWrite}
+      selected="Bluejay Default"
+      writing={false}
+    />
+  );
+
+  fireEvent.change(screen.getByRole('combobox'), {
+    target: {
+      name: "",
+      value: "Simpsons Theme",
+    },
+  });
+  expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(2);
+});
+
+test('delete custom melody', () => {
+  const onClose = jest.fn();
+  const onWrite = jest.fn();
+  const onSave = jest.fn();
+  const onDelete = jest.fn();
+
+  const melodies = [melody, melody, melody, melody];
+
+  render(
+    <MelodyEditor
+      customMelodies={defaultMelodies}
+      defaultMelodies={defaultMelodies}
+      melodies={melodies}
+      onClose={onClose}
+      onDelete={onDelete}
+      onSave={onSave}
+      onWrite={onWrite}
+      selected="Bluejay Default"
+      writing={false}
+    />
+  );
+
+  fireEvent.change(screen.getByRole('combobox'), {
+    target: {
+      name: "",
+      value: "Simpsons Theme",
+    },
+  });
+
+  userEvent.click(screen.getByText(/melodyDelete/i));
+  expect(onDelete).toHaveBeenCalled();
+});
+
 test('saves melody', () => {
   const onClose = jest.fn();
   const onWrite = jest.fn();
   const onSave = jest.fn();
   const onDelete = jest.fn();
 
-  const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
   const melodies = [melody, melody, melody, melody];
 
   const { container } = render(
@@ -291,4 +352,95 @@ test('saves melody', () => {
   expect(onSave).toHaveBeenCalled();
 
   userEvent.click(screen.getByText(/melodyDelete/i));
+});
+
+test('play melody', async() => {
+  const onClose = jest.fn();
+  const onWrite = jest.fn();
+  const onSave = jest.fn();
+  const onDelete = jest.fn();
+
+  const melodies = [melody, melody, melody, `${melody}, f#6`];
+
+  const oscStart = jest.fn();
+  const oscStop = jest.fn();
+  const oscClose = jest.fn();
+  const contextClose = jest.fn();
+
+  class Mocked extends MockedContextOnended{
+    constructor() {
+      super(contextClose, oscStart, oscStop, oscClose);
+    }
+  }
+
+  window.AudioContext = Mocked;
+
+  render(
+    <MelodyEditor
+      customMelodies={[]}
+      defaultMelodies={defaultMelodies}
+      melodies={melodies}
+      onClose={onClose}
+      onDelete={onDelete}
+      onSave={onSave}
+      onWrite={onWrite}
+      writing={false}
+    />
+  );
+
+  userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
+
+  await act(async()=> {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 400);
+    });
+  });
+
+  expect(oscStart).toHaveBeenCalled();
+  expect(oscStop).toHaveBeenCalled();
+});
+
+test('stop melody', async() => {
+  const onClose = jest.fn();
+  const onWrite = jest.fn();
+  const onSave = jest.fn();
+  const onDelete = jest.fn();
+
+  const melodies = [melody, melody, melody, `${melody}, f#6`];
+
+  const oscStart = jest.fn();
+  const oscStop = jest.fn();
+  const oscClose = jest.fn();
+  const contextClose = jest.fn();
+
+  class Mocked extends MockedContextOnended{
+    constructor() {
+      super(contextClose, oscStart, oscStop, oscClose);
+    }
+  }
+
+  window.AudioContext = Mocked;
+
+  render(
+    <MelodyEditor
+      customMelodies={[]}
+      defaultMelodies={defaultMelodies}
+      melodies={melodies}
+      onClose={onClose}
+      onDelete={onDelete}
+      onSave={onSave}
+      onWrite={onWrite}
+      writing={false}
+    />
+  );
+
+  userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
+
+  // Since playing is instantly over with the mocked class, we can not test
+  // stopping.
+  // userEvent.click(screen.getByText(/common:melodyEditorStopAll/i));
+
+  expect(oscStart).toHaveBeenCalled();
+  expect(oscStop).toHaveBeenCalled();
+  // expect(oscClose).toHaveBeenCalled();
 });

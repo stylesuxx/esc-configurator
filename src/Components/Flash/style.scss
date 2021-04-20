@@ -1,45 +1,28 @@
-#flash-content {
-  .config-wrapper {
+.flash {
+  .flash__wrapper {
     display: flex;
+  }
 
-    .common-config {
-      margin-right: 10px;
-      flex-basis: 0;
-      flex-grow: 1;
-    }
+  .flash__common {
+    margin-right: 10px;
+    flex-basis: 0;
+    flex-grow: 1;
+  }
 
-    .individual-config {
-      margin-left: 10px;
-      flex-basis: 0;
-      flex-grow: 1;
-    }
+  .flash__individual {
+    margin-left: 10px;
+    flex-basis: 0;
+    flex-grow: 1;
   }
 
   @media screen and (max-width: 768px) {
-    .config-wrapper {
+    .flash__wrapper {
       flex-direction: column;
-
-      .common-config,
-      .individual-config {
-        margin: 0px;
-      }
-    }
-  }
-
-  .missing-esc.gui-box {
-    p {
-      padding-bottom: 10px;
-      font-weight: normal;
     }
 
-    ul {
-      margin-left: 15px;
-
-      li {
-        list-style-type: disc;
-        font-weight: normal;
-        padding-bottom: 5px;
-      }
+    .flash__common,
+    .flash__individual {
+      margin: 0px;
     }
   }
 }

@@ -1,5 +1,5 @@
-.flash-box {
-  .progress {
+.esc {
+  progress {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -7,12 +7,12 @@
     border-radius: 5px;
   }
 
-  .progress::-webkit-progress-bar {
+  progress::-webkit-progress-bar {
     background: #fff;
     border-radius: 5px;
   }
 
-  .progress::-webkit-progress-value {
+  progress::-webkit-progress-value {
     background: var(--color-tertiary);
   }
 }

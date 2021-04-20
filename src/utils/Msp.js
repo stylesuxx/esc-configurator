@@ -236,10 +236,23 @@ class Msp {
     return bufferOut;
   }
 
-  crc8_dvb_s2_data(data, start, end) {
+  crc8DvbS2(crc, ch) {
+    crc ^= ch;
+    for (let i = 0; i < 8; i += 1) {
+      if (crc & 0x80) {
+        crc = ((crc << 1) & 0xFF) ^ 0xD5;
+      } else {
+        crc = (crc << 1) & 0xFF;
+      }
+    }
+
+    return crc;
+  }
+
+  crc8DvbS2Data(data, start, end) {
     let crc = 0;
     for (let i = start; i < end; i += 1) {
-      crc = this.crc8_dvb_s2(crc, data[i]);
+      crc = this.crc8DvbS2(crc, data[i]);
     }
 
     return crc;
@@ -265,7 +278,7 @@ class Msp {
       bufView[8 + i] = data[i];
     }
 
-    bufView[size - 1] = this.crc8_dvb_s2_data(bufView, 3, size - 1);
+    bufView[size - 1] = this.crc8DvbS2Data(bufView, 3, size - 1);
 
     return bufferOut;
   }
@@ -292,7 +305,7 @@ class Msp {
     return new Promise((resolve, reject) => process(resolve, reject));
   }
 
-  getApiVersion() {
+  getApiVersion () {
     return this.send(MSP.MSP_API_VERSION);
   }
 

@@ -1,0 +1,8 @@
+{
+  "settingsHeader": "Ajustes",
+  "closeText": "Cerrar",
+  "directInput": "Entrada Directa",
+  "directInputHint": "Usar entrada directa para números en lugar de los deslizadores.",
+  "printLogs": "Imprimir registros",
+  "printLogsHint": "Imprimirá los registros en la consola si está habilitado."
+}

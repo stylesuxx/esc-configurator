@@ -1,3 +1,6 @@
+import { HighlightWithinTextarea } from 'react-highlight-within-textarea';
+import { useTranslation } from 'react-i18next';
+import Rtttl from 'bluejay-rtttl-parse';
 import PropTypes from 'prop-types';
 import React, {
   useState,
@@ -6,10 +9,6 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import { HighlightWithinTextarea } from 'react-highlight-within-textarea';
-import Rtttl from 'bluejay-rtttl-parse';
-
-import { useTranslation } from 'react-i18next';
 import './style.scss';
 
 const MelodyElement = forwardRef(({
@@ -32,15 +31,16 @@ const MelodyElement = forwardRef(({
   const [isAccepted, setIsAccepted] = useState(accepted);
   const [isPlayable, setIsPlayable] = useState(false);
   const [playing, setPlaying] = useState(false);
+
   const oscillator = useRef(null);
   const highlighted = useRef(null);
 
   useImperativeHandle(ref, () => ({
     play(externalContext, gainModifier) {
-      playMelody(null, externalContext, gainModifier);
+      handlePlayMelody(null, externalContext, gainModifier);
     },
     stop() {
-      stopMelody();
+      handleStopMelody();
     },
   }));
 
@@ -98,6 +98,29 @@ const MelodyElement = forwardRef(({
     }
   }, [currentMelody]);
 
+  function handleMelodyUpdate(e) {
+    const melody = e.target.value;
+    setCurrentMelody(melody);
+
+    // If an accepted melody changes
+    if(isAccepted && melody !== acceptedMelody) {
+      setIsAccepted(false);
+      onAccept(false);
+    }
+  }
+
+  function handleAcceptMelody() {
+    let convertedMelody = Rtttl.toBluejayStartupMelody(currentMelody).data;
+    convertedMelody = Rtttl.fromBluejayStartupMelody(convertedMelody);
+
+    setAcceptedMelody(convertedMelody);
+    setCurrentMelody(convertedMelody);
+    setIsAccepted(true);
+
+    onAccept(convertedMelody);
+  }
+
+  // Can only be tested when the melody is acutally being played
   function highlightNote(index) {
     const elements = currentMelody.split(':');
     const notes = elements[2].split(',');
@@ -111,38 +134,14 @@ const MelodyElement = forwardRef(({
     setHighlight([from, to]);
   }
 
-  function updateMelody(e) {
-    const melody = e.target.value;
-    setCurrentMelody(melody);
-
-    // If an accepted melody changes
-    if(isAccepted) {
-      if(melody !== acceptedMelody) {
-        setIsAccepted(false);
-        onAccept(false);
-      }
-    }
-  }
-
-  function acceptMelody() {
-    let convertedMelody = Rtttl.toBluejayStartupMelody(currentMelody).data;
-    convertedMelody = Rtttl.fromBluejayStartupMelody(convertedMelody);
-
-    setAcceptedMelody(convertedMelody);
-    setCurrentMelody(convertedMelody);
-    setIsAccepted(true);
-
-    onAccept(convertedMelody);
-  }
-
-  function stopMelody() {
+  function handleStopMelody() {
     if (oscillator.current) {
       oscillator.current.stop();
       oscillator.current = null;
     }
   }
 
-  function playMelody(e, externalContext = null, gainModifier = 1) {
+  function handlePlayMelody(e, externalContext = null, gainModifier = 1) {
     setPlaying(true);
     highlighted.current = highlight;
     try {
@@ -157,7 +156,7 @@ const MelodyElement = forwardRef(({
     }
   }
 
-  function play(melody, externalContext = null, gainModifier = 1) {
+  function play(melody, externalContext, gainModifier) {
     const audioContext = externalContext || new window.AudioContext();
 
     const volume = audioContext.createGain();
@@ -215,7 +214,7 @@ const MelodyElement = forwardRef(({
             <button
               className="play"
               disabled={!isPlayable || disabled}
-              onClick={playing ? stopMelody : playMelody}
+              onClick={playing ? handleStopMelody : handlePlayMelody}
               type="button"
             >
               {playing ? t('common:melodyEditorStop') : t('common:melodyEditorPlay')}
@@ -225,7 +224,7 @@ const MelodyElement = forwardRef(({
               <button
                 className={`accept ${isAccepted ? 'accepted' : ''}`}
                 disabled={!isValid || playing || disabled}
-                onClick={acceptMelody}
+                onClick={handleAcceptMelody}
                 type="button"
               >
                 {t('common:melodyEditorAccept')}
@@ -238,7 +237,7 @@ const MelodyElement = forwardRef(({
             containerClassName={`editor ${playing ? 'playing' : ''}`}
             disabled={playing || disabled}
             highlight={highlight}
-            onChange={updateMelody}
+            onChange={handleMelodyUpdate}
             rows={10}
             spellCheck="false"
             value={currentMelody}

@@ -17,11 +17,192 @@ body {
   overflow-x: hidden;
 }
 
-#main-wrapper {
+.dropdown {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: 20px;
+  background: #fff;
+  background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.06));
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  width:99%;
+  margin-bottom: 5px;
+  border: 1px solid;
+  border-color: #ccc #ccc #ccc;
+  border-radius: 3px;
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 7px;
+    right: 7px;
+    width: 0;
+    height: 0;
+    border: 4px dashed;
+    border-color: #888 transparent;
+    pointer-events: none;
+  }
+
+  &:before {
+    border-bottom-style: solid;
+    border-top: none;
+    margin-top: -2px;
+  }
+
+  &:after {
+    margin-top: 5px;
+    border-top-style: solid;
+    border-bottom: none;
+  }
+
+  .dropdown__select {
+    position: relative;
+    overflow:visible;
+    width: 100%;
+    margin-top:0px;
+    padding-bottom:0px;
+    padding: 1px 8px 6px 5px;
+    height: 23px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #62717a;
+    text-shadow: 0 1px white;
+    /* Fallback for IE 8 */
+    background: #f2f2f2;
+    /* "transparent" doesn't work with Opera */
+    background: rgba(0, 0, 0, 0) !important;
+    border: 0;
+    border-radius: 0;
+    -webkit-appearance: none;
+
+    &:focus {
+      z-index: 3;
+      width: 90%;
+      color: #4fa619;
+      outline: 0px solid #49aff2;
+      outline: 0px solid -webkit-focus-ring-color;
+      outline-offset: 5px;
+
+      height:25px;
+    }
+
+    & > option {
+      margin: 3px;
+      padding: 6px 8px;
+      text-shadow: none;
+      background: #f2f2f2;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+  }
+
+  &.dark {
+    background: #3e403f;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+    background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+    background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+
+    border-color: #111 #0a0a0a black;
+    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+    color:#a6a6a6;
+    text-shadow:0px 1px rgba(0, 0, 0, 0.25);
+
+    &:before {
+      border-bottom-color: #aaa;
+    }
+
+    &:after {
+      border-top-color: #aaa;
+    }
+
+    .dropdown__select {
+      color: #a6a6a6;
+      text-shadow: 0 1px black;
+      background: #444;
+      padding-right: 20px;
+    }
+
+    .dropdown__select:focus {
+      color: #fff;
+    }
+
+    .dropdown__select > option {
+      background: #56ab1a;
+      text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+.main {
   padding: 0px 0px 0 0px;
   height: calc(100% - 7px);
 
-  .button-dark {
+  .main__header {
+    background: #3d3f3e;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .main__bar {
+    height:110px;
+    width:100%;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
+  }
+
+  .main__logo {
+    background: url('images/icon_128.png');
+    position: relative;
+    float: left;
+    height: 90px;
+    z-index: 0;
+    background-repeat: no-repeat;
+    width: 95px;
+    background-position: left center;
+    background-size: contain;
+    margin-left: 23px;
+    margin-top: 10px;
+
+    @media only screen and (max-width: 600px) {
+      margin-left: 15px;
+    }
+  }
+
+  .main__settings {
+    float: right;
+    margin-top: 12px;
+    width: 120px;
+    margin-right: 10px;
+
+    @media only screen and (max-width: 600px) {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      margin: 0px;
+      background: #3d3f3e;
+
+      & > * {
+        flex: 1;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 6px;
+      }
+
+      a {
+        margin: 0px;
+        width: 100%;
+      }
+    }
+  }
+
+  .button.button--dark {
     a,
     button {
       text-align: center;
@@ -53,13 +234,6 @@ body {
       margin-top: 8px;
       width: 118px;
     }
-  }
-
-  .header-wrapper {
-    background: #3d3f3e;
-    position: fixed;
-    width: 100%;
-    z-index: 1;
   }
 
   a {
@@ -107,60 +281,10 @@ body {
     float: right;
   }
 
-  .headerbar {
-    height:110px;
-    width:100%;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
-  }
-
-  #logo {
-    background: url('images/icon_128.png');
-    position: relative;
-    float: left;
-    height: 90px;
-    z-index: 0;
-    background-repeat: no-repeat;
-    width: 95px;
-    background-position: left center;
-    background-size: contain;
-    margin-left: 23px;
-    margin-top: 10px;
-
-    @media only screen and (max-width: 600px) {
-      margin-left: 15px;
-    }
-  }
-
   .hidden {
     display: none;
   }
 
-  .language-select {
-    float: right;
-    margin-top: 12px;
-    width: 120px;
-    margin-right: 10px;
-
-    @media only screen and (max-width: 600px) {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      margin: 0px;
-      background: #3d3f3e;
-
-      & > * {
-        flex: 1;
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 6px;
-      }
-
-      a {
-        margin: 0px;
-        width: 100%;
-      }
-    }
-  }
   .half {
     width: 50%;
 

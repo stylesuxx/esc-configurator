@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  render, screen,
+  render, screen, act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -8,12 +8,13 @@ import Home from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
-test('loads and displays Home', () => {
+test('loads and displays Home', async () => {
   const onChangePort = jest.fn();
   const onConnect = jest.fn();
   const onDisconnect = jest.fn();
   const onSetBaudRate = jest.fn();
   const onSetPort = jest.fn();
+  const prompt = jest.fn();
 
   render(
     <Home
@@ -51,4 +52,16 @@ test('loads and displays Home', () => {
   expect(screen.getByText('whatsNextText')).toBeInTheDocument();
 
   userEvent.click(screen.getByText(/addToHomeScreen/i));
+
+  class BeforeInstallPromptEvent extends Event {
+    prompt = () => prompt();
+  }
+
+  act(() => {
+    const event = new BeforeInstallPromptEvent('beforeinstallprompt');
+    window.dispatchEvent(event);
+  });
+
+  userEvent.click(screen.getByText(/addToHomeScreen/i));
+  expect(prompt).toHaveBeenCalled();
 });

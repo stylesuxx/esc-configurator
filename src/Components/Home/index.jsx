@@ -14,10 +14,6 @@ function Install() {
   const deferredPrompt = useRef(null);
   const [showInstall, setShowInstall]  = useState(false);
 
-  setTimeout(() => {
-    setShowInstall(true);
-  }, 1000);
-
   window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt.current = e;
     setShowInstall(true);

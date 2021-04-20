@@ -154,6 +154,7 @@ function PresetSelect({
     </div>
   );
 }
+PresetSelect.defaultProps = { selected: -1 };
 PresetSelect.propTypes = {
   customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   defaultMelodies: PropTypes.arrayOf(PropTypes.shape({
@@ -163,7 +164,10 @@ PresetSelect.propTypes = {
   escs: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
   onUpdateMelodies: PropTypes.func.isRequired,
-  selected: PropTypes.string.isRequired,
+  selected: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
 };
 
 function MelodyEditor({

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import ErrorBoundary from '../../ErrorBoundary';
 
 import './style.scss';
 
@@ -11,9 +10,11 @@ function Info({
   label,
   name,
 }) {
-  function Hint() {
-    if(hint) {
-      return (
+  return (
+    <span className={`info-wrapper-wrapper ${!inSync ? 'not-in-sync' : ''}`} >
+      {label}
+
+      {hint &&
         <div className="info-wrapper">
           <span
             className="info-icon"
@@ -23,27 +24,14 @@ function Info({
             ?
           </span>
 
-          <ErrorBoundary>
-            <ReactTooltip
-              className="tooltip"
-              effect="solid"
-              id={`hint-${name}`}
-            >
-              {hint}
-            </ReactTooltip>
-          </ErrorBoundary>
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  return (
-    <span className={`info-wrapper-wrapper ${!inSync ? 'not-in-sync' : ''}`} >
-      {label}
-
-      <Hint />
+          <ReactTooltip
+            className="tooltip"
+            effect="solid"
+            id={`hint-${name}`}
+          >
+            {hint}
+          </ReactTooltip>
+        </div>}
     </span>
   );
 }

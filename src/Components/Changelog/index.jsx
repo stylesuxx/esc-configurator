@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, {
-  useState,
-  useCallback,
-} from 'react';
+import React, { useState } from 'react';
+
+import Content from './Content';
 
 import './style.scss';
 
@@ -15,39 +14,16 @@ function Changelog({ entries }) {
     title: t('defaultChangelogTitle'),
   });
 
-  const ChangelogContent = () => entries.map((entry) => {
-    const listItems = entry.items.map((item) => (
-      <li key={item}>
-        {item}
-      </li>
-    ));
-
-    return (
-      <div key={entry.title}>
-        <span>
-          {entry.title}
-        </span>
-
-        <ul>
-          {listItems}
-        </ul>
-      </div>
-    );
-  });
-
-  const toggleExpanded = useCallback(() => {
+  function toggleExpanded() {
     const newExpanded = !state.expanded;
     setState({
       expanded: newExpanded,
       title: newExpanded ? t('changelogClose') : t('defaultChangelogTitle'),
     });
-  });
+  }
 
   return (
-    <div
-      className={state.expanded ? "expanded" : ""}
-      id="changelog"
-    >
+    <div className={`changelog ${state.expanded ? "expanded" : ""}`}>
       <div
         className="button"
         onClick={toggleExpanded}
@@ -56,13 +32,13 @@ function Changelog({ entries }) {
         {state.title}
       </div>
 
-      <div className="wrapper">
-        <div className="title">
+      <div className="changelog__wrapper">
+        <div className="changelog__title">
           {t('defaultChangelogHead')}
         </div>
 
-        <div className="log">
-          <ChangelogContent />
+        <div className="changelog__content">
+          <Content entries={entries} />
         </div>
       </div>
     </div>

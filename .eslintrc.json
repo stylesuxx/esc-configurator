@@ -70,7 +70,8 @@
     "Blob": false,
     "localStorage": false,
     "__dirname": false,
-    "Set": false
+    "Set": false,
+    "Event": false
   },
   "parser": "babel-eslint"
 }

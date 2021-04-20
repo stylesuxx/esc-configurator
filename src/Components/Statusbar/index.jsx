@@ -1,17 +1,16 @@
-import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, {
-  useState,
-  useImperativeHandle,
-  forwardRef,
-} from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useInterval } from '../../utils/helpers/React';
 
 import './style.scss';
 
-const Statusbar = forwardRef(({
+function Statusbar({
+  getUtilization,
   packetErrors,
   version,
-}, ref) => {
+}) {
   const { t } = useTranslation('common');
 
   const [utilization, setUtilization] = useState({
@@ -19,14 +18,15 @@ const Statusbar = forwardRef(({
     down: 0,
   });
 
-  useImperativeHandle(ref, () => ({
-    updateUtilization(utilization) {
+  useInterval(() => {
+    if(getUtilization) {
+      const utilization = getUtilization;
       setUtilization(utilization);
-    },
-  }));
+    }
+  }, 1000);
 
   return (
-    <div id="status-bar">
+    <div className="status-bar">
       <span>
         {`${t('statusbarPortUtilization')} D: ${utilization.down}% U: ${utilization.up}%`}
       </span>
@@ -35,13 +35,15 @@ const Statusbar = forwardRef(({
         {`${t('statusbarPacketError')} ${packetErrors}`}
       </span>
 
-      <span className="version">
+      <span className="status-bar__version">
         {version}
       </span>
     </div>
   );
-});
+}
+Statusbar.defaultProps = { getUtilization: null };
 Statusbar.propTypes = {
+  getUtilization: PropTypes.func,
   packetErrors: PropTypes.number.isRequired,
   version: PropTypes.string.isRequired,
 };
