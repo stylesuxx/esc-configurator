@@ -4,5 +4,7 @@
   "directInput": "直接输入",
   "directInputHint": "使用直接输入数值以代替滑块。",
   "printLogs": "打印日志",
-  "printLogsHint": "如果启用，则会将日志打印到控制台。"
+  "printLogsHint": "如果启用，则会将日志打印到控制台。",
+  "extendedDebug": "Extended debugging",
+  "extendedDebugHint": "Will additionally print addresses that are being read/written to and the sent/received payload."
 }
