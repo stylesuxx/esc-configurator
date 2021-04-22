@@ -1,5 +1,12 @@
 [
   {
+    "title": "Unpublished",
+    "items": [
+      "Improved template",
+      "Improved readability of tests"
+    ]
+  },
+  {
     "title": "0.13.0",
     "items": [
       "More tests",

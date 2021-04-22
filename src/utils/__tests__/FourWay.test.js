@@ -1,259 +1,189 @@
 import FourWay from '../FourWay';
 
-test('failed start', async() => {
-  const serial = () => { throw new Error(); };
-  const fourWay = new FourWay(serial);
 
-  fourWay.start();
+let serial;
+let resolve;
+let reject;
+let fourWay;
 
-  await new Promise((r) => {
-    setTimeout(() => {
-      r();
-    }, 1000);
-  });
-});
-
-test('start', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.start();
-
-  await new Promise((r) => {
-    setTimeout(() => {
-      r();
-    }, 1000);
+describe('FourWay', () => {
+  beforeEach(() => {
+    serial = jest.fn();
+    resolve = jest.fn();
+    reject = jest.fn();
+    fourWay = new FourWay(serial);
   });
 
-  expect(serial).toHaveBeenCalled();
-});
+  it('should handle starting with invalid serial', async() => {
+    const failingSerial = () => { throw new Error(); };
+    fourWay = new FourWay(failingSerial);
 
-test('exit', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
+    fourWay.start();
 
-  fourWay.exit();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('reset', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.reset();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('writeEEprom', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.writeEEprom();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('write', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.write();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('readEEprom', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.readEEprom();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('read', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.read();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('pageErase', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.pageErase();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('erasePages', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.erasePages();
-  expect(serial).not.toHaveBeenCalled();
-
-  fourWay.erasePages(0, 1);
-  expect(serial).toHaveBeenCalled();
-});
-
-test('erasePage', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.erasePage(0);
-  expect(serial).toHaveBeenCalled();
-});
-
-test('initFlash', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  fourWay.initFlash();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('getInfo', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  await expect(fourWay.getInfo()).rejects.toThrow();
-  expect(serial).toHaveBeenCalled();
-});
-
-test('logCallback', async() => {
-  const serial = jest.fn();
-  const logCallback = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.setLogCallback(logCallback);
-
-  fourWay.addLogMessage();
-  expect(logCallback).toHaveBeenCalled();
-});
-
-test('packetErrorCallback', async() => {
-  const serial = jest.fn();
-  const packetErrorsCallback = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.setPacketErrorsCallback(packetErrorsCallback);
-
-  fourWay.increasePacketErrors(1);
-  expect(packetErrorsCallback).toHaveBeenCalled();
-});
-
-test('commandToString', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-  const string = fourWay.commandToString(0xDEADBEEF);
-
-  expect(string).toBeNull();
-});
-
-test('valid ack', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-  const string = fourWay.ackToString(0x00);
-
-  expect(string).toEqual('ACK_OK');
-});
-
-test('invalid ack', async() => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-  const string = fourWay.ackToString(0xDEADBEEF);
-
-  expect(string).toBeNull();
-});
-
-test('parse message without params', () => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-  const buffer = fourWay.createMessage(0x30, []);
-
-  expect(buffer.byteLength).toEqual(8);
-});
-
-test('parse message with too many params', () => {
-  const serial = jest.fn();
-  const fourWay = new FourWay(serial);
-
-  expect(() => fourWay.createMessage(0x30, new Array(300))).toThrow();
-});
-
-test('parse empty message', () => {
-  const serial = jest.fn();
-  const resolve = jest.fn();
-  const reject = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.parseMessage([], resolve, reject);
-
-  expect(reject).toHaveBeenCalled();
-});
-
-test('parse message to short', () => {
-  const serial = jest.fn();
-  const resolve = jest.fn();
-  const reject = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.parseMessage([0x2e], resolve, reject);
-
-  expect(reject).toHaveBeenCalled();
-});
-
-test('parse parameters too short', () => {
-  const serial = jest.fn();
-  const resolve = jest.fn();
-  const reject = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.parseMessage([0x2e, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0], resolve, reject);
-
-  expect(reject).toHaveBeenCalled();
-});
-
-test('parse max parameters too short', () => {
-  const serial = jest.fn();
-  const resolve = jest.fn();
-  const reject = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.parseMessage([0x2e, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], resolve, reject);
-
-  expect(reject).toHaveBeenCalled();
-});
-
-test('parse checksum mismatch', () => {
-  const serial = jest.fn();
-  const resolve = jest.fn();
-  const reject = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.parseMessage([0x2e, 1, 2, 3, 1, 5, 6, 7, 8, 9, 10], resolve, reject);
-
-  expect(reject).toHaveBeenCalled();
-});
-
-test('parse valid message', () => {
-  const serial = jest.fn();
-  const resolve = jest.fn();
-  const reject = jest.fn();
-  const fourWay = new FourWay(serial);
-  fourWay.parseMessage([46, 48, 0, 0, 1, 0, 0, 68, 194], resolve, reject);
-
-  expect(resolve).toHaveBeenCalled();
-});
-
-test('serial error while sending', async() => {
-  const serial = () => { throw new Error(); };
-
-  const fourWay = new FourWay(serial);
-  expect(fourWay.testAlive()).toMatchObject({});
-});
-
-test('serial resolve', async() => {
-  const serial = () => ({
-    "command": 48,
-    "address": 0,
-    "ack": 0,
-    "checksum": 17602,
-    "params": { "0": 0 },
+    await new Promise((r) => {
+      setTimeout(() => {
+        r();
+      }, 1000);
+    });
   });
 
-  const fourWay = new FourWay(serial);
-  await expect(fourWay.testAlive()).resolves.toMatchObject(serial());
+  it('should start with valid  serial', async() => {
+    fourWay.start();
+
+    await new Promise((r) => {
+      setTimeout(() => {
+        r();
+      }, 1000);
+    });
+
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should exit', async() => {
+    fourWay.exit();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should reset', async() => {
+    fourWay.reset();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should writeEEprom', async() => {
+    fourWay.writeEEprom();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should write', async() => {
+    fourWay.write();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should readEEprom', async() => {
+    fourWay.readEEprom();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should read', async() => {
+    fourWay.read();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should page erase', async() => {
+    fourWay.pageErase();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should erase pages', async() => {
+    fourWay.erasePages();
+    expect(serial).not.toHaveBeenCalled();
+
+    fourWay.erasePages(0, 1);
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should erase page', async() => {
+    fourWay.erasePage(0);
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should init flash', async() => {
+    fourWay.initFlash();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should get info', async() => {
+    await expect(fourWay.getInfo()).rejects.toThrow();
+    expect(serial).toHaveBeenCalled();
+  });
+
+  it('should be possible to log', async() => {
+    const logCallback = jest.fn();
+    fourWay.setLogCallback(logCallback);
+
+    fourWay.addLogMessage();
+    expect(logCallback).toHaveBeenCalled();
+  });
+
+  it('should be possible to set packet error', async() => {
+    const packetErrorsCallback = jest.fn();
+    fourWay.setPacketErrorsCallback(packetErrorsCallback);
+
+    fourWay.increasePacketErrors(1);
+    expect(packetErrorsCallback).toHaveBeenCalled();
+  });
+
+  it('should convert command to string', async() => {
+    const string = fourWay.commandToString(0xDEADBEEF);
+    expect(string).toBeNull();
+  });
+
+  it('should convert ack to string', async() => {
+    const string = fourWay.ackToString(0x00);
+    expect(string).toEqual('ACK_OK');
+  });
+
+  it('should handle invalid ack', async() => {
+    const fourWay = new FourWay(serial);
+    const string = fourWay.ackToString(0xDEADBEEF);
+    expect(string).toBeNull();
+  });
+
+  it('should parse message without params', () => {
+    const buffer = fourWay.createMessage(0x30, []);
+    expect(buffer.byteLength).toEqual(8);
+  });
+
+  it('should parse message with too many params', () => {
+    expect(() => fourWay.createMessage(0x30, new Array(300))).toThrow();
+  });
+
+  it('should parse empty message', () => {
+    fourWay.parseMessage([], resolve, reject);
+    expect(reject).toHaveBeenCalled();
+  });
+
+  it('should parse message which is too short', () => {
+    fourWay.parseMessage([0x2e], resolve, reject);
+    expect(reject).toHaveBeenCalled();
+  });
+
+  it('should parse message where parameters are too short', () => {
+    fourWay.parseMessage([0x2e, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0], resolve, reject);
+    expect(reject).toHaveBeenCalled();
+  });
+
+  it('should parse message where max parameters are too short', () => {
+    fourWay.parseMessage([0x2e, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], resolve, reject);
+    expect(reject).toHaveBeenCalled();
+  });
+
+  it('should handle a checksum mismatch', () => {
+    fourWay.parseMessage([0x2e, 1, 2, 3, 1, 5, 6, 7, 8, 9, 10], resolve, reject);
+    expect(reject).toHaveBeenCalled();
+  });
+
+  it('should parse a valid message', () => {
+    fourWay.parseMessage([46, 48, 0, 0, 1, 0, 0, 68, 194], resolve, reject);
+    expect(resolve).toHaveBeenCalled();
+  });
+
+  it('should handle serial error while sending', async() => {
+    const failingSerial = () => { throw new Error(); };
+    fourWay = new FourWay(failingSerial);
+    expect(fourWay.testAlive()).toMatchObject({});
+  });
+
+  it('should handle serial resolve', async() => {
+    const serial = () => ({
+      "command": 48,
+      "address": 0,
+      "ack": 0,
+      "checksum": 17602,
+      "params": { "0": 0 },
+    });
+
+    fourWay = new FourWay(serial);
+    await expect(fourWay.testAlive()).resolves.toMatchObject(serial());
+  });
 });
