@@ -61,6 +61,10 @@ class Serial {
   writeHex = (index, esc, hex, force, migrate, cbProgress) => this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
   writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
 
+  setExtendedDebug(extendedDebug) {
+    this.fourWay.setExtendedDebug(extendedDebug);
+  }
+
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
 

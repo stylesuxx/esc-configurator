@@ -31,6 +31,10 @@ class App extends Component {
         type: 'boolean',
         value: false,
       },
+      extendedDebug: {
+        type: 'boolean',
+        value: false,
+      },
     };
 
     const loadSettings = () => {
@@ -738,10 +742,15 @@ class App extends Component {
 
   handleConnect = async(e) => {
     e.preventDefault();
-    const { serial } = this.state;
+    const {
+      serial,
+      appSettings,
+    } = this.state;
+    const { settings } = appSettings;
 
     try {
       await this.serial.open(serial.baudRate);
+      this.serial.setExtendedDebug(settings.extendedDebug.value);
       this.serial.setLogCallback(this.addLogMessage);
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('portOpened');
@@ -904,6 +913,14 @@ class App extends Component {
   handleAppSettingsUpdate = (name, value) => {
     const { appSettings } = this.state;
     const settings = { ...appSettings.settings };
+
+    switch(name) {
+      case 'extendedDebug': {
+        if (this.serial) {
+          this.serial.setExtendedDebug(value);
+        }
+      } break;
+    }
 
     settings[name].value = value;
     localStorage.setItem('settings', JSON.stringify(settings));

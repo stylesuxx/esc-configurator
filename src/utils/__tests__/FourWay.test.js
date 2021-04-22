@@ -186,4 +186,18 @@ describe('FourWay', () => {
     fourWay = new FourWay(serial);
     await expect(fourWay.testAlive()).resolves.toMatchObject(serial());
   });
+
+  it('should handle extended debug', async() => {
+    const serial = () => ({
+      "command": 48,
+      "address": 0,
+      "ack": 0,
+      "checksum": 17602,
+      "params": { "0": 0 },
+    });
+
+    fourWay = new FourWay(serial);
+    fourWay.setExtendedDebug(true);
+    await expect(fourWay.testAlive()).resolves.toMatchObject(serial());
+  });
 });

@@ -67,6 +67,12 @@ class FourWay {
     this.packetErrorsCallback = null;
 
     this.parseMessage = this.parseMessage.bind(this);
+
+    this.extendedDebug = false;
+  }
+
+  setExtendedDebug(extendedDebug) {
+    this.extendedDebug = extendedDebug;
   }
 
   setLogCallback(logCallback) {
@@ -210,11 +216,10 @@ class FourWay {
       const message = self.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
-      /*
-      if (command !== COMMANDS.cmd_InterfaceTestAlive) {
-        console.debug('sending', this.commandToString(command), address.toString(0x10));
+      if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+        const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
+        console.debug(`TX: ${this.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
-      */
 
       const processMessage = async(resolve, reject) => {
         /**
@@ -229,6 +234,10 @@ class FourWay {
         try {
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
+            if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+              const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
+              console.debug(`RX: ${this.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+            }
             return resolve(msg);
           }
         } catch(e) {

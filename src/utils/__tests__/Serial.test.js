@@ -2,23 +2,25 @@ import Serial from '../Serial';
 
 jest.setTimeout(60000);
 
+let port;
+let cancel;
+let releaseReadLock;
+let releaseWriteLock;
+let read;
+let logCallback;
+let packetErrorCallback;
+let serial;
+
 describe('Serial', () => {
-  it('should throw without port', async() => {
-    const serial = new Serial();
+  beforeEach(() => {
+    cancel = jest.fn();
+    releaseReadLock = jest.fn();
+    releaseWriteLock = jest.fn();
+    read = jest.fn();
+    logCallback = jest.fn();
+    packetErrorCallback = jest.fn();
 
-    await expect(() => serial.open()).rejects.toThrow();
-    await serial.close();
-  });
-
-  it('should read with port', async() => {
-    const cancel = jest.fn();
-    const releaseReadLock = jest.fn();
-    const releaseWriteLock = jest.fn();
-    const read = jest.fn();
-    const logCallback = jest.fn();
-    const packetErrorCallback = jest.fn();
-
-    const port = {
+    port = {
       open: jest.fn(),
       close: jest.fn(),
       writable: { getWriter:  () => ({ releaseLock: releaseWriteLock }) },
@@ -31,8 +33,17 @@ describe('Serial', () => {
       },
     };
 
-    const serial = new Serial(port);
+    serial = new Serial(port);
+  });
 
+  it('should throw without port', async() => {
+    serial = new Serial();
+
+    await expect(() => serial.open()).rejects.toThrow();
+    await serial.close();
+  });
+
+  it('should read with port', async() => {
     await serial.open();
     expect(port.open).toHaveBeenCalled();
 
@@ -53,12 +64,9 @@ describe('Serial', () => {
   });
 
   it('should handle failed reads', async() => {
-    const cancel = jest.fn();
-    const releaseReadLock = jest.fn();
-    const releaseWriteLock = jest.fn();
     const read = () => { throw new Error(); };
 
-    const port = {
+    port = {
       open: jest.fn(),
       close: jest.fn(),
       writable: { getWriter:  () => ({ releaseLock: releaseWriteLock }) },
@@ -71,17 +79,14 @@ describe('Serial', () => {
       },
     };
 
-    const serial = new Serial(port);
+    serial = new Serial(port);
     expect(() => serial.open()).not.toThrow();
   });
 
   it('should handle successful reads', async() => {
-    const cancel = jest.fn();
-    const releaseReadLock = jest.fn();
-    const releaseWriteLock = jest.fn();
     const read = () => ({ value: { byteLength: 50 } });
 
-    const port = {
+    port = {
       open: jest.fn(),
       close: jest.fn(),
       writable: { getWriter:  () => ({ releaseLock: releaseWriteLock }) },
@@ -94,18 +99,15 @@ describe('Serial', () => {
       },
     };
 
-    const serial = new Serial(port);
+    serial = new Serial(port);
     expect(() => serial.open()).not.toThrow();
   });
 
   it('should execute MSP commands', async() => {
-    const cancel = jest.fn();
-    const releaseReadLock = jest.fn();
-    const releaseWriteLock = jest.fn();
     const read = () => ({ value: { byteLength: 50 } });
     const write = jest.fn();
 
-    const port = {
+    port = {
       open: jest.fn(),
       close: jest.fn(),
       writable: {
@@ -123,7 +125,7 @@ describe('Serial', () => {
       },
     };
 
-    const serial = new Serial(port);
+    serial = new Serial(port);
     await serial.open();
 
     // commands will all time out
@@ -141,10 +143,7 @@ describe('Serial', () => {
     await expect(() => serial.spinMotor()).rejects.toThrow();
   });
 
-  it('shold execute 4Way interface commands', async() => {
-    const cancel = jest.fn();
-    const releaseReadLock = jest.fn();
-    const releaseWriteLock = jest.fn();
+  it('should toggle extended debugging', async() => {
     const read = () => ({ value: { byteLength: 50 } });
     const write = jest.fn();
 
@@ -166,7 +165,37 @@ describe('Serial', () => {
       },
     };
 
-    const serial = new Serial(port);
+    serial = new Serial(port);
+    await serial.open();
+    expect(port.open).toHaveBeenCalled();
+
+    serial.setExtendedDebug(true);
+    serial.setExtendedDebug(false);
+  });
+
+  it('should execute 4Way interface commands', async() => {
+    const read = () => ({ value: { byteLength: 50 } });
+    const write = jest.fn();
+
+    port = {
+      open: jest.fn(),
+      close: jest.fn(),
+      writable: {
+        getWriter:  () => ({
+          releaseLock: releaseWriteLock,
+          write,
+        }),
+      },
+      readable: {
+        getReader:  () => ({
+          releaseLock: releaseReadLock,
+          read,
+          cancel,
+        }),
+      },
+    };
+
+    serial = new Serial(port);
     await serial.open();
 
     expect(serial.startFourWayInterface()).toBe(undefined);
