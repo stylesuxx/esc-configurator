@@ -47,7 +47,7 @@ function FirmwareSelector({
   const [type, setType] = useState(null);
   const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
-  const [migrate, setMigrate] = useState(true);
+  const [migrate, setMigrate] = useState(false);
   const [validFirmware, setValidFirmware] = useState([]);
   const [possibleTypes, setPossibleTypes] = useState([]);
   const [options, setOptions] = useState({
@@ -291,11 +291,17 @@ function FirmwareSelector({
                 {t('migrateFlashText')}
               </span>
 
-              <span className={!migrate ? "red" : "hidden"}>
+              <span className={migrate ? "red" : "hidden"}>
                 {t('migrateFlashHint')}
               </span>
             </span>
           </label>
+        </div>
+
+        <div className="note">
+          <p
+            dangerouslySetInnerHTML={{ __html: t('migrationNote') }}
+          />
         </div>
 
         <div className="gui-box grey">

@@ -1,5 +1,11 @@
-#content .tab #firmware-selector .checkbox label {
-  flex: 1;
+#content .tab #firmware-selector {
+  .checkbox label {
+    flex: 1;
+  }
+
+  .note {
+    margin-bottom: 7px;
+  }
 }
 
 #firmware-selector {

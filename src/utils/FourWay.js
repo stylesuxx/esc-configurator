@@ -772,7 +772,16 @@ class FourWay {
       });
 
       let newEsc = await this.getInfo(target);
-      if(migrate) {
+
+      const sameFirmware = (
+        esc.individualSettings && newEsc.individualSettings &&
+        esc.individualSettings.NAME === newEsc.individualSettings.NAME
+      );
+
+      /* Only migrate settings if new and old Firmware are the same or if user
+       * forces override.
+       */
+      if(migrate || sameFirmware) {
         newEsc = migrateSettings(esc, newEsc);
       }
 
