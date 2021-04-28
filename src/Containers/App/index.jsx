@@ -573,6 +573,7 @@ class App extends Component {
       try {
         const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
         individual[i].settingsArray = newSettingsArray;
+        individual[i].settings = mergedSettings;
       } catch(e) {
         this.addLogMessage('writeSettingsFailed', { index: i + 1 });
         console.debug(e);

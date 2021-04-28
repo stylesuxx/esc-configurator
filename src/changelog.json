@@ -3,7 +3,9 @@
     "title": "Unpublished",
     "items": [
       "Improved template",
-      "Improved readability of tests"
+      "Improved readability of tests",
+      "Bugfix: Properly update settings after writing",
+      "Do not migrate settings between different firmwares"
     ]
   },
   {
