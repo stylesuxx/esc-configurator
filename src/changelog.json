@@ -6,7 +6,8 @@
       "Improved readability of tests",
       "Bugfix: Properly update settings after writing",
       "Do not migrate settings between different firmwares",
-      "Bugfix: Continue reading ESCs even if one failed"
+      "Bugfix: Continue reading ESCs even if one failed",
+      "Bugfix: Properly select the Layout on AM32"
     ]
   },
   {

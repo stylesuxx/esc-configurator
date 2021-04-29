@@ -409,6 +409,7 @@ class FourWay {
 
           flash.settings.MAIN_REVISION = mainRevision;
           flash.settings.SUB_REVISION = subRevision;
+          flash.settings.LAYOUT = flash.settings.NAME;
 
           displayName = am32BuildDisplayName(flash, flash.settings.NAME);
         } else {
