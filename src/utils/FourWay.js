@@ -425,13 +425,14 @@ class FourWay {
         flash.make = make;
       } catch (e) {
         console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
-        return null;
+        throw new Error(e);
       }
 
       try {
         flash.individualSettings = getIndividualSettings(flash);
       } catch(e) {
         console.debug('Could not get individual settings');
+        throw new Error(e);
       }
 
       // Delete some things that we do not need to pass on to the client

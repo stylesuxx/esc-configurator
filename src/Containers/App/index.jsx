@@ -505,39 +505,35 @@ class App extends Component {
 
     this.addLogMessage('readEscs', { connected });
 
-    try {
-      for (let i = 0; i < connected; i += 1) {
+    for (let i = 0; i < connected; i += 1) {
+      try {
         const settings = await this.serial.getFourWayInterfaceInfo(i);
-        if(settings) {
-          settings.index = i;
-          settings.ref = React.createRef();
-          individual.push(settings);
+        settings.index = i;
+        settings.ref = React.createRef();
+        individual.push(settings);
 
-          this.addLogMessage('readEsc', {
-            index: i + 1,
-            name: settings.displayName,
-          });
-        } else {
-          this.addLogMessage('readEscFailed', { index: i + 1 });
-        }
+        this.addLogMessage('readEsc', {
+          index: i + 1,
+          name: settings.displayName,
+        });
+      } catch(e) {
+        this.addLogMessage('readEscFailed', { index: i + 1 });
+        console.debug(e);
       }
-
-      TagManager.dataLayer({
-        dataLayer: {
-          event: "ESCs",
-          escs: {
-            name: individual[0].displayName,
-            layout: individual[0].make,
-            count: individual.length,
-          },
-        },
-      });
-
-      this.addLogMessage('readEscsSuccess');
-    } catch(e) {
-      this.addLogMessage('readEscsFailed');
-      console.debug(e);
     }
+
+    TagManager.dataLayer({
+      dataLayer: {
+        event: "ESCs",
+        escs: {
+          name: individual[0].displayName,
+          layout: individual[0].make,
+          count: individual.length,
+        },
+      },
+    });
+
+    this.addLogMessage('readEscsSuccess');
 
     this.lastConnected = connected;
     this.setActions({ isReading: false });
