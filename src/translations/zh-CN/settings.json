@@ -4,5 +4,7 @@
   "directInput": "直接输入",
   "directInputHint": "使用直接输入数值以代替滑块。",
   "printLogs": "打印日志",
-  "printLogsHint": "如果启用，则会将日志打印到控制台。"
+  "printLogsHint": "如果启用，则会将日志打印到控制台。",
+  "extendedDebug": "扩展调试中",
+  "extendedDebugHint": "还将打印正在 读取/写入 和 发送/接收 有效载荷的地址。"
 }
