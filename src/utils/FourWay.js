@@ -67,6 +67,12 @@ class FourWay {
     this.packetErrorsCallback = null;
 
     this.parseMessage = this.parseMessage.bind(this);
+
+    this.extendedDebug = false;
+  }
+
+  setExtendedDebug(extendedDebug) {
+    this.extendedDebug = extendedDebug;
   }
 
   setLogCallback(logCallback) {
@@ -210,11 +216,10 @@ class FourWay {
       const message = self.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
-      /*
-      if (command !== COMMANDS.cmd_InterfaceTestAlive) {
-        console.debug('sending', this.commandToString(command), address.toString(0x10));
+      if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+        const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
+        console.debug(`TX: ${this.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
-      */
 
       const processMessage = async(resolve, reject) => {
         /**
@@ -229,6 +234,10 @@ class FourWay {
         try {
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
+            if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+              const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
+              console.debug(`RX: ${this.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+            }
             return resolve(msg);
           }
         } catch(e) {
@@ -400,6 +409,7 @@ class FourWay {
 
           flash.settings.MAIN_REVISION = mainRevision;
           flash.settings.SUB_REVISION = subRevision;
+          flash.settings.LAYOUT = flash.settings.NAME;
 
           displayName = am32BuildDisplayName(flash, flash.settings.NAME);
         } else {
@@ -416,13 +426,14 @@ class FourWay {
         flash.make = make;
       } catch (e) {
         console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
-        return null;
+        throw new Error(e);
       }
 
       try {
         flash.individualSettings = getIndividualSettings(flash);
       } catch(e) {
         console.debug('Could not get individual settings');
+        throw new Error(e);
       }
 
       // Delete some things that we do not need to pass on to the client
@@ -763,7 +774,16 @@ class FourWay {
       });
 
       let newEsc = await this.getInfo(target);
-      if(migrate) {
+
+      const sameFirmware = (
+        esc.individualSettings && newEsc.individualSettings &&
+        esc.individualSettings.NAME === newEsc.individualSettings.NAME
+      );
+
+      /* Only migrate settings if new and old Firmware are the same or if user
+       * forces override.
+       */
+      if(migrate || sameFirmware) {
         newEsc = migrateSettings(esc, newEsc);
       }
 

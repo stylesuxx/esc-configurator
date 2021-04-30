@@ -31,6 +31,10 @@ class App extends Component {
         type: 'boolean',
         value: false,
       },
+      extendedDebug: {
+        type: 'boolean',
+        value: false,
+      },
     };
 
     const loadSettings = () => {
@@ -501,39 +505,35 @@ class App extends Component {
 
     this.addLogMessage('readEscs', { connected });
 
-    try {
-      for (let i = 0; i < connected; i += 1) {
+    for (let i = 0; i < connected; i += 1) {
+      try {
         const settings = await this.serial.getFourWayInterfaceInfo(i);
-        if(settings) {
-          settings.index = i;
-          settings.ref = React.createRef();
-          individual.push(settings);
+        settings.index = i;
+        settings.ref = React.createRef();
+        individual.push(settings);
 
-          this.addLogMessage('readEsc', {
-            index: i + 1,
-            name: settings.displayName,
-          });
-        } else {
-          this.addLogMessage('readEscFailed', { index: i + 1 });
-        }
+        this.addLogMessage('readEsc', {
+          index: i + 1,
+          name: settings.displayName,
+        });
+      } catch(e) {
+        this.addLogMessage('readEscFailed', { index: i + 1 });
+        console.debug(e);
       }
-
-      TagManager.dataLayer({
-        dataLayer: {
-          event: "ESCs",
-          escs: {
-            name: individual[0].displayName,
-            layout: individual[0].make,
-            count: individual.length,
-          },
-        },
-      });
-
-      this.addLogMessage('readEscsSuccess');
-    } catch(e) {
-      this.addLogMessage('readEscsFailed');
-      console.debug(e);
     }
+
+    TagManager.dataLayer({
+      dataLayer: {
+        event: "ESCs",
+        escs: {
+          name: individual[0].displayName,
+          layout: individual[0].make,
+          count: individual.length,
+        },
+      },
+    });
+
+    this.addLogMessage('readEscsSuccess');
 
     this.lastConnected = connected;
     this.setActions({ isReading: false });
@@ -569,6 +569,7 @@ class App extends Component {
       try {
         const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
         individual[i].settingsArray = newSettingsArray;
+        individual[i].settings = mergedSettings;
       } catch(e) {
         this.addLogMessage('writeSettingsFailed', { index: i + 1 });
         console.debug(e);
@@ -738,10 +739,15 @@ class App extends Component {
 
   handleConnect = async(e) => {
     e.preventDefault();
-    const { serial } = this.state;
+    const {
+      serial,
+      appSettings,
+    } = this.state;
+    const { settings } = appSettings;
 
     try {
       await this.serial.open(serial.baudRate);
+      this.serial.setExtendedDebug(settings.extendedDebug.value);
       this.serial.setLogCallback(this.addLogMessage);
       this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('portOpened');
@@ -904,6 +910,14 @@ class App extends Component {
   handleAppSettingsUpdate = (name, value) => {
     const { appSettings } = this.state;
     const settings = { ...appSettings.settings };
+
+    switch(name) {
+      case 'extendedDebug': {
+        if (this.serial) {
+          this.serial.setExtendedDebug(value);
+        }
+      } break;
+    }
 
     settings[name].value = value;
     localStorage.setItem('settings', JSON.stringify(settings));

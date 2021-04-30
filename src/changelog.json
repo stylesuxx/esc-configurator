@@ -1,5 +1,16 @@
 [
   {
+    "title": "0.14.0",
+    "items": [
+      "Improved template",
+      "Improved readability of tests",
+      "Do not migrate settings between different firmwares",
+      "Bugfix: Properly update settings after writing",
+      "Bugfix: Continue reading ESCs even if one failed",
+      "Bugfix: Properly select the Layout on AM32"
+    ]
+  },
+  {
     "title": "0.13.0",
     "items": [
       "More tests",

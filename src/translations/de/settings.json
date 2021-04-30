@@ -4,5 +4,7 @@
   "directInput": "Direkteingabe",
   "directInputHint": "Direkte Eingabe für Zahlen statt Schieberegler.",
   "printLogs": "Logs anzeigen",
-  "printLogsHint": "Zeigt Logs in der Browser Konsole an, wenn aktiviert."
+  "printLogsHint": "Zeigt Logs in der Browser Konsole an, wenn aktiviert.",
+  "extendedDebug": "Erweiterte Debug-Infos",
+  "extendedDebugHint": "Zusätzlich Adressen, die gerade gelesen/geschrieben werden, sowie den gesendete/empfangenen Payload ausgeben."
 }

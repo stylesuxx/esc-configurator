@@ -1,159 +1,120 @@
 import Msp from '../Msp';
 
-test('log callback', async() => {
-  const serial = jest.fn();
-  const logCallback = jest.fn();
-  const msp = new Msp(serial);
+let serial;
+let msp;
 
-  msp.setLogCallback(logCallback);
-  msp.addLogMessage();
+describe('Msp', () => {
+  beforeEach(() => {
+    serial = jest.fn();
+    msp = new Msp(serial);
+  });
 
-  expect(logCallback).toHaveBeenCalled();
-});
+  it('should be possible to log', async() => {
+    const logCallback = jest.fn();
 
-test('packet errror callback', async() => {
-  const serial = jest.fn();
-  const errorCallback = jest.fn();
-  const msp = new Msp(serial);
+    msp.setLogCallback(logCallback);
+    msp.addLogMessage();
 
-  msp.setPacketErrorsCallback(errorCallback);
-  msp.increasePacketErrors();
+    expect(logCallback).toHaveBeenCalled();
+  });
 
-  expect(errorCallback).toHaveBeenCalled();
-});
+  it('should be possible to set packet error', async() => {
+    const errorCallback = jest.fn();
 
-test('get API version', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+    msp.setPacketErrorsCallback(errorCallback);
+    msp.increasePacketErrors();
 
-  await expect(msp.getApiVersion()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+    expect(errorCallback).toHaveBeenCalled();
+  });
 
-test('get FC variant', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+  it('should return API version', async() => {
+    await expect(msp.getApiVersion()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-  await expect(msp.getFcVariant()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should return FC variant', async() => {
+    await expect(msp.getFcVariant()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-test('get FC version', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+  it('should return FC version', async() => {
+    await expect(msp.getFcVersion()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-  await expect(msp.getFcVersion()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should return build info', async() => {
+    await expect(msp.getBuildInfo()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-test('get Build info', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+  it('should return board info', async() => {
+    await expect(msp.getBoardInfo()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-  await expect(msp.getBuildInfo()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should return UUID', async() => {
+    await expect(msp.getUid()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-test('get Board info', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+  it('should return motor data', async() => {
+    await expect(msp.getMotorData()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-  await expect(msp.getBoardInfo()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should return battery state', async() => {
+    await expect(msp.getBatteryState()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-test('get UUID', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+  it('should return features', async() => {
+    await expect(msp.getFeatures()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-  await expect(msp.getUid()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should set 4 way interface', async() => {
+    await expect(msp.set4WayIf()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-test('get motor data', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+  it('should spin all motors', async() => {
+    await expect(msp.spinAllMotors()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-  await expect(msp.getMotorData()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should spin one motor', async() => {
+    await expect(msp.spinMotor()).resolves.toEqual(undefined);
+    expect(serial).toHaveBeenCalled();
+  });
 
-test('get battery state', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+  it('should encode V1 - no data', async() => {
+    const code = '';
+    const data = [];
+    const result = msp.encodeV1(code, data);
+    expect(result.byteLength).toEqual(6);
+  });
 
-  await expect(msp.getBatteryState()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should encode V1', async() => {
+    const code = 114;
+    const data = new Uint8Array([220, 5, 220, 5, 220, 5, 220, 5, 0, 0, 0, 0, 0, 0, 0, 0]);
 
-test('get features', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+    const result = msp.encodeV1(code, data);
+    expect(result.byteLength).toEqual(22);
+  });
 
-  await expect(msp.getFeatures()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should encode V2 - no data', async() => {
+    const code = '';
+    const data = [];
 
-test('set 4 way interface', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
+    const result = msp.encodeV2(code, data);
+    expect(result.byteLength).toEqual(9);
+  });
 
-  await expect(msp.set4WayIf()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
+  it('should encode V2', async() => {
+    const code = 114;
+    const data = new Uint8Array([220, 5, 220, 5, 220, 5, 220, 5, 0, 0, 0, 0, 0, 0, 0, 0]);
 
-test('spin all motors', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
-
-  await expect(msp.spinAllMotors()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
-
-test('spin one motor', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
-
-  await expect(msp.spinMotor()).resolves.toEqual(undefined);
-  expect(serial).toHaveBeenCalled();
-});
-
-test('encode V1 - no data', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
-  const code = '';
-  const data = [];
-
-  const result = msp.encodeV1(code, data);
-  expect(result.byteLength).toEqual(6);
-});
-
-test('encode V1', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
-  const code = 114;
-  const data = new Uint8Array([220, 5, 220, 5, 220, 5, 220, 5, 0, 0, 0, 0, 0, 0, 0, 0]);
-
-  const result = msp.encodeV1(code, data);
-  expect(result.byteLength).toEqual(22);
-});
-
-test('encode V2 - no data', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
-  const code = '';
-  const data = [];
-
-  const result = msp.encodeV2(code, data);
-  expect(result.byteLength).toEqual(9);
-});
-
-test('encode V2', async() => {
-  const serial = jest.fn();
-  const msp = new Msp(serial);
-  const code = 114;
-  const data = new Uint8Array([220, 5, 220, 5, 220, 5, 220, 5, 0, 0, 0, 0, 0, 0, 0, 0]);
-
-  const result = msp.encodeV2(code, data);
-  expect(result.byteLength).toEqual(25);
+    const result = msp.encodeV2(code, data);
+    expect(result.byteLength).toEqual(25);
+  });
 });
