@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.14.1",
     "items": [
       "Added more melodies",
       "Bugfix: Check if at least one ESC could be read before pushing to data layer"
