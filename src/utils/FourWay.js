@@ -280,11 +280,13 @@ class FourWay {
         let layout = BLHELI_EEPROM.LAYOUT;
         let layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
         let defaultSettings = BLHELI_EEPROM.DEFAULTS;
+        let validFirmwareNames = BLHELI_EEPROM.NAMES;
 
         if (isSiLabs) {
           layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
           settingsArray = (await this.read(BLHELI_EEPROM.SILABS.EEPROM_OFFSET, layoutSize)).params;
         } else if (isArm) {
+          validFirmwareNames = AM32_EEPROM.NAMES;
           layoutSize = AM32_EEPROM.LAYOUT_SIZE;
           layout = AM32_EEPROM.LAYOUT;
           defaultSettings = AM32_EEPROM.DEFAULTS;
@@ -307,6 +309,7 @@ class FourWay {
         const name = flash.settings.NAME;
         let newLayout = null;
         if(BLUEJAY_EEPROM.NAMES.includes(name)) {
+          validFirmwareNames = BLUEJAY_EEPROM.NAMES;
           newLayout = BLUEJAY_EEPROM.LAYOUT;
           layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
           defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
@@ -419,6 +422,7 @@ class FourWay {
           }
         }
 
+        flash.canMigrateTo = validFirmwareNames;
         flash.defaultSettings = defaultSettings[layoutRevision];
         flash.displayName = displayName;
         flash.layoutSize = layoutSize;
@@ -777,7 +781,7 @@ class FourWay {
 
       const sameFirmware = (
         esc.individualSettings && newEsc.individualSettings &&
-        esc.individualSettings.NAME === newEsc.individualSettings.NAME
+        esc.canMigrateTo.includes(newEsc.individualSettings.NAME)
       );
 
       /* Only migrate settings if new and old Firmware are the same or if user
