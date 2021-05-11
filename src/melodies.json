@@ -49,6 +49,15 @@
     ]
   },
   {
+    "name": "Revolutionary Etude - Chopin",
+    "tracks": [
+      "rev_etude_0:o=5,b=160,d=16:8p,g#6,g6,f6,d6,d#6,d6,b,g,g#,g,f,d,d#,d,b4,g4,g#4,g4,f4,d4,d#4,d4,c4,g3,c4,g3,c4,g3,c4,g3,1d6,2p.,8g#.,g,1f6",
+      "rev_etude_1:o=5,b=160,d=16:1b,2p.,8g#.,g,8b3,g#6,g6,f6,d6,d#6,d6,b,g,g#,g,f,d,d#,d,b4,g4,g#4,g4,f4,d4,d#4,d4,c4,g3,c4,g3,c4,g3,c4,g3,1d6",
+      "rev_etude_2:o=5,b=160,d=16:1g,2p.,8f.,32g.,64p,1g,2p.,8f.,32g.,64p,8p,g#6,g6,f6,d6,d#6,d6,b,g,g#,g,f,d,d#,d,b4,g4,g#4,g4,f4,d4,d#4,d4,c4,b3,g4,f4,d#4,d4,d#4,d4,c4,b3,a#4,g#4,g4",
+      "rev_etude_3:o=5,b=160,d=16:1f,2p.,8d#.,g,1f,2p.,8d#.,32g.,64p,8g,8p,1p,1p,p,f4,g4,f4,d#4,d4,d#,d,c,b4,c,b4,g#4,g4,g#4,g4,f4,d#4,f4,d#4,2c4"
+    ]
+  },
+  {
     "name": "Rick & Morty Theme",
     "tracks": [
       "Rick&Morty:d=2,o=2,b=349:1a#5,2p,2c#6,2c6,2d#6,2g#5,2f#5,1f5",
@@ -61,6 +70,15 @@
     "name": "Simpsons Theme",
     "tracks": [
       "simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6,g.6,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6"
+    ]
+  },
+  {
+    "name": "Spider Dance - Undertale OST",
+    "tracks": [
+      "spider_dance_0:b=115,o=5,d=16:8f6,8c6,8g#,8f,p,b,a#,p,a#,g,d#,e,p,c6,a#,g#,a#,c6,e,f,g#,f,e,f6,p,d#6,32c6,32a#,g#,32c#4,32p,16c#4,16a#4,32c#4,32p,32c#4,32p,16c#4,16a#4,32c#4,32p,32c#4,32p,16c#4,16f4,32c#4,32p,32c#4,32p,16c#4,16a#4,16c#4,4c4,8p,16c4,16p,2c4",
+      "spider_dance_1:b=115,o=5,d=16:8c6,8g#,8f,8c,p,f,d#,p,g,d#,a#4,c,32f4,32p,32f4,32p,32f4,32p,16f4,32g4,32p,32g4,32p,32g4,32p,16g4,32g#4,32p,32g#4,32p,32g#4,32p,16g#4,32d#4,32p,32d#4,32p,32d#4,32p,16d#4,8f,8a#4,8g,8a#4,8g#,8a#4,8a#,8a#4,8g#,8c#,8c6,8f,8a#,8g#,4g",
+      "spider_dance_2:b=115,o=4,d=32:f,p,16f,16c5,f,p,f,p,16f,d#,p,16d#,c#,p,16c#,b#,p,b#,p,16b#,c,p,c,p,16c,16p,16g#5,16f5,16d#5,16g5,16g#5,16g4,16g#4,16c5,16g#4,16g4,16a#5,4p,1p,8c6,8a#5,8f6,8c6,8e6,8c#6",
+      "spider_dance_3:b=115,o=4,d=32:16f3,16c,16a#3,16c,16f3,16c,16a#3,16c,16c#,16b#,16a#3,16p,16c,16p,16g3,16a#3,16f3,16c,16a#3,16c,16f3,16c,16a#3,16c,16g#3,16c,16a#3,16c,16g#3,16c,16a#3,16c,16c#,16g#3,16g3,16g#3,16c#,16a#3,16g#3,16a#3,16c#,16c,16a#3,16c,c#,p,16c#,16c,16c#,2p.,4c6"
     ]
   },
   {

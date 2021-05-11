@@ -522,18 +522,20 @@ class App extends Component {
       }
     }
 
-    TagManager.dataLayer({
-      dataLayer: {
-        event: "ESCs",
-        escs: {
-          name: individual[0].displayName,
-          layout: individual[0].make,
-          count: individual.length,
+    if(individual.length > 0) {
+      TagManager.dataLayer({
+        dataLayer: {
+          event: "ESCs",
+          escs: {
+            name: individual[0].displayName,
+            layout: individual[0].make,
+            count: individual.length,
+          },
         },
-      },
-    });
+      });
 
-    this.addLogMessage('readEscsSuccess');
+      this.addLogMessage('readEscsSuccess');
+    }
 
     this.lastConnected = connected;
     this.setActions({ isReading: false });
