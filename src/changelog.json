@@ -1,5 +1,12 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Added more melodies",
+      "Bugfix: Check if at least one ESC could be read before pushing to data layer"
+    ]
+  },
+  {
     "title": "0.14.0",
     "items": [
       "Improved template",
