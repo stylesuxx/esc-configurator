@@ -26,6 +26,7 @@
   "layoutNotSupported": "布局版本 {{revision}} 尚不支持",
   "escSettingsNoChange": "无更改 - 未更新 ESC {{index}}",
   "escUpdateSuccess": "正在更新 ESC {{index}} - 完成",
+  "escLocked": "ESC {{index}} seems to be locked ({{codeLockByte}}) - updating might fail",
   "escUpdateFailed": "正在更新 ESC {{index}} - 失败",
   "escSettingsLayoutMismatch": "布局不匹配，覆盖未启用 - 中止",
   "escSettingsMcuMismatch": "MCU 不匹配，覆盖未启用 - 中止",
