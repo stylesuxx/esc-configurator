@@ -1,5 +1,11 @@
 [
   {
+    "title": "unreleased",
+    "items": [
+      "Bugfix: still try to write settings even if ESC seems locked, print a message instead of throwing"
+    ]
+  },
+  {
     "title": "0.14.1",
     "items": [
       "Added more melodies",
