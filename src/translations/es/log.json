@@ -26,6 +26,7 @@
   "layoutNotSupported": "Layout revision {{revision}} is not yet supported",
   "escSettingsNoChange": "No changes - not updating ESC {{index}}",
   "escUpdateSuccess": "Updating ESC {{index}} - finished",
+  "escLocked": "ESC {{index}} seems to be locked ({{codeLockByte}}) - updating might fail",
   "escUpdateFailed": "Updating ESC {{index}} - failed",
   "escSettingsLayoutMismatch": "Layout mismatch, override not enabled - aborted",
   "escSettingsMcuMismatch": "MCU mismatch, override not enabled - aborted",
