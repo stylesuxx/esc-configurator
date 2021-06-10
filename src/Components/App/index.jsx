@@ -86,6 +86,7 @@ function App({
           mspFeatures={msp.features}
           onAllMotorSpeed={onAllMotorSpeed}
           onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
+          onCommonSettingsUpdate={escs.actions.handleCommonSettingsUpdate}
           onFlashUrl={escs.actions.handleFlashUrl}
           onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
           onLocalSubmit={escs.actions.handleLocalSubmit}
@@ -164,6 +165,7 @@ App.propTypes = {
   escs: PropTypes.shape({
     actions: PropTypes.shape({
       handleMasterUpdate: PropTypes.func.isRequired,
+      handleCommonSettingsUpdate: PropTypes.func.isRequired,
       handleIndividualSettingsUpdate: PropTypes.func.isRequired,
       handleResetDefaultls: PropTypes.func.isRequired,
       handleReadEscs: PropTypes.func.isRequired,

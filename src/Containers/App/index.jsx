@@ -35,6 +35,10 @@ class App extends Component {
         type: 'boolean',
         value: false,
       },
+      disableCommon: {
+        type: 'boolean',
+        value: false,
+      },
     };
 
     const loadSettings = () => {
@@ -449,6 +453,20 @@ class App extends Component {
     this.setEscs({ individual });
   }
 
+  handleCommonSettingsUpdate = (index, commonSettings) => {
+    const  { escs } = this.state;
+    const individual = [ ...escs.individual ];
+    for(let i = 0; i < individual.length; i += 1) {
+      if(individual[i].index === index) {
+        individual[i].settings = commonSettings;
+
+        break;
+      }
+    }
+
+    this.setEscs({ individual });
+  }
+
   handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
 
@@ -554,7 +572,11 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     this.setActions({ isWriting: true });
-    const { escs } = this.state;
+    const {
+      appSettings,
+      escs,
+    } = this.state;
+
     const individual = [ ...escs.individual ];
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
@@ -562,9 +584,16 @@ class App extends Component {
       const commonEscSettings = esc.settings;
       const masterEscSettings = escs.master;
       const individualEscSettings = esc.individualSettings;
+
+      let commonOverrides = {};
+      if(appSettings.settings.disableCommon.value) {
+        commonOverrides = commonEscSettings;
+      }
+
       const mergedSettings = {
         ...commonEscSettings,
         ...masterEscSettings,
+        ...commonOverrides,
         ...individualEscSettings,
       };
 
@@ -1034,6 +1063,7 @@ class App extends Component {
         escs={{
           actions: {
             handleMasterUpdate: this.handleSettingsUpdate,
+            handleCommonSettingsUpdate: this.handleCommonSettingsUpdate,
             handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate,
             handleResetDefaultls: this.handleResetDefaultls,
             handleReadEscs: this.handleReadEscs,
