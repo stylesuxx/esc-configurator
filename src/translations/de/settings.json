@@ -8,5 +8,5 @@
   "extendedDebug": "Erweiterte Debug-Infos",
   "extendedDebugHint": "Zusätzlich Adressen, die gerade gelesen/geschrieben werden, sowie den gesendete/empfangenen Payload ausgeben.",
   "disableCommon": "Allgemeine Einstellungen deaktivieren",
-  "disableCommonHint": "Jeder ESC hat seine eigenen Einstellungen anstatt einem gemeinsamen Satz, der für alle ESC gültig ist."
+  "disableCommonHint": "Jeder ESC hat seine eigenen Einstellungen anstatt einem gemeinsamen Satz, der für alle ESCs gültig ist."
 }
