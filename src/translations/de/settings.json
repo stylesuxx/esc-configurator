@@ -6,5 +6,7 @@
   "printLogs": "Logs anzeigen",
   "printLogsHint": "Zeigt Logs in der Browser Konsole an, wenn aktiviert.",
   "extendedDebug": "Erweiterte Debug-Infos",
-  "extendedDebugHint": "Zusätzlich Adressen, die gerade gelesen/geschrieben werden, sowie den gesendete/empfangenen Payload ausgeben."
+  "extendedDebugHint": "Zusätzlich Adressen, die gerade gelesen/geschrieben werden, sowie den gesendete/empfangenen Payload ausgeben.",
+  "disableCommon": "Disable common settings",
+  "disableCommonHint": "Each ESC will have its own set of settings instead of having a common section that is valid for all ESCs."
 }
