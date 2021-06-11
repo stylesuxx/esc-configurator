@@ -9,6 +9,8 @@
   "notePropsOff": "<strong>注意：</strong> 在使用本页面前，请确保您已经 <strong>取下</strong> 所有螺旋桨。",
   "noteConnectPower": "<strong>注意：</strong> 请将电源连接至电调。",
   "commonParameters": "公共参数",
+  "commonSettingsDisabled": "Common settings disabled",
+  "commonSettingsDisabledText": "Common settings are disabled in the settings, each ESC needs to be ajdusted individually instead.",
   "escProgrammingByTX": "通过 TX 编程",
   "escLowRPMPowerProtection": "低转速功率保护",
   "escBrakeOnStop": "停止时刹车",
