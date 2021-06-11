@@ -6,19 +6,24 @@ import React, {
   useState,
 } from 'react';
 
-import Settings from './Settings';
+import SettingsHandler from './SettingsHandler';
 
 import './style.scss';
 
 const Esc = forwardRef(({
   canFlash,
   directInput,
+  disableCommon,
   esc,
   index,
+  onCommonSettingsUpdate,
   onFlash,
   onSettingsUpdate,
 }, ref) => {
   const { t } = useTranslation('common');
+
+  const commonSettings = esc.settings;
+  const commonSettingsDescriptions = esc.settingsDescriptions;
 
   const settings = esc.individualSettings;
   const descriptions = esc.individualSettingsDescriptions;
@@ -37,32 +42,12 @@ const Esc = forwardRef(({
     onSettingsUpdate(index, settings);
   }
 
+  function updateCommonSettings(settings) {
+    onCommonSettingsUpdate(index, settings);
+  }
+
   function handleFirmwareFlash() {
     onFlash(index);
-  }
-
-  function handleCheckboxChange(e) {
-    const {
-      name, checked,
-    } = e.target;
-    settings[name] = checked ? 1 : 0;
-
-    updateSettings();
-  }
-
-  function handleSelectChange(e) {
-    const {
-      name, value,
-    } = e.target;
-    settings[name] = value;
-
-    updateSettings();
-  }
-
-  function handleNumberChange(name, value) {
-    settings[name] = value;
-
-    updateSettings();
   }
 
   return (
@@ -74,14 +59,21 @@ const Esc = forwardRef(({
       </div>
 
       <div className="spacer-box">
+        {disableCommon && commonSettingsDescriptions &&
+          <SettingsHandler
+            descriptions={commonSettingsDescriptions.base}
+            directInput={directInput}
+            disabled={!canFlash}
+            onUpdate={updateCommonSettings}
+            settings={commonSettings}
+          />}
+
         {descriptions &&
-          <Settings
+          <SettingsHandler
             descriptions={descriptions.base}
             directInput={directInput}
             disabled={!canFlash}
-            handleCheckboxChange={handleCheckboxChange}
-            handleNumberChange={handleNumberChange}
-            handleSelectChange={handleSelectChange}
+            onUpdate={updateSettings}
             settings={settings}
           />}
 
@@ -112,8 +104,10 @@ Esc.defaultProps = { canFlash: true };
 Esc.propTypes = {
   canFlash: PropTypes.bool,
   directInput: PropTypes.bool.isRequired,
+  disableCommon: PropTypes.bool.isRequired,
   esc: PropTypes.shape().isRequired,
   index: PropTypes.number.isRequired,
+  onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFlash: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };

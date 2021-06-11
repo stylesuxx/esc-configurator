@@ -2,6 +2,7 @@
   {
     "title": "unreleased",
     "items": [
+      "Added setting to disable common settings and instead allow to adjust all settings on every ESC individually",
       "Bugfix: still try to write settings even if ESC seems locked, print a message instead of throwing"
     ]
   },
