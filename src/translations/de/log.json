@@ -26,7 +26,7 @@
   "layoutNotSupported": "Layout Revision {{revision}} wird noch nicht unterstützt",
   "escSettingsNoChange": "Keine Änderungen - ESC {{index}} nicht aktualisiert",
   "escUpdateSuccess": "ESC {{index}} erfolgreich aktualisiert",
-  "escLocked": "ESC {{index}} seems to be locked ({{codeLockByte}}) - updating might fail",
+  "escLocked": "ESC {{index}} scheint gesperrt zu sein ({{codeLockByte}}) - Aktualisierung könnte fehlschlagen",
   "escUpdateFailed": "ESC {{index}} Aktualisierung fehlgeschlagen",
   "escSettingsLayoutMismatch": "Layout stimmt nicht überein, Layout ignorieren nicht aktiv - abgebrochen",
   "escSettingsMcuMismatch": "MCU stimmt nicht überein, ignorieren nicht aktiv - abgebrochen",
