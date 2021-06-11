@@ -9,6 +9,8 @@
   "notePropsOff": "<strong>Achtung:</strong> Stelle sicher, dass die Propeller <strong>entfernt</strong> wurden, bevor du den Konfigurator verwendest.",
   "noteConnectPower": "<strong>Achtung:</strong> Stelle sicher, dass eine Batterie angesteckt ist.",
   "commonParameters": "Allgemeine Parameter",
+  "commonSettingsDisabled": "Common settings disabled",
+  "commonSettingsDisabledText": "Common settings are disabled in the settings, each ESC needs to be ajdusted individually instead.",
   "escProgrammingByTX": "Programmierung durch den Sender",
   "escLowRPMPowerProtection": "Schutz bei niedrigen Drehzahlen",
   "escBrakeOnStop": "Beim Stoppen der Motoren bremsen",
