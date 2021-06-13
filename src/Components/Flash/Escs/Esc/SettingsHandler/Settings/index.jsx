@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Checkbox from '../../../../Input/Checkbox';
-import Select from '../../../../Input/Select';
-import Slider from '../../../../Input/Slider';
-import Number from '../../../../Input/Number';
+import Checkbox from '../../../../../Input/Checkbox';
+import Select from '../../../../../Input/Select';
+import Slider from '../../../../../Input/Slider';
+import Number from '../../../../../Input/Number';
 
 function Settings({
   descriptions,
@@ -65,14 +65,14 @@ function Settings({
           return (
             <Number
               disabled={disabled}
-              factor={setting.factor}
+              factor={setting.factor || setting.displayFactor}
               hint={hint}
               key={setting.name}
               label={t(setting.label)}
               max={setting.max}
               min={setting.min}
               name={setting.name}
-              offset={setting.offset}
+              offset={setting.offset || setting.displayOffset}
               onChange={handleNumberChange}
               round={false}
               step={1}
@@ -84,14 +84,14 @@ function Settings({
         return (
           <Slider
             disabled={disabled}
-            factor={setting.factor}
+            factor={setting.factor || setting.displayFactor}
             hint={hint}
             key={setting.name}
             label={t(setting.label)}
             max={setting.max}
             min={setting.min}
             name={setting.name}
-            offset={setting.offset}
+            offset={setting.offset || setting.displayOffset}
             onChange={handleNumberChange}
             round={false}
             step={setting.step}

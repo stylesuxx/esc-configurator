@@ -6,5 +6,7 @@
   "printLogs": "打印日志",
   "printLogsHint": "如果启用，则会将日志打印到控制台。",
   "extendedDebug": "扩展调试中",
-  "extendedDebugHint": "还将打印正在 读取/写入 和 发送/接收 有效载荷的地址。"
+  "extendedDebugHint": "还将打印正在 读取/写入 和 发送/接收 有效载荷的地址。",
+  "disableCommon": "禁用公共设置",
+  "disableCommonHint": "每个 ESC 都将使用自己的设置，而不是一个对所有 ESC 都生效的公共设置。"
 }

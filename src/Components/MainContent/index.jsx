@@ -36,6 +36,7 @@ function MainContent({
   mspFeatures,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
+  onCommonSettingsUpdate,
   onOpenMelodyEditor,
   onSelectFirmwareForAll,
   onSettingsUpdate,
@@ -86,9 +87,11 @@ function MainContent({
           availableSettings={settings}
           canFlash={canFlash}
           directInput={appSettings.directInput.value}
+          disableCommon={appSettings.disableCommon.value}
           escCount={connected}
           escs={escs}
           flashProgress={progress}
+          onCommonSettingsUpdate={onCommonSettingsUpdate}
           onFlash={onSingleFlash}
           onIndividualSettingsUpdate={onIndividualSettingsUpdate}
           onSettingsUpdate={onSettingsUpdate}
@@ -168,7 +171,10 @@ function MainContent({
 }
 
 MainContent.defaultProps = {
-  appSettings: { directInput: { value: false } },
+  appSettings: {
+    directInput: { value: false },
+    disableCommon: { value: false },
+  },
   changelogEntries: [],
   connected: 0,
   escs: [],
@@ -188,7 +194,10 @@ MainContent.propTypes = {
     isSelecting: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
-  appSettings: PropTypes.shape({ directInput: PropTypes.shape() }),
+  appSettings: PropTypes.shape({
+    directInput: PropTypes.shape(),
+    disableCommon: PropTypes.shape(),
+  }),
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
@@ -202,6 +211,7 @@ MainContent.propTypes = {
   mspFeatures: PropTypes.shape({ '3D': PropTypes.bool }),
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
+  onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
