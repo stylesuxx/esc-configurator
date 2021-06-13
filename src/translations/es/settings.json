@@ -6,5 +6,7 @@
   "printLogs": "Imprimir registros",
   "printLogsHint": "Imprimirá los registros en la consola si está habilitado.",
   "extendedDebug": "Extended debugging",
-  "extendedDebugHint": "Will additionally print addresses that are being read/written to and the sent/received payload."
+  "extendedDebugHint": "Will additionally print addresses that are being read/written to and the sent/received payload.",
+  "disableCommon": "Disable common settings",
+  "disableCommonHint": "Each ESC will have its own set of settings instead of having a common section that is valid for all ESCs."
 }
