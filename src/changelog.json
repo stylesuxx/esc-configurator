@@ -3,7 +3,8 @@
     "title": "unreleased",
     "items": [
       "Tracking: Track firmware and version when flashing",
-      "Documentation: Added history and credits section"
+      "Documentation: Added history and credits section",
+      "Enhancement: Detect wrongly tagged BlHeli_S version"
     ]
   },
   {

@@ -52,6 +52,6 @@ SettingsHandler.propTypes = {
   directInput: PropTypes.bool.isRequired,
   disabled: PropTypes.bool.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  settings: PropTypes.arrayOf().isRequired,
+  settings: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 export default SettingsHandler;

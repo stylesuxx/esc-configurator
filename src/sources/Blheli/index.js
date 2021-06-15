@@ -14,6 +14,10 @@ function buildDisplayName(flash, make) {
     revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
   }
 
+  if (flash.actualMake) {
+    make += ` (Probably mistagged: ${flash.actualMake})`;
+  }
+
   return `${make} - BlHeli_S, ${revision}`;
 }
 
