@@ -123,7 +123,7 @@ function MainContent({
     const targetIndex = flashTargets[0];
     const esc = escs.find((esc) => esc.index === targetIndex);
     let warning = null;
-    if(esc.actualMake) {
+    if(esc && esc.actualMake) {
       warning = t('mistagged', {
         tagged: esc.make,
         detected: esc.actualMake,
