@@ -31,6 +31,7 @@ function FirmwareSelector({
   escHint,
   signatureHint,
   selectedMode,
+  warning,
   onSubmit,
   onLocalSubmit,
   configs,
@@ -311,6 +312,13 @@ function FirmwareSelector({
           />
         </div>
 
+        {warning &&
+          <div className="note alert">
+            <p
+              dangerouslySetInnerHTML={{ __html: warning }}
+            />
+          </div>}
+
         <div className="gui-box grey">
           <div className="gui-box-titlebar">
             <div className="spacer-box-title">
@@ -411,6 +419,7 @@ FirmwareSelector.defaultProps = {
   escHint: null,
   selectedMode: null,
   signatureHint: null,
+  warning: null,
 };
 FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
@@ -425,6 +434,7 @@ FirmwareSelector.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
   signatureHint: PropTypes.number,
+  warning: PropTypes.string,
 };
 
 export default FirmwareSelector;

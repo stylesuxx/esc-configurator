@@ -42,4 +42,14 @@
   .default-btn:last-child {
     margin-bottom: 0px;
   }
+
+  .alert {
+    table {
+      margin-top: 5px;
+      font-weight: bold;
+      td {
+        padding-right: 5px;
+      }
+    }
+  }
 }
