@@ -59,6 +59,7 @@ function FirmwareSelector({
   });
   const [selection, setSelection] = useState({
     firmware: null,
+    version: null,
     url: null,
     pwm: null,
   });
@@ -219,7 +220,11 @@ function FirmwareSelector({
   }
 
   function handleVersionChange(e) {
-    const newSelection = Object.assign({}, selection, { url: e.target.value });
+    const selected = e.target.options.selectedIndex;
+    const newSelection = Object.assign({}, selection, {
+      url: e.target.value,
+      version: e.target.options[selected].text,
+    });
     setSelection(newSelection);
   }
 
@@ -250,7 +255,7 @@ function FirmwareSelector({
       mode
     );
 
-    onSubmit(formattedUrl, force, migrate);
+    onSubmit(formattedUrl, esc, selection.firmware, selection.version, selection.pwm, force, migrate);
   }
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);

@@ -645,9 +645,8 @@ class App extends Component {
 
     TagManager.dataLayer({
       dataLayer: {
-        event: 'Flashing',
-        firmwareNew: {
-          type: 'local',
+        event: 'LocalFlash',
+        firmware: {
           force,
           count: escs.targets.length,
         },
@@ -669,7 +668,7 @@ class App extends Component {
    * checked if the file already exists there, it is used, otherwise it is
    * downloaded and put into local storage for later use.
    */
-  handleFlashUrl = async(url, force, migrate) => {
+  handleFlashUrl = async(url, layout, name, version, pwm, force, migrate) => {
     this.setActions({
       isFlashing: true,
       isSelecting: false,
@@ -714,9 +713,13 @@ class App extends Component {
     if(text) {
       TagManager.dataLayer({
         dataLayer: {
-          event: 'Flashing',
-          firmwareNew: {
+          event: 'RemoteFlash',
+          firmware: {
             type,
+            layout,
+            name,
+            version,
+            pwm,
             url,
             force,
             count: escs.targets.length,

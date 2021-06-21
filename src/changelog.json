@@ -1,5 +1,11 @@
 [
   {
+    "title": "unreleased",
+    "items": [
+      "Tracking: Track firmware and version when flashing"
+    ]
+  },
+  {
     "title": "0.15.0",
     "items": [
       "Added setting to disable common settings and instead allow to adjust all settings on every ESC individually",
