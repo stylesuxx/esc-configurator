@@ -371,6 +371,70 @@ class FourWay {
             make = blheliLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
             make = blheliSLayouts[layoutName].name;
+
+            /* Some manufacturers mistag their firmware so that the actual
+             * deadtime is higher than the reported one. Try to read the timing
+             * from the currently flashed hex.
+             *
+             * Read bytes of data in 128 byte increments starting at address 0x250
+             * - 16.7:  0x300 bytes are enough
+             * - 16.71: 0x500 bytes are enough
+             */
+            const start = 0x250;
+            const amount = 0x500;
+            const data = new Uint8Array(amount);
+            let pos = 0;
+            for (let address = start; address < start + amount; address += 0x80) {
+              const currentData = (await this.read(address, 0x80)).params;
+              data.set(currentData, pos);
+              pos += 0x80;
+            }
+
+            /* Scan the gathered data to find the actual deadtime - looking for
+             * a section that looks like this in asm:
+             *
+             * MOV R1, A
+             * CLR C
+             * MOV A, R0
+             * SUBB A, #data (#data being data[i + 4])
+             *
+             * This is the relevant section in BlHeli_S source code:
+             * https://github.com/bitdump/BLHeli/blob/467834db443a887534c1f2c9fb0ff61fd6b40e3e/BLHeli_S%20SiLabs/BLHeli_S.asm#L1433
+             */
+            let timing = 0;
+            for (var i = 0; i < amount - 5; i += 1) {
+              if (
+                data[i] === 0xf9 &&
+                data[i + 1] === 0xc3 &&
+                data[i + 2] === 0xe8 &&
+                data[i + 3] === 0x94
+              ) {
+                timing = data[i + 4] / 2;
+                break;
+              }
+            }
+
+            if(timing) {
+              if (timing < 10 ) {
+                timing = '0' + timing;
+              }
+              timing = String(timing);
+
+              const splitMake =  make.split('-');
+              const taggedTiming = splitMake[2];
+
+              if(taggedTiming !== timing) {
+                splitMake[2] = timing;
+                const actualMake = splitMake.join('-');
+                this.addLogMessage('timingMismatch', {
+                  tagged: make,
+                  actual: actualMake,
+                });
+
+                flash.actualMake = actualMake;
+              }
+            }
+
             displayName = blheliBuildDisplayName(flash, make);
           }
         } else if (isArm) {
