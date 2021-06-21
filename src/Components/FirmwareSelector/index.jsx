@@ -221,9 +221,11 @@ function FirmwareSelector({
 
   function handleVersionChange(e) {
     const selected = e.target.options.selectedIndex;
+    const selecteOption = e.target.options[selected];
+
     const newSelection = Object.assign({}, selection, {
       url: e.target.value,
-      version: e.target.options[selected].text,
+      version: selecteOption ? selecteOption.text : 'N/A',
     });
     setSelection(newSelection);
   }
