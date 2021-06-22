@@ -130,5 +130,5 @@
   "escMissing1": "ESC 尚未准备就绪。例如，如果 ESC <b>正在播放旋律</b>，则可能发生这种情况。 同样，先前刷入的固件可能是错误的固件，并且它需要更长的时间才能完成启动。",
   "escMissing2": "只是 <b>没有连接更多的 ESC</b> 。",
   "escMissing3": "ESC 的 <b> MCU 存在缺陷</b> 。",
-  "mistagged": "<b>Warning:</b> It seems that the currently flashed firmware is mistagged. Please only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC.<table><tr><td>Tagged</td><td>{{tagged}}</td></tr><tr><td>Detected</td><td>{{detected}}</td></tr></table>"
+  "mistagged": "<b>警告：</b> 当前刷入的固件似乎被标记为错误。务必在您清楚您正在做什么的时候再继续。 从这里开始可能会使您的ESC 面临过热的风险，最糟糕的情况是使得 ESC 遭到破坏。<table><tr><td>标记为</td><td>{{tagged}}</td></tr><tr><td>检测到</td><td>{{detected}}</td></tr></table>"
 }
