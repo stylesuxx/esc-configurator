@@ -33,5 +33,6 @@
   "escFlashedInTime": "已刷入电调 {{index}} - {{seconds}}s",
   "passthroughNotSupported": "不支持 BLHELI 透传协议",
   "firmwareMismatch": "固件不匹配！刷入: {{flash}} vs. EEEPROM: {{eeprom}}",
-  "bootloaderMismatch": "引导程序不匹配！刷入: {{flash}} vs. EEEPROM: {{eeprom}}"
+  "bootloaderMismatch": "引导程序不匹配！刷入: {{flash}} vs. EEEPROM: {{eeprom}}",
+  "timingMismatch": "Firmware is tagged as {{tagged}} but actualy seems to be {{actual}}"
 }
