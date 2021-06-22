@@ -129,5 +129,6 @@
   "escMissingHint": "Si el resultado no es lo que estás esperando, vuelve a intentar hacer clic en el botón <b>'Leer Configuración'</b>.",
   "escMissing1": "The ESC was not ready yet. This can for example happen if it is <b>playing a melody</b>. Also a previous flash could have gone wrong and it needs longer to boot up than usual.",
   "escMissing2": "There are simply <b>not more ESCs connected.</b>",
-  "escMissing3": "The <b>MCU of the ESC is defective.</b>"
+  "escMissing3": "The <b>MCU of the ESC is defective.</b>",
+  "mistagged": "<b>Warning:</b> It seems that the currently flashed firmware is mistagged. Please only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC.<table><tr><td>Tagged</td><td>{{tagged}}</td></tr><tr><td>Detected</td><td>{{detected}}</td></tr></table>"
 }
