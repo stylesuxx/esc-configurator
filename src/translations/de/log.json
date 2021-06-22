@@ -34,5 +34,5 @@
   "passthroughNotSupported": "BLHELI passthrough nicht unterstützt",
   "firmwareMismatch": "Firmware stimmt nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "bootloaderMismatch": "Bootloader Versionen stimmen nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
-  "timingMismatch": "Firmware is tagged as {{tagged}} but actualy seems to be {{actual}}"
+  "timingMismatch": "Firmware ist als {{tagged}} markiert, es scheint aber warhscheinlicher dass es sich um {{actual}} handelt."
 }
