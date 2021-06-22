@@ -129,5 +129,6 @@
   "escMissingHint": "Manchmal kann es notwendig sein den <b>'Einstellungen lesen'<b> Knopf erneut zu drücken um das korrekte Ergebnis zu erhalten.",
   "escMissing1": "Der ESC war noch nicht bereit. Dies kann zum Beispiel passieren, wenn er <b>eine Melodie abspielt</b>. Auch ein vorheriges Flashen kann schief gelaufen sein, dadurch braucht der ESC länger zum Starten als üblich.",
   "escMissing2": "Es sind tatsächlich <b>keine weiteren ESCs verbunden.</b>",
-  "escMissing3": "Die <b>MCU des ESC ist defekt.</b>"
+  "escMissing3": "Die <b>MCU des ESC ist defekt.</b>",
+  "mistagged": "<b>Warning:</b> It seems that the currently flashed firmware is mistagged. Please only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC.<table><tr><td>Tagged</td><td>{{tagged}}</td></tr><tr><td>Detected</td><td>{{detected}}</td></tr></table>"
 }
