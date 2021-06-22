@@ -4,7 +4,9 @@
     "items": [
       "Tracking: Track firmware and version when flashing",
       "Documentation: Added history and credits section",
-      "Enhancement: Detect wrongly tagged BlHeli_S version"
+      "Enhancement: Detect wrongly tagged BlHeli_S version",
+      "Add link to report mistagged hardware",
+      "Add link to report Bluejay tested hardware"
     ]
   },
   {

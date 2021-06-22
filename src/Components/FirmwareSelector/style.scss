@@ -46,10 +46,17 @@
   .alert {
     table {
       margin-top: 5px;
+      margin-bottom: 5px;
       font-weight: bold;
       td {
         padding-right: 5px;
       }
+    }
+
+    a {
+      color: white;
+      text-decoration: underline;
+      font-weight: bold;
     }
   }
 }
