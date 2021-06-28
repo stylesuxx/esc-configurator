@@ -62,7 +62,9 @@ class Serial {
   writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
 
   setExtendedDebug(extendedDebug) {
-    this.fourWay.setExtendedDebug(extendedDebug);
+    if(this.fourWay) {
+      this.fourWay.setExtendedDebug(extendedDebug);
+    }
   }
 
   setLogCallback(logCallback) {
