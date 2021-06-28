@@ -415,9 +415,6 @@ class FourWay {
             }
 
             if(timing) {
-              if (timing < 10 ) {
-                timing = '0' + timing;
-              }
               timing = String(timing);
 
               const splitMake =  make.split('-');
