@@ -79,6 +79,7 @@
   "escLowVoltageThreshold": "低电压截止阈值",
   "escRcCarReversing": "RC 遥控车风格的反转换向",
   "bluejayText": "<p>Bluejay 是一个基于 BLHeli_S 固件能够使用双向DShot的新固件 - 如果你想要在你的飞机上运行 RPM 滤波器，那么这是一个很好的选择。该项目还旨在清理和简化最初的 BLHeli_S 源代码。</p><p>启动音乐编辑器也是它的一个新功能。</p>",
+  "bluejaySupportedHardware": "<p>Please take the time to help us document hardware on which you have successfully flashed and tested Bluejay by <a href=\"https://github.com/mathiasvr/bluejay/wiki/Tested-Hardware\" target=\"_blank\">adding it to the Wiki</a>.</p><p>Although it should be working on all BlHeli compatible hardware, we would like to maintain a list, so people can be confident that their chosen hardware will indeed work properly with Bluejay.</p>",
   "blheli32ToAM32": "<p>基于 ARM 的 ESC 的固件。虽然目前其较新，但用户和制造商都对此很感兴趣。预装 AM32 固件的 ESC 将很快可以从不同的制造商那里买到。</p><p><strong>可以在 BLHeli_32 ESC 上刷入 AM32 固件</strong>。 但是，您必须先通过 <a href=\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\" target=\"_blank\">STM32 Cube 程序</a> 和 STLink\nV2 编程适配器刷入 AM32 引导程序。所需要的引导程序可以在 <a href=\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\" target=\"_blank\">AM32 bootloader 仓库</a>中找到。</p>",
   "blhelisText": "<p>BLHeli_S 可能不需要介绍 - 在几乎每个基于 EFM8 的四轴飞行器上使用的最常见的 ESC 固件。</p><p>已尝试并测试，支持每个模拟和数字协议。</p>",
   "whatsNextHeader": "接下来是什么?",
@@ -130,5 +131,5 @@
   "escMissing1": "ESC 尚未准备就绪。例如，如果 ESC <b>正在播放旋律</b>，则可能发生这种情况。 同样，先前刷入的固件可能是错误的固件，并且它需要更长的时间才能完成启动。",
   "escMissing2": "只是 <b>没有连接更多的 ESC</b> 。",
   "escMissing3": "ESC 的 <b> MCU 存在缺陷</b> 。",
-  "mistagged": "<b>警告：</b> 当前刷入的固件似乎被标记为错误。务必在您清楚您正在做什么的时候再继续。 从这里开始可能会使您的ESC 面临过热的风险，最糟糕的情况是使得 ESC 遭到破坏。<table><tr><td>标记为</td><td>{{tagged}}</td></tr><tr><td>检测到</td><td>{{detected}}</td></tr></table>"
+  "mistagged": "<p><b>Warning:</b> It seems that the currently flashed firmware is mistagged!</p><p>Only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC. It is recommended to flash the detected version instead of the tagged version - you need to check the <i>\"Ignore inappropriate MCU Layout?\"</i> checkbox on top of the page.</p><table><tr><td>Tagged</td><td>{{tagged}}</td></tr><tr><td>Detected</td><td>{{detected}}</td></tr></table><p>If you see this message, please <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">consider adding an entry to the Wiki</a>, helping us to document problematic hardware.</p>"
 }
