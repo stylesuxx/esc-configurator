@@ -76,7 +76,7 @@ This configurator is based on [BlHeli-configurator](https://github.com/blheli-co
 ### Authors & Contributors
 To continue the legacy of everyone who was mentioned as author or contributor in one of the previously mentioned projects:
 
-* Dominic Clifton aka. hydra - maintainer of the Cleanflight firmware and configurator.
+* Dominic Clifton aka. hydra - maintainer of the [Cleanflight firmware](https://github.com/cleanflight/cleanflight) and [configurator](https://github.com/cleanflight/cleanflight-configurator).
 * ctn - primary author and maintainer of [Baseflight configurator](https://github.com/multiwii/baseflight-configurator) from which [Cleanflight Configurator](https://github.com/cleanflight/cleanflight-configurator) project was forked.
 * Andrey Mironov aka. DieHertz - primary author of [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator)
 * Micheal Keller aka. mikeller - maintainer of [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator)
