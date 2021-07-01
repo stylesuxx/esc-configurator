@@ -79,6 +79,7 @@
   "escLowVoltageThreshold": "Low Voltage Cut-Off Threshold",
   "escRcCarReversing": "RC Car Style Reversing",
   "bluejayText": "<p>Bluejay is BLHeli_S based firmware capable of bi-directional DShot - so a great choice if you want to run RPM filtering on your rig. This project also aims to clean up and simplify the original BLHeli_S source code.</p><p>A startup sound editor is also part of the deal.</p>",
+  "bluejaySupportedHardware": "<p>Please take the time to help us document hardware on which you have successfully flashed and tested Bluejay by <a href=\"https://github.com/mathiasvr/bluejay/wiki/Tested-Hardware\" target=\"_blank\">adding it to the Wiki</a>.</p><p>Although it should be working on all BLHeli compatible hardware, we would like to maintain a list, so people can be confident that their chosen hardware will indeed work properly with Bluejay.</p>",
   "blheli32ToAM32": "<p>The up and coming firmware for ARM based ESCs. Although being relatively new on the scene it has a lot of interest, both from users and manufacturers. AM32 ESCs will soon be available from different manufacturers.</p><p><strong>AM32 can be flashed on BLHeli_32 ESCs</strong>. But, you will have to first flash the AM32 bootloader via <a href=\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\" target=\"_blank\">STM32 Cube Programmer</a> and ST Link V2 programming adapter. The required bootloader can be found in the <a href=\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\" target=\"_blank\">AM32 bootloader repository</a>.</p>",
   "blhelisText": "<p>BLHeli_S probably does not need an introduction - the wildly popular ESC firmware used on almost every EFM8 based ESC in the quadcopter hobby.</p><p>Tried and tested, supports every analog and digital protocol out there.</p>",
   "whatsNextHeader": "What's next?",
@@ -129,5 +130,6 @@
   "escMissingHint": "If the result is not what you are expecting, try clicking the <b>'Read Setup'</b> button again.",
   "escMissing1": "The ESC was not ready yet. This can for example happen if it is <b>playing a melody</b>. Also a previous flash could have gone wrong and it needs longer to boot up than usual.",
   "escMissing2": "There are simply <b>not more ESCs connected.</b>",
-  "escMissing3": "The <b>MCU of the ESC is defective.</b>"
+  "escMissing3": "The <b>MCU of the ESC is defective.</b>",
+  "mistagged": "<p><b>Warning:</b> It seems that the currently flashed firmware is mistagged!</p><p>Only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC. It is recommended to flash the detected version instead of the tagged version - you need to check the <i>\"Ignore inappropriate MCU Layout?\"</i> checkbox on top of the page.</p><table><tr><td>Tagged</td><td>{{tagged}}</td></tr><tr><td>Detected</td><td>{{detected}}</td></tr></table><p>If you see this message, please <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">consider adding an entry to the Wiki</a>, helping us to document problematic hardware.</p>"
 }

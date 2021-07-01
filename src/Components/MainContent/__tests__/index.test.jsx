@@ -788,4 +788,138 @@ describe('MainContent', () => {
     expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
+
+  it('should display warning when wrong dead-time detected', () => {
+    const actions = {
+      isReading: false,
+      isWriting: false,
+      isSelecting: true,
+      isFlashing: false,
+    };
+
+    const settings = {
+      LAYOUT_REVISION: 0,
+      MAIN_REVISION: 1,
+      SUB_REVISION: 2,
+      NAME: 'NAME',
+    };
+
+    const configs = {
+      versions: {},
+      escs: {},
+      pwm: {},
+      platforms: {},
+    };
+
+    const escs = [
+      {
+        index: 0,
+        make: 'make',
+        actualMake: 'actualMake',
+        meta: { available: true },
+        settings: {
+          LAYOUT_REVISION: 0,
+          MODE: 0,
+          STARTUP_BEEP: 0,
+        },
+        bootloaderRevision: 'bl 23',
+        individualSettings: {
+          LAYOUT_REVISION: 0,
+          MAIN_REVISION: 1,
+          SUB_REVISION: 200,
+          NAME: 'FW Name',
+          MOTOR_DIRECTION: 1,
+          _PPM_MIN_THROTTLE: 125,
+          STARTUP_BEEP: 1,
+        },
+        individualSettingsDescriptions: {
+          base: [
+            {
+              name: 'MOTOR_DIRECTION',
+              type: 'enum',
+              label: 'escMotorDirection',
+              options: [
+                {
+                  value: '1',
+                  label: 'Normal',
+                },
+                {
+                  value: '2',
+                  label: 'Reversed',
+                },
+                {
+                  value: '3',
+                  label: 'Bidirectional',
+                },
+                {
+                  value: '4',
+                  label: 'Bidirectional Reversed',
+                },
+              ],
+            },
+            {
+              name: '_PPM_MIN_THROTTLE',
+              type: 'number',
+              min: 1000,
+              max: 1500,
+              step: 4,
+              label: 'escPPMMinThrottle',
+              offset: 1000,
+              factor: 4,
+              suffix: ' μs',
+            },
+            {
+              name: 'STARTUP_BEEP',
+              type: 'bool',
+              label: 'escStartupBeep',
+            },
+            {
+              name: 'IVALID',
+              type: 'IVALID',
+              label: 'invalid',
+            },
+            {
+              name: '_PPM_CENTER_THROTTLE',
+              type: 'number',
+              min: 1000,
+              max: 2020,
+              step: 4,
+              label: 'escPPMCenterThrottle',
+              offset: 1000,
+              factor: 4,
+              suffix: ' μs',
+              visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
+            },
+          ],
+        },
+      },
+    ];
+
+    render(
+      <MainContent
+        actions={actions}
+        configs={configs}
+        escs={escs}
+        flashTargets={[0]}
+        onAllMotorSpeed={onAllMotorSpeed}
+        onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onFlashUrl={onFlashUrl}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+        onLocalSubmit={onLocalSubmit}
+        onOpenMelodyEditor={onOpenMelodyEditor}
+        onReadEscs={onReadEscs}
+        onResetDefaultls={onResetDefaultls}
+        onSaveLog={onSaveLog}
+        onSelectFirmwareForAll={onSelectFirmwareForAll}
+        onSettingsUpdate={onSettingsUpdate}
+        onSingleFlash={onSingleFlash}
+        onSingleMotorSpeed={onSingleMotorSpeed}
+        onWriteSetup={onWriteSetup}
+        open
+        settings={settings}
+      />
+    );
+
+    expect(screen.getByText(/mistagged/i)).toBeInTheDocument();
+  });
 });

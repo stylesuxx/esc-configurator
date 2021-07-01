@@ -33,5 +33,6 @@
   "escFlashedInTime": "Flashed ESC {{index}} - {{seconds}}s",
   "passthroughNotSupported": "BLHELI passthrough not supported",
   "firmwareMismatch": "Firmware mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
-  "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}"
+  "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
+  "timingMismatch": "Firmware is tagged as {{tagged}} but actualy seems to be {{actual}}"
 }

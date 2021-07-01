@@ -69,3 +69,29 @@ The build is then available from the build directory and can be served by simply
     yarn test
     yarn test:watch
     yarn test:coverage
+
+## History & Credits
+This configurator is based on [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator) which was based on [Cleanflight Configurator](https://github.com/cleanflight/cleanflight-configurator) which itself was based on [Baseflight configurator](https://github.com/multiwii/baseflight-configurator). I would like to thank everyone who contributed to one of those projects, without you this project would not be possible.
+
+### Authors & Contributors
+To continue the legacy of everyone who was mentioned as author or contributor in one of the previously mentioned projects:
+
+* Dominic Clifton aka. hydra - maintainer of the [Cleanflight firmware](https://github.com/cleanflight/cleanflight) and [configurator](https://github.com/cleanflight/cleanflight-configurator).
+* ctn - primary author and maintainer of [Baseflight configurator](https://github.com/multiwii/baseflight-configurator) from which [Cleanflight Configurator](https://github.com/cleanflight/cleanflight-configurator) project was forked.
+* Andrey Mironov aka. DieHertz - primary author of [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator)
+* Micheal Keller aka. mikeller - maintainer of [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator)
+* Stefan van der Ende
+* Nathan
+* Steffen Windoffer
+* Steven R. Lilly
+* Tuomas Kuosmanen
+* Robyn Bachofer
+* ByeJon
+
+#### Authors & Contributors for esc-configurator
+* Mathias Rasmussen aka. mathiasvr - primary motivator and contributor for [esc-configurator](https://github.com/stylesuxx/esc-configurator)
+* Chris Landa aka. stylesuxx - primary author and maintainer of [esc-configurator](https://github.com/stylesuxx/esc-configurator)
+* Georg Oberleitner aka. Noctaro - German translation & Logo
+* Hugo Chiang aka. DusKing1 - Chinese translation
+
+If you feel that your name should be mentioned in the authors section, please do not hesitate to submit a pull request.

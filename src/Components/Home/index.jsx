@@ -153,6 +153,8 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
                   {t('openMelodyEditor')}
                 </button>
               </div>
+
+              <div dangerouslySetInnerHTML={{ __html: t('bluejaySupportedHardware') }} />
             </div>
           </section>
         </div>

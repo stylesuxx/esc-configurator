@@ -31,6 +31,7 @@ function FirmwareSelector({
   escHint,
   signatureHint,
   selectedMode,
+  warning,
   onSubmit,
   onLocalSubmit,
   configs,
@@ -59,6 +60,7 @@ function FirmwareSelector({
   });
   const [selection, setSelection] = useState({
     firmware: null,
+    version: null,
     url: null,
     pwm: null,
   });
@@ -219,7 +221,13 @@ function FirmwareSelector({
   }
 
   function handleVersionChange(e) {
-    const newSelection = Object.assign({}, selection, { url: e.target.value });
+    const selected = e.target.options.selectedIndex;
+    const selecteOption = e.target.options[selected];
+
+    const newSelection = Object.assign({}, selection, {
+      url: e.target.value,
+      version: selecteOption ? selecteOption.text : 'N/A',
+    });
     setSelection(newSelection);
   }
 
@@ -250,7 +258,7 @@ function FirmwareSelector({
       mode
     );
 
-    onSubmit(formattedUrl, force, migrate);
+    onSubmit(formattedUrl, esc, selection.firmware, selection.version, selection.pwm, force, migrate);
   }
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
@@ -303,6 +311,13 @@ function FirmwareSelector({
             dangerouslySetInnerHTML={{ __html: t('migrationNote') }}
           />
         </div>
+
+        {warning &&
+          <div className="note alert">
+            <p
+              dangerouslySetInnerHTML={{ __html: warning }}
+            />
+          </div>}
 
         <div className="gui-box grey">
           <div className="gui-box-titlebar">
@@ -404,6 +419,7 @@ FirmwareSelector.defaultProps = {
   escHint: null,
   selectedMode: null,
   signatureHint: null,
+  warning: null,
 };
 FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
@@ -418,6 +434,7 @@ FirmwareSelector.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
   signatureHint: PropTypes.number,
+  warning: PropTypes.string,
 };
 
 export default FirmwareSelector;

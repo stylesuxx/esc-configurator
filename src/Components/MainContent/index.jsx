@@ -57,6 +57,7 @@ function MainContent({
   fourWay,
   port,
 }) {
+  const { t } = useTranslation('common');
   const {
     isSelecting,
     isFlashing,
@@ -121,6 +122,14 @@ function MainContent({
   if (isSelecting) {
     const targetIndex = flashTargets[0];
     const esc = escs.find((esc) => esc.index === targetIndex);
+    let warning = null;
+    if(esc && esc.actualMake) {
+      warning = t('mistagged', {
+        tagged: esc.make,
+        detected: esc.actualMake,
+      });
+    }
+
     return (
       <div id="content">
         <div className="tab toolbar_fixed_bottom">
@@ -131,7 +140,9 @@ function MainContent({
               onCancel={onCancelFirmwareSelection}
               onLocalSubmit={onLocalSubmit}
               onSubmit={onFlashUrl}
+              showWarning={esc ? true : false}
               signatureHint={esc ? esc.meta.signature : null}
+              warning={warning}
             />
           </div>
         </div>

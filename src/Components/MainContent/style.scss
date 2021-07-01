@@ -26,6 +26,12 @@
     }
   }
 
+  .note.alert {
+    background-color: #bc544b;
+    border: 1px solid #ff0000;
+    color: white;
+  }
+
   @media only screen and (max-width: 600px) {
     padding-top: 170px
   }
