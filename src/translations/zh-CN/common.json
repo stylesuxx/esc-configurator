@@ -87,7 +87,7 @@
   "openPortSelection": "打开端口选择",
   "versionUnsupported": "{{name}} 版本 '{{version}}' (布局 {{layout}}) 尚未支持。<br/><br/>请打开一个<a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">问题</a>来让我们知道。",
   "motorControl": "电机控制",
-  "motorControlText": "<p>请确保您的ESC正确设置以反映滑块的状态。</p><p>例如，当您在飞控中启用3D模式后， 请确保 ESC 也已经设置为 3D 模式，否则电机可能在解锁瞬间满负荷运行。</p><p>同样地，如果你在飞控上使用双向 Dshot，而 ESC 固件并不支持双向 Dshot，那么电机将不会旋转。从已有 RPM 回传的固件向前回滚刷入 BlHeli_S 时可能会出现这种情况。</p>",
+  "motorControlText": "<p>Make sure your ESCs are properly set up to reflect the state of the sliders.</p><p>Eg.: When you enabled 3D mode in your flight controller, make sure the ESCs are also set up for 3D mode, otherwise the motors might go off with full power.</p><p>Also be aware that the motors will not spin if you have bi-directional Dshot enabled on the Flight-controller, but the ESC does not support it. Which might be the case when flashing from RPM enabled firmware to BlHeli_S.</p>",
   "enableMotorControl": "启用电机控制",
   "masterSpeed": "主速度",
   "motorNr": "电机 {{index}}",
