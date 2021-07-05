@@ -9,7 +9,7 @@
   "notePropsOff": "<strong>Nota:</strong> Asegúrate de que has removido las <strong>HELICES</strong> antes de hacer nada en esta pestaña.",
   "noteConnectPower": "<strong>Nota:</strong> Conecta energía a los ESCs.",
   "commonParameters": "Parámetros Comunes",
-  "commonSettingsDisabled": "Common settings disabled",
+  "commonSettingsDisabled": "Ajustes comunes desactivados",
   "commonSettingsDisabledText": "Common settings are disabled in the settings, each ESC needs to be ajdusted individually instead.",
   "escProgrammingByTX": "Programación a través de TX",
   "escLowRPMPowerProtection": "Protección de Energía RPM Baja",
