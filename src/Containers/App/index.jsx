@@ -113,12 +113,16 @@ class App extends Component {
 
     this.languages = [
       {
+        label: "Deutsch",
+        value: "de",
+      },
+      {
         label: "English",
         value: "en",
       },
       {
-        label: "Deutsch",
-        value: "de",
+        label: "Español",
+        value: 'es',
       },
       {
         label: "简体中文",

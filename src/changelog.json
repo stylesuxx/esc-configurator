@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Added spanish translation"
+    ]
+  },
+  {
     "title": "0.16.0",
     "items": [
       "Tracking: Track firmware and version when flashing",

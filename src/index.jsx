@@ -8,44 +8,21 @@ import reportWebVitals from './reportWebVitals';
 import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
 
-import CommonEn from './translations/en/common.json';
-import HintsEn from './translations/en/hints.json';
-import SettingsEn from './translations/en/settings.json';
-import LogEn from './translations/en/log.json';
-
-import CommonDe from './translations/de/common.json';
-import HintsDe from './translations/de/hints.json';
-import SettingsDe from './translations/de/settings.json';
-import LogDe from './translations/de/log.json';
-
-import CommonChCN from './translations/zh-CN/common.json';
-import HintsChCN from './translations/zh-CN/hints.json';
-import SettingsChCN from './translations/zh-CN/settings.json';
-import LogChCN from './translations/zh-CN/log.json';
+const languages = ['de', 'en', 'es', 'zh-CN'];
+const resources = {};
+languages.forEach((language) => {
+  resources[language] = {
+    common: require(`./translations/${language}/common.json`),
+    hints: require(`./translations/${language}/hints.json`),
+    log: require(`./translations/${language}/log.json`),
+    settings: require(`./translations/${language}/settings.json`),
+  };
+});
 
 i18next.init({
   interpolation: { excapeValue: false },
   lng: 'en',
-  resources: {
-    en: {
-      common: CommonEn,
-      hints: HintsEn,
-      log: LogEn,
-      settings: SettingsEn,
-    },
-    de: {
-      common: CommonDe,
-      hints: HintsDe,
-      log: LogDe,
-      settings: SettingsDe,
-    },
-    'zh-CN': {
-      common: CommonChCN,
-      hints: HintsChCN,
-      log: LogChCN,
-      settings: SettingsChCN,
-    },
-  },
+  resources,
 });
 
 ReactDOM.render(

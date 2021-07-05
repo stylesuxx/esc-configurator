@@ -6,7 +6,7 @@ import React from 'react';
 
 import AppSettings from '../AppSettings';
 import CookieConsent from '../CookieConsent';
-import LanguageSelection from './LanguageSelection';
+import LanguageSelection from '../LanguageSelection';
 import Log from '../Log';
 import MainContent from '../MainContent';
 import MelodyEditor from '../../Components/MelodyEditor';
