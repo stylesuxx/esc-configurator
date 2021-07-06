@@ -556,6 +556,19 @@ class App extends Component {
         },
       });
 
+      if(individual[0].actualMake) {
+        TagManager.dataLayer({
+          dataLayer: {
+            event: "Mistagged",
+            mistagged: {
+              name: individual[0].displayName,
+              tagged: individual[0].make,
+              detected: individual[0].actualMake,
+            },
+          },
+        });
+      }
+
       this.addLogMessage('readEscsSuccess');
     }
 
