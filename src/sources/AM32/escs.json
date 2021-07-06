@@ -1,49 +1,57 @@
 {
   "layouts": {
     "Arm": {
-      "DIATONE gen": {
-        "name":"Diatone",
-        "fileName":"DIATONE"
+      "cr hilariesc": {
+        "name": "Crteensy Hilariesc",
+        "fileName": "CRTEENSY_HILARIESC"
+      },
+      "DIATONE GEN": {
+        "name": "Diatone",
+        "fileName": "DIATONE"
       },
       "FD6288_PA2": {
-        "name":"FD6288 based",
-        "fileName":"FD6288"
+        "name": "FD6288 based",
+        "fileName": "FD6288"
       },
       "HGLRC_60A": {
-        "name":"HGLRC 60A",
-        "fileName":"HGLRC60A"
+        "name": "HGLRC 60A",
+        "fileName": "HGLRC"
       },
       "IFlight_50A": {
-        "name":"iFlight 50A",
-        "fileName":"IFLIGHT"
+        "name": "iFlight 50A",
+        "fileName": "IFLIGHT"
       },
       "MAMBA F40PRO": {
-        "name":"Mamba F40 Pro",
-        "fileName":"MAMBA_F40PRO"
+        "name": "Mamba F40 Pro",
+        "fileName": "MAMBA_F40PRO"
       },
       "MAMBA F50PRO": {
-        "name":"Mamba F50 Pro",
-        "fileName":"MAMBA_F50PRO"
+        "name": "Mamba F50 Pro",
+        "fileName": "MAMBA_F50PRO"
       },
       "MAMBA F60PRO": {
-        "name":"Mamba F60 Pro",
-        "fileName":"MAMBA_F60PRO"
+        "name": "Mamba F60 Pro",
+        "fileName": "MAMBA_F60PRO"
       },
       "Mp6531_Dev": {
-        "name":"MP6531 based",
-        "fileName":"MP6531"
+        "name": "MP6531 based",
+        "fileName": "MP6531"
       },
       "SISKIN_PA2": {
-        "name":"Sunrise Siskin",
-        "fileName":"SISKIN"
+        "name": "Sunrise Siskin",
+        "fileName": "SISKIN"
       },
       "T-MOTOR 45A": {
-        "name":"T-motor 45A",
-        "fileName":"TMOTOR45A"
+        "name": "T-motor 45A",
+        "fileName": "TMOTOR45A"
       },
       "T-MOTOR 55A": {
-        "name":"T-motor 55A",
-        "fileName":"TMOTOR55A"
+        "name": "T-motor 55A",
+        "fileName": "TMOTOR55A"
+      },
+      "Wraith_32": {
+        "name": "Wraith 32",
+        "fileName": "WRAITH32"
       }
     }
   },
