@@ -30,6 +30,14 @@
     background-color: #bc544b;
     border: 1px solid #ff0000;
     color: white;
+
+    p {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0px;
+      }
+    }
   }
 
   @media only screen and (max-width: 600px) {
