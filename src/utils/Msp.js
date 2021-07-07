@@ -530,11 +530,13 @@ class Msp {
             voltage: data.getUint8(3) / 10.0,   // V
             drawn: data.getUint16(4, 1),        // mAh
             amps: data.getUint16(6, 1) / 100,   // A
-            state: data.getUint8(8),
           };
 
           if(compareVersions.compare(this.version, '1.41.0', '>=')) {
-            battery.voltage = data.getUint16(9, 1) / 100.0; // V
+            battery.state = data.getUint8(8);
+            if(data.byteLength > 9) {
+              battery.voltage = data.getUint16(9, 1) / 100.0; // V
+            }
           }
 
           return battery;

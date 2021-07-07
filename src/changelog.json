@@ -9,7 +9,8 @@
       "Tracking: Mistagged versions - tagged & detected",
       "AM32: Allow flashing version 1.72",
       "AM32: Remove old versions that do not follow the latest nameing schema",
-      "AM32: Add new ESCs"
+      "AM32: Add new ESCs",
+      "Bugfix: Check data byte length before reading voltage"
     ]
   },
   {
