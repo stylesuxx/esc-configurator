@@ -2,13 +2,14 @@
 
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
+import settings from './settings.json';
 import App from './Containers/App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
 
-const languages = ['de', 'en', 'es', 'zh-CN'];
+const languages = settings.availableLanguages.map((language) => language.value);
 const resources = {};
 languages.forEach((language) => {
   resources[language] = {
@@ -21,7 +22,7 @@ languages.forEach((language) => {
 
 i18next.init({
   interpolation: { excapeValue: false },
-  lng: 'en',
+  lng: settings.defaultLanguage,
   resources,
 });
 

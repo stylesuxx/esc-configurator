@@ -10,7 +10,9 @@
       "AM32: Allow flashing version 1.72",
       "AM32: Remove old versions that do not follow the latest nameing schema",
       "AM32: Add new ESCs",
-      "Bugfix: Check data byte length before reading voltage"
+      "Bugfix: Check data byte length before reading voltage",
+      "Refactored loaders into seperate file.",
+      "Refactored settings into a seperate file"
     ]
   },
   {
