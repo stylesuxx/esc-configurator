@@ -8,5 +8,7 @@
   "extendedDebug": "Depuración extendida",
   "extendedDebugHint": "Imprimirá además las direcciones que están siendo leída/escritas y la carga útil enviada/recibida.",
   "disableCommon": "Desactivar los ajustes comunes",
-  "disableCommonHint": "Cada ESC tendrá su propia configuración en lugar de tener una sección común que sea válida para todos los ESC."
+  "disableCommonHint": "Cada ESC tendrá su propia configuración en lugar de tener una sección común que sea válida para todos los ESC.",
+  "enableAdvanced": "Enable advanced settings",
+  "enableAdvancedHint": "Adds advanced settings like dumping firmware."
 }
