@@ -31,6 +31,7 @@
   "_RPM Power Protection (Rampup)": "RPM 功率保护 (爬升功率)",
   "_Minimum Startup Power (Boost)": "最小启动功率 (升压)",
   "_Maximum Startup Power (Protection)": "最大启动功率 (保护)",
+  "escButtonFirmwareDump": "Dump Firmware",
   "escButtonFlash": "烧录固件",
   "defaultChangelogHead": "更新日志",
   "escButtonRead": "读取配置",
