@@ -13,6 +13,15 @@
     ]
   },
   {
+    "name": "Batman Theme",
+    "tracks": [
+      "bm_0:b=180,o=4,d=32:8d#5,p,8d#5,p,8d5,p,8d5,p,8c#5,p,8c#5,p,8d5,p,8d5,p,4d#5,p,p,2d#5",
+      "bm_1:b=180,o=4,d=32:8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,4g#,p,p,2g#",
+      "bm_2:b=180,o=4,d=32:8d#6,p,8d#6,p,8d6,p,8d6,p,8c#6,p,8c#6,p,8d6,p,8d6,p,4g#6,p,p,2g#6",
+      "bm_3:b=180,o=4,d=32:8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8d#6,p,8d#6,p,4d#6,p,p,2d#6"
+    ]
+  },
+  {
     "name": "Blackheart - Two Steps From Hell",
     "tracks": [
       "tsfh_bh_m:b=180,o=5,d=8:4a4,d,f4,a4,f4,d,f4,d,f4,a4,f4,f,a4,a,c,f,c,a,c,a,c,f,c,a,c,g,a#4,d,a,g,a#4,d,a#4,d,a#4,d,a#4,f,f4,a4,f4,d,f4,d,f4,a4,f4,a4,f4",
@@ -40,6 +49,15 @@
     "tracks": [
       "ts_hof_m:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
       "ts_hof_b:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4"
+    ]
+  },
+  {
+    "name": "Loituma - Ievan Polkka",
+    "tracks": [
+      "ievan_polkka_0:o=5,b=100,d=16:8a#4,32d#.,64p,32d#.,64p,16d#.,32p,d#,f,32f#,.64p,f#,d#.,32p,8d#,8f#,f,32c#.,64p,32c#.,64p,32c#.,64p,8c#,8f,8f#,d#.,32p,8d#,8p",
+      "ievan_polkka_1:o=4,b=100,d=8:d#,p,a#3,p,d#,p,a#3,p,a#3,p,c#,p,d#,p,a#3,p",
+      "ievan_polkka_2:o=5,b=100,d=8:p,32a#.,64p,32a#.,64p,p,a#,p,a#,p,a#,p,32g#.,64p,32g#.,64p,p,g#,p,a#,p,a#",
+      "ievan_polkka_3:o=5,b=100,d=8:p,32f#.,64p,32f#.,64p,p,f#,p,f#,p,f#,p,32f.,64p,32f.,64p,p,f,p,f#,p,f#"
     ]
   },
   {
