@@ -48,10 +48,10 @@ function SettingsHandler({
 }
 
 SettingsHandler.propTypes = {
-  descriptions: PropTypes.arrayOf().isRequired,
+  descriptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   directInput: PropTypes.bool.isRequired,
   disabled: PropTypes.bool.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  settings: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  settings: PropTypes.shape({}).isRequired,
 };
 export default SettingsHandler;

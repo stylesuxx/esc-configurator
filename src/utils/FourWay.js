@@ -28,7 +28,6 @@ import {
 // TODO: We might use the ones from the source here...
 import BLHELI_ESCS from '../sources/Blheli/escs.json';
 import BLUEJAY_ESCS from '../sources/Bluejay/escs.json';
-import AM32_ESCS from '../sources/AM32/escs.json';
 
 import {
   canMigrate,
@@ -39,9 +38,10 @@ import {
   delay,
   retry,
   compare,
-  findMCU,
   isValidFlash,
 } from './helpers/General';
+
+import MCU from './helpers/MCU';
 
 import {
   ACK,
@@ -581,6 +581,34 @@ class FourWay {
     throw new EscInitError();
   }
 
+  async readFirmware(target, esc, cbProgress) {
+    const {
+      interfaceMode, signature,
+    } = esc.meta;
+
+    this.progressCallback = cbProgress;
+
+    const mcu = new MCU(interfaceMode, signature);
+    const flashSize = mcu.getFlashSize();
+    const firmwareStart = mcu.getFirmwareStart();
+
+    this.totalBytes = flashSize - firmwareStart;
+    this.bytesWritten = 0;
+
+    const data = new Uint8Array(this.totalBytes);
+    let pos = 0;
+    for (let address = firmwareStart; address < flashSize; address += 0x80) {
+      const currentData = (await this.read(address, 0x80)).params;
+      data.set(currentData, pos);
+      pos += 0x80;
+
+      this.bytesWritten += 0x80;
+      this.progressCallback((this.bytesWritten / this.totalBytes) * 100);
+    }
+
+    return data;
+  }
+
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
     const {
       interfaceMode, signature,
@@ -588,46 +616,10 @@ class FourWay {
 
     this.progressCallback = cbProgress;
 
-    let flashOffset = 0;
-    let firmwareStart = 0;
-    let flashSize = (() => {
-      let mcu = null;
-
-      switch(interfaceMode) {
-        case MODES.SiLC2: {
-          return BLHELI_EEPROM.SILABS.FLASH_SIZE;
-        }
-
-        case MODES.SiLBLB: {
-          mcu = findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_EEPROM.TYPES.EFM8]) ||
-                findMCU(signature, BLHELI_ESCS.signatures[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS]) ||
-                findMCU(signature, BLHELI_ESCS.signatures.SiLabs);
-        } break;
-
-        case MODES.AtmBLB:
-        case MODES.AtmSK: {
-          mcu = findMCU(signature, BLHELI_ESCS.signatures.Atmel);
-        } break;
-
-        case MODES.ARMBLB: {
-          mcu = findMCU(signature, AM32_ESCS.signatures.Arm);
-        } break;
-
-        default: {
-          throw new UnknownInterfaceError(interfaceMode);
-        }
-      }
-
-      if(mcu.flash_offset) {
-        flashOffset = parseInt(mcu.flash_offset, 16);
-      }
-
-      if(mcu.firmware_start) {
-        firmwareStart = parseInt(mcu.firmware_start, 16);
-      }
-
-      return mcu.flash_size;
-    })();
+    const mcu = new MCU(interfaceMode, signature);
+    const flashSize = mcu.getFlashSize();
+    const flashOffset = mcu.getFlashOffset();
+    const firmwareStart = mcu.getFirmwareStart();
 
     const migrateSettings = async(oldEsc, newEsc) => {
       /**

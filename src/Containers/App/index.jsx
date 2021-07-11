@@ -527,6 +527,37 @@ class App extends Component {
     this.setEscs({ individual });
   }
 
+  handleFirmwareDump = async (target) => {
+    const { escs } = this.state;
+
+    console.log("Dump firmware for ESC", target);
+    const esc = escs.individual.find((esc) => esc.index === target);
+
+    const updateProgress = async(percent) => {
+      if(esc.ref && esc.ref.current) {
+        esc.ref.current.setProgress((percent));
+      }
+    };
+
+    this.setActions({ isFlashing: true });
+
+    this.addLogMessage('dumpingEsc', { index: target + 1 });
+    const data = await this.serial.readFirmware(target, esc, updateProgress);
+    updateProgress(0);
+
+    this.setActions({ isFlashing: false });
+
+
+    const element = document.createElement("a");
+    const file = new Blob([data], { type: 'application/octet/stream' });
+    element.href = URL.createObjectURL(file);
+    element.download = "firmware.bin";
+    document.body.appendChild(element);
+    element.click();
+
+    console.log(data);
+  }
+
   handleSingleFlash = (index) => {
     this.setEscs({ targets: [index] });
     this.setActions({ isSelecting: true });
@@ -992,6 +1023,7 @@ class App extends Component {
             handleCancelFirmwareSelection: this.handleCancelFirmwareSelection,
             handleLocalSubmit: this.handleLocalSubmit,
             handleFlashUrl: this.handleFlashUrl,
+            handleFirmwareDump: this.handleFirmwareDump,
           },
           ...escs,
         }}

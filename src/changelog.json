@@ -13,7 +13,8 @@
       "Bugfix: Check data byte length before reading voltage",
       "Refactored loaders into seperate file.",
       "Refactored settings into a seperate file",
-      "Added more melodies"
+      "Added more melodies",
+      "Allow dumping of flashed firmware"
     ]
   },
   {

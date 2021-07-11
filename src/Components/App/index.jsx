@@ -87,6 +87,7 @@ function App({
           onAllMotorSpeed={onAllMotorSpeed}
           onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
           onCommonSettingsUpdate={escs.actions.handleCommonSettingsUpdate}
+          onFirmwareDump={escs.actions.handleFirmwareDump}
           onFlashUrl={escs.actions.handleFlashUrl}
           onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
           onLocalSubmit={escs.actions.handleLocalSubmit}
@@ -166,6 +167,7 @@ App.propTypes = {
     actions: PropTypes.shape({
       handleMasterUpdate: PropTypes.func.isRequired,
       handleCommonSettingsUpdate: PropTypes.func.isRequired,
+      handleFirmwareDump: PropTypes.func.isRequired,
       handleIndividualSettingsUpdate: PropTypes.func.isRequired,
       handleResetDefaultls: PropTypes.func.isRequired,
       handleReadEscs: PropTypes.func.isRequired,

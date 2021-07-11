@@ -13,10 +13,12 @@ function Flash({
   canFlash,
   directInput,
   disableCommon,
+  enableAdvanced,
   escCount,
   escs,
   flashProgress,
   onCommonSettingsUpdate,
+  onFirmwareDump,
   onFlash,
   onIndividualSettingsUpdate,
   onSettingsUpdate,
@@ -55,9 +57,11 @@ function Flash({
             canFlash={canFlash}
             directInput={directInput}
             disableCommon={disableCommon}
+            enableAdvanced={enableAdvanced}
             escs={escs}
             flashProgress={flashProgress}
             onCommonSettingsUpdate={onCommonSettingsUpdate}
+            onFirmwareDump={onFirmwareDump}
             onFlash={onFlash}
             onSettingsUpdate={onIndividualSettingsUpdate}
           />
@@ -74,6 +78,7 @@ Flash.defaultProps = {
   canFlash: false,
   directInput: false,
   disableCommon: false,
+  enableAdvanced: false,
 };
 
 Flash.propTypes = {
@@ -81,10 +86,12 @@ Flash.propTypes = {
   canFlash: PropTypes.bool,
   directInput: PropTypes.bool,
   disableCommon: PropTypes.bool,
+  enableAdvanced: PropTypes.bool,
   escCount: PropTypes.number.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,
+  onFirmwareDump: PropTypes.func.isRequired,
   onFlash: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,

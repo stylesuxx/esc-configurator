@@ -59,6 +59,7 @@ class Serial {
   resetFourWayInterface = (esc) => this.fourWay.reset(esc);
   startFourWayInterface = () => this.fourWay.start();
   writeHex = (index, esc, hex, force, migrate, cbProgress) => this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
+  readFirmware = (index, esc, cbProgress) => this.fourWay.readFirmware(index, esc, cbProgress);
   writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
 
   setExtendedDebug(extendedDebug) {
