@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.17.0",
     "items": [
       "Wording: Improved wording on mistagged firmware",
       "Allow dumping of flashed firmware",
