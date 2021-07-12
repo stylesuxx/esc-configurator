@@ -554,8 +554,6 @@ class App extends Component {
     element.download = "firmware.bin";
     document.body.appendChild(element);
     element.click();
-
-    console.log(data);
   }
 
   handleSingleFlash = (index) => {
