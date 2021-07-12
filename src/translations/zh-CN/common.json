@@ -31,6 +31,7 @@
   "_RPM Power Protection (Rampup)": "RPM 功率保护 (爬升功率)",
   "_Minimum Startup Power (Boost)": "最小启动功率 (升压)",
   "_Maximum Startup Power (Protection)": "最大启动功率 (保护)",
+  "escButtonFirmwareDump": "转存固件",
   "escButtonFlash": "烧录固件",
   "defaultChangelogHead": "更新日志",
   "escButtonRead": "读取配置",
@@ -87,7 +88,7 @@
   "openPortSelection": "打开端口选择",
   "versionUnsupported": "{{name}} 版本 '{{version}}' (布局 {{layout}}) 尚未支持。<br/><br/>请打开一个<a href=\"https://github.com/stylesuxx/esc-configurator\" title=\"https://www.github.com/issues/new\" target=\"_blank\">问题</a>来让我们知道。",
   "motorControl": "电机控制",
-  "motorControlText": "<p>请确保您的ESC正确设置以反映滑块的状态。</p><p>例如，当您在飞控中启用3D模式后， 请确保 ESC 也已经设置为 3D 模式，否则电机可能在解锁瞬间满负荷运行。</p><p>同样地，如果你在飞控上使用双向 Dshot，而 ESC 固件并不支持双向 Dshot，那么电机将不会旋转。从已有 RPM 回传的固件向前回滚刷入 BlHeli_S 时可能会出现这种情况。</p>",
+  "motorControlText": "<p>请确保您的ESC正确设置以反映滑块的状态。</p><p>例如，当您在飞控中启用3D模式后， 请确保 ESC 也已经设置为 3D 模式，否则电机可能在解锁瞬间满负荷运行。</p><p>同样地，如果你在飞控上使用双向 Dshot，而 ESC 固件并不支持双向 Dshot，那么电机将不会旋转。从已有 RPM 回传的固件向前回滚刷入 BLHeli_S 时可能会出现这种情况。</p>",
   "enableMotorControl": "启用电机控制",
   "masterSpeed": "主速度",
   "motorNr": "电机 {{index}}",
@@ -131,5 +132,5 @@
   "escMissing1": "ESC 尚未准备就绪。例如，如果 ESC <b>正在播放旋律</b>，则可能发生这种情况。 同样，先前刷入的固件可能是错误的固件，并且它需要更长的时间才能完成启动。",
   "escMissing2": "只是 <b>没有连接更多的 ESC</b> 。",
   "escMissing3": "ESC 的 <b> MCU 存在缺陷</b> 。",
-  "mistagged": "<p><b>警告：</b> 当前刷入的固件似乎被标记为错误！</p><p>仅当您知晓您自己在做什么时再继续。在这里继续可能会导致您的电调面临过热的风险，甚至最糟糕的情况是电调烧毁。推荐刷入检测到的版本，而不是这个被标记的八本，你需要勾选顶部的<i>“忽略不匹配的 MCU 和布局？”</i>选项。</p><table><tr><td>被标记</td><td>{{tagged}}</td></tr><tr><td>检测到</td><td>{{detected}}</td></tr></table><p>如果您看到此条消息，请<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考虑在 Wiki 上添加一个词条</a>，来帮助我们记录有问题的硬件。</p>"
+  "mistagged": "<p><b>警告：</b> 当前刷入的固件似乎被标记为错误！</p><p>仅当您知晓您自己在做什么时再继续。在这里继续可能会导致您的电调面临过热的风险，甚至最糟糕的情况是电调烧毁。强烈建议刷入检测到的版本的更高死区固件，而不是这个被标记的版本，你需要勾选顶部的<i>“忽略不匹配的 MCU 和布局？”</i>选项。</p><table><tr><td>被标记</td><td>{{tagged}}</td></tr><tr><td>检测到</td><td>{{detected}}</td></tr></table><p>如果您看到此条消息，请<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考虑在 Wiki 上添加一个词条</a>，来帮助我们记录有问题的硬件。</p><p><b>如果您不明白此步骤中包含的风险，请不要犹豫，立刻<a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">加入我们的 Discord 服务器</a>。</b></p>"
 }
