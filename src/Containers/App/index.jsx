@@ -1,133 +1,36 @@
-import { serial as serialPolyfill } from 'web-serial-polyfill';
-import React, { Component } from 'react';
-import dateFormat from 'dateformat';
 import TagManager from 'react-gtm-module';
-import i18next from 'i18next';
+import React, { Component } from 'react';
 import Rtttl from 'bluejay-rtttl-parse';
+import dateFormat from 'dateformat';
+import i18next from 'i18next';
 
-import MainApp from '../../Components/App';
-import Serial from '../../utils/Serial';
-import sources from '../../sources';
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
+import MainApp from '../../Components/App';
 import settings from '../../settings.json';
 import melodies from '../../melodies.json';
+import Serial from '../../utils/Serial';
+import sources from '../../sources';
+import {
+  loadLanguage,
+  loadLog,
+  loadMelodies,
+  loadSerialApi,
+  loadSettings,
+} from '../../utils/LocalStorage';
 
 const {
-  version,
+  availableLanguages,
   corsProxy,
+  version,
 } = settings;
 
 class App extends Component {
   constructor() {
     super();
 
-    const defaultSettings = {
-      directInput: {
-        type: 'boolean',
-        value: false,
-      },
-      printLogs: {
-        type: 'boolean',
-        value: false,
-      },
-      extendedDebug: {
-        type: 'boolean',
-        value: false,
-      },
-      disableCommon: {
-        type: 'boolean',
-        value: false,
-      },
-    };
-
-    const loadSettings = () => {
-      const settings = JSON.parse(localStorage.getItem('settings')) || {};
-      return {
-        ...defaultSettings,
-        ...settings,
-      };
-    };
-
-    const loadLanguage = () => {
-      let storedLanguage = localStorage.getItem('language');
-      if(!storedLanguage) {
-        const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
-        if(browserLanguage) {
-          for(let [key, value] of Object.entries(this.languages)) {
-            if(value.value === browserLanguage) {
-              storedLanguage = browserLanguage;
-              break;
-            }
-          }
-
-          if(!storedLanguage && browserLanguage.split('-').length > 1) {
-            const part = browserLanguage.split('-')[0];
-            for(let [key, value] of Object.entries(this.languages)) {
-              if(value.value === part) {
-                storedLanguage = part;
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      if(storedLanguage) {
-        i18next.changeLanguage(storedLanguage);
-      }
-
-      return(storedLanguage || 'en');
-    };
-
-    const loadLog = () => {
-      // Load previously stored log messages and sanitize to a max line count
-      const storedLog = JSON.parse(localStorage.getItem('log'));
-      if(storedLog) {
-        return storedLog.slice(-10000);
-      }
-
-      return [];
-    };
-
-    const getSerialApi = () => {
-      if('serial' in navigator) {
-        return navigator.serial;
-      }
-
-      if('usb' in navigator) {
-        return serialPolyfill;
-      }
-
-      return null;
-    };
-
-    this.loadMelodies = () => {
-      const storedMelodies = JSON.parse(localStorage.getItem('melodies'));
-      if(storedMelodies) {
-        return storedMelodies;
-      }
-
-      return [];
-    };
-
-    this.languages = [
-      {
-        label: "English",
-        value: "en",
-      },
-      {
-        label: "Deutsch",
-        value: "de",
-      },
-      {
-        label: "简体中文",
-        value: 'zh-CN',
-      },
-    ];
-
     this.log = loadLog();
-    this.serialApi = getSerialApi();
+    this.serialApi = loadSerialApi();
 
     this.gtmActive = false;
     this.serial = undefined;
@@ -184,7 +87,7 @@ class App extends Component {
         show: false,
         dummy: true,
         defaultMelodies: melodies,
-        customMelodies: this.loadMelodies(),
+        customMelodies: loadMelodies(),
       },
     };
 
@@ -552,6 +455,19 @@ class App extends Component {
         },
       });
 
+      if(individual[0].actualMake) {
+        TagManager.dataLayer({
+          dataLayer: {
+            event: "Mistagged",
+            mistagged: {
+              name: individual[0].displayName,
+              tagged: individual[0].make,
+              detected: individual[0].actualMake,
+            },
+          },
+        });
+      }
+
       this.addLogMessage('readEscsSuccess');
     }
 
@@ -609,6 +525,35 @@ class App extends Component {
     this.setActions({ isWriting: false });
 
     this.setEscs({ individual });
+  }
+
+  handleFirmwareDump = async (target) => {
+    const { escs } = this.state;
+
+    console.log("Dump firmware for ESC", target);
+    const esc = escs.individual.find((esc) => esc.index === target);
+
+    const updateProgress = async(percent) => {
+      if(esc.ref && esc.ref.current) {
+        esc.ref.current.setProgress((percent));
+      }
+    };
+
+    this.setActions({ isFlashing: true });
+
+    this.addLogMessage('dumpingEsc', { index: target + 1 });
+    const data = await this.serial.readFirmware(target, esc, updateProgress);
+    updateProgress(0);
+
+    this.setActions({ isFlashing: false });
+
+
+    const element = document.createElement("a");
+    const file = new Blob([data], { type: 'application/octet/stream' });
+    element.href = URL.createObjectURL(file);
+    element.download = "firmware.bin";
+    document.body.appendChild(element);
+    element.click();
   }
 
   handleSingleFlash = (index) => {
@@ -980,7 +925,7 @@ class App extends Component {
     }
 
     localStorage.setItem('melodies', JSON.stringify(storedMelodies));
-    this.setMelodies({ customMelodies: this.loadMelodies() });
+    this.setMelodies({ customMelodies: loadMelodies() });
   }
 
   handleMelodyDelete = (name) => {
@@ -989,7 +934,7 @@ class App extends Component {
     if(match >= 0) {
       storedMelodies.splice(match, 1);
       localStorage.setItem('melodies', JSON.stringify(storedMelodies));
-      this.setMelodies({ customMelodies: this.loadMelodies() });
+      this.setMelodies({ customMelodies: loadMelodies() });
     }
   }
 
@@ -1076,13 +1021,14 @@ class App extends Component {
             handleCancelFirmwareSelection: this.handleCancelFirmwareSelection,
             handleLocalSubmit: this.handleLocalSubmit,
             handleFlashUrl: this.handleFlashUrl,
+            handleFirmwareDump: this.handleFirmwareDump,
           },
           ...escs,
         }}
         language={{
           actions: { handleChange: this.handleLanguageSelection },
           current: language,
-          available: this.languages,
+          available: availableLanguages,
         }}
         melodies={{
           actions: {

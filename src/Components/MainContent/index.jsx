@@ -44,6 +44,7 @@ function MainContent({
   onResetDefaultls,
   onSingleFlash,
   onWriteSetup,
+  onFirmwareDump,
   onFlashUrl,
   onSaveLog,
   configs,
@@ -89,10 +90,12 @@ function MainContent({
           canFlash={canFlash}
           directInput={appSettings.directInput.value}
           disableCommon={appSettings.disableCommon.value}
+          enableAdvanced={appSettings.enableAdvanced.value}
           escCount={connected}
           escs={escs}
           flashProgress={progress}
           onCommonSettingsUpdate={onCommonSettingsUpdate}
+          onFirmwareDump={onFirmwareDump}
           onFlash={onSingleFlash}
           onIndividualSettingsUpdate={onIndividualSettingsUpdate}
           onSettingsUpdate={onSettingsUpdate}
@@ -185,6 +188,7 @@ MainContent.defaultProps = {
   appSettings: {
     directInput: { value: false },
     disableCommon: { value: false },
+    enableAdvanced: { value: false },
   },
   changelogEntries: [],
   connected: 0,
@@ -208,6 +212,7 @@ MainContent.propTypes = {
   appSettings: PropTypes.shape({
     directInput: PropTypes.shape(),
     disableCommon: PropTypes.shape(),
+    enableAdvanced: PropTypes.shape(),
   }),
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   configs: PropTypes.shape({
@@ -223,6 +228,7 @@ MainContent.propTypes = {
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,
+  onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,

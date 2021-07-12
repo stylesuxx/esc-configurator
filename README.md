@@ -79,7 +79,7 @@ To continue the legacy of everyone who was mentioned as author or contributor in
 * Dominic Clifton aka. hydra - maintainer of the [Cleanflight firmware](https://github.com/cleanflight/cleanflight) and [configurator](https://github.com/cleanflight/cleanflight-configurator).
 * ctn - primary author and maintainer of [Baseflight configurator](https://github.com/multiwii/baseflight-configurator) from which [Cleanflight Configurator](https://github.com/cleanflight/cleanflight-configurator) project was forked.
 * Andrey Mironov aka. DieHertz - primary author of [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator)
-* Micheal Keller aka. mikeller - maintainer of [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator)
+* Michael Keller aka. mikeller - maintainer of [BlHeli-configurator](https://github.com/blheli-configurator/blheli-configurator)
 * Stefan van der Ende
 * Nathan
 * Steffen Windoffer
@@ -93,5 +93,6 @@ To continue the legacy of everyone who was mentioned as author or contributor in
 * Chris Landa aka. stylesuxx - primary author and maintainer of [esc-configurator](https://github.com/stylesuxx/esc-configurator)
 * Georg Oberleitner aka. Noctaro - German translation & Logo
 * Hugo Chiang aka. DusKing1 - Chinese translation
+* Asier Ruiz aka. Asizon - Spanish translation
 
 If you feel that your name should be mentioned in the authors section, please do not hesitate to submit a pull request.

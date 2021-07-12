@@ -1,4 +1,45 @@
 {
-  "version": "v0.16.0",
-  "corsProxy": "https://bubblesort.me/?"
+  "version": "v0.17.0",
+  "corsProxy": "https://bubblesort.me/?",
+  "availableLanguages": [
+    {
+      "label": "Deutsch",
+      "value": "de"
+    },
+    {
+      "label": "English",
+      "value": "en"
+    },
+    {
+      "label": "Español",
+      "value": "es"
+    },
+    {
+      "label": "简体中文",
+      "value": "zh-CN"
+    }
+  ],
+  "defaultLanguage": "en",
+  "defaultAppSettings": {
+    "directInput": {
+      "type": "boolean",
+      "value": false
+    },
+    "printLogs": {
+      "type": "boolean",
+      "value": false
+    },
+    "extendedDebug": {
+      "type": "boolean",
+      "value": false
+    },
+    "disableCommon": {
+      "type": "boolean",
+      "value": false
+    },
+    "enableAdvanced": {
+      "type": "boolean",
+      "value": false
+    }
+  }
 }

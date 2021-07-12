@@ -14,9 +14,11 @@ const Esc = forwardRef(({
   canFlash,
   directInput,
   disableCommon,
+  enableAdvanced,
   esc,
   index,
   onCommonSettingsUpdate,
+  onFirmwareDump,
   onFlash,
   onSettingsUpdate,
 }, ref) => {
@@ -48,6 +50,10 @@ const Esc = forwardRef(({
 
   function handleFirmwareFlash() {
     onFlash(index);
+  }
+
+  function handleFirmwareDump() {
+    onFirmwareDump(index);
   }
 
   return (
@@ -93,6 +99,16 @@ const Esc = forwardRef(({
             >
               {t('escButtonFlash')}
             </button>
+
+            {enableAdvanced &&
+              <button
+                className="firmware-dump"
+                disabled={!canFlash}
+                onClick={handleFirmwareDump}
+                type="button"
+              >
+                {t('escButtonFirmwareDump')}
+              </button>}
           </div>
         </div>
       </div>
@@ -105,9 +121,11 @@ Esc.propTypes = {
   canFlash: PropTypes.bool,
   directInput: PropTypes.bool.isRequired,
   disableCommon: PropTypes.bool.isRequired,
+  enableAdvanced: PropTypes.bool.isRequired,
   esc: PropTypes.shape().isRequired,
   index: PropTypes.number.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,
+  onFirmwareDump: PropTypes.func.isRequired,
   onFlash: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
 };

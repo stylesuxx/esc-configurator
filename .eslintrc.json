@@ -70,6 +70,7 @@
     "Blob": false,
     "localStorage": false,
     "__dirname": false,
+    "require": false,
     "Set": false,
     "Event": false
   },
