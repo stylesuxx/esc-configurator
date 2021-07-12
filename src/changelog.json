@@ -2,19 +2,20 @@
   {
     "title": "Unreleased",
     "items": [
+      "Wording: Improved wording on mistagged firmware",
+      "Allow dumping of flashed firmware",
       "Translation: Added spanish translation",
       "Translation: Improved loading of additional languages",
       "Translation: Fixed some typos",
-      "Wording: Improved wording on mistagged firmware",
       "Tracking: Mistagged versions - tagged & detected",
       "AM32: Allow flashing version 1.72",
       "AM32: Remove old versions that do not follow the latest nameing schema",
       "AM32: Add new ESCs",
       "Bugfix: Check data byte length before reading voltage",
+      "Bugfix: Properly style warning in unsupported browsers",
       "Refactored loaders into seperate file.",
       "Refactored settings into a seperate file",
-      "Added more melodies",
-      "Allow dumping of flashed firmware"
+      "Added more melodies"
     ]
   },
   {
