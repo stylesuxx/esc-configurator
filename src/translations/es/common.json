@@ -31,7 +31,7 @@
   "_RPM Power Protection (Rampup)": "Protección de Energía RPM (Rampup)",
   "_Minimum Startup Power (Boost)": "Potencia de arranque mínima (Optimizado)",
   "_Maximum Startup Power (Protection)": "Potencia de arranque máxima (Protección)",
-  "escButtonFirmwareDump": "Dump Firmware",
+  "escButtonFirmwareDump": "Volcar Firmware",
   "escButtonFlash": "Instalar Firmware",
   "defaultChangelogHead": "Registro de cambios",
   "escButtonRead": "Leer Configuración",
