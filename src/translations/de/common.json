@@ -31,7 +31,7 @@
   "_RPM Power Protection (Rampup)": "Drehzahl Leistungsschutz (Rampup)",
   "_Minimum Startup Power (Boost)": "Minimale Startleistung (Boost)",
   "_Maximum Startup Power (Protection)": "Maximale Startleistung (Protection)",
-  "escButtonFirmwareDump": "Dump Firmware",
+  "escButtonFirmwareDump": "Firmware dumpen",
   "escButtonFlash": "Firmware flashen",
   "defaultChangelogHead": "Changelog",
   "escButtonRead": "Einstellungen lesen",
