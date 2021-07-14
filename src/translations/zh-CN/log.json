@@ -16,8 +16,8 @@
   "readEscsSuccess": "ESC 读取完成",
   "readEscsFailed": "ESC 读取失败",
   "readEsc": "读取 ESC {{index}}: {{name}}",
-  "flashingEsc": "正在刷入 ESC {{index}}",
-  "flashingEscFailed": "刷写 ESC {{index}} 失败 - 请检查文件类型",
+  "flashingEsc": "正在烧录 ESC {{index}}",
+  "flashingEscFailed": "烧录 ESC {{index}} 失败 - 请检查文件类型",
   "readEscFailed": "读取 ESC {{index}} 失败",
   "resetEscFailed": "重置 ESC {{index}} 失败",
   "writeSettingsFailed": "无法将设置写入到 ESC {{index}}",
@@ -30,9 +30,9 @@
   "escUpdateFailed": "正在更新 ESC {{index}} - 失败",
   "escSettingsLayoutMismatch": "布局不匹配，覆盖未启用 - 中止",
   "escSettingsMcuMismatch": "MCU 不匹配，覆盖未启用 - 中止",
-  "escFlashedInTime": "已刷入电调 {{index}} - {{seconds}}s",
+  "escFlashedInTime": "已烧录 ESC {{index}} - {{seconds}}s",
   "passthroughNotSupported": "不支持 BLHELI 透传协议",
-  "firmwareMismatch": "固件不匹配！刷入: {{flash}} vs. EEEPROM: {{eeprom}}",
-  "bootloaderMismatch": "引导程序不匹配！刷入: {{flash}} vs. EEEPROM: {{eeprom}}",
+  "firmwareMismatch": "固件不匹配！闪存: {{flash}} vs. EEEPROM: {{eeprom}}",
+  "bootloaderMismatch": "引导程序不匹配！闪存: {{flash}} vs. EEEPROM: {{eeprom}}",
   "timingMismatch": "固件被标记为 {{tagged}} ，但实际值似乎为 {{actual}}"
 }
