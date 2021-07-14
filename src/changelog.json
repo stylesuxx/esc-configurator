@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Translation: Added traditional chinese translation"
+    ]
+  },
+  {
     "title": "0.17.0",
     "items": [
       "Wording: Improved wording on mistagged firmware",
