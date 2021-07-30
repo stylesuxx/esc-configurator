@@ -280,6 +280,7 @@ class FourWay {
         let layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
         let defaultSettings = BLHELI_EEPROM.DEFAULTS;
         let validFirmwareNames = BLHELI_EEPROM.NAMES;
+        let displayName = 'UNKNOWN';
 
         if (isSiLabs) {
           layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
@@ -305,7 +306,7 @@ class FourWay {
          * Baased on the name we can decide if the initially guessed layout
          * was correct, if not, we need to build a new settings object.
          */
-        const name = flash.settings.NAME;
+        let name = flash.settings.NAME;
         let newLayout = null;
         if(BLUEJAY_EEPROM.NAMES.includes(name)) {
           validFirmwareNames = BLUEJAY_EEPROM.NAMES;
@@ -313,6 +314,26 @@ class FourWay {
           layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
           defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
           settingsArray = (await this.read(BLUEJAY_EEPROM.EEPROM_OFFSET, layoutSize)).params;
+        }
+
+        // Try to guess firmware type if it was not properly set in the EEPROM
+        if(name === '') {
+          const start = 0x80;
+          const amount = 0x80;
+          const data = (await this.read(start, amount)).params;
+          for (let i = 0; i < amount - 5; i += 1) {
+            if (
+              data[i] === 0x4A &&
+              data[i + 1] === 0x45 &&
+              data[i + 2] === 0x53 &&
+              data[i + 3] === 0x43
+            ) {
+              flash.settings.NAME = 'JESC';
+              layout = null;
+
+              break;
+            }
+          }
         }
 
         if(newLayout) {
@@ -340,6 +361,11 @@ class FourWay {
             settingsDescriptions = AM32_EEPROM.SETTINGS_DESCRIPTIONS;
             individualSettingsDescriptions = AM32_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
+
+          default: {
+            settingsDescriptions = {};
+            individualSettingsDescriptions = {};
+          }
         }
 
         flash.settingsDescriptions = settingsDescriptions[layoutRevision];
@@ -357,17 +383,24 @@ class FourWay {
 
         const layoutName = (flash.settings.LAYOUT || '').trim();
         let make = null;
-        let displayName = 'UNKNOWN';
         if (isSiLabs) {
           const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.SILABS];
           const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS];
           const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_EEPROM.TYPES.EFM8];
 
-          if (BLUEJAY_EEPROM.NAMES.includes(name) && layoutName in bluejayLayouts) {
+          if (flash.settings.NAME === 'JESC') {
+            make = blheliSLayouts[layoutName].name;
+            const settings = flash.settings;
+            let revision = 'Unsupported/Unrecognized';
+            if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+              revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+            }
+
+            displayName = `${make} - JESC, ${revision}`;
+          } else if (BLUEJAY_EEPROM.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
             displayName = bluejayBuildDisplayName(flash, make);
-          }
-          else if (layoutName in blheliLayouts) {
+          } else if (layoutName in blheliLayouts) {
             make = blheliLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
             make = blheliSLayouts[layoutName].name;
@@ -744,20 +777,17 @@ class FourWay {
         }
       }
 
-      // erase EEPROM page
+      // Erase 0x0D and only write **FLASH*FAILED** as ESC NAME.
+      // This will be overwritten in case of sussessfull flash.
       await this.erasePage(0x0D);
-
-      // write **FLASH*FAILED** as ESC NAME
       await this.writeEEpromSafeguard(escSettingArrayTmp);
 
       // write `LJMP bootloader` to avoid bricking
       await this.writeBootoaderFailsafe();
 
-      // erase up to EEPROM, skipping first two first pages with
-      // bootloader failsafe
+      // Skipp first two pages with bootloader failsafe
+      // 0x02 - 0x0D: erase, write, verify
       await this.erasePages(0x02, 0x0D);
-
-      // write & verify just erased locations
       await this.writePages(0x02, 0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
       await this.verifyPages(0x02, 0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
 
@@ -765,17 +795,13 @@ class FourWay {
       await this.writePage(0x00, BLHELI_EEPROM.PAGE_SIZE, flash);
       await this.verifyPage(0x00, BLHELI_EEPROM.PAGE_SIZE, flash);
 
-      // erase second page
+      // Second page: erase, write, verify
       await this.erasePage(0x01);
-
-      // write & verify second page
       await this.writePage(0x01, BLHELI_EEPROM.PAGE_SIZE, flash);
       await this.verifyPage(0x01, BLHELI_EEPROM.PAGE_SIZE, flash);
 
-      // erase EEPROM
+      // 14th page: erase, write, verify
       await this.erasePage(0x0D);
-
-      // write & verify EEPROM
       await this.writePage(0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
       await this.verifyPage(0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
     };
@@ -902,16 +928,18 @@ class FourWay {
   }
 
   async writeBootoaderFailsafe() {
-    const ljmpReset = new Uint8Array([ 0x02, 0x19, 0xFD ]);
-    const ljmpBootloader = new Uint8Array([ 0x02, 0x1C, 0x00 ]);
+    //const ljmpReset = new Uint8Array([0x02, 0x19, 0xFD]);
+    const ljmpBootloader = new Uint8Array([0x02, 0x1C, 0x00]);
 
+    /*
     const message = await this.read(0, 3);
 
     if(!compare(ljmpReset, message.params)) {
       // @todo LJMP bootloader is probably already there and we could skip some steps
     }
+    */
 
-    await this.erasePage(1);
+    await this.erasePage(0x01);
     await this.write(0x200, ljmpBootloader);
 
     const verifyBootloader = async (resolve, reject) => {
@@ -926,8 +954,8 @@ class FourWay {
 
     await retry(verifyBootloader, 10);
 
-    await this.erasePage(0);
-    const beginAddress = 0;
+    await this.erasePage(0x00);
+    const beginAddress = 0x00;
     const endAddress = 0x200;
     const step = 0x80;
 
