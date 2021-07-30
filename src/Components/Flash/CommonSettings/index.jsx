@@ -77,18 +77,41 @@ function CommonSettings({
   }
 
   if (!settingsDescriptions) {
-    const unsupported = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
+    const unsupportedNames = ['JESC'];
+    const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
-    return (
-      <h3
+    let unsupportedText = (
+      <p
         dangerouslySetInnerHTML={{
           __html: t('common:versionUnsupported', {
-            version: unsupported,
+            version: version,
             name: availableSettings.NAME,
             layout: availableSettings.LAYOUT_REVISION,
           }),
         }}
       />
+    );
+
+    if (unsupportedNames.includes(availableSettings.NAME)) {
+      unsupportedText = (
+        <p
+          dangerouslySetInnerHTML={{ __html: t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }}
+        />
+      );
+    }
+
+    return (
+      <div className="gui-box grey">
+        <div className="gui-box-titlebar">
+          <div className="spacer-box-title">
+            {t('unsupportedFirmware')}
+          </div>
+        </div>
+
+        <div className="spacer-box">
+          {unsupportedText}
+        </div>
+      </div>
     );
   }
 

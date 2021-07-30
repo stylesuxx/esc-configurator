@@ -404,6 +404,9 @@ class FourWay {
             make = blheliLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
             make = blheliSLayouts[layoutName].name;
+            const splitMake =  make.split('-');
+            const taggedTiming = splitMake[2];
+            const mcuType = splitMake[1];
 
             /* Some manufacturers mistag their firmware so that the actual
              * deadtime is higher than the reported one. Try to read the timing
@@ -442,16 +445,19 @@ class FourWay {
                 data[i + 2] === 0xe8 &&
                 data[i + 3] === 0x94
               ) {
-                timing = data[i + 4] / 2;
+                timing = data[i + 4];
+
+                // If an H type MCU is detected, half the timing.
+                if(mcuType === 'H') {
+                  timing /= 2;
+                }
+
                 break;
               }
             }
 
             if(timing) {
               timing = String(timing);
-
-              const splitMake =  make.split('-');
-              const taggedTiming = splitMake[2];
 
               if(taggedTiming !== timing) {
                 splitMake[2] = timing;

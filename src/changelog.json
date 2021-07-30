@@ -3,7 +3,9 @@
     "title": "Unreleased",
     "items": [
       "Translation: Added traditional chinese translation",
-      "Attempt to detect JESC and do not allow settings to be changed"
+      "Attempt to detect JESC and do not allow settings to be changed",
+      "Enhancement: Improve display of unsupported firmware/version",
+      "Bugfix: Improve detection of wrong dead-time on ESCs with L MCU"
     ]
   },
   {
