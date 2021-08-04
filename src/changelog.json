@@ -1,5 +1,14 @@
 [
   {
+    "title": "0.18.0",
+    "items": [
+      "Translation: Added traditional chinese translation",
+      "Attempt to detect JESC and do not allow settings to be changed",
+      "Enhancement: Improve display of unsupported firmware/version",
+      "Bugfix: Improve detection of wrong dead-time on ESCs with L MCU"
+    ]
+  },
+  {
     "title": "0.17.0",
     "items": [
       "Wording: Improved wording on mistagged firmware",

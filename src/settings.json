@@ -1,5 +1,5 @@
 {
-  "version": "v0.17.0",
+  "version": "v0.18.0",
   "corsProxy": "https://bubblesort.me/?",
   "availableLanguages": [
     {
@@ -17,6 +17,10 @@
     {
       "label": "简体中文",
       "value": "zh-CN"
+    },
+    {
+      "label": "繁體中文",
+      "value": "zh-TW"
     }
   ],
   "defaultLanguage": "en",
