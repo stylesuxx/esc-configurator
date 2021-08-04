@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.18.0",
     "items": [
       "Translation: Added traditional chinese translation",
       "Attempt to detect JESC and do not allow settings to be changed",
