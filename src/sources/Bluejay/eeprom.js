@@ -37,11 +37,11 @@ SETTINGS_DESCRIPTIONS['200'] = {
         value: '13',
         label: '29%  (1.50)',
       }],
-      label: '_Rampup Start Power',
+      label: 'Rampup Start Power',
     }, {
       name: 'STARTUP_POWER_MIN',
       type: 'number',
-      label: '_Minimum Startup Power (Boost)',
+      label: 'escMinStartupPower',
       min: 1000,
       max: 1125,
       step: 5,
@@ -175,7 +175,7 @@ SETTINGS_DESCRIPTIONS['201'] = {
     }, {
       name: 'STARTUP_POWER_MAX',
       type: 'number',
-      label: '_Maximum Startup Power (Protection)',
+      label: 'escMaxStartupPower',
       // Note: The real displayFactor is 1000 / 255 but 250 makes the slider nicer to work with minimal loss of accuracy
       min: 1004,
       max: 1300,
@@ -238,7 +238,7 @@ SETTINGS_DESCRIPTIONS['201'] = {
         value: '0',
         label: 'Off',
       }],
-      label: '_RPM Power Protection (Rampup)',
+      label: 'escRampupPower',
     }, {
       name: 'BEEP_STRENGTH',
       inherit: SETTINGS_DESCRIPTIONS['200'],
@@ -280,7 +280,7 @@ SETTINGS_DESCRIPTIONS['202'] = {
       {
         name: 'DAMPING_MODE',
         type: 'enum',
-        label: '_Damping mode (Complementary PWM)',
+        label: 'escDampingMode',
         options: [{
           value: '0',
           label: 'Off',
