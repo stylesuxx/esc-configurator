@@ -114,13 +114,13 @@ test('possible AM32', async() => {
   expect(types.length).toBe(1);
 });
 
-test('possible Blheli Silabs', async() => {
+test('possible BLHeli Silabs', async() => {
   const types = getPossibleTypes(0xF310);
 
   expect(types.length).toBe(1);
 });
 
-test('possible Blheli Atmel', async() => {
+test('possible BLHeli Atmel', async() => {
   const types = getPossibleTypes(0x9307);
 
   expect(types.length).toBe(1);

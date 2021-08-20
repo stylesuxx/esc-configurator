@@ -3,7 +3,7 @@ import {
   buildDisplayName,
 } from '../';
 
-describe('Blheli', () => {
+describe('BLHeli', () => {
   it('should handle conditional visibility with general settings', () => {
     const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);
     const settings = { GOVERNOR_MODE: 3 };
@@ -56,13 +56,13 @@ describe('Blheli', () => {
     };
 
     const name = buildDisplayName(flash, 'MAKE');
-    expect(name).toEqual('MAKE - BlHeli_S, 1.100');
+    expect(name).toEqual('MAKE - BLHeli_S, 1.100');
   });
 
   it('should return display name when revision is missing', () => {
     const flash = { settings: {} };
 
     const name = buildDisplayName(flash, 'MAKE');
-    expect(name).toEqual('MAKE - BlHeli_S, Unsupported/Unrecognized');
+    expect(name).toEqual('MAKE - BLHeli_S, Unsupported/Unrecognized');
   });
 });

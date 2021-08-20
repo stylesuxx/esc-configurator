@@ -41,7 +41,7 @@ describe('Source', () => {
 
   it('should return name', async() => {
     const name = await blheliSource.getName();
-    expect(name).toBe('Blheli');
+    expect(name).toBe('BLHeli');
   });
 
   it('should return pwm', async() => {
