@@ -10,7 +10,7 @@ const BLHELI_M_ESCS_REMOTE = 'https://raw.githubusercontent.com/Asizon/blheli-co
 
 const pwmOptions = [];
 const blheliMConfig = new Source(
-  'Blheli_M',
+  'BLHeli_M',
   BLHELI_M_VERSIONS_REMOTE,
   BLHELI_M_ESCS_REMOTE,
   BLHELI_M_VERSIONS_LOCAL,

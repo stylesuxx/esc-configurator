@@ -93,7 +93,7 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
                 rel="noreferrer"
                 target="_blank"
               >
-                BLHELI_S
+                BLHeli_S
               </a>
             </li>
 
@@ -121,7 +121,7 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
 
         <div className="summary-section">
           <h3>
-            BLHELI_S
+            BLHeli_S
           </h3>
 
           <section>

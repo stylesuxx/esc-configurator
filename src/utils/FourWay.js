@@ -434,7 +434,7 @@ class FourWay {
              * MOV A, R0
              * SUBB A, #data (#data being data[i + 4])
              *
-             * This is the relevant section in BlHeli_S source code:
+             * This is the relevant section in BLHeli_S source code:
              * https://github.com/bitdump/BLHeli/blob/467834db443a887534c1f2c9fb0ff61fd6b40e3e/BLHeli_S%20SiLabs/BLHeli_S.asm#L1433
              */
             let timing = 0;

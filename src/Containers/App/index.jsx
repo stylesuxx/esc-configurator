@@ -410,7 +410,7 @@ class App extends Component {
 
         await this.serial.startFourWayInterface();
 
-        /* Give the ESC's some time to boot - it might take longer if they
+        /* Give the ESCs some time to boot - it might take longer if they
          * are playing a startup melody.
          */
         await delay(1200);
@@ -735,7 +735,7 @@ class App extends Component {
        * disconnected before.
        *
        * Unfortunately this convenience feature can not be used, since on EMU
-       * it might lead to the ESC's being wiped.
+       * it might lead to the ESCs being wiped.
        */
       // await this.serial.exitFourWayInterface();
     } catch (e) {

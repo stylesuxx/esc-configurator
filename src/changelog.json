@@ -32,7 +32,7 @@
     "items": [
       "Tracking: Track firmware and version when flashing",
       "Documentation: Added history and credits section",
-      "Enhancement: Detect wrongly tagged BlHeli_S version",
+      "Enhancement: Detect wrongly tagged BLHeli_S version",
       "Enhancement: Allow flashing of 120 dead-time on Bluejay",
       "Add link to report mistagged hardware",
       "Add link to report Bluejay tested hardware"

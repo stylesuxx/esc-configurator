@@ -18,12 +18,12 @@ function buildDisplayName(flash, make) {
     make += ` (Probably mistagged: ${flash.actualMake})`;
   }
 
-  return `${make} - BlHeli_S, ${revision}`;
+  return `${make} - BLHeli_S, ${revision}`;
 }
 
 const pwmOptions = [];
 const blheliConfig = new Source(
-  'Blheli',
+  'BLHeli',
   PLATFORMS.SILABS,
   VERSIONS_REMOTE,
   ESCS_REMOTE,
