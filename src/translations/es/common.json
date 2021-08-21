@@ -111,7 +111,7 @@
   "melodyEditorStopAll": "Detener todo",
   "melodyPresetsLabel": "Selecciona una melodía",
   "homeAttributionHeader": "Cualidades",
-  "homeAttributionText": "Este proyecto se inspiró fuertemente en el <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">Configurador Blheli</a>. La mayoría de la interfaz de usuario ha sido reescrita desde cero, pero muchas de las cosas de bajo nivel relacionadas con el flasheo y el manejo del firmware han sido reutilizadas - así que un gran aplauso para todos los involucrados en el Configurador de Blheli original.",
+  "homeAttributionText": "This project was heavily inspired by the <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a>. Most of the UI has been re-written from scratch but a lot of the low level stuff related to flashing and firmware handling have been re-used - so a big shout out to everyone involved in the original BLHeli Configurator.",
   "syncMelodies": "Sincronizar Melodias",
   "syncMelodiesHint": "Si se activa, se utilizará la misma melodia en todos los ESCs.",
   "allEscs": "Todos los ESCs",
