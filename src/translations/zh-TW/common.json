@@ -111,7 +111,7 @@
   "melodyEditorStopAll": "停止全部",
   "melodyPresetsLabel": "選擇一個旋律",
   "homeAttributionHeader": "致謝",
-  "homeAttributionText": "This project was heavily inspired by the <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a>. Most of the UI has been re-written from scratch but a lot of the low level stuff related to flashing and firmware handling have been re-used - so a big shout out to everyone involved in the original BLHeli Configurator.",
+  "homeAttributionText": "此項目受 <a target=\"_blank\" href=\"https://github.com/blheli-configurator/blheli-configurator\">BLHeli Configurator</a> 的强烈啓發。大多數用戶界面都是從零還是重寫的，但大量與燒錄和固件處理有關的低級物品已被重新使用 - 所以對雖有參與原來的 BLHeli Configurator 的人致以最高敬意。",
   "syncMelodies": "同步旋律",
   "syncMelodiesHint": "如果開啓，所有的 ESC 都將使用相同的旋律。",
   "allEscs": "全部 ESC",
