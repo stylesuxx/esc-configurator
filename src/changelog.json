@@ -1,5 +1,14 @@
 [
   {
+    "title": "unreleased",
+    "items": [
+      "Wording: Normalized ESCs and BLHeli_S",
+      "Bugfix: Fixed min/max properties with slider",
+      "Chore: Bluejay settings cleanup",
+      "Chore: Removed old Bluejay versions"
+    ]
+  },
+  {
     "title": "0.18.0",
     "items": [
       "Translation: Added traditional chinese translation",
