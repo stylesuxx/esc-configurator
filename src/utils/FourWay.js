@@ -636,6 +636,8 @@ class FourWay {
 
     const data = new Uint8Array(this.totalBytes);
     let pos = 0;
+
+    await this.initFlash(target);
     for (let address = firmwareStart; address < flashSize; address += 0x80) {
       const currentData = (await this.read(address, 0x80)).params;
       data.set(currentData, pos);

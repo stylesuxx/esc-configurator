@@ -5,7 +5,8 @@
       "Wording: Normalized ESCs and BLHeli_S",
       "Bugfix: Fixed min/max properties with slider",
       "Chore: Bluejay settings cleanup",
-      "Chore: Removed old Bluejay versions"
+      "Chore: Removed old Bluejay versions",
+      "Bugfix: Dump the proper ESC instead of defaulting to the last one"
     ]
   },
   {
