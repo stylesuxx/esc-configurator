@@ -6,7 +6,8 @@
       "Bugfix: Fixed min/max properties with slider",
       "Chore: Bluejay settings cleanup",
       "Chore: Removed old Bluejay versions",
-      "Bugfix: Dump the proper ESC instead of defaulting to the last one"
+      "Bugfix: Dump the proper ESC instead of defaulting to the last one",
+      "Bugfix: Update the proper ESC after flashing a single ESC"
     ]
   },
   {
