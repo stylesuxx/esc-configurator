@@ -13,10 +13,6 @@ function AppSettings({
 }) {
   const { t } = useTranslation('settings');
 
-  function handleChildClick(e) {
-    e.stopPropagation();
-  }
-
   function handleCheckboxChange(e) {
     const name = e.target.name;
     const value = e.target.checked;
@@ -47,11 +43,14 @@ function AppSettings({
   return (
     <div
       className="settings"
-      onClick={onClose}
     >
       <div
+        className="backdrop"
+        onClick={onClose}
+      />
+    
+      <div
         className="settings__wrapper"
-        onClick={handleChildClick}
       >
         <div
           className="settings__close"
