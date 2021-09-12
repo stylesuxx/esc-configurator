@@ -18,6 +18,7 @@
   "readEsc": "Leer ESC {{index}}: {{name}}",
   "flashingEsc": "Flasheando ESC {{index}}",
   "flashingEscFailed": "Error al flashear el ESC {{index}} - comprueba el tipo de archivo",
+  "fetchingFilesFailed": "Failed fetching files for {{name}}",
   "readEscFailed": "Error al leer el ESC {{index}}",
   "resetEscFailed": "Error al resetear el ESC {{index}}",
   "writeSettingsFailed": "Error al escribir ajustes en el ESC {{index}}",
