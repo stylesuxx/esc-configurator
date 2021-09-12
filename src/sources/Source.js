@@ -2,9 +2,11 @@ import BLHELI_EEPROM from './Blheli/eeprom';
 import BLUEJAY_EEPROM from './Bluejay/eeprom';
 import AM32_EEPROM from './AM32/eeprom';
 
+import { FileNotAvailableError } from '../utils/Errors';
+
 class Source {
-  constructor(name, platform, versions, escs, eeprom, localVersions, localEscs, pwm) {
-    if(!name || platform === undefined || !versions || !escs || !eeprom || !localVersions || !localEscs || !pwm) {
+  constructor(name, platform, versions, escs, eeprom, pwm) {
+    if(!name || platform === undefined || !versions || !escs || !eeprom || !pwm) {
       throw new Error("Parameters required: name, platform, versions, escs, eeprom, localVersions, localEscs, pwm");
     }
 
@@ -13,8 +15,6 @@ class Source {
     this.versions = versions;
     this.escs = escs;
     this.eeprom = eeprom;
-    this.localVersions = localVersions;
-    this.localEscs = localEscs;
     this.pwm = pwm;
 
     this.fetchJson = async (url) => {
@@ -44,29 +44,41 @@ class Source {
   }
 
   async getVersions() {
-    if(navigator.onLine) {
-      try {
-        const result = await this.fetchJson(this.versions);
-        return result;
-      } catch(e) {
-        // No neet to catch - returl local versions anyway
+    const localStorageKey = `${this.getName()}_versions`;
+
+    try {
+      const result = await this.fetchJson(this.versions);
+      localStorage.setItem(localStorageKey, JSON.stringify(result));
+
+      return result;
+    } catch(e) {
+      const content = localStorage.getItem(localStorageKey);
+
+      if(content !== null) {
+        return (JSON.parse(content));
       }
     }
 
-    return this.localVersions;
+    throw new FileNotAvailableError();
   }
 
   async getEscs() {
-    if(navigator.onLine) {
-      try {
-        const result = await this.fetchJson(this.escs);
-        return result;
-      } catch(e) {
-        // No neet to catch - return local escs anyway
+    const localStorageKey = `${this.getName()}_escs`;
+
+    try {
+      const result = await this.fetchJson(this.escs);
+      localStorage.setItem(localStorageKey, JSON.stringify(result));
+
+      return result;
+    } catch(e) {
+      const content = localStorage.getItem(localStorageKey);
+
+      if(content !== null) {
+        return (JSON.parse(content));
       }
     }
 
-    return this.localEscs;
+    throw new FileNotAvailableError();
   }
 
   getEeprom() {

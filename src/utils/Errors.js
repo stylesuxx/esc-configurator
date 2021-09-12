@@ -70,10 +70,18 @@ class EscLockedError extends Error {
   }
 }
 
+class FileNotAvailableError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'EscLockedError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   EscInitError,
   EscLockedError,
+  FileNotAvailableError,
   InvalidHexFileError,
   SettingsVerificationError,
   TooManyParametersError,

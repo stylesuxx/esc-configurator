@@ -199,10 +199,19 @@ class App extends Component {
       const source = sources[i];
       const name = source.getName();
 
-      configs.versions[name] = await source.getVersions();
-      configs.escs[name] = await source.getEscs();
-      configs.platforms[name] = source.getPlatform();
-      configs.pwm[name] = source.getPwm();
+      try {
+        configs.versions[name] = await source.getVersions();
+        configs.escs[name] = await source.getEscs();
+        configs.platforms[name] = source.getPlatform();
+        configs.pwm[name] = source.getPwm();
+      } catch(e) {
+        this.addLogMessage('fetchingFilesFailed', { name: name });
+
+        configs.versions[name] = [];
+        configs.escs[name] = [];
+        configs.platforms[name] = [];
+        configs.pwm[name] = [];
+      }
     }
 
     return configs;
@@ -529,8 +538,6 @@ class App extends Component {
 
   handleFirmwareDump = async (target) => {
     const { escs } = this.state;
-
-    console.log("Dump firmware for ESC", target);
     const esc = escs.individual.find((esc) => esc.index === target);
 
     const updateProgress = async(percent) => {

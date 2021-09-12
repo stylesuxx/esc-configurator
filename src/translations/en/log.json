@@ -18,6 +18,7 @@
   "readEsc": "Read ESC {{index}}: {{name}}",
   "flashingEsc": "Flashing ESC {{index}}",
   "flashingEscFailed": "Failed flashing ESC {{index}} - check file type",
+  "fetchingFilesFailed": "Failed fetching files for {{name}}",
   "readEscFailed": "Failed reading ESC {{index}}",
   "resetEscFailed": "Failed resetting ESC {{index}}",
   "writeSettingsFailed": "Failed writing settings to ESC {{index}}",

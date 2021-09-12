@@ -2,6 +2,7 @@
   {
     "title": "unreleased",
     "items": [
+      "Enhancement: Cache firmware versions and layouts - do not store them in the app",
       "Wording: Normalized ESCs and BLHeli_S",
       "Bugfix: Fixed min/max properties with slider",
       "Chore: Bluejay settings cleanup",

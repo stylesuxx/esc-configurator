@@ -6,22 +6,24 @@ describe('Source', () => {
     expect(() => new Source()).toThrow();
   });
 
-  it('should return local veriions with invalid URL', async() => {
-    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid', 'invalid', 'localVersions', 'localESCs', 'invalid');
+  it('should throw with invalid URL', async() => {
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid', 'invalid', 'invalid');
 
-    const versions = await invalidSource.getVersions();
-    expect(versions).toBe('localVersions');
-
-    const escs = await invalidSource.getEscs();
-    expect(escs).toBe('localESCs');
+    await expect(() => invalidSource.getVersions()).rejects.toThrow();
+    await expect(() => invalidSource.getEscs()).rejects.toThrow();
   });
 
-  it('should return local versions with invalid URL', async() => {
-    jest.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);
-    const invalidSource = new Source('invalid', 'invalid', 'https://google.com', 'invalid', 'invalid', 'localVersions', 'localESCs', 'invalid');
+  it('should return values from local storage with invalid URL', async() => {
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid', 'invalid', 'invalid');
 
-    const versions = await invalidSource.getVersions();
-    expect(versions).toBe('localVersions');
+    localStorage.setItem('invalid_versions', '{}');
+    localStorage.setItem('invalid_escs', '{}');
+
+    let versions = await invalidSource.getVersions();
+    expect(versions).toStrictEqual({});
+
+    let escs = await invalidSource.getEscs();
+    expect(escs).toStrictEqual({});
   });
 
   it('should return BLHeli_S versions', async() => {

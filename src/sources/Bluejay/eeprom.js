@@ -2,7 +2,11 @@ const EEPROM_OFFSET = 0x1A00;
 const PAGE_SIZE = 0x0200;
 const LAYOUT_SIZE = 0xF0;
 const TYPES = { EFM8: 'EFM8' };
-const NAMES = ['Bluejay', 'Bluejay (BETA)', 'Bluejay (TEST)'];
+const NAMES = [
+  'Bluejay',
+  'Bluejay (BETA)',
+  'Bluejay (TEST)',
+];
 
 const SETTINGS_DESCRIPTIONS = {};
 
@@ -263,7 +267,7 @@ SETTINGS_DESCRIPTIONS['201'] = {
 
 // inherit settings descriptions and also retain ordering
 function merge_inherited_descriptions (descs) {
-  for (let i = 0; i < descs.MULTI.base.length; i++) {
+  for (let i = 0; i < descs.MULTI.base.length; i += 1) {
     if (descs.MULTI.base[i].inherit) {
       descs.MULTI.base[i] = descs.MULTI.base[i].inherit.MULTI.base.find((s) => s.name === descs.MULTI.base[i].name);
     }
@@ -291,7 +295,7 @@ SETTINGS_DESCRIPTIONS['202'] = {
           value: '2',
           label: 'On',
         }],
-      }], 
+      }],
   },
 };
 
@@ -299,8 +303,8 @@ SETTINGS_DESCRIPTIONS['203'] = {
   MULTI: {
     base: [
       ...SETTINGS_DESCRIPTIONS['201'].MULTI.base.filter((s) => s.name !== 'STARTUP_BEEP'),
-    ], 
-  }, 
+    ],
+  },
 };
 
 const LAYOUT = {
