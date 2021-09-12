@@ -18,6 +18,7 @@
   "readEsc": "ESC {{index}}: {{name}}",
   "flashingEsc": "ESC {{index}} wird geflasht",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
+  "fetchingFilesFailed": "Failed fetching files for {{name}}",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
   "resetEscFailed": "Reset von ESC {{index}} fehlgeschlagen",
   "writeSettingsFailed": "Fehler beim Schreiben der Einstellungen auf ESC {{index}}",
