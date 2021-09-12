@@ -5,12 +5,17 @@ import {
 import { MODES } from '../FourWayConstants';
 import { findMCU } from './General';
 
-import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
+import bluejayConfig from '../../sources/Bluejay';
+import blheliConfig from '../../sources/Blheli';
+import am32Config from '../../sources/AM32';
 
-import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
-import BLHELI_ESCS from '../../sources/Blheli/escs.json';
-import AM32_ESCS from '../../sources/AM32/escs.json';
+const blheliEscs = blheliConfig.getLocalEscs();
+const blheliEeprom = blheliConfig.getEeprom();
+
+const bluejayEscs = bluejayConfig.getLocalEscs();
+const bluejayEeprom = bluejayConfig.getEeprom();
+
+const am32Escs = am32Config.getLocalEscs();
 
 class MCU {
   constructor(interfaceMode, signature) {
@@ -19,19 +24,19 @@ class MCU {
       switch(interfaceMode) {
         case MODES.SiLBLB: {
           return (
-            findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_EEPROM.TYPES.EFM8]) ||
-            findMCU(signature, BLHELI_ESCS.signatures[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS]) ||
-            findMCU(signature, BLHELI_ESCS.signatures.SiLabs)
+            findMCU(signature, bluejayEscs.signatures[bluejayEeprom.TYPES.EFM8]) ||
+            findMCU(signature, blheliEscs.signatures[blheliEeprom.TYPES.BLHELI_S_SILABS]) ||
+            findMCU(signature, blheliEscs.signatures.SiLabs)
           );
         }
 
         case MODES.AtmBLB:
         case MODES.AtmSK: {
-          return findMCU(signature, BLHELI_ESCS.signatures.Atmel);
+          return findMCU(signature, blheliEscs.signatures.Atmel);
         }
 
         case MODES.ARMBLB: {
-          return findMCU(signature, AM32_ESCS.signatures.Arm);
+          return findMCU(signature, am32Escs.signatures.Arm);
         }
 
         default: {
@@ -48,7 +53,7 @@ class MCU {
   getFlashSize() {
     switch(this.interfaceMode) {
       case MODES.SiLC2: {
-        return BLHELI_EEPROM.SILABS.FLASH_SIZE;
+        return blheliEeprom.SILABS.FLASH_SIZE;
       }
     }
 

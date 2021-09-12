@@ -10,24 +10,17 @@ import {
   UnknownPlatformError,
 } from './Errors';
 
-import {
-  buildDisplayName as blheliBuildDisplayName,
-  EEPROM as BLHELI_EEPROM,
-} from '../sources/Blheli';
+import am32Config from '../sources/AM32';
+import blheliConfig from '../sources/Blheli';
+import bluejayConfig from '../sources/Bluejay';
 
-import {
-  buildDisplayName as am32BuildDisplayName,
-  EEPROM as AM32_EEPROM,
-} from '../sources/AM32';
+const blheliEscs = blheliConfig.getLocalEscs();
+const blheliEeprom = blheliConfig.getEeprom();
 
-import {
-  buildDisplayName as bluejayBuildDisplayName,
-  EEPROM as BLUEJAY_EEPROM,
-} from '../sources/Bluejay';
+const bluejayEscs = bluejayConfig.getLocalEscs();
+const bluejayEeprom = bluejayConfig.getEeprom();
 
-// TODO: We might use the ones from the source here...
-import BLHELI_ESCS from '../sources/Blheli/escs.json';
-import BLUEJAY_ESCS from '../sources/Bluejay/escs.json';
+const am32Eeprom = am32Config.getEeprom();
 
 import {
   canMigrate,
@@ -276,21 +269,21 @@ class FourWay {
         const isSiLabs = SILABS_MODES.includes(interfaceMode);
         const isArm = interfaceMode === MODES.ARMBLB;
         let settingsArray = null;
-        let layout = BLHELI_EEPROM.LAYOUT;
-        let layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
-        let defaultSettings = BLHELI_EEPROM.DEFAULTS;
-        let validFirmwareNames = BLHELI_EEPROM.NAMES;
+        let layout = blheliEeprom.LAYOUT;
+        let layoutSize = blheliEeprom.LAYOUT_SIZE;
+        let defaultSettings = blheliEeprom.DEFAULTS;
+        let validFirmwareNames = blheliEeprom.NAMES;
         let displayName = 'UNKNOWN';
 
         if (isSiLabs) {
-          layoutSize = BLHELI_EEPROM.LAYOUT_SIZE;
-          settingsArray = (await this.read(BLHELI_EEPROM.SILABS.EEPROM_OFFSET, layoutSize)).params;
+          layoutSize = blheliEeprom.LAYOUT_SIZE;
+          settingsArray = (await this.read(blheliEeprom.SILABS.EEPROM_OFFSET, layoutSize)).params;
         } else if (isArm) {
-          validFirmwareNames = AM32_EEPROM.NAMES;
-          layoutSize = AM32_EEPROM.LAYOUT_SIZE;
-          layout = AM32_EEPROM.LAYOUT;
-          defaultSettings = AM32_EEPROM.DEFAULTS;
-          settingsArray = (await this.read(AM32_EEPROM.EEPROM_OFFSET, layoutSize)).params;
+          validFirmwareNames = am32Eeprom.NAMES;
+          layoutSize = am32Eeprom.LAYOUT_SIZE;
+          layout = am32Eeprom.LAYOUT;
+          defaultSettings = am32Eeprom.DEFAULTS;
+          settingsArray = (await this.read(am32Eeprom.EEPROM_OFFSET, layoutSize)).params;
         } else {
           throw new UnknownPlatformError('Neither SiLabs nor Arm');
         }
@@ -308,12 +301,12 @@ class FourWay {
          */
         let name = flash.settings.NAME;
         let newLayout = null;
-        if(BLUEJAY_EEPROM.NAMES.includes(name)) {
-          validFirmwareNames = BLUEJAY_EEPROM.NAMES;
-          newLayout = BLUEJAY_EEPROM.LAYOUT;
-          layoutSize = BLUEJAY_EEPROM.LAYOUT_SIZE;
-          defaultSettings = BLUEJAY_EEPROM.DEFAULTS;
-          settingsArray = (await this.read(BLUEJAY_EEPROM.EEPROM_OFFSET, layoutSize)).params;
+        if(bluejayEeprom.NAMES.includes(name)) {
+          validFirmwareNames = bluejayEeprom.NAMES;
+          newLayout = bluejayEeprom.LAYOUT;
+          layoutSize = bluejayEeprom.LAYOUT_SIZE;
+          defaultSettings = bluejayEeprom.DEFAULTS;
+          settingsArray = (await this.read(bluejayEeprom.EEPROM_OFFSET, layoutSize)).params;
         }
 
         // Try to guess firmware type if it was not properly set in the EEPROM
@@ -347,19 +340,19 @@ class FourWay {
         let individualSettingsDescriptions = null;
         let settingsDescriptions = null;
         switch(layout) {
-          case BLHELI_EEPROM.LAYOUT: {
-            settingsDescriptions = BLHELI_EEPROM.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = BLHELI_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          case blheliEeprom.LAYOUT: {
+            settingsDescriptions = blheliEeprom.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = blheliEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
-          case BLUEJAY_EEPROM.LAYOUT: {
-            settingsDescriptions = BLUEJAY_EEPROM.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = BLUEJAY_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          case bluejayEeprom.LAYOUT: {
+            settingsDescriptions = bluejayEeprom.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = bluejayEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
-          case AM32_EEPROM.LAYOUT: {
-            settingsDescriptions = AM32_EEPROM.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = AM32_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          case am32Eeprom.LAYOUT: {
+            settingsDescriptions = am32Eeprom.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = am32Eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
           default: {
@@ -384,9 +377,9 @@ class FourWay {
         const layoutName = (flash.settings.LAYOUT || '').trim();
         let make = null;
         if (isSiLabs) {
-          const blheliLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.SILABS];
-          const blheliSLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS];
-          const bluejayLayouts = BLUEJAY_ESCS.layouts[BLUEJAY_EEPROM.TYPES.EFM8];
+          const blheliLayouts = blheliEscs.layouts[blheliEeprom.TYPES.SILABS];
+          const blheliSLayouts = blheliEscs.layouts[blheliEeprom.TYPES.BLHELI_S_SILABS];
+          const bluejayLayouts = bluejayEscs.layouts[bluejayEeprom.TYPES.EFM8];
 
           if (flash.settings.NAME === 'JESC') {
             make = blheliSLayouts[layoutName].name;
@@ -397,9 +390,9 @@ class FourWay {
             }
 
             displayName = `${make} - JESC, ${revision}`;
-          } else if (BLUEJAY_EEPROM.NAMES.includes(name) && layoutName in bluejayLayouts) {
+          } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
-            displayName = bluejayBuildDisplayName(flash, make);
+            displayName = bluejayConfig.buildDisplayName(flash, make);
           } else if (layoutName in blheliLayouts) {
             make = blheliLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
@@ -471,14 +464,14 @@ class FourWay {
               }
             }
 
-            displayName = blheliBuildDisplayName(flash, make);
+            displayName = blheliConfig.buildDisplayName(flash, make);
           }
         } else if (isArm) {
           /* Read version information direct from EEPROM so we can later
            * compare to the settings object. This allows us to verify, that
            * everything went well after flashing.
            */
-          const [mainRevision, subRevision] = (await this.read(AM32_EEPROM.VERSION_OFFSET, AM32_EEPROM.VERSION_SIZE)).params;
+          const [mainRevision, subRevision] = (await this.read(am32Eeprom.VERSION_OFFSET, am32Eeprom.VERSION_SIZE)).params;
 
           if(
             flash.settings.MAIN_REVISION !== mainRevision ||
@@ -501,7 +494,7 @@ class FourWay {
           /* Bootloader input pins are limited. If something different is set,
            * then the user probably has an old fw flashed.
            */
-          for(let [key, value] of Object.entries(AM32_EEPROM.BOOT_LOADER_PINS)) {
+          for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
             if(value === flash.bootloader.input) {
               flash.bootloader.valid = true;
               flash.bootloader.pin = key;
@@ -513,9 +506,9 @@ class FourWay {
           flash.settings.SUB_REVISION = subRevision;
           flash.settings.LAYOUT = flash.settings.NAME;
 
-          displayName = am32BuildDisplayName(flash, flash.settings.NAME);
+          displayName = am32Config.buildDisplayName(flash, flash.settings.NAME);
         } else {
-          const blheliAtmelLayouts = BLHELI_ESCS.layouts[BLHELI_EEPROM.TYPES.ATMEL];
+          const blheliAtmelLayouts = blheliEscs.layouts[blheliEeprom.TYPES.ATMEL];
           if (layoutName in blheliAtmelLayouts) {
             make = blheliAtmelLayouts[layoutName].name;
           }
@@ -580,12 +573,12 @@ class FourWay {
             }
           }
 
-          await this.pageErase(BLHELI_EEPROM.EEPROM_OFFSET / BLHELI_EEPROM.PAGE_SIZE);
-          await this.write(BLHELI_EEPROM.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(BLHELI_EEPROM.EEPROM_OFFSET, esc.layoutSize)).params;
+          await this.pageErase(blheliEeprom.EEPROM_OFFSET / blheliEeprom.PAGE_SIZE);
+          await this.write(blheliEeprom.EEPROM_OFFSET, newSettingsArray);
+          readbackSettings = (await this.read(blheliEeprom.EEPROM_OFFSET, esc.layoutSize)).params;
         } else if (esc.isArm) {
-          await this.write(AM32_EEPROM.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(AM32_EEPROM.EEPROM_OFFSET, esc.layoutSize)).params;
+          await this.write(am32Eeprom.EEPROM_OFFSET, newSettingsArray);
+          readbackSettings = (await this.read(am32Eeprom.EEPROM_OFFSET, esc.layoutSize)).params;
         } else {
           // write only changed bytes for Atmel
           for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
@@ -672,22 +665,22 @@ class FourWay {
       let settingsDescriptions = null;
       let individualSettingsDescriptions = null;
       switch(newEsc.layout) {
-        case BLHELI_EEPROM.LAYOUT: {
+        case blheliEeprom.LAYOUT: {
           console.debug('BLHELI layout found');
-          settingsDescriptions = BLHELI_EEPROM.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = BLHELI_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = blheliEeprom.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = blheliEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
 
-        case BLUEJAY_EEPROM.LAYOUT: {
+        case bluejayEeprom.LAYOUT: {
           console.debug('Bluejay layout found');
-          settingsDescriptions = BLUEJAY_EEPROM.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = BLUEJAY_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = bluejayEeprom.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = bluejayEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
 
-        case AM32_EEPROM.LAYOUT: {
+        case am32Eeprom.LAYOUT: {
           console.debug('AM32 layout found');
-          settingsDescriptions = AM32_EEPROM.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = AM32_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = am32Eeprom.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = am32Eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
       }
 
@@ -739,21 +732,21 @@ class FourWay {
        * We then double that since we are also tracking the bytes read back
        * and update the progress bar accordingly.
        */
-      this.totalBytes = BLHELI_EEPROM.PAGE_SIZE * 14 * 2;
+      this.totalBytes = blheliEeprom.PAGE_SIZE * 14 * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(BLHELI_EEPROM.SILABS.EEPROM_OFFSET, BLHELI_EEPROM.LAYOUT_SIZE);
+      const message = await this.read(blheliEeprom.SILABS.EEPROM_OFFSET, blheliEeprom.LAYOUT_SIZE);
 
       // checkESCAndMCU
       const escSettingArrayTmp = message.params;
       const target_layout = escSettingArrayTmp.subarray(
-        BLHELI_EEPROM.LAYOUT.LAYOUT.offset,
-        BLHELI_EEPROM.LAYOUT.LAYOUT.offset + BLHELI_EEPROM.LAYOUT.LAYOUT.size);
+        blheliEeprom.LAYOUT.LAYOUT.offset,
+        blheliEeprom.LAYOUT.LAYOUT.offset + blheliEeprom.LAYOUT.LAYOUT.size);
 
-      const settings_image = flash.subarray(BLHELI_EEPROM.EEPROM_OFFSET);
+      const settings_image = flash.subarray(blheliEeprom.EEPROM_OFFSET);
       const fw_layout = settings_image.subarray(
-        BLHELI_EEPROM.LAYOUT.LAYOUT.offset,
-        BLHELI_EEPROM.LAYOUT.LAYOUT.offset + BLHELI_EEPROM.LAYOUT.LAYOUT.size);
+        blheliEeprom.LAYOUT.LAYOUT.offset,
+        blheliEeprom.LAYOUT.LAYOUT.offset + blheliEeprom.LAYOUT.LAYOUT.size);
 
       if (!compare(target_layout, fw_layout)) {
         var target_layout_str = Convert.bufferToAscii(target_layout).trim();
@@ -768,11 +761,11 @@ class FourWay {
       }
 
       const target_mcu = escSettingArrayTmp.subarray(
-        BLHELI_EEPROM.LAYOUT.MCU.offset,
-        BLHELI_EEPROM.LAYOUT.MCU.offset + BLHELI_EEPROM.LAYOUT.MCU.size);
+        blheliEeprom.LAYOUT.MCU.offset,
+        blheliEeprom.LAYOUT.MCU.offset + blheliEeprom.LAYOUT.MCU.size);
       const fw_mcu = settings_image.subarray(
-        BLHELI_EEPROM.LAYOUT.MCU.offset,
-        BLHELI_EEPROM.LAYOUT.MCU.offset + BLHELI_EEPROM.LAYOUT.MCU.size);
+        blheliEeprom.LAYOUT.MCU.offset,
+        blheliEeprom.LAYOUT.MCU.offset + blheliEeprom.LAYOUT.MCU.size);
       if (!compare(target_mcu, fw_mcu)) {
         var target_mcu_str = Convert.bufferToAscii(target_mcu).trim();
         if (target_mcu_str.length === 0) {
@@ -796,45 +789,45 @@ class FourWay {
       // Skipp first two pages with bootloader failsafe
       // 0x02 - 0x0D: erase, write, verify
       await this.erasePages(0x02, 0x0D);
-      await this.writePages(0x02, 0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
-      await this.verifyPages(0x02, 0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.writePages(0x02, 0x0D, blheliEeprom.PAGE_SIZE, flash);
+      await this.verifyPages(0x02, 0x0D, blheliEeprom.PAGE_SIZE, flash);
 
       // write & verify first page
-      await this.writePage(0x00, BLHELI_EEPROM.PAGE_SIZE, flash);
-      await this.verifyPage(0x00, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.writePage(0x00, blheliEeprom.PAGE_SIZE, flash);
+      await this.verifyPage(0x00, blheliEeprom.PAGE_SIZE, flash);
 
       // Second page: erase, write, verify
       await this.erasePage(0x01);
-      await this.writePage(0x01, BLHELI_EEPROM.PAGE_SIZE, flash);
-      await this.verifyPage(0x01, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.writePage(0x01, blheliEeprom.PAGE_SIZE, flash);
+      await this.verifyPage(0x01, blheliEeprom.PAGE_SIZE, flash);
 
       // 14th page: erase, write, verify
       await this.erasePage(0x0D);
-      await this.writePage(0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
-      await this.verifyPage(0x0D, BLHELI_EEPROM.PAGE_SIZE, flash);
+      await this.writePage(0x0D, blheliEeprom.PAGE_SIZE, flash);
+      await this.verifyPage(0x0D, blheliEeprom.PAGE_SIZE, flash);
     };
 
     const flashArm = async(flash) => {
       this.totalBytes = (flash.byteLength - (flash.firmwareStart ? flash.firmwareStart : 0)) * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(AM32_EEPROM.EEPROM_OFFSET, AM32_EEPROM.LAYOUT_SIZE);
+      const message = await this.read(am32Eeprom.EEPROM_OFFSET, am32Eeprom.LAYOUT_SIZE);
       const originalSettings = message.params;
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
       eepromInfo.set([originalSettings[1], originalSettings[2]], 1);
       eepromInfo.set(Convert.asciiToBuffer('FLASH FAIL  '), 5);
 
-      await this.write(AM32_EEPROM.EEPROM_OFFSET, eepromInfo);
+      await this.write(am32Eeprom.EEPROM_OFFSET, eepromInfo);
 
-      await this.writePages(0x04, 0x40, AM32_EEPROM.PAGE_SIZE, flash);
-      await this.verifyPages(0x04, 0x40, AM32_EEPROM.PAGE_SIZE, flash);
+      await this.writePages(0x04, 0x40, am32Eeprom.PAGE_SIZE, flash);
+      await this.verifyPages(0x04, 0x40, am32Eeprom.PAGE_SIZE, flash);
 
       originalSettings[0] = 0x01;
       originalSettings.fill(0x00, 3, 5);
       originalSettings.set(Convert.asciiToBuffer('NOT READY   '), 5);
 
-      await this.write(AM32_EEPROM.EEPROM_OFFSET, originalSettings);
+      await this.write(am32Eeprom.EEPROM_OFFSET, originalSettings);
     };
 
     const flashTarget = async(target, flash) => {
@@ -853,7 +846,7 @@ class FourWay {
 
           // Reset after flashing to update name and settings
           await this.reset(target);
-          await delay(AM32_EEPROM.RESET_DELAY);
+          await delay(am32Eeprom.RESET_DELAY);
         } break;
 
         default: throw new UnknownInterfaceError(interfaceMode);
@@ -913,9 +906,9 @@ class FourWay {
 
         // Check pseudo-eeprom page for BLHELI signature
         const mcu = Convert.bufferToAscii(
-          flash.subarray(BLHELI_EEPROM.SILABS.EEPROM_OFFSET)
-            .subarray(BLHELI_EEPROM.LAYOUT.MCU.offset)
-            .subarray(0, BLHELI_EEPROM.LAYOUT.MCU.size));
+          flash.subarray(blheliEeprom.SILABS.EEPROM_OFFSET)
+            .subarray(blheliEeprom.LAYOUT.MCU.offset)
+            .subarray(0, blheliEeprom.LAYOUT.MCU.size));
 
         if(!isValidFlash(mcu, flash)) {
           throw new InvalidHexFileError('Invalid hex file');
@@ -984,11 +977,11 @@ class FourWay {
   }
 
   async writeEEpromSafeguard(settings) {
-    settings.set(Convert.asciiToBuffer('**FLASH*FAILED**'), BLHELI_EEPROM.LAYOUT.NAME.offset);
-    const response = await this.write(BLHELI_EEPROM.EEPROM_OFFSET, settings);
+    settings.set(Convert.asciiToBuffer('**FLASH*FAILED**'), blheliEeprom.LAYOUT.NAME.offset);
+    const response = await this.write(blheliEeprom.EEPROM_OFFSET, settings);
 
     const verifySafeguard = async (resolve, reject) => {
-      const message = await this.read(response.address, BLHELI_EEPROM.LAYOUT_SIZE);
+      const message = await this.read(response.address, blheliEeprom.LAYOUT_SIZE);
 
       if (!compare(settings, message.params)) {
         reject(new Error('failed to verify write **FLASH*FAILED**'));

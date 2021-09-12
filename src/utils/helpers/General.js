@@ -1,15 +1,18 @@
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
-import BLHELI_ESCS from '../../sources/Blheli/escs.json';
+import am32Config from '../../sources/AM32';
+import blheliConfig from '../../sources/Blheli';
+import bluejayConfig from '../../sources/Bluejay';
 
-import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
-import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
+const am32Escs = am32Config.getLocalEscs();
+const am32Eeprom = am32Config.getEeprom();
+const am32Types = am32Eeprom.TYPES;
 
-import { EEPROM as AM32_EEPROM } from '../../sources/AM32';
-import AM32_ESCS from '../../sources/AM32/escs.json';
+const blheliEscs = blheliConfig.getLocalEscs();
+const blheliEeprom = blheliConfig.getEeprom();
+const blheliTypes = blheliEeprom.TYPES;
 
-const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
-const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
-const AM32_TYPES = AM32_EEPROM.TYPES;
+const bluejayEscs = bluejayConfig.getLocalEscs();
+const bluejayEeprom = bluejayConfig.getEeprom();
+const bluejayTypes = bluejayEeprom.TYPES;
 
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
@@ -91,11 +94,11 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
 
 // Check if a given layout is available in any of the sources
 const isValidLayout = (layout) => {
-  if(BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8][layout] ||
-     BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL][layout] ||
-     AM32_ESCS.layouts[AM32_TYPES.ARM][layout] ||
-     BLHELI_TYPES.BLHELI_S_SILABS[layout] ||
-     BLHELI_TYPES.SILABS[layout]
+  if(bluejayEscs.layouts[bluejayTypes.EFM8][layout] ||
+     blheliEscs.layouts[blheliTypes.ATMEL][layout] ||
+     am32Escs.layouts[am32Types.ARM][layout] ||
+     blheliTypes.BLHELI_S_SILABS[layout] ||
+     blheliTypes.SILABS[layout]
   ) {
     return true;
   }
@@ -105,24 +108,24 @@ const isValidLayout = (layout) => {
 
 const getPossibleTypes = (signature) => {
   const types = [];
-  if(findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_TYPES.EFM8])) {
-    types.push(BLUEJAY_TYPES.EFM8);
+  if(findMCU(signature, bluejayEscs.signatures[bluejayTypes.EFM8])) {
+    types.push(bluejayTypes.EFM8);
   }
 
-  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
-    types.push(BLHELI_TYPES.BLHELI_S_SILABS);
+  if (findMCU(signature, blheliEscs.signatures[blheliTypes.BLHELI_S_SILABS])) {
+    types.push(blheliTypes.BLHELI_S_SILABS);
   }
 
-  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.SILABS])) {
-    types.push(BLHELI_TYPES.SILABS);
+  if (findMCU(signature, blheliEscs.signatures[blheliTypes.SILABS])) {
+    types.push(blheliTypes.SILABS);
   }
 
-  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.ATMEL])) {
-    types.push(BLHELI_TYPES.ATMEL);
+  if (findMCU(signature, blheliEscs.signatures[blheliTypes.ATMEL])) {
+    types.push(blheliTypes.ATMEL);
   }
 
-  if (findMCU(signature, AM32_ESCS.signatures[AM32_TYPES.ARM])) {
-    types.push(AM32_TYPES.ARM);
+  if (findMCU(signature, am32Escs.signatures[am32Types.ARM])) {
+    types.push(am32Types.ARM);
   }
 
   return types;

@@ -1,4 +1,6 @@
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
+import blheliConfig from '../../sources/Blheli';
+
+const blheliEeprom = blheliConfig.getEeprom();
 
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);
@@ -47,7 +49,7 @@ const getMaster = (escs) => escs.find((esc) => esc.meta.available);
 
 const getAllSettings = (escs) => escs.map((esc) => esc.settings);
 
-const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === BLHELI_EEPROM.MODES.MULTI);
+const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === blheliEeprom.MODES.MULTI);
 
 function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualSettingsDescriptions) {
   if (from.MODE === to.MODE) {

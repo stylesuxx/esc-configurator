@@ -3,13 +3,25 @@ import {
   render, screen, fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import sources from '../../../sources';
 
-import FirmwareSelector from '../';
+import sources from '../../../sources';
+import populateLocalStorage from '../../../utils/helpers/__tests__/LocalStorage';
+
+let FirmwareSelector;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
 describe('FirmwareSelector', () => {
+  beforeAll(async () => {
+    await populateLocalStorage();
+
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    FirmwareSelector = require('../').default;
+  });
+
   it('should display firmware selection', () => {
     const configs = {
       versions: {},

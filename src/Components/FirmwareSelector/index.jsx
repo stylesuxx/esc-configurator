@@ -9,14 +9,17 @@ import {
   getPossibleTypes,
 } from '../../utils/helpers/General';
 
+import blheliConfig from '../../sources/Blheli';
+import bluejayConfig from '../../sources/Bluejay';
+
 import LabeledSelect from '../Input/LabeledSelect';
 
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
-import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
+const blheliEeprom = blheliConfig.getEeprom();
+const bluejayEeprom = bluejayConfig.getEeprom();
 
-const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
-const BLHELI_MODES = BLHELI_EEPROM.MODES;
-const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
+const blheliTypes = blheliEeprom.TYPES;
+const blheliModes = blheliEeprom.MODES;
+const bluejayTypes = bluejayEeprom.TYPES;
 
 import {
   PLATFORMS,
@@ -112,11 +115,11 @@ function FirmwareSelector({
       } else {
         switch(selection.firmware) {
           case 'Bluejay': {
-            newType = BLUEJAY_TYPES.EFM8;
+            newType = bluejayTypes.EFM8;
           } break;
 
           default: {
-            newType = BLHELI_TYPES.BLHELI_S_SILABS;
+            newType = blheliTypes.BLHELI_S_SILABS;
           }
         }
       }
@@ -167,7 +170,7 @@ function FirmwareSelector({
       ));
 
       const modeOptions = [];
-      for (const mode in BLHELI_MODES) {
+      for (const mode in blheliModes) {
         modeOptions.push({
           key: mode,
           value: mode,
@@ -346,7 +349,7 @@ function FirmwareSelector({
                 />
 
                 {/*
-                {type === BLHELI_TYPES.SILABS || type === BLHELI_TYPES.ATMEL &&
+                {type === blheliTypes.SILABS || type === blheliTypes.ATMEL &&
                   <LabeledSelect
                     firstLabel={t('selectMode')}
                     label="Mode"

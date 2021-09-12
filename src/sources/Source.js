@@ -2,7 +2,10 @@ import BLHELI_EEPROM from './Blheli/eeprom';
 import BLUEJAY_EEPROM from './Bluejay/eeprom';
 import AM32_EEPROM from './AM32/eeprom';
 
-import { FileNotAvailableError } from '../utils/Errors';
+import {
+  FileNotAvailableError,
+  LocalDataNotAvailableError,
+} from '../utils/Errors';
 
 class Source {
   constructor(name, platform, versions, escs, eeprom, pwm) {
@@ -29,6 +32,10 @@ class Source {
         throw new Error(e);
       }
     };
+  }
+
+  buildDisplayName() {
+    throw new Error("Method buildDisplayName not implemented");
   }
 
   getPlatform() {
@@ -79,6 +86,19 @@ class Source {
     }
 
     throw new FileNotAvailableError();
+  }
+
+  getLocalEscs() {
+    const localStorageKey = `${this.getName()}_escs`;
+    const content = localStorage.getItem(localStorageKey);
+
+    if(content !== null) {
+      return (JSON.parse(content));
+    }
+
+    console.log(localStorageKey);
+
+    throw new LocalDataNotAvailableError();
   }
 
   getEeprom() {

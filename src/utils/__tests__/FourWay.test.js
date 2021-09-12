@@ -1,12 +1,22 @@
-import FourWay from '../FourWay';
-
+import populateLocalStorage from '../helpers/__tests__/LocalStorage';
 
 let serial;
 let resolve;
 let reject;
 let fourWay;
+let FourWay;
 
 describe('FourWay', () => {
+  beforeAll(async() => {
+    await populateLocalStorage();
+
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    FourWay = require('../FourWay').default;
+  });
+
   beforeEach(() => {
     serial = jest.fn();
     resolve = jest.fn();

@@ -1,127 +1,150 @@
 import fs from 'fs';
 
+import populateLocalStorage from './LocalStorage';
 import Flash from '../Flash';
 
+
+let retry, delay, compare, isValidFlash, isValidLayout, getPossibleTypes;
+/*
 import {
   retry,
   delay,
   compare,
   isValidFlash, isValidLayout, getPossibleTypes,
 } from '../General';
+*/
 
-test('compare same buffers', () => {
-  const buffer1 = new Uint8Array([1, 2, 3]);
-  const buffer2 = new Uint8Array([1, 2, 3]);
+describe('General', () => {
+  beforeAll(async() => {
+    await populateLocalStorage();
 
-  expect(compare(buffer1, buffer2)).toBeTruthy();
-});
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    const general = require('../General');
+    retry = general.retry;
+    delay = general.delay;
+    compare = general.compare;
+    isValidFlash = general.isValidFlash;
+    isValidLayout = general.isValidLayout;
+    getPossibleTypes = general.getPossibleTypes;
+  });
 
-test('compare buffers of different length', () => {
-  const buffer1 = new Uint8Array([1, 2, 3]);
-  const buffer2 = new Uint8Array([1, 2]);
+  it('compare same buffers', () => {
+    const buffer1 = new Uint8Array([1, 2, 3]);
+    const buffer2 = new Uint8Array([1, 2, 3]);
 
-  expect(compare(buffer1, buffer2)).not.toBeTruthy();
-});
+    expect(compare(buffer1, buffer2)).toBeTruthy();
+  });
 
-test('compare different buffers', () => {
-  const buffer1 = new Uint8Array([1, 2, 3]);
-  const buffer2 = new Uint8Array([3, 2, 1]);
+  it('compare buffers of different length', () => {
+    const buffer1 = new Uint8Array([1, 2, 3]);
+    const buffer2 = new Uint8Array([1, 2]);
 
-  expect(compare(buffer1, buffer2)).not.toBeTruthy();
-});
+    expect(compare(buffer1, buffer2)).not.toBeTruthy();
+  });
 
-test('delay', async() => {
-  await delay(500);
+  it('compare different buffers', () => {
+    const buffer1 = new Uint8Array([1, 2, 3]);
+    const buffer2 = new Uint8Array([3, 2, 1]);
 
-  expect(true).toBeTruthy();
-});
+    expect(compare(buffer1, buffer2)).not.toBeTruthy();
+  });
 
-test('valid Flash', () => {
-  const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);
-  const hexString = hexContent.toString();
-  const parsed = Flash.parseHex(hexString);
-  const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
-  const flashOffset = 0;
-  const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
+  it('delay', async() => {
+    await delay(500);
 
-  expect(isValidFlash('#BLHELI$EFM8B21#', flash)).toBeTruthy();
-});
+    expect(true).toBeTruthy();
+  });
 
-test('invalid Flash', () => {
-  expect(isValidFlash('#BLHELI$INVALID', new Uint8Array([1,2,3,4]))).not.toBeTruthy();
-});
+  it('valid Flash', () => {
+    const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);
+    const hexString = hexContent.toString();
+    const parsed = Flash.parseHex(hexString);
+    const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
+    const flashOffset = 0;
+    const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
-test('retry failing each time', async() => {
-  function test(resolve, reject) {
-    reject(new Error('Fail'));
-  }
+    expect(isValidFlash('#BLHELI$EFM8B21#', flash)).toBeTruthy();
+  });
 
-  await expect(retry(test, 5, 10)).rejects.toThrow();
-});
+  it('invalid Flash', () => {
+    expect(isValidFlash('#BLHELI$INVALID', new Uint8Array([1,2,3,4]))).not.toBeTruthy();
+  });
 
-test('retry failing each time without delay', async() => {
-  function test(resolve, reject) {
-    reject(new Error('Fail'));
-  }
-
-  await expect(retry(test, 5)).rejects.toThrow();
-});
-
-test('retry succeeds at first try', async() => {
-  function test(resolve) {
-    resolve(true);
-  }
-
-  const success = await retry(test, 5, 10);
-  expect(success).toBeTruthy();
-});
-
-test('retry succeeds at third try', async() => {
-  let count = 0;
-
-  function test(resolve, reject) {
-    count += 1;
-    if(count === 3) {
-      resolve(true);
-    } else {
+  it('retry failing each time', async() => {
+    function test(resolve, reject) {
       reject(new Error('Fail'));
     }
-  }
 
-  const success = await retry(test, 5, 10);
-  expect(success).toBeTruthy();
-});
+    await expect(retry(test, 5, 10)).rejects.toThrow();
+  });
 
-test('check invalid layout', async() => {
-  const valid = isValidLayout('invalid');
-  expect(valid).not.toBeTruthy();
-});
+  it('retry failing each time without delay', async() => {
+    function test(resolve, reject) {
+      reject(new Error('Fail'));
+    }
 
-test('check valid layout', async() => {
-  const valid = isValidLayout('#A_L_00#');
-  expect(valid).toBeTruthy();
-});
+    await expect(retry(test, 5)).rejects.toThrow();
+  });
 
-test('possible EFM8', async() => {
-  const types = getPossibleTypes(0xE8B1);
+  it('retry succeeds at first try', async() => {
+    function test(resolve) {
+      resolve(true);
+    }
 
-  expect(types.length).toBe(2);
-});
+    const success = await retry(test, 5, 10);
+    expect(success).toBeTruthy();
+  });
 
-test('possible AM32', async() => {
-  const types = getPossibleTypes(0x1f06);
+  it('retry succeeds at third try', async() => {
+    let count = 0;
 
-  expect(types.length).toBe(1);
-});
+    function test(resolve, reject) {
+      count += 1;
+      if(count === 3) {
+        resolve(true);
+      } else {
+        reject(new Error('Fail'));
+      }
+    }
 
-test('possible BLHeli Silabs', async() => {
-  const types = getPossibleTypes(0xF310);
+    const success = await retry(test, 5, 10);
+    expect(success).toBeTruthy();
+  });
 
-  expect(types.length).toBe(1);
-});
+  it('check invalid layout', async() => {
+    const valid = isValidLayout('invalid');
+    expect(valid).not.toBeTruthy();
+  });
 
-test('possible BLHeli Atmel', async() => {
-  const types = getPossibleTypes(0x9307);
+  it('check valid layout', async() => {
+    const valid = isValidLayout('#A_L_00#');
+    expect(valid).toBeTruthy();
+  });
 
-  expect(types.length).toBe(1);
+  it('possible EFM8', async() => {
+    const types = getPossibleTypes(0xE8B1);
+
+    expect(types.length).toBe(2);
+  });
+
+  it('possible AM32', async() => {
+    const types = getPossibleTypes(0x1f06);
+
+    expect(types.length).toBe(1);
+  });
+
+  it('possible BLHeli Silabs', async() => {
+    const types = getPossibleTypes(0xF310);
+
+    expect(types.length).toBe(1);
+  });
+
+  it('possible BLHeli Atmel', async() => {
+    const types = getPossibleTypes(0x9307);
+
+    expect(types.length).toBe(1);
+  });
 });

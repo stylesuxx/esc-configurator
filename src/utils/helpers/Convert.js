@@ -1,8 +1,10 @@
-import { EEPROM } from '../../sources/Blheli';
+import config from '../../sources/Blheli';
+
+const eeprom = config.getEeprom();
 
 class Convert {
   static modeToString(mode) {
-    for (const [key, value] of Object.entries(EEPROM.MODES)) {
+    for (const [key, value] of Object.entries(eeprom.MODES)) {
       if (value === mode) {
         return key;
       }

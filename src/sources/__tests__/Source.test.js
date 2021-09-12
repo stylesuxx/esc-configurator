@@ -26,6 +26,13 @@ describe('Source', () => {
     expect(escs).toStrictEqual({});
   });
 
+  it('should return local escs', async() => {
+    localStorage.setItem('BLHeli_escs', '{}');
+
+    let escs = await blheliSource.getLocalEscs();
+    expect(escs).toStrictEqual({});
+  });
+
   it('should return BLHeli_S versions', async() => {
     let versions = await blheliSource.getVersions();
     expect(versions).not.toBe({});

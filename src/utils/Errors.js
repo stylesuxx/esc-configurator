@@ -77,12 +77,20 @@ class FileNotAvailableError extends Error {
   }
 }
 
+class LocalDataNotAvailableError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'LocalDataNotAvailableError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   EscInitError,
   EscLockedError,
   FileNotAvailableError,
   InvalidHexFileError,
+  LocalDataNotAvailableError,
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
