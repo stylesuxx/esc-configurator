@@ -29,7 +29,7 @@
   "escPPMMaxThrottle": "PPM Max Schub",
   "statusbarPortUtilization": "Port-Auslastung:",
   "statusbarPacketError": "Paket-Fehler:",
-  "escRampupPower": "RPM Leistungsschutz (Rampup)",
+  "escRampupPower": "Drehzahl Leistungsschutz (Rampup)",
   "escMinStartupPower": "Minimale Startleistung (Boost)",
   "escMaxStartupPower": "Maximale Startleistung (Schutz)",
   "escButtonFirmwareDump": "Firmware dumpen",
