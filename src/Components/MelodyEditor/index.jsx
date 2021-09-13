@@ -228,10 +228,6 @@ function MelodyEditor({
     setAcceptedMelodies([...acceptedMelodies]);
   }
 
-  function handleChildClick(e) {
-    e.stopPropagation();
-  }
-
   function handleSave() {
     setCurrentMelodies([...acceptedMelodies]);
     onWrite(acceptedMelodies);
@@ -330,13 +326,14 @@ function MelodyEditor({
   });
 
   return (
-    <div
-      id="melody-editor"
-      onClick={handleClose}
-    >
+    <div id="melody-editor">
+      <div
+        className="backdrop"
+        onClick={handleClose}
+      />
+
       <div
         className="melody-editor-wrapper"
-        onClick={handleChildClick}
       >
         <div
           className="close"
