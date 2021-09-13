@@ -205,9 +205,9 @@ const MelodyElement = forwardRef(({
       <div className="esc-melody">
         <header>
           <div className="index">
-            <h3>
+            <h4>
               {label}
-            </h3>
+            </h4>
           </div>
 
           <div className="default-btn">

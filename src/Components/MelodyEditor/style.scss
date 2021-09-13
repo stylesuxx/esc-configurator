@@ -1,13 +1,14 @@
 #melody-editor {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 0px;
-  top: 0px;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .overlay {
+    .overlay__wrapper {
+      max-width: 960px;
+      width: 80%;
+
+      @media screen and (max-width: 600px) {
+        width: 90%;
+      }
+    }
+  }
 
   .line-wrapper {
     margin-top: 20px;
@@ -83,80 +84,59 @@
     }
   }
 
-  .melody-editor-wrapper {
-    padding: 10px;
-    background: white;
-    max-width: 960px;
-    width: 80%;
-    position: relative;
-
-    @media screen and (max-width: 600px) {
-      width: 90%;
-    }
-
-    .sync-wrapper {
-
-      .checkbox {
-        display: flex;
-      }
-    }
-
-    .melody-editor-escs {
+  .sync-wrapper {
+    .checkbox {
       display: flex;
-      flex-wrap: wrap;
-      margin-left: -10px;
-      margin-right: -10px;
+    }
+  }
 
-      &.all {
-        .esc-melody-wrapper {
-          width: 100%;
-        }
+  .melody-editor-escs {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -10px;
+    margin-right: -10px;
+
+    &.all {
+      .esc-melody-wrapper {
+        width: 100%;
       }
     }
+  }
 
-    @media screen and (max-width: 600px) {
-      .melody-editor-escs.single {
-        .esc-melody {
-          margin-top: 5px;
-          margin-bottom: 5px;
+  .button-wrapper {
+    display: flex;
+    justify-content: flex-end;
 
-          header {
-            flex-direction: column;
-            border: 0px;
-            padding-bottom: 0px;
-            margin-bottom: 4px;
+    button {
+      width: 100px;
+      margin-left: 15px;
+    }
+  }
 
-            .default-btn {
-              margin-top: 2px;
-              margin-left: -2px;
-              margin-right: -2px;
+  @media screen and (max-width: 600px) {
+    .melody-editor-escs.single {
+      .esc-melody {
+        margin-top: 5px;
+        margin-bottom: 5px;
 
-              button {
-                margin-left: 2px;
-                margin-right: 2px;
-              }
+        header {
+          flex-direction: column;
+          border: 0px;
+          padding-bottom: 0px;
+          margin-bottom: 4px;
+
+          .default-btn {
+            margin-top: 2px;
+            margin-left: -2px;
+            margin-right: -2px;
+
+            button {
+              margin-left: 2px;
+              margin-right: 2px;
             }
           }
         }
       }
-    }
-
-    .button-wrapper {
-      display: flex;
-      justify-content: flex-end;
-
-      button {
-        width: 100px;
-        margin-left: 15px;
-      }
-    }
-
-    .close {
-      cursor: pointer;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-weight: bold;
     }
   }
 }

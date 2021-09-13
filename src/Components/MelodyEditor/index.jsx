@@ -7,9 +7,10 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import './style.scss';
 
-import LabeledSelect from '../Input/LabeledSelect';
 import Checkbox from '../Input/Checkbox';
+import LabeledSelect from '../Input/LabeledSelect';
 import MelodyElement from './MelodyElement';
+import Overlay from '../Overlay';
 
 function SaveMelody({ onSave }) {
   const { t } = useTranslation();
@@ -327,25 +328,10 @@ function MelodyEditor({
 
   return (
     <div id="melody-editor">
-      <div
-        className="backdrop"
-        onClick={handleClose}
-      />
-
-      <div
-        className="melody-editor-wrapper"
+      <Overlay
+        headline={t('common:melodyEditorHeader')}
+        onClose={handleClose}
       >
-        <div
-          className="close"
-          onClick={handleClose}
-        >
-          {t('settings:closeText')}
-        </div>
-
-        <h3>
-          {t('common:melodyEditorHeader')}
-        </h3>
-
         <div className="line-wrapper">
           <div className="sync-wrapper">
             <Checkbox
@@ -408,7 +394,7 @@ function MelodyEditor({
               {t('common:melodyEditorWrite')}
             </button>}
         </div>
-      </div>
+      </Overlay>
     </div>
   );
 }

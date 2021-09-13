@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Checkbox from '../Input/Checkbox';
+import Overlay from '../Overlay';
 
 import './style.scss';
 
@@ -41,33 +42,15 @@ function AppSettings({
   });
 
   return (
-    <div
-      className="settings"
-    >
-      <div
-        className="backdrop"
-        onClick={onClose}
-      />
-    
-      <div
-        className="settings__wrapper"
+    <div className="settings">
+      <Overlay
+        headline={t('settingsHeader')}
+        onClose={onClose}
       >
-        <div
-          className="settings__close"
-          onClick={onClose}
-          type="button"
-        >
-          {t('closeText')}
-        </div>
-
-        <h3>
-          {t('settingsHeader')}
-        </h3>
-
         <div>
           {settingElements}
         </div>
-      </div>
+      </Overlay>
     </div>
   );
 }
