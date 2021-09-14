@@ -5,17 +5,19 @@ import {
 import { MODES } from '../FourWayConstants';
 import { findMCU } from './General';
 
-import bluejayConfig from '../../sources/Bluejay';
-import blheliConfig from '../../sources/Blheli';
-import am32Config from '../../sources/AM32';
+import {
+  am32Source,
+  blheliSource,
+  bluejaySource,
+} from '../../sources';
 
-const blheliEscs = blheliConfig.getLocalEscs();
-const blheliEeprom = blheliConfig.getEeprom();
+const blheliEscs = blheliSource.getLocalEscs();
+const blheliEeprom = blheliSource.getEeprom();
 
-const bluejayEscs = bluejayConfig.getLocalEscs();
-const bluejayEeprom = bluejayConfig.getEeprom();
+const bluejayEscs = bluejaySource.getLocalEscs();
+const bluejayEeprom = bluejaySource.getEeprom();
 
-const am32Escs = am32Config.getLocalEscs();
+const am32Escs = am32Source.getLocalEscs();
 
 class MCU {
   constructor(interfaceMode, signature) {

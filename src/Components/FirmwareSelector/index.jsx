@@ -9,25 +9,24 @@ import {
   getPossibleTypes,
 } from '../../utils/helpers/General';
 
-import blheliConfig from '../../sources/Blheli';
-import bluejayConfig from '../../sources/Bluejay';
+import {
+  ARM_TYPES,
+  PLATFORMS,
+  SILABS_TYPES,
+  blheliSource,
+  bluejaySource,
+} from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
 
-const blheliEeprom = blheliConfig.getEeprom();
-const bluejayEeprom = bluejayConfig.getEeprom();
+import './style.scss';
+
+const blheliEeprom = blheliSource.getEeprom();
+const bluejayEeprom = bluejaySource.getEeprom();
 
 const blheliTypes = blheliEeprom.TYPES;
 const blheliModes = blheliEeprom.MODES;
 const bluejayTypes = bluejayEeprom.TYPES;
-
-import {
-  PLATFORMS,
-  SILABS_TYPES,
-  ARM_TYPES,
-} from '../../sources';
-
-import './style.scss';
 
 function FirmwareSelector({
   onCancel,

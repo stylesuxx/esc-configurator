@@ -10,17 +10,11 @@ import {
   UnknownPlatformError,
 } from './Errors';
 
-import am32Config from '../sources/AM32';
-import blheliConfig from '../sources/Blheli';
-import bluejayConfig from '../sources/Bluejay';
-
-const blheliEscs = blheliConfig.getLocalEscs();
-const blheliEeprom = blheliConfig.getEeprom();
-
-const bluejayEscs = bluejayConfig.getLocalEscs();
-const bluejayEeprom = bluejayConfig.getEeprom();
-
-const am32Eeprom = am32Config.getEeprom();
+import {
+  am32Source,
+  blheliSource,
+  bluejaySource,
+} from '../sources';
 
 import {
   canMigrate,
@@ -44,6 +38,14 @@ import {
   SILABS_MODES,
 } from './FourWayConstants';
 import { NotEnoughDataError } from './helpers/QueueProcessor';
+
+const blheliEscs = blheliSource.getLocalEscs();
+const blheliEeprom = blheliSource.getEeprom();
+
+const bluejayEscs = bluejaySource.getLocalEscs();
+const bluejayEeprom = bluejaySource.getEeprom();
+
+const am32Eeprom = am32Source.getEeprom();
 
 class FourWay {
   constructor(serial) {
@@ -392,7 +394,7 @@ class FourWay {
             displayName = `${make} - JESC, ${revision}`;
           } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
-            displayName = bluejayConfig.buildDisplayName(flash, make);
+            displayName = bluejaySource.buildDisplayName(flash, make);
           } else if (layoutName in blheliLayouts) {
             make = blheliLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
@@ -464,7 +466,7 @@ class FourWay {
               }
             }
 
-            displayName = blheliConfig.buildDisplayName(flash, make);
+            displayName = blheliSource.buildDisplayName(flash, make);
           }
         } else if (isArm) {
           /* Read version information direct from EEPROM so we can later
@@ -506,7 +508,7 @@ class FourWay {
           flash.settings.SUB_REVISION = subRevision;
           flash.settings.LAYOUT = flash.settings.NAME;
 
-          displayName = am32Config.buildDisplayName(flash, flash.settings.NAME);
+          displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
         } else {
           const blheliAtmelLayouts = blheliEscs.layouts[blheliEeprom.TYPES.ATMEL];
           if (layoutName in blheliAtmelLayouts) {

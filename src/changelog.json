@@ -9,7 +9,9 @@
       "Chore: Removed old Bluejay versions",
       "Bugfix: Dump the proper ESC instead of defaulting to the last one",
       "Bugfix: Update the proper ESC after flashing a single ESC",
-      "Refactor: Removed firmware and ESC files - use the ones from the coresponding repository instead"
+      "Refactor: Removed firmware and ESC files - use the ones from the coresponding repository instead",
+      "Refactor: Overlay component",
+      "Added more melodies"
     ]
   },
   {

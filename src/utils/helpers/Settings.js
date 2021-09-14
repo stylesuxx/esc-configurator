@@ -1,6 +1,6 @@
-import blheliConfig from '../../sources/Blheli';
+import { blheliSource } from '../../sources';
 
-const blheliEeprom = blheliConfig.getEeprom();
+const blheliEeprom = blheliSource.getEeprom();
 
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);

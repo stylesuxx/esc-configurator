@@ -1,17 +1,19 @@
-import am32Config from '../../sources/AM32';
-import blheliConfig from '../../sources/Blheli';
-import bluejayConfig from '../../sources/Bluejay';
+import {
+  am32Source,
+  blheliSource,
+  bluejaySource,
+} from '../../sources';
 
-const am32Escs = am32Config.getLocalEscs();
-const am32Eeprom = am32Config.getEeprom();
+const am32Escs = am32Source.getLocalEscs();
+const am32Eeprom = am32Source.getEeprom();
 const am32Types = am32Eeprom.TYPES;
 
-const blheliEscs = blheliConfig.getLocalEscs();
-const blheliEeprom = blheliConfig.getEeprom();
+const blheliEscs = blheliSource.getLocalEscs();
+const blheliEeprom = blheliSource.getEeprom();
 const blheliTypes = blheliEeprom.TYPES;
 
-const bluejayEscs = bluejayConfig.getLocalEscs();
-const bluejayEeprom = bluejayConfig.getEeprom();
+const bluejayEscs = bluejaySource.getLocalEscs();
+const bluejayEeprom = bluejaySource.getEeprom();
 const bluejayTypes = bluejayEeprom.TYPES;
 
 function compare(a, b) {

@@ -1,11 +1,13 @@
-import blheliConfig from '../../../sources/Blheli';
-import am32Config from '../../../sources/AM32';
-import bluejayConfig from '../../../sources/Bluejay';
+import {
+  am32Source,
+  blheliSource,
+  bluejaySource,
+} from '../../../sources';
 
 const populateLocalStorage = async() => {
-  await blheliConfig.getEscs();
-  await am32Config.getEscs();
-  await bluejayConfig.getEscs();
+  await am32Source.getEscs();
+  await blheliSource.getEscs();
+  await bluejaySource.getEscs();
 };
 
 export default populateLocalStorage;

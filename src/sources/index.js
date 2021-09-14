@@ -8,14 +8,10 @@ import blheliSource from './Blheli';
 import bluejaySource from './Bluejay';
 import am32Source from './AM32';
 
-// TODO: Needs implementation
-// import blheliMConfig from './BlheliM';
-
 const sources = [
   bluejaySource,
   blheliSource,
   am32Source,
-  // blheliMConfig,
 ];
 
 export {
