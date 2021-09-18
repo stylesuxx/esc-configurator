@@ -25,6 +25,7 @@ function FirmwareSelector({
   onLocalSubmit,
   onSubmit,
   selectedMode,
+  showUnstable,
   warning,
 }) {
   const { t } = useTranslation('common');
@@ -91,8 +92,11 @@ function FirmwareSelector({
         name: layout.name,
       }));
 
-      const versionsSelected = versions[selection.firmware];
-      const versionOptions = Object.values(versionsSelected).map((version) => ({
+      const versionsSelected = Object.values(
+        versions[selection.firmware].filter((v) => showUnstable || !v.prerelease)
+      );
+
+      const versionOptions = versionsSelected.map((version) => ({
         key: version.key,
         value: version.url,
         name: version.name,
@@ -379,6 +383,7 @@ FirmwareSelector.propTypes = {
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
+  showUnstable: PropTypes.bool.isRequired,
   warning: PropTypes.string,
 };
 
