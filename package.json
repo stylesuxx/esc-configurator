@@ -44,7 +44,8 @@
     "test:coverage": "yarn test --coverage --watchAll=false",
     "codecov": "yarn test:coverage && codecov",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src --ext .jsx,.js"
+    "lint": "eslint ./src --ext .jsx,.js",
+    "lint-commit": "git diff --name-only --cached | grep -E '(.js|.jsx)$' | xargs yarn eslint"
   },
   "eslintConfig": {
     "extends": [
@@ -92,7 +93,7 @@
     "coveragePathIgnorePatterns": [".*Mocked.*"]
   },
   "pre-commit": [
-    "lint"
+    "lint-commit"
   ],
   "pre-push": [
     "test:coverage"
