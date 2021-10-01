@@ -1,5 +1,6 @@
 import Source, { PLATFORMS } from '../Source.js';
 import eeprom from './eeprom';
+import * as escsjson from '../Blheli/blheli_escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 const ESCS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_escs.json';
@@ -19,6 +20,10 @@ class BluejaySource extends Source {
     const name = `${settings.NAME.trim()}`;
 
     return `${make} - ${name}, ${revision}${pwm}`;
+  }
+
+  getMcuSignatures() {
+    return escsjson.signatures['BLHeli_S SiLabs'];
   }
 }
 

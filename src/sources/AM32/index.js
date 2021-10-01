@@ -1,5 +1,6 @@
 import Source, { PLATFORMS } from '../Source';
 import eeprom from './eeprom';
+import * as escsjson from './escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/versions.json';
 const ESCS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/escs.json';
@@ -19,6 +20,10 @@ class AM32Source extends Source {
     const bootloader = flash.bootloader.valid ? `, Bootloader v${flash.bootloader.version} (${flash.bootloader.pin})` : ', Bootloader unknown';
 
     return `${make} - AM32, ${revision}${bootloader}`;
+  }
+
+  getMcuSignatures() {
+    return escsjson.signatures.Arm;
   }
 }
 

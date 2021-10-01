@@ -112,28 +112,24 @@ const isValidLayout = (layout) => {
 };
 
 const getPossibleTypes = (signature) => {
-  const am32Escs = am32Source.getLocalEscs();
-  const blheliEscs = blheliSSource.getLocalEscs();
-  const bluejayEscs = bluejaySource.getLocalEscs();
-
   const types = [];
-  if(findMCU(signature, bluejayEscs.signatures[bluejayTypes.EFM8])) {
+  if(findMCU(signature, bluejaySource.getMcuSignatures())) {
     types.push(bluejayTypes.EFM8);
   }
 
-  if (findMCU(signature, blheliEscs.signatures[blheliTypes.BLHELI_S_SILABS])) {
+  if (findMCU(signature, blheliSSource.getMcuSignatures())) {
     types.push(blheliTypes.BLHELI_S_SILABS);
   }
 
-  if (findMCU(signature, blheliEscs.signatures[blheliTypes.SILABS])) {
+  if (findMCU(signature, blheliSilabsSource.getMcuSignatures())) {
     types.push(blheliTypes.SILABS);
   }
 
-  if (findMCU(signature, blheliEscs.signatures[blheliTypes.ATMEL])) {
+  if (findMCU(signature, blheliSource.getMcuSignatures())) {
     types.push(blheliTypes.ATMEL);
   }
 
-  if (findMCU(signature, am32Escs.signatures[am32Types.ARM])) {
+  if (findMCU(signature, am32Source.getMcuSignatures())) {
     types.push(am32Types.ARM);
   }
 

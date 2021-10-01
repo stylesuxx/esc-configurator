@@ -1,5 +1,6 @@
 import Source, { PLATFORMS } from '../Source';
 import eeprom from './eeprom';
+import * as escsjson from './blheli_escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
 const ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_escs.json';
@@ -18,14 +19,22 @@ class BLHeliSource extends Source {
 
     return `${make} - BLHeli_S, ${revision}`;
   }
+
+  getMcuSignatures() {
+    return escsjson.signatures.Atmel;
+  }
 }
 
 class BLHeliSilabsSource extends BLHeliSource {
-
+  getMcuSignatures() {
+    return escsjson.signatures.SiLabs;
+  }
 }
 
 class BLHeliSSource extends BLHeliSource {
-
+  getMcuSignatures() {
+    return escsjson.signatures['BLHeli_S SiLabs'];
+  }
 }
 
 const pwmOptions = [];
