@@ -64,7 +64,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -139,7 +138,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -185,7 +183,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -236,7 +233,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -282,7 +278,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const mspFeatures = { '3D': true };
@@ -331,7 +326,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -381,7 +375,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [
@@ -508,7 +501,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [
@@ -640,7 +632,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [
@@ -767,7 +758,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -819,7 +809,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [

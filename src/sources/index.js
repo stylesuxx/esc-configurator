@@ -1,5 +1,3 @@
-import { PLATFORMS } from './Source';
-
 import am32Source from './AM32';
 
 import {
@@ -17,7 +15,6 @@ const sources = [
 ];
 
 export {
-  PLATFORMS,
   am32Source,
   blheliSource,
   blheliSilabsSource,

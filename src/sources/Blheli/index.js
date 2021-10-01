@@ -1,4 +1,4 @@
-import Source, { PLATFORMS } from '../Source';
+import Source from '../Source';
 import eeprom from './eeprom';
 import * as escsjson from './blheli_escs.json';
 
@@ -64,7 +64,6 @@ class BLHeliSSource extends BLHeliSource {
 const pwmOptions = [];
 const blheliSource = new BLHeliSource(
   'BLHeli',
-  'PLATFORMS.ATMEL', // TODO
   VERSIONS_REMOTE,
   ESCS_REMOTE,
   eeprom,
@@ -73,7 +72,6 @@ const blheliSource = new BLHeliSource(
 
 const blheliSilabsSource = new BLHeliSilabsSource(
   'BLHeli',
-  PLATFORMS.SILABS,
   VERSIONS_REMOTE,
   ESCS_REMOTE,
   eeprom,
@@ -82,7 +80,6 @@ const blheliSilabsSource = new BLHeliSilabsSource(
 
 const blheliSSource = new BLHeliSSource(
   'BLHeli_S',
-  PLATFORMS.SILABS,
   VERSIONS_REMOTE,
   ESCS_REMOTE,
   eeprom,

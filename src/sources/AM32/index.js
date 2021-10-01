@@ -1,4 +1,4 @@
-import Source, { PLATFORMS } from '../Source';
+import Source from '../Source';
 import eeprom from './eeprom';
 import * as escsjson from './escs.json';
 
@@ -38,7 +38,6 @@ class AM32Source extends Source {
 const pwmOptions = [];
 const source = new AM32Source(
   'AM32',
-  PLATFORMS.ARM,
   VERSIONS_REMOTE,
   ESCS_REMOTE,
   eeprom,

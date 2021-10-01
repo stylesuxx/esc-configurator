@@ -27,7 +27,6 @@ describe('FirmwareSelector', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const onSubmit = jest.fn();
@@ -62,7 +61,6 @@ describe('FirmwareSelector', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -71,7 +69,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.platforms[name] = source.getPlatform();
       configs.pwm[name] = source.getPwm();
     }
 
@@ -173,7 +170,6 @@ describe('FirmwareSelector', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -182,7 +178,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.platforms[name] = source.getPlatform();
       configs.pwm[name] = source.getPwm();
     }
 

@@ -4,13 +4,12 @@ import {
 } from '../utils/Errors';
 
 class Source {
-  constructor(name, platform, versions, escs, eeprom, pwm) {
-    if(!name || platform === undefined || !versions || !escs || !eeprom || !pwm) {
-      throw new Error("Parameters required: name, platform, versions, escs, eeprom, localVersions, localEscs, pwm");
+  constructor(name, versions, escs, eeprom, pwm) {
+    if(!name || !versions || !escs || !eeprom || !pwm) {
+      throw new Error("Parameters required: name, versions, escs, eeprom, pwm");
     }
 
     this.name = name;
-    this.platform = platform;
     this.versions = versions;
     this.escs = escs;
     this.eeprom = eeprom;
@@ -32,10 +31,6 @@ class Source {
 
   buildDisplayName() {
     throw new Error("Method buildDisplayName not implemented");
-  }
-
-  getPlatform() {
-    return this.platform;
   }
 
   getName() {
@@ -99,14 +94,5 @@ class Source {
     return this.eeprom;
   }
 }
-
-const PLATFORMS = {
-  SILABS: 0,
-  ARM: 1,
-};
-
-export {
-  PLATFORMS,
-};
 
 export default Source;

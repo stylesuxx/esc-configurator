@@ -9,10 +9,7 @@ import {
   getSupportedSources,
 } from '../../utils/helpers/General';
 
-import {
-  PLATFORMS,
-  blheliSource,
-} from '../../sources';
+import { blheliSource } from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
 
@@ -35,7 +32,6 @@ function FirmwareSelector({
     escs,
     versions,
     pwm,
-    platforms,
   } = configs;
 
   const [esc, setEsc] = useState(null);
@@ -386,7 +382,6 @@ FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
-    platforms: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,
   }).isRequired,
   escHint: PropTypes.string,

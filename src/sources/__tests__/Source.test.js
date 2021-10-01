@@ -43,11 +43,6 @@ describe('Source', () => {
     expect(escs).not.toBe({});
   });
 
-  it('should return platform', async() => {
-    const platform = await blheliSSource.getPlatform();
-    expect(platform).toBe(0);
-  });
-
   it('should return name', async() => {
     const name = await blheliSSource.getName();
     expect(name).toBe('BLHeli_S');
