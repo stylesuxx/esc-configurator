@@ -19,7 +19,7 @@ class AM32Source extends Source {
 
     const bootloader = flash.bootloader.valid ? `, Bootloader v${flash.bootloader.version} (${flash.bootloader.pin})` : ', Bootloader unknown';
 
-    return `${make} - AM32, ${revision}${bootloader}`;
+    return `${make} - ${this.name}, ${revision}${bootloader}`;
   }
 
   getEscLayouts() {

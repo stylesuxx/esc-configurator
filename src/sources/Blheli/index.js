@@ -17,7 +17,7 @@ class BLHeliSource extends Source {
       make += ` (Probably mistagged: ${flash.actualMake})`;
     }
 
-    return `${make} - BLHeli_S, ${revision}`;
+    return `${make} - ${this.name}, ${revision}`;
   }
 
   getEscLayouts() {
