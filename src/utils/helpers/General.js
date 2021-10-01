@@ -1,4 +1,4 @@
-import {
+import sources, {
   am32Source,
   blheliSource,
   blheliSilabsSource,
@@ -94,22 +94,7 @@ async function retry(func, maxRetries, iterationDelay = null) {
 const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === parseInt(signature, 10));
 
 // Check if a given layout is available in any of the sources
-const isValidLayout = (layout) => {
-  const am32Escs = am32Source.getLocalEscs();
-  const blheliEscs = blheliSSource.getLocalEscs();
-  const bluejayEscs = bluejaySource.getLocalEscs();
-
-  if(bluejayEscs.layouts[bluejayTypes.EFM8][layout] ||
-     blheliEscs.layouts[blheliTypes.ATMEL][layout] ||
-     am32Escs.layouts[am32Types.ARM][layout] ||
-     blheliTypes.BLHELI_S_SILABS[layout] ||
-     blheliTypes.SILABS[layout]
-  ) {
-    return true;
-  }
-
-  return false;
-};
+const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
 
 const getPossibleTypes = (signature) => {
   const types = [];

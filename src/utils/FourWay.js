@@ -61,10 +61,6 @@ class FourWay {
     this.parseMessage = this.parseMessage.bind(this);
 
     this.extendedDebug = false;
-
-    this.blheliEscs = blheliSSource.getLocalEscs();
-    this.bluejayEscs = bluejaySource.getLocalEscs();
-
   }
 
   setExtendedDebug(extendedDebug) {
@@ -381,9 +377,9 @@ class FourWay {
         const layoutName = (flash.settings.LAYOUT || '').trim();
         let make = null;
         if (isSiLabs) {
-          const blheliSilabsLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.SILABS];
-          const blheliSLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.BLHELI_S_SILABS];
-          const bluejayLayouts = this.bluejayEscs.layouts[bluejayEeprom.TYPES.EFM8];
+          const blheliSilabsLayouts = blheliSilabsSource.getEscLayouts();
+          const blheliSLayouts = blheliSSource.getEscLayouts();
+          const bluejayLayouts = bluejaySource.getEscLayouts();
 
           if (flash.settings.NAME === 'JESC') {
             make = blheliSLayouts[layoutName].name;
@@ -512,7 +508,7 @@ class FourWay {
 
           displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
         } else {
-          const blheliAtmelLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.ATMEL];
+          const blheliAtmelLayouts = blheliSource.getEscLayouts();
           if (layoutName in blheliAtmelLayouts) {
             make = blheliAtmelLayouts[layoutName].name;
           }

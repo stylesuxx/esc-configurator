@@ -20,18 +20,30 @@ class BLHeliSource extends Source {
     return `${make} - BLHeli_S, ${revision}`;
   }
 
+  getEscLayouts() {
+    return escsjson.layouts.Atmel;
+  }
+
   getMcuSignatures() {
     return escsjson.signatures.Atmel;
   }
 }
 
 class BLHeliSilabsSource extends BLHeliSource {
+  getEscLayouts() {
+    return escsjson.layouts.SiLabs;
+  }
+
   getMcuSignatures() {
     return escsjson.signatures.SiLabs;
   }
 }
 
 class BLHeliSSource extends BLHeliSource {
+  getEscLayouts() {
+    return escsjson.layouts['BLHeli_S SiLabs'];
+  }
+
   getMcuSignatures() {
     return escsjson.signatures['BLHeli_S SiLabs'];
   }

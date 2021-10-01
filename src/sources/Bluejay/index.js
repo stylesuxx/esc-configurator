@@ -22,6 +22,10 @@ class BluejaySource extends Source {
     return `${make} - ${name}, ${revision}${pwm}`;
   }
 
+  getEscLayouts() {
+    return escsjson.layouts['BLHeli_S SiLabs'];
+  }
+
   getMcuSignatures() {
     return escsjson.signatures['BLHeli_S SiLabs'];
   }

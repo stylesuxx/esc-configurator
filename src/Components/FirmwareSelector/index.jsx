@@ -126,10 +126,10 @@ function FirmwareSelector({
       /**
        * Build the actual Option set for the selected firmware
        */
-      const descriptions = escs[selection.firmware].layouts[newType];
+      const layouts = escs[selection.firmware];
       const escOptions = [];
-      for (const layout in descriptions) {
-        const esc = descriptions[layout];
+      for (const layout in layouts) {
+        const esc = layouts[layout];
 
         escOptions.push({
           key: layout,
@@ -247,7 +247,7 @@ function FirmwareSelector({
   }
 
   function handleSubmit() {
-    const escsAll = escs[selection.firmware].layouts[type];
+    const escsAll = escs[selection.firmware];
 
     const format = (str2Format, ...args) =>
       str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );

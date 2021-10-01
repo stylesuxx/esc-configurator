@@ -22,6 +22,10 @@ class AM32Source extends Source {
     return `${make} - AM32, ${revision}${bootloader}`;
   }
 
+  getEscLayouts() {
+    return escsjson.layouts.Arm;
+  }
+
   getMcuSignatures() {
     return escsjson.signatures.Arm;
   }
