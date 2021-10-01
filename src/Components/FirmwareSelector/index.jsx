@@ -83,46 +83,31 @@ function FirmwareSelector({
        * Build the actual Option set for the selected firmware
        */
       const layouts = escs[selection.firmware];
-      const escOptions = [];
-      for (const layout in layouts) {
-        const esc = layouts[layout];
+      const escOptions =  Object.entries(layouts).map(([layout, esc]) => ({
+        key: layout,
+        value: layout,
+        name: esc.name,
+      }));
 
-        escOptions.push({
-          key: layout,
-          value: layout,
-          name: esc.name,
-        });
-      }
-
-      const versionOptions = [];
       const versionsSelected = versions[selection.firmware];
-      for (const version in versionsSelected) {
-        const current = versionsSelected[version];
-        const url = current.url;
-
-        versionOptions.push({
-          key: current.key,
-          value: url,
-          name: current.name,
-        });
-      }
+      const versionOptions = Object.entries(versionsSelected).map(([_, version]) => ({
+        key: version.key,
+        value: version.url,
+        name: version.name,
+      }));
 
       const frequencies = pwm[selection.firmware];
-      const frequencyOptions = frequencies.map((item) => (
-        {
-          key: item,
-          value: item,
-          name: item,
-        }
-      ));
+      const frequencyOptions = frequencies.map((item) => ({
+        key: item,
+        value: item,
+        name: item,
+      }));
 
-      const firmwareOptions = validFirmware.map((key) => (
-        {
-          key,
-          value: key,
-          name: key,
-        }
-      ));
+      const firmwareOptions = validFirmware.map((key) => ({
+        key,
+        value: key,
+        name: key,
+      }));
 
       const modeOptions = [];
       for (const mode in blheliModes) {
