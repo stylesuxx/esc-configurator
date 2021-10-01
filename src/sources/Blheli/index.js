@@ -20,8 +20,25 @@ class BLHeliSource extends Source {
   }
 }
 
+class BLHeliSilabsSource extends BLHeliSource {
+
+}
+
+class BLHeliSSource extends BLHeliSource {
+
+}
+
 const pwmOptions = [];
-const source = new BLHeliSource(
+const blheliSource = new BLHeliSource(
+  'BLHeli',
+  'PLATFORMS.ATMEL', // TODO
+  VERSIONS_REMOTE,
+  ESCS_REMOTE,
+  eeprom,
+  pwmOptions
+);
+
+const blheliSilabsSource = new BLHeliSilabsSource(
   'BLHeli',
   PLATFORMS.SILABS,
   VERSIONS_REMOTE,
@@ -30,4 +47,19 @@ const source = new BLHeliSource(
   pwmOptions
 );
 
-export default source;
+const blheliSSource = new BLHeliSSource(
+  'BLHeli_S',
+  PLATFORMS.SILABS,
+  VERSIONS_REMOTE,
+  ESCS_REMOTE,
+  eeprom,
+  pwmOptions
+);
+
+export {
+  blheliSource,
+  blheliSilabsSource,
+  blheliSSource, 
+};
+
+export default blheliSSource;

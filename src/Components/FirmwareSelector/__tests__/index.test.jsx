@@ -105,7 +105,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Firmware' }), {
       target: {
-        value: 'BLHeli',
+        value: 'BLHeli_S',
         name: 'Firmware',
       },
     });

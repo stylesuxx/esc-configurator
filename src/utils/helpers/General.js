@@ -1,13 +1,15 @@
 import {
   am32Source,
   blheliSource,
+  blheliSilabsSource,
+  blheliSSource,
   bluejaySource,
 } from '../../sources';
 
 const am32Eeprom = am32Source.getEeprom();
 const am32Types = am32Eeprom.TYPES;
 
-const blheliEeprom = blheliSource.getEeprom();
+const blheliEeprom = blheliSSource.getEeprom();
 const blheliTypes = blheliEeprom.TYPES;
 
 const bluejayEeprom = bluejaySource.getEeprom();
@@ -94,7 +96,7 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
 // Check if a given layout is available in any of the sources
 const isValidLayout = (layout) => {
   const am32Escs = am32Source.getLocalEscs();
-  const blheliEscs = blheliSource.getLocalEscs();
+  const blheliEscs = blheliSSource.getLocalEscs();
   const bluejayEscs = bluejaySource.getLocalEscs();
 
   if(bluejayEscs.layouts[bluejayTypes.EFM8][layout] ||
@@ -111,7 +113,7 @@ const isValidLayout = (layout) => {
 
 const getPossibleTypes = (signature) => {
   const am32Escs = am32Source.getLocalEscs();
-  const blheliEscs = blheliSource.getLocalEscs();
+  const blheliEscs = blheliSSource.getLocalEscs();
   const bluejayEscs = bluejaySource.getLocalEscs();
 
   const types = [];

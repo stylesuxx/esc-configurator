@@ -8,16 +8,18 @@ import { findMCU } from './General';
 import {
   am32Source,
   blheliSource,
+  blheliSilabsSource,
+  blheliSSource,
   bluejaySource,
 } from '../../sources';
 
 class MCU {
   constructor(interfaceMode, signature) {
     const am32Escs = am32Source.getLocalEscs();
-    const blheliEscs = blheliSource.getLocalEscs();
+    const blheliEscs = blheliSSource.getLocalEscs();
     const bluejayEscs = bluejaySource.getLocalEscs();
 
-    const blheliEeprom = blheliSource.getEeprom();
+    const blheliEeprom = blheliSSource.getEeprom();
     const bluejayEeprom = bluejaySource.getEeprom();
 
     this.interfaceMode = interfaceMode;

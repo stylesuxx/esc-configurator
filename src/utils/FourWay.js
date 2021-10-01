@@ -13,6 +13,8 @@ import {
 import {
   am32Source,
   blheliSource,
+  blheliSilabsSource,
+  blheliSSource,
   bluejaySource,
 } from '../sources';
 
@@ -39,7 +41,7 @@ import {
 } from './FourWayConstants';
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
-const blheliEeprom = blheliSource.getEeprom();
+const blheliEeprom = blheliSSource.getEeprom();
 const bluejayEeprom = bluejaySource.getEeprom();
 const am32Eeprom = am32Source.getEeprom();
 
@@ -60,7 +62,7 @@ class FourWay {
 
     this.extendedDebug = false;
 
-    this.blheliEscs = blheliSource.getLocalEscs();
+    this.blheliEscs = blheliSSource.getLocalEscs();
     this.bluejayEscs = bluejaySource.getLocalEscs();
 
   }
@@ -379,7 +381,7 @@ class FourWay {
         const layoutName = (flash.settings.LAYOUT || '').trim();
         let make = null;
         if (isSiLabs) {
-          const blheliLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.SILABS];
+          const blheliSilabsLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.SILABS];
           const blheliSLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.BLHELI_S_SILABS];
           const bluejayLayouts = this.bluejayEscs.layouts[bluejayEeprom.TYPES.EFM8];
 
@@ -395,8 +397,8 @@ class FourWay {
           } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
             displayName = bluejaySource.buildDisplayName(flash, make);
-          } else if (layoutName in blheliLayouts) {
-            make = blheliLayouts[layoutName].name;
+          } else if (layoutName in blheliSilabsLayouts) {
+            make = blheliSilabsLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
             make = blheliSLayouts[layoutName].name;
             const splitMake =  make.split('-');
@@ -466,7 +468,7 @@ class FourWay {
               }
             }
 
-            displayName = blheliSource.buildDisplayName(flash, make);
+            displayName = blheliSSource.buildDisplayName(flash, make);
           }
         } else if (isArm) {
           /* Read version information direct from EEPROM so we can later
