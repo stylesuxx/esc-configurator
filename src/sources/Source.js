@@ -1,7 +1,3 @@
-import BLHELI_EEPROM from './Blheli/eeprom';
-import BLUEJAY_EEPROM from './Bluejay/eeprom';
-import AM32_EEPROM from './AM32/eeprom';
-
 import {
   FileNotAvailableError,
   LocalDataNotAvailableError,
@@ -109,19 +105,8 @@ const PLATFORMS = {
   ARM: 1,
 };
 
-const SILABS_TYPES = [
-  BLHELI_EEPROM.TYPES.BLHELI_S_SILABS,
-  BLUEJAY_EEPROM.TYPES.EFM8,
-];
-
-const ARM_TYPES = [
-  AM32_EEPROM.TYPES.ARM,
-];
-
 export {
-  ARM_TYPES,
   PLATFORMS,
-  SILABS_TYPES,
 };
 
 export default Source;

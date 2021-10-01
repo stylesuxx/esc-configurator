@@ -1,8 +1,4 @@
-import {
-  PLATFORMS,
-  SILABS_TYPES,
-  ARM_TYPES,
-} from './Source';
+import { PLATFORMS } from './Source';
 
 import am32Source from './AM32';
 
@@ -22,8 +18,6 @@ const sources = [
 
 export {
   PLATFORMS,
-  SILABS_TYPES,
-  ARM_TYPES,
   am32Source,
   blheliSource,
   blheliSilabsSource,

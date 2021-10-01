@@ -1,7 +1,7 @@
 const EEPROM_OFFSET = 0x1A00;
 const PAGE_SIZE = 0x0200;
 const LAYOUT_SIZE = 0xF0;
-const TYPES = { EFM8: 'EFM8' };
+
 const NAMES = [
   'Bluejay',
   'Bluejay (BETA)',
@@ -587,7 +587,6 @@ const EEPROM = {
   NAMES,
   PAGE_SIZE,
   SETTINGS_DESCRIPTIONS,
-  TYPES,
 };
 
 export default EEPROM;

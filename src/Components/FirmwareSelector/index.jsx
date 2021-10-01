@@ -6,27 +6,19 @@ import React, {
 
 import {
   isValidLayout,
-  getPossibleTypes,
+  getSupportedSources,
 } from '../../utils/helpers/General';
 
 import {
-  ARM_TYPES,
   PLATFORMS,
-  SILABS_TYPES,
   blheliSource,
-  bluejaySource,
 } from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
 
 import './style.scss';
 
-const blheliEeprom = blheliSource.getEeprom();
-const bluejayEeprom = bluejaySource.getEeprom();
-
-const blheliTypes = blheliEeprom.TYPES;
-const blheliModes = blheliEeprom.MODES;
-const bluejayTypes = bluejayEeprom.TYPES;
+const blheliModes = blheliSource.getEeprom().MODES;
 
 function FirmwareSelector({
   onCancel,
@@ -47,12 +39,10 @@ function FirmwareSelector({
   } = configs;
 
   const [esc, setEsc] = useState(null);
-  const [type, setType] = useState(null);
   const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
   const [migrate, setMigrate] = useState(false);
   const [validFirmware, setValidFirmware] = useState([]);
-  const [possibleTypes, setPossibleTypes] = useState([]);
   const [options, setOptions] = useState({
     versions: [],
     frequencies: [],
@@ -72,28 +62,17 @@ function FirmwareSelector({
   // Pre select ESC if escHint is a valid layout
   useEffect(async () => {
     const availableFirmware = Object.keys(escs);
-    const siLabsFirmwares = availableFirmware.filter((name) => platforms[name] === PLATFORMS.SILABS);
-    const armFirmwares = availableFirmware.filter((name) => platforms[name] === PLATFORMS.ARM);
 
-    const types = getPossibleTypes(signatureHint);
-    const siLabs = types.filter((value) => SILABS_TYPES.includes(value));
-    const arm = types.filter((value) => ARM_TYPES.includes(value));
+    const validSources = getSupportedSources(signatureHint);
 
-    const validFirmware = availableFirmware.filter((key) => {
-      if((siLabs.length > 0 && siLabsFirmwares.includes(key)) ||
-         (arm.length > 0 && armFirmwares.includes(key))
-      ) {
-        return true;
-      }
-
-      return false;
-    });
+    const validFirmware = availableFirmware.filter((name) =>
+      validSources.some((s) => s.name === name)
+    );
 
     const newSelection = Object.assign({}, selection, { firmware: validFirmware[0] });
     setSelection(newSelection);
 
     setValidFirmware(validFirmware);
-    setPossibleTypes(types);
     setMode(selectedMode);
 
     if(isValidLayout(escHint)) {
@@ -104,25 +83,6 @@ function FirmwareSelector({
   // Update firmware options when firmware has changed
   useEffect(async () => {
     if(selection.firmware) {
-      /**
-       * If only one type has been returned, that is our selection, in the other
-       * case, we need to set the type based on the selected firmware.
-       */
-      let newType = null;
-      if(possibleTypes.length === 1) {
-        newType = possibleTypes[0];
-      } else {
-        switch(selection.firmware) {
-          case 'Bluejay': {
-            newType = bluejayTypes.EFM8;
-          } break;
-
-          default: {
-            newType = blheliTypes.BLHELI_S_SILABS;
-          }
-        }
-      }
-
       /**
        * Build the actual Option set for the selected firmware
        */
@@ -186,7 +146,6 @@ function FirmwareSelector({
       };
 
       setOptions(currentOptions);
-      setType(newType);
     }
   }, [selection.firmware]);
 

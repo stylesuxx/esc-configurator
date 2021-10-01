@@ -1,19 +1,4 @@
-import sources, {
-  am32Source,
-  blheliSource,
-  blheliSilabsSource,
-  blheliSSource,
-  bluejaySource,
-} from '../../sources';
-
-const am32Eeprom = am32Source.getEeprom();
-const am32Types = am32Eeprom.TYPES;
-
-const blheliEeprom = blheliSSource.getEeprom();
-const blheliTypes = blheliEeprom.TYPES;
-
-const bluejayEeprom = bluejaySource.getEeprom();
-const bluejayTypes = bluejayEeprom.TYPES;
+import sources from '../../sources';
 
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
@@ -96,30 +81,7 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
 // Check if a given layout is available in any of the sources
 const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
 
-const getPossibleTypes = (signature) => {
-  const types = [];
-  if(findMCU(signature, bluejaySource.getMcuSignatures())) {
-    types.push(bluejayTypes.EFM8);
-  }
-
-  if (findMCU(signature, blheliSSource.getMcuSignatures())) {
-    types.push(blheliTypes.BLHELI_S_SILABS);
-  }
-
-  if (findMCU(signature, blheliSilabsSource.getMcuSignatures())) {
-    types.push(blheliTypes.SILABS);
-  }
-
-  if (findMCU(signature, blheliSource.getMcuSignatures())) {
-    types.push(blheliTypes.ATMEL);
-  }
-
-  if (findMCU(signature, am32Source.getMcuSignatures())) {
-    types.push(am32Types.ARM);
-  }
-
-  return types;
-};
+const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcuSignatures()));
 
 export {
   retry,
@@ -128,5 +90,5 @@ export {
   findMCU,
   isValidFlash,
   isValidLayout,
-  getPossibleTypes,
+  getSupportedSources,
 };
