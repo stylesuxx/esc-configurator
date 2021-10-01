@@ -659,7 +659,7 @@ class FourWay {
       /**
        * Migrate settings from the previous firmware if possible.
        */
-      const newSettings = Object.assign({}, newEsc.settings);
+      const newSettings = { ...newEsc.settings };
       const oldSettings = esc.settings;
 
       let settingsDescriptions = null;

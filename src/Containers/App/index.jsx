@@ -388,7 +388,10 @@ class App extends Component {
       const target = esc.index;
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
-      const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
+      const mergedSettings = {
+        ...currentEscSettings,
+        ...defaultSettings, 
+      };
 
       try {
         await this.serial.writeSettings(target, esc, mergedSettings);

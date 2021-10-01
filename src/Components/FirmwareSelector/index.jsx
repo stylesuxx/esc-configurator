@@ -65,7 +65,10 @@ function FirmwareSelector({
       validSources.some((s) => s.name === name)
     );
 
-    const newSelection = Object.assign({}, selection, { firmware: validFirmware[0] });
+    const newSelection = {
+      ...selection,
+      firmware: validFirmware[0], 
+    };
     setSelection(newSelection);
 
     setValidFirmware(validFirmware);
@@ -166,10 +169,11 @@ function FirmwareSelector({
     const selected = e.target.options.selectedIndex;
     const selecteOption = e.target.options[selected];
 
-    const newSelection = Object.assign({}, selection, {
+    const newSelection = {
+      ...selection,
       url: e.target.value,
-      version: selecteOption ? selecteOption.text : 'N/A',
-    });
+      version: selecteOption ? selecteOption.text : 'N/A', 
+    };
     setSelection(newSelection);
   }
 
@@ -182,7 +186,10 @@ function FirmwareSelector({
   }
 
   function handlePwmChange(e) {
-    const newSelection = Object.assign({}, selection, { pwm: e.target.value });
+    const newSelection = {
+      ...selection,
+      pwm: e.target.value, 
+    };
     setSelection(newSelection);
   }
 
