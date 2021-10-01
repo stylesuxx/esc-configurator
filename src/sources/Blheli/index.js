@@ -27,6 +27,10 @@ class BLHeliSource extends Source {
   getMcuSignatures() {
     return escsjson.signatures.Atmel;
   }
+
+  async getVersions() {
+    return (await this.getVersionsList()).Atmel;
+  }
 }
 
 class BLHeliSilabsSource extends BLHeliSource {
@@ -37,6 +41,10 @@ class BLHeliSilabsSource extends BLHeliSource {
   getMcuSignatures() {
     return escsjson.signatures.SiLabs;
   }
+
+  async getVersions() {
+    return (await this.getVersionsList()).Silabs;
+  }
 }
 
 class BLHeliSSource extends BLHeliSource {
@@ -46,6 +54,10 @@ class BLHeliSSource extends BLHeliSource {
 
   getMcuSignatures() {
     return escsjson.signatures['BLHeli_S SiLabs'];
+  }
+
+  async getVersions() {
+    return (await this.getVersionsList())['BLHeli_S SiLabs'];
   }
 }
 

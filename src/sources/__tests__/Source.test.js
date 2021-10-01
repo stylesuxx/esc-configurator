@@ -9,7 +9,7 @@ describe('Source', () => {
   it('should throw with invalid URL', async() => {
     const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid', 'invalid', 'invalid');
 
-    await expect(() => invalidSource.getVersions()).rejects.toThrow();
+    await expect(() => invalidSource.getVersionsList()).rejects.toThrow();
     await expect(() => invalidSource.getEscs()).rejects.toThrow();
   });
 
@@ -19,7 +19,7 @@ describe('Source', () => {
     localStorage.setItem('invalid_versions', '{}');
     localStorage.setItem('invalid_escs', '{}');
 
-    let versions = await invalidSource.getVersions();
+    let versions = await invalidSource.getVersionsList();
     expect(versions).toStrictEqual({});
 
     let escs = await invalidSource.getEscs();

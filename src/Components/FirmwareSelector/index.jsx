@@ -139,7 +139,7 @@ function FirmwareSelector({
       }
 
       const versionOptions = [];
-      const versionsSelected = versions[selection.firmware][newType];
+      const versionsSelected = versions[selection.firmware];
       for (const version in versionsSelected) {
         const current = versionsSelected[version];
         const url = current.url;

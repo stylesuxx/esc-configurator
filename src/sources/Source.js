@@ -50,7 +50,7 @@ class Source {
     return this.pwm;
   }
 
-  async getVersions() {
+  async getVersionsList() {
     const localStorageKey = `${this.getName()}_versions`;
 
     try {

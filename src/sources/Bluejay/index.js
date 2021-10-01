@@ -29,6 +29,10 @@ class BluejaySource extends Source {
   getMcuSignatures() {
     return escsjson.signatures['BLHeli_S SiLabs'];
   }
+
+  async getVersions() {
+    return (await this.getVersionsList()).EFM8;
+  }
 }
 
 const pwmOptions = [24, 48, 96];

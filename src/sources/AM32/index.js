@@ -29,6 +29,10 @@ class AM32Source extends Source {
   getMcuSignatures() {
     return escsjson.signatures.Arm;
   }
+
+  async getVersions() {
+    return (await this.getVersionsList()).Arm;
+  }
 }
 
 const pwmOptions = [];
