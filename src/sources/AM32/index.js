@@ -3,7 +3,6 @@ import eeprom from './eeprom';
 import * as escsjson from './escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/versions.json';
-const ESCS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/escs.json';
 
 class AM32Source extends Source {
   buildDisplayName(flash, make) {
@@ -39,7 +38,6 @@ const pwmOptions = [];
 const source = new AM32Source(
   'AM32',
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
   eeprom,
   pwmOptions
 );

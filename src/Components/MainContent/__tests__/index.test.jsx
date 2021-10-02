@@ -4,8 +4,6 @@ import {
   screen,
 } from '@testing-library/react';
 
-import populateLocalStorage from '../../../utils/helpers/__tests__/LocalStorage';
-
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
 let onWriteSetup;
@@ -26,8 +24,6 @@ let MainContent;
 
 describe('MainContent', () => {
   beforeAll(async () => {
-    await populateLocalStorage();
-
     /**
      * require component instead of import so that we can properly
      * pre-populate the local storage

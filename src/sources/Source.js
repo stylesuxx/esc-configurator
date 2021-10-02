@@ -4,14 +4,13 @@ import {
 } from '../utils/Errors';
 
 class Source {
-  constructor(name, versions, escs, eeprom, pwm) {
-    if(!name || !versions || !escs || !eeprom || !pwm) {
-      throw new Error("Parameters required: name, versions, escs, eeprom, pwm");
+  constructor(name, versions, eeprom, pwm) {
+    if(!name || !versions || !eeprom || !pwm) {
+      throw new Error("Parameters required: name, versions, eeprom, pwm");
     }
 
     this.name = name;
     this.versions = versions;
-    this.escs = escs;
     this.eeprom = eeprom;
     this.pwm = pwm;
 
@@ -58,36 +57,6 @@ class Source {
     }
 
     throw new FileNotAvailableError();
-  }
-
-  async getEscs() {
-    const localStorageKey = `${this.getName()}_escs`;
-
-    try {
-      const result = await this.fetchJson(this.escs);
-      localStorage.setItem(localStorageKey, JSON.stringify(result));
-
-      return result;
-    } catch(e) {
-      const content = localStorage.getItem(localStorageKey);
-
-      if(content !== null) {
-        return (JSON.parse(content));
-      }
-    }
-
-    throw new FileNotAvailableError();
-  }
-
-  getLocalEscs() {
-    const localStorageKey = `${this.getName()}_escs`;
-    const content = localStorage.getItem(localStorageKey);
-
-    if(content !== null) {
-      return (JSON.parse(content));
-    }
-
-    throw new LocalDataNotAvailableError();
   }
 
   getEeprom() {

@@ -3,7 +3,6 @@ import eeprom from './eeprom';
 import * as escsjson from './blheli_escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
-const ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_escs.json';
 
 class BLHeliSource extends Source {
   buildDisplayName(flash, make) {
@@ -65,7 +64,6 @@ const pwmOptions = [];
 const blheliSource = new BLHeliSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
   eeprom,
   pwmOptions
 );
@@ -73,7 +71,6 @@ const blheliSource = new BLHeliSource(
 const blheliSilabsSource = new BLHeliSilabsSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
   eeprom,
   pwmOptions
 );
@@ -81,7 +78,6 @@ const blheliSilabsSource = new BLHeliSilabsSource(
 const blheliSSource = new BLHeliSSource(
   'BLHeli_S',
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
   eeprom,
   pwmOptions
 );

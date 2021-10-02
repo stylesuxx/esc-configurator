@@ -1,5 +1,3 @@
-import populateLocalStorage from '../helpers/__tests__/LocalStorage';
-
 let serial;
 let resolve;
 let reject;
@@ -8,8 +6,6 @@ let FourWay;
 
 describe('FourWay', () => {
   beforeAll(async() => {
-    await populateLocalStorage();
-
     /**
      * require component instead of import so that we can properly
      * pre-populate the local storage

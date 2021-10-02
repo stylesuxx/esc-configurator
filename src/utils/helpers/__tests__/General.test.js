@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-import populateLocalStorage from './LocalStorage';
 import Flash from '../Flash';
 
 
@@ -16,8 +15,6 @@ import {
 
 describe('General', () => {
   beforeAll(async() => {
-    await populateLocalStorage();
-
     /**
      * require component instead of import so that we can properly
      * pre-populate the local storage

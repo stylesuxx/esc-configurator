@@ -3,7 +3,6 @@ import eeprom from './eeprom';
 import * as escsjson from '../Blheli/blheli_escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
-const ESCS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_escs.json';
 
 class BluejaySource extends Source {
   buildDisplayName(flash, make) {
@@ -39,7 +38,6 @@ const pwmOptions = [24, 48, 96];
 const config = new BluejaySource(
   'Bluejay',
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
   eeprom,
   pwmOptions
 );

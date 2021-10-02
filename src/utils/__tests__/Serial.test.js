@@ -1,5 +1,3 @@
-import populateLocalStorage from '../helpers/__tests__/LocalStorage';
-
 jest.setTimeout(60000);
 
 let port;
@@ -14,8 +12,6 @@ let Serial;
 
 describe('Serial', () => {
   beforeAll(async() => {
-    await populateLocalStorage();
-
     /**
      * require component instead of import so that we can properly
      * pre-populate the local storage
