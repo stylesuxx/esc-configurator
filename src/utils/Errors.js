@@ -84,8 +84,16 @@ class LocalDataNotAvailableError extends Error {
   }
 }
 
+class ConversionError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ConversionError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
+  ConversionError,
   EscInitError,
   EscLockedError,
   FileNotAvailableError,

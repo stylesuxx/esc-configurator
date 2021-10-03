@@ -1,4 +1,5 @@
 class Flash {
+
   // Pad data to fixed size
   static fillImage(data, size, flashOffset) {
     var image = new Uint8Array(size).fill(0xFF);

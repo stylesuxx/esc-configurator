@@ -11,16 +11,15 @@ import {
   bluejaySource,
 } from '../../sources';
 
-const blheliEscs = blheliSource.getLocalEscs();
-const blheliEeprom = blheliSource.getEeprom();
-
-const bluejayEscs = bluejaySource.getLocalEscs();
-const bluejayEeprom = bluejaySource.getEeprom();
-
-const am32Escs = am32Source.getLocalEscs();
-
 class MCU {
   constructor(interfaceMode, signature) {
+    const am32Escs = am32Source.getLocalEscs();
+    const blheliEscs = blheliSource.getLocalEscs();
+    const bluejayEscs = bluejaySource.getLocalEscs();
+
+    const blheliEeprom = blheliSource.getEeprom();
+    const bluejayEeprom = bluejaySource.getEeprom();
+
     this.interfaceMode = interfaceMode;
     this.mcu = ((interfaceMode) => {
       switch(interfaceMode) {
@@ -53,6 +52,8 @@ class MCU {
   }
 
   getFlashSize() {
+    const blheliEeprom = blheliSource.getEeprom();
+
     switch(this.interfaceMode) {
       case MODES.SiLC2: {
         return blheliEeprom.SILABS.FLASH_SIZE;
