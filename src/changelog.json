@@ -3,6 +3,8 @@
     "title": "unreleased",
     "items": [
       "Enhancement: Cache firmware versions and layouts - do not store them in the app",
+      "Enhancement: Diable connect/disconnect button when app not idle",
+      "Enhancement: Added more melodies",
       "Wording: Normalized ESCs and BLHeli_S",
       "Bugfix: Fixed min/max properties with slider",
       "Chore: Bluejay settings cleanup",
@@ -11,7 +13,7 @@
       "Bugfix: Update the proper ESC after flashing a single ESC",
       "Refactor: Removed firmware and ESC files - use the ones from the coresponding repository instead",
       "Refactor: Overlay component",
-      "Added more melodies"
+      "Chore: Updated codecov dependency"
     ]
   },
   {
