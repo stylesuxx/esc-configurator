@@ -96,8 +96,6 @@ class Source {
       return (JSON.parse(content));
     }
 
-    console.log(localStorageKey);
-
     throw new LocalDataNotAvailableError();
   }
 
