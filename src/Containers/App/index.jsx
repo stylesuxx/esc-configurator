@@ -75,6 +75,8 @@ class App extends Component {
         isWriting: false,
         isSelecting: false,
         isFlashing: false,
+        isConnecting: false,
+        isDisconnecting: false,
       },
       language: loadLanguage(),
       melodies: {
@@ -731,6 +733,8 @@ class App extends Component {
     } = this.state;
     const { settings } = appSettings;
 
+    this.setActions({ isConnecting: true });
+
     try {
       await this.serial.open(serial.baudRate);
       this.serial.setExtendedDebug(settings.extendedDebug.value);
@@ -810,11 +814,15 @@ class App extends Component {
       this.serial.close();
       this.addLogMessage('portUsed');
     }
+
+    this.setActions({ isConnecting: false });
   }
 
   handleDisconnect = async(e) => {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
+
+    this.setActions({ isDisconnecting: true });
 
     const { escs } = this.state;
     if(this.serial) {
@@ -830,7 +838,6 @@ class App extends Component {
       this.serial.close();
     }
 
-    this.addLogMessage('closedPort');
     this.lastConnected = 0;
 
     this.setSerial({
@@ -845,7 +852,11 @@ class App extends Component {
       isWriting: false,
       isSelecting: false,
       isFlashing: false,
+      isConnecting: false,
+      isDisconnecting: false,
     });
+
+    this.addLogMessage('closedPort');
   }
 
   handleAllMotorSpeed = async(speed) => {

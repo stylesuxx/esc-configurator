@@ -103,6 +103,7 @@ Ports.propTypes = {
 function PortPicker({
   hasPort,
   hasSerial,
+  isIdle,
   open,
   onSetPort,
   onSetBaudRate,
@@ -221,6 +222,7 @@ function PortPicker({
       <div id="connect-button-wrapper">
         <button
           className={`${open ? 'active' : ''}`}
+          disabled={!isIdle}
           name="connect"
           onClick={open ? onDisconnect : onConnect}
           type="button"
@@ -238,12 +240,14 @@ function PortPicker({
 PortPicker.defaultProps = {
   hasPort: false,
   hasSerial: false,
+  isIdle: false,
   open: false,
   ports: [],
 };
 PortPicker.propTypes = {
   hasPort: PropTypes.bool,
   hasSerial: PropTypes.bool,
+  isIdle: PropTypes.bool,
   onChangePort: PropTypes.func.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnect: PropTypes.func.isRequired,
