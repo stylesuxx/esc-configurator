@@ -58,16 +58,14 @@ function FirmwareSelector({
   // Pre select ESC if escHint is a valid layout
   useEffect(async () => {
     const availableFirmware = Object.keys(escs);
-
     const validSources = getSupportedSources(signatureHint);
-
     const validFirmware = availableFirmware.filter((name) =>
-      validSources.some((s) => s.name === name)
+      validSources.some((source) => source.name === name)
     );
 
     const newSelection = {
       ...selection,
-      firmware: validFirmware[0], 
+      firmware: validFirmware[0],
     };
     setSelection(newSelection);
 
@@ -93,7 +91,7 @@ function FirmwareSelector({
       }));
 
       const versionsSelected = versions[selection.firmware];
-      const versionOptions = Object.entries(versionsSelected).map(([_, version]) => ({
+      const versionOptions = Object.values(versionsSelected).map((version) => ({
         key: version.key,
         value: version.url,
         name: version.name,
@@ -172,7 +170,7 @@ function FirmwareSelector({
     const newSelection = {
       ...selection,
       url: e.target.value,
-      version: selecteOption ? selecteOption.text : 'N/A', 
+      version: selecteOption ? selecteOption.text : 'N/A',
     };
     setSelection(newSelection);
   }
@@ -188,7 +186,7 @@ function FirmwareSelector({
   function handlePwmChange(e) {
     const newSelection = {
       ...selection,
-      pwm: e.target.value, 
+      pwm: e.target.value,
     };
     setSelection(newSelection);
   }
