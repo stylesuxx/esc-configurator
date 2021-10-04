@@ -770,4 +770,37 @@ describe('CommonSettings', () => {
       },
     });
   });
+
+  it('should display warning when firmware is unsopported', () => {
+    const availableSettings = {
+      LAYOUT_REVISION: 203,
+      MAIN_REVISION: 1,
+      NAME: 'JESC',
+      SUB_REVISION: 100,
+    };
+
+    const escs = [
+      {
+        meta: { available: true },
+        settings: { MODE: 1 },
+      },
+    ];
+
+    const onFlash = jest.fn();
+    const onSettingsUpdate = jest.fn();
+
+    render(
+      <CustomSettings
+        availableSettings={availableSettings}
+        directInput={false}
+        escs={escs}
+        index={0}
+        onFlash={onFlash}
+        onSettingsUpdate={onSettingsUpdate}
+      />
+    );
+
+    expect(screen.getByText(/unsupportedFirmware/i)).toBeInTheDocument();
+    expect(screen.getByText(/common:useDedicatedConfigurator/i)).toBeInTheDocument();
+  });
 });
