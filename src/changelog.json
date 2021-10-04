@@ -13,6 +13,7 @@
       "Bugfix: Update the proper ESC after flashing a single ESC",
       "Refactor: Removed firmware and ESC files - use the ones from the coresponding repository instead",
       "Refactor: Overlay component",
+      "Refactor: Simplified firmware sources",
       "Chore: Updated codecov dependency"
     ]
   },
