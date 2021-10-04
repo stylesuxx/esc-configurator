@@ -73,14 +73,18 @@ describe('FirmwareSelector', () => {
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
 
+    const escMock = {
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
     const { container } = render(
       <FirmwareSelector
         configs={configs}
-        escHint="#S_H_90#"
+        esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-        signatureHint={59570}
       />
     );
 
@@ -182,14 +186,18 @@ describe('FirmwareSelector', () => {
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
 
+    const escMock = {
+      settings: { LAYOUT: "T-MOTOR 55A" },
+      meta: { signature: 0x1F06 },
+    };
+
     render(
       <FirmwareSelector
         configs={configs}
-        escHint="T-MOTOR 55A"
+        esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-        signatureHint={7942}
       />
     );
 

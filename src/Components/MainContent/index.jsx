@@ -139,12 +139,11 @@ function MainContent({
           <div className="content_wrapper">
             <FirmwareSelector
               configs={configs}
-              escHint={esc ? esc.settings.LAYOUT : null}
+              esc={esc}
               onCancel={onCancelFirmwareSelection}
               onLocalSubmit={onLocalSubmit}
               onSubmit={onFlashUrl}
               showWarning={esc ? true : false}
-              signatureHint={esc ? esc.meta.signature : null}
               warning={warning}
             />
           </div>
