@@ -1,7 +1,6 @@
-import {
-  EEPROM,
-  buildDisplayName,
-} from '../';
+import config from '../';
+
+const EEPROM = config.getEeprom();
 
 describe('AM32', () => {
   it('should handle conditional visibility', () => {
@@ -37,7 +36,7 @@ describe('AM32', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'MAKE');
+    const name = config.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - AM32, 1.100, Bootloader v8 (PB2)');
   });
 
@@ -51,7 +50,7 @@ describe('AM32', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'MAKE');
+    const name = config.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader v8 (PB2)');
   });
 
@@ -65,7 +64,7 @@ describe('AM32', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'MAKE');
+    const name = config.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - AM32, Unsupported/Unrecognized, Bootloader unknown');
   });
 
@@ -79,7 +78,7 @@ describe('AM32', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'NOT READY');
+    const name = config.buildDisplayName(flash, 'NOT READY');
     expect(name).toEqual('NOT READY - AM32, FLASH FIRMWARE, Bootloader v8 (PB2)');
   });
 });

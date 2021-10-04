@@ -5,38 +5,35 @@ import {
 import { MODES } from '../FourWayConstants';
 import { findMCU } from './General';
 
-import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
-
-import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
-import BLHELI_ESCS from '../../sources/Blheli/escs.json';
-import AM32_ESCS from '../../sources/AM32/escs.json';
+import {
+  am32Source,
+  blheliSource,
+  blheliSilabsSource,
+  blheliSSource,
+  bluejaySource,
+} from '../../sources';
 
 class MCU {
   constructor(interfaceMode, signature) {
     this.interfaceMode = interfaceMode;
     this.mcu = ((interfaceMode) => {
       switch(interfaceMode) {
-        case MODES.SiLBLB: {
+        case MODES.SiLBLB: 
           return (
-            findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_EEPROM.TYPES.EFM8]) ||
-            findMCU(signature, BLHELI_ESCS.signatures[BLHELI_EEPROM.TYPES.BLHELI_S_SILABS]) ||
-            findMCU(signature, BLHELI_ESCS.signatures.SiLabs)
+            findMCU(signature, bluejaySource.getMcuSignatures()) ||
+            findMCU(signature, blheliSSource.getMcuSignatures()) ||
+            findMCU(signature, blheliSilabsSource.getMcuSignatures())
           );
-        }
 
         case MODES.AtmBLB:
-        case MODES.AtmSK: {
-          return findMCU(signature, BLHELI_ESCS.signatures.Atmel);
-        }
+        case MODES.AtmSK:
+          return findMCU(signature, blheliSource.getMcuSignatures());
 
-        case MODES.ARMBLB: {
-          return findMCU(signature, AM32_ESCS.signatures.Arm);
-        }
+        case MODES.ARMBLB: 
+          return findMCU(signature, am32Source.getMcuSignatures());
 
-        default: {
+        default: 
           throw new UnknownInterfaceError(interfaceMode);
-        }
       }
     })(interfaceMode);
 
@@ -46,10 +43,11 @@ class MCU {
   }
 
   getFlashSize() {
+    const blheliEeprom = blheliSource.getEeprom();
+
     switch(this.interfaceMode) {
-      case MODES.SiLC2: {
-        return BLHELI_EEPROM.SILABS.FLASH_SIZE;
-      }
+      case MODES.SiLC2:
+        return blheliEeprom.SILABS.FLASH_SIZE;
     }
 
     return this.mcu.flash_size;

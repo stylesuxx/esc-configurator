@@ -1,41 +1,87 @@
-import EEPROM from './eeprom';
-import Source, { PLATFORMS } from '../Source';
-
-import VERSIONS_LOCAL from './versions.json';
-import ESCS_LOCAL from './escs.json';
+import Source from '../Source';
+import eeprom from './eeprom';
+import * as escsjson from './blheli_escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
-const ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_escs.json';
 
-function buildDisplayName(flash, make) {
-  const settings = flash.settings;
-  let revision = 'Unsupported/Unrecognized';
-  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+class BLHeliSource extends Source {
+  buildDisplayName(flash, make) {
+    const settings = flash.settings;
+    let revision = 'Unsupported/Unrecognized';
+    if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+    }
+
+    if (flash.actualMake) {
+      make += ` (Probably mistagged: ${flash.actualMake})`;
+    }
+
+    return `${make} - ${this.name}, ${revision}`;
   }
 
-  if (flash.actualMake) {
-    make += ` (Probably mistagged: ${flash.actualMake})`;
+  getEscLayouts() {
+    return escsjson.layouts.Atmel;
   }
 
-  return `${make} - BlHeli_S, ${revision}`;
+  getMcuSignatures() {
+    return escsjson.signatures.Atmel;
+  }
+
+  async getVersions() {
+    return (await this.getVersionsList()).Atmel;
+  }
 }
 
-const pwmOptions = [];
-const blheliConfig = new Source(
-  'Blheli',
-  PLATFORMS.SILABS,
+class BLHeliSilabsSource extends BLHeliSource {
+  getEscLayouts() {
+    return escsjson.layouts.SiLabs;
+  }
+
+  getMcuSignatures() {
+    return escsjson.signatures.SiLabs;
+  }
+
+  async getVersions() {
+    return (await this.getVersionsList()).Silabs;
+  }
+}
+
+class BLHeliSSource extends BLHeliSource {
+  getEscLayouts() {
+    return escsjson.layouts['BLHeli_S SiLabs'];
+  }
+
+  getMcuSignatures() {
+    return escsjson.signatures['BLHeli_S SiLabs'];
+  }
+
+  async getVersions() {
+    return (await this.getVersionsList())['BLHeli_S SiLabs'];
+  }
+}
+
+const blheliSource = new BLHeliSource(
+  'BLHeli',
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
-  EEPROM,
-  VERSIONS_LOCAL,
-  ESCS_LOCAL,
-  pwmOptions
+  eeprom
+);
+
+const blheliSilabsSource = new BLHeliSilabsSource(
+  'BLHeli',
+  VERSIONS_REMOTE,
+  eeprom
+);
+
+const blheliSSource = new BLHeliSSource(
+  'BLHeli_S',
+  VERSIONS_REMOTE,
+  eeprom
 );
 
 export {
-  buildDisplayName,
-  EEPROM,
+  blheliSource,
+  blheliSilabsSource,
+  blheliSSource,
 };
 
-export default blheliConfig;
+export default blheliSSource;

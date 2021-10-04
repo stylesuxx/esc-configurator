@@ -58,7 +58,7 @@
         {
           "name":"STARTUP_POWER_MIN",
           "type":"number",
-          "label":"_Minimum Startup Power (Boost)",
+          "label":"escMinStartupPower",
           "min":1000,
           "max":1125,
           "step":5,
@@ -69,7 +69,7 @@
         {
           "name":"STARTUP_POWER_MAX",
           "type":"number",
-          "label":"_Maximum Startup Power (Protection)",
+          "label":"escMaxStartupPower",
           "min":1004,
           "max":1300,
           "step":4,
@@ -223,7 +223,7 @@
               "label":"Off"
             }
           ],
-          "label":"_RPM Power Protection (Rampup)"
+          "label":"escRampupPower"
         },
         {
           "name":"BEEP_STRENGTH",
@@ -399,7 +399,7 @@
         {
           "name":"STARTUP_POWER_MIN",
           "type":"number",
-          "label":"_Minimum Startup Power (Boost)",
+          "label":"escMinStartupPower",
           "min":1000,
           "max":1125,
           "step":5,
@@ -410,7 +410,7 @@
         {
           "name":"STARTUP_POWER_MAX",
           "type":"number",
-          "label":"_Maximum Startup Power (Protection)",
+          "label":"escMaxStartupPower",
           "min":1004,
           "max":1300,
           "step":4,
@@ -564,7 +564,7 @@
               "label":"Off"
             }
           ],
-          "label":"_RPM Power Protection (Rampup)"
+          "label":"escRampupPower"
         },
         {
           "name":"BEEP_STRENGTH",
@@ -740,7 +740,7 @@
         {
           "name":"STARTUP_POWER_MIN",
           "type":"number",
-          "label":"_Minimum Startup Power (Boost)",
+          "label":"escMinStartupPower",
           "min":1000,
           "max":1125,
           "step":5,
@@ -751,7 +751,7 @@
         {
           "name":"STARTUP_POWER_MAX",
           "type":"number",
-          "label":"_Maximum Startup Power (Protection)",
+          "label":"escMaxStartupPower",
           "min":1004,
           "max":1300,
           "step":4,
@@ -905,7 +905,7 @@
               "label":"Off"
             }
           ],
-          "label":"_RPM Power Protection (Rampup)"
+          "label":"escRampupPower"
         },
         {
           "name":"BEEP_STRENGTH",
@@ -1081,7 +1081,7 @@
         {
           "name":"STARTUP_POWER_MIN",
           "type":"number",
-          "label":"_Minimum Startup Power (Boost)",
+          "label":"escMinStartupPower",
           "min":1000,
           "max":1125,
           "step":5,
@@ -1092,7 +1092,7 @@
         {
           "name":"STARTUP_POWER_MAX",
           "type":"number",
-          "label":"_Maximum Startup Power (Protection)",
+          "label":"escMaxStartupPower",
           "min":1004,
           "max":1300,
           "step":4,
@@ -1246,7 +1246,7 @@
               "label":"Off"
             }
           ],
-          "label":"_RPM Power Protection (Rampup)"
+          "label":"escRampupPower"
         },
         {
           "name":"BEEP_STRENGTH",

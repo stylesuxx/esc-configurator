@@ -111,7 +111,7 @@
         }
       }
 
-      &:hover {
+      &:hover:not([disabled]) {
         .connect {
           background-color: var(--color-primary);
         }
@@ -130,24 +130,5 @@
         }
       }
     }
-  }
-}
-
-header #not-supported {
-  float: right;
-  max-width: 400px;
-  z-index: 100;
-  border: 1px solid red;
-  background: white;
-  margin: 20px;
-  margin-top: 7px;
-  margin-bottom: 0px;
-  margin-left: 10px;
-  padding: 10px;
-  font-size: 16px;
-  text-align: center;
-
-  a {
-    text-decoration: underline;
   }
 }

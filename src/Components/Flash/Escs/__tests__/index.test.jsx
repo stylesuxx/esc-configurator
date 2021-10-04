@@ -37,7 +37,7 @@ describe('Escs', () => {
     const flashProgress = [];
 
     for(let i = 0; i < 4; i += 1) {
-      const current = Object.assign({}, esc);
+      const current = { ...esc };
       current.index = i;
       escs.push(current);
       flashProgress.push(0);

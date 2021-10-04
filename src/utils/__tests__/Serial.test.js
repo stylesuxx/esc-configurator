@@ -1,5 +1,3 @@
-import Serial from '../Serial';
-
 jest.setTimeout(60000);
 
 let port;
@@ -10,8 +8,17 @@ let read;
 let logCallback;
 let packetErrorCallback;
 let serial;
+let Serial;
 
 describe('Serial', () => {
+  beforeAll(async() => {
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    Serial = require('../Serial').default;
+  });
+
   beforeEach(() => {
     cancel = jest.fn();
     releaseReadLock = jest.fn();

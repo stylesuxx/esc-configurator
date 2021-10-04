@@ -2,126 +2,121 @@ import fs from 'fs';
 
 import Flash from '../Flash';
 
+
+let retry, delay, compare, isValidFlash, isValidLayout;
+/*
 import {
   retry,
   delay,
   compare,
-  isValidFlash, isValidLayout, getPossibleTypes,
+  isValidFlash, isValidLayout,
 } from '../General';
+*/
 
-test('compare same buffers', () => {
-  const buffer1 = new Uint8Array([1, 2, 3]);
-  const buffer2 = new Uint8Array([1, 2, 3]);
+describe('General', () => {
+  beforeAll(async() => {
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    const general = require('../General');
+    retry = general.retry;
+    delay = general.delay;
+    compare = general.compare;
+    isValidFlash = general.isValidFlash;
+    isValidLayout = general.isValidLayout;
+  });
 
-  expect(compare(buffer1, buffer2)).toBeTruthy();
-});
+  it('compare same buffers', () => {
+    const buffer1 = new Uint8Array([1, 2, 3]);
+    const buffer2 = new Uint8Array([1, 2, 3]);
 
-test('compare buffers of different length', () => {
-  const buffer1 = new Uint8Array([1, 2, 3]);
-  const buffer2 = new Uint8Array([1, 2]);
+    expect(compare(buffer1, buffer2)).toBeTruthy();
+  });
 
-  expect(compare(buffer1, buffer2)).not.toBeTruthy();
-});
+  it('compare buffers of different length', () => {
+    const buffer1 = new Uint8Array([1, 2, 3]);
+    const buffer2 = new Uint8Array([1, 2]);
 
-test('compare different buffers', () => {
-  const buffer1 = new Uint8Array([1, 2, 3]);
-  const buffer2 = new Uint8Array([3, 2, 1]);
+    expect(compare(buffer1, buffer2)).not.toBeTruthy();
+  });
 
-  expect(compare(buffer1, buffer2)).not.toBeTruthy();
-});
+  it('compare different buffers', () => {
+    const buffer1 = new Uint8Array([1, 2, 3]);
+    const buffer2 = new Uint8Array([3, 2, 1]);
 
-test('delay', async() => {
-  await delay(500);
+    expect(compare(buffer1, buffer2)).not.toBeTruthy();
+  });
 
-  expect(true).toBeTruthy();
-});
+  it('delay', async() => {
+    await delay(500);
 
-test('valid Flash', () => {
-  const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);
-  const hexString = hexContent.toString();
-  const parsed = Flash.parseHex(hexString);
-  const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
-  const flashOffset = 0;
-  const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
+    expect(true).toBeTruthy();
+  });
 
-  expect(isValidFlash('#BLHELI$EFM8B21#', flash)).toBeTruthy();
-});
+  it('valid Flash', () => {
+    const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);
+    const hexString = hexContent.toString();
+    const parsed = Flash.parseHex(hexString);
+    const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
+    const flashOffset = 0;
+    const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
-test('invalid Flash', () => {
-  expect(isValidFlash('#BLHELI$INVALID', new Uint8Array([1,2,3,4]))).not.toBeTruthy();
-});
+    expect(isValidFlash('#BLHELI$EFM8B21#', flash)).toBeTruthy();
+  });
 
-test('retry failing each time', async() => {
-  function test(resolve, reject) {
-    reject(new Error('Fail'));
-  }
+  it('invalid Flash', () => {
+    expect(isValidFlash('#BLHELI$INVALID', new Uint8Array([1,2,3,4]))).not.toBeTruthy();
+  });
 
-  await expect(retry(test, 5, 10)).rejects.toThrow();
-});
-
-test('retry failing each time without delay', async() => {
-  function test(resolve, reject) {
-    reject(new Error('Fail'));
-  }
-
-  await expect(retry(test, 5)).rejects.toThrow();
-});
-
-test('retry succeeds at first try', async() => {
-  function test(resolve) {
-    resolve(true);
-  }
-
-  const success = await retry(test, 5, 10);
-  expect(success).toBeTruthy();
-});
-
-test('retry succeeds at third try', async() => {
-  let count = 0;
-
-  function test(resolve, reject) {
-    count += 1;
-    if(count === 3) {
-      resolve(true);
-    } else {
+  it('retry failing each time', async() => {
+    function test(resolve, reject) {
       reject(new Error('Fail'));
     }
-  }
 
-  const success = await retry(test, 5, 10);
-  expect(success).toBeTruthy();
-});
+    await expect(retry(test, 5, 10)).rejects.toThrow();
+  });
 
-test('check invalid layout', async() => {
-  const valid = isValidLayout('invalid');
-  expect(valid).not.toBeTruthy();
-});
+  it('retry failing each time without delay', async() => {
+    function test(resolve, reject) {
+      reject(new Error('Fail'));
+    }
 
-test('check valid layout', async() => {
-  const valid = isValidLayout('#A_L_00#');
-  expect(valid).toBeTruthy();
-});
+    await expect(retry(test, 5)).rejects.toThrow();
+  });
 
-test('possible EFM8', async() => {
-  const types = getPossibleTypes(0xE8B1);
+  it('retry succeeds at first try', async() => {
+    function test(resolve) {
+      resolve(true);
+    }
 
-  expect(types.length).toBe(2);
-});
+    const success = await retry(test, 5, 10);
+    expect(success).toBeTruthy();
+  });
 
-test('possible AM32', async() => {
-  const types = getPossibleTypes(0x1f06);
+  it('retry succeeds at third try', async() => {
+    let count = 0;
 
-  expect(types.length).toBe(1);
-});
+    function test(resolve, reject) {
+      count += 1;
+      if(count === 3) {
+        resolve(true);
+      } else {
+        reject(new Error('Fail'));
+      }
+    }
 
-test('possible Blheli Silabs', async() => {
-  const types = getPossibleTypes(0xF310);
+    const success = await retry(test, 5, 10);
+    expect(success).toBeTruthy();
+  });
 
-  expect(types.length).toBe(1);
-});
+  it('check invalid layout', async() => {
+    const valid = isValidLayout('invalid');
+    expect(valid).not.toBeTruthy();
+  });
 
-test('possible Blheli Atmel', async() => {
-  const types = getPossibleTypes(0x9307);
-
-  expect(types.length).toBe(1);
+  it('check valid layout', async() => {
+    const valid = isValidLayout('#A_L_00#');
+    expect(valid).toBeTruthy();
+  });
 });

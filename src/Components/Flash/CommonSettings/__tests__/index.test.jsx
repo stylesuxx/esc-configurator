@@ -271,7 +271,7 @@ describe('CommonSettings', () => {
     const escs = [];
 
     for(let i = 0; i < 4; i += 1) {
-      const current = Object.assign({}, esc);
+      const current = { ...esc };
       escs.push(current);
     }
 
@@ -769,5 +769,38 @@ describe('CommonSettings', () => {
         name: 'MOTOR_DIRECTION',
       },
     });
+  });
+
+  it('should display warning when firmware is unsopported', () => {
+    const availableSettings = {
+      LAYOUT_REVISION: 203,
+      MAIN_REVISION: 1,
+      NAME: 'JESC',
+      SUB_REVISION: 100,
+    };
+
+    const escs = [
+      {
+        meta: { available: true },
+        settings: { MODE: 1 },
+      },
+    ];
+
+    const onFlash = jest.fn();
+    const onSettingsUpdate = jest.fn();
+
+    render(
+      <CustomSettings
+        availableSettings={availableSettings}
+        directInput={false}
+        escs={escs}
+        index={0}
+        onFlash={onFlash}
+        onSettingsUpdate={onSettingsUpdate}
+      />
+    );
+
+    expect(screen.getByText(/unsupportedFirmware/i)).toBeInTheDocument();
+    expect(screen.getByText(/common:useDedicatedConfigurator/i)).toBeInTheDocument();
   });
 });

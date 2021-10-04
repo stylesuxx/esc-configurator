@@ -1,16 +1,15 @@
-import {
-  EEPROM,
-  buildDisplayName,
-} from '../';
+import config from '../';
 
-describe('Blheli', () => {
+const eeprom = config.getEeprom();
+
+describe('BLHeli', () => {
   it('should handle conditional visibility with general settings', () => {
-    const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(eeprom.SETTINGS_DESCRIPTIONS);
     const settings = { GOVERNOR_MODE: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = EEPROM.SETTINGS_DESCRIPTIONS[keys[i]].MULTI.base;
+      const base = eeprom.SETTINGS_DESCRIPTIONS[keys[i]].MULTI.base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
@@ -25,7 +24,7 @@ describe('Blheli', () => {
   });
 
   it('should handle conditional visibility with custom settings', () => {
-    const keys = Object.keys(EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS);
     const settings = {
       GOVERNOR_MODE: 3,
       MOTOR_DIRECTION: 3,
@@ -33,7 +32,7 @@ describe('Blheli', () => {
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS[keys[i]].base;
+      const base = eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
@@ -55,14 +54,28 @@ describe('Blheli', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'MAKE');
-    expect(name).toEqual('MAKE - BlHeli_S, 1.100');
+    const name = config.buildDisplayName(flash, 'MAKE');
+    expect(name).toEqual('MAKE - BLHeli_S, 1.100');
+  });
+
+  it('should return mistagged display name', () => {
+    const wrongTag = 'wrong tag';
+    const flash = {
+      settings: {
+        MAIN_REVISION: 1,
+        SUB_REVISION: 100,
+      },
+      actualMake: wrongTag,
+    };
+
+    const name = config.buildDisplayName(flash, 'MAKE');
+    expect(name).toEqual(`MAKE (Probably mistagged: ${wrongTag}) - BLHeli_S, 1.100`);
   });
 
   it('should return display name when revision is missing', () => {
     const flash = { settings: {} };
 
-    const name = buildDisplayName(flash, 'MAKE');
-    expect(name).toEqual('MAKE - BlHeli_S, Unsupported/Unrecognized');
+    const name = config.buildDisplayName(flash, 'MAKE');
+    expect(name).toEqual('MAKE - BLHeli_S, Unsupported/Unrecognized');
   });
 });

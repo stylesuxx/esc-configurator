@@ -68,13 +68,14 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
-        platforms: {},
       },
       actions: {
         isReading: false,
         isWriting: false,
         isSelecting: false,
         isFlashing: false,
+        isConnecting: false,
+        isDisconnecting: false,
       },
       language: loadLanguage(),
       melodies: {
@@ -199,10 +200,17 @@ class App extends Component {
       const source = sources[i];
       const name = source.getName();
 
-      configs.versions[name] = await source.getVersions();
-      configs.escs[name] = await source.getEscs();
-      configs.platforms[name] = source.getPlatform();
-      configs.pwm[name] = source.getPwm();
+      try {
+        configs.versions[name] = await source.getVersions();
+        configs.escs[name] = source.getEscLayouts();
+        configs.pwm[name] = source.getPwm();
+      } catch(e) {
+        this.addLogMessage('fetchingFilesFailed', { name: name });
+
+        configs.versions[name] = [];
+        configs.escs[name] = [];
+        configs.pwm[name] = [];
+      }
     }
 
     return configs;
@@ -249,7 +257,7 @@ class App extends Component {
       if(result) {
         result.index = target;
         result.ref = React.createRef();
-        individual[i] = result;
+        individual[target] = result;
 
         await this.setEscs({ individual });
       } else {
@@ -380,7 +388,10 @@ class App extends Component {
       const target = esc.index;
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
-      const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
+      const mergedSettings = {
+        ...currentEscSettings,
+        ...defaultSettings, 
+      };
 
       try {
         await this.serial.writeSettings(target, esc, mergedSettings);
@@ -410,7 +421,7 @@ class App extends Component {
 
         await this.serial.startFourWayInterface();
 
-        /* Give the ESC's some time to boot - it might take longer if they
+        /* Give the ESCs some time to boot - it might take longer if they
          * are playing a startup melody.
          */
         await delay(1200);
@@ -529,8 +540,6 @@ class App extends Component {
 
   handleFirmwareDump = async (target) => {
     const { escs } = this.state;
-
-    console.log("Dump firmware for ESC", target);
     const esc = escs.individual.find((esc) => esc.index === target);
 
     const updateProgress = async(percent) => {
@@ -724,6 +733,8 @@ class App extends Component {
     } = this.state;
     const { settings } = appSettings;
 
+    this.setActions({ isConnecting: true });
+
     try {
       await this.serial.open(serial.baudRate);
       this.serial.setExtendedDebug(settings.extendedDebug.value);
@@ -735,7 +746,7 @@ class App extends Component {
        * disconnected before.
        *
        * Unfortunately this convenience feature can not be used, since on EMU
-       * it might lead to the ESC's being wiped.
+       * it might lead to the ESCs being wiped.
        */
       // await this.serial.exitFourWayInterface();
     } catch (e) {
@@ -803,11 +814,15 @@ class App extends Component {
       this.serial.close();
       this.addLogMessage('portUsed');
     }
+
+    this.setActions({ isConnecting: false });
   }
 
   handleDisconnect = async(e) => {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
+
+    this.setActions({ isDisconnecting: true });
 
     const { escs } = this.state;
     if(this.serial) {
@@ -823,7 +838,6 @@ class App extends Component {
       this.serial.close();
     }
 
-    this.addLogMessage('closedPort');
     this.lastConnected = 0;
 
     this.setSerial({
@@ -838,7 +852,11 @@ class App extends Component {
       isWriting: false,
       isSelecting: false,
       isFlashing: false,
+      isConnecting: false,
+      isDisconnecting: false,
     });
+
+    this.addLogMessage('closedPort');
   }
 
   handleAllMotorSpeed = async(speed) => {

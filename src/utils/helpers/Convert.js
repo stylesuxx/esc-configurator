@@ -1,8 +1,11 @@
-import { EEPROM } from '../../sources/Blheli';
+import { blheliSource } from '../../sources';
+import { ConversionError } from '../Errors';
 
 class Convert {
   static modeToString(mode) {
-    for (const [key, value] of Object.entries(EEPROM.MODES)) {
+    const eeprom = blheliSource.getEeprom();
+
+    for (const [key, value] of Object.entries(eeprom.MODES)) {
       if (value === mode) {
         return key;
       }
@@ -13,18 +16,23 @@ class Convert {
     const object = {};
 
     for (const [prop, setting] of Object.entries(layout)) {
-      if (setting.size === 1) {
-        object[prop] = settingsUint8Array[setting.offset];
-      } else if (setting.size === 2) {
-        object[prop] = settingsUint8Array[setting.offset] << 8 | settingsUint8Array[setting.offset + 1];
-      } else if (setting.size > 2) {
+      const {
+        size,
+        offset,
+      } = setting;
+
+      if (size === 1) {
+        object[prop] = settingsUint8Array[offset];
+      } else if (size === 2) {
+        object[prop] = settingsUint8Array[offset] << 8 | settingsUint8Array[offset + 1];
+      } else if (size > 2) {
         if(prop === 'STARTUP_MELODY') {
-          object[prop] = settingsUint8Array.subarray(setting.offset).subarray(0, setting.size);
+          object[prop] = settingsUint8Array.subarray(offset, offset + size);
         } else {
-          object[prop] = String.fromCharCode.apply(undefined, settingsUint8Array.subarray(setting.offset).subarray(0, setting.size)).trim();
+          object[prop] = String.fromCharCode.apply(undefined, settingsUint8Array.subarray(offset, offset + size)).trim();
         }
       } else {
-        throw new Error('Logic error');
+        throw new ConversionError();
       }
     }
 
@@ -35,22 +43,27 @@ class Convert {
     const array = new Uint8Array(layoutSize).fill(0xff);
 
     for (const [prop, setting] of Object.entries(layout)) {
-      if (setting.size === 1) {
-        array[setting.offset] = settingsObject[prop];
-      } else if (setting.size === 2) {
-        array[setting.offset] = settingsObject[prop] >> 8 & 0xff;
-        array[setting.offset + 1] = settingsObject[prop] & 0xff;
-      } else if (setting.size > 2) {
+      const {
+        size,
+        offset,
+      } = setting;
+
+      if (size === 1) {
+        array[offset] = settingsObject[prop];
+      } else if (size === 2) {
+        array[offset] = settingsObject[prop] >> 8 & 0xff;
+        array[offset + 1] = settingsObject[prop] & 0xff;
+      } else if (size > 2) {
         const { length } = settingsObject[prop];
-        for (let i = 0; i < setting.size; i += 1) {
+        for (let i = 0; i < size; i += 1) {
           if(prop === 'STARTUP_MELODY') {
-            array[setting.offset + i] = i < length ? settingsObject[prop][i] % 256 : 0;
+            array[offset + i] = i < length ? settingsObject[prop][i] % 256 : 0;
           } else {
-            array[setting.offset + i] = i < length ? settingsObject[prop].charCodeAt(i) : ' '.charCodeAt(0);
+            array[offset + i] = i < length ? settingsObject[prop].charCodeAt(i) : ' '.charCodeAt(0);
           }
         }
       } else {
-        throw new Error('Logic error');
+        throw new ConversionError();
       }
     }
 

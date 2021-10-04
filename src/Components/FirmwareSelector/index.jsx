@@ -6,25 +6,16 @@ import React, {
 
 import {
   isValidLayout,
-  getPossibleTypes,
+  getSupportedSources,
 } from '../../utils/helpers/General';
+
+import { blheliSource } from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
 
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
-import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
-
-const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
-const BLHELI_MODES = BLHELI_EEPROM.MODES;
-const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
-
-import {
-  PLATFORMS,
-  SILABS_TYPES,
-  ARM_TYPES,
-} from '../../sources';
-
 import './style.scss';
+
+const blheliModes = blheliSource.getEeprom().MODES;
 
 function FirmwareSelector({
   onCancel,
@@ -41,16 +32,13 @@ function FirmwareSelector({
     escs,
     versions,
     pwm,
-    platforms,
   } = configs;
 
   const [esc, setEsc] = useState(null);
-  const [type, setType] = useState(null);
   const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
   const [migrate, setMigrate] = useState(false);
   const [validFirmware, setValidFirmware] = useState([]);
-  const [possibleTypes, setPossibleTypes] = useState([]);
   const [options, setOptions] = useState({
     versions: [],
     frequencies: [],
@@ -70,28 +58,18 @@ function FirmwareSelector({
   // Pre select ESC if escHint is a valid layout
   useEffect(async () => {
     const availableFirmware = Object.keys(escs);
-    const siLabsFirmwares = availableFirmware.filter((name) => platforms[name] === PLATFORMS.SILABS);
-    const armFirmwares = availableFirmware.filter((name) => platforms[name] === PLATFORMS.ARM);
+    const validSources = getSupportedSources(signatureHint);
+    const validFirmware = availableFirmware.filter((name) =>
+      validSources.some((source) => source.name === name)
+    );
 
-    const types = getPossibleTypes(signatureHint);
-    const siLabs = types.filter((value) => SILABS_TYPES.includes(value));
-    const arm = types.filter((value) => ARM_TYPES.includes(value));
-
-    const validFirmware = availableFirmware.filter((key) => {
-      if((siLabs.length > 0 && siLabsFirmwares.includes(key)) ||
-         (arm.length > 0 && armFirmwares.includes(key))
-      ) {
-        return true;
-      }
-
-      return false;
-    });
-
-    const newSelection = Object.assign({}, selection, { firmware: validFirmware[0] });
+    const newSelection = {
+      ...selection,
+      firmware: validFirmware[0],
+    };
     setSelection(newSelection);
 
     setValidFirmware(validFirmware);
-    setPossibleTypes(types);
     setMode(selectedMode);
 
     if(isValidLayout(escHint)) {
@@ -103,71 +81,37 @@ function FirmwareSelector({
   useEffect(async () => {
     if(selection.firmware) {
       /**
-       * If only one type has been returned, that is our selection, in the other
-       * case, we need to set the type based on the selected firmware.
-       */
-      let newType = null;
-      if(possibleTypes.length === 1) {
-        newType = possibleTypes[0];
-      } else {
-        switch(selection.firmware) {
-          case 'Bluejay': {
-            newType = BLUEJAY_TYPES.EFM8;
-          } break;
-
-          default: {
-            newType = BLHELI_TYPES.BLHELI_S_SILABS;
-          }
-        }
-      }
-
-      /**
        * Build the actual Option set for the selected firmware
        */
-      const descriptions = escs[selection.firmware].layouts[newType];
-      const escOptions = [];
-      for (const layout in descriptions) {
-        const esc = descriptions[layout];
+      const layouts = escs[selection.firmware];
+      const escOptions =  Object.entries(layouts).map(([layout, esc]) => ({
+        key: layout,
+        value: layout,
+        name: esc.name,
+      }));
 
-        escOptions.push({
-          key: layout,
-          value: layout,
-          name: esc.name,
-        });
-      }
-
-      const versionOptions = [];
-      const versionsSelected = versions[selection.firmware][newType];
-      for (const version in versionsSelected) {
-        const current = versionsSelected[version];
-        const url = current.url;
-
-        versionOptions.push({
-          key: current.key,
-          value: url,
-          name: current.name,
-        });
-      }
+      const versionsSelected = versions[selection.firmware];
+      const versionOptions = Object.values(versionsSelected).map((version) => ({
+        key: version.key,
+        value: version.url,
+        name: version.name,
+      }));
 
       const frequencies = pwm[selection.firmware];
-      const frequencyOptions = frequencies.map((item) => (
-        {
-          key: item,
-          value: item,
-          name: item,
-        }
-      ));
+      const frequencyOptions = frequencies.map((item) => ({
+        key: item,
+        value: item,
+        name: item,
+      }));
 
-      const firmwareOptions = validFirmware.map((key) => (
-        {
-          key,
-          value: key,
-          name: key,
-        }
-      ));
+      const firmwareOptions = validFirmware.map((key) => ({
+        key,
+        value: key,
+        name: key,
+      }));
 
       const modeOptions = [];
-      for (const mode in BLHELI_MODES) {
+      for (const mode in blheliModes) {
         modeOptions.push({
           key: mode,
           value: mode,
@@ -184,7 +128,6 @@ function FirmwareSelector({
       };
 
       setOptions(currentOptions);
-      setType(newType);
     }
   }, [selection.firmware]);
 
@@ -224,10 +167,11 @@ function FirmwareSelector({
     const selected = e.target.options.selectedIndex;
     const selecteOption = e.target.options[selected];
 
-    const newSelection = Object.assign({}, selection, {
+    const newSelection = {
+      ...selection,
       url: e.target.value,
       version: selecteOption ? selecteOption.text : 'N/A',
-    });
+    };
     setSelection(newSelection);
   }
 
@@ -240,12 +184,15 @@ function FirmwareSelector({
   }
 
   function handlePwmChange(e) {
-    const newSelection = Object.assign({}, selection, { pwm: e.target.value });
+    const newSelection = {
+      ...selection,
+      pwm: e.target.value,
+    };
     setSelection(newSelection);
   }
 
   function handleSubmit() {
-    const escsAll = escs[selection.firmware].layouts[type];
+    const escsAll = escs[selection.firmware];
 
     const format = (str2Format, ...args) =>
       str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );
@@ -346,7 +293,7 @@ function FirmwareSelector({
                 />
 
                 {/*
-                {type === BLHELI_TYPES.SILABS || type === BLHELI_TYPES.ATMEL &&
+                {type === blheliTypes.SILABS || type === blheliTypes.ATMEL &&
                   <LabeledSelect
                     firstLabel={t('selectMode')}
                     label="Mode"
@@ -425,7 +372,6 @@ FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
-    platforms: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,
   }).isRequired,
   escHint: PropTypes.string,

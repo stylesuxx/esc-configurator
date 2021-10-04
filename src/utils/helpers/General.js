@@ -1,15 +1,4 @@
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
-import BLHELI_ESCS from '../../sources/Blheli/escs.json';
-
-import { EEPROM as BLUEJAY_EEPROM } from '../../sources/Bluejay';
-import BLUEJAY_ESCS from '../../sources/Bluejay/escs.json';
-
-import { EEPROM as AM32_EEPROM } from '../../sources/AM32';
-import AM32_ESCS from '../../sources/AM32/escs.json';
-
-const BLHELI_TYPES = BLHELI_EEPROM.TYPES;
-const BLUEJAY_TYPES = BLUEJAY_EEPROM.TYPES;
-const AM32_TYPES = AM32_EEPROM.TYPES;
+import sources from '../../sources';
 
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
@@ -90,43 +79,9 @@ async function retry(func, maxRetries, iterationDelay = null) {
 const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === parseInt(signature, 10));
 
 // Check if a given layout is available in any of the sources
-const isValidLayout = (layout) => {
-  if(BLUEJAY_ESCS.layouts[BLUEJAY_TYPES.EFM8][layout] ||
-     BLHELI_ESCS.layouts[BLHELI_TYPES.ATMEL][layout] ||
-     AM32_ESCS.layouts[AM32_TYPES.ARM][layout] ||
-     BLHELI_TYPES.BLHELI_S_SILABS[layout] ||
-     BLHELI_TYPES.SILABS[layout]
-  ) {
-    return true;
-  }
+const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
 
-  return false;
-};
-
-const getPossibleTypes = (signature) => {
-  const types = [];
-  if(findMCU(signature, BLUEJAY_ESCS.signatures[BLUEJAY_TYPES.EFM8])) {
-    types.push(BLUEJAY_TYPES.EFM8);
-  }
-
-  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.BLHELI_S_SILABS])) {
-    types.push(BLHELI_TYPES.BLHELI_S_SILABS);
-  }
-
-  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.SILABS])) {
-    types.push(BLHELI_TYPES.SILABS);
-  }
-
-  if (findMCU(signature, BLHELI_ESCS.signatures[BLHELI_TYPES.ATMEL])) {
-    types.push(BLHELI_TYPES.ATMEL);
-  }
-
-  if (findMCU(signature, AM32_ESCS.signatures[AM32_TYPES.ARM])) {
-    types.push(AM32_TYPES.ARM);
-  }
-
-  return types;
-};
+const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcuSignatures()));
 
 export {
   retry,
@@ -135,5 +90,5 @@ export {
   findMCU,
   isValidFlash,
   isValidLayout,
-  getPossibleTypes,
+  getSupportedSources,
 };

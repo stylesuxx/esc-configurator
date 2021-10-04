@@ -1,21 +1,24 @@
-import BLHELI_EEPROM from './Blheli/eeprom';
-import BLUEJAY_EEPROM from './Bluejay/eeprom';
-import AM32_EEPROM from './AM32/eeprom';
+import {
+  LocalDataNotAvailableError,
+  MethodNotImplementedError,
+  MissingParametersError,
+} from '../utils/Errors';
 
+/* Abstract Base Class for firmware sources
+ *
+ * Every source needs to implement thi abstract Source class and implement all
+ * required methods.
+ */
 class Source {
-  constructor(name, platform, versions, escs, eeprom, localVersions, localEscs, pwm) {
-    if(!name || platform === undefined || !versions || !escs || !eeprom || !localVersions || !localEscs || !pwm) {
-      throw new Error("Parameters required: name, platform, versions, escs, eeprom, localVersions, localEscs, pwm");
+  constructor(name, versions, eeprom) {
+    if(!name || !versions || !eeprom) {
+      throw new MissingParametersError("name, versions, eeprom");
     }
 
     this.name = name;
-    this.platform = platform;
     this.versions = versions;
-    this.escs = escs;
     this.eeprom = eeprom;
-    this.localVersions = localVersions;
-    this.localEscs = localEscs;
-    this.pwm = pwm;
+    this.pwm = [];
 
     this.fetchJson = async (url) => {
       try {
@@ -29,10 +32,45 @@ class Source {
         throw new Error(e);
       }
     };
+
+    this.getVersionsList = async () => {
+      const localStorageKey = `${this.getName()}_versions`;
+
+      try {
+        const result = await this.fetchJson(this.versions);
+        localStorage.setItem(localStorageKey, JSON.stringify(result));
+
+        return result;
+      } catch(e) {
+        const content = localStorage.getItem(localStorageKey);
+
+        if(content !== null) {
+          return (JSON.parse(content));
+        }
+      }
+
+      throw new LocalDataNotAvailableError();
+    };
   }
 
-  getPlatform() {
-    return this.platform;
+  buildDisplayName() {
+    throw new MethodNotImplementedError("buildDisplayName()");
+  }
+
+  getEscLayouts() {
+    throw new MethodNotImplementedError("getEscLayouts()");
+  }
+
+  getMcuSignatures() {
+    throw new MethodNotImplementedError("getMcuSignatures()");
+  }
+
+  getVersions() {
+    throw new MethodNotImplementedError("getVersions()");
+  }
+
+  getEeprom() {
+    return this.eeprom;
   }
 
   getName() {
@@ -42,56 +80,6 @@ class Source {
   getPwm() {
     return this.pwm;
   }
-
-  async getVersions() {
-    if(navigator.onLine) {
-      try {
-        const result = await this.fetchJson(this.versions);
-        return result;
-      } catch(e) {
-        // No neet to catch - returl local versions anyway
-      }
-    }
-
-    return this.localVersions;
-  }
-
-  async getEscs() {
-    if(navigator.onLine) {
-      try {
-        const result = await this.fetchJson(this.escs);
-        return result;
-      } catch(e) {
-        // No neet to catch - return local escs anyway
-      }
-    }
-
-    return this.localEscs;
-  }
-
-  getEeprom() {
-    return this.eeprom;
-  }
 }
-
-const PLATFORMS = {
-  SILABS: 0,
-  ARM: 1,
-};
-
-const SILABS_TYPES = [
-  BLHELI_EEPROM.TYPES.BLHELI_S_SILABS,
-  BLUEJAY_EEPROM.TYPES.EFM8,
-];
-
-const ARM_TYPES = [
-  AM32_EEPROM.TYPES.ARM,
-];
-
-export {
-  ARM_TYPES,
-  PLATFORMS,
-  SILABS_TYPES,
-};
 
 export default Source;
