@@ -4,6 +4,11 @@ import {
   MissingParametersError,
 } from '../utils/Errors';
 
+/* Abstract Base Class for firmware sources
+ *
+ * Every source needs to implement thi abstract Source class and implement all
+ * required methods.
+ */
 class Source {
   constructor(name, versions, eeprom) {
     if(!name || !versions || !eeprom) {

@@ -58,6 +58,20 @@ describe('BLHeli', () => {
     expect(name).toEqual('MAKE - BLHeli_S, 1.100');
   });
 
+  it('should return mistagged display name', () => {
+    const wrongTag = 'wrong tag';
+    const flash = {
+      settings: {
+        MAIN_REVISION: 1,
+        SUB_REVISION: 100,
+      },
+      actualMake: wrongTag,
+    };
+
+    const name = config.buildDisplayName(flash, 'MAKE');
+    expect(name).toEqual(`MAKE (Probably mistagged: ${wrongTag}) - BLHeli_S, 1.100`);
+  });
+
   it('should return display name when revision is missing', () => {
     const flash = { settings: {} };
 

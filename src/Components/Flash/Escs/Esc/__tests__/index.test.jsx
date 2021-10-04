@@ -43,7 +43,7 @@ describe('Esc', () => {
     expect(screen.getByText(/ESC 1/i)).toBeInTheDocument();
   });
 
-  it('should show name, version and boottloader', () => {
+  it('should show name, version and bootloader', () => {
     const esc = {
       bootloaderRevision: 'bl 23',
       displayName: 'displayName 1234',
@@ -454,5 +454,104 @@ describe('Esc', () => {
     const progressbar = screen.getByRole(/progressbar/i);
     expect(progressbar).toBeInTheDocument();
     expect(progressbar.value).toEqual(50);
+  });
+
+  it('should show common settings and handle change', () => {
+    const esc = {
+      bootloaderRevision: 'bl 23',
+      settings: {
+        COMMON_MOTOR_DIRECTION: 1,
+        COMMON_STARTUP_BEEP: 0,
+      },
+      settingsDescriptions: {
+        base: [
+          {
+            name: 'COMMON_MOTOR_DIRECTION',
+            type: 'enum',
+            label: 'escMotorDirection',
+            options: [
+              {
+                value: '1',
+                label: 'Normal',
+              },
+              {
+                value: '2',
+                label: 'Reversed',
+              },
+              {
+                value: '3',
+                label: 'Bidirectional',
+              },
+              {
+                value: '4',
+                label: 'Bidirectional Reversed',
+              },
+            ],
+          },
+          {
+            name: 'COMMON_STARTUP_BEEP',
+            type: 'bool',
+            label: 'escStartupBeep',
+          },
+        ],
+      },
+    };
+
+    const onFlash = jest.fn();
+    const onCommonSettingsUpdate = jest.fn();
+
+    render(
+      <Esc
+        canFlash
+        directInput={false}
+        disableCommon
+        esc={esc}
+        index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFlash={onFlash}
+      />
+    );
+
+    expect(screen.getByText(/hints:COMMON_MOTOR_DIRECTION/i)).toBeInTheDocument();
+    expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole(/checkbox/i));
+
+    // Change select
+    fireEvent.change(screen.getByRole(/combobox/i), {
+      taget: {
+        value: 3,
+        name: 'COMMON_MOTOR_DIRECTION',
+      },
+    });
+  });
+
+  it('should trigger firmware dump', () => {
+    const esc = {
+      bootloaderRevision: 'bl 23',
+      individualSettings: {
+        MAIN_REVISION: 1,
+        SUB_REVISION: 200,
+        NAME: 'FW Name',
+      },
+    };
+
+    const onFirmwareDump = jest.fn();
+    const onSettingsUpdate = jest.fn();
+
+    render(
+      <Esc
+        canFlash
+        directInput={false}
+        enableAdvanced
+        esc={esc}
+        index={0}
+        onFirmwareDump={onFirmwareDump}
+        onSettingsUpdate={onSettingsUpdate}
+      />
+    );
+
+    userEvent.click(screen.getByText(/escButtonFirmwareDump/i));
+    expect(onFirmwareDump).toHaveBeenCalled();
   });
 });
