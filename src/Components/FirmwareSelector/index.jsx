@@ -64,11 +64,10 @@ function FirmwareSelector({
 
     const currentFirmware = validFirmware.find((name) => esc.firmwareName === name);
 
-    const newSelection = {
+    setSelection({
       ...selection,
       firmware: currentFirmware || validFirmware[0],
-    };
-    setSelection(newSelection);
+    });
 
     setValidFirmware(validFirmware);
     setMode(selectedMode);
@@ -146,13 +145,11 @@ function FirmwareSelector({
   function handleFirmwareChange(e) {
     const firmware = e.target.value;
 
-    const newSelection = {
+    setSelection({
       firmware,
       url: null,
       pwm: null,
-    };
-
-    setSelection(newSelection);
+    });
   }
 
   function handleEscChange(e) {
@@ -168,12 +165,11 @@ function FirmwareSelector({
     const selected = e.target.options.selectedIndex;
     const selecteOption = e.target.options[selected];
 
-    const newSelection = {
+    setSelection({
       ...selection,
       url: e.target.value,
       version: selecteOption ? selecteOption.text : 'N/A',
-    };
-    setSelection(newSelection);
+    });
   }
 
   function handleForceChange(e) {
@@ -185,11 +181,10 @@ function FirmwareSelector({
   }
 
   function handlePwmChange(e) {
-    const newSelection = {
+    setSelection({
       ...selection,
       pwm: e.target.value,
-    };
-    setSelection(newSelection);
+    });
   }
 
   function handleSubmit() {
