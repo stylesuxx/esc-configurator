@@ -60,32 +60,28 @@ class BLHeliSSource extends BLHeliSource {
   }
 }
 
-const pwmOptions = [];
 const blheliSource = new BLHeliSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  eeprom,
-  pwmOptions
+  eeprom
 );
 
 const blheliSilabsSource = new BLHeliSilabsSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  eeprom,
-  pwmOptions
+  eeprom
 );
 
 const blheliSSource = new BLHeliSSource(
   'BLHeli_S',
   VERSIONS_REMOTE,
-  eeprom,
-  pwmOptions
+  eeprom
 );
 
 export {
   blheliSource,
   blheliSilabsSource,
-  blheliSSource, 
+  blheliSSource,
 };
 
 export default blheliSSource;

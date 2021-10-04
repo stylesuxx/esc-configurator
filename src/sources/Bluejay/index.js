@@ -5,6 +5,11 @@ import * as escsjson from '../Blheli/blheli_escs.json';
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 
 class BluejaySource extends Source {
+  constructor(name, versions, eeprom, pwm) {
+    super(name, versions, eeprom);
+    this.pwm = pwm;
+  }
+
   buildDisplayName(flash, make) {
     const settings = flash.settings;
     let revision = 'Unsupported/Unrecognized';

@@ -34,12 +34,10 @@ class AM32Source extends Source {
   }
 }
 
-const pwmOptions = [];
 const source = new AM32Source(
   'AM32',
   VERSIONS_REMOTE,
-  eeprom,
-  pwmOptions
+  eeprom
 );
 
 export default source;

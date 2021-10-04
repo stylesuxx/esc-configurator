@@ -84,6 +84,20 @@ class ConversionError extends Error {
   }
 }
 
+class MethodNotImplementedError extends Error {
+  constructor(methodName) {
+    super(`method '${methodName}' must be implemented`);
+    this.name = 'MethodNotImplementedError';
+  }
+}
+
+class MissingParametersError extends Error {
+  constructor(parameters) {
+    super(`parameters '${parameters}' are required`);
+    this.name = 'MissingParametersError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   ConversionError,
@@ -91,6 +105,8 @@ export {
   EscLockedError,
   InvalidHexFileError,
   LocalDataNotAvailableError,
+  MethodNotImplementedError,
+  MissingParametersError,
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
