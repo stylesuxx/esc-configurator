@@ -18,6 +18,7 @@
   "readEsc": "讀取 ESC {{index}}: {{name}}",
   "flashingEsc": "正在燒錄 ESC {{index}}",
   "flashingEscFailed": "燒錄 ESC {{index}} 失敗 - 請檢查文件類型",
+  "fetchingFilesFailed": "獲取 {{name}} 資料失敗",
   "readEscFailed": "讀取 ESC {{index}} 失敗",
   "resetEscFailed": "重置 ESC {{index}} 失敗",
   "writeSettingsFailed": "無法將設定寫入到 {{index}}",
