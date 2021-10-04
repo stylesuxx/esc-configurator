@@ -4,8 +4,6 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import populateLocalStorage from '../../../utils/helpers/__tests__/LocalStorage';
-
 let App;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
@@ -13,8 +11,6 @@ jest.mock('i18next', () => ({ changeLanguage: () => null }));
 
 describe('App', () => {
   beforeAll(async () => {
-    await populateLocalStorage();
-
     /**
      * require component instead of import so that we can properly
      * pre-populate the local storage

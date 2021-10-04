@@ -13,6 +13,8 @@ import {
 import {
   am32Source,
   blheliSource,
+  blheliSilabsSource,
+  blheliSSource,
   bluejaySource,
 } from '../sources';
 
@@ -39,7 +41,7 @@ import {
 } from './FourWayConstants';
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
-const blheliEeprom = blheliSource.getEeprom();
+const blheliEeprom = blheliSSource.getEeprom();
 const bluejayEeprom = bluejaySource.getEeprom();
 const am32Eeprom = am32Source.getEeprom();
 
@@ -59,10 +61,6 @@ class FourWay {
     this.parseMessage = this.parseMessage.bind(this);
 
     this.extendedDebug = false;
-
-    this.blheliEscs = blheliSource.getLocalEscs();
-    this.bluejayEscs = bluejaySource.getLocalEscs();
-
   }
 
   setExtendedDebug(extendedDebug) {
@@ -379,9 +377,9 @@ class FourWay {
         const layoutName = (flash.settings.LAYOUT || '').trim();
         let make = null;
         if (isSiLabs) {
-          const blheliLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.SILABS];
-          const blheliSLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.BLHELI_S_SILABS];
-          const bluejayLayouts = this.bluejayEscs.layouts[bluejayEeprom.TYPES.EFM8];
+          const blheliSilabsLayouts = blheliSilabsSource.getEscLayouts();
+          const blheliSLayouts = blheliSSource.getEscLayouts();
+          const bluejayLayouts = bluejaySource.getEscLayouts();
 
           if (flash.settings.NAME === 'JESC') {
             make = blheliSLayouts[layoutName].name;
@@ -395,8 +393,8 @@ class FourWay {
           } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
             displayName = bluejaySource.buildDisplayName(flash, make);
-          } else if (layoutName in blheliLayouts) {
-            make = blheliLayouts[layoutName].name;
+          } else if (layoutName in blheliSilabsLayouts) {
+            make = blheliSilabsLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
             make = blheliSLayouts[layoutName].name;
             const splitMake =  make.split('-');
@@ -466,7 +464,7 @@ class FourWay {
               }
             }
 
-            displayName = blheliSource.buildDisplayName(flash, make);
+            displayName = blheliSSource.buildDisplayName(flash, make);
           }
         } else if (isArm) {
           /* Read version information direct from EEPROM so we can later
@@ -510,7 +508,7 @@ class FourWay {
 
           displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
         } else {
-          const blheliAtmelLayouts = this.blheliEscs.layouts[blheliEeprom.TYPES.ATMEL];
+          const blheliAtmelLayouts = blheliSource.getEscLayouts();
           if (layoutName in blheliAtmelLayouts) {
             make = blheliAtmelLayouts[layoutName].name;
           }
@@ -661,7 +659,7 @@ class FourWay {
       /**
        * Migrate settings from the previous firmware if possible.
        */
-      const newSettings = Object.assign({}, newEsc.settings);
+      const newSettings = { ...newEsc.settings };
       const oldSettings = esc.settings;
 
       let settingsDescriptions = null;

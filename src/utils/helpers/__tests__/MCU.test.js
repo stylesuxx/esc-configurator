@@ -1,12 +1,9 @@
-import populateLocalStorage from './LocalStorage';
 import { MODES } from '../../FourWayConstants';
 
 let MCU;
 
 describe('MCU', () => {
   beforeAll(async() => {
-    await populateLocalStorage();
-
     /**
      * require component instead of import so that we can properly
      * pre-populate the local storage

@@ -8,41 +8,32 @@ import { findMCU } from './General';
 import {
   am32Source,
   blheliSource,
+  blheliSilabsSource,
+  blheliSSource,
   bluejaySource,
 } from '../../sources';
 
 class MCU {
   constructor(interfaceMode, signature) {
-    const am32Escs = am32Source.getLocalEscs();
-    const blheliEscs = blheliSource.getLocalEscs();
-    const bluejayEscs = bluejaySource.getLocalEscs();
-
-    const blheliEeprom = blheliSource.getEeprom();
-    const bluejayEeprom = bluejaySource.getEeprom();
-
     this.interfaceMode = interfaceMode;
     this.mcu = ((interfaceMode) => {
       switch(interfaceMode) {
-        case MODES.SiLBLB: {
+        case MODES.SiLBLB: 
           return (
-            findMCU(signature, bluejayEscs.signatures[bluejayEeprom.TYPES.EFM8]) ||
-            findMCU(signature, blheliEscs.signatures[blheliEeprom.TYPES.BLHELI_S_SILABS]) ||
-            findMCU(signature, blheliEscs.signatures.SiLabs)
+            findMCU(signature, bluejaySource.getMcuSignatures()) ||
+            findMCU(signature, blheliSSource.getMcuSignatures()) ||
+            findMCU(signature, blheliSilabsSource.getMcuSignatures())
           );
-        }
 
         case MODES.AtmBLB:
-        case MODES.AtmSK: {
-          return findMCU(signature, blheliEscs.signatures.Atmel);
-        }
+        case MODES.AtmSK:
+          return findMCU(signature, blheliSource.getMcuSignatures());
 
-        case MODES.ARMBLB: {
-          return findMCU(signature, am32Escs.signatures.Arm);
-        }
+        case MODES.ARMBLB: 
+          return findMCU(signature, am32Source.getMcuSignatures());
 
-        default: {
+        default: 
           throw new UnknownInterfaceError(interfaceMode);
-        }
       }
     })(interfaceMode);
 
@@ -55,9 +46,8 @@ class MCU {
     const blheliEeprom = blheliSource.getEeprom();
 
     switch(this.interfaceMode) {
-      case MODES.SiLC2: {
+      case MODES.SiLC2:
         return blheliEeprom.SILABS.FLASH_SIZE;
-      }
     }
 
     return this.mcu.flash_size;

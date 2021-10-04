@@ -1,23 +1,20 @@
 import fs from 'fs';
 
-import populateLocalStorage from './LocalStorage';
 import Flash from '../Flash';
 
 
-let retry, delay, compare, isValidFlash, isValidLayout, getPossibleTypes;
+let retry, delay, compare, isValidFlash, isValidLayout;
 /*
 import {
   retry,
   delay,
   compare,
-  isValidFlash, isValidLayout, getPossibleTypes,
+  isValidFlash, isValidLayout,
 } from '../General';
 */
 
 describe('General', () => {
   beforeAll(async() => {
-    await populateLocalStorage();
-
     /**
      * require component instead of import so that we can properly
      * pre-populate the local storage
@@ -28,7 +25,6 @@ describe('General', () => {
     compare = general.compare;
     isValidFlash = general.isValidFlash;
     isValidLayout = general.isValidLayout;
-    getPossibleTypes = general.getPossibleTypes;
   });
 
   it('compare same buffers', () => {
@@ -122,29 +118,5 @@ describe('General', () => {
   it('check valid layout', async() => {
     const valid = isValidLayout('#A_L_00#');
     expect(valid).toBeTruthy();
-  });
-
-  it('possible EFM8', async() => {
-    const types = getPossibleTypes(0xE8B1);
-
-    expect(types.length).toBe(2);
-  });
-
-  it('possible AM32', async() => {
-    const types = getPossibleTypes(0x1f06);
-
-    expect(types.length).toBe(1);
-  });
-
-  it('possible BLHeli Silabs', async() => {
-    const types = getPossibleTypes(0xF310);
-
-    expect(types.length).toBe(1);
-  });
-
-  it('possible BLHeli Atmel', async() => {
-    const types = getPossibleTypes(0x9307);
-
-    expect(types.length).toBe(1);
   });
 });

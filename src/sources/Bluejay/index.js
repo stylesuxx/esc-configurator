@@ -1,8 +1,8 @@
-import Source, { PLATFORMS } from '../Source.js';
+import Source from '../Source.js';
 import eeprom from './eeprom';
+import * as escsjson from '../Blheli/blheli_escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
-const ESCS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_escs.json';
 
 class BluejaySource extends Source {
   buildDisplayName(flash, make) {
@@ -20,14 +20,24 @@ class BluejaySource extends Source {
 
     return `${make} - ${name}, ${revision}${pwm}`;
   }
+
+  getEscLayouts() {
+    return escsjson.layouts['BLHeli_S SiLabs'];
+  }
+
+  getMcuSignatures() {
+    return escsjson.signatures['BLHeli_S SiLabs'];
+  }
+
+  async getVersions() {
+    return (await this.getVersionsList()).EFM8;
+  }
 }
 
 const pwmOptions = [24, 48, 96];
 const config = new BluejaySource(
   'Bluejay',
-  PLATFORMS.SILABS,
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
   eeprom,
   pwmOptions
 );

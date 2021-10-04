@@ -68,7 +68,6 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
-        platforms: {},
       },
       actions: {
         isReading: false,
@@ -203,15 +202,13 @@ class App extends Component {
 
       try {
         configs.versions[name] = await source.getVersions();
-        configs.escs[name] = await source.getEscs();
-        configs.platforms[name] = source.getPlatform();
+        configs.escs[name] = source.getEscLayouts();
         configs.pwm[name] = source.getPwm();
       } catch(e) {
         this.addLogMessage('fetchingFilesFailed', { name: name });
 
         configs.versions[name] = [];
         configs.escs[name] = [];
-        configs.platforms[name] = [];
         configs.pwm[name] = [];
       }
     }
@@ -391,7 +388,10 @@ class App extends Component {
       const target = esc.index;
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
-      const mergedSettings = Object.assign({}, currentEscSettings, defaultSettings);
+      const mergedSettings = {
+        ...currentEscSettings,
+        ...defaultSettings, 
+      };
 
       try {
         await this.serial.writeSettings(target, esc, mergedSettings);

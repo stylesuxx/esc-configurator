@@ -1,17 +1,4 @@
-import {
-  am32Source,
-  blheliSource,
-  bluejaySource,
-} from '../../sources';
-
-const am32Eeprom = am32Source.getEeprom();
-const am32Types = am32Eeprom.TYPES;
-
-const blheliEeprom = blheliSource.getEeprom();
-const blheliTypes = blheliEeprom.TYPES;
-
-const bluejayEeprom = bluejaySource.getEeprom();
-const bluejayTypes = bluejayEeprom.TYPES;
+import sources from '../../sources';
 
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
@@ -92,51 +79,9 @@ async function retry(func, maxRetries, iterationDelay = null) {
 const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === parseInt(signature, 10));
 
 // Check if a given layout is available in any of the sources
-const isValidLayout = (layout) => {
-  const am32Escs = am32Source.getLocalEscs();
-  const blheliEscs = blheliSource.getLocalEscs();
-  const bluejayEscs = bluejaySource.getLocalEscs();
+const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
 
-  if(bluejayEscs.layouts[bluejayTypes.EFM8][layout] ||
-     blheliEscs.layouts[blheliTypes.ATMEL][layout] ||
-     am32Escs.layouts[am32Types.ARM][layout] ||
-     blheliTypes.BLHELI_S_SILABS[layout] ||
-     blheliTypes.SILABS[layout]
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
-const getPossibleTypes = (signature) => {
-  const am32Escs = am32Source.getLocalEscs();
-  const blheliEscs = blheliSource.getLocalEscs();
-  const bluejayEscs = bluejaySource.getLocalEscs();
-
-  const types = [];
-  if(findMCU(signature, bluejayEscs.signatures[bluejayTypes.EFM8])) {
-    types.push(bluejayTypes.EFM8);
-  }
-
-  if (findMCU(signature, blheliEscs.signatures[blheliTypes.BLHELI_S_SILABS])) {
-    types.push(blheliTypes.BLHELI_S_SILABS);
-  }
-
-  if (findMCU(signature, blheliEscs.signatures[blheliTypes.SILABS])) {
-    types.push(blheliTypes.SILABS);
-  }
-
-  if (findMCU(signature, blheliEscs.signatures[blheliTypes.ATMEL])) {
-    types.push(blheliTypes.ATMEL);
-  }
-
-  if (findMCU(signature, am32Escs.signatures[am32Types.ARM])) {
-    types.push(am32Types.ARM);
-  }
-
-  return types;
-};
+const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcuSignatures()));
 
 export {
   retry,
@@ -145,5 +90,5 @@ export {
   findMCU,
   isValidFlash,
   isValidLayout,
-  getPossibleTypes,
+  getSupportedSources,
 };

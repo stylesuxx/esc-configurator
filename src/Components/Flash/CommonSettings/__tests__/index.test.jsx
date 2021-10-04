@@ -271,7 +271,7 @@ describe('CommonSettings', () => {
     const escs = [];
 
     for(let i = 0; i < 4; i += 1) {
-      const current = Object.assign({}, esc);
+      const current = { ...esc };
       escs.push(current);
     }
 

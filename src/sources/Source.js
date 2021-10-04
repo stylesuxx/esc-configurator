@@ -1,19 +1,13 @@
-import BLHELI_EEPROM from './Blheli/eeprom';
-import BLUEJAY_EEPROM from './Bluejay/eeprom';
-import AM32_EEPROM from './AM32/eeprom';
-
 import { LocalDataNotAvailableError } from '../utils/Errors';
 
 class Source {
-  constructor(name, platform, versions, escs, eeprom, pwm) {
-    if(!name || platform === undefined || !versions || !escs || !eeprom || !pwm) {
-      throw new Error("Parameters required: name, platform, versions, escs, eeprom, localVersions, localEscs, pwm");
+  constructor(name, versions, eeprom, pwm) {
+    if(!name || !versions || !eeprom || !pwm) {
+      throw new Error("Parameters required: name, versions, eeprom, pwm");
     }
 
     this.name = name;
-    this.platform = platform;
     this.versions = versions;
-    this.escs = escs;
     this.eeprom = eeprom;
     this.pwm = pwm;
 
@@ -35,10 +29,6 @@ class Source {
     throw new Error("Method buildDisplayName not implemented");
   }
 
-  getPlatform() {
-    return this.platform;
-  }
-
   getName() {
     return this.name;
   }
@@ -47,17 +37,7 @@ class Source {
     return this.pwm;
   }
 
-  async primeLocalStorage() {
-    
-  }
-
-  /* Acquire Firmware Versions
-   *
-   * Try to fetch the remote first. If this does not work, for example because
-   * the client is offline, fall back to the Layouts that are stored in the
-   * local storage. If this also does not work, throw an error.
-   */
-  async getVersions() {
+  async getVersionsList() {
     const localStorageKey = `${this.getName()}_versions`;
 
     try {
@@ -76,59 +56,9 @@ class Source {
     throw new LocalDataNotAvailableError();
   }
 
-  /* Acquire ESC layouts
-   *
-   * Try to fetch the remote first. If this does not work, for example because
-   * the client is offline, fall back to the Layouts that are stored in the
-   * local storage. If this also does not work, throw an error.
-   */
-  async getEscs() {
-    const localStorageKey = `${this.getName()}_escs`;
-
-    try {
-      const result = await this.fetchJson(this.escs);
-      localStorage.setItem(localStorageKey, JSON.stringify(result));
-
-      return result;
-    } catch(e) {
-      return this.getLocalEscs();
-    }
-  }
-
-  getLocalEscs() {
-    const localStorageKey = `${this.getName()}_escs`;
-    const content = localStorage.getItem(localStorageKey);
-
-    if(content !== null) {
-      return (JSON.parse(content));
-    }
-
-    throw new LocalDataNotAvailableError();
-  }
-
   getEeprom() {
     return this.eeprom;
   }
 }
-
-const PLATFORMS = {
-  SILABS: 0,
-  ARM: 1,
-};
-
-const SILABS_TYPES = [
-  BLHELI_EEPROM.TYPES.BLHELI_S_SILABS,
-  BLUEJAY_EEPROM.TYPES.EFM8,
-];
-
-const ARM_TYPES = [
-  AM32_EEPROM.TYPES.ARM,
-];
-
-export {
-  ARM_TYPES,
-  PLATFORMS,
-  SILABS_TYPES,
-};
 
 export default Source;

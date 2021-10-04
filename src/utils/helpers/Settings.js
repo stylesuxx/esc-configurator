@@ -5,7 +5,7 @@ const blheliEeprom = blheliSource.getEeprom();
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);
   if(master) {
-    return Object.assign({}, master.settings);
+    return { ...master.settings };
   }
 
   return {};
