@@ -70,13 +70,6 @@ class EscLockedError extends Error {
   }
 }
 
-class FileNotAvailableError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'EscLockedError';
-  }
-}
-
 class LocalDataNotAvailableError extends Error {
   constructor(message) {
     super(message);
@@ -96,7 +89,6 @@ export {
   ConversionError,
   EscInitError,
   EscLockedError,
-  FileNotAvailableError,
   InvalidHexFileError,
   LocalDataNotAvailableError,
   SettingsVerificationError,

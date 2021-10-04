@@ -2,10 +2,7 @@ import BLHELI_EEPROM from './Blheli/eeprom';
 import BLUEJAY_EEPROM from './Bluejay/eeprom';
 import AM32_EEPROM from './AM32/eeprom';
 
-import {
-  FileNotAvailableError,
-  LocalDataNotAvailableError,
-} from '../utils/Errors';
+import { LocalDataNotAvailableError } from '../utils/Errors';
 
 class Source {
   constructor(name, platform, versions, escs, eeprom, pwm) {
@@ -50,6 +47,16 @@ class Source {
     return this.pwm;
   }
 
+  async primeLocalStorage() {
+    
+  }
+
+  /* Acquire Firmware Versions
+   *
+   * Try to fetch the remote first. If this does not work, for example because
+   * the client is offline, fall back to the Layouts that are stored in the
+   * local storage. If this also does not work, throw an error.
+   */
   async getVersions() {
     const localStorageKey = `${this.getName()}_versions`;
 
@@ -66,9 +73,15 @@ class Source {
       }
     }
 
-    throw new FileNotAvailableError();
+    throw new LocalDataNotAvailableError();
   }
 
+  /* Acquire ESC layouts
+   *
+   * Try to fetch the remote first. If this does not work, for example because
+   * the client is offline, fall back to the Layouts that are stored in the
+   * local storage. If this also does not work, throw an error.
+   */
   async getEscs() {
     const localStorageKey = `${this.getName()}_escs`;
 
@@ -78,14 +91,8 @@ class Source {
 
       return result;
     } catch(e) {
-      const content = localStorage.getItem(localStorageKey);
-
-      if(content !== null) {
-        return (JSON.parse(content));
-      }
+      return this.getLocalEscs();
     }
-
-    throw new FileNotAvailableError();
   }
 
   getLocalEscs() {
