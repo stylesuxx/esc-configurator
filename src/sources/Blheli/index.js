@@ -1,6 +1,7 @@
 import Source from '../Source';
 import eeprom from './eeprom';
-import * as escsjson from './blheli_escs.json';
+import escsAtmel from './escsAtmel.json';
+import escsSilabs from './escsSilabs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
 
@@ -20,11 +21,11 @@ class BLHeliSource extends Source {
   }
 
   getEscLayouts() {
-    return escsjson.layouts.Atmel;
+    return escsAtmel.layouts;
   }
 
   getMcuSignatures() {
-    return escsjson.signatures.Atmel;
+    return escsAtmel.mucs;
   }
 
   async getVersions() {
@@ -34,29 +35,15 @@ class BLHeliSource extends Source {
 
 class BLHeliSilabsSource extends BLHeliSource {
   getEscLayouts() {
-    return escsjson.layouts.SiLabs;
+    return escsSilabs.layouts;
   }
 
   getMcuSignatures() {
-    return escsjson.signatures.SiLabs;
+    return escsSilabs.mcus;
   }
 
   async getVersions() {
     return (await this.getVersionsList()).Silabs;
-  }
-}
-
-class BLHeliSSource extends BLHeliSource {
-  getEscLayouts() {
-    return escsjson.layouts['BLHeli_S SiLabs'];
-  }
-
-  getMcuSignatures() {
-    return escsjson.signatures['BLHeli_S SiLabs'];
-  }
-
-  async getVersions() {
-    return (await this.getVersionsList())['BLHeli_S SiLabs'];
   }
 }
 
@@ -72,16 +59,10 @@ const blheliSilabsSource = new BLHeliSilabsSource(
   eeprom
 );
 
-const blheliSSource = new BLHeliSSource(
-  'BLHeli_S',
-  VERSIONS_REMOTE,
-  eeprom
-);
-
 export {
+  BLHeliSource,
   blheliSource,
   blheliSilabsSource,
-  blheliSSource,
 };
 
-export default blheliSSource;
+export default blheliSource;

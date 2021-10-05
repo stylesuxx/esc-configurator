@@ -2,9 +2,10 @@ import am32Source from './AM32';
 
 import {
   blheliSource,
-  blheliSilabsSource, 
-  blheliSSource,
+  blheliSilabsSource,
 } from './Blheli';
+
+import { blheliSSource } from './BlheliS';
 
 import bluejaySource from './Bluejay';
 

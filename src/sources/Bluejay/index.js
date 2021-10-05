@@ -1,6 +1,6 @@
-import Source from '../Source.js';
+import Source from '../Source';
 import eeprom from './eeprom';
-import * as escsjson from '../Blheli/blheli_escs.json';
+import escs from '../BlheliS/escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 
@@ -27,11 +27,11 @@ class BluejaySource extends Source {
   }
 
   getEscLayouts() {
-    return escsjson.layouts['BLHeli_S SiLabs'];
+    return escs.layouts;
   }
 
   getMcuSignatures() {
-    return escsjson.signatures['BLHeli_S SiLabs'];
+    return escs.mcus;
   }
 
   async getVersions() {
