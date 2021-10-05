@@ -1,5 +1,6 @@
 import Source from '../Source';
 import eeprom from './eeprom';
+import settings from './settings';
 import escsAtmel from './escsAtmel.json';
 import escsSilabs from './escsSilabs.json';
 
@@ -34,14 +35,20 @@ class BLHeliSilabsSource extends BLHeliSource {
 const blheliSource = new BLHeliSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  eeprom,
+  {
+    ...eeprom,
+    ...settings, 
+  },
   escsAtmel
 );
 
 const blheliSilabsSource = new BLHeliSilabsSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  eeprom,
+  {
+    ...eeprom,
+    ...settings, 
+  },
   escsSilabs
 );
 

@@ -1,5 +1,6 @@
 import Source from '../Source';
 import eeprom from './eeprom';
+import settings from './settings';
 import escs from '../BlheliS/escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
@@ -35,7 +36,10 @@ const pwmOptions = [24, 48, 96];
 const config = new BluejaySource(
   'Bluejay',
   VERSIONS_REMOTE,
-  eeprom,
+  {
+    ...eeprom,
+    ...settings, 
+  },
   escs,
   pwmOptions
 );

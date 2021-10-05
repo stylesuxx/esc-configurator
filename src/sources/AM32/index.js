@@ -1,5 +1,6 @@
 import Source from '../Source';
 import eeprom from './eeprom';
+import settings from './settings';
 import escs from './escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/versions.json';
@@ -29,7 +30,10 @@ class AM32Source extends Source {
 const source = new AM32Source(
   'AM32',
   VERSIONS_REMOTE,
-  eeprom,
+  {
+    ...eeprom,
+    ...settings, 
+  },
   escs
 );
 
