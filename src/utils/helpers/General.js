@@ -81,7 +81,7 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
 // Check if a given layout is available in any of the sources
 const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
 
-const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcuSignatures()));
+const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcus()));
 
 export {
   retry,

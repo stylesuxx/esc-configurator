@@ -74,7 +74,7 @@ describe('BLHeli Source', () => {
   });
 
   it('should return BLHeli_S MCU signatures', async() => {
-    const escs = await blheliSource.getMcuSignatures();
+    const escs = await blheliSource.getMcus();
     expect(escs).not.toBe({});
   });
 
@@ -101,7 +101,7 @@ describe('BLHeliSilabs Source', () => {
   });
 
   it('should return BLHeli_S MCU signatures', async() => {
-    const escs = await blheliSilabsSource.getMcuSignatures();
+    const escs = await blheliSilabsSource.getMcus();
     expect(escs).not.toBe({});
   });
 
@@ -128,7 +128,7 @@ describe('BLHeli_S Source', () => {
   });
 
   it('should return BLHeli_S MCU signatures', async() => {
-    const escs = await blheliSSource.getMcuSignatures();
+    const escs = await blheliSSource.getMcus();
     expect(escs).not.toBe({});
   });
 
