@@ -11,17 +11,15 @@ describe('Invalid Source', () => {
   });
 
   it('should throw with invalid Source', async() => {
-    const invalidSource = new Source('invalid', 'invalid', 'invalid');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
 
     await expect(() => invalidSource.getVersionsList()).rejects.toThrow();
     expect(() => invalidSource.buildDisplayName()).toThrow();
-    expect(() => invalidSource.getEscLayouts()).toThrow();
-    expect(() => invalidSource.getMcuSignatures()).toThrow();
     expect(() => invalidSource.getVersions()).toThrow();
   });
 
   it('should return values from local storage with invalid URL', async() => {
-    const invalidSource = new Source('invalid', 'invalid', 'invalid');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
 
     localStorage.setItem('invalid_versions', '{}');
 

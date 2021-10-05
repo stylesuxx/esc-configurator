@@ -21,14 +21,6 @@ class AM32Source extends Source {
     return `${make} - ${this.name}, ${revision}${bootloader}`;
   }
 
-  getEscLayouts() {
-    return escs.layouts;
-  }
-
-  getMcuSignatures() {
-    return escs.mcus;
-  }
-
   async getVersions() {
     return (await this.getVersionsList()).Arm;
   }
@@ -37,7 +29,8 @@ class AM32Source extends Source {
 const source = new AM32Source(
   'AM32',
   VERSIONS_REMOTE,
-  eeprom
+  eeprom,
+  escs
 );
 
 export default source;

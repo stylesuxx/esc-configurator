@@ -5,14 +5,6 @@ import escs from './escs.json';
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
 
 class BLHeliSSource extends BLHeliSource {
-  getEscLayouts() {
-    return escs.layouts;
-  }
-
-  getMcuSignatures() {
-    return escs.mcus;
-  }
-
   async getVersions() {
     return (await this.getVersionsList())['BLHeli_S SiLabs'];
   }
@@ -21,11 +13,12 @@ class BLHeliSSource extends BLHeliSource {
 const blheliSSource = new BLHeliSSource(
   'BLHeli_S',
   VERSIONS_REMOTE,
-  eeprom
+  eeprom,
+  escs
 );
 
 export {
-  blheliSSource, 
+  blheliSSource,
 };
 
 export default blheliSSource;

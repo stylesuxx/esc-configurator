@@ -5,8 +5,8 @@ import escs from '../BlheliS/escs.json';
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 
 class BluejaySource extends Source {
-  constructor(name, versions, eeprom, pwm) {
-    super(name, versions, eeprom);
+  constructor(name, versions, eeprom, escs, pwm) {
+    super(name, versions, eeprom, escs);
     this.pwm = pwm;
   }
 
@@ -26,14 +26,6 @@ class BluejaySource extends Source {
     return `${make} - ${name}, ${revision}${pwm}`;
   }
 
-  getEscLayouts() {
-    return escs.layouts;
-  }
-
-  getMcuSignatures() {
-    return escs.mcus;
-  }
-
   async getVersions() {
     return (await this.getVersionsList()).EFM8;
   }
@@ -44,6 +36,7 @@ const config = new BluejaySource(
   'Bluejay',
   VERSIONS_REMOTE,
   eeprom,
+  escs,
   pwmOptions
 );
 

@@ -20,28 +20,12 @@ class BLHeliSource extends Source {
     return `${make} - ${this.name}, ${revision}`;
   }
 
-  getEscLayouts() {
-    return escsAtmel.layouts;
-  }
-
-  getMcuSignatures() {
-    return escsAtmel.mucs;
-  }
-
   async getVersions() {
     return (await this.getVersionsList()).Atmel;
   }
 }
 
 class BLHeliSilabsSource extends BLHeliSource {
-  getEscLayouts() {
-    return escsSilabs.layouts;
-  }
-
-  getMcuSignatures() {
-    return escsSilabs.mcus;
-  }
-
   async getVersions() {
     return (await this.getVersionsList()).Silabs;
   }
@@ -50,13 +34,15 @@ class BLHeliSilabsSource extends BLHeliSource {
 const blheliSource = new BLHeliSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  eeprom
+  eeprom,
+  escsAtmel
 );
 
 const blheliSilabsSource = new BLHeliSilabsSource(
   'BLHeli',
   VERSIONS_REMOTE,
-  eeprom
+  eeprom,
+  escsSilabs
 );
 
 export {
