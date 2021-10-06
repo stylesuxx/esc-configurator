@@ -1,7 +1,16 @@
 import Source from '../Source';
 import eeprom from './eeprom';
 import settings from './settings';
-import escs from '../BlheliS/escs.json';
+import escsBlheliS from '../BlheliS/escs.json';
+import escsBluejay from './escs.json';
+
+const escs = {
+  mcus: escsBlheliS.mcus,
+  layouts: {
+    ...escsBlheliS.layouts,
+    ...escsBluejay.layouts, 
+  }, 
+};
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 
