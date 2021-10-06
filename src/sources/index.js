@@ -5,7 +5,7 @@ import {
   blheliSilabsSource,
 } from './Blheli';
 
-import { blheliSSource } from './BlheliS';
+import blheliSSource from './BlheliS';
 
 import bluejaySource from './Bluejay';
 

@@ -297,8 +297,6 @@ SETTINGS_DESCRIPTIONS['203'] = {
   },
 };
 
-
-
 const INDIVIDUAL_SETTINGS = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',

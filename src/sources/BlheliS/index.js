@@ -21,8 +21,4 @@ const blheliSSource = new BLHeliSSource(
   escs
 );
 
-export {
-  blheliSSource,
-};
-
 export default blheliSSource;
