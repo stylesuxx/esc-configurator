@@ -2,14 +2,15 @@
   {
     "title": "unreleased",
     "items": [
+      "Enhancement: Pre-select current ESC firmware when flashing",
       "Enhancement: Cache firmware versions and layouts - do not store them in the app",
-      "Enhancement: Diable connect/disconnect button when app not idle",
+      "Enhancement: Disable connect/disconnect button when app not idle",
       "Enhancement: Added more melodies",
       "Wording: Normalized ESCs and BLHeli_S",
       "Bugfix: Fixed min/max properties with slider",
       "Bugfix: Dump the proper ESC instead of defaulting to the last one",
       "Bugfix: Update the proper ESC after flashing a single ESC",
-      "Refactor: Removed firmware and ESC files - use the ones from the coresponding repository instead",
+      "Refactor: Removed firmware and ESC files - use the ones from the corresponding repository instead",
       "Refactor: Overlay component",
       "Refactor: Simplified firmware sources",
       "Chore: Bluejay settings cleanup",

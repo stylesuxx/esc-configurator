@@ -274,6 +274,7 @@ class FourWay {
         let defaultSettings = blheliEeprom.DEFAULTS;
         let validFirmwareNames = blheliEeprom.NAMES;
         let displayName = 'UNKNOWN';
+        let firmwareName = 'UNKNOWN';
 
         if (isSiLabs) {
           layoutSize = blheliEeprom.LAYOUT_SIZE;
@@ -390,9 +391,11 @@ class FourWay {
             }
 
             displayName = `${make} - JESC, ${revision}`;
+            firmwareName = 'JESC';
           } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
             displayName = bluejaySource.buildDisplayName(flash, make);
+            firmwareName = bluejaySource.getName();
           } else if (layoutName in blheliSilabsLayouts) {
             make = blheliSilabsLayouts[layoutName].name;
           } else if (layoutName in blheliSLayouts) {
@@ -465,6 +468,7 @@ class FourWay {
             }
 
             displayName = blheliSSource.buildDisplayName(flash, make);
+            firmwareName = blheliSSource.getName();
           }
         } else if (isArm) {
           /* Read version information direct from EEPROM so we can later
@@ -507,6 +511,7 @@ class FourWay {
           flash.settings.LAYOUT = flash.settings.NAME;
 
           displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
+          firmwareName = am32Source.getName();
         } else {
           const blheliAtmelLayouts = blheliSource.getEscLayouts();
           if (layoutName in blheliAtmelLayouts) {
@@ -517,6 +522,7 @@ class FourWay {
         flash.canMigrateTo = validFirmwareNames;
         flash.defaultSettings = defaultSettings[layoutRevision];
         flash.displayName = displayName;
+        flash.firmwareName = firmwareName;
         flash.layoutSize = layoutSize;
         flash.layout = layout;
         flash.make = make;
