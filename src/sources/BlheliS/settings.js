@@ -377,18 +377,8 @@ const SETTINGS_LAYOUT_32 = [
 ];
 
 const SETTINGS_DESCRIPTIONS = {
-  33: {
-    MULTI: { base: SETTINGS_LAYOUT_33 },
-    // There is no MAIN nor MULTI mode in BLHeli_S, added for completeness
-    MAIN: { base: [] },
-    TAIL: { base: [] },
-  },
-  32: {
-    MULTI: { base: SETTINGS_LAYOUT_32 },
-    // There is no MAIN nor MULTI mode in BLHeli_S, added for completeness
-    MAIN: { base: [] },
-    TAIL: { base: [] },
-  },
+  33: { base: SETTINGS_LAYOUT_33 },
+  32: { base: SETTINGS_LAYOUT_32 },
 };
 
 // @todo add validation for min/max throttle

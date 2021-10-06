@@ -1101,84 +1101,72 @@ const MULTI_SETTINGS_LAYOUT_19 = [
 
 const SETTINGS_DESCRIPTIONS = {
   '21': {
-    MULTI: {
-      base: MULTI_SETTINGS_LAYOUT_21,
-      overrides: {
-        '14.5': [
-          {
-            name: 'PWM_DITHER',
-            type: 'enum',
-            label: 'escPWMOutputDither',
-            options: [
-              {
-                value: '1',
-                label: 'Off',
-              }, {
-                value: '2',
-                label: '7',
-              },
-              {
-                value: '3',
-                label: '15',
-              }, {
-                value: '4',
-                label: '31',
-              },
-              {
-                value: '5',
-                label: '63',
-              },
-            ],
-          },
-        ],
-      },
+    base: MULTI_SETTINGS_LAYOUT_21,
+    overrides: {
+      '14.5': [
+        {
+          name: 'PWM_DITHER',
+          type: 'enum',
+          label: 'escPWMOutputDither',
+          options: [
+            {
+              value: '1',
+              label: 'Off',
+            }, {
+              value: '2',
+              label: '7',
+            },
+            {
+              value: '3',
+              label: '15',
+            }, {
+              value: '4',
+              label: '31',
+            },
+            {
+              value: '5',
+              label: '63',
+            },
+          ],
+        },
+      ],
     },
-    MAIN: { base: [] },
-    TAIL: { base: [] },
   },
 
   '20': {
-    MULTI: {
-      base: MULTI_SETTINGS_LAYOUT_20,
-      overrides: {
-        '14.0': [
-          {
-            name: 'PWM_DITHER',
-            type: 'enum',
-            label: 'escPWMOutputDither',
-            options: [
-              {
-                value: '1',
-                label: '1',
-              }, {
-                value: '2',
-                label: '3',
-              },
-              {
-                value: '3',
-                label: '7',
-              }, {
-                value: '4',
-                label: '15',
-              },
-              {
-                value: '5',
-                label: '31',
-              },
-            ],
-          },
-        ],
-      },
+    base: MULTI_SETTINGS_LAYOUT_20,
+    overrides: {
+      '14.0': [
+        {
+          name: 'PWM_DITHER',
+          type: 'enum',
+          label: 'escPWMOutputDither',
+          options: [
+            {
+              value: '1',
+              label: '1',
+            }, {
+              value: '2',
+              label: '3',
+            },
+            {
+              value: '3',
+              label: '7',
+            }, {
+              value: '4',
+              label: '15',
+            },
+            {
+              value: '5',
+              label: '31',
+            },
+          ],
+        },
+      ],
     },
-    MAIN: { base: [] },
-    TAIL: { base: [] },
   },
 
-  '19': {
-    MULTI: { base: MULTI_SETTINGS_LAYOUT_19 },
-    MAIN: { base: [] },
-    TAIL: { base: [] },
-  },
+  '19': { base: MULTI_SETTINGS_LAYOUT_19 },
 };
 
 const INDIVIDUAL_SETTINGS = [

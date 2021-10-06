@@ -2,264 +2,260 @@ const SETTINGS_DESCRIPTIONS = {};
 
 // V0.9
 SETTINGS_DESCRIPTIONS['200'] = {
-  MULTI: {
-    base: [{
-      name: 'RPM_POWER_SLOPE',
-      type: 'enum',
-      options: [{
-        value: '1',
-        label: '0.5% (0.031)',
-      }, {
-        value: '7',
-        label: '5%  (0.25)',
-      }, {
-        value: '8',
-        label: '7%  (0.38)',
-      }, {
-        value: '9',
-        label: '10%  (0.50)',
-      }, {
-        value: '10',
-        label: '15%  (0.75)',
-      }, {
-        value: '11',
-        label: '20%  (1.00)',
-      }, {
-        value: '12',
-        label: '24%  (1.25)',
-      }, {
-        value: '13',
-        label: '29%  (1.50)',
-      }],
-      label: 'Rampup Start Power',
+  base: [{
+    name: 'RPM_POWER_SLOPE',
+    type: 'enum',
+    options: [{
+      value: '1',
+      label: '0.5% (0.031)',
     }, {
-      name: 'STARTUP_POWER_MIN',
-      type: 'number',
-      label: 'escMinStartupPower',
-      min: 1000,
-      max: 1125,
-      step: 5,
-      displayFactor: 1000 / 2047,
-      displayOffset: 1000,
-      displayPrecision: 0,
+      value: '7',
+      label: '5%  (0.25)',
     }, {
-      name: 'TEMPERATURE_PROTECTION',
-      type: 'enum',
-      label: 'escTemperatureProtection',
-      options: [{
-        value: '0',
-        label: 'Disabled',
-      }, {
-        value: '1',
-        label: '80 C',
-      }, {
-        value: '2',
-        label: '90 C',
-      }, {
-        value: '3',
-        label: '100 C',
-      }, {
-        value: '4',
-        label: '110 C',
-      }, {
-        value: '5',
-        label: '120 C',
-      }, {
-        value: '6',
-        label: '130 C',
-      }, {
-        value: '7',
-        label: '140 C',
-      }],
+      value: '8',
+      label: '7%  (0.38)',
     }, {
-      name: '_LOW_RPM_POWER_PROTECTION',
-      type: 'bool',
-      label: 'escLowRPMPowerProtection',
+      value: '9',
+      label: '10%  (0.50)',
     }, {
-      name: 'BRAKE_ON_STOP',
-      type: 'bool',
-      label: 'escBrakeOnStop',
+      value: '10',
+      label: '15%  (0.75)',
     }, {
-      name: 'DEMAG_COMPENSATION',
-      type: 'enum',
-      label: 'escDemagCompensation',
-      options: [{
-        value: '1',
-        label: 'Off',
-      }, {
-        value: '2',
-        label: 'Low',
-      }, {
-        value: '3',
-        label: 'High',
-      }],
+      value: '11',
+      label: '20%  (1.00)',
     }, {
-      name: 'COMMUTATION_TIMING',
-      type: 'enum',
-      label: 'escMotorTiming',
-      options: [{
-        value: '1',
-        label: '0° (Low)',
-      }, {
-        value: '2',
-        label: '7.5° (MediumLow)',
-      }, {
-        value: '3',
-        label: '15° (Medium)',
-      }, {
-        value: '4',
-        label: '22.5° (MediumHigh)',
-      }, {
-        value: '5',
-        label: '30° (High)',
-      }],
+      value: '12',
+      label: '24%  (1.25)',
     }, {
-      name: 'BEEP_STRENGTH',
-      type: 'number',
-      min: 0,
-      max: 255,
-      step: 1,
-      label: 'escBeepStrength',
-    }, {
-      name: 'BEACON_STRENGTH',
-      type: 'number',
-      min: 0,
-      max: 255,
-      step: 1,
-      label: 'escBeaconStrength',
-    }, {
-      name: 'BEACON_DELAY',
-      type: 'enum',
-      label: 'escBeaconDelay',
-      options: [{
-        value: '1',
-        label: '1 minute',
-      }, {
-        value: '2',
-        label: '2 minutes',
-      }, {
-        value: '3',
-        label: '5 minutes',
-      }, {
-        value: '4',
-        label: '10 minutes',
-      }, {
-        value: '5',
-        label: 'Infinite',
-      }],
-    }, {
-      name: 'STARTUP_BEEP',
-      type: 'bool',
-      label: 'escStartupBeep',
-    }, {
-      name: 'DITHERING',
-      type: 'bool',
-      label: 'escDithering',
+      value: '13',
+      label: '29%  (1.50)',
     }],
-  },
+    label: 'Rampup Start Power',
+  }, {
+    name: 'STARTUP_POWER_MIN',
+    type: 'number',
+    label: 'escMinStartupPower',
+    min: 1000,
+    max: 1125,
+    step: 5,
+    displayFactor: 1000 / 2047,
+    displayOffset: 1000,
+    displayPrecision: 0,
+  }, {
+    name: 'TEMPERATURE_PROTECTION',
+    type: 'enum',
+    label: 'escTemperatureProtection',
+    options: [{
+      value: '0',
+      label: 'Disabled',
+    }, {
+      value: '1',
+      label: '80 C',
+    }, {
+      value: '2',
+      label: '90 C',
+    }, {
+      value: '3',
+      label: '100 C',
+    }, {
+      value: '4',
+      label: '110 C',
+    }, {
+      value: '5',
+      label: '120 C',
+    }, {
+      value: '6',
+      label: '130 C',
+    }, {
+      value: '7',
+      label: '140 C',
+    }],
+  }, {
+    name: '_LOW_RPM_POWER_PROTECTION',
+    type: 'bool',
+    label: 'escLowRPMPowerProtection',
+  }, {
+    name: 'BRAKE_ON_STOP',
+    type: 'bool',
+    label: 'escBrakeOnStop',
+  }, {
+    name: 'DEMAG_COMPENSATION',
+    type: 'enum',
+    label: 'escDemagCompensation',
+    options: [{
+      value: '1',
+      label: 'Off',
+    }, {
+      value: '2',
+      label: 'Low',
+    }, {
+      value: '3',
+      label: 'High',
+    }],
+  }, {
+    name: 'COMMUTATION_TIMING',
+    type: 'enum',
+    label: 'escMotorTiming',
+    options: [{
+      value: '1',
+      label: '0° (Low)',
+    }, {
+      value: '2',
+      label: '7.5° (MediumLow)',
+    }, {
+      value: '3',
+      label: '15° (Medium)',
+    }, {
+      value: '4',
+      label: '22.5° (MediumHigh)',
+    }, {
+      value: '5',
+      label: '30° (High)',
+    }],
+  }, {
+    name: 'BEEP_STRENGTH',
+    type: 'number',
+    min: 0,
+    max: 255,
+    step: 1,
+    label: 'escBeepStrength',
+  }, {
+    name: 'BEACON_STRENGTH',
+    type: 'number',
+    min: 0,
+    max: 255,
+    step: 1,
+    label: 'escBeaconStrength',
+  }, {
+    name: 'BEACON_DELAY',
+    type: 'enum',
+    label: 'escBeaconDelay',
+    options: [{
+      value: '1',
+      label: '1 minute',
+    }, {
+      value: '2',
+      label: '2 minutes',
+    }, {
+      value: '3',
+      label: '5 minutes',
+    }, {
+      value: '4',
+      label: '10 minutes',
+    }, {
+      value: '5',
+      label: 'Infinite',
+    }],
+  }, {
+    name: 'STARTUP_BEEP',
+    type: 'bool',
+    label: 'escStartupBeep',
+  }, {
+    name: 'DITHERING',
+    type: 'bool',
+    label: 'escDithering',
+  }],
 };
 
 
 // V0.10
 SETTINGS_DESCRIPTIONS['201'] = {
-  MULTI: {
-    base: [{
-      name: 'STARTUP_POWER_MIN',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+  base: [{
+    name: 'STARTUP_POWER_MIN',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'STARTUP_POWER_MAX',
+    type: 'number',
+    label: 'escMaxStartupPower',
+    // Note: The real displayFactor is 1000 / 255 but 250 makes the slider nicer to work with minimal loss of accuracy
+    min: 1004,
+    max: 1300,
+    step: 4,
+    displayFactor: 1000 / 250,
+    displayOffset: 1000,
+    displayPrecision: 0,
+  }, {
+    name: 'TEMPERATURE_PROTECTION',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'COMMUTATION_TIMING',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'DEMAG_COMPENSATION',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'RPM_POWER_SLOPE',
+    type: 'enum',
+    options: [{
+      value: '1',
+      label: '1x (More protection)',
     }, {
-      name: 'STARTUP_POWER_MAX',
-      type: 'number',
-      label: 'escMaxStartupPower',
-      // Note: The real displayFactor is 1000 / 255 but 250 makes the slider nicer to work with minimal loss of accuracy
-      min: 1004,
-      max: 1300,
-      step: 4,
-      displayFactor: 1000 / 250,
-      displayOffset: 1000,
-      displayPrecision: 0,
+      value: '2',
+      label: '2x',
     }, {
-      name: 'TEMPERATURE_PROTECTION',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '3',
+      label: '3x',
     }, {
-      name: 'COMMUTATION_TIMING',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '4',
+      label: '4x',
     }, {
-      name: 'DEMAG_COMPENSATION',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '5',
+      label: '5x',
     }, {
-      name: 'RPM_POWER_SLOPE',
-      type: 'enum',
-      options: [{
-        value: '1',
-        label: '1x (More protection)',
-      }, {
-        value: '2',
-        label: '2x',
-      }, {
-        value: '3',
-        label: '3x',
-      }, {
-        value: '4',
-        label: '4x',
-      }, {
-        value: '5',
-        label: '5x',
-      }, {
-        value: '6',
-        label: '6x',
-      }, {
-        value: '7',
-        label: '7x',
-      }, {
-        value: '8',
-        label: '8x',
-      }, {
-        value: '9',
-        label: '9x',
-      }, {
-        value: '10',
-        label: '10x',
-      }, {
-        value: '11',
-        label: '11x',
-      }, {
-        value: '12',
-        label: '12x',
-      }, {
-        value: '13',
-        label: '13x (Less protection)',
-      }, {
-        value: '0',
-        label: 'Off',
-      }],
-      label: 'escRampupPower',
+      value: '6',
+      label: '6x',
     }, {
-      name: 'BEEP_STRENGTH',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '7',
+      label: '7x',
     }, {
-      name: 'BEACON_STRENGTH',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '8',
+      label: '8x',
     }, {
-      name: 'BEACON_DELAY',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '9',
+      label: '9x',
     }, {
-      name: 'STARTUP_BEEP',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '10',
+      label: '10x',
     }, {
-      name: 'DITHERING',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '11',
+      label: '11x',
     }, {
-      name: 'BRAKE_ON_STOP',
-      inherit: SETTINGS_DESCRIPTIONS['200'],
+      value: '12',
+      label: '12x',
+    }, {
+      value: '13',
+      label: '13x (Less protection)',
+    }, {
+      value: '0',
+      label: 'Off',
     }],
-  },
+    label: 'escRampupPower',
+  }, {
+    name: 'BEEP_STRENGTH',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'BEACON_STRENGTH',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'BEACON_DELAY',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'STARTUP_BEEP',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'DITHERING',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }, {
+    name: 'BRAKE_ON_STOP',
+    inherit: SETTINGS_DESCRIPTIONS['200'],
+  }],
 };
 
 // inherit settings descriptions and also retain ordering
 function merge_inherited_descriptions (descs) {
-  for (let i = 0; i < descs.MULTI.base.length; i += 1) {
-    if (descs.MULTI.base[i].inherit) {
-      descs.MULTI.base[i] = descs.MULTI.base[i].inherit.MULTI.base.find((s) => s.name === descs.MULTI.base[i].name);
+  for (let i = 0; i < descs.base.length; i += 1) {
+    if (descs.base[i].inherit) {
+      descs.base[i] = descs.base[i].inherit.base.find((s) => s.name === descs.base[i].name);
     }
   }
 }
@@ -268,33 +264,29 @@ merge_inherited_descriptions(SETTINGS_DESCRIPTIONS['201']);
 
 // 201 with damping mode
 SETTINGS_DESCRIPTIONS['202'] = {
-  MULTI: {
-    base: [
-      ...SETTINGS_DESCRIPTIONS['201'].MULTI.base,
-      {
-        name: 'DAMPING_MODE',
-        type: 'enum',
-        label: 'escDampingMode',
-        options: [{
-          value: '0',
-          label: 'Off',
-        }, {
-          value: '1',
-          label: 'Not during startup',
-        }, {
-          value: '2',
-          label: 'On',
-        }],
+  base: [
+    ...SETTINGS_DESCRIPTIONS['201'].base,
+    {
+      name: 'DAMPING_MODE',
+      type: 'enum',
+      label: 'escDampingMode',
+      options: [{
+        value: '0',
+        label: 'Off',
+      }, {
+        value: '1',
+        label: 'Not during startup',
+      }, {
+        value: '2',
+        label: 'On',
       }],
-  },
+    }],
 };
 
 SETTINGS_DESCRIPTIONS['203'] = {
-  MULTI: {
-    base: [
-      ...SETTINGS_DESCRIPTIONS['201'].MULTI.base.filter((s) => s.name !== 'STARTUP_BEEP'),
-    ],
-  },
+  base: [
+    ...SETTINGS_DESCRIPTIONS['201'].base.filter((s) => s.name !== 'STARTUP_BEEP'),
+  ],
 };
 
 const INDIVIDUAL_SETTINGS = [{
