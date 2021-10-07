@@ -1,9 +1,8 @@
 import am32Source from './AM32';
 
-import {
-  blheliSource,
-  blheliSilabsSource,
-} from './Blheli';
+import blheliSource from './Blheli/Atmel';
+
+import blheliSilabsSource from './Blheli/Silabs';
 
 import blheliSSource from './BlheliS';
 
