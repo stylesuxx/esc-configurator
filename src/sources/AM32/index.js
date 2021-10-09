@@ -25,6 +25,22 @@ class AM32Source extends Source {
     this.setLocalVersions(versions.Arm);
     return versions.Arm;
   }
+
+  getFirmwareUrl({
+    escKey, version, url,
+  }) {
+    const format = (str2Format, ...args) =>
+      str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0]);
+
+    const name = this.escs.layouts[escKey].fileName;
+
+    const formattedUrl = format(
+      url,
+      name
+    );
+
+    return formattedUrl;
+  }
 }
 
 const source = new AM32Source(

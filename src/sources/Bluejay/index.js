@@ -39,6 +39,22 @@ class BluejaySource extends Source {
   async getVersions() {
     return (await this.getRemoteVersionsList(VERSIONS_REMOTE)).EFM8;
   }
+
+  getFirmwareUrl({
+    escKey, version, pwm, url,
+  }) {
+    const format = (str2Format, ...args) =>
+      str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0]);
+
+    const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
+
+    const formattedUrl = format(
+      url,
+      `${name}_${pwm}`
+    );
+
+    return formattedUrl;
+  }
 }
 
 const pwmOptions = [24, 48, 96];

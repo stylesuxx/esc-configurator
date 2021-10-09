@@ -10,6 +10,7 @@ import {
 } from '../../utils/helpers/General';
 
 import { blheliSource } from '../../sources';
+import sources from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
 
@@ -188,20 +189,16 @@ function FirmwareSelector({
   }
 
   function handleSubmit() {
-    const escsAll = escs[selection.firmware];
+    const source = sources.find((s) => s.getName() === selection.firmware);
+    const firmwareUrl = source.getFirmwareUrl({
+      escKey: escLayout,
+      version: selection.version,
+      pwm: selection.pwm,
+      mode: mode,
+      url: selection.url,
+    });
 
-    const format = (str2Format, ...args) =>
-      str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );
-
-    const name = escsAll[escLayout].fileName || escsAll[escLayout].name.replace(/[\s-]/g, '_').toUpperCase();
-    const pwmSuffix = selection.pwm ? '_' + selection.pwm : '';
-    const formattedUrl = format(
-      selection.url,
-      `${name}${pwmSuffix}`,
-      mode
-    );
-
-    onSubmit(formattedUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
+    onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
   }
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
