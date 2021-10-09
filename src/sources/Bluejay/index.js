@@ -1,12 +1,22 @@
-import Source from '../Source.js';
+import Source from '../Source';
 import eeprom from './eeprom';
-import * as escsjson from '../Blheli/blheli_escs.json';
+import settings from './settings';
+import escsBlheliS from '../BlheliS/escs.json';
+import escsBluejay from './escs.json';
+
+const escs = {
+  mcus: escsBlheliS.mcus,
+  layouts: {
+    ...escsBlheliS.layouts,
+    ...escsBluejay.layouts, 
+  }, 
+};
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 
 class BluejaySource extends Source {
-  constructor(name, versions, eeprom, pwm) {
-    super(name, versions, eeprom);
+  constructor(name, versions, eeprom, escs, pwm) {
+    super(name, versions, eeprom, escs);
     this.pwm = pwm;
   }
 
@@ -26,14 +36,6 @@ class BluejaySource extends Source {
     return `${make} - ${name}, ${revision}${pwm}`;
   }
 
-  getEscLayouts() {
-    return escsjson.layouts['BLHeli_S SiLabs'];
-  }
-
-  getMcuSignatures() {
-    return escsjson.signatures['BLHeli_S SiLabs'];
-  }
-
   async getVersions() {
     return (await this.getVersionsList()).EFM8;
   }
@@ -43,7 +45,11 @@ const pwmOptions = [24, 48, 96];
 const config = new BluejaySource(
   'Bluejay',
   VERSIONS_REMOTE,
-  eeprom,
+  {
+    ...eeprom,
+    ...settings, 
+  },
+  escs,
   pwmOptions
 );
 

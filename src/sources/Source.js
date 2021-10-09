@@ -10,14 +10,15 @@ import {
  * required methods.
  */
 class Source {
-  constructor(name, versions, eeprom) {
-    if(!name || !versions || !eeprom) {
-      throw new MissingParametersError("name, versions, eeprom");
+  constructor(name, versions, eeprom, escs) {
+    if(!name || !versions || !eeprom || !escs) {
+      throw new MissingParametersError("name, versions, eeprom, escs");
     }
 
     this.name = name;
     this.versions = versions;
     this.eeprom = eeprom;
+    this.escs = escs;
     this.pwm = [];
 
     this.fetchJson = async (url) => {
@@ -58,11 +59,11 @@ class Source {
   }
 
   getEscLayouts() {
-    throw new MethodNotImplementedError("getEscLayouts()");
+    return this.escs.layouts;
   }
 
   getMcuSignatures() {
-    throw new MethodNotImplementedError("getMcuSignatures()");
+    return this.escs.mcus;
   }
 
   getVersions() {

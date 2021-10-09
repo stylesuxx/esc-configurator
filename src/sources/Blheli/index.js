@@ -1,8 +1,4 @@
 import Source from '../Source';
-import eeprom from './eeprom';
-import * as escsjson from './blheli_escs.json';
-
-const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
 
 class BLHeliSource extends Source {
   buildDisplayName(flash, make) {
@@ -18,70 +14,8 @@ class BLHeliSource extends Source {
 
     return `${make} - ${this.name}, ${revision}`;
   }
-
-  getEscLayouts() {
-    return escsjson.layouts.Atmel;
-  }
-
-  getMcuSignatures() {
-    return escsjson.signatures.Atmel;
-  }
-
-  async getVersions() {
-    return (await this.getVersionsList()).Atmel;
-  }
 }
-
-class BLHeliSilabsSource extends BLHeliSource {
-  getEscLayouts() {
-    return escsjson.layouts.SiLabs;
-  }
-
-  getMcuSignatures() {
-    return escsjson.signatures.SiLabs;
-  }
-
-  async getVersions() {
-    return (await this.getVersionsList()).Silabs;
-  }
-}
-
-class BLHeliSSource extends BLHeliSource {
-  getEscLayouts() {
-    return escsjson.layouts['BLHeli_S SiLabs'];
-  }
-
-  getMcuSignatures() {
-    return escsjson.signatures['BLHeli_S SiLabs'];
-  }
-
-  async getVersions() {
-    return (await this.getVersionsList())['BLHeli_S SiLabs'];
-  }
-}
-
-const blheliSource = new BLHeliSource(
-  'BLHeli',
-  VERSIONS_REMOTE,
-  eeprom
-);
-
-const blheliSilabsSource = new BLHeliSilabsSource(
-  'BLHeli',
-  VERSIONS_REMOTE,
-  eeprom
-);
-
-const blheliSSource = new BLHeliSSource(
-  'BLHeli_S',
-  VERSIONS_REMOTE,
-  eeprom
-);
 
 export {
-  blheliSource,
-  blheliSilabsSource,
-  blheliSSource,
+  BLHeliSource, 
 };
-
-export default blheliSSource;
