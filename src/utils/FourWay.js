@@ -201,11 +201,9 @@ class FourWay {
   }
 
   sendMessagePromised(command, params = [0], address = 0, retries = 10) {
-    const self = this;
-
     const process = async (resolve, reject) => {
       this.lastCommandTimestamp = Date.now();
-      const message = self.createMessage(command, params, address);
+      const message = this.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
       if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
@@ -1134,12 +1132,10 @@ class FourWay {
   }
 
   start() {
-    const self = this;
-
     this.interval = setInterval(async() => {
-      if (Date.now() - self.lastCommandTimestamp > 900) {
+      if (Date.now() - this.lastCommandTimestamp > 900) {
         try {
-          await self.testAlive();
+          await this.testAlive();
         } catch (error) {
           console.debug('Alive Test failed');
         }
