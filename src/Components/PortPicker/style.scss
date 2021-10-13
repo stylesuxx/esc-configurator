@@ -117,16 +117,20 @@
         }
       }
 
-      &.active {
+      &.active,
+      &.active:hover:not([disabled]) {
         .connect {
           background-color: #e60000;
           border: 1px solid #fe0000;
           background-image: url(images/icons/cf_icon_usb1_white.svg);
           transition: none;
         }
+      }
 
+      &.active:hover:not([disabled]) {
         .connect:hover {
           background-color: #f21212;
+          border: 1px solid #f21212;
         }
       }
     }
