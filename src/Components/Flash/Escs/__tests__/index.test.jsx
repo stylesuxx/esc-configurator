@@ -7,14 +7,27 @@ import Escs from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
+let onCommonSettingsUpdate;
+let onFirmwareDump;
+let onFlash;
+let onSettingsUpdate;
+
 describe('Escs', () => {
+  beforeEach(() => {
+    onCommonSettingsUpdate = jest.fn();
+    onSettingsUpdate = jest.fn();
+    onFlash = jest.fn();
+    onFirmwareDump = jest.fn();
+  });
+
   it('should not show ESCs without ESCs', () => {
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <Escs
         canFlash={false}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
@@ -43,14 +56,13 @@ describe('Escs', () => {
       flashProgress.push(0);
     }
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Escs
         canFlash={false}
         escs={escs}
         flashProgress={flashProgress}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
         progress={flashProgress}

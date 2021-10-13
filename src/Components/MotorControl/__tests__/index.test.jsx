@@ -12,16 +12,19 @@ jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) 
 
 let onAllUpdate;
 let onSingleUpdate;
+let getBatteryState;
 
 describe('MotorControl', () => {
   beforeEach(() => {
     onAllUpdate = jest.fn();
     onSingleUpdate = jest.fn();
+    getBatteryState = jest.fn();
   });
 
   it('should render without motor count', () => {
     render(
       <MotorControl
+        getBatteryState={getBatteryState}
         onAllUpdate={onAllUpdate}
         onSingleUpdate={onSingleUpdate}
       />
@@ -35,6 +38,7 @@ describe('MotorControl', () => {
   it('should render with motorcount', () => {
     render(
       <MotorControl
+        getBatteryState={getBatteryState}
         motorCount={4}
         onAllUpdate={onAllUpdate}
         onSingleUpdate={onSingleUpdate}

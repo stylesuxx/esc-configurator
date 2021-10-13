@@ -1,6 +1,9 @@
 import React from 'react';
 import {
-  render, screen, fireEvent,
+  act,
+  fireEvent,
+  render,
+  screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -21,18 +24,29 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
+let onCommonSettingsUpdate;
+let onFlash;
+let onFirmwareDump;
+let onSettingsUpdate;
+
 describe('Esc', () => {
+  beforeEach(() => {
+    onCommonSettingsUpdate = jest.fn();
+    onFlash = jest.fn();
+    onFirmwareDump = jest.fn();
+    onSettingsUpdate = jest.fn();
+  });
+
   it('should display ESC details', () => {
     const esc = { individualSettings: {} };
-
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <Esc
         directInput={false}
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
@@ -54,14 +68,13 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Esc
         directInput={false}
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
         progress={50}
@@ -82,14 +95,13 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Esc
         directInput={false}
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
@@ -108,15 +120,14 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Esc
         canFlash={false}
         directInput={false}
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
@@ -136,15 +147,14 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Esc
         canFlash
         directInput={false}
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
@@ -227,15 +237,14 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Esc
         canFlash
         directInput={false}
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
@@ -330,15 +339,14 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Esc
         canFlash
         directInput
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
@@ -433,24 +441,28 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     const ref = React.createRef();
 
     render(
       <Esc
         canFlash
         directInput
+        disableCommon={false}
+        enableAdvanced={false}
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
         ref={ref}
       />
     );
 
-    ref.current.setProgress(50);
+    act(() => {
+      ref.current.setProgress(50);
+    });
+
     const progressbar = screen.getByRole(/progressbar/i);
     expect(progressbar).toBeInTheDocument();
     expect(progressbar.value).toEqual(50);
@@ -497,18 +509,18 @@ describe('Esc', () => {
       },
     };
 
-    const onFlash = jest.fn();
-    const onCommonSettingsUpdate = jest.fn();
-
     render(
       <Esc
         canFlash
         directInput={false}
         disableCommon
+        enableAdvanced={false}
         esc={esc}
         index={0}
         onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
+        onSettingsUpdate={onSettingsUpdate}
       />
     );
 
@@ -536,17 +548,17 @@ describe('Esc', () => {
       },
     };
 
-    const onFirmwareDump = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Esc
         canFlash
         directInput={false}
+        disableCommon={false}
         enableAdvanced
         esc={esc}
         index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
+        onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
       />
     );

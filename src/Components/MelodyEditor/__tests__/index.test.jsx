@@ -16,15 +16,25 @@ jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) 
 
 const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
-let onClose = jest.fn();
-let onWrite = jest.fn();
-let onSave = jest.fn();
+let onClose;
+let onDelete;
+let onWrite;
+let onSave;
+let oscStart;
+let oscStop;
+let oscClose;
+let contextClose;
 
 describe('MelodyEditor', () => {
   beforeEach(() => {
     onClose = jest.fn();
+    onDelete = jest.fn();
     onWrite = jest.fn();
     onSave = jest.fn();
+    oscStart = jest.fn();
+    oscStop = jest.fn();
+    oscClose = jest.fn();
+    contextClose = jest.fn();
   });
 
   it('should display without melodies', () => {
@@ -34,8 +44,10 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={[]}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
+        onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
         writing={false}
@@ -63,8 +75,10 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={[]}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
+        onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
         writing={false}
@@ -101,8 +115,10 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={[]}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
+        onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
         writing={false}
@@ -125,16 +141,6 @@ describe('MelodyEditor', () => {
     for(let i = 0; i < acceptButtons.length; i += 1) {
       userEvent.click(acceptButtons[i]);
     }
-
-    // Not available because of missing audio context
-    /*
-    userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
-    expect(screen.getByText('common:melodyEditorStopAll')).toBeInTheDocument();
-
-    userEvent.click(screen.getByText(/common:melodyEditorStopAll/i));
-
-    expect(screen.getByText('common:melodyEditorPlayAll')).toBeInTheDocument();
-    */
   });
 
   it('should display while writing', () => {
@@ -144,8 +150,10 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={[]}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
+        onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
         writing
@@ -178,8 +186,10 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={[]}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
+        onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
         writing={false}
@@ -210,14 +220,6 @@ describe('MelodyEditor', () => {
     }
     userEvent.click(screen.getByText(/common:melodyEditorWrite/i));
     expect(onWrite).toHaveBeenCalled();
-
-    /*
-    userEvent.click(screen.getByText(/write/i));
-    expect(onWrite).not.toHaveBeenCalled();
-
-    userEvent.click(screen.getByText(/close/i));
-    expect(onClose).toHaveBeenCalled();
-    */
   });
 
   it('should update when preset is selected', () => {
@@ -227,8 +229,10 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={defaultMelodies}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
+        onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
         writing={false}
@@ -251,8 +255,10 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={defaultMelodies}
         defaultMelodies={[]}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
+        onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
         selected="Bluejay Default"
@@ -277,6 +283,7 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={defaultMelodies}
         defaultMelodies={defaultMelodies}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
         onDelete={onDelete}
@@ -306,6 +313,7 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={defaultMelodies}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
         onDelete={onDelete}
@@ -334,11 +342,6 @@ describe('MelodyEditor', () => {
     const onDelete = jest.fn();
     const melodies = [melody, melody, melody, `${melody}, f#6`];
 
-    const oscStart = jest.fn();
-    const oscStop = jest.fn();
-    const oscClose = jest.fn();
-    const contextClose = jest.fn();
-
     class Mocked extends MockedContextOnended{
       constructor() {
         super(contextClose, oscStart, oscStop, oscClose);
@@ -351,6 +354,7 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={defaultMelodies}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
         onDelete={onDelete}
@@ -373,13 +377,7 @@ describe('MelodyEditor', () => {
   });
 
   it('should be possible to stop a playing melody', async() => {
-    const onDelete = jest.fn();
     const melodies = [melody, melody, melody, `${melody}, f#6`];
-
-    const oscStart = jest.fn();
-    const oscStop = jest.fn();
-    const oscClose = jest.fn();
-    const contextClose = jest.fn();
 
     class Mocked extends MockedContextOnended{
       constructor() {
@@ -393,6 +391,7 @@ describe('MelodyEditor', () => {
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={defaultMelodies}
+        dummy={false}
         melodies={melodies}
         onClose={onClose}
         onDelete={onDelete}
