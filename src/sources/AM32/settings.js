@@ -228,7 +228,7 @@ const SETTINGS_DESCRIPTIONS = {
   '1': { base: SETTINGS_LAYOUT_1 },
 };
 
-const INDIVIDUAL_SETTINGS = [
+const INDIVIDUAL_SETTINGS_0 = [
   {
     name: 'MOTOR_DIRECTION',
     type: 'bool',
@@ -241,9 +241,20 @@ const INDIVIDUAL_SETTINGS = [
   },
 ];
 
+const INDIVIDUAL_SETTINGS_1 = [
+  ...INDIVIDUAL_SETTINGS_0,
+  {
+    name: 'STARTUP_MELODY',
+    type: 'melody',
+    label: 'startupMelody',
+    value: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    melodyLength: 128,
+  },
+];
+
 const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
-  '0': { base: INDIVIDUAL_SETTINGS },
-  '1': { base: INDIVIDUAL_SETTINGS },
+  '0': { base: INDIVIDUAL_SETTINGS_0 },
+  '1': { base: INDIVIDUAL_SETTINGS_1 },
 };
 
 const DEFAULTS = {
@@ -285,9 +296,9 @@ const DEFAULTS = {
     LOW_VOLTAGE_CUTOFF: 0,
     LOW_VOLTAGE_THRESHOLD: 50,
     RC_CAR_REVERSING: 0,
+    STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   },
 };
-
 
 const settings = {
   DEFAULTS,

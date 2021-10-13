@@ -2,6 +2,7 @@
   {
     "title": "unreleased",
     "items": [
+      "Enhancement: Enable melodies for AM32",
       "Enhancement: Pre-select current ESC firmware when flashing",
       "Enhancement: Cache firmware versions and layouts - do not store them in the app",
       "Enhancement: Disable connect/disconnect button when app not idle",

@@ -32,7 +32,7 @@ const source = new AM32Source(
   VERSIONS_REMOTE,
   {
     ...eeprom,
-    ...settings, 
+    ...settings,
   },
   escs
 );

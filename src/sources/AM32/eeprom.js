@@ -7,7 +7,7 @@ const RESET_DELAY_MS = 1000;
 
 const PAGE_SIZE = 0x0400;
 const EEPROM_OFFSET = 0x7c00;
-const LAYOUT_SIZE = 0x30;
+const LAYOUT_SIZE = 0xB0;
 
 const FLASH_VERSION_OFFSET = 0x10C0;
 const FLASH_VERSION_SIZE = 14;
@@ -127,6 +127,10 @@ const LAYOUT = {
   RC_CAR_REVERSING: {
     offset: 0x26,
     size: 1,
+  },
+  STARTUP_MELODY: {
+    offset: 0x30,
+    size: 128,
   },
 };
 
