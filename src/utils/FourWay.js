@@ -365,14 +365,8 @@ class FourWay {
         flash.settingsDescriptions = settingsDescriptions[layoutRevision];
         flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
 
-        if (interfaceMode !== MODES.ARMBLB) {
-          const mode = Convert.modeToString(flash.settings.MODE);
-          try {
-            const descriptions = settingsDescriptions[layoutRevision][mode];
-            flash.settingsDescriptions = descriptions;
-          } catch(e) {
-            this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
-          }
+        if(!flash.settingsDescriptions) {
+          this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
         }
 
         const layoutName = (flash.settings.LAYOUT || '').trim();

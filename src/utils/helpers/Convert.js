@@ -1,17 +1,6 @@
-import { blheliSource } from '../../sources';
 import { ConversionError } from '../Errors';
 
 class Convert {
-  static modeToString(mode) {
-    const eeprom = blheliSource.getEeprom();
-
-    for (const [key, value] of Object.entries(eeprom.MODES)) {
-      if (value === mode) {
-        return key;
-      }
-    }
-  }
-
   static arrayToSettingsObject(settingsUint8Array, layout) {
     const object = {};
 

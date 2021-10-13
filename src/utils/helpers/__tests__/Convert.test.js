@@ -7,10 +7,6 @@ const EEPROM = config.getEeprom();
 // Melody missing last byte
 const settingsArray = new Uint8Array(Object.values(bluejaySettingsArrayObject));
 
-test('modeToString', () => {
-  expect(Convert.modeToString(0x55AA)).toEqual('MULTI');
-});
-
 test('settingsUint8Array', () => {
   const layout = JSON.parse(JSON.stringify(EEPROM.LAYOUT));
 

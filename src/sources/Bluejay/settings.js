@@ -157,7 +157,6 @@ SETTINGS_DESCRIPTIONS['200'] = {
   }],
 };
 
-
 // V0.10
 SETTINGS_DESCRIPTIONS['201'] = {
   base: [{
