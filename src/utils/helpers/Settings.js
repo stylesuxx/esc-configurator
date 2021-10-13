@@ -64,22 +64,12 @@ function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualS
     const fromLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
     const toLayout = toSettingsDescriptions[to.LAYOUT_REVISION];
 
-    let fromCommons = null;
-    let toCommons = null;
-    if(fromLayout.MULTI && toLayout.MULTI) {
-      fromCommons = fromLayout.MULTI.base;
-      toCommons = toLayout.MULTI.base;
-    } else if(fromLayout.base && toLayout.base) {
-      fromCommons = fromLayout.base;
-      toCommons = toLayout.base;
-    }
-
-    if(!fromCommons || !toCommons) {
+    if(!(fromLayout.base && toLayout.base)) {
       return false;
     }
 
-    const fromCommon = fromCommons.find((setting) => setting.name === settingName);
-    const toCommon = toCommons.find((setting) => setting.name === settingName);
+    const fromCommon = fromLayout.base.find((setting) => setting.name === settingName);
+    const toCommon = toLayout.base.find((setting) => setting.name === settingName);
 
     if (fromCommon && toCommon) {
       return true;

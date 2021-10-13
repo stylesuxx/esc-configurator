@@ -1,6 +1,7 @@
 import Source from '../Source';
 import eeprom from './eeprom';
-import * as escsjson from './escs.json';
+import settings from './settings';
+import escs from './escs.json';
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/src/sources/AM32/versions.json';
 
@@ -21,14 +22,6 @@ class AM32Source extends Source {
     return `${make} - ${this.name}, ${revision}${bootloader}`;
   }
 
-  getEscLayouts() {
-    return escsjson.layouts.Arm;
-  }
-
-  getMcuSignatures() {
-    return escsjson.signatures.Arm;
-  }
-
   async getVersions() {
     return (await this.getVersionsList()).Arm;
   }
@@ -37,7 +30,11 @@ class AM32Source extends Source {
 const source = new AM32Source(
   'AM32',
   VERSIONS_REMOTE,
-  eeprom
+  {
+    ...eeprom,
+    ...settings, 
+  },
+  escs
 );
 
 export default source;

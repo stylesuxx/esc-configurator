@@ -9,7 +9,7 @@ describe('BLHeli', () => {
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = eeprom.SETTINGS_DESCRIPTIONS[keys[i]].MULTI.base;
+      const base = eeprom.SETTINGS_DESCRIPTIONS[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {

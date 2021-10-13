@@ -31,7 +31,7 @@
   "statusbarPacketError": "Paket-Fehler:",
   "escRampupPower": "Drehzahl Leistungsschutz (Rampup)",
   "escMinStartupPower": "Minimale Startleistung (Boost)",
-  "escMaxStartupPower": "Maximale Startleistung (Protection)",
+  "escMaxStartupPower": "Maximale Startleistung (Schutz)",
   "escButtonFirmwareDump": "Firmware dumpen",
   "escButtonFlash": "Firmware flashen",
   "defaultChangelogHead": "Changelog",

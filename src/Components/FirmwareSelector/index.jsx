@@ -18,14 +18,13 @@ import './style.scss';
 const blheliModes = blheliSource.getEeprom().MODES;
 
 function FirmwareSelector({
+  configs,
+  esc,
   onCancel,
-  escHint,
-  signatureHint,
+  onLocalSubmit,
+  onSubmit,
   selectedMode,
   warning,
-  onSubmit,
-  onLocalSubmit,
-  configs,
 }) {
   const { t } = useTranslation('common');
   const {
@@ -34,7 +33,7 @@ function FirmwareSelector({
     pwm,
   } = configs;
 
-  const [esc, setEsc] = useState(null);
+  const [escLayout, setEscLayout] = useState(null);
   const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
   const [migrate, setMigrate] = useState(false);
@@ -55,25 +54,26 @@ function FirmwareSelector({
 
   const file = useRef(null);
 
-  // Pre select ESC if escHint is a valid layout
+  // Pre select current firmware and ESC layout if valid
   useEffect(async () => {
     const availableFirmware = Object.keys(escs);
-    const validSources = getSupportedSources(signatureHint);
+    const validSources = getSupportedSources(esc.meta.signature);
     const validFirmware = availableFirmware.filter((name) =>
       validSources.some((source) => source.name === name)
     );
 
-    const newSelection = {
+    const currentFirmware = validFirmware.find((name) => esc.firmwareName === name);
+
+    setSelection({
       ...selection,
-      firmware: validFirmware[0],
-    };
-    setSelection(newSelection);
+      firmware: currentFirmware || validFirmware[0],
+    });
 
     setValidFirmware(validFirmware);
     setMode(selectedMode);
 
-    if(isValidLayout(escHint)) {
-      setEsc(escHint);
+    if(isValidLayout(esc.settings.LAYOUT)) {
+      setEscLayout(esc.settings.LAYOUT);
     }
   }, []);
 
@@ -84,10 +84,10 @@ function FirmwareSelector({
        * Build the actual Option set for the selected firmware
        */
       const layouts = escs[selection.firmware];
-      const escOptions =  Object.entries(layouts).map(([layout, esc]) => ({
-        key: layout,
-        value: layout,
-        name: esc.name,
+      const escOptions = Object.entries(layouts).map(([key, layout]) => ({
+        key: key,
+        value: key,
+        name: layout.name,
       }));
 
       const versionsSelected = versions[selection.firmware];
@@ -145,17 +145,15 @@ function FirmwareSelector({
   function handleFirmwareChange(e) {
     const firmware = e.target.value;
 
-    const newSelection = {
+    setSelection({
       firmware,
       url: null,
       pwm: null,
-    };
-
-    setSelection(newSelection);
+    });
   }
 
   function handleEscChange(e) {
-    setEsc(e.target.value);
+    setEscLayout(e.target.value);
   }
 
   function handleLocalSubmit(e) {
@@ -167,12 +165,11 @@ function FirmwareSelector({
     const selected = e.target.options.selectedIndex;
     const selecteOption = e.target.options[selected];
 
-    const newSelection = {
+    setSelection({
       ...selection,
       url: e.target.value,
       version: selecteOption ? selecteOption.text : 'N/A',
-    };
-    setSelection(newSelection);
+    });
   }
 
   function handleForceChange(e) {
@@ -184,11 +181,10 @@ function FirmwareSelector({
   }
 
   function handlePwmChange(e) {
-    const newSelection = {
+    setSelection({
       ...selection,
       pwm: e.target.value,
-    };
-    setSelection(newSelection);
+    });
   }
 
   function handleSubmit() {
@@ -197,7 +193,7 @@ function FirmwareSelector({
     const format = (str2Format, ...args) =>
       str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );
 
-    const name = escsAll[esc].fileName ? escsAll[esc].fileName : escsAll[esc].name.replace(/[\s-]/g, '_').toUpperCase();
+    const name = escsAll[escLayout].fileName || escsAll[escLayout].name.replace(/[\s-]/g, '_').toUpperCase();
     const pwmSuffix = selection.pwm ? '_' + selection.pwm : '';
     const formattedUrl = format(
       selection.url,
@@ -205,7 +201,7 @@ function FirmwareSelector({
       mode
     );
 
-    onSubmit(formattedUrl, esc, selection.firmware, selection.version, selection.pwm, force, migrate);
+    onSubmit(formattedUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
   }
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
@@ -269,7 +265,7 @@ function FirmwareSelector({
         <div className="gui-box grey">
           <div className="gui-box-titlebar">
             <div className="spacer-box-title">
-              {t('selectTarget')}
+              {`${t('selectTarget')}${esc.displayName ? ` (${esc.displayName})` : ''}`}
             </div>
           </div>
 
@@ -289,7 +285,7 @@ function FirmwareSelector({
                   label="ESC"
                   onChange={handleEscChange}
                   options={options.escs}
-                  selected={esc}
+                  selected={escLayout}
                 />
 
                 {/*
@@ -363,9 +359,11 @@ function FirmwareSelector({
   );
 }
 FirmwareSelector.defaultProps = {
-  escHint: null,
+  esc: {
+    meta: {},
+    settings: {},
+  },
   selectedMode: null,
-  signatureHint: null,
   warning: null,
 };
 FirmwareSelector.propTypes = {
@@ -374,12 +372,16 @@ FirmwareSelector.propTypes = {
     versions: PropTypes.shape().isRequired,
     pwm: PropTypes.shape().isRequired,
   }).isRequired,
-  escHint: PropTypes.string,
+  esc: PropTypes.shape({
+    displayName: PropTypes.string,
+    firmwareName: PropTypes.string,
+    meta: PropTypes.shape({ signature: PropTypes.string }),
+    settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
+  }),
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
-  signatureHint: PropTypes.number,
   warning: PropTypes.string,
 };
 
