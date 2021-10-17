@@ -1,41 +1,21 @@
-import EEPROM from './eeprom';
-import Source, { PLATFORMS } from '../Source';
+import Source from '../Source';
 
-import VERSIONS_LOCAL from './versions.json';
-import ESCS_LOCAL from './escs.json';
+class BLHeliSource extends Source {
+  buildDisplayName(flash, make) {
+    const settings = flash.settings;
+    let revision = 'Unsupported/Unrecognized';
+    if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+    }
 
-const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
-const ESCS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_escs.json';
+    if (flash.actualMake) {
+      make += ` (Probably mistagged: ${flash.actualMake})`;
+    }
 
-function buildDisplayName(flash, make) {
-  const settings = flash.settings;
-  let revision = 'Unsupported/Unrecognized';
-  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+    return `${make} - ${this.name}, ${revision}`;
   }
-
-  if (flash.actualMake) {
-    make += ` (Probably mistagged: ${flash.actualMake})`;
-  }
-
-  return `${make} - BlHeli_S, ${revision}`;
 }
 
-const pwmOptions = [];
-const blheliConfig = new Source(
-  'Blheli',
-  PLATFORMS.SILABS,
-  VERSIONS_REMOTE,
-  ESCS_REMOTE,
-  EEPROM,
-  VERSIONS_LOCAL,
-  ESCS_LOCAL,
-  pwmOptions
-);
-
 export {
-  buildDisplayName,
-  EEPROM,
+  BLHeliSource, 
 };
-
-export default blheliConfig;

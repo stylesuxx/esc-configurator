@@ -70,11 +70,43 @@ class EscLockedError extends Error {
   }
 }
 
+class LocalDataNotAvailableError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'LocalDataNotAvailableError';
+  }
+}
+
+class ConversionError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ConversionError';
+  }
+}
+
+class MethodNotImplementedError extends Error {
+  constructor(methodName) {
+    super(`method '${methodName}' must be implemented`);
+    this.name = 'MethodNotImplementedError';
+  }
+}
+
+class MissingParametersError extends Error {
+  constructor(parameters) {
+    super(`parameters '${parameters}' are required`);
+    this.name = 'MissingParametersError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
+  ConversionError,
   EscInitError,
   EscLockedError,
   InvalidHexFileError,
+  LocalDataNotAvailableError,
+  MethodNotImplementedError,
+  MissingParametersError,
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,

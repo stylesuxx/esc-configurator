@@ -1,5 +1,26 @@
 [
   {
+    "title": "0.19.0",
+    "items": [
+      "Enhancement: Enable melodies for AM32",
+      "Enhancement: Pre-select current ESC firmware when flashing",
+      "Enhancement: Cache firmware versions and layouts - do not store them in the app",
+      "Enhancement: Disable connect/disconnect button when app not idle",
+      "Enhancement: Added more melodies",
+      "Wording: Normalized ESCs and BLHeli_S",
+      "Bugfix: Fixed min/max properties with slider",
+      "Bugfix: Dump the proper ESC instead of defaulting to the last one",
+      "Bugfix: Update the proper ESC after flashing a single ESC",
+      "Refactor: Removed firmware and ESC files - use the ones from the corresponding repository instead",
+      "Refactor: Overlay component",
+      "Refactor: Simplified firmware sources",
+      "Chore: Bluejay settings cleanup",
+      "Chore: Removed old Bluejay versions",
+      "Chore: Updated codecov dependency",
+      "Chore: Improve tests"
+    ]
+  },
+  {
     "title": "0.18.0",
     "items": [
       "Translation: Added traditional chinese translation",
@@ -32,7 +53,7 @@
     "items": [
       "Tracking: Track firmware and version when flashing",
       "Documentation: Added history and credits section",
-      "Enhancement: Detect wrongly tagged BlHeli_S version",
+      "Enhancement: Detect wrongly tagged BLHeli_S version",
       "Enhancement: Allow flashing of 120 dead-time on Bluejay",
       "Add link to report mistagged hardware",
       "Add link to report Bluejay tested hardware"

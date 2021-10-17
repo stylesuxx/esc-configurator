@@ -1,44 +1,56 @@
-import Source, { PLATFORMS } from '../Source.js';
+import Source from '../Source';
+import eeprom from './eeprom';
+import settings from './settings';
+import escsBlheliS from '../BlheliS/escs.json';
+import escsBluejay from './escs.json';
 
-import EEPROM from './eeprom';
-
-import VERSIONS_LOCAL from './versions.json';
-import ESCS_LOCAL from './escs.json';
+const escs = {
+  mcus: escsBlheliS.mcus,
+  layouts: {
+    ...escsBlheliS.layouts,
+    ...escsBluejay.layouts, 
+  }, 
+};
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
-const ESCS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_escs.json';
 
-function buildDisplayName(flash, make) {
-  const settings = flash.settings;
-  let revision = 'Unsupported/Unrecognized';
-  if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-    revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+class BluejaySource extends Source {
+  constructor(name, versions, eeprom, escs, pwm) {
+    super(name, versions, eeprom, escs);
+    this.pwm = pwm;
   }
 
-  let pwm = '';
-  if(settings.__PWM_FREQUENCY && settings.__PWM_FREQUENCY !== 0xFF) {
-    pwm = `, ${settings.__PWM_FREQUENCY}kHz`;
-  }
-  const name = `${settings.NAME.trim()}`;
+  buildDisplayName(flash, make) {
+    const settings = flash.settings;
+    let revision = 'Unsupported/Unrecognized';
+    if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
+      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+    }
 
-  return `${make} - ${name}, ${revision}${pwm}`;
+    let pwm = '';
+    if(settings.__PWM_FREQUENCY && settings.__PWM_FREQUENCY !== 0xFF) {
+      pwm = `, ${settings.__PWM_FREQUENCY}kHz`;
+    }
+    const name = `${settings.NAME.trim()}`;
+
+    return `${make} - ${name}, ${revision}${pwm}`;
+  }
+
+  async getVersions() {
+    return (await this.getVersionsList()).EFM8;
+  }
 }
 
 const pwmOptions = [24, 48, 96];
-const bluejayConfig = new Source(
+const config = new BluejaySource(
   'Bluejay',
-  PLATFORMS.SILABS,
   VERSIONS_REMOTE,
-  ESCS_REMOTE,
-  EEPROM,
-  VERSIONS_LOCAL,
-  ESCS_LOCAL,
+  {
+    ...eeprom,
+    ...settings, 
+  },
+  escs,
   pwmOptions
 );
 
-export {
-  buildDisplayName,
-  EEPROM,
-};
-
-export default bluejayConfig;
+export default config;

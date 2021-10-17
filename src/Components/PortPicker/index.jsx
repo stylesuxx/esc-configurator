@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import CompatibilityWarning from './CompatibilityWarning';
+
 import './style.scss';
 
 function BaudRates({
@@ -103,6 +105,7 @@ Ports.propTypes = {
 function PortPicker({
   hasPort,
   hasSerial,
+  isIdle,
   open,
   onSetPort,
   onSetBaudRate,
@@ -122,60 +125,7 @@ function PortPicker({
   }
 
   if(!hasSerial) {
-    return (
-      <div id="not-supported">
-        <b>
-          Web Serial
-        </b>
-
-        {' '}
-        is not supported on your browser. Make sure you&apos;re running an up to date Chromium based browser like
-
-        {' '}
-
-        <a
-          href="https://www.google.com/intl/de/chrome/"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Chrome
-        </a>
-
-        {', '}
-
-        <a
-          href="https://vivaldi.com/download/"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Vivaldi
-        </a>
-
-        {', '}
-
-        <a
-          href="https://www.microsoft.com/edge/"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Edge
-        </a>
-
-        {' '}
-
-        or any other
-
-        {' '}
-
-        <a
-          href="https://caniuse.com/mdn-api_serial"
-          rel="noreferrer"
-          target="_blank"
-        >
-          compatible browser.
-        </a>
-      </div>
-    );
+    return <CompatibilityWarning />;
   }
 
   return (
@@ -221,6 +171,7 @@ function PortPicker({
       <div id="connect-button-wrapper">
         <button
           className={`${open ? 'active' : ''}`}
+          disabled={!isIdle}
           name="connect"
           onClick={open ? onDisconnect : onConnect}
           type="button"
@@ -238,12 +189,14 @@ function PortPicker({
 PortPicker.defaultProps = {
   hasPort: false,
   hasSerial: false,
+  isIdle: false,
   open: false,
   ports: [],
 };
 PortPicker.propTypes = {
   hasPort: PropTypes.bool,
   hasSerial: PropTypes.bool,
+  isIdle: PropTypes.bool,
   onChangePort: PropTypes.func.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnect: PropTypes.func.isRequired,

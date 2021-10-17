@@ -20,6 +20,11 @@ let onPlay;
 let onStop;
 let onUpdate;
 
+const invalidMelody = "UNPLAYABLE";
+const tooLongMelody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
+const unsopportedNotesMelody = "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.";
+const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
+
 describe('MeldodyElement', () => {
   beforeEach(() => {
     onAccept = jest.fn();
@@ -32,6 +37,8 @@ describe('MeldodyElement', () => {
     render(
       <MelodyElement
         accepted={false}
+        disabled
+        dummy={false}
         label="Label comes here"
         onAccept={onAccept}
         onPlay={onPlay}
@@ -54,13 +61,13 @@ describe('MeldodyElement', () => {
   });
 
   it('should display with unplayable melody', async() => {
-    const melody = "UNPLAYABLE";
-
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
-        melody={melody}
+        melody={invalidMelody}
         onAccept={onAccept}
         onPlay={onPlay}
         onStop={onStop}
@@ -82,13 +89,13 @@ describe('MeldodyElement', () => {
   });
 
   it('should display with unsupported note', async() => {
-    const melody = "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.";
-
     const { container } = render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
-        melody={melody}
+        melody={unsopportedNotesMelody}
         onAccept={onAccept}
         onPlay={onPlay}
         onStop={onStop}
@@ -111,13 +118,13 @@ describe('MeldodyElement', () => {
   });
 
   it('should load with too long melody', async() => {
-    const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
-
     const { container } = render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
-        melody={melody}
+        melody={tooLongMelody}
         onAccept={onAccept}
         onPlay={onPlay}
         onStop={onStop}
@@ -145,6 +152,8 @@ describe('MeldodyElement', () => {
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
         melody={melody}
         onAccept={onAccept}
@@ -174,13 +183,14 @@ describe('MeldodyElement', () => {
   });
 
   it('should be able to change to valid melody', async() => {
-    const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, xxx";
 
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
-        melody={melody}
+        melody={invalidMelody}
         onAccept={onAccept}
         onPlay={onPlay}
         onStop={onStop}
@@ -197,11 +207,11 @@ describe('MeldodyElement', () => {
   });
 
   it('should be able to change to different melody', async() => {
-    const melody = "Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6";
-
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
         melody={melody}
         onAccept={onAccept}
@@ -246,11 +256,11 @@ describe('MeldodyElement', () => {
   it('should play and stop through imperative handle', async() => {
     const ref = React.createRef();
 
-    const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
-
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
         melody={melody}
         onAccept={onAccept}
@@ -272,7 +282,6 @@ describe('MeldodyElement', () => {
     jest.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);
 
     const ref = React.createRef();
-    const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
     const oscStart = jest.fn();
     const oscStop = jest.fn();
@@ -284,6 +293,8 @@ describe('MeldodyElement', () => {
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
         melody={melody}
         onAccept={onAccept}
@@ -311,7 +322,6 @@ describe('MeldodyElement', () => {
     jest.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);
 
     const ref = React.createRef();
-    const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
     const oscStart = jest.fn();
     const oscStop = jest.fn();
@@ -323,6 +333,8 @@ describe('MeldodyElement', () => {
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
         melody={melody}
         onAccept={onAccept}
@@ -348,7 +360,6 @@ describe('MeldodyElement', () => {
 
   it('should play', async() => {
     const ref = React.createRef();
-    const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
     const oscStart = jest.fn();
     const oscStop = jest.fn();
@@ -366,6 +377,8 @@ describe('MeldodyElement', () => {
     render(
       <MelodyElement
         accepted={false}
+        disabled={false}
+        dummy={false}
         label="Label comes here"
         melody={melody}
         onAccept={onAccept}

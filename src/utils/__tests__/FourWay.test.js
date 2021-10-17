@@ -1,12 +1,18 @@
-import FourWay from '../FourWay';
-
-
 let serial;
 let resolve;
 let reject;
 let fourWay;
+let FourWay;
 
 describe('FourWay', () => {
+  beforeAll(async() => {
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    FourWay = require('../FourWay').default;
+  });
+
   beforeEach(() => {
     serial = jest.fn();
     resolve = jest.fn();

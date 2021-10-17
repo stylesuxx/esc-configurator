@@ -4,8 +4,6 @@ import {
   screen,
 } from '@testing-library/react';
 
-import MainContent from '../';
-
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
 let onWriteSetup;
@@ -22,8 +20,17 @@ let onFlashUrl;
 let onCancelFirmwareSelection;
 let onAllMotorSpeed;
 let onOpenMelodyEditor;
+let MainContent;
 
 describe('MainContent', () => {
+  beforeAll(async () => {
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    MainContent = require('../').default;
+  });
+
   beforeEach(() => {
     onWriteSetup = jest.fn();
     onSettingsUpdate = jest.fn();
@@ -53,7 +60,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -128,7 +134,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -174,7 +179,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -225,7 +229,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -271,7 +274,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const mspFeatures = { '3D': true };
@@ -320,7 +322,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -370,7 +371,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [
@@ -497,7 +497,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [
@@ -629,7 +628,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [
@@ -756,7 +754,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     render(
@@ -808,7 +805,6 @@ describe('MainContent', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const escs = [

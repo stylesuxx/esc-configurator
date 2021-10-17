@@ -3,19 +3,27 @@ import {
   render, screen, fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import sources from '../../../sources';
 
-import FirmwareSelector from '../';
+let FirmwareSelector;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
 describe('FirmwareSelector', () => {
+  beforeAll(async () => {
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    FirmwareSelector = require('../').default;
+  });
+
   it('should display firmware selection', () => {
     const configs = {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     const onSubmit = jest.fn();
@@ -50,7 +58,6 @@ describe('FirmwareSelector', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -58,8 +65,7 @@ describe('FirmwareSelector', () => {
       const name = source.getName();
 
       configs.versions[name] = await source.getVersions();
-      configs.escs[name] = await source.getEscs();
-      configs.platforms[name] = source.getPlatform();
+      configs.escs[name] = source.getEscLayouts();
       configs.pwm[name] = source.getPwm();
     }
 
@@ -67,14 +73,18 @@ describe('FirmwareSelector', () => {
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
 
+    const escMock = {
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
     const { container } = render(
       <FirmwareSelector
         configs={configs}
-        escHint="#S_H_90#"
+        esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-        signatureHint={59570}
       />
     );
 
@@ -93,7 +103,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Firmware' }), {
       target: {
-        value: 'Blheli',
+        value: 'BLHeli_S',
         name: 'Firmware',
       },
     });
@@ -161,7 +171,6 @@ describe('FirmwareSelector', () => {
       versions: {},
       escs: {},
       pwm: {},
-      platforms: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -169,8 +178,7 @@ describe('FirmwareSelector', () => {
       const name = source.getName();
 
       configs.versions[name] = await source.getVersions();
-      configs.escs[name] = await source.getEscs();
-      configs.platforms[name] = source.getPlatform();
+      configs.escs[name] = source.getEscLayouts();
       configs.pwm[name] = source.getPwm();
     }
 
@@ -178,14 +186,18 @@ describe('FirmwareSelector', () => {
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
 
+    const escMock = {
+      settings: { LAYOUT: "T-MOTOR 55A" },
+      meta: { signature: 0x1F06 },
+    };
+
     render(
       <FirmwareSelector
         configs={configs}
-        escHint="T-MOTOR 55A"
+        esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-        signatureHint={7942}
       />
     );
 

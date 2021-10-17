@@ -4,12 +4,20 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import App from '../';
+let App;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 jest.mock('i18next', () => ({ changeLanguage: () => null }));
 
 describe('App', () => {
+  beforeAll(async () => {
+    /**
+     * require component instead of import so that we can properly
+     * pre-populate the local storage
+     */
+    App = require('../').default;
+  });
+
   test('should render container', () => {
     render(<App />);
     expect(screen.getByRole('button', { name: /settings/i })).toBeInTheDocument();

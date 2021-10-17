@@ -77,7 +77,7 @@ function Slider({
             onChange={updateValue}
             onChangeComplete={handleUpdate}
             step={step}
-            value={inSync ? getDisplayValue() : 0}
+            value={inSync ? getDisplayValue() : min}
           />
         </div>
 

@@ -1,9 +1,11 @@
-import { EEPROM as BLHELI_EEPROM } from '../../sources/Blheli';
+import { blheliSource } from '../../sources';
+
+const blheliEeprom = blheliSource.getEeprom();
 
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);
   if(master) {
-    return Object.assign({}, master.settings);
+    return { ...master.settings };
   }
 
   return {};
@@ -47,7 +49,7 @@ const getMaster = (escs) => escs.find((esc) => esc.meta.available);
 
 const getAllSettings = (escs) => escs.map((esc) => esc.settings);
 
-const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === BLHELI_EEPROM.MODES.MULTI);
+const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === blheliEeprom.MODES.MULTI);
 
 function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualSettingsDescriptions) {
   if (from.MODE === to.MODE) {
@@ -62,22 +64,12 @@ function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualS
     const fromLayout = toSettingsDescriptions[from.LAYOUT_REVISION];
     const toLayout = toSettingsDescriptions[to.LAYOUT_REVISION];
 
-    let fromCommons = null;
-    let toCommons = null;
-    if(fromLayout.MULTI && toLayout.MULTI) {
-      fromCommons = fromLayout.MULTI.base;
-      toCommons = toLayout.MULTI.base;
-    } else if(fromLayout.base && toLayout.base) {
-      fromCommons = fromLayout.base;
-      toCommons = toLayout.base;
-    }
-
-    if(!fromCommons || !toCommons) {
+    if(!(fromLayout.base && toLayout.base)) {
       return false;
     }
 
-    const fromCommon = fromCommons.find((setting) => setting.name === settingName);
-    const toCommon = toCommons.find((setting) => setting.name === settingName);
+    const fromCommon = fromLayout.base.find((setting) => setting.name === settingName);
+    const toCommon = toLayout.base.find((setting) => setting.name === settingName);
 
     if (fromCommon && toCommon) {
       return true;

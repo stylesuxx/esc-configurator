@@ -1,16 +1,15 @@
-import {
-  EEPROM,
-  buildDisplayName,
-} from '../';
+import config from '../';
+
+const eeprom = config.getEeprom();
 
 describe('Bluejay', () => {
   it('should handle conditional visibility with general settings', () => {
-    const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(eeprom.SETTINGS_DESCRIPTIONS);
     const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = EEPROM.SETTINGS_DESCRIPTIONS[keys[i]].MULTI.base;
+      const base = eeprom.SETTINGS_DESCRIPTIONS[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
@@ -25,12 +24,12 @@ describe('Bluejay', () => {
   });
 
   it('should handle conditional visibility with custom settings', () => {
-    const keys = Object.keys(EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS);
     const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS[keys[i]].base;
+      const base = eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
@@ -54,7 +53,7 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'MAKE');
+    const name = config.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, 1.100, 24kHz');
   });
 
@@ -66,7 +65,7 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'MAKE');
+    const name = config.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized, 24kHz');
   });
 
@@ -78,7 +77,7 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = buildDisplayName(flash, 'MAKE');
+    const name = config.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized');
   });
 });

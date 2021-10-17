@@ -20,9 +20,9 @@ function App({
   actions,
   appSettings,
   configs,
-  melodies,
   escs,
   language,
+  melodies,
   msp,
   onAllMotorSpeed,
   onCookieAccept,
@@ -32,6 +32,7 @@ function App({
   stats,
 }) {
   const { t } = useTranslation('common');
+  const isIdle = !Object.values(actions).some((element) => element);
 
   return (
     <div>
@@ -43,6 +44,7 @@ function App({
             <PortPicker
               hasPort={serial.connected}
               hasSerial={serial.hasSerial}
+              isIdle={isIdle}
               onChangePort={serial.actions.handleChangePort}
               onConnect={serial.actions.handleConnect}
               onDisconnect={serial.actions.handleDisconnect}
@@ -150,6 +152,8 @@ App.defaultProps = {
 
 App.propTypes = {
   actions: PropTypes.shape({
+    isConnecting: PropTypes.bool.isRequired,
+    isFlashing: PropTypes.bool.isRequired,
     isReading: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
