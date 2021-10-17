@@ -257,7 +257,7 @@ class App extends Component {
       if(result) {
         result.index = target;
         result.ref = React.createRef();
-        individual[target] = result;
+        individual[i] = result;
 
         await this.setEscs({ individual });
       } else {
@@ -390,7 +390,7 @@ class App extends Component {
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = {
         ...currentEscSettings,
-        ...defaultSettings, 
+        ...defaultSettings,
       };
 
       try {
