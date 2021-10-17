@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.19.1",
+    "items": [
+      "Bugfix: Fix travis builds by installing python before installing node dependencies"
+    ]
+  },
+  {
     "title": "0.19.0",
     "items": [
       "Enhancement: Enable melodies for AM32",

@@ -1,5 +1,9 @@
+dist: xenial
 language: node_js
 script:
   - yarn codecov
 node_js:
   - node
+before_install:
+  - "pyenv install 3.6.3"
+  - "pyenv global 3.6.3"
