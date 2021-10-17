@@ -1,6 +1,6 @@
 [
   {
-    "title": "unreleased",
+    "title": "0.19.0",
     "items": [
       "Enhancement: Enable melodies for AM32",
       "Enhancement: Pre-select current ESC firmware when flashing",
