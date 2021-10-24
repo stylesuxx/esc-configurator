@@ -288,7 +288,7 @@ const SETTINGS_LAYOUT_2 = [
     name: 'PWM_FREQUENCY',
     type: 'number',
     label: 'escPwmFrequency',
-    min: 24,
+    min: 8,
     max: 48,
     step: 1,
     visibleIf: (settings) => settings.VARIABLE_PWM_FREQUENCY === 0,
