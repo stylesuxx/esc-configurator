@@ -369,12 +369,12 @@ const SETTINGS_LAYOUT_2 = [
     type: 'bool',
     label: 'escRcCarReversing',
   },
- {
+  {
     name: 'USE_HALL_SENSORS',
     type: 'bool',
     label: 'escHallSensors',
   },
-   {
+  {
     name: 'SINE_MODE_RANGE',
     type: 'number',
     label: 'escSineModeRange',
@@ -382,7 +382,7 @@ const SETTINGS_LAYOUT_2 = [
     max: 25,
     step: 1,
   },
-     {
+  {
     name: 'BRAKE_STRENGTH',
     type: 'number',
     label: 'escBrakeStrength',
