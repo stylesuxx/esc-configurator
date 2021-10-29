@@ -1,6 +1,11 @@
 {
   "Arm":[
     {
+      "name": "1.78",
+      "url": "https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.78/{0}_1.78.hex",
+      "key": "1.78"
+    },
+    {
       "name": "1.74",
       "url": "https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.74/{0}_1.74.hex",
       "key": "1.74"
