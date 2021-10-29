@@ -1,5 +1,12 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Update: Add AM32 v1.78",
+      "Added more melodies"
+    ]
+  },
+  {
     "title": "0.19.1",
     "items": [
       "Bugfix: Fix travis builds by installing python before installing node dependencies"
