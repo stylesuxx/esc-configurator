@@ -128,18 +128,6 @@ const LAYOUT = {
     offset: 0x26,
     size: 1,
   },
-  USE_HALL_SENSORS: {
-    offset: 0x27,
-    size: 1,
-  },
-  SINE_MODE_RANGE: {
-    offset: 0x28,
-    size: 1,
-  },
-  BRAKE_STRENGTH: {
-    offset: 0x29,
-    size: 1,
-  },
   STARTUP_MELODY: {
     offset: 0x30,
     size: 128,
