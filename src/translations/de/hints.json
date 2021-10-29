@@ -30,5 +30,8 @@
   "SERVO_DEAD_BAND": "Wird auf beiden Seiten der Servo Neutralstellung angewendet. Alles in diesem Bereich wird als Null interpretiert.",
   "LOW_VOLTAGE_CUTOFF": "Wenn aktiviert, wird die Stromversorgung zum Motor getrennt falls die Versorgungsspannung unter einen bestimmten Wert fällt.",
   "LOW_VOLTAGE_THRESHOLD": "Spannungswert pro Zelle bei dem der Strom unterbrochen wird. Einheit in Volt x 10. Um bei 3.3V abzuschalten, gib 33 ein.",
-  "RC_CAR_REVERSING": "Nur für Bodenfahrzeuge. Überschreibt die Benutzereinstellungen und versetzt den ESC in den bidirektionalen Modus. Mit Doppeltipp, um den Motor rückwärts zu drehen."
+  "RC_CAR_REVERSING": "Nur für Bodenfahrzeuge. Überschreibt die Benutzereinstellungen und versetzt den ESC in den bidirektionalen Modus. Mit Doppeltipp, um den Motor rückwärts zu drehen.",
+  "USE_HALL_SENSORS": "For speed controllers with a hall sensor input to be used with sensored motors.",
+  "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",
+  "BRAKE_STRENGTH": "The level of hold brake applied when brake on stop is enabled."
 }
