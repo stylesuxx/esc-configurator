@@ -30,5 +30,8 @@
   "SERVO_DEAD_BAND": "Aplicado a ambos lados del Neutral, cualquier cosa en este rango se considera de cero acelerador.",
   "LOW_VOLTAGE_CUTOFF": "Cuando está habilitado cortará energía al motor cuando el voltaje caiga por debajo del umbral de baja tensión.",
   "LOW_VOLTAGE_THRESHOLD": "Nivel de voltaje por celda donde se corta. Unidades en voltios * 10. Para cortar a 3.3v introduzca 330 por ejemplo.",
-  "RC_CAR_REVERSING": "Solo para vehículos terrestres. Anula la configuración del usuario y coloca los ESC en modo bidireccional con doble toque para controlar el tipo inverso."
+  "RC_CAR_REVERSING": "Solo para vehículos terrestres. Anula la configuración del usuario y coloca los ESC en modo bidireccional con doble toque para controlar el tipo inverso.",
+  "USE_HALL_SENSORS": "For speed controllers with a hall sensor input to be used with sensored motors.",
+  "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",
+  "BRAKE_STRENGTH": "The level of hold brake applied when brake on stop is enabled."
 }
