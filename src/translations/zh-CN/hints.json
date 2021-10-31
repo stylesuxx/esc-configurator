@@ -32,6 +32,6 @@
   "LOW_VOLTAGE_THRESHOLD": "切断电源时每节电池的电压等级。电压单位为 *10伏。例如，要在在 3.3V 切断，请输入 330。",
   "RC_CAR_REVERSING": "仅适用于地面车辆。将会覆盖用户设置，并将 ESC 设置为双向模式。",
   "USE_HALL_SENSORS": "For speed controllers with a hall sensor input to be used with sensored motors.",
-  "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",
-  "BRAKE_STRENGTH": "The level of hold brake applied when brake on stop is enabled."
+  "SINE_MODE_RANGE": "用于正弦式启动的油门量%",
+  "BRAKE_STRENGTH": "当停止时刹车启用时的刹车等级。"
 }
