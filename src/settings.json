@@ -1,6 +1,6 @@
 {
-  "version": "v0.19.1",
-  "corsProxy": "https://bubblesort.me/?",
+  "version": "v0.20.0",
+  "corsProxy": "https://cors.bubblesort.me/?",
   "availableLanguages": [
     {
       "label": "Deutsch",

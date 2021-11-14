@@ -1,5 +1,13 @@
 [
   {
+    "title": "0.20.0",
+    "items": [
+      "Update: Add AM32 v1.78",
+      "Update: Changed cors proxy URL",
+      "Added more melodies"
+    ]
+  },
+  {
     "title": "0.19.1",
     "items": [
       "Bugfix: Fix travis builds by installing python before installing node dependencies"

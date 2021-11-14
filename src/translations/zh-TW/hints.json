@@ -30,5 +30,8 @@
   "SERVO_DEAD_BAND": "施加在伺服輸入中位的兩側，這個範圍內的任何信號都將被視為零。",
   "LOW_VOLTAGE_CUTOFF": "啟用後，當電壓降到低電壓閾值以下時，將會切斷電源。",
   "LOW_VOLTAGE_THRESHOLD": "切斷電源時每節電池的電壓等級。電壓單位為 *10伏。例如，要在在 3.3V 切斷，請輸入 330。",
-  "RC_CAR_REVERSING": "僅適用於地面車輛。將會覆蓋用戶設置，并將 ESC 設置為雙向模式。"
+  "RC_CAR_REVERSING": "僅適用於地面車輛。將會覆蓋用戶設置，并將 ESC 設置為雙向模式。",
+  "USE_HALL_SENSORS": "用於與帶有霍爾傳感器輸入的速度控制器來感應電機",
+  "SINE_MODE_RANGE": "用於正弦式啟動的油門量%",
+  "BRAKE_STRENGTH": "當停止時剎車啟用時的剎車等級"
 }
