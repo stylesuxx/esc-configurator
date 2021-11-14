@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.20.0",
     "items": [
       "Update: Add AM32 v1.78",
       "Update: Changed cors proxy URL",
