@@ -4,6 +4,10 @@ import {
   MissingParametersError,
 } from '../utils/Errors';
 
+import settings from '../settings.json';
+
+const { corsProxy } = settings;
+
 /* Abstract Base Class for firmware sources
  *
  * Every source needs to implement thi abstract Source class and implement all
@@ -23,7 +27,8 @@ class Source {
 
     this.fetchJson = async (url) => {
       try {
-        const response = await fetch(url);
+        const proxy = `${corsProxy}${url}`;
+        const response = await fetch(proxy);
         if(!response.ok) {
           throw new Error(response.statusText);
         }
