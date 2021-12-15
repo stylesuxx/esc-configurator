@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.20.1",
+    "items": [
+      "Enhancement: Use CORS proxy with all requests"
+    ]
+  },
+  {
     "title": "0.20.0",
     "items": [
       "Update: Add AM32 v1.78",
