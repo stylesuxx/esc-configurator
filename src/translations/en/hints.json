@@ -33,5 +33,6 @@
   "RC_CAR_REVERSING": "For ground vehicles only. Overrides user settings and places ESC into bi-directional mode with double tap to reverse type control.",
   "USE_HALL_SENSORS": "For speed controllers with a hall sensor input to be used with sensored motors.",
   "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",
-  "BRAKE_STRENGTH":  "The level of hold brake applied when brake on stop is enabled."
+  "BRAKE_STRENGTH":  "The level of hold brake applied when brake on stop is enabled.",
+  "BRAKING_STRENGTH": "Maximum amount of braking applied (complementary PWM duty cycle)."
 }
