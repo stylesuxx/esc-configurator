@@ -33,5 +33,6 @@
   "RC_CAR_REVERSING": "Solo para vehículos terrestres. Anula la configuración del usuario y coloca los ESC en modo bidireccional con doble toque para controlar el tipo inverso.",
   "USE_HALL_SENSORS": "Para usar la entrada de controladoras de velocidad con sensores Hall con motores con sensores.",
   "SINE_MODE_RANGE": "La cantidad de acelerador en porcentaje usada para el arranque sinusoide.",
-  "BRAKE_STRENGTH": "El nivel de retención del freno aplicado cuando brake on stop está activado."
+  "BRAKE_STRENGTH": "El nivel de retención del freno aplicado cuando brake on stop está activado.",
+  "BRAKING_STRENGTH": "Maximum amount of braking applied (complementary PWM duty cycle)."
 }
