@@ -70,7 +70,7 @@ const LAYOUT = {
     offset: 0x0F,
     size: 1,
   },
-  __REARM_AT_START: {
+  BRAKING_STRENGTH: {
     offset: 0x10,
     size: 1,
   },
