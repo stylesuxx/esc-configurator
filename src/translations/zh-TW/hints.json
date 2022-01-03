@@ -33,5 +33,6 @@
   "RC_CAR_REVERSING": "僅適用於地面車輛。將會覆蓋用戶設置，并將 ESC 設置為雙向模式。",
   "USE_HALL_SENSORS": "用於與帶有霍爾傳感器輸入的速度控制器來感應電機",
   "SINE_MODE_RANGE": "用於正弦式啟動的油門量%",
-  "BRAKE_STRENGTH": "當停止時剎車啟用時的剎車等級"
+  "BRAKE_STRENGTH": "當停止時剎車啟用時的剎車等級",
+  "BRAKING_STRENGTH": "Maximum amount of braking applied (complementary PWM duty cycle)."
 }
