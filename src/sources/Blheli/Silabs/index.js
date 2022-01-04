@@ -6,6 +6,7 @@ import versions from './versions.json';
 
 class BLHeliSilabsSource extends BLHeliSource {
   async getVersions() {
+    this.setLocalVersions(versions);
     return versions;
   }
 }

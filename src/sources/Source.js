@@ -56,6 +56,11 @@ class Source {
 
       throw new LocalDataNotAvailableError();
     };
+
+    this.setLocalVersions = async(versions) => {
+      const localStorageKey = `${this.getName()}_versions`;
+      localStorage.setItem(localStorageKey, JSON.stringify(versions));
+    };
   }
 
   buildDisplayName() {

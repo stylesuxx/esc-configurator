@@ -22,6 +22,7 @@ class AM32Source extends Source {
   }
 
   async getVersions() {
+    this.setLocalVersions(versions.Arm);
     return versions.Arm;
   }
 }
