@@ -1,0 +1,57 @@
+[
+  {
+    "name":"14.9",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/d14033c64f6497ea78e4418d34ee345ee0aa3f0b/Atmel/Hex files/{0}_{1}_REV14_9.HEX",
+    "key":"14.9"
+  },
+  {
+    "name":"14.8",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/1d0a8c489ccf09738f3ce895850694b352565af0/Atmel/Hex files/{0}_{1}_REV14_8.HEX",
+    "key":"14.8"
+  },
+  {
+    "name":"14.7",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/81e6a3bbb6762c5c4e809a9f11b7c65992a68c6c/Atmel/Hex files/{0}_{1}_REV14_7.HEX",
+    "key":"14.7"
+  },
+  {
+    "name":"14.6",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/a374b0d2af46716c447ec88cadfa45879ccced70/Atmel/Hex files/{0}_{1}_REV14_6.HEX",
+    "key":"14.6"
+  },
+  {
+    "name":"14.5",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/6c3ce811d8f2a28e1de3be0218aa871f4bd8ea63/Atmel/Hex files/{0}_{1}_REV14_5.HEX",
+    "key":"14.5"
+  },
+  {
+    "name":"14.4",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/c9f2d1ed9a00f41742ef418f95452dea1d53abb1/Atmel/Hex files/{0}_{1}_REV14_4.HEX",
+    "key":"14.4"
+  },
+  {
+    "name":"14.3",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/a6c01051fec2f440868cd1e7dd4b305699ca604d/Atmel/Hex files/{0}_{1}_REV14_3.HEX",
+    "key":"14.3"
+  },
+  {
+    "name":"14.2",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/93b4cbca7bba32f3ac7ceed3739d77f66454728b/Atmel/Hex files/{0}_{1}_REV14_2.HEX",
+    "key":"14.2"
+  },
+  {
+    "name":"14.1",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/2e08b9913b139998d243bc153af6f6391b771f75/Atmel/Hex files/{0}_{1}_REV14_1.HEX",
+    "key":"14.1"
+  },
+  {
+    "name":"14.0",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/fd08042abd0091d31dcb3b4d87759c34db95ea33/Atmel/Hex files/{0}_{1}_REV14_0.HEX",
+    "key":"14.0"
+  },
+  {
+    "name":"13.2",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/be327449af1339421f56df6d3b17cd57f6f230cc/Atmel/Hex files/{0}_{1}_REV13_2.HEX",
+    "key":"13.2"
+  }
+]

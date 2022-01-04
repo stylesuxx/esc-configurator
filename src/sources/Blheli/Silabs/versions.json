@@ -1,0 +1,70 @@
+[
+  {
+    "name":"14.9",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/0cc6798eda294d502167145a600a7540092f8bb8/SiLabs/Hex files/{0}_{1}_REV14_9.HEX",
+    "key":"14.9"
+  },
+  {
+    "name":"14.8",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/1d0a8c489ccf09738f3ce895850694b352565af0/SiLabs/Hex files/{0}_{1}_REV14_8.HEX",
+    "key":"14.8"
+  },
+  {
+    "name":"14.6",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/a374b0d2af46716c447ec88cadfa45879ccced70/SiLabs/Hex files/{0}_{1}_REV14_6.HEX",
+    "key":"14.6"
+  },
+  {
+    "name":"14.5",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/6c3ce811d8f2a28e1de3be0218aa871f4bd8ea63/SiLabs/Hex files/{0}_{1}_REV14_5.HEX",
+    "key":"14.5"
+  },
+  {
+    "name":"14.4",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/c9f2d1ed9a00f41742ef418f95452dea1d53abb1/SiLabs/Hex files/{0}_{1}_REV14_4.HEX",
+    "key":"14.4"
+  },
+  {
+    "name":"14.3",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/a6c01051fec2f440868cd1e7dd4b305699ca604d/SiLabs/Hex files/{0}_{1}_REV14_3.HEX",
+    "key":"14.3"
+  },
+  {
+    "name":"14.2",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/93b4cbca7bba32f3ac7ceed3739d77f66454728b/SiLabs/Hex files/{0}_{1}_REV14_2.HEX",
+    "key":"14.2"
+  },
+  {
+    "name":"14.1",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/2e08b9913b139998d243bc153af6f6391b771f75/SiLabs/Hex files/{0}_{1}_REV14_1.HEX",
+    "key":"14.1"
+  },
+  {
+    "name":"14.0",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/fd08042abd0091d31dcb3b4d87759c34db95ea33/SiLabs/Hex files/{0}_{1}_REV14_0.HEX",
+    "key":"14.0"
+  },
+  {
+    "name":"13.2",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/be327449af1339421f56df6d3b17cd57f6f230cc/SiLabs/Hex files/{0}_{1}_REV13_2.HEX",
+    "key":"13.2"
+  },
+  {
+    "name":"14.85 MultiShot Imperial March",
+    "url":"https://raw.githubusercontent.com/cleanflight/blheli-multishot/e8b56843a95bc2ba217680df341a716250730c74/SiLabs/Hex files REV14_85/Multishot_Imperial_March/{0}_MULTISHOT_REV14_85.HEX",
+    "multishot":true,
+    "key":"14.85MSIM"
+  },
+  {
+    "name":"14.85 MultiShot Fast Start",
+    "url":"https://raw.githubusercontent.com/cleanflight/blheli-multishot/e8b56843a95bc2ba217680df341a716250730c74/SiLabs/Hex files REV14_85/Multishot_Fast_Start/{0}_MULTISHOT_REV14_85.HEX",
+    "multishot":true,
+    "key":"14.85MSFS"
+  },
+  {
+    "name":"14.85 MultiShot Crazy Fast Start",
+    "url":"https://raw.githubusercontent.com/cleanflight/blheli-multishot/e8b56843a95bc2ba217680df341a716250730c74/SiLabs/Hex files REV14_85/MultiShot_Crazy_FastStart/{0}_MULTISHOT_REV14_85.HEX",
+    "multishot":true,
+    "key":"14.85MSCFS"
+  }
+]

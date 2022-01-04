@@ -2,21 +2,19 @@ import { BLHeliSource } from '..';
 import eeprom from '../eeprom';
 import settings from '../settings';
 import escs from './escs.json';
-
-const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/blheli-configurator/blheli-configurator/master/js/blheli_versions.json';
+import versions from './versions.json';
 
 class BLHeliSilabsSource extends BLHeliSource {
   async getVersions() {
-    return (await this.getVersionsList()).Silabs;
+    return versions;
   }
 }
 
 const blheliSilabsSource = new BLHeliSilabsSource(
   'BLHeli',
-  VERSIONS_REMOTE,
   {
     ...eeprom,
-    ...settings, 
+    ...settings,
   },
   escs
 );

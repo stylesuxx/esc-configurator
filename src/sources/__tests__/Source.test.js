@@ -13,7 +13,7 @@ describe('Invalid Source', () => {
   it('should throw with invalid Source', async() => {
     const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
 
-    await expect(() => invalidSource.getVersionsList()).rejects.toThrow();
+    await expect(() => invalidSource.getRemoteVersionsList()).rejects.toThrow();
     expect(() => invalidSource.buildDisplayName()).toThrow();
     expect(() => invalidSource.getVersions()).toThrow();
   });
@@ -23,7 +23,7 @@ describe('Invalid Source', () => {
 
     localStorage.setItem('invalid_versions', '{}');
 
-    let versions = await invalidSource.getVersionsList();
+    let versions = await invalidSource.getRemoteVersionsList();
     expect(versions).toStrictEqual({});
   });
 });
