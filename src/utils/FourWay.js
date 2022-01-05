@@ -297,7 +297,7 @@ class FourWay {
         flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
 
         /**
-         * Baased on the name we can decide if the initially guessed layout
+         * Based on the name we can decide if the initially guessed layout
          * was correct, if not, we need to build a new settings object.
          */
         let name = flash.settings.NAME;
@@ -326,6 +326,21 @@ class FourWay {
               layout = null;
 
               break;
+            }
+          }
+
+          /*
+           * If still no name, it might be BLHeli_M - this can unfortunately
+           * only be guessed based on the version - if it is 16.9, then it
+           * _might_ be BLHeli_M.
+           */
+          if(flash.settings.NAME === '') {
+            if(
+              flash.settings.MAIN_REVISION === 16 &&
+              flash.settings.SUB_REVISION === 9
+            ) {
+              flash.settings.NAME = 'BLHeli_M';
+              layout = null;
             }
           }
         }
@@ -376,7 +391,10 @@ class FourWay {
           const blheliSLayouts = blheliSSource.getEscLayouts();
           const bluejayLayouts = bluejaySource.getEscLayouts();
 
-          if (flash.settings.NAME === 'JESC') {
+          if (
+            flash.settings.NAME === 'JESC' ||
+            flash.settings.NAME === 'BLHeli_M'
+          ) {
             make = blheliSLayouts[layoutName].name;
             const settings = flash.settings;
             let revision = 'Unsupported/Unrecognized';
@@ -384,8 +402,8 @@ class FourWay {
               revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
             }
 
-            displayName = `${make} - JESC, ${revision}`;
-            firmwareName = 'JESC';
+            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
+            firmwareName = flash.settings.NAME;
           } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
             displayName = bluejaySource.buildDisplayName(flash, make);

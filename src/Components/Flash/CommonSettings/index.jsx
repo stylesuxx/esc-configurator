@@ -77,7 +77,7 @@ function CommonSettings({
   }
 
   if (!settingsDescriptions) {
-    const unsupportedNames = ['JESC'];
+    const unsupportedNames = ['JESC', 'BLHeli_M'];
     const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
     let unsupportedText = (

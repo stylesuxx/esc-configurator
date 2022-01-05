@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Enhancement: Detect BLHeli_M and recommend to use dedicated configurator"
+    ]
+  },
+  {
     "title": "0.21.0",
     "items": [
       "Update: Add settings layout for Bluejay v0.15",
