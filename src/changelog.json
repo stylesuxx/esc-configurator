@@ -1,9 +1,10 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.21.0",
     "items": [
+      "Update: Add settings layout for Bluejay v0.15",
       "Enhancement: Add braking setting to Bluejay",
-      "Enhancement: Use locally maintained source list for BLHeli_S versions in order to support new layouts"
+      "Enhancement: Use locally maintained source list for BLHeli_S versions in order to support 'new' layouts"
     ]
   },
   {
