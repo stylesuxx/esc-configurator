@@ -8,15 +8,15 @@ const escs = {
   mcus: escsBlheliS.mcus,
   layouts: {
     ...escsBlheliS.layouts,
-    ...escsBluejay.layouts, 
-  }, 
+    ...escsBluejay.layouts,
+  },
 };
 
 const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
 
 class BluejaySource extends Source {
-  constructor(name, versions, eeprom, escs, pwm) {
-    super(name, versions, eeprom, escs);
+  constructor(name, eeprom, escs, pwm) {
+    super(name, eeprom, escs);
     this.pwm = pwm;
   }
 
@@ -37,17 +37,16 @@ class BluejaySource extends Source {
   }
 
   async getVersions() {
-    return (await this.getVersionsList()).EFM8;
+    return (await this.getRemoteVersionsList(VERSIONS_REMOTE)).EFM8;
   }
 }
 
 const pwmOptions = [24, 48, 96];
 const config = new BluejaySource(
   'Bluejay',
-  VERSIONS_REMOTE,
   {
     ...eeprom,
-    ...settings, 
+    ...settings,
   },
   escs,
   pwmOptions

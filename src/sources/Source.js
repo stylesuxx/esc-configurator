@@ -14,13 +14,12 @@ const { corsProxy } = settings;
  * required methods.
  */
 class Source {
-  constructor(name, versions, eeprom, escs) {
-    if(!name || !versions || !eeprom || !escs) {
-      throw new MissingParametersError("name, versions, eeprom, escs");
+  constructor(name, eeprom, escs) {
+    if(!name || !eeprom || !escs) {
+      throw new MissingParametersError("name, eeprom, escs");
     }
 
     this.name = name;
-    this.versions = versions;
     this.eeprom = eeprom;
     this.escs = escs;
     this.pwm = [];
@@ -39,11 +38,11 @@ class Source {
       }
     };
 
-    this.getVersionsList = async () => {
+    this.getRemoteVersionsList = async (url) => {
       const localStorageKey = `${this.getName()}_versions`;
 
       try {
-        const result = await this.fetchJson(this.versions);
+        const result = await this.fetchJson(url);
         localStorage.setItem(localStorageKey, JSON.stringify(result));
 
         return result;
@@ -56,6 +55,11 @@ class Source {
       }
 
       throw new LocalDataNotAvailableError();
+    };
+
+    this.setLocalVersions = async(versions) => {
+      const localStorageKey = `${this.getName()}_versions`;
+      localStorage.setItem(localStorageKey, JSON.stringify(versions));
     };
   }
 
