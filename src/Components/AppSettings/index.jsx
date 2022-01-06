@@ -2,6 +2,9 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Divider from '@mui/material/Divider';
+import FormControl from '@mui/material/FormControl';
+
 import Checkbox from '../Input/Checkbox';
 import Overlay from '../Overlay';
 
@@ -29,14 +32,18 @@ function AppSettings({
     switch(setting.type) {
       case 'boolean': {
         return (
-          <Checkbox
-            hint={t(`${key}Hint`)}
-            key={key}
-            label={t(key)}
-            name={key}
-            onChange={handleCheckboxChange}
-            value={setting.value ? 1 : 0}
-          />
+          <>
+            <Checkbox
+              hint={t(`${key}Hint`)}
+              key={key}
+              label={t(key)}
+              name={key}
+              onChange={handleCheckboxChange}
+              value={setting.value ? 1 : 0}
+            />
+
+            <Divider />
+          </>
         );
       }
     }
@@ -50,9 +57,12 @@ function AppSettings({
         onClose={onClose}
         open={open}
       >
-        <div>
+        <FormControl
+          component="fieldset"
+          variant="standard"
+        >
           {settingElements}
-        </div>
+        </FormControl>
       </Overlay>
     </div>
   );

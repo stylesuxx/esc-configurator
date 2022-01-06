@@ -291,13 +291,6 @@ describe('CommonSettings', () => {
 
     userEvent.click(screen.getByRole(/checkbox/i));
     expect(onSettingsUpdate).toHaveBeenCalled();
-
-    fireEvent.change(screen.getByRole(/combobox/i), {
-      taget: {
-        value: 3,
-        name: 'MOTOR_DIRECTION',
-      },
-    });
   });
 
   it('should allow updating with direct input', () => {
@@ -613,13 +606,6 @@ describe('CommonSettings', () => {
 
     userEvent.click(screen.getByRole(/checkbox/i));
     expect(onSettingsUpdate).toHaveBeenCalled();
-
-    fireEvent.change(screen.getByRole(/combobox/i), {
-      taget: {
-        value: 3,
-        name: 'MOTOR_DIRECTION',
-      },
-    });
   });
 
   it('should handle setting overrides', () => {
@@ -762,13 +748,6 @@ describe('CommonSettings', () => {
 
     userEvent.click(screen.getByRole(/checkbox/i));
     expect(onSettingsUpdate).toHaveBeenCalled();
-
-    fireEvent.change(screen.getByRole(/combobox/i), {
-      taget: {
-        value: 3,
-        name: 'MOTOR_DIRECTION',
-      },
-    });
   });
 
   it('should display warning when firmware is unsopported', () => {

@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Info from '../Info';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import MuiSelect from '@mui/material/Select';
 
-import './style.scss';
+//import Info from '../Info';
+
+//import './style.scss';
 
 function Select({
   name,
@@ -17,46 +23,52 @@ function Select({
 }) {
   function Select() {
     const optionElements = options.map((option) => (
-      <option
+      <MenuItem
         key={option.value}
         value={option.value}
       >
         {option.label}
-      </option>
+      </MenuItem>
     ));
 
     return (
-      <select
+      <MuiSelect
         disabled={disabled}
+        id={`${name}-select`}
+        label={label}
+        labelId={`${name}-select-label`}
         name={name}
         onChange={onChange}
+        size="small"
         value={inSync ? value : -1}
       >
-        <option
+        <MenuItem
           className="hidden"
           disabled
           value="-1"
         />
 
         {optionElements}
-      </select>
+      </MuiSelect>
     );
   }
 
   return (
     <div className="select">
-      <label>
-        <div className="input-wrapper">
-          <Select />
-        </div>
+      <FormControl
+        fullWidth
+        variant="standard"
+      >
+        <InputLabel id={`${name}-select-label`}>
+          {label}
+        </InputLabel>
 
-        <Info
-          hint={hint}
-          inSync={inSync}
-          label={label}
-          name={name}
-        />
-      </label>
+        <Select />
+
+        <FormHelperText>
+          {hint}
+        </FormHelperText>
+      </FormControl>
     </div>
   );
 }
