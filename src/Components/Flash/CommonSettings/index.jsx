@@ -5,6 +5,9 @@ import React, {
   useState,
 } from 'react';
 
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+
 import {
   getMasterSettings,
   getMaster,
@@ -156,40 +159,73 @@ function CommonSettings({
     switch (setting.type) {
       case 'bool': {
         return (
-          <Checkbox
-            disabled={disabled}
-            hint={hint}
-            inSync={inSync}
-            key={setting.name}
-            label={t(setting.label)}
-            name={setting.name}
-            onChange={handleCheckboxChange}
-            value={value}
-          />
+          <>
+            <Checkbox
+              disabled={disabled}
+              hint={hint}
+              inSync={inSync}
+              key={setting.name}
+              label={t(setting.label)}
+              name={setting.name}
+              onChange={handleCheckboxChange}
+              value={value}
+            />
+
+            <Divider />
+          </>
         );
       }
 
       case 'enum': {
         const { options } = setting;
         return (
-          <Select
-            disabled={disabled}
-            hint={hint}
-            inSync={inSync}
-            key={setting.name}
-            label={t(setting.label)}
-            name={setting.name}
-            onChange={handleSelectChange}
-            options={options}
-            value={value}
-          />
+          <>
+            <Select
+              disabled={disabled}
+              hint={hint}
+              inSync={inSync}
+              key={setting.name}
+              label={t(setting.label)}
+              name={setting.name}
+              onChange={handleSelectChange}
+              options={options}
+              value={value}
+            />
+
+            <Divider />
+          </>
         );
       }
 
       case 'number': {
         if(directInput) {
           return (
-            <Number
+            <>
+              <Number
+                disabled={disabled}
+                factor={setting.displayFactor}
+                hint={hint}
+                inSync={inSync}
+                key={setting.name}
+                label={t(setting.label)}
+                max={setting.max}
+                min={setting.min}
+                name={setting.name}
+                offset={setting.displayOffset}
+                onChange={handleNumberChange}
+                round={false}
+                step={setting.step}
+                value={value}
+              />
+
+              <Divider />
+            </>
+          );
+        }
+
+        return (
+          <>
+            <Slider
               disabled={disabled}
               factor={setting.displayFactor}
               hint={hint}
@@ -205,26 +241,9 @@ function CommonSettings({
               step={setting.step}
               value={value}
             />
-          );
-        }
 
-        return (
-          <Slider
-            disabled={disabled}
-            factor={setting.displayFactor}
-            hint={hint}
-            inSync={inSync}
-            key={setting.name}
-            label={t(setting.label)}
-            max={setting.max}
-            min={setting.min}
-            name={setting.name}
-            offset={setting.displayOffset}
-            onChange={handleNumberChange}
-            round={false}
-            step={setting.step}
-            value={value}
-          />
+            <Divider />
+          </>
         );
       }
 
@@ -241,7 +260,9 @@ function CommonSettings({
       </div>
 
       <div className="spacer-box">
-        {settingElements}
+        <Stack spacing={1}>
+          {settingElements}
+        </Stack>
       </div>
     </div>
   );

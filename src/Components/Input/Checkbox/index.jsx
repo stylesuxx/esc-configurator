@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 import MuiCheckbox from '@mui/material/Checkbox';
 
 import Info from '../Info';
@@ -17,7 +18,6 @@ function Checkbox({
 }) {
   const formattedLabel = (
     <Info
-      hint={hint}
       inSync={inSync}
       label={label}
       name={name}
@@ -33,10 +33,19 @@ function Checkbox({
             disabled={disabled}
             name={name}
             onChange={onChange}
+            size="small"
+            sx={{
+              paddingTop: 0,
+              paddingBottom: 0,
+            }}
           />
         }
         label={formattedLabel}
       />
+
+      <FormHelperText>
+        {hint}
+      </FormHelperText>
     </div>
   );
 }
