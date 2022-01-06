@@ -5,6 +5,8 @@ import React, {
 } from 'react';
 import InputRange from 'react-input-range';
 
+import MuiSlider from '@mui/material/Slider';
+
 import Info from '../Info';
 
 import 'react-input-range/lib/css/index.css';
@@ -67,6 +69,7 @@ function Slider({
     <div className="number">
       <label>
         <div className="input-wrapper">
+          {/*
           <InputRange
             disabled={disabled}
             formatLabel={format}
@@ -79,6 +82,9 @@ function Slider({
             step={step}
             value={inSync ? getDisplayValue() : min}
           />
+          */}
+
+          <MuiSlider />
         </div>
 
         <Info
