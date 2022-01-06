@@ -95,9 +95,15 @@
         color: #4F4F4F;
         font-size: 11px;
       }
+
+      .checkbox .info-wrapper-wrapper {
+        margin: 0px;
+        font-size: 1rem;
+        color: #303030;
+      }
     }
 
-    .checkbox,
+    //.checkbox,
     .number,
     .number-text,
     .select {
@@ -127,6 +133,7 @@
       }
     }
 
+    /*
     .checkbox {
       display: flex;
       flex-direction: row;
@@ -135,6 +142,7 @@
         flex: 0 0 195px;
       }
     }
+    */
 
     .number {
       margin-top: 20px;
