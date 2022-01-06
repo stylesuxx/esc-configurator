@@ -27,6 +27,7 @@ function SaveMelody({ onSave }) {
   return (
     <div className="save-melody-wrapper">
       <input
+        data-testid="saveMelodyName"
         name="save-melody-name"
         onChange={updateName}
         placeholder={t('common:melodyEditorName')}
@@ -178,6 +179,7 @@ function MelodyEditor({
   onDelete,
   onSave,
   onWrite,
+  open,
   customMelodies,
   defaultMelodies,
   writing,
@@ -327,11 +329,13 @@ function MelodyEditor({
   });
 
   return (
-    <div id="melody-editor">
-      <Overlay
-        headline={t('common:melodyEditorHeader')}
-        onClose={handleClose}
-      >
+    <Overlay
+      headline={t('common:melodyEditorHeader')}
+      maxWidth='xl'
+      onClose={handleClose}
+      open={open}
+    >
+      <div id="melody-editor">
         <div className="line-wrapper">
           <div className="sync-wrapper">
             <Checkbox
@@ -394,8 +398,9 @@ function MelodyEditor({
               {t('common:melodyEditorWrite')}
             </button>}
         </div>
-      </Overlay>
-    </div>
+      </div>
+
+    </Overlay>
   );
 }
 
@@ -408,6 +413,7 @@ MelodyEditor.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onWrite: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   writing: PropTypes.bool.isRequired,
 };
 

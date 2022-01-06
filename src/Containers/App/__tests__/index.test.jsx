@@ -20,6 +20,7 @@ describe('App', () => {
 
   test('should render container', () => {
     render(<App />);
+
     expect(screen.getByRole('button', { name: /settings/i })).toBeInTheDocument();
     expect(screen.getByAltText(/Discord/i)).toBeInTheDocument();
 
@@ -29,12 +30,18 @@ describe('App', () => {
     // Ensure that the footer is there
     expect(screen.getByText(/statusbarPortUtilization/i)).toBeInTheDocument();
     expect(screen.getByText(/statusbarPacketError/i)).toBeInTheDocument();
+  });
 
-    // Click the Settings
+  test('should open the settings', () => {
+    render(<App />);
+
     userEvent.click(screen.getByRole('button', { name: /settings/i }));
     expect(screen.getByText(/settingsHeader/i)).toBeInTheDocument();
+  });
 
-    // Open Melody editor
+  test('should open the melody editor', () => {
+    render(<App />);
+
     userEvent.click(screen.getByRole('button', { name: /openMelodyEditor/i }));
     expect(screen.getByText(/melodyEditorHeader/i)).toBeInTheDocument();
   });

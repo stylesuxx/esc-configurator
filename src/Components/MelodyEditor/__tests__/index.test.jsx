@@ -50,6 +50,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -58,13 +59,13 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(1);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.getAllByText(/Please supply a value and an onChange parameter./i).length).toEqual(2);
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
     userEvent.click(screen.getByText(/write/i));
     expect(onWrite).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/close/i));
+    userEvent.click(screen.getByTestId('CloseIcon'));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -81,6 +82,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -94,7 +96,7 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(4);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
     const acceptButtons = screen.getAllByText(/common:melodyEditorAccept/i);
@@ -104,7 +106,7 @@ describe('MelodyEditor', () => {
     userEvent.click(screen.getByText(/write/i));
     expect(onWrite).toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/close/i));
+    userEvent.click(screen.getByTestId('CloseIcon'));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -121,6 +123,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -134,7 +137,7 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(4);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
     const acceptButtons = screen.getAllByText(/common:melodyEditorAccept/i);
@@ -156,6 +159,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing
       />
     );
@@ -169,13 +173,13 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(4);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
     userEvent.click(screen.getByText(/write/i));
     expect(onWrite).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/close/i));
+    userEvent.click(screen.getByTestId('CloseIcon'));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -192,6 +196,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -201,7 +206,7 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(1);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
     expect(screen.getByRole(/checkbox/i)).toBeInTheDocument();
 
@@ -235,6 +240,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -261,6 +267,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         selected="Bluejay Default"
         writing={false}
       />
@@ -289,6 +296,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         selected="Bluejay Default"
         writing={false}
       />
@@ -319,6 +327,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -326,7 +335,9 @@ describe('MelodyEditor', () => {
     userEvent.click(screen.getByText(/common:melodyEditorSave/i));
     expect(onSave).not.toHaveBeenCalled();
 
-    fireEvent.change(container.querySelector('input[type=text]'), {
+    expect(screen.getByTestId('saveMelodyName')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByTestId('saveMelodyName'), {
       target: {
         name: "",
         value: "TestName",
@@ -360,6 +371,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -397,6 +409,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );

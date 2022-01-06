@@ -114,25 +114,25 @@ function App({
         />
       </div>
 
-      {appSettings.show &&
-        <AppSettings
-          onClose={appSettings.actions.handleClose}
-          onUpdate={appSettings.actions.handleUpdate}
-          settings={appSettings.settings}
-        />}
+      <AppSettings
+        onClose={appSettings.actions.handleClose}
+        onUpdate={appSettings.actions.handleUpdate}
+        open={appSettings.show}
+        settings={appSettings.settings}
+      />
 
-      {melodies.show &&
-        <MelodyEditor
-          customMelodies={melodies.customMelodies}
-          defaultMelodies={melodies.defaultMelodies}
-          dummy={melodies.dummy}
-          melodies={melodies.escs}
-          onClose={melodies.actions.handleClose}
-          onDelete={melodies.actions.handleDelete}
-          onSave={melodies.actions.handleSave}
-          onWrite={melodies.actions.handleWrite}
-          writing={actions.isWriting}
-        />}
+      <MelodyEditor
+        customMelodies={melodies.customMelodies}
+        defaultMelodies={melodies.defaultMelodies}
+        dummy={melodies.dummy}
+        melodies={melodies.escs}
+        onClose={melodies.actions.handleClose}
+        onDelete={melodies.actions.handleDelete}
+        onSave={melodies.actions.handleSave}
+        onWrite={melodies.actions.handleWrite}
+        open={melodies.show}
+        writing={actions.isWriting}
+      />
 
       <CookieConsent onCookieAccept={onCookieAccept} />
 
