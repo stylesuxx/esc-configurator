@@ -39,18 +39,16 @@ describe('FirmwareSelector', () => {
       />
     );
 
-    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
+    expect(screen.getByText('forceFlashText')).toBeInTheDocument();
+    expect(screen.getByText('migrateFlashText')).toBeInTheDocument();
+    expect(screen.getByText('forceFlashText')).toBeInTheDocument();
 
-    expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
-    expect(screen.getByText(/escButtonSelectLocally/i)).toBeInTheDocument();
-    expect(screen.getByText(/buttonCancel/i)).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelect')).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelectLocally')).toBeInTheDocument();
+    expect(screen.getByText('buttonCancel')).toBeInTheDocument();
 
-    expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
-    expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'selectFirmware selectFirmware' })).toBeInTheDocument();
+    expect(screen.getByText('selectTarget')).toBeInTheDocument();
   });
 
   it('should allow changing firmware options for BLHeli_S', async() => {
@@ -89,9 +87,7 @@ describe('FirmwareSelector', () => {
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -101,59 +97,29 @@ describe('FirmwareSelector', () => {
     expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
     expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Firmware' }), {
-      target: {
-        value: 'BLHeli_S',
-        name: 'Firmware',
-      },
-    });
+    // Firmware selection
+    fireEvent.mouseDown(screen.getByRole('button', { name: 'selectFirmware BLHeli_S' }));
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'ESC' }), {
-      target: {
-        value: '#S_H_50#',
-        name: 'ESC',
-      },
-    });
+    let element = screen.getByRole('option', { name: 'Bluejay' });
+    userEvent.click(element);
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
-      target: {
-        value: '16.7 [Official]',
-        name: 'Version',
-      },
-    });
+    // Layout selection
+    fireEvent.mouseDown(screen.getByRole('button', { name: 'selectEsc S-H-90' }));
 
-    const checkboxes = screen.getAllByRole(/checkbox/i);
-    for(let i = 0; i < checkboxes.length; i += 1) {
-      userEvent.click(checkboxes[i]);
-    }
+    element = screen.getByRole('option', { 'name': 'S-H-50' });
+    userEvent.click(element);
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Firmware' }), {
-      target: {
-        value: 'Bluejay',
-        name: 'Firmware',
-      },
-    });
+    // Version selection
+    fireEvent.mouseDown(screen.getByRole('button', { name: 'selectVersion selectVersion' }));
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'ESC' }), {
-      target: {
-        value: '#S_H_50#',
-        name: 'ESC',
-      },
-    });
+    element = screen.getByRole('option', { 'name': '0.15 (Test)' });
+    userEvent.click(element);
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
-      target: {
-        value: 'https://github.com/mathiasvr/bluejay/releases/download/v0.10/{0}_v0.10.hex',
-        name: 'Version',
-      },
-    });
+    // PWM selection
+    fireEvent.mouseDown(screen.getByRole('button', { name: 'selectPwmFrequency selectPwmFrequency' }));
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'PWM Frequency' }), {
-      target: {
-        value: '96',
-        name: 'PWM Frequency',
-      },
-    });
+    element = screen.getByRole('option', { 'name': '96' });
+    userEvent.click(element);
 
     userEvent.click(screen.getByText('escButtonSelect'));
     expect(onSubmit).toHaveBeenCalled();
@@ -202,26 +168,72 @@ describe('FirmwareSelector', () => {
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
-    expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
-    expect(screen.getByText(/escButtonSelectLocally/i)).toBeInTheDocument();
-    expect(screen.getByText(/buttonCancel/i)).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelect')).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelectLocally')).toBeInTheDocument();
+    expect(screen.getByText('buttonCancel')).toBeInTheDocument();
 
-    expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
-    expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
+    expect(screen.getByText('selectFirmware')).toBeInTheDocument();
+    expect(screen.getByText('selectTarget')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
-      target: {
-        value: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/{0}_1.65.hex',
-        name: 'Version',
-      },
-    });
+    fireEvent.mouseDown(screen.getByRole('button', { 'name': 'selectVersion selectVersion' }));
+
+    const element = screen.getByRole('option', { 'name': '1.78' });
+    userEvent.click(element);
 
     userEvent.click(screen.getByText('escButtonSelect'));
     expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it('should show warning when forcing target', async() => {
+    const configs = {
+      versions: {},
+      escs: {},
+      pwm: {},
+    };
+
+    const onSubmit = jest.fn();
+    const onLocalSubmit = jest.fn();
+    const onCancel = jest.fn();
+
+    render(
+      <FirmwareSelector
+        configs={configs}
+        onCancel={onCancel}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('checkbox', { name: 'forceFlashText' }));
+
+    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
+  });
+
+  it('should show warning when forcing migration', async() => {
+    const configs = {
+      versions: {},
+      escs: {},
+      pwm: {},
+    };
+
+    const onSubmit = jest.fn();
+    const onLocalSubmit = jest.fn();
+    const onCancel = jest.fn();
+
+    render(
+      <FirmwareSelector
+        configs={configs}
+        onCancel={onCancel}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('checkbox', { name: 'migrateFlashText' }));
+
+    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
   });
 });

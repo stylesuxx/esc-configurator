@@ -4,6 +4,7 @@ import React from 'react';
 
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
+import Stack from '@mui/material/Stack';
 
 import Checkbox from '../Input/Checkbox';
 import Overlay from '../Overlay';
@@ -61,7 +62,9 @@ function AppSettings({
           component="fieldset"
           variant="standard"
         >
-          {settingElements}
+          <Stack spacing={1}>
+            {settingElements}
+          </Stack>
         </FormControl>
       </Overlay>
     </div>
