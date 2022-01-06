@@ -11,6 +11,7 @@ function AppSettings({
   settings,
   onClose,
   onUpdate,
+  open,
 }) {
   const { t } = useTranslation('settings');
 
@@ -45,7 +46,9 @@ function AppSettings({
     <div className="settings">
       <Overlay
         headline={t('settingsHeader')}
+        maxWidth='sm'
         onClose={onClose}
+        open={open}
       >
         <div>
           {settingElements}
@@ -58,6 +61,7 @@ function AppSettings({
 AppSettings.propTypes = {
   onClose: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   settings: PropTypes.shape().isRequired,
 };
 

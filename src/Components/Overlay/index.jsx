@@ -1,46 +1,62 @@
-import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import './style.scss';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Overlay({
   children,
   headline,
+  maxWidth,
   onClose,
+  open,
 }) {
-  const { t } = useTranslation('settings');
+  return(
+    <Dialog
+      aria-labelledby="customized-dialog-title"
+      fullWidth
+      maxWidth={maxWidth}
+      onClose={onClose}
+      open={open}
+    >
+      <DialogTitle>
+        {headline}
 
-  return (
-    <div className="overlay">
-      <div
-        className="backdrop"
-        onClick={onClose}
-      />
-
-      <div className="overlay__wrapper">
-        <div
-          className="overlay__close"
+        <IconButton
+          aria-label="close"
           onClick={onClose}
-          type="button"
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
         >
-          {t('closeText')}
-        </div>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-        <h3>
-          {headline}
-        </h3>
-
+      <DialogContent dividers>
         {children}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
-Overlay.defaultProps = { children: null };
+
+Overlay.defaultProps = {
+  children: null,
+  maxWidth: 'sm',
+  open: false,
+};
 Overlay.propTypes = {
   children: PropTypes.element,
   headline: PropTypes.string.isRequired,
+  maxWidth: PropTypes.string,
   onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool,
 };
 
 export default Overlay;

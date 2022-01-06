@@ -4,6 +4,10 @@
   padding-bottom: 5px;
   margin-top: 2px;
 
+  .input-wrapper {
+    display: inline-block;
+  }
+
   &:last-child {
     border-bottom: none;
   }
