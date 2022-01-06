@@ -245,12 +245,12 @@ describe('MelodyEditor', () => {
       />
     );
 
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: {
-        name: "",
-        value: "preset-Bluejay Default",
-      },
-    });
+    fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
+
+    const listbox = screen.getByRole('listbox');
+    const element = listbox.querySelector('li[data-value="preset-Bluejay Default"]');
+    userEvent.click(element);
+
     expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(2);
   });
 
@@ -273,12 +273,12 @@ describe('MelodyEditor', () => {
       />
     );
 
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: {
-        name: "",
-        value: "Simpsons Theme",
-      },
-    });
+    fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
+
+    const listbox = screen.getByRole('listbox');
+    const element = listbox.querySelector(`li[data-value="Simpsons Theme"]`);
+    userEvent.click(element);
+
     expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(2);
   });
 
@@ -286,7 +286,7 @@ describe('MelodyEditor', () => {
     const onDelete = jest.fn();
     const melodies = [melody, melody, melody, melody];
 
-    render(
+    const { container } = render(
       <MelodyEditor
         customMelodies={defaultMelodies}
         defaultMelodies={defaultMelodies}
@@ -302,12 +302,11 @@ describe('MelodyEditor', () => {
       />
     );
 
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: {
-        name: "",
-        value: "Simpsons Theme",
-      },
-    });
+    fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
+
+    const listbox = screen.getByRole('listbox');
+    const element = listbox.querySelector(`li[data-value="Simpsons Theme"]`);
+    userEvent.click(element);
 
     userEvent.click(screen.getByText(/melodyDelete/i));
     expect(onDelete).toHaveBeenCalled();

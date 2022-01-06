@@ -203,18 +203,16 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
+    expect(screen.getByText('forceFlashText')).toBeInTheDocument();
+    expect(screen.getByText('migrateFlashText')).toBeInTheDocument();
+    expect(screen.getByText('forceFlashText')).toBeInTheDocument();
 
-    expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
-    expect(screen.getByText(/escButtonSelectLocally/i)).toBeInTheDocument();
-    expect(screen.getByText(/buttonCancel/i)).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelect')).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelectLocally')).toBeInTheDocument();
+    expect(screen.getByText('buttonCancel')).toBeInTheDocument();
 
-    expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
-    expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'selectFirmware selectFirmware' })).toBeInTheDocument();
+    expect(screen.getByText('selectTarget')).toBeInTheDocument();
   });
 
   it('should display when flashing', () => {
@@ -736,9 +734,7 @@ describe('MainContent', () => {
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
   });
 

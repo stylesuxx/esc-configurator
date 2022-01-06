@@ -7,6 +7,8 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import './style.scss';
 
+import Stack from '@mui/material/Stack';
+
 import Checkbox from '../Input/Checkbox';
 import LabeledSelect from '../Input/LabeledSelect';
 import MelodyElement from './MelodyElement';
@@ -336,31 +338,35 @@ function MelodyEditor({
       open={open}
     >
       <div id="melody-editor">
-        <div className="line-wrapper">
-          <div className="sync-wrapper">
-            <Checkbox
-              disabled={isAnyPlaying || writing}
-              hint={t("common:syncMelodiesHint")}
-              label={t("common:syncMelodies")}
-              name="syncMelodies"
-              onChange={toggleSync}
-              value={sync ? 1 : 0}
+        <Stack spacing={1}>
+          <div className="line-wrapper">
+            <div className="sync-wrapper">
+              <Checkbox
+                disabled={isAnyPlaying || writing}
+                hint={t("common:syncMelodiesHint")}
+                label={t("common:syncMelodies")}
+                name="syncMelodies"
+                onChange={toggleSync}
+                value={sync ? 1 : 0}
+              />
+            </div>
+          </div>
+
+          <div className="line-wrapper">
+            <PresetSelect
+              customMelodies={customMelodies}
+              defaultMelodies={defaultMelodies}
+              escs={melodies.length}
+              onDelete={onDelete}
+              onUpdateMelodies={handleMelodiesSelected}
+              selected={selectedMelody.current}
             />
           </div>
 
-          <PresetSelect
-            customMelodies={customMelodies}
-            defaultMelodies={defaultMelodies}
-            escs={melodies.length}
-            onDelete={onDelete}
-            onUpdateMelodies={handleMelodiesSelected}
-            selected={selectedMelody.current}
+          <SaveMelody
+            onSave={handleMelodiesSave}
           />
-        </div>
-
-        <SaveMelody
-          onSave={handleMelodiesSave}
-        />
+        </Stack>
 
         <div className={`melody-editor-escs ${sync ? 'all' : 'single'}`}>
           {!sync && melodyElements}

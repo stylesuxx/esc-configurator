@@ -4,6 +4,11 @@ import React, {
   useState, useEffect, useRef,
 } from 'react';
 
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+
+import Checkbox from '../Input/Checkbox';
+
 import {
   isValidLayout,
   getSupportedSources,
@@ -162,13 +167,12 @@ function FirmwareSelector({
   }
 
   function handleVersionChange(e) {
-    const selected = e.target.options.selectedIndex;
-    const selecteOption = e.target.options[selected];
+    const selected = e.target.value;
 
     setSelection({
       ...selection,
       url: e.target.value,
-      version: selecteOption ? selecteOption.text : 'N/A',
+      version: selected ? selected : 'N/A',
     });
   }
 
@@ -209,45 +213,27 @@ function FirmwareSelector({
   return (
     <div id="firmware-selector">
       <div className="center-wrapper">
-        <div className="checkbox force">
-          <label>
-            <input
-              defaultChecked={force}
-              onChange={handleForceChange}
-              type="checkbox"
-            />
+        <Stack spacing={1}>
+          <Checkbox
+            hint={force ? t('forceFlashHint') : null}
+            key='force'
+            label={t('forceFlashText')}
+            name='force'
+            onChange={handleForceChange}
+            type="checkbox"
+            value={force ? 1 : 0}
+          />
 
-            <span>
-              <span>
-                {t('forceFlashText')}
-              </span>
-
-              <span className={force ? "red" : "hidden"}>
-                {t('forceFlashHint')}
-              </span>
-            </span>
-          </label>
-        </div>
-
-        <div className="checkbox migrate">
-          <label>
-            <input
-              defaultChecked={migrate}
-              onChange={handleMigrateChange}
-              type="checkbox"
-            />
-
-            <span>
-              <span>
-                {t('migrateFlashText')}
-              </span>
-
-              <span className={migrate ? "red" : "hidden"}>
-                {t('migrateFlashHint')}
-              </span>
-            </span>
-          </label>
-        </div>
+          <Checkbox
+            hint={migrate ? t('migrateFlashHint') : null}
+            key='migrate'
+            label={t('migrateFlashText')}
+            name='migrate'
+            onChange={handleMigrateChange}
+            type="checkbox"
+            value={migrate ? 1 : 0}
+          />
+        </Stack>
 
         <div className="note">
           <p
@@ -270,52 +256,79 @@ function FirmwareSelector({
           </div>
 
           <div className="spacer-box">
-            <LabeledSelect
-              firstLabel={t('selectFirmware')}
-              label="Firmware"
-              onChange={handleFirmwareChange}
-              options={options.firmwares}
-              selected={selection.firmware}
-            />
-
-            {selection.firmware &&
-              <>
+            <Grid
+              container
+              spacing={1}
+            >
+              <Grid
+                item
+                xs={6}
+              >
                 <LabeledSelect
-                  firstLabel={t('selectEsc')}
-                  label="ESC"
-                  onChange={handleEscChange}
-                  options={options.escs}
-                  selected={escLayout}
+                  firstLabel={t('selectFirmware')}
+                  label={t('selectFirmware')}
+                  onChange={handleFirmwareChange}
+                  options={options.firmwares}
+                  selected={selection.firmware}
                 />
+              </Grid>
 
-                {/*
-                {type === blheliTypes.SILABS || type === blheliTypes.ATMEL &&
-                  <LabeledSelect
-                    firstLabel={t('selectMode')}
-                    label="Mode"
-                    onChange={updateMode}
-                    options={options.modes}
-                    selected={mode}
-                  />}
-                */}
+              {selection.firmware &&
+                <>
+                  <Grid
+                    item
+                    xs={6}
+                  >
+                    <LabeledSelect
+                      firstLabel={t('selectEsc')}
+                      label={t('selectEsc')}
+                      onChange={handleEscChange}
+                      options={options.escs}
+                      selected={escLayout}
+                    />
+                  </Grid>
 
-                <LabeledSelect
-                  firstLabel={t('selectVersion')}
-                  label="Version"
-                  onChange={handleVersionChange}
-                  options={options.versions}
-                  selected={selection.url}
-                />
+                  {/*
+                  {type === blheliTypes.SILABS || type === blheliTypes.ATMEL &&
+                    <LabeledSelect
+                      firstLabel={t('selectMode')}
+                      label="Mode"
+                      onChange={updateMode}
+                      options={options.modes}
+                      selected={mode}
+                    />}
+                  */}
 
-                {options.frequencies.length > 0 &&
-                  <LabeledSelect
-                    firstLabel={t('selectPwmFrequency')}
-                    label="PWM Frequency"
-                    onChange={handlePwmChange}
-                    options={options.frequencies}
-                    selected={selection.pwm}
-                  />}
-              </>}
+                  <Grid
+                    item
+                    xs={6}
+                  >
+                    <LabeledSelect
+                      firstLabel={t('selectVersion')}
+                      label={t('selectVersion')}
+                      onChange={handleVersionChange}
+                      options={options.versions}
+                      selected={selection.url}
+                    />
+                  </Grid>
+
+                  {options.frequencies.length > 0 &&
+                    <Grid
+                      item
+                      xs={6}
+                    >
+                      <LabeledSelect
+                        firstLabel={t('selectPwmFrequency')}
+                        label={t('selectPwmFrequency')}
+                        onChange={handlePwmChange}
+                        options={options.frequencies}
+                        selected={selection.pwm}
+                      />
+                    </Grid>}
+                </>}
+            </Grid>
+
+            <br />
 
             <div className="default-btn">
               <button

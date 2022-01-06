@@ -1,6 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import MuiSelect from '@mui/material/Select';
+
 function LabeledSelect({
   label,
   firstLabel,
@@ -10,45 +15,51 @@ function LabeledSelect({
 }) {
   function Select() {
     const optionElements = options.map((item) => (
-      <option
+      <MenuItem
         disabled={item.disabled}
         key={item.key}
         value={item.value}
       >
         {item.name}
-      </option>
+      </MenuItem>
     ));
 
     return (
-      <select
+      <MuiSelect
+        id={`${label}-select`}
+        label={label}
+        labelId={`${label}-select-label`}
         name={label || firstLabel}
         onChange={onChange}
+        size="small"
         value={selected || -1}
       >
-        <option
+        <MenuItem
           className="hidden"
           disabled
           value={-1}
         >
           {firstLabel}
-        </option>
+        </MenuItem>
 
         {optionElements}
-      </select>
+      </MuiSelect>
     );
   }
 
   return (
     <div className="select">
-      <label>
-        <div className="input-wrapper">
-          <Select />
-        </div>
+      <FormControl
+        fullWidth
+        variant="standard"
+      >
 
-        <span className="info-wrapper-wrapper">
+        <InputLabel id={`${label}-select-label`}>
           {label}
-        </span>
-      </label>
+        </InputLabel>
+
+        <Select />
+      </FormControl>
     </div>
   );
 }

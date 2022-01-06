@@ -54,7 +54,7 @@ function Select({
   }
 
   return (
-    <div className="select">
+    <div className="selectx">
       <FormControl
         fullWidth
         variant="standard"
