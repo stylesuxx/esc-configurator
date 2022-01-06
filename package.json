@@ -4,6 +4,10 @@
   "private": false,
   "license": "AGPL-3.0",
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/material": "^5.2.7",
     "@palmabit/react-cookie-law": "^0.6.2",
     "bluejay-rtttl-parse": "^2.0.2",
     "compare-versions": "^3.6.0",
