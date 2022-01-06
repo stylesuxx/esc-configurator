@@ -1,8 +1,26 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactTooltip from 'react-tooltip';
+
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 import './style.scss';
+
+const BootstrapTooltip = styled(({
+  className,
+  ...props
+}) => (
+  <Tooltip
+    arrow
+    classes={{ popper: className }}
+    title={props.title}
+  >
+    {props.children}
+  </Tooltip>
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: { color: theme.palette.common.black },
+  [`& .${tooltipClasses.tooltip}`]: { backgroundColor: theme.palette.common.black },
+}));
 
 function Info({
   hint,
@@ -16,21 +34,15 @@ function Info({
 
       {hint &&
         <div className="info-wrapper">
-          <span
-            className="info-icon"
-            data-for={`hint-${name}`}
-            data-tip
-          >
-            ?
-          </span>
-
-          <ReactTooltip
-            className="tooltip"
-            effect="solid"
-            id={`hint-${name}`}
-          >
-            {hint}
-          </ReactTooltip>
+          <BootstrapTooltip title={hint}>
+            <span
+              className="info-icon"
+              data-for={`hint-${name}`}
+              data-tip
+            >
+              ?
+            </span>
+          </BootstrapTooltip>
         </div>}
     </span>
   );
