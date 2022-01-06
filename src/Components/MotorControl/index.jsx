@@ -7,6 +7,11 @@ import React, {
 } from 'react';
 import 'rc-slider/assets/index.css';
 
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import MuiSlider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
+
 import Checkbox from '../Input/Checkbox';
 import { useInterval } from '../../utils/helpers/React';
 
@@ -97,32 +102,37 @@ function MotorControl({
 
   function MotorSlider({
     disabled,
+    key,
     onChange,
   }) {
     const [value, setValue] = useState(startValue);
     /* istanbul ignore next */
-    function update(value) {
-      setValue(value);
-      onChange(value);
+    function update(e) {
+      const newValue = e.target.value;
+      if(newValue !== value) {
+        console.log(newValue);
+        setValue(newValue);
+        onChange(newValue);
+      }
     }
 
     return(
-      <SliderWithTooltip
-        defaultValue={value}
+      <MuiSlider
+        aria-label="Small"
         disabled={disabled}
+        key={key}
         max={maxValue}
         min={minValue}
         onChange={update}
         step={10}
-        tipProps={{
-          visible: true,
-          placement: 'top',
-        }}
+        value={value}
+        valueLabelDisplay="auto"
       />
     );
   }
   MotorSlider.propTypes = {
     disabled: PropTypes.bool.isRequired,
+    key: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
   };
 
@@ -146,12 +156,13 @@ function MotorControl({
 
     return(
       <div className={`slider slider-${index}`}>
-        <h3>
+        <Typography>
           {t("motorNr", { index: index + 1 })}
-        </h3>
+        </Typography>
 
         <MotorSlider
           disabled={!unlock || !unlockIndividual}
+          key={index + 1}
           onChange={update}
         />
       </div>
@@ -181,15 +192,25 @@ function MotorControl({
     <div id="motor-control-wrapper">
       <div className="gui-box grey">
         <div className="gui-box-titlebar">
-          <div className="spacer-box-title">
+          <Typography className="spacer-box-title">
             {t('motorControl')}
-          </div>
+          </Typography>
         </div>
 
-        <div className="spacer-box">
-          <div
-            dangerouslySetInnerHTML={{ __html: t('motorControlText') }}
-          />
+        <Box
+          sx={{ p: 2 }}
+        >
+          <Typography paragraph>
+            {t('motorControlText-1')}
+          </Typography>
+
+          <Typography paragraph>
+            {t('motorControlText-2')}
+          </Typography>
+
+          <Typography paragraph>
+            {t('motorControlText-3')}
+          </Typography>
 
           <div className="line-wrapper">
             <Checkbox
@@ -204,20 +225,29 @@ function MotorControl({
             />
           </div>
 
-          <div id="slider-wrapper">
-            <div id="single-slider">
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              xs={6}
+            >
               {singleSliderElements}
-            </div>
+            </Grid>
 
-            <div id="master-slider">
-              <h3>
+            <Grid
+              item
+              xs={6}
+            >
+              <Typography>
                 {t('masterSpeed')}
-              </h3>
+              </Typography>
 
               {memoizedMasterSlider}
-            </div>
-          </div>
-        </div>
+            </Grid>
+          </Grid>
+        </Box>
       </div>
     </div>
   );
