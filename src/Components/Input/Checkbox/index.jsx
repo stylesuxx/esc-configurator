@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Info from '../Info';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import MuiCheckbox from '@mui/material/Checkbox';
 
-import './style.scss';
+import Info from '../Info';
 
 function Checkbox({
   name,
@@ -14,26 +15,27 @@ function Checkbox({
   inSync,
   hint,
 }) {
+  const formattedLabel = (
+    <Info
+      hint={hint}
+      inSync={inSync}
+      label={label}
+      name={name}
+    />
+  );
+
   return (
     <div className="checkbox">
-      <label>
-        <div className="input-wrapper">
-          <input
+      <FormControlLabel
+        control={
+          <MuiCheckbox
             checked={value === 1}
             disabled={disabled}
             name={name}
             onChange={onChange}
-            type="checkbox"
           />
-        </div>
-      </label>
-
-
-      <Info
-        hint={hint}
-        inSync={inSync}
-        label={label}
-        name={name}
+        }
+        label={formattedLabel}
       />
     </div>
   );

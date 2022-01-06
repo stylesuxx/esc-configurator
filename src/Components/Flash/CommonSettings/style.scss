@@ -1,5 +1,5 @@
-.not-in-sync::before {
-  content: '*';
+.not-in-sync::after {
+  content: ' *';
   color: red;
   font-weight: bold;
 }
