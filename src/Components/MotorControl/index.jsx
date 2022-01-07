@@ -1,23 +1,18 @@
-import Slider, { createSliderWithTooltip } from 'rc-slider';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
   useState,
   useMemo,
 } from 'react';
-import 'rc-slider/assets/index.css';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import MuiSlider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 
-import Checkbox from '../Input/Checkbox';
 import { useInterval } from '../../utils/helpers/React';
-
-import './style.scss';
-
-const SliderWithTooltip = createSliderWithTooltip(Slider);
+import Checkbox from '../Input/Checkbox';
+import Warning from '../Warning';
 
 function BatteryState({ getBatteryState }) {
   const { t } = useTranslation('common');
@@ -189,67 +184,86 @@ function MotorControl({
   ), [unlock]);
 
   return (
-    <div id="motor-control-wrapper">
-      <div className="gui-box grey">
-        <div className="gui-box-titlebar">
-          <Typography className="spacer-box-title">
-            {t('motorControl')}
-          </Typography>
-        </div>
-
-        <Box
-          sx={{ p: 2 }}
-        >
-          <Typography paragraph>
-            {t('motorControlText-1')}
-          </Typography>
-
-          <Typography paragraph>
-            {t('motorControlText-2')}
-          </Typography>
-
-          <Typography paragraph>
-            {t('motorControlText-3')}
-          </Typography>
-
-          <div className="line-wrapper">
-            <Checkbox
-              label={t('enableMotorControl')}
-              name="enable-motor-control"
-              onChange={toggleUnlock}
-              value={unlock ? 1 : 0}
-            />
-
-            <BatteryState
-              getBatteryState={getBatteryState}
-            />
+    <Grid
+      container
+      spacing={2}
+    >
+      <Grid
+        item
+        md={5}
+        xs={12}
+      >
+        <div className="gui-box grey">
+          <div className="gui-box-titlebar">
+            <Typography className="spacer-box-title">
+              {t('motorControl')}
+            </Typography>
           </div>
 
-          <Grid
-            container
-            spacing={3}
+          <Box
+            sx={{ p: 2 }}
           >
-            <Grid
-              item
-              xs={6}
-            >
-              {singleSliderElements}
-            </Grid>
+            <Typography paragraph>
+              {t('motorControlText-1')}
+            </Typography>
+
+            <Typography paragraph>
+              {t('motorControlText-2')}
+            </Typography>
+
+            <Typography paragraph>
+              {t('motorControlText-3')}
+            </Typography>
+
+            <div className="line-wrapper">
+              <Checkbox
+                label={t('enableMotorControl')}
+                name="enable-motor-control"
+                onChange={toggleUnlock}
+                value={unlock ? 1 : 0}
+              />
+
+              <BatteryState
+                getBatteryState={getBatteryState}
+              />
+            </div>
+
+            <br />
 
             <Grid
-              item
-              xs={6}
+              container
+              spacing={3}
             >
-              <Typography>
-                {t('masterSpeed')}
-              </Typography>
+              <Grid
+                item
+                xs={6}
+              >
+                {singleSliderElements}
+              </Grid>
 
-              {memoizedMasterSlider}
+              <Grid
+                item
+                xs={6}
+              >
+                <Typography>
+                  {t('masterSpeed')}
+                </Typography>
+
+                {memoizedMasterSlider}
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </div>
-    </div>
+          </Box>
+        </div>
+      </Grid>
+
+      <Grid
+        item
+        md={7}
+        xs={12}
+      >
+        <Warning />
+      </Grid>
+    </Grid>
   );
 }
 MotorControl.defaultProps = {

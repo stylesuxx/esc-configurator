@@ -3,14 +3,15 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-import InputRange from 'react-input-range';
 
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
 import MuiSlider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 
 import Info from '../Info';
 
-import 'react-input-range/lib/css/index.css';
-import './style.scss';
+//import './style.scss';
 
 function Slider({
   name,
@@ -44,21 +45,18 @@ function Slider({
   };
 
   /* istanbul ignore next */
-  function updateValue(value) {
-    value = Math.floor((value - offset) / factor);
-    setCurrentValue(value);
+  function updateValue(e) {
+    const newValue = e.target.value;
+    const newValueScaled = Math.floor((newValue - offset) / factor);
+
+    if(currentValue !== newValueScaled) {
+      setCurrentValue(newValueScaled);
+    }
   }
 
-  // Makes no sense to test, component has its own test, we just assume that
-  // the slider actually slides.
   /* istanbul ignore next */
-  function handleUpdate(value) {
-    value = Math.floor((value - offset) / factor);
-
-    // Timout needed for individual settings
-    setTimeout(() => {
-      onChange(name, value);
-    }, 100);
+  function handleUpdate() {
+    onChange(name, currentValue);
   }
 
   function format(value) {
@@ -66,35 +64,52 @@ function Slider({
   }
 
   return (
-    <div className="number">
-      <label>
-        <div className="input-wrapper">
-          {/*
-          <InputRange
+    <FormControl
+      fullWidth
+      variant="standard"
+    >
+      <Grid
+        alignItems="center"
+        container
+        spacing={2}
+      >
+        <Grid
+          item
+          xs={6}
+        >
+          <MuiSlider
+            aria-label='xxx'
+            aria-labelledby={`${name}-select-label`}
             disabled={disabled}
             formatLabel={format}
             labelSuffix={suffix}
-            maxValue={max}
-            minValue={min}
+            max={max}
+            min={min}
             name={name}
             onChange={updateValue}
-            onChangeComplete={handleUpdate}
+            onChangeCommitted={handleUpdate}
             step={step}
             value={inSync ? getDisplayValue() : min}
+            valueLabelDisplay="auto"
           />
-          */}
+        </Grid>
 
-          <MuiSlider />
-        </div>
+        <Grid
+          item
+          xs={6}
+        >
+          <Typography id={`${name}-select-label`}>
+            {label}
 
-        <Info
-          hint={hint}
-          inSync={inSync}
-          label={label}
-          name={name}
-        />
-      </label>
-    </div>
+            <Info
+              hint={hint}
+              inSync={inSync}
+              name={name}
+            />
+          </Typography>
+        </Grid>
+      </Grid>
+    </FormControl>
   );
 }
 

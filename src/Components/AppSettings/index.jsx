@@ -33,18 +33,14 @@ function AppSettings({
     switch(setting.type) {
       case 'boolean': {
         return (
-          <>
-            <Checkbox
-              hint={t(`${key}Hint`)}
-              key={key}
-              label={t(key)}
-              name={key}
-              onChange={handleCheckboxChange}
-              value={setting.value ? 1 : 0}
-            />
-
-            <Divider />
-          </>
+          <Checkbox
+            hint={t(`${key}Hint`)}
+            key={key}
+            label={t(key)}
+            name={key}
+            onChange={handleCheckboxChange}
+            value={setting.value ? 1 : 0}
+          />
         );
       }
     }
@@ -59,10 +55,12 @@ function AppSettings({
         open={open}
       >
         <FormControl
-          component="fieldset"
+          fullWidth
           variant="standard"
         >
-          <Stack spacing={1}>
+          <Stack
+            spacing={2}
+          >
             {settingElements}
           </Stack>
         </FormControl>

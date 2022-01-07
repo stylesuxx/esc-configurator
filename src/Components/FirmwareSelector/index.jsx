@@ -215,7 +215,7 @@ function FirmwareSelector({
       <div className="center-wrapper">
         <Stack spacing={1}>
           <Checkbox
-            hint={force ? t('forceFlashHint') : null}
+            help={force ? t('forceFlashHint') : null}
             key='force'
             label={t('forceFlashText')}
             name='force'
@@ -225,7 +225,7 @@ function FirmwareSelector({
           />
 
           <Checkbox
-            hint={migrate ? t('migrateFlashHint') : null}
+            help={migrate ? t('migrateFlashHint') : null}
             key='migrate'
             label={t('migrateFlashText')}
             name='migrate'

@@ -516,7 +516,6 @@ describe('Esc', () => {
       />
     );
 
-    expect(screen.getByText(/hints:COMMON_MOTOR_DIRECTION/i)).toBeInTheDocument();
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
 
     userEvent.click(screen.getByRole(/checkbox/i));

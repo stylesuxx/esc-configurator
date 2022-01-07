@@ -2,14 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import InputLabel from '@mui/material/InputLabel';
+import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import MuiSelect from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
 
-//import Info from '../Info';
-
-//import './style.scss';
+import Info from '../Info';
 
 function Select({
   name,
@@ -54,22 +52,44 @@ function Select({
   }
 
   return (
-    <div className="selectx">
-      <FormControl
-        fullWidth
-        variant="standard"
+
+    <FormControl
+      fullWidth
+      variant="standard"
+    >
+      <Grid
+        alignItems="center"
+        container
+        spacing={2}
       >
-        <InputLabel id={`${name}-select-label`}>
-          {label}
-        </InputLabel>
+        <Grid
+          item
+          xs={6}
+        >
+          <FormControl
+            fullWidth
+            variant="standard"
+          >
+            <Select />
+          </FormControl>
+        </Grid>
 
-        <Select />
+        <Grid
+          item
+          xs={6}
+        >
+          <Typography id={`${name}-select-label`} >
+            {label}
 
-        <FormHelperText>
-          {hint}
-        </FormHelperText>
-      </FormControl>
-    </div>
+            <Info
+              hint={hint}
+              inSync={inSync}
+              name={name}
+            />
+          </Typography>
+        </Grid>
+      </Grid>
+    </FormControl>
   );
 }
 

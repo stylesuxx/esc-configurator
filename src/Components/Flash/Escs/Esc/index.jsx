@@ -6,9 +6,13 @@ import React, {
   useState,
 } from 'react';
 
-import SettingsHandler from './SettingsHandler';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
-import './style.scss';
+import SettingsHandler from './SettingsHandler';
 
 const Esc = forwardRef(({
   canFlash,
@@ -59,59 +63,75 @@ const Esc = forwardRef(({
   return (
     <div className="esc gui-box grey">
       <div className="gui-box-titlebar">
-        <div className="spacer-box-title">
+        <Typography className="spacer-box-title">
           {title}
-        </div>
+        </Typography>
       </div>
 
-      <div className="spacer-box">
-        {disableCommon && commonSettingsDescriptions &&
-          <SettingsHandler
-            descriptions={commonSettingsDescriptions.base}
-            directInput={directInput}
-            disabled={!canFlash}
-            onUpdate={updateCommonSettings}
-            settings={commonSettings}
-          />}
-
-        {descriptions &&
-          <SettingsHandler
-            descriptions={descriptions.base}
-            directInput={directInput}
-            disabled={!canFlash}
-            onUpdate={updateSettings}
-            settings={settings}
-          />}
-
-        <div className="half">
-          <div className="default-btn flash-btn">
-            <progress
-              className={progress > 0 ? 'progress' : 'hidden'}
-              max="100"
-              min="0"
-              value={progress}
-            />
-
-            <button
+      <Box sx={{ p: 2 }}>
+        <Stack
+          divider={<Divider />}
+          spacing={1}
+        >
+          {disableCommon && commonSettingsDescriptions &&
+            <SettingsHandler
+              descriptions={commonSettingsDescriptions.base}
+              directInput={directInput}
               disabled={!canFlash}
-              onClick={handleFirmwareFlash}
-              type="button"
-            >
-              {t('escButtonFlash')}
-            </button>
+              onUpdate={updateCommonSettings}
+              settings={commonSettings}
+            />}
 
-            {enableAdvanced &&
-              <button
-                className="firmware-dump"
-                disabled={!canFlash}
-                onClick={handleFirmwareDump}
-                type="button"
+          {descriptions &&
+            <SettingsHandler
+              descriptions={descriptions.base}
+              directInput={directInput}
+              disabled={!canFlash}
+              onUpdate={updateSettings}
+              settings={settings}
+            />}
+
+          <Stack>
+            <Grid
+              container
+              spacing={2}
+            >
+              <Grid
+                item
+                lg={12}
+                xs={6}
               >
-                {t('escButtonFirmwareDump')}
-              </button>}
-          </div>
-        </div>
-      </div>
+                <div className="default-btn flash-btn">
+                  <progress
+                    className={progress > 0 ? 'progress' : 'hidden'}
+                    max="100"
+                    min="0"
+                    value={progress}
+                  />
+
+                  <button
+                    disabled={!canFlash}
+                    onClick={handleFirmwareFlash}
+                    type="button"
+                  >
+                    {t('escButtonFlash')}
+                  </button>
+
+                  {enableAdvanced &&
+                    <button
+                      className="firmware-dump"
+                      disabled={!canFlash}
+                      onClick={handleFirmwareDump}
+                      type="button"
+                    >
+                      {t('escButtonFirmwareDump')}
+                    </button>}
+                </div>
+              </Grid>
+            </Grid>
+          </Stack>
+        </Stack>
+      </Box>
     </div>
   );
 });

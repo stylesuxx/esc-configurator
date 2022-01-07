@@ -344,10 +344,8 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
+    expect(screen.getByText('escButtonSaveLog')).toBeInTheDocument();
+    expect(screen.getByText('escButtonFlashAll')).toBeInTheDocument();
   });
 
   it('should display when reading with ESC', () => {
@@ -477,10 +475,8 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
+    expect(screen.getByText('escButtonSaveLog')).toBeInTheDocument();
+    expect(screen.getByText('escButtonFlashAll')).toBeInTheDocument();
   });
 
   it('should display when writing with ESC', () => {
