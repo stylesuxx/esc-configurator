@@ -9,6 +9,13 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
+
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 import './style.scss';
 
 const MelodyElement = forwardRef(({
@@ -201,35 +208,33 @@ const MelodyElement = forwardRef(({
   }
 
   return (
-    <div className="esc-melody-wrapper">
-      <div className="esc-melody">
+    <div className="esc-melody">
+      <Stack spacing={1}>
         <header>
-          <div className="index">
-            <h4>
-              {label}
-            </h4>
-          </div>
+          <Typography>
+            {label}
+          </Typography>
 
-          <div className="default-btn">
-            <button
+          <ButtonGroup>
+            <Button
               className="play"
               disabled={!isPlayable || disabled}
               onClick={playing ? handleStopMelody : handlePlayMelody}
-              type="button"
+              variant='outlined'
             >
               {playing ? t('common:melodyEditorStop') : t('common:melodyEditorPlay')}
-            </button>
+            </Button>
 
             { !dummy &&
-              <button
+              <Button
                 className={`accept ${isAccepted ? 'accepted' : ''}`}
                 disabled={!isValid || playing || disabled}
                 onClick={handleAcceptMelody}
-                type="button"
+                variant='outlined'
               >
                 {t('common:melodyEditorAccept')}
-              </button>}
-          </div>
+              </Button>}
+          </ButtonGroup>
         </header>
 
         <div className="editor-wrapper">
@@ -243,7 +248,7 @@ const MelodyElement = forwardRef(({
             value={currentMelody}
           />
         </div>
-      </div>
+      </Stack>
     </div>
   );
 });

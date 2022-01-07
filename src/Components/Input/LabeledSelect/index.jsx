@@ -54,9 +54,10 @@ function LabeledSelect({
         variant="standard"
       >
 
-        <InputLabel id={`${label}-select-label`}>
-          {label}
-        </InputLabel>
+        { label &&
+          <InputLabel id={`${label}-select-label`}>
+            {label}
+          </InputLabel>}
 
         <Select />
       </FormControl>
