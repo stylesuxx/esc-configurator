@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 
 import CommonSettings from './CommonSettings';
 import CountWarning from './CountWarning';
@@ -73,7 +74,7 @@ function Flash({
         md={7}
         xs={12}
       >
-        <div className="flash__individual">
+        <Stack spacing={2}>
           <Escs
             canFlash={canFlash}
             directInput={directInput}
@@ -87,9 +88,9 @@ function Flash({
             onSettingsUpdate={onIndividualSettingsUpdate}
           />
 
-          {escCount !== escs.length &&
+          {escCount + 1 !== escs.length &&
             <CountWarning />}
-        </div>
+        </Stack>
       </Grid>
     </Grid>
   );

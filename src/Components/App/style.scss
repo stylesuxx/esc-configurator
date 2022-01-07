@@ -1,3 +1,5 @@
+@import '../../variables.scss';
+
 * {
   margin: 0;
   padding: 0;
@@ -7,9 +9,6 @@
 }
 
 body {
-  font-family: 'open_sansregular', 'Segoe UI', Tahoma, sans-serif;
-  font-size: 12px;
-  color: #303030;
   background-color: lightgray;
   margin: 0px;
   padding: 0px;
@@ -140,8 +139,10 @@ body {
 }
 
 .main {
+  /*
   padding: 0px 0px 0 0px;
   height: calc(100% - 7px);
+  */
 
   .main__header {
     background: #3d3f3e;
@@ -238,7 +239,6 @@ body {
   a {
     text-decoration: none;
     color: #000;
-    font-family: 'open_sanssemibold', Arial;
   }
 
   a:hover {
@@ -315,9 +315,11 @@ body {
     border-radius: 4px;
     border: 1px solid var(--color-tertiary);
     color: var(--color-tertiary);
+    /*
     font-family: 'open_sanssemibold', Arial;
     font-size: 12px;
     line-height: 13px;
+    */
     display: block;
     width: 100%;
     transition: all ease 0.2s;
@@ -362,7 +364,7 @@ body {
 .content_wrapper {
   padding: 20px;
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 70px;
 
   @media only screen and (max-width: 600px) {
     margin-bottom: 120px;

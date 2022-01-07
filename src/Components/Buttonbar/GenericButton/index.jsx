@@ -6,15 +6,20 @@ import Button from '@mui/material/Button';
 function GenericButton({
   className,
   disabled,
+  fullWidth,
   onClick,
+  sx,
   text,
+  variant,
 }) {
   return (
     <Button
       className={className}
       disabled={disabled}
+      fullWidth={fullWidth}
       onClick={onClick}
-      variant="contained"
+      sx={sx}
+      variant={variant}
     >
       {text}
     </Button>
@@ -24,12 +29,18 @@ function GenericButton({
 GenericButton.defaultProps = {
   className: null,
   disabled: false,
+  fullWidth: false,
+  sx: null,
+  variant: 'contained',
 };
 GenericButton.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  fullWidth: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
+  sx: PropTypes.shape({}),
   text: PropTypes.string.isRequired,
+  variant: PropTypes.string,
 };
 
 export default GenericButton;

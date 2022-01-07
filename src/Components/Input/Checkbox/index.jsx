@@ -4,7 +4,6 @@ import React from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import MuiCheckbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
 
 import Info from '../Info';
 

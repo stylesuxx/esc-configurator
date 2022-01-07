@@ -2,6 +2,9 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
 import Content from './Content';
 
 import './style.scss';
@@ -24,23 +27,28 @@ function Changelog({ entries }) {
 
   return (
     <div className={`changelog ${state.expanded ? "expanded" : ""}`}>
-      <div
+      <Typography
         className="button"
         onClick={toggleExpanded}
-        type="button"
       >
         {state.title}
-      </div>
+      </Typography>
 
-      <div className="changelog__wrapper">
-        <div className="changelog__title">
+      <Box
+        className="wrapper"
+        sx={{
+          p: 1,
+          borderLeft: '5px solid #71B238',
+          overflowY: 'auto',
+          height: 1,
+        }}
+      >
+        <Typography variant="h6">
           {t('defaultChangelogHead')}
-        </div>
+        </Typography>
 
-        <div className="changelog__content">
-          <Content entries={entries} />
-        </div>
-      </div>
+        <Content entries={entries} />
+      </Box>
     </div>
   );
 }

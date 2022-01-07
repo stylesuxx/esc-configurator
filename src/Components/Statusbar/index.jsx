@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useInterval } from '../../utils/helpers/React';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
-import './style.scss';
+import { useInterval } from '../../utils/helpers/React';
 
 function Statusbar({
   getUtilization,
@@ -26,19 +28,48 @@ function Statusbar({
   }, 1000);
 
   return (
-    <div className="status-bar">
-      <span>
-        {`${t('statusbarPortUtilization')} D: ${utilization.down}% U: ${utilization.up}%`}
-      </span>
+    <Box
+      className="status-barx"
+      sx={{
+        height: '20px',
+        lineHeight: '20px',
+        position: 'fixed',
+        bottom: 0,
+        width: 1,
+        borderTop: '1px solid #7d7d79',
+        background: '#bfbeb5',
+      }}
+    >
+      <Box
+        className="mui-fixed"
+        sx={{
+          p: 1,
+          paddingTop: 0,
+          paddingBottom: 0,
+        }}
+      >
+        <Grid
+          container
+          justifyContent="space-between"
+        >
+          <Grid item>
+            <Typography variant="body2">
+              {`${t('statusbarPortUtilization')} D: ${utilization.down}% U: ${utilization.up}%`}
 
-      <span>
-        {`${t('statusbarPacketError')} ${packetErrors}`}
-      </span>
+              &nbsp;|&nbsp;
 
-      <span className="status-bar__version">
-        {version}
-      </span>
-    </div>
+              {`${t('statusbarPacketError')} ${packetErrors}`}
+            </Typography>
+          </Grid>
+
+          <Grid item>
+            <Typography variant="body2">
+              {version}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
   );
 }
 Statusbar.defaultProps = { getUtilization: null };

@@ -1,23 +1,31 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+
 function Content({ entries }) {
   const entryElements = entries.map((entry) => {
     const listItems = entry.items.map((item) => (
-      <li key={item}>
-        {item}
-      </li>
+      <ListItem key={item}>
+        <ListItemText primary={item} />
+      </ListItem>
     ));
 
     return (
       <div key={entry.title}>
-        <span>
+        <Typography>
           {entry.title}
-        </span>
+        </Typography>
 
-        <ul>
+        <Divider />
+
+        <List dense>
           {listItems}
-        </ul>
+        </List>
       </div>
     );
   });

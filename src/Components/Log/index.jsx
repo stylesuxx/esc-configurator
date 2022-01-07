@@ -2,6 +2,9 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
 import './style.scss';
 
 function Log({ messages }) {
@@ -10,9 +13,12 @@ function Log({ messages }) {
 
   const messageElements = messages.slice(0).reverse().
     map((message, index) => (
-      <div key={index}>
+      <Typography
+        key={index}
+        variant="body2"
+      >
         {message}
-      </div>
+      </Typography>
     ));
 
   function toggleExpanded() {
@@ -24,21 +30,38 @@ function Log({ messages }) {
       className={expanded ? 'expanded' : ''}
       id="log"
     >
-      <div className="logswitch">
-        <button
+      <Box
+        className="logswitch"
+        sx={{
+          p: 2,
+          paddingTop: '4px',
+          position: 'absolute',
+          right: 0,
+          zIndex: 1,
+        }}
+      >
+        <Typography
+          className="button"
           id="showlog"
           onClick={toggleExpanded}
-          type="button"
+          variant="body2"
         >
           {expanded ? t('hideLog') : t('showLog')}
-        </button>
-      </div>
+        </Typography>
+      </Box>
 
       <div id="scrollicon" />
 
-      <div className="wrapper">
+      <Box
+        className="wrapper"
+        sx={{
+          p: 2,
+          paddingTop: '4px',
+          paddingBottom: '4px',
+        }}
+      >
         {messageElements}
-      </div>
+      </Box>
     </div>
   );
 }

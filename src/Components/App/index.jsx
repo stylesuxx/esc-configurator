@@ -9,6 +9,8 @@ import {
   ThemeProvider,
 } from '@mui/material/styles';
 
+import Box from '@mui/material/Box';
+
 import AppSettings from '../AppSettings';
 import CookieConsent from '../CookieConsent';
 import LanguageSelection from '../LanguageSelection';
@@ -50,44 +52,46 @@ function App({
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="main">
+      <Box className="main">
         <header className="main__header">
-          <div className="main__bar">
-            <div className="main__logo" />
+          <Box className="mui-fixed">
+            <div className="main__bar">
+              <div className="main__logo" />
 
-            <PortPicker
-              hasPort={serial.connected}
-              hasSerial={serial.hasSerial}
-              isIdle={isIdle}
-              onChangePort={serial.actions.handleChangePort}
-              onConnect={serial.actions.handleConnect}
-              onDisconnect={serial.actions.handleDisconnect}
-              onSetBaudRate={serial.actions.handleSetBaudRate}
-              onSetPort={serial.actions.handleSetPort}
-              open={serial.open}
-              ports={serial.portNames}
-            />
-
-            <div className="main__settings">
-              <LanguageSelection
-                current={language.current}
-                languages={language.available}
-                onChange={language.actions.handleChange}
+              <PortPicker
+                hasPort={serial.connected}
+                hasSerial={serial.hasSerial}
+                isIdle={isIdle}
+                onChangePort={serial.actions.handleChangePort}
+                onConnect={serial.actions.handleConnect}
+                onDisconnect={serial.actions.handleDisconnect}
+                onSetBaudRate={serial.actions.handleSetBaudRate}
+                onSetPort={serial.actions.handleSetPort}
+                open={serial.open}
+                ports={serial.portNames}
               />
 
-              <div className="button button--dark">
-                <button
-                  onClick={appSettings.actions.handleOpen}
-                  type="button"
-                >
-                  {t('settings')}
-                </button>
+              <div className="main__settings">
+                <LanguageSelection
+                  current={language.current}
+                  languages={language.available}
+                  onChange={language.actions.handleChange}
+                />
+
+                <div className="button button--dark">
+                  <button
+                    onClick={appSettings.actions.handleOpen}
+                    type="button"
+                  >
+                    {t('settings')}
+                  </button>
+                </div>
+
               </div>
-
             </div>
-          </div>
 
-          <Log messages={serial.log} />
+            <Log messages={serial.log} />
+          </Box>
         </header>
 
         <MainContent
@@ -126,7 +130,7 @@ function App({
           packetErrors={stats.packetErrors}
           version={stats.version}
         />
-      </div>
+      </Box>
 
       <AppSettings
         onClose={appSettings.actions.handleClose}

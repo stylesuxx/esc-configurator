@@ -1,43 +1,50 @@
 import { useTranslation } from 'react-i18next';
 import React from 'react';
 
-import './style.scss';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+
+import MainCard from '../../MainCard';
 
 function CountWarning() {
   const { t } = useTranslation('common');
 
   return (
-    <div className="gui-box grey missing-esc">
-      <div className="gui-box-titlebar">
-        <div className="spacer-box-title">
-          {t('escMissingHeader')}
-        </div>
-      </div>
+    <MainCard
+      title={t('escMissingHeader')}
+    >
+      <Typography>
+        {t('escMissingText')}
+      </Typography>
 
-      <div className="spacer-box">
-        <p>
-          {t('escMissingText')}
-        </p>
-
-        <ul>
-          <li
-            dangerouslySetInnerHTML={{ __html: t('escMissing1') }}
+      <List dense>
+        <ListItem>
+          <ListItemText
+            primary={<p dangerouslySetInnerHTML={{ __html: t('escMissing1') }} />}
           />
+        </ListItem>
 
-          <li
-            dangerouslySetInnerHTML={{ __html: t('escMissing2') }}
+        <ListItem>
+          <ListItemText
+            primary={<p dangerouslySetInnerHTML={{ __html: t('escMissing2') }} />}
           />
+        </ListItem>
 
-          <li
-            dangerouslySetInnerHTML={{ __html: t('escMissing3') }}
+        <ListItem>
+          <ListItemText
+            primary={<p dangerouslySetInnerHTML={{ __html: t('escMissing3') }} />}
           />
-        </ul>
+        </ListItem>
+      </List>
 
+      <Typography>
         <p
           dangerouslySetInnerHTML={{ __html: t('escMissingHint') }}
         />
-      </div>
-    </div>
+      </Typography>
+    </MainCard>
   );
 }
 

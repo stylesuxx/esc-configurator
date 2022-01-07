@@ -1,4 +1,3 @@
-/* Log setup*/
 #log {
   margin-bottom: 0px;
   border: 0px solid silver;
@@ -8,6 +7,7 @@
   line-height: 21px;
   height: 27px;
   overflow-y: hidden;
+  position: relative;
 
   #scrollicon {
     position: fixed;
@@ -45,13 +45,6 @@
   }
 
   .wrapper {
-    padding: 5px; /* was 5*/
-    padding-left: 10px;
-    padding-bottom: 4px;
-    -webkit-user-select: text;
-    position: relative;
-    bottom: 0px;
-
     @media only screen and (max-width: 600px) {
       .date {
         display: none;
@@ -59,31 +52,15 @@
     }
   }
 
-  a {
-    font-weight: regular;
-    color: var(--color-tertiary);
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
   .logswitch {
-    position: absolute;
-    right: 20px;
-    z-index: 10;
-    line-height: 27px;
-
-    button {
-      background: transparent;
+    .button {
       color: #656565 !important;
       transition: all 0.3s;
       cursor: pointer;
     }
 
-    button:hover {
+    .button:hover {
       color: #959595 !important;
-      text-decoration: none !important;
       transition: all 0.3s;
     }
   }
