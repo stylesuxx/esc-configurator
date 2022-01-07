@@ -1,75 +1,36 @@
-.esc-melody-wrapper {
-  width: 50%;
+.esc-melody {
+  header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
 
-  .esc-melody {
-    flex: 1;
-    margin: 10px;
-    position: relative;
+  .editor-wrapper {
+    border: 1px solid silver;
+    padding: 5px;
+    display: flex;
 
-    header {
-      padding-bottom: 5px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid silver;
-      display: flex;
-      justify-content: space-between;
+    .editor {
       width: 100%;
+      font-family: monospace;
 
-      .default-btn {
-        width: auto;
-        display: flex;
-
-        button {
-          margin-left: 10px;
-          width: 100px;
-        }
-
-        button.accepted {
-          background: var(--color-tertiary);
-          color: white;
-
-          &[disabled] {
-            cursor: default;
-            opacity: 0.5;
-          }
-        }
+      mark {
+        background: #FFCCCB;
       }
 
-      .index {
-        flex: 1;
-        h4 {
-          padding-top: 5px;
-          font-size: 1.17em;
-        }
-      }
-    }
-
-    .editor-wrapper {
-      border: 1px solid silver;
-      padding: 5px;
-      display: flex;
-
-      .editor {
-        width: 100%;
-        font-family: monospace;
-
+      &.playing {
         mark {
-          background: #FFCCCB;
+          background: #CCFFCB;
         }
+      }
 
-        &.playing {
-          mark {
-            background: #CCFFCB;
-          }
-        }
+      textarea {
+        width: 100%;
+        resize: none;
+        border: 0px;
 
-        textarea {
-          width: 100%;
-          resize: none;
-          border: 0px;
-
-          &[disabled] {
-            opacity: 0.75;
-          }
+        &[disabled] {
+          opacity: 0.75;
         }
       }
     }

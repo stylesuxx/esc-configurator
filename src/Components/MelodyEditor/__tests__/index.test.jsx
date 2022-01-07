@@ -334,9 +334,10 @@ describe('MelodyEditor', () => {
     userEvent.click(screen.getByText(/common:melodyEditorSave/i));
     expect(onSave).not.toHaveBeenCalled();
 
-    expect(screen.getByTestId('saveMelodyName')).toBeInTheDocument();
+    const element = screen.getAllByRole('textbox')[0];
+    expect(element).toBeInTheDocument();
 
-    fireEvent.change(screen.getByTestId('saveMelodyName'), {
+    fireEvent.change(element, {
       target: {
         name: "",
         value: "TestName",
