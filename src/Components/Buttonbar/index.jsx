@@ -2,6 +2,10 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Box from '@mui/material/Box';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Grid from '@mui/material/Grid';
+
 import GenericButton from './GenericButton';
 
 import './style.scss';
@@ -23,62 +27,83 @@ function Buttonbar({
 
   return (
     <div className="button-bar">
-      <div className="buttons-bottom mobile-show">
-        {showMelodyEditor &&
-          <GenericButton
-            disabled={!canRead}
-            onClick={onOpenMelodyEditor}
-            text={t('escButtonOpenMelodyEditor')}
-          />}
-      </div>
+      <Box
+        sx={{
+          p: 1,
+          width: 1,
+        }}
+      >
+        <Grid
+          container
+          justifyContent="space-between"
+          spacing={1}
+        >
+          <div className="buttons-bottom mobile-show">
+            {showMelodyEditor &&
+              <GenericButton
+                disabled={!canRead}
+                onClick={onOpenMelodyEditor}
+                text={t('escButtonOpenMelodyEditor')}
+              />}
+          </div>
 
-      <div className="buttons-left">
-        <GenericButton
-          onClick={onSaveLog}
-          text={t('escButtonSaveLog')}
-        />
+          <Grid item>
+            <div className="buttons-left">
+              <ButtonGroup>
+                <GenericButton
+                  onClick={onSaveLog}
+                  text={t('escButtonSaveLog')}
+                />
 
-        <div className="mobile-show">
-          <GenericButton
-            disabled={!canResetDefaults}
-            onClick={onResetDefaults}
-            text={t('resetDefaults')}
-          />
-        </div>
-      </div>
+                <GenericButton
+                  className="mobile-show"
+                  disabled={!canResetDefaults}
+                  onClick={onResetDefaults}
+                  text={t('resetDefaults')}
+                />
+              </ButtonGroup>
+            </div>
+          </Grid>
 
-      <div className="buttons-right">
-        <GenericButton
-          disabled={!canRead}
-          onClick={onReadSetup}
-          text={t('escButtonRead')}
-        />
+          <Grid item>
+            <div className="buttons-right">
+              <ButtonGroup>
+                {showMelodyEditor &&
+                  <GenericButton
+                    disabled={!canRead}
+                    onClick={onOpenMelodyEditor}
+                    text={t('escButtonOpenMelodyEditor')}
+                  />}
 
-        <GenericButton
-          disabled={!canWrite}
-          onClick={onWriteSetup}
-          text={t('escButtonWrite')}
-        />
+                <GenericButton
+                  className="mobile-hide"
+                  disabled={!canResetDefaults}
+                  onClick={onResetDefaults}
+                  text={t('resetDefaults')}
+                />
 
-        <GenericButton
-          disabled={!canFlash}
-          onClick={onSeletFirmwareForAll}
-          text={t('escButtonFlashAll')}
-        />
+                <GenericButton
+                  disabled={!canFlash}
+                  onClick={onSeletFirmwareForAll}
+                  text={t('escButtonFlashAll')}
+                />
 
-        <GenericButton
-          disabled={!canResetDefaults}
-          onClick={onResetDefaults}
-          text={t('resetDefaults')}
-        />
+                <GenericButton
+                  disabled={!canWrite}
+                  onClick={onWriteSetup}
+                  text={t('escButtonWrite')}
+                />
 
-        {showMelodyEditor &&
-          <GenericButton
-            disabled={!canRead}
-            onClick={onOpenMelodyEditor}
-            text={t('escButtonOpenMelodyEditor')}
-          />}
-      </div>
+                <GenericButton
+                  disabled={!canRead}
+                  onClick={onReadSetup}
+                  text={t('escButtonRead')}
+                />
+              </ButtonGroup>
+            </div>
+          </Grid>
+        </Grid>
+      </Box>
     </div>
   );
 }

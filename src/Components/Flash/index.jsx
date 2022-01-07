@@ -33,6 +33,13 @@ function Flash({
     >
       <Grid
         item
+        xs={12}
+      >
+        <Warning />
+      </Grid>
+
+      <Grid
+        item
         md={5}
         xs={12}
       >
@@ -67,10 +74,6 @@ function Flash({
         xs={12}
       >
         <div className="flash__individual">
-          <Warning />
-
-          <br />
-
           <Escs
             canFlash={canFlash}
             directInput={directInput}

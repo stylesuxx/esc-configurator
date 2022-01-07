@@ -5,13 +5,13 @@ import React, {
   useMemo,
 } from 'react';
 
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import MuiSlider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 
 import { useInterval } from '../../utils/helpers/React';
 import Checkbox from '../Input/Checkbox';
+import MainCard from '../MainCard';
 import Warning from '../Warning';
 
 function BatteryState({ getBatteryState }) {
@@ -190,78 +190,67 @@ function MotorControl({
     >
       <Grid
         item
-        md={5}
         xs={12}
       >
-        <div className="gui-box grey">
-          <div className="gui-box-titlebar">
-            <Typography className="spacer-box-title">
-              {t('motorControl')}
-            </Typography>
-          </div>
-
-          <Box
-            sx={{ p: 2 }}
-          >
-            <Typography paragraph>
-              {t('motorControlText-1')}
-            </Typography>
-
-            <Typography paragraph>
-              {t('motorControlText-2')}
-            </Typography>
-
-            <Typography paragraph>
-              {t('motorControlText-3')}
-            </Typography>
-
-            <div className="line-wrapper">
-              <Checkbox
-                label={t('enableMotorControl')}
-                name="enable-motor-control"
-                onChange={toggleUnlock}
-                value={unlock ? 1 : 0}
-              />
-
-              <BatteryState
-                getBatteryState={getBatteryState}
-              />
-            </div>
-
-            <br />
-
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                item
-                xs={6}
-              >
-                {singleSliderElements}
-              </Grid>
-
-              <Grid
-                item
-                xs={6}
-              >
-                <Typography>
-                  {t('masterSpeed')}
-                </Typography>
-
-                {memoizedMasterSlider}
-              </Grid>
-            </Grid>
-          </Box>
-        </div>
+        <Warning />
       </Grid>
 
       <Grid
         item
-        md={7}
+        md={5}
         xs={12}
       >
-        <Warning />
+        <MainCard title={t('motorControl')}>
+          <Typography paragraph>
+            {t('motorControlText-1')}
+          </Typography>
+
+          <Typography paragraph>
+            {t('motorControlText-2')}
+          </Typography>
+
+          <Typography paragraph>
+            {t('motorControlText-3')}
+          </Typography>
+
+          <div className="line-wrapper">
+            <Checkbox
+              label={t('enableMotorControl')}
+              name="enable-motor-control"
+              onChange={toggleUnlock}
+              value={unlock ? 1 : 0}
+            />
+
+            <BatteryState
+              getBatteryState={getBatteryState}
+            />
+          </div>
+
+          <br />
+
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              xs={6}
+            >
+              {singleSliderElements}
+            </Grid>
+
+            <Grid
+              item
+              xs={6}
+            >
+              <Typography>
+                {t('masterSpeed')}
+              </Typography>
+
+              {memoizedMasterSlider}
+            </Grid>
+          </Grid>
+        </MainCard>
       </Grid>
     </Grid>
   );
