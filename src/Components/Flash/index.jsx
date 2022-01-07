@@ -2,11 +2,12 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Grid from '@mui/material/Grid';
+
 import CommonSettings from './CommonSettings';
 import CountWarning from './CountWarning';
 import Escs from './Escs';
-
-import './style.scss';
+import Warning from '../Warning';
 
 function Flash({
   availableSettings,
@@ -26,8 +27,15 @@ function Flash({
   const { t } = useTranslation('common');
 
   return (
-    <div className="flash">
-      <div className="flash__wrapper">
+    <Grid
+      container
+      spacing={2}
+    >
+      <Grid
+        item
+        md={5}
+        xs={12}
+      >
         <div className="flash__common">
           {escs.length > 0 && !disableCommon &&
             <CommonSettings
@@ -51,8 +59,18 @@ function Flash({
               </div>
             </div>}
         </div>
+      </Grid>
 
+      <Grid
+        item
+        md={7}
+        xs={12}
+      >
         <div className="flash__individual">
+          <Warning />
+
+          <br />
+
           <Escs
             canFlash={canFlash}
             directInput={directInput}
@@ -69,8 +87,8 @@ function Flash({
           {escCount !== escs.length &&
             <CountWarning />}
         </div>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
 

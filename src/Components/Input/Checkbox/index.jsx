@@ -4,6 +4,7 @@ import React from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import MuiCheckbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
 
 import Info from '../Info';
 
@@ -15,9 +16,11 @@ function Checkbox({
   onChange,
   inSync,
   hint,
+  help,
 }) {
   const formattedLabel = (
     <Info
+      hint={hint}
       inSync={inSync}
       label={label}
       name={name}
@@ -43,15 +46,17 @@ function Checkbox({
         label={formattedLabel}
       />
 
-      <FormHelperText>
-        {hint}
-      </FormHelperText>
+      { help &&
+        <FormHelperText>
+          {help}
+        </FormHelperText>}
     </div>
   );
 }
 
 Checkbox.defaultProps = {
   disabled: false,
+  help: null,
   hint: null,
   inSync: true,
   value: 0,
@@ -59,6 +64,7 @@ Checkbox.defaultProps = {
 
 Checkbox.propTypes = {
   disabled: PropTypes.bool,
+  help: PropTypes.string,
   hint: PropTypes.string,
   inSync: PropTypes.bool,
   label: PropTypes.string.isRequired,
