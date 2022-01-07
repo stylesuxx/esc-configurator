@@ -11,8 +11,6 @@ import Typography from '@mui/material/Typography';
 
 import Info from '../Info';
 
-//import './style.scss';
-
 function Slider({
   name,
   value,

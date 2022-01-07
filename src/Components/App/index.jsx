@@ -4,6 +4,11 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import {
+  createTheme,
+  ThemeProvider,
+} from '@mui/material/styles';
+
 import AppSettings from '../AppSettings';
 import CookieConsent from '../CookieConsent';
 import LanguageSelection from '../LanguageSelection';
@@ -15,6 +20,15 @@ import Statusbar from '../Statusbar';
 
 import changelogEntries from '../../changelog.json';
 import './style.scss';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#6a8347',
+      ph: '',
+    },
+  },
+});
 
 function App({
   actions,
@@ -35,7 +49,7 @@ function App({
   const isIdle = !Object.values(actions).some((element) => element);
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <div className="main">
         <header className="main__header">
           <div className="main__bar">
@@ -137,7 +151,7 @@ function App({
       <CookieConsent onCookieAccept={onCookieAccept} />
 
       <ToastContainer />
-    </div>
+    </ThemeProvider>
   );
 }
 

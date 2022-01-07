@@ -7,11 +7,14 @@ import React, {
 } from 'react';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import MainCard from '../../../MainCard';
 import SettingsHandler from './SettingsHandler';
 
 const Esc = forwardRef(({
@@ -61,78 +64,70 @@ const Esc = forwardRef(({
   }
 
   return (
-    <div className="esc gui-box grey">
-      <div className="gui-box-titlebar">
-        <Typography className="spacer-box-title">
-          {title}
-        </Typography>
-      </div>
+    <MainCard title={title}>
+      <Stack
+        divider={<Divider />}
+        spacing={1}
+      >
+        {disableCommon && commonSettingsDescriptions &&
+          <SettingsHandler
+            descriptions={commonSettingsDescriptions.base}
+            directInput={directInput}
+            disabled={!canFlash}
+            onUpdate={updateCommonSettings}
+            settings={commonSettings}
+          />}
 
-      <Box sx={{ p: 2 }}>
-        <Stack
-          divider={<Divider />}
-          spacing={1}
-        >
-          {disableCommon && commonSettingsDescriptions &&
-            <SettingsHandler
-              descriptions={commonSettingsDescriptions.base}
-              directInput={directInput}
-              disabled={!canFlash}
-              onUpdate={updateCommonSettings}
-              settings={commonSettings}
-            />}
+        {descriptions &&
+          <SettingsHandler
+            descriptions={descriptions.base}
+            directInput={directInput}
+            disabled={!canFlash}
+            onUpdate={updateSettings}
+            settings={settings}
+          />}
 
-          {descriptions &&
-            <SettingsHandler
-              descriptions={descriptions.base}
-              directInput={directInput}
-              disabled={!canFlash}
-              onUpdate={updateSettings}
-              settings={settings}
-            />}
-
-          <Stack>
+        <Stack>
+          <Grid
+            container
+            spacing={2}
+          >
             <Grid
-              container
-              spacing={2}
+              item
+              xs={12}
             >
-              <Grid
-                item
-                lg={12}
-                xs={6}
-              >
-                <div className="default-btn flash-btn">
-                  <progress
-                    className={progress > 0 ? 'progress' : 'hidden'}
-                    max="100"
-                    min="0"
-                    value={progress}
-                  />
+              <div className="flash-btn">
+                <progress
+                  className={progress > 0 ? 'progress' : 'hidden'}
+                  max="100"
+                  min="0"
+                  value={progress}
+                />
 
-                  <button
+                <ButtonGroup
+                  variant="outlined"
+                >
+                  <Button
                     disabled={!canFlash}
                     onClick={handleFirmwareFlash}
-                    type="button"
                   >
                     {t('escButtonFlash')}
-                  </button>
+                  </Button>
 
                   {enableAdvanced &&
-                    <button
-                      className="firmware-dump"
+                    <Button
                       disabled={!canFlash}
                       onClick={handleFirmwareDump}
-                      type="button"
                     >
                       {t('escButtonFirmwareDump')}
-                    </button>}
-                </div>
-              </Grid>
+                    </Button>}
+                </ButtonGroup>
+              </div>
             </Grid>
-          </Stack>
+          </Grid>
         </Stack>
-      </Box>
-    </div>
+      </Stack>
+    </MainCard>
   );
 });
 Esc.displayName = 'Esc';

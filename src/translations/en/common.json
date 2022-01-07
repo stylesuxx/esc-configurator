@@ -61,7 +61,7 @@
   "forceFlashHint": "Flashing inappropriate firmware may damage your ESC, do so at your own risk",
   "migrateFlashText": "Migrate settings between different firmwares?",
   "migrateFlashHint": "This will attempt to migrate settings between different firmwares like for example from BLHeli_S to Bluejay",
-  "migrationNote": "<b>Note:</b> Be aware that settings are not migrated between different firmwares, make sure to take note of your motor directions and other settings you might want to move over. Settings will be migrated between different versions of the same firmware.",
+  "migrationNote": "Be aware that settings are not migrated between different firmwares, make sure to take note of your motor directions and other settings you might want to move over. Settings will be migrated between different versions of the same firmware.",
   "escDirectionReversed": "Direction Reversed",
   "escBidirectionalMode": "Bidirectional Mode",
   "escSinusoidalStartup": "Sinusoidal Startup",
@@ -138,6 +138,6 @@
   "escMissing1": "The ESC was not ready yet. This can for example happen if it is <b>playing a melody</b>. Also a previous flash could have gone wrong and it needs longer to boot up than usual.",
   "escMissing2": "There are simply <b>not more ESCs connected.</b>",
   "escMissing3": "The <b>MCU of the ESC is defective.</b>",
-  "mistagged": "<p><b>Warning:</b> It seems that the currently flashed firmware is mistagged!</p><p>Only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC. If you want to proceed, it is highly advised to flash the version with the higher dead-time - you need to check the <i>\"Ignore inappropriate MCU Layout?\"</i> checkbox on top of the page.</p><table><tr><td>Tagged</td><td>{{tagged}}</td></tr><tr><td>Detected</td><td>{{detected}}</td></tr></table><p>If you see this message, please <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">consider adding an entry to the Wiki</a>, helping us to document problematic hardware.</p><p><b>If you do not understand the risks involved in proceeding, do not hesitate to <a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">join us on discord</a>.</b></p>",
+  "mistagged": "<p>It seems that the currently flashed firmware is mistagged!</p><p>Only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC. If you want to proceed, it is highly advised to flash the version with the higher dead-time - you need to check the <i>\"Ignore inappropriate MCU Layout?\"</i> checkbox on top of the page.</p><table><tr><td>Tagged</td><td>{{tagged}}</td></tr><tr><td>Detected</td><td>{{detected}}</td></tr></table><p>If you see this message, please <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">consider adding an entry to the Wiki</a>, helping us to document problematic hardware.</p><p><b>If you do not understand the risks involved in proceeding, do not hesitate to <a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">join us on discord</a>.</b></p>",
   "update": "Update available! To update the app, refresh or restart it."
 }

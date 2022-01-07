@@ -5,8 +5,6 @@ import React, {
   useState,
 } from 'react';
 
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -19,6 +17,7 @@ import {
 } from '../../../utils/helpers/Settings';
 
 import Checkbox from '../../Input/Checkbox';
+import MainCard from '../../MainCard';
 import Select from '../../Input/Select';
 import Slider from '../../Input/Slider';
 import Number from '../../Input/Number';
@@ -87,37 +86,31 @@ function CommonSettings({
     const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
     let unsupportedText = (
-      <p
-        dangerouslySetInnerHTML={{
-          __html: t('common:versionUnsupported', {
-            version: version,
-            name: availableSettings.NAME,
-            layout: availableSettings.LAYOUT_REVISION,
-          }),
-        }}
-      />
+      <Typography>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t('common:versionUnsupported', {
+              version: version,
+              name: availableSettings.NAME,
+              layout: availableSettings.LAYOUT_REVISION,
+            }),
+          }}
+        />
+      </Typography>
     );
 
     if (unsupportedNames.includes(availableSettings.NAME)) {
       unsupportedText = (
-        <p
-          dangerouslySetInnerHTML={{ __html: t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }}
-        />
+        <Typography>
+          {t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
+        </Typography>
       );
     }
 
     return (
-      <div className="gui-box grey">
-        <div className="gui-box-titlebar">
-          <div className="spacer-box-title">
-            {t('unsupportedFirmware')}
-          </div>
-        </div>
-
-        <div className="spacer-box">
-          {unsupportedText}
-        </div>
-      </div>
+      <MainCard title={t('unsupportedFirmware')}>
+        {unsupportedText}
+      </MainCard>
     );
   }
 
@@ -252,21 +245,11 @@ function CommonSettings({
   });
 
   return (
-    <div className="gui-box grey">
-      <div className="gui-box-titlebar">
-        <Typography className="spacer-box-title">
-          {t('commonParameters')}
-        </Typography>
-      </div>
-
-      <Box sx={{ p: 2 }}>
-        <Stack
-          spacing={1}
-        >
-          {settingElements}
-        </Stack>
-      </Box>
-    </div>
+    <MainCard title={t('commonParameters')}>
+      <Stack spacing={1}>
+        {settingElements}
+      </Stack>
+    </MainCard>
   );
 }
 

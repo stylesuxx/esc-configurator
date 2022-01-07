@@ -4,10 +4,14 @@ import React, {
   useState, useEffect, useRef,
 } from 'react';
 
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 
 import Checkbox from '../Input/Checkbox';
+import MainCard from '../MainCard';
 
 import {
   isValidLayout,
@@ -17,8 +21,6 @@ import {
 import { blheliSource } from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
-
-import './style.scss';
 
 const blheliModes = blheliSource.getEeprom().MODES;
 
@@ -211,9 +213,83 @@ function FirmwareSelector({
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
 
   return (
-    <div id="firmware-selector">
-      <div className="center-wrapper">
+    <Container>
+      <MainCard
+        title={`${t('selectTarget')}${esc.displayName ? ` (${esc.displayName})` : ''}`}
+      >
         <Stack spacing={1}>
+          <Grid
+            container
+            spacing={1}
+          >
+            <Grid
+              item
+              xs={6}
+            >
+              <LabeledSelect
+                firstLabel={t('selectFirmware')}
+                label={t('selectFirmware')}
+                onChange={handleFirmwareChange}
+                options={options.firmwares}
+                selected={selection.firmware}
+              />
+            </Grid>
+
+            {selection.firmware &&
+              <>
+                <Grid
+                  item
+                  xs={6}
+                >
+                  <LabeledSelect
+                    firstLabel={t('selectEsc')}
+                    label={t('selectEsc')}
+                    onChange={handleEscChange}
+                    options={options.escs}
+                    selected={escLayout}
+                  />
+                </Grid>
+
+                {/*
+                {type === blheliTypes.SILABS || type === blheliTypes.ATMEL &&
+                  <LabeledSelect
+                    firstLabel={t('selectMode')}
+                    label="Mode"
+                    onChange={updateMode}
+                    options={options.modes}
+                    selected={mode}
+                  />}
+                */}
+
+                <Grid
+                  item
+                  xs={6}
+                >
+                  <LabeledSelect
+                    firstLabel={t('selectVersion')}
+                    label={t('selectVersion')}
+                    onChange={handleVersionChange}
+                    options={options.versions}
+                    selected={selection.url}
+                  />
+                </Grid>
+
+                {options.frequencies.length > 0 &&
+                  <Grid
+                    item
+                    xs={6}
+                  >
+                    <LabeledSelect
+                      firstLabel={t('selectPwmFrequency')}
+                      label={t('selectPwmFrequency')}
+                      onChange={handlePwmChange}
+                      options={options.frequencies}
+                      selected={selection.pwm}
+                    />
+                  </Grid>}
+              </>}
+          </Grid>
+
           <Checkbox
             help={force ? t('forceFlashHint') : null}
             key='force'
@@ -233,142 +309,50 @@ function FirmwareSelector({
             type="checkbox"
             value={migrate ? 1 : 0}
           />
-        </Stack>
 
-        <div className="note">
-          <p
-            dangerouslySetInnerHTML={{ __html: t('migrationNote') }}
-          />
-        </div>
+          <Alert severity="warning">
+            {t('migrationNote')}
+          </Alert>
 
-        {warning &&
-          <div className="note alert">
-            <p
-              dangerouslySetInnerHTML={{ __html: warning }}
-            />
-          </div>}
-
-        <div className="gui-box grey">
-          <div className="gui-box-titlebar">
-            <div className="spacer-box-title">
-              {`${t('selectTarget')}${esc.displayName ? ` (${esc.displayName})` : ''}`}
-            </div>
-          </div>
-
-          <div className="spacer-box">
-            <Grid
-              container
-              spacing={1}
-            >
-              <Grid
-                item
-                xs={6}
-              >
-                <LabeledSelect
-                  firstLabel={t('selectFirmware')}
-                  label={t('selectFirmware')}
-                  onChange={handleFirmwareChange}
-                  options={options.firmwares}
-                  selected={selection.firmware}
-                />
-              </Grid>
-
-              {selection.firmware &&
-                <>
-                  <Grid
-                    item
-                    xs={6}
-                  >
-                    <LabeledSelect
-                      firstLabel={t('selectEsc')}
-                      label={t('selectEsc')}
-                      onChange={handleEscChange}
-                      options={options.escs}
-                      selected={escLayout}
-                    />
-                  </Grid>
-
-                  {/*
-                  {type === blheliTypes.SILABS || type === blheliTypes.ATMEL &&
-                    <LabeledSelect
-                      firstLabel={t('selectMode')}
-                      label="Mode"
-                      onChange={updateMode}
-                      options={options.modes}
-                      selected={mode}
-                    />}
-                  */}
-
-                  <Grid
-                    item
-                    xs={6}
-                  >
-                    <LabeledSelect
-                      firstLabel={t('selectVersion')}
-                      label={t('selectVersion')}
-                      onChange={handleVersionChange}
-                      options={options.versions}
-                      selected={selection.url}
-                    />
-                  </Grid>
-
-                  {options.frequencies.length > 0 &&
-                    <Grid
-                      item
-                      xs={6}
-                    >
-                      <LabeledSelect
-                        firstLabel={t('selectPwmFrequency')}
-                        label={t('selectPwmFrequency')}
-                        onChange={handlePwmChange}
-                        options={options.frequencies}
-                        selected={selection.pwm}
-                      />
-                    </Grid>}
-                </>}
-            </Grid>
-
-            <br />
-
-            <div className="default-btn">
-              <button
-                className={disableFlashButton ? "disabled" : ""}
-                disabled={disableFlashButton}
-                onClick={handleSubmit}
-                type="button"
-              >
-                {t('escButtonSelect')}
-              </button>
-            </div>
-
-            <div className="default-btn">
-              <input
-                onChange={handleLocalSubmit}
-                ref={file}
-                style={{ display: 'none' }}
-                type="file"
+          {warning &&
+            <Alert severity="error">
+              <p
+                dangerouslySetInnerHTML={{ __html: warning }}
               />
+            </Alert>}
 
-              <button
-                onClick={clickFile}
-                type="button"
-              >
-                {t('escButtonSelectLocally')}
-              </button>
-            </div>
+          <Button
+            className={disableFlashButton ? "disabled" : ""}
+            disabled={disableFlashButton}
+            onClick={handleSubmit}
+            variant="outlined"
+          >
+            {t('escButtonSelect')}
+          </Button>
 
-            <div className="default-btn">
-              <button
-                onClick={onCancel}
-                type="button"
-              >
-                {t('buttonCancel')}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          <input
+            onChange={handleLocalSubmit}
+            ref={file}
+            style={{ display: 'none' }}
+            type="file"
+          />
+
+          <Button
+            onClick={clickFile}
+            variant="outlined"
+          >
+            {t('escButtonSelectLocally')}
+          </Button>
+
+          <Button
+            onClick={onCancel}
+            variant="outlined"
+          >
+            {t('buttonCancel')}
+          </Button>
+        </Stack>
+      </MainCard>
+    </Container>
   );
 }
 FirmwareSelector.defaultProps = {
