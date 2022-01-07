@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Box from '@mui/material/Box';
+
 import Home from '../Home';
 import Flash from '../Flash';
 import Buttonbar from '../Buttonbar';
@@ -119,19 +121,17 @@ function MainContent({
 
     return (
       <div id="content">
-        <div className="tab toolbar_fixed_bottom">
-          <div className="content_wrapper">
-            <FirmwareSelector
-              configs={configs}
-              esc={esc}
-              onCancel={onCancelFirmwareSelection}
-              onLocalSubmit={onLocalSubmit}
-              onSubmit={onFlashUrl}
-              showWarning={esc ? true : false}
-              warning={warning}
-            />
-          </div>
-        </div>
+        <Box sx={{ p: 2 }}>
+          <FirmwareSelector
+            configs={configs}
+            esc={esc}
+            onCancel={onCancelFirmwareSelection}
+            onLocalSubmit={onLocalSubmit}
+            onSubmit={onFlashUrl}
+            showWarning={esc ? true : false}
+            warning={warning}
+          />
+        </Box>
       </div>
     );
   }
@@ -139,13 +139,16 @@ function MainContent({
   return (
     <>
       <div id="content">
-        <div className="tab toolbar_fixed_bottom">
-          <div className="content_wrapper">
-            <FlashWrapper />
+        <Box
+          sx={{
+            p: 2,
+            marginBottom: '85px',
+          }}
+        >
+          <FlashWrapper />
 
-            <MotorControlWrapper />
-          </div>
-        </div>
+          <MotorControlWrapper />
+        </Box>
       </div>
 
       <Buttonbar

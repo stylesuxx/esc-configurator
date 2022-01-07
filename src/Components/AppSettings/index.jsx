@@ -2,14 +2,11 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import Stack from '@mui/material/Stack';
 
 import Checkbox from '../Input/Checkbox';
 import Overlay from '../Overlay';
-
-import './style.scss';
 
 function AppSettings({
   settings,
@@ -47,25 +44,23 @@ function AppSettings({
   });
 
   return (
-    <div className="settings">
-      <Overlay
-        headline={t('settingsHeader')}
-        maxWidth='sm'
-        onClose={onClose}
-        open={open}
+    <Overlay
+      headline={t('settingsHeader')}
+      maxWidth='sm'
+      onClose={onClose}
+      open={open}
+    >
+      <FormControl
+        fullWidth
+        variant="standard"
       >
-        <FormControl
-          fullWidth
-          variant="standard"
+        <Stack
+          spacing={1}
         >
-          <Stack
-            spacing={2}
-          >
-            {settingElements}
-          </Stack>
-        </FormControl>
-      </Overlay>
-    </div>
+          {settingElements}
+        </Stack>
+      </FormControl>
+    </Overlay>
   );
 }
 

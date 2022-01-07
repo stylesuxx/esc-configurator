@@ -4,6 +4,11 @@ import Rtttl from 'bluejay-rtttl-parse';
 import dateFormat from 'dateformat';
 import i18next from 'i18next';
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
