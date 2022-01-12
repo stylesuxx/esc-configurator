@@ -2,14 +2,48 @@
   min-height: 100%;
   overflow: hidden;
 
+  /* Needed so we can have p elements in the translations */
+  .MuiTypography-paragraph {
+    p {
+      margin-bottom: 16px
+    }
+
+    p:last-child {
+      margin-bottom: 0px;
+    }
+
+    ul {
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      li {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+  }
+
+  .MuiAlert-message {
+    a {
+      color: rgb(102, 60, 0);
+      text-decoration: underline;
+    }
+  }
+
   .line-1 {
     margin-bottom: 20px;
   }
 
+  a {
+    text-decoration: underline;
+  }
+
   .install-wrapper {
     position: absolute;
-    top: 17px;
-    right: 60px;
+    top: 142px;
+    right: 100px;
     height: 0;
     overflow: hidden;
 
@@ -22,16 +56,15 @@
 
   @keyframes slide {
     from {height: 0;}
-    to {height: 150px;}
+    to {height: 180px;}
   }
 
   .install {
     max-width: 400px;
-    padding: 10px;
+    padding: 8px;
     background: rgba(211, 211, 211, 0.25);
 
     .description {
-      text-align: center;
 
       p {
         padding-bottom: 10px;
@@ -46,17 +79,6 @@
     }
   }
 
-  .melody-editor-button {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
-
-    button {
-      max-width: 200px;
-    }
-  }
-
   .firmware-logo-bar {
     display: flex;
     align-items: center;
@@ -65,22 +87,6 @@
     & > * {
       width: 50%;
     }
-  }
-
-  a.discord-link {
-    width: 100%;
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-
-    img.discord {
-      height: 50px;
-    }
-  }
-
-  .content_wrapper {
-    padding: 0;
-    overflow-y: auto;
   }
 
   .content_top {
@@ -95,79 +101,6 @@
     }
   }
 
-  .content_mid {
-    background-color: #eaeaea;
-    overflow: hidden;
-    display: flex;
-    padding-bottom: 45px;
-    padding-top: 20px;
-
-    @media only screen and (max-width: 991px) {
-      & {
-        flex-direction: column;
-      }
-    }
-
-    .summary-section {
-      margin-top: 20px;
-
-      &:first-child {
-        margin-top: 0px;
-      }
-
-      h3 {
-        padding-bottom: 5px;
-        margin-bottom: 10px;
-        border-bottom: 1px solid silver;
-      }
-
-      section {
-        display: flex;
-
-        p {
-          padding-bottom: 10px;
-        }
-
-        p:last-of-type {
-          padding-bottom: 0px;
-        }
-
-        img {
-          width: 128px;
-          height: 128px;
-          margin-right: 15px;
-        }
-      }
-    }
-
-    a,
-    a:hover {
-      text-decoration: underline;
-    }
-
-    & > div {
-      flex: 1
-    }
-
-    .column {
-      .wrap {
-        padding: 15px;
-        padding-bottom: 0px;
-        padding-top: 0px;
-      }
-    }
-
-    h2 {
-        margin-bottom: 5px;
-        font-size: 18px;
-    }
-
-    h3 {
-        font-size: 16px;
-        margin-bottom: 2px;
-    }
-  }
-
   .logowrapper {
     display: flex;
     flex-direction: column;
@@ -176,50 +109,10 @@
     margin-right: auto;
     width: 800px;
     color: white;
-    /*
-    font-size: 14px;
-    font-family: 'open_sanslight', Arial;
-    */
-
-    a {
-      color: white;
-      text-decoration: underline;
-    }
 
     img {
       width: 420px;
       margin: 5px;
-    }
-
-    span {
-      /*
-      font-size: 22px;
-      font-family: 'open_sanslight', Arial;
-      */
-    }
-  }
-
-  .text1, .text2, .text3 {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-weight: normal;
-    font-family: 'open_sansregular', Arial;
-    font-size: 14px;
-    line-height: 20px;
-  }
-
-  .text1 .wrap {
-      margin-left: 0px;
-  }
-
-  .text3 ul,
-  .text2 ul {
-    margin-top: 10px;
-
-    li {
-      line-height: 24px;
-      margin-left: 20px;
-      list-style: disc;
     }
   }
 }

@@ -84,7 +84,8 @@ describe('MainContent', () => {
     );
 
     expect(screen.getByText(/homeWelcome/i)).toBeInTheDocument();
-    expect(screen.getByText(/betaWarning/i)).toBeInTheDocument();
+    expect(screen.getByText(/betaWarningTitle/i)).toBeInTheDocument();
+    expect(screen.getByText(/betaWarningText/i)).toBeInTheDocument();
     expect(screen.getByText(/homeDisclaimerHeader/i)).toBeInTheDocument();
     expect(screen.getByText(/homeDisclaimerText/i)).toBeInTheDocument();
     expect(screen.getByText(/homeAttributionHeader/i)).toBeInTheDocument();

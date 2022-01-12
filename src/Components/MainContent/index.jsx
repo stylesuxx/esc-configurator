@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 import Home from '../Home';
 import Flash from '../Flash';
@@ -10,6 +11,7 @@ import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '../FirmwareSelector';
 import Changelog from '../../Components/Changelog';
 import MotorControl from '../../Components/MotorControl';
+import Warning from '../Warning';
 
 import './style.scss';
 

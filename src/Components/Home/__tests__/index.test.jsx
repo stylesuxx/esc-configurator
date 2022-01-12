@@ -30,7 +30,8 @@ describe('Home', () => {
     expect(screen.getByText('homeWelcome')).toBeInTheDocument();
     expect(screen.getByText('homeInstall')).toBeInTheDocument();
     expect(screen.getByText('addToHomeScreen')).toBeInTheDocument();
-    expect(screen.getByText('betaWarning')).toBeInTheDocument();
+    expect(screen.getByText('betaWarningTitle')).toBeInTheDocument();
+    expect(screen.getByText('betaWarningText')).toBeInTheDocument();
     expect(screen.getByText('homeDisclaimerHeader')).toBeInTheDocument();
     expect(screen.getByText('homeDisclaimerText')).toBeInTheDocument();
     expect(screen.getByText('homeAttributionHeader')).toBeInTheDocument();
