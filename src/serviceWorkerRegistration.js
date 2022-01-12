@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { toast } from 'react-toastify';
+import i18n from 'i18next';
 
 /*
  * This optional code is used to register a service worker.
@@ -115,7 +116,7 @@ function registerValidSW(swUrl, config) {
                 'tabs for this page are closed. See https://cra.link/PWA.');
 
               registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-              toast.info('Update available! To update the app, refresh this tab.', {
+              toast.info(i18n.t('common:update'), {
                 toastId: 'appUpdateAvailable',
                 autoClose: false,
               });
@@ -181,8 +182,7 @@ function checkValidServiceWorker(swUrl, config) {
       }
     }).
     catch(() => {
-      console.log('No internet connection found.' +
-        'App is running in offline mode.');
+      console.log('No internet connection found. App is running in offline mode.');
     });
 }
 
