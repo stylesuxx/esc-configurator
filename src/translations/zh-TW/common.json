@@ -135,5 +135,6 @@
   "escMissing1": "ESC 尚未準備就緒。例如，如果 ESC <b>正在播放旋律</b>，則可能發生這種情況。同樣，先前刷入的固件可能是錯誤的固件，并且它需要更長的時間才能完成啓動。",
   "escMissing2": "只是 <b>沒有連接更多的 ESC</b>。",
   "escMissing3": "ESC 的 <b> MCU 存在缺陷</b>。",
-  "mistagged": "<p><b>警告：</b> 當前燒錄的固件似乎被標記為錯誤！</p><p>僅當您知曉自己在做什麽時再繼續。在這裏繼續可能會導致您的電調面臨過熱的風險，甚至最糟糕的情況是電調燒毀。强烈建議燒錄檢測到的版本的更高死區固件，而不是這個被標記的版本，您需要都選頂部的<i>“忽略不匹配的 MCU 和佈局？”</i>選項。</p><table><tr><td>被標記</td><td>{{tagged}}</td></tr><tr><td>檢測到</td><td>{{detected}}</td></tr></table><p>如果您看到此條消息，請<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考慮在 Wiki 上添加一個詞條</a>，來幫助我們記錄有問題的硬件。</p><p><b>如果您不明白此步驟中包含的風險，請不要猶豫，立刻<a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">加入我們的 Discord 服務器</a>。</b></p>"
+  "mistagged": "<p><b>警告：</b> 當前燒錄的固件似乎被標記為錯誤！</p><p>僅當您知曉自己在做什麽時再繼續。在這裏繼續可能會導致您的電調面臨過熱的風險，甚至最糟糕的情況是電調燒毀。强烈建議燒錄檢測到的版本的更高死區固件，而不是這個被標記的版本，您需要都選頂部的<i>“忽略不匹配的 MCU 和佈局？”</i>選項。</p><table><tr><td>被標記</td><td>{{tagged}}</td></tr><tr><td>檢測到</td><td>{{detected}}</td></tr></table><p>如果您看到此條消息，請<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考慮在 Wiki 上添加一個詞條</a>，來幫助我們記錄有問題的硬件。</p><p><b>如果您不明白此步驟中包含的風險，請不要猶豫，立刻<a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">加入我們的 Discord 服務器</a>。</b></p>",
+  "update": "Update available! To update the app, refresh or restart it."
 }
