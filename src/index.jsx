@@ -21,7 +21,7 @@ languages.forEach((language) => {
 });
 
 i18next.init({
-  interpolation: { excapeValue: false },
+  interpolation: { escapeValue: false },
   lng: settings.defaultLanguage,
   resources,
 });
