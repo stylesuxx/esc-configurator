@@ -127,6 +127,15 @@
     ]
   },
   {
+    "name": "Starwars Imperial March",
+    "tracks": [
+      "imperial1:d=4,o=3,b=450:2g5,2p,2g5,2p,2g5,2p,2d#5,4p,4a#5,2g5,2p,2d#5,4p,4a#5,1g5,2p",
+      "imperial2:d=4,o=3,b=450:4g4,4p,4g4,4p,4g4,4p,4g4,4p,8g4,8p,8g4,8p,8g4,8g4,8g4,8g4,4d#4,4p,4d#4,4p,4g4,4p,4g4,4p,4d#4,4p,4d#4,4p,1g4,2p",
+      "imperial3:d=4,o=3,b=450:2d5,2p,2d5,2p,2d5,2p,2a#4,4p,4f5,2d5,2p,2a#4,4p,4f5,1d5,2p",
+      "imperial4:d=4,o=3,b=450:2g6,2p,2g6,2p,2g6,2p,2d#6,4p,4a#6,2g6,2p,2d#6,4p,4a#6,1g6,2p"
+    ]
+  },
+  {
     "name": "Super Mario One Up",
     "tracks": [
       "powerup_1: d=2,o=2,b=960:8c4,8g3,8c4,8e4,8g4,8c5,8g4,8g#3,8c4,8d#4,8g#4,8d#4,8g#4,8c5,8d#5,8g#5,8d#5,8d4,8f4,8a#4,8f4,8a#4,8d5,8f5,8d5,8f5,8a#5,8f5",
