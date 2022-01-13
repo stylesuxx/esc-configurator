@@ -75,7 +75,10 @@
   {
     "name": "Never gonna give you up - Rick Astley",
     "tracks": [
-      "never:d=4,o=3,b=210:8g3,8a3,8c4,8a3,4e4,8p,4e4,8p,4.d4,4p,8p,8g3,8a3,8c4,8a3,4d4,8p,4d4,8p,4c4,8b3,4.a3,8g3,8a3,8c4,8a3,2c4,4d4,4b3,4a3,4.g3,8p,4g3,2d4,2.c4,4p"
+      "never1:d=4,o=3,b=210:8d5,8e5,8g5,8d5,4b5,8p,4b5,8p,2a5,4p,8d5,8e5,8g5,8d5,4a5,8p,4a5,8p,4g5,8g5,8f#5,4e5,8d5,8e5,8g5,8e5,2g5,4a5,4f#5,8f#5,8e5,4d5,8d5,8p,8d5,8p,4a5,8a5,8p,2g5",
+      "never2:d=4,o=3,b=210:2p,4g5,8p,4g5,8p,2f#5,4p,2p,4f#5,8p,4f#5,8p,2e5,4p,2p,2e5,4p,2d5,4p,2p,4d5,8d5,8p,2e5",
+      "never3:d=4,o=3,b=210:2p,4e5,8p,4e5,8p,2d5,4p,2p,4d5,8p,4d5,8p,2b4,4p,2p,2c5,4p,2a4,4p,2p,4b4,8b4,8p,2b4",
+      "never4:d=4,o=3,b=210:8d4,8e4,8g4,8d4,4c4,4c4,4c4,4d4,8p,8d4,8e4,8p,8g4,8p,8a4,8p,4b4,4b4,4b4,4e4,8e4,8f#4,8e4,8p,8d4,8e4,8g4,8e4,2a4,4a4,2d5,8a4,8p,8d4,8p,8a4,8p,2f#4,2e4"
     ]
   },
   {
