@@ -44,14 +44,13 @@
       "ab_chiq_b2:b=104,o=4,d=16:a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a,p,a,p,h,p,c#5,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,8d5"
     ]
   },
-  },
   {
     "name": "The Expanse Theme",
     "tracks": [
-      "expance1:d=4,o=5,b=124:f,g,2a6,8a.6,16p,a6,2g6,2f6,1d6,4p"
-      "expance2:d=4,o=5,b=124:f4,g4,2a,8a.,16p,a,2g,2f,1f,4p"
-      "expance3:d=4,o=5,b=124:2p,8p,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8p,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8p,8a3,8c4,8e4,8f4,8a4,8e4,8f4,4p"
-      "expance4:d=4,o=5,b=124:2p,1d3,1p,1f3,4p"
+      "expance1:b=140,o=5,d=4:f,g,2a,8a.,16p,a,2g,2f,1d,p"
+      "expance2:b=140,o=4,d=4:p,p,2p,8d.,16p,p,2p,2d,1f,p"
+      "expance3:b=140,o=5,d=4:2p,8p,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8d4,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8d,8a3,8c4,8e4,8f4,8a4,8e4,8f4,p"
+      "expance4:b=140,o=3,d=4:p,p,2f,8f.,16p,f,2e,2p,1a,p"
     ]
   },
   {
