@@ -38,6 +38,7 @@
   "escButtonRead": "Leer Configuración",
   "escButtonFlashAll": "Flashear todos",
   "escButtonSaveLog": "Guardar registro de depuración",
+  "escButtonClearLog": "Clear Debug Log",
   "escButtonWrite": "Escribir Configuración",
   "buttonCancel": "Cancelar",
   "escButtonSelect": "Flashear",
