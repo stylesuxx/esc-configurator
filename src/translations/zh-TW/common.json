@@ -38,6 +38,7 @@
   "escButtonRead": "讀取設定",
   "escButtonFlashAll": "燒錄全部",
   "escButtonSaveLog": "保存除錯日志",
+  "escButtonClearLog": "Clear Debug Log",
   "escButtonWrite": "寫入配置",
   "buttonCancel": "取消",
   "escButtonSelect": "燒錄",
