@@ -38,6 +38,7 @@
   "escButtonRead": "Read Setup",
   "escButtonFlashAll": "Flash All",
   "escButtonSaveLog": "Save Debug Log",
+  "escButtonClearLog": "Clear Debug Log",
   "escButtonWrite": "Write Setup",
   "buttonCancel": "Cancel",
   "escButtonSelect": "Flash",

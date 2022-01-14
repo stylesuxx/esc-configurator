@@ -50,6 +50,12 @@ function loadLog() {
   return [];
 }
 
+function clearLog() {
+  localStorage.setItem('log', JSON.stringify([]));
+
+  return [];
+}
+
 function loadMelodies() {
   const storedMelodies = JSON.parse(localStorage.getItem('melodies'));
   if(storedMelodies) {
@@ -80,6 +86,7 @@ function loadSerialApi() {
 }
 
 export {
+  clearLog,
   loadLanguage,
   loadLog,
   loadMelodies,

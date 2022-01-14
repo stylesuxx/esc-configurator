@@ -7,6 +7,7 @@ import GenericButton from './GenericButton';
 import './style.scss';
 
 function Buttonbar({
+  onClearLog,
   onOpenMelodyEditor,
   onReadSetup,
   onWriteSetup,
@@ -36,6 +37,11 @@ function Buttonbar({
         <GenericButton
           onClick={onSaveLog}
           text={t('escButtonSaveLog')}
+        />
+
+        <GenericButton
+          onClick={onClearLog}
+          text={t('escButtonClearLog')}
         />
 
         <div className="mobile-show">
@@ -88,6 +94,7 @@ Buttonbar.propTypes = {
   canRead: PropTypes.bool.isRequired,
   canResetDefaults: PropTypes.bool.isRequired,
   canWrite: PropTypes.bool.isRequired,
+  onClearLog: PropTypes.func.isRequired,
   onOpenMelodyEditor: PropTypes.func.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,

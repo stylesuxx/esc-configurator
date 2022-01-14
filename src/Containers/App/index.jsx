@@ -12,6 +12,7 @@ import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
 import {
+  clearLog,
   loadLanguage,
   loadLog,
   loadMelodies,
@@ -344,6 +345,12 @@ class App extends Component {
     element.download = "esc-configurator-log.txt";
     document.body.appendChild(element);
     element.click();
+
+    this.handleClearLog();
+  }
+
+  handleClearLog = () => {
+    this.log = clearLog();
   }
 
   handleSettingsUpdate = (master) => {
@@ -1060,6 +1067,7 @@ class App extends Component {
         }}
         msp={msp}
         onAllMotorSpeed={this.handleAllMotorSpeed}
+        onClearLog={this.handleClearLog}
         onCookieAccept={this.handleCookieAccept}
         onSaveLog={this.handleSaveLog}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}

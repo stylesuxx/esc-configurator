@@ -36,6 +36,7 @@ function MainContent({
   mspFeatures,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
+  onClearLog,
   onCommonSettingsUpdate,
   onOpenMelodyEditor,
   onSelectFirmwareForAll,
@@ -171,6 +172,7 @@ function MainContent({
         canRead={canRead}
         canResetDefaults={canWrite}
         canWrite={canWrite}
+        onClearLog={onClearLog}
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
@@ -226,6 +228,7 @@ MainContent.propTypes = {
   mspFeatures: PropTypes.shape({ '3D': PropTypes.bool }),
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
+  onClearLog: PropTypes.func.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
