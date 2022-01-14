@@ -38,6 +38,7 @@
   "escButtonRead": "Einstellungen lesen",
   "escButtonFlashAll": "Alle flashen",
   "escButtonSaveLog": "Debug-Protokoll speichern",
+  "escButtonClearLog": "Clear Debug Log",
   "escButtonWrite": "Einstellungen speichern",
   "buttonCancel": "Abbrechen",
   "escButtonSelect": "Flashen",
