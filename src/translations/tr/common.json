@@ -38,6 +38,7 @@
   "escButtonRead": "Ayarları Oku",
   "escButtonFlashAll": "Tümüne Yükle",
   "escButtonSaveLog": "Hata Ayıklama Günlüğünü Kaydet",
+  "escButtonClearLog": "Clear Debug Log",
   "escButtonWrite": "Ayarı Kaydet",
   "buttonCancel": "İptal",
   "escButtonSelect": "Kaydet",
