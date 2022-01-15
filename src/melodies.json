@@ -13,6 +13,15 @@
     ]
   },
   {
+    "name": "AC/DC - Back in Black",
+    "tracks": [
+        "ACDCBack1:b=180,o=5,d=4:16b4,8p.,2p,16d,16p,16d,16p,16d,8p.,2p,16a4,16p,16a4,16p,16a4,8p.,2p.,8p,16g4,16p,16e4,16p,16d4,16p,16b3,16p,16a3,16b3,16a3,16p,16g3,16p",
+        "ACDCBack2:b=180,o=5,d=4:16g#4,8p.,2p,16d4,16p,16d4,16p,16d4,8p.,2p,16e4,16p,16e4,16p,16e4,8p.,2p.,1p",
+        "ACDCBack3:b=180,o=5,d=4:16e3,8p.,p,16e3,8p.,p,2p,16e3,8p.,p,2p,16e3,8p.,p,2p,16e3,8p.,p",
+        "ACDCBack4:b=180,o=5,d=4:16e4,8p.,2p,16a3,16p,16a3,16p,16a3,8p.,2p,16c#4,16p,16c#4,16p,16c#4,8p.,2p.,1p"
+    ]
+  },
+  {
     "name": "AC/DC - TNT",
     "tracks": [
         "tnt1:d=4,o=3,b=250:2c6,4c6,2p,4d#6,4p,2f6,4f6,4p,4d#5,4f6,4d#5,4p,2c6",
