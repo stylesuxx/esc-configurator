@@ -310,6 +310,15 @@ class FourWay {
           settingsArray = (await this.read(bluejayEeprom.EEPROM_OFFSET, layoutSize)).params;
         }
 
+        /*
+        * If Arm is detected - it has to be AM32, otherwise it is probably
+        * BLHeli_32 which is not supported.
+        */
+        if(isArm && flash.firmwareName !== 'AM32') {
+          flash.settings.NAME = 'BLHeli_32';
+          layout = null;
+        }
+
         // Try to guess firmware type if it was not properly set in the EEPROM
         if(name === '') {
           const start = 0x80;
@@ -343,6 +352,7 @@ class FourWay {
               layout = null;
             }
           }
+
         }
 
         if(newLayout) {
@@ -483,47 +493,57 @@ class FourWay {
             firmwareName = blheliSSource.getName();
           }
         } else if (isArm) {
-          /* Read version information direct from EEPROM so we can later
-           * compare to the settings object. This allows us to verify, that
-           * everything went well after flashing.
-           */
-          const [mainRevision, subRevision] = (await this.read(am32Eeprom.VERSION_OFFSET, am32Eeprom.VERSION_SIZE)).params;
-
-          if(
-            flash.settings.MAIN_REVISION !== mainRevision ||
-            flash.settings.SUB_REVISION !== subRevision
+          if (
+            flash.settings.NAME === 'BLHeli_32'
           ) {
-            const flashFirmware = `${flash.settings.MAIN_REVISION}.${flash.settings.SUB_REVISION}`;
-            const eepromFirmware = `${mainRevision}.${subRevision}`;
-            this.addLogMessage('firmwareMismatch', {
-              flash: flashFirmware,
-              eeprom: eepromFirmware,
-            });
-          }
+            let revision = 'Unsupported/Unrecognized';
+            make = 'Unknown';
 
-          flash.bootloader = {};
-          if(flash.meta.input) {
-            flash.bootloader.input = flash.meta.input;
-            flash.bootloader.valid = false;
-          }
+            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
+            firmwareName = flash.settings.NAME;
+          } else {
+            /* Read version information direct from EEPROM so we can later
+             * compare to the settings object. This allows us to verify, that
+             * everything went well after flashing.
+             */
+            const [mainRevision, subRevision] = (await this.read(am32Eeprom.VERSION_OFFSET, am32Eeprom.VERSION_SIZE)).params;
 
-          /* Bootloader input pins are limited. If something different is set,
-           * then the user probably has an old fw flashed.
-           */
-          for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
-            if(value === flash.bootloader.input) {
-              flash.bootloader.valid = true;
-              flash.bootloader.pin = key;
-              flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
+            if(
+              flash.settings.MAIN_REVISION !== mainRevision ||
+              flash.settings.SUB_REVISION !== subRevision
+            ) {
+              const flashFirmware = `${flash.settings.MAIN_REVISION}.${flash.settings.SUB_REVISION}`;
+              const eepromFirmware = `${mainRevision}.${subRevision}`;
+              this.addLogMessage('firmwareMismatch', {
+                flash: flashFirmware,
+                eeprom: eepromFirmware,
+              });
             }
+
+            flash.bootloader = {};
+            if(flash.meta.input) {
+              flash.bootloader.input = flash.meta.input;
+              flash.bootloader.valid = false;
+            }
+
+            /* Bootloader input pins are limited. If something different is set,
+             * then the user probably has an old fw flashed.
+             */
+            for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
+              if(value === flash.bootloader.input) {
+                flash.bootloader.valid = true;
+                flash.bootloader.pin = key;
+                flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
+              }
+            }
+
+            flash.settings.MAIN_REVISION = mainRevision;
+            flash.settings.SUB_REVISION = subRevision;
+            flash.settings.LAYOUT = flash.settings.NAME;
+
+            displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
+            firmwareName = am32Source.getName();
           }
-
-          flash.settings.MAIN_REVISION = mainRevision;
-          flash.settings.SUB_REVISION = subRevision;
-          flash.settings.LAYOUT = flash.settings.NAME;
-
-          displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
-          firmwareName = am32Source.getName();
         } else {
           const blheliAtmelLayouts = blheliSource.getEscLayouts();
           if (layoutName in blheliAtmelLayouts) {

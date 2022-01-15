@@ -4,7 +4,9 @@
     "items": [
       "Enhancement: Detect BLHeli_M and recommend to use dedicated configurator",
       "Enhancement: Properly handle empty melody",
-      "Enhancement: More melodies"
+      "Enhancement: More melodies",
+      "Enhancement: Allow logs to be cleared manually and after saving the log",
+      "Enhancement: Show warning if non AM32 ARM firmware has been detected - it then is very likely BLHeli_32"
     ]
   },
   {
