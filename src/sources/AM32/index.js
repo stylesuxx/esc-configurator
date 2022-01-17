@@ -23,9 +23,7 @@ class AM32Source extends GithubSource {
   }
 
   async getVersions() {
-    const versionList = await this.getRemoteVersionsList(GITHUB_REPO);
-    this.setLocalVersions(versionList);
-    return versionList;
+    return this.getRemoteVersionsList(GITHUB_REPO);
   }
 
   getFirmwareUrl({

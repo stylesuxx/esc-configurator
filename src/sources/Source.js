@@ -20,11 +20,6 @@ class Source {
     this.eeprom = eeprom;
     this.escs = escs;
     this.pwm = [];
-
-    this.setLocalVersions = async(versions) => {
-      const localStorageKey = `${this.getName()}_versions`;
-      localStorage.setItem(localStorageKey, JSON.stringify(versions));
-    };
   }
 
   async getRemoteVersionsList(url) {
