@@ -10,6 +10,15 @@ let FirmwareSelector;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
+const mockJsonResponse = (content) =>
+  new window.Response(content, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Time-Cached': Date.now().toString(),
+    },
+  });
+
 describe('FirmwareSelector', () => {
   beforeAll(async () => {
     /**
@@ -54,6 +63,15 @@ describe('FirmwareSelector', () => {
   });
 
   it('should allow changing firmware options for BLHeli_S', async() => {
+    const json = `[{ "tag_name": "v0.10", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
     const configs = {
       versions: {},
       escs: {},
@@ -143,7 +161,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/mathiasvr/bluejay/releases/download/v0.10/{0}_v0.10.hex',
+        value: 'https://github.com/mathiasvr/bluejay/releases/download/v0.10/',
         name: 'Version',
       },
     });
@@ -167,6 +185,15 @@ describe('FirmwareSelector', () => {
   });
 
   it('should allow changing firmware options for AM32', async() => {
+    const json = `[{ "tag_name": "v1.65", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
     const configs = {
       versions: {},
       escs: {},
@@ -216,7 +243,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/{0}_1.65.hex',
+        value: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/',
         name: 'Version',
       },
     });
