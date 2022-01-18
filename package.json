@@ -21,6 +21,7 @@
     "react-tooltip": "=4.2.8",
     "scheduler": "0.14.0",
     "sleep": "^6.3.0",
+    "ua-parser-js": "^1.0.2",
     "web-serial-polyfill": "stylesuxx/web-serial-polyfill#temporary-fix",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.3",

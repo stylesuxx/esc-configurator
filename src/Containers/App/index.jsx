@@ -1,3 +1,4 @@
+import UAParser from 'ua-parser-js';
 import TagManager from 'react-gtm-module';
 import React, { Component } from 'react';
 import Rtttl from 'bluejay-rtttl-parse';
@@ -106,6 +107,15 @@ class App extends Component {
 
   async componentDidMount() {
     this.onMount(async() => {
+
+      const uaParser = new UAParser();
+      const browser = uaParser.getBrowser();
+      const os = uaParser.getOS();
+      this.addLogMessage('browser', {
+        ...browser,
+        os: os.name,
+      });
+
       if (this.serialApi) {
         this.serialApi.removeEventListener('connect', this.serialConnectHandler);
         this.serialApi.removeEventListener('disconnect', this.serialDisconnectHandler);

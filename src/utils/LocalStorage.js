@@ -78,7 +78,11 @@ function loadSerialApi() {
     return navigator.serial;
   }
 
-  if('usb' in navigator) {
+  // Brave has USB support but it does not work properly with the polyfill
+  if(
+    'usb' in navigator &&
+    !('brave' in navigator)
+  ) {
     return serialPolyfill;
   }
 
