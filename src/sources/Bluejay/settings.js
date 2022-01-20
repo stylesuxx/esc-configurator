@@ -323,26 +323,7 @@ SETTINGS_DESCRIPTIONS['205'] = {
   ],
 };
 
-const INDIVIDUAL_SETTINGS = [{
-  name: 'MOTOR_DIRECTION',
-  type: 'enum',
-  label: 'escMotorDirection',
-  options: [{
-    value: '1',
-    label: 'Normal',
-  }, {
-    value: '2',
-    label: 'Reversed',
-  }, {
-    value: '3',
-    label: 'Bidirectional',
-  }, {
-    value: '4',
-    label: 'Bidirectional Reversed',
-  }],
-}];
-
-const INDIVIDUAL_SETTINGS_203 = [{
+const INDIVIDUAL_SETTINGS_200 = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',
   label: 'escMotorDirection',
@@ -360,17 +341,51 @@ const INDIVIDUAL_SETTINGS_203 = [{
     label: 'Bidirectional Reversed',
   }],
 }, {
-  name: 'STARTUP_MELODY',
-  type: 'melody',
+  name: 'LED_CONTROL',
+  type: 'enum',
+  label: 'escLedControl',
+  options: [{
+    value: 0x00,
+    label: 'Off',
+  }, {
+    value: 0x03,
+    label: 'Blue',
+  }, {
+    value: 0x0C,
+    label: 'Green',
+  }, {
+    value: 0x30,
+    label: 'Red',
+  }, {
+    value: 0x0F,
+    label: 'Cyan',
+  }, {
+    value: 0x33,
+    label: 'Magenta',
+  }, {
+    value: 0x3C,
+    label: 'Yellow',
+  }, {
+    value: 0x3F,
+    label: 'White',
+  }],
 }];
+
+const INDIVIDUAL_SETTINGS_203 = [
+  ...INDIVIDUAL_SETTINGS_200,
+  {
+    name: 'STARTUP_MELODY',
+    type: 'melody',
+  },
+];
 
 const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
   '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
-  '202': { base: INDIVIDUAL_SETTINGS },
-  '201': { base: INDIVIDUAL_SETTINGS },
-  '200': { base: INDIVIDUAL_SETTINGS },
+  '202': { base: INDIVIDUAL_SETTINGS_200 },
+  '201': { base: INDIVIDUAL_SETTINGS_200 },
+  '200': { base: INDIVIDUAL_SETTINGS_200 },
 };
 
 const DEFAULTS = {};
