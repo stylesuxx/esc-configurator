@@ -1,10 +1,20 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/all", "plugin:jest/recommended"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": { "jsx": true }
+  },
+  "env": {
+    "es2021": true,
+    "browser": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/all", "plugin:jest/recommended", "react-app", "react-app/jest"],
   "ignorePatterns": ["service-worker.js"],
-  "plugins": [
-    "react"
-  ],
+  "plugins": ["react", "jest"],
   "rules": {
+    "react/jsx-no-bind": "off",
+    "react/no-unstable-nested-components": "warn",
     "react/jsx-max-depth": ["warn", { "max": 5 }],
     "indent": ["warn", 2, { "SwitchCase": 1 }],
     "react/jsx-indent": ["warn", 2],
@@ -13,6 +23,9 @@
     "react/no-multi-comp": "off",
     "react/no-set-state": "off",
     "react/forbid-component-props": "off",
+    "react-hooks/rules-of-hooks": "warn",
+    "testing-library/no-container": "warn",
+    "testing-library/no-node-access": "warn",
     "no-unreachable": "off",
     "react/no-array-index-key": "warn",
     "react/no-danger": "warn",
@@ -49,31 +62,5 @@
     "react": {
       "version": "detect"
     }
-  },
-  "globals": {
-    "document": false,
-    "process": false,
-    "navigator": false,
-    "console": false,
-    "fetch": false,
-    "URL": false,
-    "window": false,
-    "setInterval": false,
-    "clearInterval": false,
-    "Uint8Array": false,
-    "ArrayBuffer": false,
-    "DataView": false,
-    "setTimeout": false,
-    "clearTimeout": false,
-    "Promise": false,
-    "FileReader": false,
-    "Blob": false,
-    "localStorage": false,
-    "__dirname": false,
-    "require": false,
-    "Set": false,
-    "Event": false,
-    "global": false
-  },
-  "parser": "babel-eslint"
+  }
 }
