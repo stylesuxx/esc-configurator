@@ -1,9 +1,20 @@
 import Source from '../Source';
+import { GithubSource } from '../Source';
+
 import {
   blheliSource,
   blheliSilabsSource,
   blheliSSource,
 } from '../index';
+
+const mockJsonResponse = (content) =>
+  new window.Response(content, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Time-Cached': Date.now().toString(),
+    },
+  });
 
 describe('Invalid Source', () => {
   it('should throw without parameters', () => {
@@ -11,20 +22,43 @@ describe('Invalid Source', () => {
   });
 
   it('should throw with invalid Source', async() => {
-    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid');
 
     await expect(() => invalidSource.getRemoteVersionsList()).rejects.toThrow();
     expect(() => invalidSource.buildDisplayName()).toThrow();
     expect(() => invalidSource.getVersions()).toThrow();
   });
 
-  it('should return values from local storage with invalid URL', async() => {
-    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
+  it('should return response from cache with invalid versions URL', async() => {
+    global.caches = {
+      open: jest.fn().mockImplementationOnce(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse('{}'))) });
+        })
+      ),
+    };
 
-    localStorage.setItem('invalid_versions', '{}');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid');
 
-    let versions = await invalidSource.getRemoteVersionsList();
+    const versions = await invalidSource.getRemoteVersionsList();
+
     expect(versions).toStrictEqual({});
+  });
+
+  it('should return response from cache with invalid github URL', async() => {
+    global.caches = {
+      open: jest.fn().mockImplementationOnce(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse('[]'))) });
+        })
+      ),
+    };
+
+    const invalidGithubSource = new GithubSource('invalid', 'invalid', 'invalid');
+
+    const versions = await invalidGithubSource.getRemoteVersionsList();
+
+    expect(versions).toStrictEqual([]);
   });
 });
 

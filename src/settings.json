@@ -44,6 +44,10 @@
     "enableAdvanced": {
       "type": "boolean",
       "value": false
+    },
+    "unstableVersions": {
+      "type": "boolean",
+      "value": false
     }
   }
 }

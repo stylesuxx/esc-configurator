@@ -1,12 +1,9 @@
 import {
-  LocalDataNotAvailableError,
   MethodNotImplementedError,
   MissingParametersError,
 } from '../utils/Errors';
 
-import settings from '../settings.json';
-
-const { corsProxy } = settings;
+import { fetchJsonCached } from '../utils/Fetch';
 
 /* Abstract Base Class for firmware sources
  *
@@ -23,44 +20,10 @@ class Source {
     this.eeprom = eeprom;
     this.escs = escs;
     this.pwm = [];
+  }
 
-    this.fetchJson = async (url) => {
-      try {
-        const proxy = `${corsProxy}${url}`;
-        const response = await fetch(proxy);
-        if(!response.ok) {
-          throw new Error(response.statusText);
-        }
-
-        return response.json();
-      } catch(e) {
-        throw new Error(e);
-      }
-    };
-
-    this.getRemoteVersionsList = async (url) => {
-      const localStorageKey = `${this.getName()}_versions`;
-
-      try {
-        const result = await this.fetchJson(url);
-        localStorage.setItem(localStorageKey, JSON.stringify(result));
-
-        return result;
-      } catch(e) {
-        const content = localStorage.getItem(localStorageKey);
-
-        if(content !== null) {
-          return (JSON.parse(content));
-        }
-      }
-
-      throw new LocalDataNotAvailableError();
-    };
-
-    this.setLocalVersions = async(versions) => {
-      const localStorageKey = `${this.getName()}_versions`;
-      localStorage.setItem(localStorageKey, JSON.stringify(versions));
-    };
+  async getRemoteVersionsList(url) {
+    return await fetchJsonCached(url);
   }
 
   buildDisplayName() {
@@ -91,5 +54,25 @@ class Source {
     return this.pwm;
   }
 }
+
+class GithubSource extends Source {
+  async getRemoteVersionsList(repo) {
+    const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases`);
+
+    return githubReleases
+      .filter((r) => r.assets.length) // hide releases without assets
+      .map((r) => ({
+        name: r.name || r.tag_name.replace(/^v/, ''),
+        key: r.tag_name,
+        url: `https://github.com/${repo}/releases/download/${r.tag_name}/`,
+        prerelease: r.prerelease,
+        published_at: r.published_at,
+      }));
+  }
+}
+
+export {
+  GithubSource,
+};
 
 export default Source;
