@@ -1,10 +1,11 @@
-import Source from '../Source';
+import { GithubSource } from '../Source';
 import eeprom from './eeprom';
 import settings from './settings';
 import escs from './escs.json';
-import versions from './versions.json';
 
-class AM32Source extends Source {
+const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
+
+class AM32Source extends GithubSource {
   buildDisplayName(flash, make) {
     const settings = flash.settings;
     let revision = 'Unsupported/Unrecognized';
@@ -22,8 +23,15 @@ class AM32Source extends Source {
   }
 
   async getVersions() {
-    this.setLocalVersions(versions.Arm);
-    return versions.Arm;
+    return this.getRemoteVersionsList(GITHUB_REPO);
+  }
+
+  getFirmwareUrl({
+    escKey, version, url,
+  }) {
+    const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
+
+    return `${url}${name}_${version}.hex`;
   }
 }
 

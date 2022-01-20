@@ -72,7 +72,8 @@
     "__dirname": false,
     "require": false,
     "Set": false,
-    "Event": false
+    "Event": false,
+    "global": false
   },
   "parser": "babel-eslint"
 }

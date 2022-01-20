@@ -1,4 +1,4 @@
-import Source from '../Source';
+import { GithubSource } from '../Source';
 import eeprom from './eeprom';
 import settings from './settings';
 import escsBlheliS from '../BlheliS/escs.json';
@@ -12,9 +12,9 @@ const escs = {
   },
 };
 
-const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
+const GITHUB_REPO = 'mathiasvr/bluejay';
 
-class BluejaySource extends Source {
+class BluejaySource extends GithubSource {
   constructor(name, eeprom, escs, pwm) {
     super(name, eeprom, escs);
     this.pwm = pwm;
@@ -37,7 +37,15 @@ class BluejaySource extends Source {
   }
 
   async getVersions() {
-    return (await this.getRemoteVersionsList(VERSIONS_REMOTE)).EFM8;
+    return this.getRemoteVersionsList(GITHUB_REPO);
+  }
+
+  getFirmwareUrl({
+    escKey, version, pwm, url,
+  }) {
+    const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
+
+    return `${url}${name}_${pwm}_v${version}.hex`;
   }
 }
 
