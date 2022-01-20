@@ -10,5 +10,7 @@
   "disableCommon": "禁用公共设置",
   "disableCommonHint": "每个 ESC 都将使用自己的设置，而不是一个对所有 ESC 都生效的公共设置。",
   "enableAdvanced": "启用高级设置",
-  "enableAdvancedHint": "添加一些高级设置，如转储固件。"
+  "enableAdvancedHint": "添加一些高级设置，如转储固件。",
+  "unstableVersions": "Show unstable firmware",
+  "unstableVersionsHint": "Show unstable firmware versions and prereleases"
 }
