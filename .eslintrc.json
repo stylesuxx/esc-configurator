@@ -1,5 +1,9 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/all", "plugin:jest/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/all",
+    "plugin:jest/recommended"
+  ],
   "ignorePatterns": ["service-worker.js"],
   "plugins": [
     "react"
@@ -75,5 +79,11 @@
     "Event": false,
     "global": false
   },
-  "parser": "babel-eslint"
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   act,
   render,
@@ -31,12 +31,10 @@ describe('Statusbar', () => {
   });
 
   it('should render with utilization callback', async () => {
-    function getUtilization() {
-      return {
-        up: 10,
-        down: 20,
-      };
-    }
+    let getUtilization = jest.fn(() => ({
+      up: 10,
+      down: 20,
+    }));
 
     render(
       <StatusBar
@@ -45,6 +43,8 @@ describe('Statusbar', () => {
         version="version"
       />
     );
+
+    expect(getUtilization).toHaveBeenCalled();
 
     expect(screen.getByText(/statusbarPortUtilization/i)).toBeInTheDocument();
     expect(screen.getByText(/statusbarPacketError 0/i)).toBeInTheDocument();

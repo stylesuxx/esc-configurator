@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useRef,
   useState,
 } from 'react';
@@ -19,11 +20,11 @@ function Install() {
     setShowInstall(true);
   });
 
-  function handleInstallToHomescreen() {
+  const handleInstallToHomescreen = useCallback(() => {
     if(deferredPrompt.current) {
       deferredPrompt.current.prompt();
     }
-  }
+  }, [deferredPrompt]);
 
   return(
     <div className={`install-wrapper ${showInstall ? 'active' : ''}`}>

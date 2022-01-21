@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import Home from '../Home';
 import Flash from '../Flash';
@@ -83,7 +83,7 @@ function MainContent({
     );
   }
 
-  function FlashWrapper() {
+  const FlashWrapper = useCallback(() => {
     if(fourWay) {
       return (
         <Flash
@@ -105,9 +105,22 @@ function MainContent({
     }
 
     return null;
-  }
+  }, [
+    fourWay,
+    settings,
+    canFlash,
+    appSettings,
+    connected,
+    escs,
+    progress,
+    onCommonSettingsUpdate,
+    onFirmwareDump,
+    onSingleFlash,
+    onIndividualSettingsUpdate,
+    onSettingsUpdate,
+  ]);
 
-  function MotorControlWrapper() {
+  const MotorControlWrapper = useCallback(() => {
     if(!fourWay && !actions.isReading) {
       return (
         <MotorControl
@@ -121,7 +134,15 @@ function MainContent({
     }
 
     return null;
-  }
+  }, [
+    fourWay,
+    actions.isReading,
+    port.getBatteryState,
+    connected,
+    onAllMotorSpeed,
+    onSingleMotorSpeed,
+    mspFeatures,
+  ]);
 
   if (isSelecting) {
     const targetIndex = flashTargets[0];

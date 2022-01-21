@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
-  useState, useEffect, useRef,
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
 } from 'react';
 
 import {
@@ -136,9 +139,9 @@ function FirmwareSelector({
     }
   }, [selection.firmware]);
 
-  function clickFile() {
+  const clickFile = useCallback(() => {
     file.current.click();
-  }
+  }, [file]);
 
   /*
   // TODO: Not yet implemented - this might only be needed for ATMEL
@@ -147,7 +150,7 @@ function FirmwareSelector({
   }
   */
 
-  function handleFirmwareChange(e) {
+  const handleFirmwareChange = useCallback((e) => {
     const firmware = e.target.value;
 
     setSelection({
@@ -155,44 +158,44 @@ function FirmwareSelector({
       url: null,
       pwm: null,
     });
-  }
+  }, []);
 
-  function handleEscChange(e) {
+  const handleEscChange = useCallback((e) => {
     setEscLayout(e.target.value);
-  }
+  }, [setEscLayout]);
 
-  function handleLocalSubmit(e) {
+  const handleLocalSubmit = useCallback((e) => {
     e.preventDefault();
     onLocalSubmit(e, force, migrate);
-  }
+  }, [onLocalSubmit, force, migrate]);
 
-  function handleVersionChange(e) {
+  const handleVersionChange = useCallback((e) => {
     const selected = e.target.options.selectedIndex;
-    const selecteOption = e.target.options[selected];
+    const selectedOption = e.target.options[selected];
 
     setSelection({
       ...selection,
       url: e.target.value,
-      version: selecteOption && options.versions[selected - 1].key,
+      version: selectedOption && options.versions[selected - 1].key,
     });
-  }
+  }, [selection]);
 
-  function handleForceChange(e) {
+  const handleForceChange = useCallback((e) => {
     setForce(e.target.checked);
-  }
+  }, [setForce]);
 
-  function handleMigrateChange(e) {
+  const handleMigrateChange = useCallback((e) => {
     setMigrate(e.target.checked);
-  }
+  }, [setMigrate]);
 
-  function handlePwmChange(e) {
+  const handlePwmChange = useCallback((e) => {
     setSelection({
       ...selection,
       pwm: e.target.value,
     });
-  }
+  }, [selection]);
 
-  function handleSubmit() {
+  const handleSubmit = useCallback(() => {
     const source = sources.find((s) => s.getName() === selection.firmware);
     const firmwareUrl = source.getFirmwareUrl({
       escKey: escLayout,
@@ -204,7 +207,7 @@ function FirmwareSelector({
     });
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
-  }
+  }, [sources, escLayout, selection, mode]);
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
 

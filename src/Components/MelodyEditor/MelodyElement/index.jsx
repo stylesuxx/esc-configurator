@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Rtttl from 'bluejay-rtttl-parse';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useEffect,
   useRef,
@@ -96,7 +97,7 @@ const MelodyElement = forwardRef(({
     onUpdate(currentMelody);
   }, [currentMelody]);
 
-  function handleMelodyUpdate(e) {
+  const handleMelodyUpdate = useCallback((e) => {
     const melody = e.target.value;
     setCurrentMelody(melody);
 
@@ -105,9 +106,9 @@ const MelodyElement = forwardRef(({
       setIsAccepted(false);
       onAccept(false);
     }
-  }
+  }, [onAccept, isAccepted, acceptedMelody]);
 
-  function handleAcceptMelody() {
+  const handleAcceptMelody = useCallback(() => {
     let convertedMelody = Rtttl.toBluejayStartupMelody(currentMelody).data;
     convertedMelody = Rtttl.fromBluejayStartupMelody(convertedMelody);
 
@@ -116,7 +117,7 @@ const MelodyElement = forwardRef(({
     setIsAccepted(true);
 
     onAccept(convertedMelody);
-  }
+  }, [currentMelody, onAccept]);
 
   // Can only be tested when the melody is acutally being played
   function highlightNote(index) {

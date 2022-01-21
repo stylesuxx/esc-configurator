@@ -1,4 +1,6 @@
-import { corsProxy } from '../settings.json';
+import Settings from '../settings.json';
+
+const { corsProxy } = Settings;
 
 async function fetchProxy(url) {
   return fetch(`${corsProxy}${url}`);

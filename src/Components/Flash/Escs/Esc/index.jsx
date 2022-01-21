@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   forwardRef,
   useImperativeHandle,
   useState,
@@ -40,21 +41,21 @@ const Esc = forwardRef(({
     },
   }));
 
-  function updateSettings() {
+  const updateSettings = useCallback(() => {
     onSettingsUpdate(index, settings);
-  }
+  }, [onSettingsUpdate, index, settings]);
 
-  function updateCommonSettings(settings) {
+  const updateCommonSettings = useCallback((settings) => {
     onCommonSettingsUpdate(index, settings);
-  }
+  }, [onCommonSettingsUpdate, index, settings]);
 
-  function handleFirmwareFlash() {
+  const handleFirmwareFlash = useCallback(() => {
     onFlash(index);
-  }
+  }, [onFlash, index]);
 
-  function handleFirmwareDump() {
+  const handleFirmwareDump = useCallback(() => {
     onFirmwareDump(index);
-  }
+  }, [onFirmwareDump, index]);
 
   return (
     <div className="esc gui-box grey">

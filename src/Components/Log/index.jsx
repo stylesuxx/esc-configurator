@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, {
+  useCallback,
+  useState,
+} from 'react';
 
 import './style.scss';
 
@@ -15,9 +18,9 @@ function Log({ messages }) {
       </div>
     ));
 
-  function toggleExpanded() {
+  const toggleExpanded = useCallback(() => {
     setExpanded(!expanded);
-  }
+  }, [expanded]);
 
   return (
     <div

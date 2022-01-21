@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 function LabeledSelect({
   label,
@@ -8,7 +8,7 @@ function LabeledSelect({
   selected,
   onChange,
 }) {
-  function Select() {
+  const Select = useCallback(() => {
     const optionElements = options.map((item) => (
       <option
         disabled={item.disabled}
@@ -36,7 +36,7 @@ function LabeledSelect({
         {optionElements}
       </select>
     );
-  }
+  }, [options, label, firstLabel, onChange, selected]);
 
   return (
     <div className="select">
