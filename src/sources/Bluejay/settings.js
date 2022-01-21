@@ -302,6 +302,27 @@ SETTINGS_DESCRIPTIONS['204'] = {
   ],
 };
 
+SETTINGS_DESCRIPTIONS['205'] = {
+  base: [
+    ...SETTINGS_DESCRIPTIONS['204'].base,
+    {
+      name: 'STARTUP_BEEP',
+      type: 'enum',
+      label: 'escStartupBeep',
+      options: [{
+        value: '0',
+        label: 'Off',
+      }, {
+        value: '1',
+        label: 'Normal',
+      }, {
+        value: '2',
+        label: 'Custom',
+      }],
+    },
+  ],
+};
+
 const INDIVIDUAL_SETTINGS = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',
@@ -341,12 +362,10 @@ const INDIVIDUAL_SETTINGS_203 = [{
 }, {
   name: 'STARTUP_MELODY',
   type: 'melody',
-  label: 'startupMelody',
-  value: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  melodyLength: 128,
 }];
 
 const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
+  '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
   '202': { base: INDIVIDUAL_SETTINGS },
@@ -387,13 +406,19 @@ DEFAULTS['202'] = { // unreleased
 
 DEFAULTS['203'] = { // v0.12
   ...DEFAULTS['201'],
-  STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0],
 };
 delete DEFAULTS['203'].STARTUP_BEEP;
 
 DEFAULTS['204'] = { // v0.15
   ...DEFAULTS['203'],
   BRAKING_STRENGTH: 255,
+};
+
+DEFAULTS['205'] = {
+  ...DEFAULTS['204'],
+  STARTUP_BEEP: 1,
+  STARTUP_MELODY_WAIT_MS: 0,
 };
 
 const settings = {
