@@ -421,6 +421,7 @@ DEFAULTS['204'] = { // v0.15
 DEFAULTS['205'] = {
   ...DEFAULTS['204'],
   STARTUP_BEEP: 1,
+  STARTUP_MELODY_WAIT_MS: 0,
 };
 
 const settings = {
