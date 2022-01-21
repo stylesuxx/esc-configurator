@@ -69,9 +69,11 @@ const MelodyElement = forwardRef(({
         }
       }
 
-      const highlight = [];
+      let current = [];
       const uniqueWrongNotes = [ ...new Set(wrongNotes)];
-      highlight.push(uniqueWrongNotes);
+      if(uniqueWrongNotes.length > 0) {
+        current.push(uniqueWrongNotes);
+      }
 
       if(tooLongNotes.length > 0) {
         const elements = currentMelody.split(':');
@@ -81,10 +83,10 @@ const MelodyElement = forwardRef(({
           offset += notes[i].length + 1;
         }
 
-        highlight.push([offset - 1, currentMelody.length]);
+        current.push([offset - 1, currentMelody.length - 1]);
       }
 
-      setHighlight(highlight);
+      setHighlight(current);
 
       const isValid = uniqueWrongNotes.length === 0 && tooLongNotes.length === 0;
       setIsValid(isValid);
@@ -97,8 +99,7 @@ const MelodyElement = forwardRef(({
     onUpdate(currentMelody);
   }, [currentMelody]);
 
-  const handleMelodyUpdate = useCallback((e) => {
-    const melody = e.target.value;
+  const handleMelodyUpdate = useCallback((melody) => {
     setCurrentMelody(melody);
 
     // If an accepted melody changes
@@ -231,14 +232,13 @@ const MelodyElement = forwardRef(({
           </div>
         </header>
 
-        <div className="editor-wrapper">
+        <div
+          className={`editor-wrapper ${playing ? 'playing' : ''}`}
+          disabled={playing || disabled}
+        >
           <HighlightWithinTextarea
-            containerClassName={`editor ${playing ? 'playing' : ''}`}
-            disabled={playing || disabled}
             highlight={highlight}
             onChange={handleMelodyUpdate}
-            rows={10}
-            spellCheck="false"
             value={currentMelody}
           />
         </div>
