@@ -71,18 +71,6 @@ function MainContent({
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const showMelodyEditor = escs.length > 0 && escs[0].individualSettings.STARTUP_MELODY ? true : false;
 
-  if (!open) {
-    return (
-      <>
-        <Home
-          onOpenMelodyEditor={onOpenMelodyEditor}
-        />
-
-        <Changelog entries={changelogEntries} />
-      </>
-    );
-  }
-
   const FlashWrapper = useCallback(() => {
     if(fourWay) {
       return (
@@ -143,6 +131,18 @@ function MainContent({
     onSingleMotorSpeed,
     mspFeatures,
   ]);
+
+  if (!open) {
+    return (
+      <>
+        <Home
+          onOpenMelodyEditor={onOpenMelodyEditor}
+        />
+
+        <Changelog entries={changelogEntries} />
+      </>
+    );
+  }
 
   if (isSelecting) {
     const targetIndex = flashTargets[0];
