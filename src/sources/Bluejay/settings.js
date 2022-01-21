@@ -302,6 +302,27 @@ SETTINGS_DESCRIPTIONS['204'] = {
   ],
 };
 
+SETTINGS_DESCRIPTIONS['205'] = {
+  base: [
+    ...SETTINGS_DESCRIPTIONS['204'].base,
+    {
+      name: 'STARTUP_BEEP',
+      type: 'enum',
+      label: 'escStartupBeep',
+      options: [{
+        value: '0',
+        label: 'Off',
+      }, {
+        value: '1',
+        label: 'Normal',
+      }, {
+        value: '2',
+        label: 'Custom',
+      }],
+    },
+  ],
+};
+
 const INDIVIDUAL_SETTINGS = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',
@@ -347,6 +368,7 @@ const INDIVIDUAL_SETTINGS_203 = [{
 }];
 
 const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
+  '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
   '202': { base: INDIVIDUAL_SETTINGS },
@@ -394,6 +416,11 @@ delete DEFAULTS['203'].STARTUP_BEEP;
 DEFAULTS['204'] = { // v0.15
   ...DEFAULTS['203'],
   BRAKING_STRENGTH: 255,
+};
+
+DEFAULTS['205'] = {
+  ...DEFAULTS['204'],
+  STARTUP_BEEP: 1,
 };
 
 const settings = {
