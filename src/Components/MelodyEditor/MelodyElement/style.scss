@@ -50,25 +50,22 @@
 
       & > * {
         width: 100%;
-        height: 100px;
-      }
-
-      &[disabled] {
-        opacity: 0.75;
-      }
-
-      .editor {
-        width: 100%;
+        height: 115px;
         font-family: monospace;
+        overflow-y: auto;
 
         mark {
           background: #FFCCCB;
         }
+      }
 
-        &.playing {
-          mark {
-            background: #CCFFCB;
-          }
+      &[disabled] {
+        color: #909090;
+      }
+
+      &.playing {
+        mark {
+          background: #CCFFCB;
         }
       }
     }

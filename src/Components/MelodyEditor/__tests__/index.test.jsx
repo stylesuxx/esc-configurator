@@ -38,7 +38,7 @@ describe('MelodyEditor', () => {
   });
 
   it('should display without melodies', () => {
-    const melodies = [null, null, null, null];
+    const melodies = ['', '', '', ''];
 
     render(
       <MelodyEditor
@@ -57,7 +57,6 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText('common:melodyEditorPlay').length).toEqual(1);
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(1);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
-    expect(screen.getAllByText(/Please supply a value and an onChange parameter./i).length).toEqual(2);
     expect(screen.getByText(/close/i)).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
@@ -245,7 +244,7 @@ describe('MelodyEditor', () => {
         value: "preset-Bluejay Default",
       },
     });
-    expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(2);
+    expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(1);
   });
 
   it('should update when custom melody is selected', () => {
@@ -272,7 +271,7 @@ describe('MelodyEditor', () => {
         value: "Simpsons Theme",
       },
     });
-    expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(2);
+    expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(1);
   });
 
   it('should be possible to delete custom melody', () => {
