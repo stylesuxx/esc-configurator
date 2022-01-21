@@ -11,7 +11,8 @@
       "Enhancement: Detect Brave browser and show incompatibility message",
       "Enhancement: Fetch available firmware versions from Github API",
       "Enhancement: Allow to set colors on certain ESCs with configurable LEDs",
-      "Update: Add settings layout for Bluejay v0.16"
+      "Update: Add settings layout for Bluejay v0.16",
+      "Update: Dependency updates"
     ]
   },
   {
