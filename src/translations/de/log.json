@@ -36,5 +36,5 @@
   "firmwareMismatch": "Firmware stimmt nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "bootloaderMismatch": "Bootloader Versionen stimmen nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Firmware ist als {{tagged}} markiert, es scheint aber wahrscheinlicher dass es sich um {{actual}} handelt",
-  "browser": "{{name}} ({{version}}) on {{os}}"
+  "browser": "{{name}} ({{version}}) auf {{os}}"
 }
