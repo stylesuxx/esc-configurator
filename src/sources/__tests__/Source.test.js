@@ -1,5 +1,5 @@
 import Source from '../Source';
-import { GithubSource } from '../Source';
+import GithubSource from '../GithubSource';
 
 import {
   blheliSource,

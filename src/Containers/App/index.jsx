@@ -117,13 +117,17 @@ class App extends Component {
       });
 
       if (this.serialApi) {
+        /**
+         * Fetch configs in the background - some of them are fetched via
+         * github API and might take some time to be fetched.
+         */
+        this.fetchConfigs().then((configs) => this.setState({ configs }));
+
         this.serialApi.removeEventListener('connect', this.serialConnectHandler);
         this.serialApi.removeEventListener('disconnect', this.serialDisconnectHandler);
 
         this.serialApi.addEventListener('connect', this.serialConnectHandler);
         this.serialApi.addEventListener('disconnect', this.serialDisconnectHandler);
-
-        this.setState({ configs: await this.fetchConfigs() });
         this.serialConnectHandler();
       } else {
         this.setSerial({ checked: true });

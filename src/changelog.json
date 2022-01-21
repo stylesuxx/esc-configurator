@@ -8,7 +8,8 @@
       "Enhancement: Allow logs to be cleared manually and after saving the log",
       "Enhancement: Show warning if non AM32 ARM firmware has been detected - it then is very likely BLHeli_32",
       "Enhancement: Log detected browser, version and OS",
-      "Enhancement: Detect Brave browser and show incompatibility message"
+      "Enhancement: Detect Brave browser and show incompatibility message",
+      "Enhancement: Fetch available firmware versions from Github API"
     ]
   },
   {

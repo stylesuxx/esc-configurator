@@ -1,4 +1,4 @@
-import { GithubSource } from '../Source';
+import GithubSource from '../GithubSource';
 import eeprom from './eeprom';
 import settings from './settings';
 import escsBlheliS from '../BlheliS/escs.json';
