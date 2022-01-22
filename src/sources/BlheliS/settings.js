@@ -440,6 +440,36 @@ const INDIVIDUAL_SETTINGS = [
     suffix: " μs",
     visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
   },
+  {
+    name: 'LED_CONTROL',
+    type: 'enum',
+    label: 'escLedControl',
+    options: [{
+      value: 0x00,
+      label: 'Off',
+    }, {
+      value: 0x03,
+      label: 'Blue',
+    }, {
+      value: 0x0C,
+      label: 'Green',
+    }, {
+      value: 0x30,
+      label: 'Red',
+    }, {
+      value: 0x0F,
+      label: 'Cyan',
+    }, {
+      value: 0x33,
+      label: 'Magenta',
+    }, {
+      value: 0x3C,
+      label: 'Yellow',
+    }, {
+      value: 0x3F,
+      label: 'White',
+    }],
+  },
 ];
 
 const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
