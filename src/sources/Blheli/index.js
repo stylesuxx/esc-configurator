@@ -16,7 +16,7 @@ class BLHeliSource extends Source {
   }
 
   getFirmwareUrl({
-    escKey, mode, url,
+    escKey, version, mode, url,
   }) {
     const format = (str2Format, ...args) =>
       str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0]);
