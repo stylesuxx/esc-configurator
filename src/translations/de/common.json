@@ -25,6 +25,7 @@
   "escStartupBeep": "Startmelodie beim Einschalten",
   "escDithering": "Dithering",
   "escMotorDirection": "Motorrichtung",
+  "escLedControl": "LED Configuration",
   "escPPMMinThrottle": "PPM Min Schub",
   "escPPMMaxThrottle": "PPM Max Schub",
   "statusbarPortUtilization": "Port-Auslastung:",
