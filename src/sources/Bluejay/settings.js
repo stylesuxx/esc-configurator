@@ -319,6 +319,20 @@ SETTINGS_DESCRIPTIONS['205'] = {
         value: '2',
         label: 'Custom',
       }],
+    }, {
+      name: 'PWM_FREQUENCY',
+      type: 'enum',
+      label: 'escPwmFrequency',
+      options: [{
+        value: '24',
+        label: '24',
+      }, {
+        value: '48',
+        label: '48',
+      }, {
+        value: '96',
+        label: '96',
+      }],
     },
   ],
 };
@@ -434,6 +448,7 @@ DEFAULTS['205'] = {
   ...DEFAULTS['204'],
   STARTUP_BEEP: 1,
   STARTUP_MELODY_WAIT_MS: 0,
+  PWM_FREQUENCY: 24,
 };
 
 const settings = {

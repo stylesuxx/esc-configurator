@@ -49,7 +49,7 @@ const LAYOUT = {
     offset: 0x09,
     size: 1,
   },
-  __PWM_FREQUENCY: {
+  PWM_FREQUENCY: {
     offset: 0x0A,
     size: 1,
   },

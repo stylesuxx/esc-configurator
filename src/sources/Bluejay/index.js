@@ -28,8 +28,8 @@ class BluejaySource extends GithubSource {
     }
 
     let pwm = '';
-    if(settings.__PWM_FREQUENCY && settings.__PWM_FREQUENCY !== 0xFF) {
-      pwm = `, ${settings.__PWM_FREQUENCY}kHz`;
+    if(settings.PWM_FREQUENCY && settings.PWM_FREQUENCY !== 0xFF) {
+      pwm = `, ${settings.PWM_FREQUENCY}kHz`;
     }
     const name = `${settings.NAME.trim()}`;
 
@@ -41,9 +41,13 @@ class BluejaySource extends GithubSource {
   }
 
   getFirmwareUrl({
-    escKey, version, pwm, url,
+    escKey, version, pwm, url, settings,
   }) {
     const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
+
+    if (settings.LAYOUT_REVISION >= 205) {
+      return `${url}${name}_${version}.hex`;
+    }
 
     return `${url}${name}_${pwm}_${version}.hex`;
   }
