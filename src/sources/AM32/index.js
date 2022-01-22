@@ -31,8 +31,6 @@ class AM32Source extends GithubSource {
   }) {
     const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
 
-    version = version.replace(/^v/, '');
-
     return `${url}${name}_${version}.hex`;
   }
 }
