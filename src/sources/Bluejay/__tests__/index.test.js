@@ -48,7 +48,7 @@ describe('Bluejay', () => {
       settings: {
         MAIN_REVISION: 1,
         SUB_REVISION: 100,
-        __PWM_FREQUENCY: 24,
+        PWM_FREQUENCY: 24,
         NAME: 'Bluejay',
       },
     };
@@ -60,7 +60,7 @@ describe('Bluejay', () => {
   it('should return display Name with missing revisions', () => {
     const flash = {
       settings: {
-        __PWM_FREQUENCY: 24,
+        PWM_FREQUENCY: 24,
         NAME: 'Bluejay',
       },
     };
@@ -72,7 +72,7 @@ describe('Bluejay', () => {
   it('should return display name without PWM', () => {
     const flash = {
       settings: {
-        __PWM_FREQUENCY: 0xFF,
+        PWM_FREQUENCY: 0xFF,
         NAME: 'Bluejay',
       },
     };
