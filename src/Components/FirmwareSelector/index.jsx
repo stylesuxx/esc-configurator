@@ -178,7 +178,7 @@ function FirmwareSelector({
       url: e.target.value,
       version: selectedOption && options.versions[selected - 1].key,
     });
-  }, [selection]);
+  }, [options, selection]);
 
   const handleForceChange = useCallback((e) => {
     setForce(e.target.checked);
