@@ -25,6 +25,7 @@
   "escStartupBeep": "Sonido Inicial",
   "escDithering": "Difuminado",
   "escMotorDirection": "Dirección del motor",
+  "escLedControl": "LED Configuration",
   "escPPMMinThrottle": "Acelerador Mínimo PPM",
   "escPPMMaxThrottle": "Acelerador Máximo PPM",
   "statusbarPortUtilization": "Uso del puerto:",
