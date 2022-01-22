@@ -25,6 +25,7 @@
   "escStartupBeep": "Başlangıç Bip Sesi",
   "escDithering": "ESC titremesi",
   "escMotorDirection": "Motor Dönüş Yönü",
+  "escLedControl": "LED Configuration",
   "escPPMMinThrottle": "PPM Min Throttle",
   "escPPMMaxThrottle": "PPM Max Throttle",
   "statusbarPortUtilization": "Bağlantı Noktası Kullanımı:",
