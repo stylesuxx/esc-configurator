@@ -45,7 +45,7 @@ class BluejaySource extends GithubSource {
   }) {
     const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
 
-    return `${url}${name}_${pwm}_v${version}.hex`;
+    return `${url}${name}_${pwm}_${version}.hex`;
   }
 }
 

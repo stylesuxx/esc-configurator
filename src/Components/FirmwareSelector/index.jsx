@@ -173,7 +173,7 @@ function FirmwareSelector({
     setSelection({
       ...selection,
       url: e.target.value,
-      version: selecteOption ? selecteOption.text : 'N/A',
+      version: selecteOption && options.versions[selected - 1].key,
     });
   }
 
