@@ -31,12 +31,10 @@ describe('Statusbar', () => {
   });
 
   it('should render with utilization callback', async () => {
-    function getUtilization() {
-      return {
-        up: 10,
-        down: 20,
-      };
-    }
+    let getUtilization = jest.fn(() => ({
+      up: 10,
+      down: 20,
+    }));
 
     render(
       <StatusBar
@@ -55,6 +53,8 @@ describe('Statusbar', () => {
         setTimeout(r, 1200);
       });
     });
+
+    expect(getUtilization).toHaveBeenCalled();
     expect(screen.getByText('statusbarPortUtilization D: 20% U: 10%')).toBeInTheDocument();
   });
 });

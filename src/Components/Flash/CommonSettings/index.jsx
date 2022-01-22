@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useEffect,
   useState,
 } from 'react';
@@ -49,7 +50,7 @@ function CommonSettings({
     }
   }, [settings]);
 
-  function handleCheckboxChange(e) {
+  const handleCheckboxChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
     const {
       name,
@@ -57,9 +58,9 @@ function CommonSettings({
     } = e.target;
     newSettings[name] = checked ? 1 : 0;
     setSettings(newSettings);
-  }
+  }, [availableSettings]);
 
-  function handleSelectChange(e) {
+  const handleSelectChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
     const {
       name,
@@ -67,14 +68,14 @@ function CommonSettings({
     } = e.target;
     newSettings[name] = value;
     setSettings(newSettings);
-  }
+  }, [availableSettings]);
 
-  function handleNumberChange(name, value) {
+  const handleNumberChange = useCallback((name, value) => {
     const newSettings = { ...availableSettings };
 
     newSettings[name] = value;
     setSettings(newSettings);
-  }
+  }, [availableSettings]);
 
   if (!settingsDescriptions) {
     const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Rtttl from 'bluejay-rtttl-parse';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useEffect,
   useRef,
@@ -68,9 +69,11 @@ const MelodyElement = forwardRef(({
         }
       }
 
-      const highlight = [];
+      let current = [];
       const uniqueWrongNotes = [ ...new Set(wrongNotes)];
-      highlight.push(uniqueWrongNotes);
+      if(uniqueWrongNotes.length > 0) {
+        current.push(uniqueWrongNotes);
+      }
 
       if(tooLongNotes.length > 0) {
         const elements = currentMelody.split(':');
@@ -80,10 +83,10 @@ const MelodyElement = forwardRef(({
           offset += notes[i].length + 1;
         }
 
-        highlight.push([offset - 1, currentMelody.length]);
+        current.push([offset - 1, currentMelody.length]);
       }
 
-      setHighlight(highlight);
+      setHighlight(current);
 
       const isValid = uniqueWrongNotes.length === 0 && tooLongNotes.length === 0;
       setIsValid(isValid);
@@ -96,8 +99,7 @@ const MelodyElement = forwardRef(({
     onUpdate(currentMelody);
   }, [currentMelody]);
 
-  function handleMelodyUpdate(e) {
-    const melody = e.target.value;
+  const handleMelodyUpdate = useCallback((melody) => {
     setCurrentMelody(melody);
 
     // If an accepted melody changes
@@ -105,9 +107,9 @@ const MelodyElement = forwardRef(({
       setIsAccepted(false);
       onAccept(false);
     }
-  }
+  }, [onAccept, isAccepted, acceptedMelody]);
 
-  function handleAcceptMelody() {
+  const handleAcceptMelody = useCallback(() => {
     let convertedMelody = Rtttl.toBluejayStartupMelody(currentMelody).data;
     convertedMelody = Rtttl.fromBluejayStartupMelody(convertedMelody);
 
@@ -116,7 +118,7 @@ const MelodyElement = forwardRef(({
     setIsAccepted(true);
 
     onAccept(convertedMelody);
-  }
+  }, [currentMelody, onAccept]);
 
   // Can only be tested when the melody is acutally being played
   function highlightNote(index) {
@@ -230,14 +232,13 @@ const MelodyElement = forwardRef(({
           </div>
         </header>
 
-        <div className="editor-wrapper">
+        <div
+          className={`editor-wrapper ${playing ? 'playing' : ''}`}
+          disabled={playing || disabled}
+        >
           <HighlightWithinTextarea
-            containerClassName={`editor ${playing ? 'playing' : ''}`}
-            disabled={playing || disabled}
             highlight={highlight}
             onChange={handleMelodyUpdate}
-            rows={10}
-            spellCheck="false"
             value={currentMelody}
           />
         </div>

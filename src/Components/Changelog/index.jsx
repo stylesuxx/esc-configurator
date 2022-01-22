@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, {
+  useState,
+  useCallback,
+} from 'react';
 
 import Content from './Content';
 
@@ -14,13 +17,13 @@ function Changelog({ entries }) {
     title: t('defaultChangelogTitle'),
   });
 
-  function toggleExpanded() {
+  const toggleExpanded = useCallback(() => {
     const newExpanded = !state.expanded;
     setState({
       expanded: newExpanded,
       title: newExpanded ? t('changelogClose') : t('defaultChangelogTitle'),
     });
-  }
+  }, [state.expanded]);
 
   return (
     <div className={`changelog ${state.expanded ? "expanded" : ""}`}>

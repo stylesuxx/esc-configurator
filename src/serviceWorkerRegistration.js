@@ -25,10 +25,10 @@ const isLocalhost = Boolean(window.location.hostname === 'localhost' ||
   // [::1] is the IPv6 localhost address.
   window.location.hostname === '[::1]' ||
   // 127.0.0.0/8 are considered localhost for IPv4.
-  window.
-    location.
-    hostname.
-    match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/));
+  window
+    .location
+    .hostname
+    .match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/));
 
 /**
  * @param {Object} config Service worker cnfiguration
@@ -89,9 +89,9 @@ export function register(config) {
  * @param {Object} config
  */
 function registerValidSW(swUrl, config) {
-  navigator.serviceWorker.
-    register(swUrl).
-    then((registration) => {
+  navigator.serviceWorker
+    .register(swUrl)
+    .then((registration) => {
 
       registration.update();
       setInterval(() => {
@@ -141,8 +141,8 @@ function registerValidSW(swUrl, config) {
           }
         };
       };
-    }).
-    catch((error) => {
+    })
+    .catch((error) => {
       console.error(
         'Error during service worker registration:',
         error
@@ -159,8 +159,8 @@ function checkValidServiceWorker(swUrl, config) {
   fetch(
     swUrl,
     { headers: { 'Service-Worker': 'script' } }
-  ).
-    then((response) => {
+  )
+    .then((response) => {
       // Ensure service worker exists, and that we really are getting a JS file.
       const contentType = response.headers.get('content-type');
       if (
@@ -180,8 +180,8 @@ function checkValidServiceWorker(swUrl, config) {
           config
         );
       }
-    }).
-    catch(() => {
+    })
+    .catch(() => {
       console.log('No internet connection found. App is running in offline mode.');
     });
 }
@@ -191,11 +191,11 @@ function checkValidServiceWorker(swUrl, config) {
  */
 export function unregister() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.
-      then((registration) => {
+    navigator.serviceWorker.ready
+      .then((registration) => {
         registration.unregister();
-      }).
-      catch((error) => {
+      })
+      .catch((error) => {
         console.error(error.message);
       });
   }

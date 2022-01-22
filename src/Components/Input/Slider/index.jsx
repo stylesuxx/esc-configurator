@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useEffect,
 } from 'react';
@@ -42,26 +43,24 @@ function Slider({
   };
 
   /* istanbul ignore next */
-  function updateValue(value) {
+  const updateValue = useCallback((value) => {
     value = Math.floor((value - offset) / factor);
     setCurrentValue(value);
-  }
+  }, [offset, factor]);
 
   // Makes no sense to test, component has its own test, we just assume that
   // the slider actually slides.
   /* istanbul ignore next */
-  function handleUpdate(value) {
+  const handleUpdate = useCallback((value) => {
     value = Math.floor((value - offset) / factor);
 
     // Timout needed for individual settings
     setTimeout(() => {
       onChange(name, value);
     }, 100);
-  }
+  }, [onChange, offset, factor]);
 
-  function format(value) {
-    return `${value}${suffix}`;
-  }
+  const format = useCallback((value) => `${value}${suffix}`, [suffix]);
 
   return (
     <div className="number">
