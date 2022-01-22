@@ -25,6 +25,7 @@
   "escStartupBeep": "啓動蜂鳴音",
   "escDithering": "抖動",
   "escMotorDirection": "電機方向",
+  "escLedControl": "LED Configuration",
   "escPPMMinThrottle": "PPM 最小油門",
   "escPPMMaxThrottle": "PPM 最大油門",
   "statusbarPortUtilization": "埠口利用率：",
