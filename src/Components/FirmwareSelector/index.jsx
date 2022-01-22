@@ -173,7 +173,7 @@ function FirmwareSelector({
     setSelection({
       ...selection,
       url: e.target.value,
-      version: selecteOption ? selecteOption.text : 'N/A',
+      version: selecteOption && options.versions[selected - 1].key,
     });
   }
 
@@ -200,6 +200,7 @@ function FirmwareSelector({
       pwm: selection.pwm,
       mode: mode,
       url: selection.url,
+      settings: esc.settings,
     });
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
