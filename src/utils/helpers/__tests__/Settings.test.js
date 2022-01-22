@@ -1,17 +1,16 @@
-import escs from './escs.json';
-
-import bluejaySource from '../../../sources/Bluejay';
-const BLUEJAY_EEPROM = bluejaySource.getEeprom();
-
-import am32Source from '../../../sources/AM32';
-const AM32_EEPROM = am32Source.getEeprom();
-
 import {
   getMasterSettings,
   getIndividualSettingsDescriptions,
   getIndividualSettings,
   canMigrate,
 } from '../Settings';
+
+import escs from './escs.json';
+import bluejaySource from '../../../sources/Bluejay';
+import am32Source from '../../../sources/AM32';
+
+const AM32_EEPROM = am32Source.getEeprom();
+const BLUEJAY_EEPROM = bluejaySource.getEeprom();
 
 test('get master settings object', () => {
   const settings = getMasterSettings(escs);
