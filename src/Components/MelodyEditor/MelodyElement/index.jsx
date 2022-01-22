@@ -83,7 +83,7 @@ const MelodyElement = forwardRef(({
           offset += notes[i].length + 1;
         }
 
-        current.push([offset - 1, currentMelody.length - 1]);
+        current.push([offset - 1, currentMelody.length]);
       }
 
       setHighlight(current);
