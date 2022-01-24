@@ -23,7 +23,7 @@
   "escBeepStrength": "Startmelodie Lautstärke",
   "escBeaconStrength": "Beacon Lautstärke",
   "escStartupBeep": "Startmelodie beim Einschalten",
-  "escDithering": "Dithering",
+  "escDithering": "PWM Dithering",
   "escMotorDirection": "Motorrichtung",
   "escPPMMinThrottle": "PPM Min Schub",
   "escPPMMaxThrottle": "PPM Max Schub",

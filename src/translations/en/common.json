@@ -23,7 +23,7 @@
   "escBeepStrength": "Beep Strength",
   "escBeaconStrength": "Beacon Strength",
   "escStartupBeep": "Startup Beep",
-  "escDithering": "Dithering",
+  "escDithering": "PWM Dithering",
   "escMotorDirection": "Motor Direction",
   "escLedControl": "LED Configuration",
   "escPPMMinThrottle": "PPM Min Throttle",

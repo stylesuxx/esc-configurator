@@ -33,7 +33,7 @@ class Source {
     return this.escs.layouts;
   }
 
-  getMcuSignatures() {
+  getMcus() {
     return this.escs.mcus;
   }
 
