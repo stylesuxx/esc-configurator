@@ -11,6 +11,6 @@
   "disableCommonHint": "每個 ESC 都將使用自己的設定，而不是一個對所有 ESC 都生效的公共設定。",
   "enableAdvanced": "啓用高級設定",
   "enableAdvancedHint": "添加一些高級設定，如轉儲固件。",
-  "unstableVersions": "Show unstable firmware",
-  "unstableVersionsHint": "Show unstable firmware versions and prereleases"
+  "unstableVersions": "顯示不穩定固件",
+  "unstableVersionsHint": "顯示不穩定的固件版本和預發佈版本"
 }
