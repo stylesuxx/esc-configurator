@@ -1,8 +1,8 @@
 {
   "settingsHeader": "設定",
   "closeText": "關閉",
-  "directInput": "直接輸入",
-  "directInputHint": "使用直接輸入數值以代替滑塊。",
+  "directInput": "Numeric Input",
+  "directInputHint": "Use numeric input for numbers instead of sliders.",
   "printLogs": "打印日志",
   "printLogsHint": "如果啓用，則會將日志打印到控制臺。",
   "extendedDebug": "擴展調試中",
