@@ -1,8 +1,8 @@
 {
   "settingsHeader": "Ajustes",
   "closeText": "Cerrar",
-  "directInput": "Entrada Directa",
-  "directInputHint": "Usar entrada directa para números en lugar de los deslizadores.",
+  "directInput": "Numeric Input",
+  "directInputHint": "Use numeric input for numbers instead of sliders.",
   "printLogs": "Imprimir registros",
   "printLogsHint": "Imprimirá los registros en la consola si está habilitado.",
   "extendedDebug": "Depuración extendida",
