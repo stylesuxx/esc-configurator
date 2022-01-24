@@ -36,5 +36,5 @@
   "firmwareMismatch": "固件不匹配！閃存: {{flash}} vs. EEPROM: {{eeprom}}",
   "bootloaderMismatch": "引導程式不匹配！閃存: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "固件被標記為 {{tagged}}，但實際值似乎為 {{actual}}",
-  "browser": "{{name}} ({{version}}) on {{os}}"
+  "browser": "{{name}} ({{version}}) 在 {{os}}"
 }
