@@ -23,7 +23,7 @@
   "escBeepStrength": "Bip Sesi Kuvveti",
   "escBeaconStrength": "Beacon Sesi Kuvveti",
   "escStartupBeep": "Başlangıç Bip Sesi",
-  "escDithering": "ESC titremesi",
+  "escDithering": "PWM Dithering",
   "escMotorDirection": "Motor Dönüş Yönü",
   "escLedControl": "LED Configuration",
   "escPPMMinThrottle": "PPM Min Throttle",
