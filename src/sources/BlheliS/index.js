@@ -12,10 +12,8 @@ class BLHeliSSource extends BLHeliSource {
 
 const blheliSSource = new BLHeliSSource(
   'BLHeli_S',
-  {
-    ...eeprom,
-    ...settings,
-  },
+  eeprom,
+  settings,
   escs
 );
 

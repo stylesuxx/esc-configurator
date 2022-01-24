@@ -39,10 +39,8 @@ class AM32Source extends GithubSource {
 
 const source = new AM32Source(
   'AM32',
-  {
-    ...eeprom,
-    ...settings,
-  },
+  eeprom,
+  settings,
   escs
 );
 

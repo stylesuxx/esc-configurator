@@ -42,8 +42,11 @@ import {
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
 const blheliEeprom = blheliSSource.getEeprom();
+const blheliSettings = blheliSSource.getSettings();
 const bluejayEeprom = bluejaySource.getEeprom();
+const bluejaySettings = bluejaySource.getSettings();
 const am32Eeprom = am32Source.getEeprom();
+const am32Settings = am32Source.getSettings();
 
 class FourWay {
   constructor(serial) {
@@ -269,7 +272,7 @@ class FourWay {
         let settingsArray = null;
         let layout = blheliEeprom.LAYOUT;
         let layoutSize = blheliEeprom.LAYOUT_SIZE;
-        let defaultSettings = blheliEeprom.DEFAULTS;
+        let defaultSettings = blheliSettings.DEFAULTS;
         let validFirmwareNames = blheliEeprom.NAMES;
         let displayName = 'UNKNOWN';
         let firmwareName = 'UNKNOWN';
@@ -281,7 +284,7 @@ class FourWay {
           validFirmwareNames = am32Eeprom.NAMES;
           layoutSize = am32Eeprom.LAYOUT_SIZE;
           layout = am32Eeprom.LAYOUT;
-          defaultSettings = am32Eeprom.DEFAULTS;
+          defaultSettings = am32Settings.DEFAULTS;
           settingsArray = (await this.read(am32Eeprom.EEPROM_OFFSET, layoutSize)).params;
         } else {
           throw new UnknownPlatformError('Neither SiLabs nor Arm');
@@ -304,7 +307,7 @@ class FourWay {
           validFirmwareNames = bluejayEeprom.NAMES;
           newLayout = bluejayEeprom.LAYOUT;
           layoutSize = bluejayEeprom.LAYOUT_SIZE;
-          defaultSettings = bluejayEeprom.DEFAULTS;
+          defaultSettings = bluejaySettings.DEFAULTS;
           settingsArray = (await this.read(bluejayEeprom.EEPROM_OFFSET, layoutSize)).params;
         }
 
@@ -365,18 +368,18 @@ class FourWay {
         let settingsDescriptions = null;
         switch(layout) {
           case blheliEeprom.LAYOUT: {
-            settingsDescriptions = blheliEeprom.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = blheliEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = blheliSettings.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = blheliSettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
           case bluejayEeprom.LAYOUT: {
-            settingsDescriptions = bluejayEeprom.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = bluejayEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = bluejaySettings.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = bluejaySettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
           case am32Eeprom.LAYOUT: {
-            settingsDescriptions = am32Eeprom.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = am32Eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = am32Settings.SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = am32Settings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
           default: {
@@ -703,20 +706,20 @@ class FourWay {
       switch(newEsc.layout) {
         case blheliEeprom.LAYOUT: {
           console.debug('BLHELI layout found');
-          settingsDescriptions = blheliEeprom.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = blheliEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = blheliSettings.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = blheliSettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
 
         case bluejayEeprom.LAYOUT: {
           console.debug('Bluejay layout found');
-          settingsDescriptions = bluejayEeprom.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = bluejayEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = bluejaySettings.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = bluejaySettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
 
         case am32Eeprom.LAYOUT: {
           console.debug('AM32 layout found');
-          settingsDescriptions = am32Eeprom.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = am32Eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = am32Settings.SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = am32Settings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
       }
 

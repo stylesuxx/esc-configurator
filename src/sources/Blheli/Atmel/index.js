@@ -12,10 +12,8 @@ class BLHeliAtmelSource extends BLHeliSource {
 
 const blheliSource = new BLHeliAtmelSource(
   'BLHeli',
-  {
-    ...eeprom,
-    ...settings,
-  },
+  eeprom,
+  settings,
   escs
 );
 

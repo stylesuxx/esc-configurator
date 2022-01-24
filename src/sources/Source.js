@@ -1,3 +1,4 @@
+import SettingsHandler from '../Components/Flash/Escs/Esc/SettingsHandler';
 import {
   MethodNotImplementedError,
   MissingParametersError,
@@ -10,13 +11,14 @@ import { fetchJsonCached } from '../utils/Fetch';
  * required methods.
  */
 class Source {
-  constructor(name, eeprom, escs) {
+  constructor(name, eeprom, settings, escs) {
     if(!name || !eeprom || !escs) {
-      throw new MissingParametersError("name, eeprom, escs");
+      throw new MissingParametersError("name, eeprom, settings, escs");
     }
 
     this.name = name;
     this.eeprom = eeprom;
+    this.settings = settings;
     this.escs = escs;
     this.pwm = [];
   }
@@ -43,6 +45,10 @@ class Source {
 
   getEeprom() {
     return this.eeprom;
+  }
+
+  getSettings() {
+    return this.settings;
   }
 
   getName() {
