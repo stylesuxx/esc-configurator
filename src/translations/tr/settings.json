@@ -11,6 +11,6 @@
   "disableCommonHint": "Each ESC will have its own set of settings instead of having a common section that is valid for all ESCs.",
   "enableAdvanced": "Enable advanced settings",
   "enableAdvancedHint": "Adds advanced settings like dumping firmware.",
-  "unstableVersions": "Show unstable firmware",
-  "unstableVersionsHint": "Show unstable firmware versions and prereleases"
+  "unstableVersions": "Show firmware pre-releases",
+  "unstableVersionsHint": "Show unstable firmware versions and pre-releases"
 }
