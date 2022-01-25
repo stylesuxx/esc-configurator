@@ -12,7 +12,7 @@ import { fetchJsonCached } from '../utils/Fetch';
  */
 class Source {
   constructor(name, eeprom, settings, escs) {
-    if(!name || !eeprom || !escs) {
+    if(!name || !eeprom || !settings || !escs) {
       throw new MissingParametersError("name, eeprom, settings, escs");
     }
 
