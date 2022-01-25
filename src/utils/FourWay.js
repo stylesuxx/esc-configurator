@@ -369,17 +369,17 @@ class FourWay {
         switch(layout) {
           case blheliEeprom.LAYOUT: {
             settingsDescriptions = blheliSettings.COMMON;
-            individualSettingsDescriptions = blheliSettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = blheliSettings.INDIVIDUAL;
           } break;
 
           case bluejayEeprom.LAYOUT: {
             settingsDescriptions = bluejaySettings.COMMON;
-            individualSettingsDescriptions = bluejaySettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = bluejaySettings.INDIVIDUAL;
           } break;
 
           case am32Eeprom.LAYOUT: {
             settingsDescriptions = am32Settings.COMMON;
-            individualSettingsDescriptions = am32Settings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            individualSettingsDescriptions = am32Settings.INDIVIDUAL;
           } break;
 
           default: {
@@ -707,19 +707,19 @@ class FourWay {
         case blheliEeprom.LAYOUT: {
           console.debug('BLHELI layout found');
           settingsDescriptions = blheliSettings.COMMON;
-          individualSettingsDescriptions = blheliSettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = blheliSettings.INDIVIDUAL;
         } break;
 
         case bluejayEeprom.LAYOUT: {
           console.debug('Bluejay layout found');
           settingsDescriptions = bluejaySettings.COMMON;
-          individualSettingsDescriptions = bluejaySettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = bluejaySettings.INDIVIDUAL;
         } break;
 
         case am32Eeprom.LAYOUT: {
           console.debug('AM32 layout found');
           settingsDescriptions = am32Settings.COMMON;
-          individualSettingsDescriptions = am32Settings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          individualSettingsDescriptions = am32Settings.INDIVIDUAL;
         } break;
       }
 
