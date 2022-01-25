@@ -45,7 +45,7 @@ class BluejaySource extends GithubSource {
   }) {
     const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
 
-    if (settings.LAYOUT_REVISION >= 205) {
+    if (version === 'test-melody-pwm') {
       return `${url}${name}_${version}.hex`;
     }
 
