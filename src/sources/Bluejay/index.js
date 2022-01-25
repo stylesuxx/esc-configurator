@@ -1,6 +1,6 @@
 import GithubSource from '../GithubSource';
 import eeprom from './eeprom';
-import settings from './settings';
+import settingsDescriptions from './settings';
 import escsBlheliS from '../BlheliS/escs.json';
 import escsBluejay from './escs.json';
 
@@ -15,8 +15,8 @@ const escs = {
 const GITHUB_REPO = 'mathiasvr/bluejay';
 
 class BluejaySource extends GithubSource {
-  constructor(name, eeprom, settings, escs, pwm) {
-    super(name, eeprom, settings, escs);
+  constructor(name, eeprom, settingsDescriptions, escs, pwm) {
+    super(name, eeprom, settingsDescriptions, escs);
     this.pwm = pwm;
   }
 
@@ -57,7 +57,7 @@ const pwmOptions = [24, 48, 96];
 const config = new BluejaySource(
   'Bluejay',
   eeprom,
-  settings,
+  settingsDescriptions,
   escs,
   pwmOptions
 );

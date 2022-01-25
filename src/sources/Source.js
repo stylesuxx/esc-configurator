@@ -11,14 +11,14 @@ import { fetchJsonCached } from '../utils/Fetch';
  * required methods.
  */
 class Source {
-  constructor(name, eeprom, settings, escs) {
-    if(!name || !eeprom || !settings || !escs) {
-      throw new MissingParametersError("name, eeprom, settings, escs");
+  constructor(name, eeprom, settingsDescriptions, escs) {
+    if(!name || !eeprom || !settingsDescriptions || !escs) {
+      throw new MissingParametersError("name, eeprom, settingsDescriptions, escs");
     }
 
     this.name = name;
     this.eeprom = eeprom;
-    this.settings = settings;
+    this.settings = settingsDescriptions;
     this.escs = escs;
     this.pwm = [];
   }
@@ -47,7 +47,7 @@ class Source {
     return this.eeprom;
   }
 
-  getSettings() {
+  getSettingsDescriptions() {
     return this.settings;
   }
 

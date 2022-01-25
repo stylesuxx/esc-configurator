@@ -1,6 +1,6 @@
 import GithubSource from '../GithubSource';
 import eeprom from './eeprom';
-import settings from './settings';
+import settingsDescriptions from './settings';
 import escs from './escs.json';
 
 const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
@@ -40,7 +40,7 @@ class AM32Source extends GithubSource {
 const source = new AM32Source(
   'AM32',
   eeprom,
-  settings,
+  settingsDescriptions,
   escs
 );
 

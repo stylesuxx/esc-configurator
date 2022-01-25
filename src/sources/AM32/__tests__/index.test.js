@@ -1,15 +1,15 @@
 import config from '../';
 
-const SETTINGS = config.getSettings();
+const SETTINGS_DESCRIPTIONS = config.getSettingsDescriptions();
 
 describe('AM32', () => {
   it('should handle conditional visibility', () => {
-    const keys = Object.keys(SETTINGS.COMMON);
+    const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
     const settings = { VARIABLE_PWM_FREQUENCY: 0 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = SETTINGS.COMMON[i].base;
+      const base = SETTINGS_DESCRIPTIONS.COMMON[i].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
