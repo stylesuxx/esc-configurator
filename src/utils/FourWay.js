@@ -308,15 +308,6 @@ class FourWay {
           settingsArray = (await this.read(bluejayEeprom.EEPROM_OFFSET, layoutSize)).params;
         }
 
-        /*
-        * If Arm is detected - it has to be AM32, otherwise it is probably
-        * BLHeli_32 which is not supported.
-        */
-        if(isArm && flash.firmwareName !== 'AM32') {
-          flash.settings.NAME = 'BLHeli_32';
-          layout = null;
-        }
-
         // Try to guess firmware type if it was not properly set in the EEPROM
         if(name === '') {
           const start = 0x80;
@@ -390,6 +381,15 @@ class FourWay {
 
         if(!flash.settingsDescriptions) {
           this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
+
+          /*
+          * If Arm is detected and we have no matching layout, it might be
+          * BLHeli_32.
+          */
+          if(isArm) {
+            flash.settings.NAME = 'BLHeli_32';
+            layout = null;
+          }
         }
 
         const layoutName = (flash.settings.LAYOUT || '').trim();
