@@ -175,7 +175,7 @@ const SETTINGS_LAYOUT_2 = [
   },
 ];
 
-const SETTINGS_DESCRIPTIONS = {
+const COMMON = {
   '0': { base: SETTINGS_LAYOUT_0 },
   '1': { base: SETTINGS_LAYOUT_1 },
   '2': { base: SETTINGS_LAYOUT_2 },
@@ -268,7 +268,7 @@ const DEFAULTS = {
 const settings = {
   DEFAULTS,
   INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-  SETTINGS_DESCRIPTIONS,
+  COMMON,
 };
 
 export default settings;

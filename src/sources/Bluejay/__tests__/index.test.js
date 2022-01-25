@@ -4,12 +4,12 @@ const SETTINGS = config.getSettings();
 
 describe('Bluejay', () => {
   it('should handle conditional visibility with general settings', () => {
-    const keys = Object.keys(SETTINGS.SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(SETTINGS.COMMON);
     const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = SETTINGS.SETTINGS_DESCRIPTIONS[keys[i]].base;
+      const base = SETTINGS.COMMON[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {

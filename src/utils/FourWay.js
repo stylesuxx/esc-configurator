@@ -368,17 +368,17 @@ class FourWay {
         let settingsDescriptions = null;
         switch(layout) {
           case blheliEeprom.LAYOUT: {
-            settingsDescriptions = blheliSettings.SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = blheliSettings.COMMON;
             individualSettingsDescriptions = blheliSettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
           case bluejayEeprom.LAYOUT: {
-            settingsDescriptions = bluejaySettings.SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = bluejaySettings.COMMON;
             individualSettingsDescriptions = bluejaySettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
           case am32Eeprom.LAYOUT: {
-            settingsDescriptions = am32Settings.SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = am32Settings.COMMON;
             individualSettingsDescriptions = am32Settings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
           } break;
 
@@ -706,19 +706,19 @@ class FourWay {
       switch(newEsc.layout) {
         case blheliEeprom.LAYOUT: {
           console.debug('BLHELI layout found');
-          settingsDescriptions = blheliSettings.SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = blheliSettings.COMMON;
           individualSettingsDescriptions = blheliSettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
 
         case bluejayEeprom.LAYOUT: {
           console.debug('Bluejay layout found');
-          settingsDescriptions = bluejaySettings.SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = bluejaySettings.COMMON;
           individualSettingsDescriptions = bluejaySettings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
 
         case am32Eeprom.LAYOUT: {
           console.debug('AM32 layout found');
-          settingsDescriptions = am32Settings.SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = am32Settings.COMMON;
           individualSettingsDescriptions = am32Settings.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
         } break;
       }

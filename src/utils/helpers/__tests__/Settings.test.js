@@ -74,7 +74,7 @@ test('can migrate invalid setting', () => {
 });
 
 test('can migrate valid setting', () => {
-  const settingsDescriptions = BLUEJAY_SETTINGS.SETTINGS_DESCRIPTIONS;
+  const settingsDescriptions = BLUEJAY_SETTINGS.COMMON;
   const individualSettingsDescriptions = BLUEJAY_SETTINGS.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
   const result = canMigrate('MOTOR_DIRECTION', escs[0].settings, escs[1].settings, settingsDescriptions, individualSettingsDescriptions);
 
@@ -82,7 +82,7 @@ test('can migrate valid setting', () => {
 });
 
 test('can migrate from different platforms', () => {
-  const settingsDescriptions = AM32_SETTINGS.SETTINGS_DESCRIPTIONS;
+  const settingsDescriptions = AM32_SETTINGS.COMMON;
   const individualSettingsDescriptions = AM32_SETTINGS.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
   const result = canMigrate('MOTOR_DIRECTION', escs[0].settings, escs[1].settings, settingsDescriptions, individualSettingsDescriptions);
 

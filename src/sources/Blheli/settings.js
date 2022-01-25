@@ -1099,7 +1099,7 @@ const MULTI_SETTINGS_LAYOUT_19 = [
   },
 ];
 
-const SETTINGS_DESCRIPTIONS = {
+const COMMON = {
   '21': {
     base: MULTI_SETTINGS_LAYOUT_21,
     overrides: {
@@ -1232,7 +1232,7 @@ const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
 
 const settings = {
   INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-  SETTINGS_DESCRIPTIONS,
+  COMMON,
 };
 
 export default settings;

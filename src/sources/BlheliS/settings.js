@@ -376,7 +376,7 @@ const SETTINGS_LAYOUT_32 = [
   },
 ];
 
-const SETTINGS_DESCRIPTIONS = {
+const COMMON = {
   33: { base: SETTINGS_LAYOUT_33 },
   32: { base: SETTINGS_LAYOUT_32 },
 };
@@ -517,7 +517,7 @@ const DEFAULTS = {
 const settings = {
   DEFAULTS,
   INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-  SETTINGS_DESCRIPTIONS,
+  COMMON,
 };
 
 export default settings;
