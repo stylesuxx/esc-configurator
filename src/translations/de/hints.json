@@ -6,7 +6,7 @@
   "BEEP_STRENGTH": "Die Lautstärke der Startmelodie. Wenn diese zu hoch gesetzt wird besteht Gefahr die Motoren zu beschädigen.",
   "BEACON_STRENGTH": "Die Lautstärke des Beacon. Wenn diese zu hoch gesetzt wird besteht Gefahr die Motoren zu beschädigen.",
   "STARTUP_POWER_MIN": "Die minimal angewendete Leistung die aufgewendet wird um die Motoren zu starten. Erhöhe diesen Wert wenn die Motoren sich nicht bei minimalen Schub bewegen.",
-  "DITHERING": "Erhöht die effektive PWM Auflösung auf 2000 werte. Es ist prinzipiell gut diese Einstellung aktiviert zu lasse - vor allem mit PWM Frequenzen über 24kHz.",
+  "DITHERING": "Erhöht die effektive PWM Auflösung auf 2000 Schritte. Es empfiehlt sich diese Einstellung aktiviert zu lassen - im Speziellen bei PWM Frequenzen über 24kHz.",
   "STARTUP_POWER_MAX": "Limitiert die Leistung wenn die Motoren gestartet oder die Drehrichtung geändert wird.",
   "RPM_POWER_SLOPE": "Beschränkt wie sehr die Leistung, basierend auf der momentanen Drehzahl, erhöht werden kann. Niedrige Werte verhindern Leistungsspitzen, können aber auch zu verminderter Beschleunigung und verminderter maximal Geschwindigkeit führen.",
   "MOTOR_DIRECTION": "Die Motordrehrichtung kann normal oder rückwärts sein. Im \"bidirecional\" Modus ist die Mittelstellung des Steuerknüppels Null.",

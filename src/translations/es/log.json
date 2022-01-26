@@ -35,5 +35,6 @@
   "passthroughNotSupported": "Passthrough BLHELI no soportado",
   "firmwareMismatch": "¡El firmware no coincide! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "bootloaderMismatch": "¡El cargador de arranque no coincide! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
-  "timingMismatch": "El firmware está etiquetado como {{tagged}} pero en realidad parece ser {{actual}}"
+  "timingMismatch": "El firmware está etiquetado como {{tagged}} pero en realidad parece ser {{actual}}",
+  "browser": "{{name}} ({{version}}) on {{os}}"
 }

@@ -23,8 +23,9 @@
   "escBeepStrength": "Intensidad del Beep",
   "escBeaconStrength": "Intensidad de Baliza",
   "escStartupBeep": "Sonido Inicial",
-  "escDithering": "Difuminado",
+  "escDithering": "PWM Dithering",
   "escMotorDirection": "Dirección del motor",
+  "escLedControl": "LED Configuration",
   "escPPMMinThrottle": "Acelerador Mínimo PPM",
   "escPPMMaxThrottle": "Acelerador Máximo PPM",
   "statusbarPortUtilization": "Uso del puerto:",
@@ -38,6 +39,7 @@
   "escButtonRead": "Leer Configuración",
   "escButtonFlashAll": "Flashear todos",
   "escButtonSaveLog": "Guardar registro de depuración",
+  "escButtonClearLog": "Clear Debug Log",
   "escButtonWrite": "Escribir Configuración",
   "buttonCancel": "Cancelar",
   "escButtonSelect": "Flashear",
@@ -81,6 +83,9 @@
   "escLowVoltageCutoff": "Corte de Bajo Voltaje",
   "escLowVoltageThreshold": "Umbral de corte bajo voltaje",
   "escRcCarReversing": "Invertir el Estilo de Coche RC",
+  "escHallSensors": "Hall Sensors",
+  "escSineModeRange": "Sine Mode Range",
+  "escBrakeStrength": "Braking Strength",
   "bluejayText": "<p>Bluejay es un firmware basado en BLHeli_S capaz de usar DShot Bidireccional - así que es una gran opción si quieres ejecutar un filtro RPM en tu aparato. Este proyecto también pretende limpiar y simplificar el código fuente original de BLHeli_S.</p><p>Un editor de sonido de inicio también es parte de la oferta.</p>",
   "bluejaySupportedHardware": "<p>Por favor, tómese el tiempo para ayudarnos a documentar el hardware en el que ha flasheado y probado con éxito Bluejay <a href=\"https://github.com/mathiasvr/bluejay/wiki/Tested-Hardware\" target=\"_blank\">añadiéndolo al Wiki</a>.</p><p>Aunque debería estar trabajando en todo el hardware compatible con BLHeli, nos gustaría mantener una lista, para que la gente pueda estar segura de que el hardware elegido funcionará correctamente con Bluejay.</p>",
   "blheli32ToAM32": "<p>El firmware para los ESC basados en ARM. A pesar de ser relativamente nuevo en la escena tiene mucho interés, tanto de los usuarios como de los fabricantes. Los ESCs AM32 pronto estarán disponibles en diferentes fabricantes.</p><p><strong>AM32 puede ser flasheado en ESC's BLHeli_32</strong>. Pero, primero tendrá que flashear el cargador de arranque AM32 a través de <a href=\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\" target=\"_blank\">STM32 Cube Programmer</a> o ST Link V2. El cargador de arranque necesario se puede encontrar en el repositorio <a href=\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\" target=\"_blank\">de carga de arranque AM32</a>.</p>",
@@ -135,5 +140,6 @@
   "escMissing1": "El ESC aún no estaba listo. Esto puede suceder, por ejemplo, si <b>está reproduciendo una melodia</b>. También un flash anterior podría haber salido mal y necesita más tiempo para arrancar de lo habitual.",
   "escMissing2": "Simplemente <b>no hay más ESC conectados.</b>",
   "escMissing3": "La <b>MCU del ESC esta defectuosa.</b>",
-  "mistagged": "<p><b>Advertencia:</b> Parece que el firmware actualmente flasheado es erróneo!</p><p>Sólo procede si sabes lo que estás haciendo. Proceder aquí podría poner a su ESC en riesgo de recalentamiento y - en el peor de los casos- destrucción del ESC. Se recomienda flashear la versión detectada en lugar de la versión etiquetada - ¿Necesitas comprobar el <i>\"Ignorar diseño MCU inapropiado?\"</i> casilla de verificación en la parte superior de la página.</p><table><tr><td>Etiquetado</td><td>{{tagged}}</td></tr><tr><td>Detectado</td><td>{{detected}}</td></tr></table><p>Si ves este mensaje, por favor <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">considere añadir una entrada en la Wiki</a>, ayudándonos a documentar hardware problemático.</p><p><b>Si no comprende los riesgos que implica continuar, no dude en <a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\"> unirse a nosotros en Discord</a>.</b></p>"
+  "mistagged": "<p><b>Advertencia:</b> Parece que el firmware actualmente flasheado es erróneo!</p><p>Sólo procede si sabes lo que estás haciendo. Proceder aquí podría poner a su ESC en riesgo de recalentamiento y - en el peor de los casos- destrucción del ESC. Se recomienda flashear la versión detectada en lugar de la versión etiquetada - ¿Necesitas comprobar el <i>\"Ignorar diseño MCU inapropiado?\"</i> casilla de verificación en la parte superior de la página.</p><table><tr><td>Etiquetado</td><td>{{tagged}}</td></tr><tr><td>Detectado</td><td>{{detected}}</td></tr></table><p>Si ves este mensaje, por favor <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">considere añadir una entrada en la Wiki</a>, ayudándonos a documentar hardware problemático.</p><p><b>Si no comprende los riesgos que implica continuar, no dude en <a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\"> unirse a nosotros en Discord</a>.</b></p>",
+  "update": "Update available! To update the app, refresh or restart it."
 }

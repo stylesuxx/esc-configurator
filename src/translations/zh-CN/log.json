@@ -35,5 +35,6 @@
   "passthroughNotSupported": "不支持 BLHELI 透传协议",
   "firmwareMismatch": "固件不匹配！闪存: {{flash}} vs. EEEPROM: {{eeprom}}",
   "bootloaderMismatch": "引导程序不匹配！闪存: {{flash}} vs. EEEPROM: {{eeprom}}",
-  "timingMismatch": "固件被标记为 {{tagged}} ，但实际值似乎为 {{actual}}"
+  "timingMismatch": "固件被标记为 {{tagged}} ，但实际值似乎为 {{actual}}",
+  "browser": "{{name}} ({{version}}) 在 {{os}}"
 }
