@@ -3,6 +3,7 @@ import eeprom from './eeprom';
 import settings from './settings';
 import escs from './escs.json';
 import blacklist from './blacklist.json';
+import patterns from './patterns.json';
 
 const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
 
@@ -30,11 +31,20 @@ class AM32Source extends GithubSource {
   getFirmwareUrl({
     escKey, version, url,
   }) {
-    const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
+    const name = this.escs.layouts[escKey].fileName;
 
     version = version.replace(/^v/, '');
 
-    return `${url}${name}_${version}.hex`;
+    let pattern = `${url}${name}_${version}.hex`;
+    if (version in patterns) {
+      const replaced = patterns[version]
+        .replace('${name}', name)
+        .replace('${version}', version);
+
+      pattern = `${url}${replaced}`;
+    }
+
+    return pattern;
   }
 }
 
