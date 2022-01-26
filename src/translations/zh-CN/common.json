@@ -23,7 +23,7 @@
   "escBeepStrength": "蜂鸣强度",
   "escBeaconStrength": "信标强度",
   "escStartupBeep": "启动蜂鸣音",
-  "escDithering": "PWM Dithering",
+  "escDithering": "PWM 抖动",
   "escMotorDirection": "电机方向",
   "escLedControl": "LED 配置",
   "escPPMMinThrottle": "PPM 最小油门",
