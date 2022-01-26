@@ -3,6 +3,7 @@ import eeprom from './eeprom';
 import settings from './settings';
 import escsBlheliS from '../BlheliS/escs.json';
 import escsBluejay from './escs.json';
+import blacklist from './blacklist.json';
 
 const escs = {
   mcus: escsBlheliS.mcus,
@@ -37,7 +38,7 @@ class BluejaySource extends GithubSource {
   }
 
   async getVersions() {
-    return this.getRemoteVersionsList(GITHUB_REPO);
+    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
   }
 
   getFirmwareUrl({

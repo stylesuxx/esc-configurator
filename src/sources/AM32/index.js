@@ -2,6 +2,7 @@ import GithubSource from '../GithubSource';
 import eeprom from './eeprom';
 import settings from './settings';
 import escs from './escs.json';
+import blacklist from './blacklist.json';
 
 const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
 
@@ -23,7 +24,7 @@ class AM32Source extends GithubSource {
   }
 
   async getVersions() {
-    return this.getRemoteVersionsList(GITHUB_REPO);
+    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
   }
 
   getFirmwareUrl({
