@@ -85,7 +85,7 @@ describe('AM32', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
       version: '1.64',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.64/'
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.64/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
@@ -96,7 +96,7 @@ describe('AM32', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
       version: '1.65',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/'
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
@@ -107,7 +107,7 @@ describe('AM32', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
       version: '1.74',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.74/'
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.74/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
@@ -118,7 +118,7 @@ describe('AM32', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
       version: '1.77',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.77/'
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.77/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
@@ -129,7 +129,7 @@ describe('AM32', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
       version: '1.78',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.78/'
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.78/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
@@ -140,7 +140,7 @@ describe('AM32', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
       version: '1.80',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.80/'
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.80/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
