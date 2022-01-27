@@ -1,14 +1,14 @@
 import source from '../';
-const EEPROM = source.getEeprom();
+const SETTINGS_DESCRIPTIONS = source.getSettingsDescriptions();
 
 describe('AM32', () => {
   it('should handle conditional visibility', () => {
-    const keys = Object.keys(EEPROM.SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
     const settings = { VARIABLE_PWM_FREQUENCY: 0 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = EEPROM.SETTINGS_DESCRIPTIONS[i].base;
+      const base = SETTINGS_DESCRIPTIONS.COMMON[i].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {

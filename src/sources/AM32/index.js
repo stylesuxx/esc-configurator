@@ -1,6 +1,6 @@
 import GithubSource from '../GithubSource';
 import eeprom from './eeprom';
-import settings from './settings';
+import settingsDescriptions from './settings';
 import escs from './escs.json';
 import blacklist from './blacklist.json';
 import patterns from './patterns.json';
@@ -50,10 +50,8 @@ class AM32Source extends GithubSource {
 
 const source = new AM32Source(
   'AM32',
-  {
-    ...eeprom,
-    ...settings,
-  },
+  eeprom,
+  settingsDescriptions,
   escs
 );
 

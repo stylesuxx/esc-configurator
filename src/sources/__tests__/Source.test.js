@@ -22,7 +22,7 @@ describe('Invalid Source', () => {
   });
 
   it('should throw with invalid Source', async() => {
-    const invalidSource = new Source('invalid', 'invalid', 'invalid');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
 
     await expect(() => invalidSource.getRemoteVersionsList()).rejects.toThrow();
     expect(() => invalidSource.buildDisplayName()).toThrow();
@@ -38,7 +38,7 @@ describe('Invalid Source', () => {
       ),
     };
 
-    const invalidSource = new Source('invalid', 'invalid', 'invalid');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
 
     const versions = await invalidSource.getRemoteVersionsList();
 
@@ -54,7 +54,7 @@ describe('Invalid Source', () => {
       ),
     };
 
-    const invalidGithubSource = new GithubSource('invalid', 'invalid', 'invalid');
+    const invalidGithubSource = new GithubSource('invalid', 'invalid', 'invalid', 'invalid');
 
     const versions = await invalidGithubSource.getRemoteVersionsList();
 

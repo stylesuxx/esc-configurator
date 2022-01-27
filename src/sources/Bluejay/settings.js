@@ -1,7 +1,7 @@
-const SETTINGS_DESCRIPTIONS = {};
+const COMMON = {};
 
 // V0.9
-SETTINGS_DESCRIPTIONS['200'] = {
+COMMON['200'] = {
   base: [{
     name: 'RPM_POWER_SLOPE',
     type: 'enum',
@@ -158,10 +158,10 @@ SETTINGS_DESCRIPTIONS['200'] = {
 };
 
 // V0.10
-SETTINGS_DESCRIPTIONS['201'] = {
+COMMON['201'] = {
   base: [{
     name: 'STARTUP_POWER_MIN',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'STARTUP_POWER_MAX',
     type: 'number',
@@ -175,13 +175,13 @@ SETTINGS_DESCRIPTIONS['201'] = {
     displayPrecision: 0,
   }, {
     name: 'TEMPERATURE_PROTECTION',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'COMMUTATION_TIMING',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'DEMAG_COMPENSATION',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'RPM_POWER_SLOPE',
     type: 'enum',
@@ -231,22 +231,22 @@ SETTINGS_DESCRIPTIONS['201'] = {
     label: 'escRampupPower',
   }, {
     name: 'BEEP_STRENGTH',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'BEACON_STRENGTH',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'BEACON_DELAY',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'STARTUP_BEEP',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'DITHERING',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'BRAKE_ON_STOP',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }],
 };
 
@@ -259,12 +259,12 @@ function merge_inherited_descriptions (descs) {
   }
 }
 
-merge_inherited_descriptions(SETTINGS_DESCRIPTIONS['201']);
+merge_inherited_descriptions(COMMON['201']);
 
 // 201 with damping mode
-SETTINGS_DESCRIPTIONS['202'] = {
+COMMON['202'] = {
   base: [
-    ...SETTINGS_DESCRIPTIONS['201'].base,
+    ...COMMON['201'].base,
     {
       name: 'BRAKING_STRENGTH',
       type: 'enum',
@@ -282,15 +282,15 @@ SETTINGS_DESCRIPTIONS['202'] = {
     }],
 };
 
-SETTINGS_DESCRIPTIONS['203'] = {
+COMMON['203'] = {
   base: [
-    ...SETTINGS_DESCRIPTIONS['201'].base.filter((s) => s.name !== 'STARTUP_BEEP'),
+    ...COMMON['201'].base.filter((s) => s.name !== 'STARTUP_BEEP'),
   ],
 };
 
-SETTINGS_DESCRIPTIONS['204'] = {
+COMMON['204'] = {
   base: [
-    ...SETTINGS_DESCRIPTIONS['203'].base,
+    ...COMMON['203'].base,
     {
       name: 'BRAKING_STRENGTH',
       type: 'number',
@@ -302,9 +302,9 @@ SETTINGS_DESCRIPTIONS['204'] = {
   ],
 };
 
-SETTINGS_DESCRIPTIONS['205'] = {
+COMMON['205'] = {
   base: [
-    ...SETTINGS_DESCRIPTIONS['204'].base,
+    ...COMMON['204'].base,
     {
       name: 'STARTUP_BEEP',
       type: 'enum',
@@ -393,7 +393,7 @@ const INDIVIDUAL_SETTINGS_203 = [
   },
 ];
 
-const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
+const INDIVIDUAL = {
   '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
@@ -453,8 +453,8 @@ DEFAULTS['205'] = {
 
 const settings = {
   DEFAULTS,
-  INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-  SETTINGS_DESCRIPTIONS,
+  INDIVIDUAL,
+  COMMON,
 };
 
 export default settings;
