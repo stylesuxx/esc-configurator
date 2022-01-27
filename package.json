@@ -1,6 +1,6 @@
 {
   "name": "esc-configurator",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "private": false,
   "license": "AGPL-3.0",
   "dependencies": {
