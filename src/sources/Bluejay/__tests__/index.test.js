@@ -1,6 +1,6 @@
-import config from '../';
+import source from '../';
 
-const eeprom = config.getEeprom();
+const eeprom = source.getEeprom();
 
 describe('Bluejay', () => {
   it('should handle conditional visibility with general settings', () => {
@@ -53,7 +53,7 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, 1.100, 24kHz');
   });
 
@@ -65,7 +65,7 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized, 24kHz');
   });
 
@@ -77,7 +77,18 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized');
+  });
+
+  it('should return a firmware URL for PWM less files', () => {
+    const params = {
+      escKey: '#S_H_50#',
+      version: 'test-melody-pwm',
+      url: 'https://github.com/mathiasvr/bluejay/releases/download/test-melody-pwm/',
+    };
+    const url = source.getFirmwareUrl(params);
+
+    expect(url).toEqual('https://github.com/mathiasvr/bluejay/releases/download/test-melody-pwm/S_H_50_test-melody-pwm.hex');
   });
 });
