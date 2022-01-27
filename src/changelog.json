@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Enhancement: Upload coverage reports to codecov with github workflows"
+    ]
+  },
+  {
     "title": "0.22.0",
     "items": [
       "Enhancement: Detect BLHeli_M and recommend to use dedicated configurator",
