@@ -2,6 +2,10 @@ import Settings from '../settings.json';
 
 const { corsProxy } = Settings;
 
+
+
+const ONE_DAY = 24 * 60 * 60 * 1000;
+
 async function fetchProxy(url) {
   return fetch(`${corsProxy}${url}`);
 }
@@ -26,8 +30,6 @@ async function fetchAndCache(cache, url) {
 
   return newResponse;
 }
-
-const ONE_DAY = 24 * 60 * 60 * 1000;
 
 // Fetch content from cache or online if necessary
 async function fetchJsonCached(url, opts = { maxAge: ONE_DAY }) {
