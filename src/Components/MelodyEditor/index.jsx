@@ -262,6 +262,7 @@ function MelodyEditor({
     }
   }, [audioContext, references]);
 
+  /* istanbul ignore next */
   const handleStopAll = useCallback(() => {
     for(let i = 0; i < references.length; i += 1) {
       const child = references[i];
