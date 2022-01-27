@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.22.0",
     "items": [
       "Enhancement: Detect BLHeli_M and recommend to use dedicated configurator",
       "Enhancement: Properly handle empty melody",
