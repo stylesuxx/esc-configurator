@@ -365,6 +365,8 @@ function FirmwareSelector({
 }
 FirmwareSelector.defaultProps = {
   esc: {
+    displayName: 'UNKNOWN',
+    firmwareName: 'UNKNOWN',
     meta: {},
     settings: {},
   },

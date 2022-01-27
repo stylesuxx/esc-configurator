@@ -365,12 +365,6 @@ describe('MelodyEditor', () => {
 
     userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
 
-    await act(async()=> {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 400);
-      });
-    });
-
     expect(oscStart).toHaveBeenCalled();
     expect(oscStop).toHaveBeenCalled();
   });
@@ -401,6 +395,12 @@ describe('MelodyEditor', () => {
     );
 
     userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
+
+    await act(async()=> {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
+    });
 
     // Since playing is instantly over with the mocked class, we can not test
     // stopping.

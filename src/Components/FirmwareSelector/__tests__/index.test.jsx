@@ -184,6 +184,54 @@ describe('FirmwareSelector', () => {
     expect(onCancel).toHaveBeenCalled();
   });
 
+  it('should display title', async() => {
+    const json = `[{ "tag_name": "v0.10", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
+    const configs = {
+      versions: {},
+      escs: {},
+      pwm: {},
+    };
+
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = source.getEscLayouts();
+      configs.pwm[name] = source.getPwm();
+    }
+
+    const onSubmit = jest.fn();
+    const onLocalSubmit = jest.fn();
+    const onCancel = jest.fn();
+
+    const escMock = {
+      displayName: 'Display Name',
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
+    const { container } = render(
+      <FirmwareSelector
+        configs={configs}
+        esc={escMock}
+        onCancel={onCancel}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />
+    );
+
+    expect(screen.getByText('selectTarget (Display Name)')).toBeInTheDocument();
+  });
+
   it('should allow changing firmware options for AM32', async() => {
     const json = `[{ "tag_name": "v1.65", "assets": [{}] }]`;
     global.caches = {

@@ -104,6 +104,8 @@ class Serial {
     while(this.running) {
       try {
         const { value } = await this.reader.read();
+
+        /* istanbul ignore next */
         if(value) {
           this.received += value.byteLength;
           this.qp.addData(value);
