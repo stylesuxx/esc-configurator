@@ -20,17 +20,17 @@ class MCU {
       switch(interfaceMode) {
         case MODES.SiLBLB: 
           return (
-            findMCU(signature, bluejaySource.getMcuSignatures()) ||
-            findMCU(signature, blheliSSource.getMcuSignatures()) ||
-            findMCU(signature, blheliSilabsSource.getMcuSignatures())
+            findMCU(signature, bluejaySource.getMcus()) ||
+            findMCU(signature, blheliSSource.getMcus()) ||
+            findMCU(signature, blheliSilabsSource.getMcus())
           );
 
         case MODES.AtmBLB:
         case MODES.AtmSK:
-          return findMCU(signature, blheliSource.getMcuSignatures());
+          return findMCU(signature, blheliSource.getMcus());
 
         case MODES.ARMBLB: 
-          return findMCU(signature, am32Source.getMcuSignatures());
+          return findMCU(signature, am32Source.getMcus());
 
         default: 
           throw new UnknownInterfaceError(interfaceMode);

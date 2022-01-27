@@ -23,8 +23,9 @@
   "escBeepStrength": "蜂鳴强度",
   "escBeaconStrength": "蜂鳴强度",
   "escStartupBeep": "啓動蜂鳴音",
-  "escDithering": "抖動",
+  "escDithering": "PWM 抖動",
   "escMotorDirection": "電機方向",
+  "escLedControl": "LED 配置",
   "escPPMMinThrottle": "PPM 最小油門",
   "escPPMMaxThrottle": "PPM 最大油門",
   "statusbarPortUtilization": "埠口利用率：",
@@ -38,6 +39,7 @@
   "escButtonRead": "讀取設定",
   "escButtonFlashAll": "燒錄全部",
   "escButtonSaveLog": "保存除錯日志",
+  "escButtonClearLog": "清除調試日志",
   "escButtonWrite": "寫入配置",
   "buttonCancel": "取消",
   "escButtonSelect": "燒錄",
@@ -81,6 +83,9 @@
   "escLowVoltageCutoff": "低電壓截止",
   "escLowVoltageThreshold": "低電壓截止閾值",
   "escRcCarReversing": "RC 遙控車風格的反轉換向",
+  "escHallSensors": "霍爾傳感器",
+  "escSineModeRange": "正弦模式範圍",
+  "escBrakeStrength": "刹車强度",
   "bluejayText": "<p>Bluejay 是一個基於 BLHeli_S 固件能夠使用雙向Dshot的新固件 - 如果您想要在您的飛機上運行 RPM 濾波器，那麽這是一個很好的選擇。該項目還旨在清理和簡化最初的 BLHeli_S 源代碼。</p><p>啓動音樂編輯器也是它的一個新功能。</p>",
   "bluejaySupportedHardware": "<p>請花一點時間來幫助我們將您的成功刷到 Bluejay 固件的硬體 <a href=\"https://github.com/mathiasvr/bluejay/wiki/Tested-Hardware\" target=\"_blank\">添加到 Wiki 上</a>。</p><p>儘管它理論上能夠兼容所有 BLHeli 的硬件，但我們仍想保留一個列表。這樣人們就可以確信，他們手中的硬體的確能夠在 Bluejay 上正常工作。</p>",
   "blheli32ToAM32": "<p>基於 ARM 的 ESC 的固件。雖然目前其較新，但用戶和製造商都對此很感興趣。預裝 AM32 固件的 ESC 將很快可以從不同的製造商那裏買到。</p><p><strong>可以在 BLHeli_32 ESC 上刷入 AM32 固件</strong>。但是，您必須先通過<a href=\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\" target=\"_blank\">STM32 Cube 程序</a> 和 STLink V2 編程適配器刷入 AM32 引導程式。所需要的引導程式可以在 <a href=\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\" target=\"_blank\">AM32 bootloader 倉庫</a>中找到。</p>",
@@ -135,5 +140,6 @@
   "escMissing1": "ESC 尚未準備就緒。例如，如果 ESC <b>正在播放旋律</b>，則可能發生這種情況。同樣，先前刷入的固件可能是錯誤的固件，并且它需要更長的時間才能完成啓動。",
   "escMissing2": "只是 <b>沒有連接更多的 ESC</b>。",
   "escMissing3": "ESC 的 <b> MCU 存在缺陷</b>。",
-  "mistagged": "<p><b>警告：</b> 當前燒錄的固件似乎被標記為錯誤！</p><p>僅當您知曉自己在做什麽時再繼續。在這裏繼續可能會導致您的電調面臨過熱的風險，甚至最糟糕的情況是電調燒毀。强烈建議燒錄檢測到的版本的更高死區固件，而不是這個被標記的版本，您需要都選頂部的<i>“忽略不匹配的 MCU 和佈局？”</i>選項。</p><table><tr><td>被標記</td><td>{{tagged}}</td></tr><tr><td>檢測到</td><td>{{detected}}</td></tr></table><p>如果您看到此條消息，請<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考慮在 Wiki 上添加一個詞條</a>，來幫助我們記錄有問題的硬件。</p><p><b>如果您不明白此步驟中包含的風險，請不要猶豫，立刻<a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">加入我們的 Discord 服務器</a>。</b></p>"
+  "mistagged": "<p><b>警告：</b> 當前燒錄的固件似乎被標記為錯誤！</p><p>僅當您知曉自己在做什麽時再繼續。在這裏繼續可能會導致您的電調面臨過熱的風險，甚至最糟糕的情況是電調燒毀。强烈建議燒錄檢測到的版本的更高死區固件，而不是這個被標記的版本，您需要都選頂部的<i>“忽略不匹配的 MCU 和佈局？”</i>選項。</p><table><tr><td>被標記</td><td>{{tagged}}</td></tr><tr><td>檢測到</td><td>{{detected}}</td></tr></table><p>如果您看到此條消息，請<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考慮在 Wiki 上添加一個詞條</a>，來幫助我們記錄有問題的硬件。</p><p><b>如果您不明白此步驟中包含的風險，請不要猶豫，立刻<a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">加入我們的 Discord 服務器</a>。</b></p>",
+  "update": "有更新可用！要更新應用程式，請刷新或重新啓動。"
 }

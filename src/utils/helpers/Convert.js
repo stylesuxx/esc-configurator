@@ -13,7 +13,7 @@ class Convert {
       if (size === 1) {
         object[prop] = settingsUint8Array[offset];
       } else if (size === 2) {
-        object[prop] = settingsUint8Array[offset] << 8 | settingsUint8Array[offset + 1];
+        object[prop] = (settingsUint8Array[offset] << 8) | settingsUint8Array[offset + 1];
       } else if (size > 2) {
         if(prop === 'STARTUP_MELODY') {
           object[prop] = settingsUint8Array.subarray(offset, offset + size);
@@ -40,7 +40,7 @@ class Convert {
       if (size === 1) {
         array[offset] = settingsObject[prop];
       } else if (size === 2) {
-        array[offset] = settingsObject[prop] >> 8 & 0xff;
+        array[offset] = (settingsObject[prop] >> 8) & 0xff;
         array[offset + 1] = settingsObject[prop] & 0xff;
       } else if (size > 2) {
         const { length } = settingsObject[prop];

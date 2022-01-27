@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Rtttl from 'bluejay-rtttl-parse';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useEffect,
   useRef,
@@ -49,57 +50,56 @@ const MelodyElement = forwardRef(({
   }, [melody]);
 
   useEffect(() => {
-    if(currentMelody) {
-      try {
-        const response = Rtttl.toBluejayStartupMelody(currentMelody);
-        const errors = response.errorCodes;
-        const notes = currentMelody.split(':')[2].split(',');
+    try {
+      const response = Rtttl.toBluejayStartupMelody(currentMelody);
+      const errors = response.errorCodes;
+      const notes = currentMelody.split(':')[2].split(',');
 
-        const wrongNotes = [];
-        const tooLongNotes = [];
-        for(let i = 0; i < errors.length; i += 1) {
-          switch(errors[i]) {
-            case 1: {
-              wrongNotes.push(notes[i].replace(',', ''));
-            } break;
+      const wrongNotes = [];
+      const tooLongNotes = [];
+      for(let i = 0; i < errors.length; i += 1) {
+        switch(errors[i]) {
+          case 1: {
+            wrongNotes.push(notes[i].replace(',', ''));
+          } break;
 
-            case 2: {
-              tooLongNotes.push(i);
-            } break;
-          }
+          case 2: {
+            tooLongNotes.push(i);
+          } break;
         }
-
-        const highlight = [];
-        const uniqueWrongNotes = [ ...new Set(wrongNotes)];
-        highlight.push(uniqueWrongNotes);
-
-        if(tooLongNotes.length > 0) {
-          const elements = currentMelody.split(':');
-          const notes = elements[2].split(',');
-          let offset = elements[0].length + elements[1].length + 2;
-          for(let i = 0; i < tooLongNotes[0]; i += 1) {
-            offset += notes[i].length + 1;
-          }
-
-          highlight.push([offset - 1, currentMelody.length]);
-        }
-
-        setHighlight(highlight);
-
-        const isValid = uniqueWrongNotes.length === 0 && tooLongNotes.length === 0;
-        setIsValid(isValid);
-        setIsPlayable(true);
-      } catch(e) {
-        setIsPlayable(false);
-        setIsValid(false);
       }
 
-      onUpdate(currentMelody);
+      let current = [];
+      const uniqueWrongNotes = [ ...new Set(wrongNotes)];
+      if(uniqueWrongNotes.length > 0) {
+        current.push(uniqueWrongNotes);
+      }
+
+      if(tooLongNotes.length > 0) {
+        const elements = currentMelody.split(':');
+        const notes = elements[2].split(',');
+        let offset = elements[0].length + elements[1].length + 2;
+        for(let i = 0; i < tooLongNotes[0]; i += 1) {
+          offset += notes[i].length + 1;
+        }
+
+        current.push([offset - 1, currentMelody.length]);
+      }
+
+      setHighlight(current);
+
+      const isValid = uniqueWrongNotes.length === 0 && tooLongNotes.length === 0;
+      setIsValid(isValid);
+      setIsPlayable(true);
+    } catch(e) {
+      setIsPlayable(false);
+      setIsValid(false);
     }
+
+    onUpdate(currentMelody);
   }, [currentMelody]);
 
-  function handleMelodyUpdate(e) {
-    const melody = e.target.value;
+  const handleMelodyUpdate = useCallback((melody) => {
     setCurrentMelody(melody);
 
     // If an accepted melody changes
@@ -107,9 +107,9 @@ const MelodyElement = forwardRef(({
       setIsAccepted(false);
       onAccept(false);
     }
-  }
+  }, [onAccept, isAccepted, acceptedMelody]);
 
-  function handleAcceptMelody() {
+  const handleAcceptMelody = useCallback(() => {
     let convertedMelody = Rtttl.toBluejayStartupMelody(currentMelody).data;
     convertedMelody = Rtttl.fromBluejayStartupMelody(convertedMelody);
 
@@ -118,7 +118,7 @@ const MelodyElement = forwardRef(({
     setIsAccepted(true);
 
     onAccept(convertedMelody);
-  }
+  }, [currentMelody, onAccept]);
 
   // Can only be tested when the melody is acutally being played
   function highlightNote(index) {
@@ -232,14 +232,13 @@ const MelodyElement = forwardRef(({
           </div>
         </header>
 
-        <div className="editor-wrapper">
+        <div
+          className={`editor-wrapper ${playing ? 'playing' : ''}`}
+          disabled={playing || disabled}
+        >
           <HighlightWithinTextarea
-            containerClassName={`editor ${playing ? 'playing' : ''}`}
-            disabled={playing || disabled}
             highlight={highlight}
             onChange={handleMelodyUpdate}
-            rows={10}
-            spellCheck="false"
             value={currentMelody}
           />
         </div>

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import Info from '../Info';
 
@@ -15,7 +15,7 @@ function Select({
   inSync,
   hint,
 }) {
-  function Select() {
+  const Select = useCallback(() => {
     const optionElements = options.map((option) => (
       <option
         key={option.value}
@@ -41,7 +41,7 @@ function Select({
         {optionElements}
       </select>
     );
-  }
+  }, [options, disabled, name, onChange, inSync, value]);
 
   return (
     <div className="select">

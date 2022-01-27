@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, {
+  useCallback,
+  useState,
+} from 'react';
 
 import Info from '../Info';
 
@@ -21,7 +24,7 @@ function Number({
 }) {
   const [displayValue, setDisplayValue] = useState(value * factor + offset);
 
-  function updateValue() {
+  const updateValue = useCallback(() => {
     let value = displayValue;
     value = Math.round((value - offset) / factor);
 
@@ -40,12 +43,12 @@ function Number({
 
     setDisplayValue(value * factor + offset);
     onChange(name, value);
-  }
+  }, [displayValue, offset, factor, min, max, onChange]);
 
-  function handleChange(e) {
+  const handleChange = useCallback((e) => {
     let value = parseInt(e.target.value, 10);
     setDisplayValue(value);
-  }
+  }, []);
 
   return (
     <div className="number-text">

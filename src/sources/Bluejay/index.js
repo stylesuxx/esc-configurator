@@ -1,8 +1,9 @@
-import Source from '../Source';
+import GithubSource from '../GithubSource';
 import eeprom from './eeprom';
 import settings from './settings';
 import escsBlheliS from '../BlheliS/escs.json';
 import escsBluejay from './escs.json';
+import blacklist from './blacklist.json';
 
 const escs = {
   mcus: escsBlheliS.mcus,
@@ -12,9 +13,9 @@ const escs = {
   },
 };
 
-const VERSIONS_REMOTE = 'https://raw.githubusercontent.com/mathiasvr/bluejay-configurator/bluejay/js/bluejay_versions.json';
+const GITHUB_REPO = 'mathiasvr/bluejay';
 
-class BluejaySource extends Source {
+class BluejaySource extends GithubSource {
   constructor(name, eeprom, escs, pwm) {
     super(name, eeprom, escs);
     this.pwm = pwm;
@@ -28,8 +29,8 @@ class BluejaySource extends Source {
     }
 
     let pwm = '';
-    if(settings.__PWM_FREQUENCY && settings.__PWM_FREQUENCY !== 0xFF) {
-      pwm = `, ${settings.__PWM_FREQUENCY}kHz`;
+    if(settings.PWM_FREQUENCY && settings.PWM_FREQUENCY !== 0xFF) {
+      pwm = `, ${settings.PWM_FREQUENCY}kHz`;
     }
     const name = `${settings.NAME.trim()}`;
 
@@ -37,7 +38,19 @@ class BluejaySource extends Source {
   }
 
   async getVersions() {
-    return (await this.getRemoteVersionsList(VERSIONS_REMOTE)).EFM8;
+    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
+  }
+
+  getFirmwareUrl({
+    escKey, version, pwm, url, settings,
+  }) {
+    const name = this.escs.layouts[escKey].name.replace(/[\s-]/g, '_').toUpperCase();
+
+    if (version === 'test-melody-pwm') {
+      return `${url}${name}_${version}.hex`;
+    }
+
+    return `${url}${name}_${pwm}_${version}.hex`;
   }
 }
 

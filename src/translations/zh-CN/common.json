@@ -23,8 +23,9 @@
   "escBeepStrength": "蜂鸣强度",
   "escBeaconStrength": "信标强度",
   "escStartupBeep": "启动蜂鸣音",
-  "escDithering": "抖动",
+  "escDithering": "PWM 抖动",
   "escMotorDirection": "电机方向",
+  "escLedControl": "LED 配置",
   "escPPMMinThrottle": "PPM 最小油门",
   "escPPMMaxThrottle": "PPM 最大油门",
   "statusbarPortUtilization": "端口利用率：",
@@ -38,6 +39,7 @@
   "escButtonRead": "读取配置",
   "escButtonFlashAll": "烧录全部",
   "escButtonSaveLog": "保存调试日志",
+  "escButtonClearLog": "清除调试日志",
   "escButtonWrite": "写入配置",
   "buttonCancel": "取消",
   "escButtonSelect": "烧录",
@@ -81,6 +83,9 @@
   "escLowVoltageCutoff": "低电压截止",
   "escLowVoltageThreshold": "低电压截止阈值",
   "escRcCarReversing": "RC 遥控车风格的反转换向",
+  "escHallSensors": "霍尔传感器",
+  "escSineModeRange": "正弦模式范围",
+  "escBrakeStrength": "刹车强度",
   "bluejayText": "<p>Bluejay 是一个基于 BLHeli_S 固件能够使用双向DShot的新固件 - 如果你想要在你的飞机上运行 RPM 滤波器，那么这是一个很好的选择。该项目还旨在清理和简化最初的 BLHeli_S 源代码。</p><p>启动音乐编辑器也是它的一个新功能。</p>",
   "bluejaySupportedHardware": "<p>请花一点时间来帮助我们将您的成功刷到 Bluejay 固件的硬件 <a href=\"https://github.com/mathiasvr/bluejay/wiki/Tested-Hardware\" target=\"_blank\">添加到 Wiki 上</a>。</p><p>尽管它理论上能够兼容所有 BLHeli 的硬件，但我们仍然想保留一个列表。这样人们就可以确信，他们手中的硬件的确能够在 Bluejay 上正常工作。</p>",
   "blheli32ToAM32": "<p>基于 ARM 的 ESC 的固件。虽然目前其较新，但用户和制造商都对此很感兴趣。预装 AM32 固件的 ESC 将很快可以从不同的制造商那里买到。</p><p><strong>可以在 BLHeli_32 ESC 上刷入 AM32 固件</strong>。 但是，您必须先通过 <a href=\"https://www.st.com/en/development-tools/stm32cubeprog.html#get-software\" target=\"_blank\">STM32 Cube 程序</a> 和 STLink V2 编程适配器刷入 AM32 引导程序。所需要的引导程序可以在 <a href=\"https://github.com/AlkaMotors/AM32_Bootloader_F051/releases\" target=\"_blank\">AM32 bootloader 仓库</a>中找到。</p>",
@@ -135,5 +140,6 @@
   "escMissing1": "ESC 尚未准备就绪。例如，如果 ESC <b>正在播放旋律</b>，则可能发生这种情况。 同样，先前刷入的固件可能是错误的固件，并且它需要更长的时间才能完成启动。",
   "escMissing2": "只是 <b>没有连接更多的 ESC</b> 。",
   "escMissing3": "ESC 的 <b> MCU 存在缺陷</b> 。",
-  "mistagged": "<p><b>警告：</b> 当前烧录的固件似乎被标记为错误！</p><p>仅当您知晓您自己在做什么时再继续。在这里继续可能会导致您的电调面临过热的风险，甚至最糟糕的情况是电调烧毁。强烈建议烧录检测到的版本的更高死区固件，而不是这个被标记的版本，你需要勾选顶部的<i>“忽略不匹配的 MCU 和布局？”</i>选项。</p><table><tr><td>被标记</td><td>{{tagged}}</td></tr><tr><td>检测到</td><td>{{detected}}</td></tr></table><p>如果您看到此条消息，请<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考虑在 Wiki 上添加一个词条</a>，来帮助我们记录有问题的硬件。</p><p><b>如果您不明白此步骤中包含的风险，请不要犹豫，立刻<a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">加入我们的 Discord 服务器</a>。</b></p>"
+  "mistagged": "<p><b>警告：</b> 当前烧录的固件似乎被标记为错误！</p><p>仅当您知晓您自己在做什么时再继续。在这里继续可能会导致您的电调面临过热的风险，甚至最糟糕的情况是电调烧毁。强烈建议烧录检测到的版本的更高死区固件，而不是这个被标记的版本，你需要勾选顶部的<i>“忽略不匹配的 MCU 和布局？”</i>选项。</p><table><tr><td>被标记</td><td>{{tagged}}</td></tr><tr><td>检测到</td><td>{{detected}}</td></tr></table><p>如果您看到此条消息，请<a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">考虑在 Wiki 上添加一个词条</a>，来帮助我们记录有问题的硬件。</p><p><b>如果您不明白此步骤中包含的风险，请不要犹豫，立刻<a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">加入我们的 Discord 服务器</a>。</b></p>",
+  "update": "有更新可用！要更新应用程序，请刷新或重新启动。"
 }

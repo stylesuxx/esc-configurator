@@ -302,26 +302,42 @@ SETTINGS_DESCRIPTIONS['204'] = {
   ],
 };
 
-const INDIVIDUAL_SETTINGS = [{
-  name: 'MOTOR_DIRECTION',
-  type: 'enum',
-  label: 'escMotorDirection',
-  options: [{
-    value: '1',
-    label: 'Normal',
-  }, {
-    value: '2',
-    label: 'Reversed',
-  }, {
-    value: '3',
-    label: 'Bidirectional',
-  }, {
-    value: '4',
-    label: 'Bidirectional Reversed',
-  }],
-}];
+SETTINGS_DESCRIPTIONS['205'] = {
+  base: [
+    ...SETTINGS_DESCRIPTIONS['204'].base,
+    {
+      name: 'STARTUP_BEEP',
+      type: 'enum',
+      label: 'escStartupBeep',
+      options: [{
+        value: '0',
+        label: 'Off',
+      }, {
+        value: '1',
+        label: 'Normal',
+      }, {
+        value: '2',
+        label: 'Custom',
+      }],
+    }, {
+      name: 'PWM_FREQUENCY',
+      type: 'enum',
+      label: 'escPwmFrequency',
+      options: [{
+        value: '24',
+        label: '24',
+      }, {
+        value: '48',
+        label: '48',
+      }, {
+        value: '96',
+        label: '96',
+      }],
+    },
+  ],
+};
 
-const INDIVIDUAL_SETTINGS_203 = [{
+const INDIVIDUAL_SETTINGS_200 = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',
   label: 'escMotorDirection',
@@ -339,19 +355,51 @@ const INDIVIDUAL_SETTINGS_203 = [{
     label: 'Bidirectional Reversed',
   }],
 }, {
-  name: 'STARTUP_MELODY',
-  type: 'melody',
-  label: 'startupMelody',
-  value: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  melodyLength: 128,
+  name: 'LED_CONTROL',
+  type: 'enum',
+  label: 'escLedControl',
+  options: [{
+    value: 0x00,
+    label: 'Off',
+  }, {
+    value: 0x03,
+    label: 'Blue',
+  }, {
+    value: 0x0C,
+    label: 'Green',
+  }, {
+    value: 0x30,
+    label: 'Red',
+  }, {
+    value: 0x0F,
+    label: 'Cyan',
+  }, {
+    value: 0x33,
+    label: 'Magenta',
+  }, {
+    value: 0x3C,
+    label: 'Yellow',
+  }, {
+    value: 0x3F,
+    label: 'White',
+  }],
 }];
 
+const INDIVIDUAL_SETTINGS_203 = [
+  ...INDIVIDUAL_SETTINGS_200,
+  {
+    name: 'STARTUP_MELODY',
+    type: 'melody',
+  },
+];
+
 const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
+  '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
-  '202': { base: INDIVIDUAL_SETTINGS },
-  '201': { base: INDIVIDUAL_SETTINGS },
-  '200': { base: INDIVIDUAL_SETTINGS },
+  '202': { base: INDIVIDUAL_SETTINGS_200 },
+  '201': { base: INDIVIDUAL_SETTINGS_200 },
+  '200': { base: INDIVIDUAL_SETTINGS_200 },
 };
 
 const DEFAULTS = {};
@@ -387,13 +435,20 @@ DEFAULTS['202'] = { // unreleased
 
 DEFAULTS['203'] = { // v0.12
   ...DEFAULTS['201'],
-  STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0],
 };
 delete DEFAULTS['203'].STARTUP_BEEP;
 
 DEFAULTS['204'] = { // v0.15
   ...DEFAULTS['203'],
   BRAKING_STRENGTH: 255,
+};
+
+DEFAULTS['205'] = {
+  ...DEFAULTS['204'],
+  STARTUP_BEEP: 1,
+  STARTUP_MELODY_WAIT_MS: 0,
+  PWM_FREQUENCY: 24,
 };
 
 const settings = {

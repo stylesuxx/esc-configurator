@@ -75,13 +75,12 @@ async function retry(func, maxRetries, iterationDelay = null) {
   return new Promise((resolve, reject) => process(resolve, reject));
 }
 
-// signatrue is expected to be a decimal
-const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === parseInt(signature, 10));
+const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === signature);
 
 // Check if a given layout is available in any of the sources
 const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
 
-const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcuSignatures()));
+const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcus()));
 
 export {
   retry,

@@ -25,6 +25,7 @@ function App({
   melodies,
   msp,
   onAllMotorSpeed,
+  onClearLog,
   onCookieAccept,
   onSaveLog,
   onSingleMotorSpeed,
@@ -88,6 +89,7 @@ function App({
           mspFeatures={msp.features}
           onAllMotorSpeed={onAllMotorSpeed}
           onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
+          onClearLog={onClearLog}
           onCommonSettingsUpdate={escs.actions.handleCommonSettingsUpdate}
           onFirmwareDump={escs.actions.handleFirmwareDump}
           onFlashUrl={escs.actions.handleFlashUrl}
@@ -208,6 +210,7 @@ App.propTypes = {
   }).isRequired,
   msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
+  onClearLog: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,

@@ -1,6 +1,6 @@
 const EEPROM_OFFSET = 0x1A00;
 const PAGE_SIZE = 0x0200;
-const LAYOUT_SIZE = 0xF0;
+const LAYOUT_SIZE = 0xFF;
 
 const NAMES = [
   'Bluejay',
@@ -49,7 +49,7 @@ const LAYOUT = {
     offset: 0x09,
     size: 1,
   },
-  __PWM_FREQUENCY: {
+  PWM_FREQUENCY: {
     offset: 0x0A,
     size: 1,
   },
@@ -187,6 +187,10 @@ const LAYOUT = {
   STARTUP_MELODY: {
     offset: 0x70,
     size: 128,
+  },
+  STARTUP_MELODY_WAIT_MS: {
+    offset: 0xF0,
+    size: 2,
   },
 };
 

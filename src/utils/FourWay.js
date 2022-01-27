@@ -201,11 +201,9 @@ class FourWay {
   }
 
   sendMessagePromised(command, params = [0], address = 0, retries = 10) {
-    const self = this;
-
     const process = async (resolve, reject) => {
       this.lastCommandTimestamp = Date.now();
-      const message = self.createMessage(command, params, address);
+      const message = this.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
       if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
@@ -297,7 +295,7 @@ class FourWay {
         flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
 
         /**
-         * Baased on the name we can decide if the initially guessed layout
+         * Based on the name we can decide if the initially guessed layout
          * was correct, if not, we need to build a new settings object.
          */
         let name = flash.settings.NAME;
@@ -328,6 +326,22 @@ class FourWay {
               break;
             }
           }
+
+          /*
+           * If still no name, it might be BLHeli_M - this can unfortunately
+           * only be guessed based on the version - if it is 16.9, then it
+           * _might_ be BLHeli_M.
+           */
+          if(flash.settings.NAME === '') {
+            if(
+              flash.settings.MAIN_REVISION === 16 &&
+              flash.settings.SUB_REVISION === 9
+            ) {
+              flash.settings.NAME = 'BLHeli_M';
+              layout = null;
+            }
+          }
+
         }
 
         if(newLayout) {
@@ -367,6 +381,15 @@ class FourWay {
 
         if(!flash.settingsDescriptions) {
           this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
+
+          /*
+          * If Arm is detected and we have no matching layout, it might be
+          * BLHeli_32.
+          */
+          if(isArm) {
+            flash.settings.NAME = 'BLHeli_32';
+            layout = null;
+          }
         }
 
         const layoutName = (flash.settings.LAYOUT || '').trim();
@@ -376,7 +399,10 @@ class FourWay {
           const blheliSLayouts = blheliSSource.getEscLayouts();
           const bluejayLayouts = bluejaySource.getEscLayouts();
 
-          if (flash.settings.NAME === 'JESC') {
+          if (
+            flash.settings.NAME === 'JESC' ||
+            flash.settings.NAME === 'BLHeli_M'
+          ) {
             make = blheliSLayouts[layoutName].name;
             const settings = flash.settings;
             let revision = 'Unsupported/Unrecognized';
@@ -384,8 +410,8 @@ class FourWay {
               revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
             }
 
-            displayName = `${make} - JESC, ${revision}`;
-            firmwareName = 'JESC';
+            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
+            firmwareName = flash.settings.NAME;
           } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
             make = bluejayLayouts[layoutName].name;
             displayName = bluejaySource.buildDisplayName(flash, make);
@@ -465,47 +491,57 @@ class FourWay {
             firmwareName = blheliSSource.getName();
           }
         } else if (isArm) {
-          /* Read version information direct from EEPROM so we can later
-           * compare to the settings object. This allows us to verify, that
-           * everything went well after flashing.
-           */
-          const [mainRevision, subRevision] = (await this.read(am32Eeprom.VERSION_OFFSET, am32Eeprom.VERSION_SIZE)).params;
-
-          if(
-            flash.settings.MAIN_REVISION !== mainRevision ||
-            flash.settings.SUB_REVISION !== subRevision
+          if (
+            flash.settings.NAME === 'BLHeli_32'
           ) {
-            const flashFirmware = `${flash.settings.MAIN_REVISION}.${flash.settings.SUB_REVISION}`;
-            const eepromFirmware = `${mainRevision}.${subRevision}`;
-            this.addLogMessage('firmwareMismatch', {
-              flash: flashFirmware,
-              eeprom: eepromFirmware,
-            });
-          }
+            let revision = 'Unsupported/Unrecognized';
+            make = 'Unknown';
 
-          flash.bootloader = {};
-          if(flash.meta.input) {
-            flash.bootloader.input = flash.meta.input;
-            flash.bootloader.valid = false;
-          }
+            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
+            firmwareName = flash.settings.NAME;
+          } else {
+            /* Read version information direct from EEPROM so we can later
+             * compare to the settings object. This allows us to verify, that
+             * everything went well after flashing.
+             */
+            const [mainRevision, subRevision] = (await this.read(am32Eeprom.VERSION_OFFSET, am32Eeprom.VERSION_SIZE)).params;
 
-          /* Bootloader input pins are limited. If something different is set,
-           * then the user probably has an old fw flashed.
-           */
-          for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
-            if(value === flash.bootloader.input) {
-              flash.bootloader.valid = true;
-              flash.bootloader.pin = key;
-              flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
+            if(
+              flash.settings.MAIN_REVISION !== mainRevision ||
+              flash.settings.SUB_REVISION !== subRevision
+            ) {
+              const flashFirmware = `${flash.settings.MAIN_REVISION}.${flash.settings.SUB_REVISION}`;
+              const eepromFirmware = `${mainRevision}.${subRevision}`;
+              this.addLogMessage('firmwareMismatch', {
+                flash: flashFirmware,
+                eeprom: eepromFirmware,
+              });
             }
+
+            flash.bootloader = {};
+            if(flash.meta.input) {
+              flash.bootloader.input = flash.meta.input;
+              flash.bootloader.valid = false;
+            }
+
+            /* Bootloader input pins are limited. If something different is set,
+             * then the user probably has an old fw flashed.
+             */
+            for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
+              if(value === flash.bootloader.input) {
+                flash.bootloader.valid = true;
+                flash.bootloader.pin = key;
+                flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
+              }
+            }
+
+            flash.settings.MAIN_REVISION = mainRevision;
+            flash.settings.SUB_REVISION = subRevision;
+            flash.settings.LAYOUT = flash.settings.NAME;
+
+            displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
+            firmwareName = am32Source.getName();
           }
-
-          flash.settings.MAIN_REVISION = mainRevision;
-          flash.settings.SUB_REVISION = subRevision;
-          flash.settings.LAYOUT = flash.settings.NAME;
-
-          displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
-          firmwareName = am32Source.getName();
         } else {
           const blheliAtmelLayouts = blheliSource.getEscLayouts();
           if (layoutName in blheliAtmelLayouts) {
@@ -1096,12 +1132,10 @@ class FourWay {
   }
 
   start() {
-    const self = this;
-
     this.interval = setInterval(async() => {
-      if (Date.now() - self.lastCommandTimestamp > 900) {
+      if (Date.now() - this.lastCommandTimestamp > 900) {
         try {
-          await self.testAlive();
+          await this.testAlive();
         } catch (error) {
           console.debug('Alive Test failed');
         }

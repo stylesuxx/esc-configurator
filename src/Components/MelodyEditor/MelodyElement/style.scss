@@ -48,28 +48,24 @@
       padding: 5px;
       display: flex;
 
-      .editor {
+      & > * {
         width: 100%;
+        height: 115px;
         font-family: monospace;
+        overflow-y: auto;
 
         mark {
           background: #FFCCCB;
         }
+      }
 
-        &.playing {
-          mark {
-            background: #CCFFCB;
-          }
-        }
+      &[disabled] {
+        color: #909090;
+      }
 
-        textarea {
-          width: 100%;
-          resize: none;
-          border: 0px;
-
-          &[disabled] {
-            opacity: 0.75;
-          }
+      &.playing {
+        mark {
+          background: #CCFFCB;
         }
       }
     }

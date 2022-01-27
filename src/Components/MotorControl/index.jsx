@@ -2,6 +2,7 @@ import Slider, { createSliderWithTooltip } from 'rc-slider';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useMemo,
 } from 'react';
@@ -70,15 +71,15 @@ function MotorControl({
   const [unlock, setUnlock] = useState(false);
   const [unlockIndividual, setUnlockIndividual] = useState(true);
 
-  function toggleUnlock() {
+  const toggleUnlock = useCallback(() => {
     setUnlock(!unlock);
     onAllUpdate(startValue);
-  }
+  }, [unlock, startValue]);
 
   // Makes no sense to test, component has its own test, we just assume that
   // the slider actually slides.
   /* istanbul ignore next */
-  function updateValue(value) {
+  const updateValue = useCallback((value) => {
     if(value !== startValue && unlockIndividual) {
       setUnlockIndividual(false);
     }
@@ -88,23 +89,24 @@ function MotorControl({
     }
 
     onAllUpdate(value);
-  }
+  }, [startValue, unlockIndividual, startValue, onAllUpdate]);
 
   /* istanbul ignore next */
-  function updateSingleValue(index, speed) {
+  const updateSingleValue = useCallback((index, speed) => {
     onSingleUpdate(index, speed);
-  }
+  }, [onSingleUpdate]);
 
-  function MotorSlider({
+  const MotorSlider = useCallback(({
     disabled,
     onChange,
-  }) {
+  }) => {
     const [value, setValue] = useState(startValue);
+
     /* istanbul ignore next */
-    function update(value) {
+    const update = useCallback((value) => {
       setValue(value);
       onChange(value);
-    }
+    }, []);
 
     return(
       <SliderWithTooltip
@@ -120,29 +122,27 @@ function MotorControl({
         }}
       />
     );
-  }
+  }, [maxValue, minValue]);
   MotorSlider.propTypes = {
     disabled: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
   };
 
-  function MasterSlider() {
-    return(
-      <MotorSlider
-        disabled={!unlock}
-        onChange={updateValue}
-      />
-    );
-  }
+  const MasterSlider = useCallback(() => (
+    <MotorSlider
+      disabled={!unlock}
+      onChange={updateValue}
+    />
+  ), [unlock, updateValue]);
 
-  function IndividualMotorSlider({
+  const IndividualMotorSlider = useCallback(({
     index,
     onChange,
-  }) {
+  }) => {
     /* istanbul ignore next */
-    function update(value) {
+    const update = useCallback((value) => {
       onChange(index + 1, value);
-    }
+    }, [index, onChange]);
 
     return(
       <div className={`slider slider-${index}`}>
@@ -156,7 +156,7 @@ function MotorControl({
         />
       </div>
     );
-  }
+  }, [unlock, unlockIndividual]);
   IndividualMotorSlider.propTypes = {
     index: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,

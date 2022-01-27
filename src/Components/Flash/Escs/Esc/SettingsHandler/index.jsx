@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import Settings from './Settings';
 
@@ -10,29 +10,29 @@ function SettingsHandler({
   onUpdate,
   settings,
 }) {
-  function handleCheckboxChange(e) {
+  const handleCheckboxChange = useCallback((e) => {
     const {
       name, checked,
     } = e.target;
     settings[name] = checked ? 1 : 0;
 
     onUpdate(settings);
-  }
+  }, [onUpdate, settings]);
 
-  function handleSelectChange(e) {
+  const handleSelectChange = useCallback((e) => {
     const {
       name, value,
     } = e.target;
     settings[name] = value;
 
     onUpdate(settings);
-  }
+  }, [onUpdate, settings]);
 
-  function handleNumberChange(name, value) {
+  const handleNumberChange = useCallback((name, value) => {
     settings[name] = value;
 
     onUpdate(settings);
-  }
+  }, [onUpdate, settings]);
 
   return (
     <Settings

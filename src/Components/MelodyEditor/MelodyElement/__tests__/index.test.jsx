@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  createEvent,
   render,
   screen,
   fireEvent,
@@ -40,6 +41,7 @@ describe('MeldodyElement', () => {
         disabled
         dummy={false}
         label="Label comes here"
+        melody=""
         onAccept={onAccept}
         onPlay={onPlay}
         onStop={onStop}
@@ -51,7 +53,6 @@ describe('MeldodyElement', () => {
     expect(screen.getByText(/common:melodyEditorPlay/i)).toBeInTheDocument();
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.getByText(/common:melodyEditorAccept/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/Please supply a value and an onChange parameter./i).length).toEqual(2);
 
     userEvent.click(screen.getByText(/common:melodyEditorPlay/i));
     expect(onPlay).not.toHaveBeenCalled();
@@ -200,7 +201,15 @@ describe('MeldodyElement', () => {
 
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
-    fireEvent.change(screen.getByRole(/textbox/i), { target: { value: 'simpsons:d=4,o=5,b=160:c.6' } });
+    const textarea = screen.getByRole('textbox');
+    const event = createEvent.paste(textarea, {
+      clipboardData:{
+        types: ['text/plain'],
+        getData: () => 'simpsons:d=4,o=5,b=160:c.6',
+      },
+    });
+    fireEvent(textarea, event);
+
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
     expect(onAccept).toHaveBeenCalled();
@@ -223,7 +232,15 @@ describe('MeldodyElement', () => {
 
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
-    fireEvent.change(screen.getByRole(/textbox/i), { target: { value: 'Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g' } });
+    const textarea = screen.getByRole('textbox');
+    const event = createEvent.paste(textarea, {
+      clipboardData:{
+        types: ['text/plain'],
+        getData: () => 'Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g',
+      },
+    });
+    fireEvent(textarea, event);
+
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
     expect(onAccept).toHaveBeenCalled();
@@ -246,7 +263,15 @@ describe('MeldodyElement', () => {
       />
     );
 
-    fireEvent.change(screen.getByRole(/textbox/i), { target: { value: 'Melody:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5' } });
+    const textarea = screen.getByRole('textbox');
+    const event = createEvent.paste(textarea, {
+      clipboardData:{
+        types: ['text/plain'],
+        getData: () => melody,
+      },
+    });
+    fireEvent(textarea, event);
+
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 

@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, {
+  useCallback,
+  useState,
+} from 'react';
 
 import './style.scss';
 
@@ -8,16 +11,16 @@ function Log({ messages }) {
   const { t } = useTranslation('common');
   const [ expanded, setExpanded] = useState(false);
 
-  const messageElements = messages.slice(0).reverse().
-    map((message, index) => (
+  const messageElements = messages.slice(0).reverse()
+    .map((message, index) => (
       <div key={index}>
         {message}
       </div>
     ));
 
-  function toggleExpanded() {
+  const toggleExpanded = useCallback(() => {
     setExpanded(!expanded);
-  }
+  }, [expanded]);
 
   return (
     <div
