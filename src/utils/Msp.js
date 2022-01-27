@@ -195,7 +195,7 @@ class Msp {
 
           this.increasePacketErrors(1);
           return reject(new Error(`code: ${code} - crc failed`));
-        } break;
+        }
 
         default: {
           return reject(new Error(`Unknown state detected: ${state}`));

@@ -63,7 +63,8 @@
     }],
     "object-property-newline": "error",
     "default-case": "off",
-    "no-template-curly-in-string": "off"
+    "no-template-curly-in-string": "off",
+    "no-unreachable": "error"
   },
   "settings": {
     "react": {
