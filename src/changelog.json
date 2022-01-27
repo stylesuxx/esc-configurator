@@ -2,7 +2,9 @@
   {
     "title": "Unreleased",
     "items": [
-      "Enhancement: Upload coverage reports to codecov with github workflows"
+      "Enhancement: Upload coverage reports to codecov with github workflows",
+      "Chore: Improved code coverage",
+      "Chore: Code cleanup"
     ]
   },
   {

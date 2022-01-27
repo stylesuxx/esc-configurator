@@ -106,7 +106,7 @@ class Flash {
 
         // extended linear address record
         case 0x04: {
-          extendedLinearAddress = (parseInt(content.substr(0, 2), 16) << 24) | parseInt(content.substr(2, 2), 16) << 16;
+          extendedLinearAddress = (parseInt(content.substr(0, 2), 16) << 24) | (parseInt(content.substr(2, 2), 16) << 16);
         } break;
 
         // start linear address record

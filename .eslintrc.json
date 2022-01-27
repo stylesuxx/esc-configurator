@@ -30,9 +30,8 @@
     "react-hooks/rules-of-hooks": "warn",
     "testing-library/no-container": "warn",
     "testing-library/no-node-access": "warn",
-    "no-unreachable": "off",
     "no-lone-blocks": "off",
-    "no-mixed-operators": "off",
+    "no-mixed-operators": "error",
     "react/no-array-index-key": "warn",
     "react/no-danger": "warn",
     "no-unused-vars": "warn",
@@ -62,7 +61,9 @@
       "exports": "always-multiline",
       "functions": "never"
     }],
-    "object-property-newline": "error"
+    "object-property-newline": "error",
+    "default-case": "off",
+    "no-template-curly-in-string": "off"
   },
   "settings": {
     "react": {

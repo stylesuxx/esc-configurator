@@ -114,7 +114,7 @@ class FourWay {
     crc ^= byte << 8;
     for (let i = 0; i < 8; i += 1) {
       if (crc & 0x8000) {
-        crc = crc << 1 ^ 0x1021;
+        crc = (crc << 1) ^ 0x1021;
       } else {
         crc <<= 1;
       }
@@ -139,7 +139,7 @@ class FourWay {
     // Fill header
     bufferView[0] = pc;
     bufferView[1] = command;
-    bufferView[2] = address >> 8 & 0xff;
+    bufferView[2] = (address >> 8) & 0xff;
     bufferView[3] = address & 0xff;
     bufferView[4] = params.length === 256 ? 0 : params.length;
 
@@ -153,7 +153,7 @@ class FourWay {
     const msgWithoutChecksum = bufferView.subarray(0, -2);
     const checksum = msgWithoutChecksum.reduce(this.crc16XmodemUpdate, 0);
 
-    bufferView[5 + params.length] = checksum >> 8 & 0xff;
+    bufferView[5 + params.length] = (checksum >> 8) & 0xff;
     bufferView[6 + params.length] = checksum & 0xff;
 
     return bufferOut;
@@ -183,9 +183,9 @@ class FourWay {
 
     const message = {
       command: view[1],
-      address: view[2] << 8 | view[3],
+      address: (view[2] << 8) | view[3],
       ack: view[5 + paramCount],
-      checksum: view[6 + paramCount] << 8 | view[7 + paramCount],
+      checksum: (view[6 + paramCount] << 8) | view[7 + paramCount],
       params: view.slice(5, 5 + paramCount),
     };
 
@@ -262,7 +262,7 @@ class FourWay {
       try {
         const interfaceMode = flash.params[3];
         flash.meta.input = flash.params[2];
-        flash.meta.signature = flash.params[1] << 8 | flash.params[0];
+        flash.meta.signature = (flash.params[1] << 8) | flash.params[0];
         flash.meta.interfaceMode = interfaceMode;
         flash.meta.available = true;
 
