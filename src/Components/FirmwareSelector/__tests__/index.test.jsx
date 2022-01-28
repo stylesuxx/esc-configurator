@@ -219,7 +219,7 @@ describe('FirmwareSelector', () => {
       meta: { signature: 0xE8B2 },
     };
 
-    const { container } = render(
+    render(
       <FirmwareSelector
         configs={configs}
         esc={escMock}

@@ -999,7 +999,7 @@ class FourWay {
     const endAddress = 0x200;
     const step = 0x80;
 
-    for (var address = beginAddress; address < endAddress; address += step) {
+    for (let address = beginAddress; address < endAddress; address += step) {
       const verifyErased = async(resolve, reject) => {
         const message = await this.read(address, step);
         const erased = message.params.every((x) => x === 0xFF);
@@ -1037,7 +1037,7 @@ class FourWay {
     const end_address = end * pageSize;
     const step = 0x80;
 
-    for (var address = beginAddress; address < end_address && address < image.length; address += step) {
+    for (let address = beginAddress; address < end_address && address < image.length; address += step) {
       const verifyPages = async (resolve, reject) => {
         const message = await this.read(address, Math.min(step, image.length - address));
         const reference = image.subarray(message.address, message.address + message.params.byteLength);
@@ -1053,7 +1053,7 @@ class FourWay {
         }
       };
 
-      // Verification might not always succeed on the first time
+      // Verification might not always succeed the first time
       await retry(verifyPages, 10);
     }
   }

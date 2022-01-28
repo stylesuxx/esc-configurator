@@ -48,7 +48,7 @@ function CommonSettings({
     if(settings) {
       onSettingsUpdate(settings);
     }
-  }, [settings]);
+  }, [settings, onSettingsUpdate]);
 
   const handleCheckboxChange = useCallback((e) => {
     const newSettings = { ...availableSettings };

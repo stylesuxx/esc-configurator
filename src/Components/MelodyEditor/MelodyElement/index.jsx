@@ -97,7 +97,7 @@ const MelodyElement = forwardRef(({
     }
 
     onUpdate(currentMelody);
-  }, [currentMelody]);
+  }, [currentMelody, onUpdate]);
 
   const handleMelodyUpdate = useCallback((melody) => {
     setCurrentMelody(melody);

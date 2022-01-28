@@ -74,7 +74,7 @@ function MotorControl({
   const toggleUnlock = useCallback(() => {
     setUnlock(!unlock);
     onAllUpdate(startValue);
-  }, [unlock, startValue]);
+  }, [unlock, startValue, onAllUpdate]);
 
   // Makes no sense to test, component has its own test, we just assume that
   // the slider actually slides.
@@ -89,7 +89,7 @@ function MotorControl({
     }
 
     onAllUpdate(value);
-  }, [startValue, unlockIndividual, startValue, onAllUpdate]);
+  }, [startValue, unlockIndividual, onAllUpdate]);
 
   /* istanbul ignore next */
   const updateSingleValue = useCallback((index, speed) => {
@@ -106,7 +106,7 @@ function MotorControl({
     const update = useCallback((value) => {
       setValue(value);
       onChange(value);
-    }, []);
+    }, [onChange]);
 
     return(
       <SliderWithTooltip
@@ -122,18 +122,11 @@ function MotorControl({
         }}
       />
     );
-  }, [maxValue, minValue]);
+  }, [startValue, maxValue, minValue]);
   MotorSlider.propTypes = {
     disabled: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
   };
-
-  const MasterSlider = useCallback(() => (
-    <MotorSlider
-      disabled={!unlock}
-      onChange={updateValue}
-    />
-  ), [unlock, updateValue]);
 
   const IndividualMotorSlider = useCallback(({
     index,
@@ -156,7 +149,7 @@ function MotorControl({
         />
       </div>
     );
-  }, [unlock, unlockIndividual]);
+  }, [t, unlock, unlockIndividual]);
   IndividualMotorSlider.propTypes = {
     index: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -174,8 +167,11 @@ function MotorControl({
   }
 
   const memoizedMasterSlider = useMemo(() => (
-    <MasterSlider />
-  ), [unlock]);
+    <MotorSlider
+      disabled={!unlock}
+      onChange={updateValue}
+    />
+  ), [unlock, updateValue]);
 
   return (
     <div id="motor-control-wrapper">

@@ -39,6 +39,8 @@ function AppSettings({
         );
       }
     }
+
+    return null;
   });
 
   return (

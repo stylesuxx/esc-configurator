@@ -76,7 +76,7 @@ function PresetSelect({
     }
 
     setCanDelete(canDelete);
-  }, [selectedPreset]);
+  }, [selectedPreset, customMelodies]);
 
   const handleUpdate = useCallback((e) => {
     const value = e.target.value;
@@ -102,29 +102,21 @@ function PresetSelect({
     onUpdateMelodies(defaultMelodies[0].tracks);
 
     onDelete(selectedPreset);
-  }, [onUpdateMelodies, defaultMelodies, onDelete]);
+  }, [onUpdateMelodies, defaultMelodies, onDelete, selectedPreset]);
 
   const defaultPossibilities = defaultMelodies.filter((item) => item.tracks.length <= escs );
-  const defaultOptions = defaultPossibilities.map((melody) => {
-    if(melody.tracks.length <= escs) {
-      return {
-        key: `preset-${melody.name}`,
-        name: melody.name,
-        value: `preset-${melody.name}`,
-      };
-    }
-  });
+  const defaultOptions = defaultPossibilities.map((item) => ({
+    key: `preset-${item.name}`,
+    name: item.name,
+    value: `preset-${item.name}`,
+  }));
 
   const customPossibilities = customMelodies.filter((item) => item.tracks.length <= escs );
-  const customOptions = customPossibilities.map((melody) => {
-    if(melody.tracks.length <= escs) {
-      return {
-        key: melody.name,
-        name: melody.name,
-        value: melody.name,
-      };
-    }
-  });
+  const customOptions = customPossibilities.map((item) => ({
+    key: item.name,
+    name: item.name,
+    value: item.name,
+  }));
 
   const options = [
     ...defaultOptions,
@@ -199,16 +191,6 @@ function MelodyEditor({
   const totalPlaying = useRef(0);
   const audioContext = useRef(0);
 
-  useEffect(() => {
-    checkAcceptedAll();
-  }, [acceptedMelodies]);
-
-  const handleClose = useCallback(() => {
-    if(!isAnyPlaying) {
-      onClose();
-    }
-  }, [isAnyPlaying]);
-
   const checkAcceptedAll = useCallback(() => {
     let allAccepted = true;
     for(let i = 0; i < acceptedMelodies.length; i += 1) {
@@ -220,6 +202,16 @@ function MelodyEditor({
 
     setAllAccepted(allAccepted);
   }, [acceptedMelodies]);
+
+  useEffect(() => {
+    checkAcceptedAll();
+  }, [acceptedMelodies, checkAcceptedAll]);
+
+  const handleClose = useCallback(() => {
+    if(!isAnyPlaying) {
+      onClose();
+    }
+  }, [isAnyPlaying, onClose]);
 
   const handleAcceptAll = useCallback((accept) => {
     const acceptedMelodiesNew = acceptedMelodies.map(() => accept);
@@ -273,7 +265,7 @@ function MelodyEditor({
   const toggleSync = useCallback(() => {
     handleAcceptAll(false);
     setSync(!sync);
-  }, [handleAcceptAll]);
+  }, [sync, handleAcceptAll]);
 
   const handleMelodiesSave = useCallback((name) => {
     selectedMelody.current = name;
@@ -306,11 +298,11 @@ function MelodyEditor({
   const melodyElements = currentMelodies.map((melody, index) => {
     const handleAcceptMelody = useCallback((accept) => {
       handleAccept(index, accept);
-    }, [index, handleAccept]);
+    }, [index]);
 
     const handleUpdate = useCallback((melody) => {
       handleMelodiesUpdate(index, melody);
-    }, [index, handleMelodiesUpdate]);
+    }, [index]);
 
     return (
       <MelodyElement
