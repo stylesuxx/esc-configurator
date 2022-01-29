@@ -66,6 +66,10 @@ const MelodyElement = forwardRef(({
           case 2: {
             tooLongNotes.push(i);
           } break;
+
+          default: {
+            console.log('Unknown RTTL conversion Error', errors[i]);
+          }
         }
       }
 

@@ -38,9 +38,9 @@ function AppSettings({
           />
         );
       }
-    }
 
-    return null;
+      default: return null;
+    }
   });
 
   return (

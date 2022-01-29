@@ -747,6 +747,10 @@ class FourWay {
           settingsDescriptions = am32SettingsDescriptions.COMMON;
           individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
         } break;
+
+        default: {
+          console.log('Unknown layout', newEsc.layout);
+        }
       }
 
       /**
