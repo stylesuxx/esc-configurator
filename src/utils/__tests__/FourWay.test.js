@@ -24,11 +24,11 @@ describe('FourWay', () => {
     const failingSerial = () => { throw new Error(); };
     fourWay = new FourWay(failingSerial);
 
-    fourWay.start();
+    expect(() => fourWay.start()).not.toThrow();
 
-    await new Promise((r) => {
+    await new Promise((resolve) => {
       setTimeout(() => {
-        r();
+        resolve();
       }, 1000);
     });
   });

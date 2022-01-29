@@ -66,6 +66,32 @@ class FourWay {
     this.extendedDebug = false;
   }
 
+  start() {
+    this.interval = setInterval(async() => {
+      if (Date.now() - this.lastCommandTimestamp > 900) {
+        try {
+          await this.testAlive();
+        } catch (error) {
+          console.debug('Alive Test failed');
+        }
+      }
+    }, 800);
+  }
+
+  exit() {
+    clearInterval(this.interval);
+
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
+  }
+
+  testAlive() {
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
+  }
+
+  reset(target) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
+  }
+
   setExtendedDebug(extendedDebug) {
     this.extendedDebug = extendedDebug;
   }
@@ -1118,32 +1144,6 @@ class FourWay {
 
   writeEEprom(address, data) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceWriteEEprom, data, address);
-  }
-
-  reset(target) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
-  }
-
-  exit() {
-    clearInterval(this.interval);
-
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
-  }
-
-  testAlive() {
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
-  }
-
-  start() {
-    this.interval = setInterval(async() => {
-      if (Date.now() - this.lastCommandTimestamp > 900) {
-        try {
-          await this.testAlive();
-        } catch (error) {
-          console.debug('Alive Test failed');
-        }
-      }
-    }, 800);
   }
 }
 
