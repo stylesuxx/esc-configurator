@@ -165,6 +165,61 @@ PresetSelect.propTypes = {
   ]),
 };
 
+function IndexedMelodyElement ({
+  accepted,
+  disabled,
+  dummy,
+  index,
+  label,
+  melody,
+  onAccept,
+  onAddRef,
+  onPlay,
+  onStop,
+  onUpdate,
+}) {
+  const handleAcceptMelody = useCallback((accept) => {
+    onAccept(index, accept);
+  }, [index, onAccept]);
+
+  const handleUpdate = useCallback((melody) => {
+    onUpdate(index, melody);
+  }, [index, onUpdate]);
+
+  const handleAddRef = useCallback((ref) => {
+    onAddRef(index, ref);
+  }, [index, onAddRef]);
+
+  return (
+    <MelodyElement
+      accepted={accepted}
+      disabled={disabled}
+      dummy={dummy}
+      label={label}
+      melody={melody}
+      onAccept={handleAcceptMelody}
+      onPlay={onPlay}
+      onStop={onStop}
+      onUpdate={handleUpdate}
+      ref={handleAddRef}
+    />
+  );
+}
+
+IndexedMelodyElement.propTypes = {
+  accepted: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  dummy: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  melody: PropTypes.string.isRequired,
+  onAccept: PropTypes.func.isRequired,
+  onAddRef: PropTypes.func.isRequired,
+  onPlay: PropTypes.func.isRequired,
+  onStop: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+};
+
 function MelodyEditor({
   dummy,
   melodies,
@@ -179,7 +234,7 @@ function MelodyEditor({
   const { t } = useTranslation();
 
   const defaultAccepted = melodies.map(() => null);
-  const references = melodies.map(() => useRef());
+  const melodyElementReferences = useRef({});
   const uniqueMelodies = [...new Set(melodies)];
   const [allAccepted, setAllAccepted] = useState(false);
   const [sync, setSync] = useState(uniqueMelodies.length <= 1);
@@ -248,19 +303,21 @@ function MelodyEditor({
     setIsAnyPlaying(true);
 
     audioContext.current = new window.AudioContext();
-    for(let i = 0; i < references.length; i += 1) {
-      const child = references[i];
-      child.current.play(audioContext.current, 1 / references.length);
+    const length = Object.keys(melodyElementReferences.current).length;
+    for(let i = 0; i < length; i += 1) {
+      const child = melodyElementReferences.current[i];
+      child.play(audioContext.current, 1 / length);
     }
-  }, [audioContext, references]);
+  }, [audioContext, melodyElementReferences]);
 
   /* istanbul ignore next */
   const handleStopAll = useCallback(() => {
-    for(let i = 0; i < references.length; i += 1) {
-      const child = references[i];
-      child.current.stop();
+    const length = Object.keys(melodyElementReferences.current).length;
+    for(let i = 0; i < length; i += 1) {
+      const child = melodyElementReferences.current[i];
+      child.stop();
     }
-  }, [references]);
+  }, [melodyElementReferences]);
 
   const toggleSync = useCallback(() => {
     handleAcceptAll(false);
@@ -295,31 +352,26 @@ function MelodyEditor({
     }
   }, [melodies, latestMelodies]);
 
-  const melodyElements = currentMelodies.map((melody, index) => {
-    const handleAcceptMelody = useCallback((accept) => {
-      handleAccept(index, accept);
-    }, [index]);
+  const handleAddRef = useCallback((index, ref) => {
+    melodyElementReferences.current[index] = ref;
+  }, [melodyElementReferences]);
 
-    const handleUpdate = useCallback((melody) => {
-      handleMelodiesUpdate(index, melody);
-    }, [index]);
-
-    return (
-      <MelodyElement
-        accepted={acceptedMelodies[index] ? true : false}
-        disabled={writing}
-        dummy={dummy}
-        key={index}
-        label={`ESC ${index + 1}`}
-        melody={melody}
-        onAccept={handleAcceptMelody}
-        onPlay={handlePlay}
-        onStop={handleStop}
-        onUpdate={handleUpdate}
-        ref={references[index]}
-      />
-    );
-  });
+  const melodyElements = currentMelodies.map((melody, index) => (
+    <IndexedMelodyElement
+      accepted={acceptedMelodies[index] ? true : false}
+      disabled={writing}
+      dummy={dummy}
+      index={index}
+      key={index}
+      label={`ESC ${index + 1}`}
+      melody={melody}
+      onAccept={handleAccept}
+      onAddRef={handleAddRef}
+      onPlay={handlePlay}
+      onStop={handleStop}
+      onUpdate={handleMelodiesUpdate}
+    />
+  ));
 
   return (
     <div id="melody-editor">
