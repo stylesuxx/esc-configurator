@@ -56,6 +56,84 @@ function BatteryState({ getBatteryState }) {
 }
 BatteryState.propTypes = { getBatteryState: PropTypes.func.isRequired };
 
+function MotorSlider({
+  disabled,
+  max,
+  min,
+  onChange,
+  startValue,
+}) {
+  const [value, setValue] = useState(startValue);
+
+  /* istanbul ignore next */
+  const update = useCallback((value) => {
+    setValue(value);
+    onChange(value);
+  }, [onChange]);
+
+  return(
+    <SliderWithTooltip
+      defaultValue={value}
+      disabled={disabled}
+      max={max}
+      min={min}
+      onChange={update}
+      step={10}
+      tipProps={{
+        visible: true,
+        placement: 'top',
+      }}
+    />
+  );
+}
+MotorSlider.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  max: PropTypes.number.isRequired,
+  min: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  startValue: PropTypes.number.isRequired,
+};
+
+function IndividualMotorSlider({
+  disabled,
+  index,
+  max,
+  min,
+  onChange,
+  startValue,
+}) {
+  const { t } = useTranslation('common');
+
+  /* istanbul ignore next */
+  const update = useCallback((value) => {
+    onChange(index + 1, value);
+  }, [index, onChange]);
+
+  return(
+    <div className={`slider slider-${index}`}>
+      <h3>
+        {t("motorNr", { index: index + 1 })}
+      </h3>
+
+      <MotorSlider
+        disabled={disabled}
+        max={max}
+        min={min}
+        onChange={update}
+        startValue={startValue}
+      />
+    </div>
+  );
+}
+IndividualMotorSlider.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  min: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  startValue: PropTypes.number.isRequired,
+};
+
 function MotorControl({
   getBatteryState,
   motorCount,
@@ -96,72 +174,17 @@ function MotorControl({
     onSingleUpdate(index, speed);
   }, [onSingleUpdate]);
 
-  const MotorSlider = useCallback(({
-    disabled,
-    onChange,
-  }) => {
-    const [value, setValue] = useState(startValue);
-
-    /* istanbul ignore next */
-    const update = useCallback((value) => {
-      setValue(value);
-      onChange(value);
-    }, [onChange]);
-
-    return(
-      <SliderWithTooltip
-        defaultValue={value}
-        disabled={disabled}
-        max={maxValue}
-        min={minValue}
-        onChange={update}
-        step={10}
-        tipProps={{
-          visible: true,
-          placement: 'top',
-        }}
-      />
-    );
-  }, [startValue, maxValue, minValue]);
-  MotorSlider.propTypes = {
-    disabled: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
-  const IndividualMotorSlider = useCallback(({
-    index,
-    onChange,
-  }) => {
-    /* istanbul ignore next */
-    const update = useCallback((value) => {
-      onChange(index + 1, value);
-    }, [index, onChange]);
-
-    return(
-      <div className={`slider slider-${index}`}>
-        <h3>
-          {t("motorNr", { index: index + 1 })}
-        </h3>
-
-        <MotorSlider
-          disabled={!unlock || !unlockIndividual}
-          onChange={update}
-        />
-      </div>
-    );
-  }, [t, unlock, unlockIndividual]);
-  IndividualMotorSlider.propTypes = {
-    index: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
   const singleSliderElements = [];
   for(let i = 0; i < motorCount; i += 1) {
     singleSliderElements.push(
       <IndividualMotorSlider
+        disabled={!unlock || !unlockIndividual}
         index={i}
         key={i}
+        max={maxValue}
+        min={minValue}
         onChange={updateSingleValue}
+        startValue={startValue}
       />
     );
   }
@@ -169,9 +192,12 @@ function MotorControl({
   const memoizedMasterSlider = useMemo(() => (
     <MotorSlider
       disabled={!unlock}
+      max={maxValue}
+      min={minValue}
       onChange={updateValue}
+      startValue={startValue}
     />
-  ), [unlock, updateValue]);
+  ), [startValue, unlock, updateValue]);
 
   return (
     <div id="motor-control-wrapper">
