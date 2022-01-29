@@ -29,6 +29,7 @@ function SaveMelody({ onSave }) {
   return (
     <div className="save-melody-wrapper">
       <input
+        data-testid="save-melody-input"
         name="save-melody-name"
         onChange={updateName}
         placeholder={t('common:melodyEditorName')}
