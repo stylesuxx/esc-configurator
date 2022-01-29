@@ -335,6 +335,7 @@ function FirmwareSelector({
 
             <div className="default-btn">
               <input
+                data-testid="input-file"
                 onChange={handleLocalSubmit}
                 ref={file}
                 style={{ display: 'none' }}
