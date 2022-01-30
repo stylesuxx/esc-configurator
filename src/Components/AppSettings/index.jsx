@@ -39,7 +39,9 @@ function AppSettings({
         );
       }
 
-      default: return null;
+      default: {
+        return null;
+      }
     }
   });
 
