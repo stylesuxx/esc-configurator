@@ -118,11 +118,11 @@ function PortPicker({
 
   const handleBaudRateChange = useCallback((e) => {
     onSetBaudRate(e.target.value);
-  }, []);
+  }, [onSetBaudRate]);
 
   const handlePortChange = useCallback((e) => {
     onChangePort(e.target.value);
-  }, []);
+  }, [onChangePort]);
 
   if(!hasSerial) {
     return <CompatibilityWarning />;

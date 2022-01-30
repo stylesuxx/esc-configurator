@@ -20,21 +20,21 @@
   "plugins": ["react", "jest"],
   "rules": {
     "react/jsx-max-depth": ["warn", { "max": 5 }],
-    "indent": ["warn", 2, { "SwitchCase": 1 }],
     "react/jsx-indent": ["warn", 2],
     "react/jsx-indent-props": ["warn", 2],
     "react/jsx-no-literals": "off",
     "react/no-multi-comp": "off",
     "react/no-set-state": "off",
-    "react/forbid-component-props": "off",
-    "react-hooks/rules-of-hooks": "warn",
-    "testing-library/no-container": "warn",
-    "testing-library/no-node-access": "warn",
-    "no-unreachable": "off",
-    "no-lone-blocks": "off",
-    "no-mixed-operators": "off",
     "react/no-array-index-key": "warn",
     "react/no-danger": "warn",
+    "react/forbid-component-props": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "testing-library/no-container": "error",
+    "testing-library/no-node-access": "error",
+    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "no-lone-blocks": "off",
+    "no-mixed-operators": "error",
     "no-unused-vars": "warn",
     "new-cap": [
       "error", {
@@ -62,7 +62,10 @@
       "exports": "always-multiline",
       "functions": "never"
     }],
-    "object-property-newline": "error"
+    "object-property-newline": "error",
+    "default-case": "warn",
+    "no-template-curly-in-string": "off",
+    "no-unreachable": "warn"
   },
   "settings": {
     "react": {

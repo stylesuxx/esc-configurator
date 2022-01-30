@@ -90,7 +90,7 @@ describe('MeldodyElement', () => {
   });
 
   it('should display with unsupported note', async() => {
-    const { container } = render(
+    render(
       <MelodyElement
         accepted={false}
         disabled={false}
@@ -104,7 +104,7 @@ describe('MeldodyElement', () => {
       />
     );
 
-    expect(container.querySelectorAll('mark').length).toEqual(32);
+    expect(screen.getAllByText(/32c2#./i).length).toEqual(32);
     expect(screen.getByText(/Label comes here/i)).toBeInTheDocument();
     expect(screen.getByText(/common:melodyEditorPlay/i)).toBeInTheDocument();
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('MeldodyElement', () => {
   });
 
   it('should load with too long melody', async() => {
-    const { container } = render(
+    render(
       <MelodyElement
         accepted={false}
         disabled={false}
@@ -133,7 +133,7 @@ describe('MeldodyElement', () => {
       />
     );
 
-    expect(container.querySelectorAll('mark').length).toEqual(1);
+    expect(screen.getByText(new RegExp(/^, 8p, 8f#, 8f#,/i))).toBeInTheDocument();
     expect(screen.getByText(/Label comes here/i)).toBeInTheDocument();
     expect(screen.getByText(/common:melodyEditorPlay/i)).toBeInTheDocument();
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();

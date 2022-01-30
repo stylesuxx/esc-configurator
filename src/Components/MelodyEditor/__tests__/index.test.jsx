@@ -308,7 +308,7 @@ describe('MelodyEditor', () => {
     const onDelete = jest.fn();
     const melodies = [melody, melody, melody, melody];
 
-    const { container } = render(
+    render(
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={defaultMelodies}
@@ -325,7 +325,7 @@ describe('MelodyEditor', () => {
     userEvent.click(screen.getByText(/common:melodyEditorSave/i));
     expect(onSave).not.toHaveBeenCalled();
 
-    fireEvent.change(container.querySelector('input[type=text]'), {
+    fireEvent.change(screen.getByTestId('save-melody-input'), {
       target: {
         name: "",
         value: "TestName",

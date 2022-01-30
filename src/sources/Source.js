@@ -1,4 +1,3 @@
-import SettingsHandler from '../Components/Flash/Escs/Esc/SettingsHandler';
 import {
   MethodNotImplementedError,
   MissingParametersError,

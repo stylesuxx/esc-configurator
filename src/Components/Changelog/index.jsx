@@ -23,7 +23,7 @@ function Changelog({ entries }) {
       expanded: newExpanded,
       title: newExpanded ? t('changelogClose') : t('defaultChangelogTitle'),
     });
-  }, [state.expanded]);
+  }, [t, state.expanded]);
 
   return (
     <div className={`changelog ${state.expanded ? "expanded" : ""}`}>

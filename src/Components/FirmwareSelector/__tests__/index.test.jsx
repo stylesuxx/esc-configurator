@@ -96,7 +96,7 @@ describe('FirmwareSelector', () => {
       meta: { signature: 0xE8B2 },
     };
 
-    const { container } = render(
+    render(
       <FirmwareSelector
         configs={configs}
         esc={escMock}
@@ -177,7 +177,7 @@ describe('FirmwareSelector', () => {
     expect(onSubmit).toHaveBeenCalled();
 
     userEvent.click(screen.getByText('escButtonSelectLocally'));
-    fireEvent.change(container.querySelector('input[type=file]'));
+    fireEvent.change(screen.getByTestId('input-file'));
     expect(onLocalSubmit).toHaveBeenCalled();
 
     userEvent.click(screen.getByText('buttonCancel'));
@@ -219,7 +219,7 @@ describe('FirmwareSelector', () => {
       meta: { signature: 0xE8B2 },
     };
 
-    const { container } = render(
+    render(
       <FirmwareSelector
         configs={configs}
         esc={escMock}

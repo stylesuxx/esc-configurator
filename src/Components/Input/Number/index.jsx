@@ -43,7 +43,7 @@ function Number({
 
     setDisplayValue(value * factor + offset);
     onChange(name, value);
-  }, [displayValue, offset, factor, min, max, onChange]);
+  }, [displayValue, offset, factor, min, max, onChange, name]);
 
   const handleChange = useCallback((e) => {
     let value = parseInt(e.target.value, 10);

@@ -253,10 +253,17 @@ function Home({ onOpenMelodyEditor }) {
 
               <Install />
 
-              <div
-                align="center"
-                dangerouslySetInnerHTML={{ __html: t('betaWarning') }}
-              />
+              <div>
+                <div
+                  align="center"
+                  dangerouslySetInnerHTML={{ __html: t('betaWarning') }}
+                />
+
+                <div
+                  align="center"
+                  dangerouslySetInnerHTML={{ __html: t('findHelp') }}
+                />
+              </div>
             </div>
           </div>
 

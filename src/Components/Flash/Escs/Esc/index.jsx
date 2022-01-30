@@ -47,7 +47,7 @@ const Esc = forwardRef(({
 
   const updateCommonSettings = useCallback((settings) => {
     onCommonSettingsUpdate(index, settings);
-  }, [onCommonSettingsUpdate, index, settings]);
+  }, [onCommonSettingsUpdate, index]);
 
   const handleFirmwareFlash = useCallback(() => {
     onFlash(index);

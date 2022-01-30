@@ -54,9 +54,11 @@ class MCU {
 
         return blheliEeprom.SILABS.FLASH_SIZE;
       }
-    }
 
-    return this.mcu.flash_size;
+      default: {
+        return this.mcu.flash_size;
+      }
+    }
   }
 
   getFlashOffset() {

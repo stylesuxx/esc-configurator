@@ -66,6 +66,32 @@ class FourWay {
     this.extendedDebug = false;
   }
 
+  start() {
+    this.interval = setInterval(async() => {
+      if (Date.now() - this.lastCommandTimestamp > 900) {
+        try {
+          await this.testAlive();
+        } catch (error) {
+          console.debug('Alive Test failed');
+        }
+      }
+    }, 800);
+  }
+
+  exit() {
+    clearInterval(this.interval);
+
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
+  }
+
+  testAlive() {
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
+  }
+
+  reset(target) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
+  }
+
   setExtendedDebug(extendedDebug) {
     this.extendedDebug = extendedDebug;
   }
@@ -114,7 +140,7 @@ class FourWay {
     crc ^= byte << 8;
     for (let i = 0; i < 8; i += 1) {
       if (crc & 0x8000) {
-        crc = crc << 1 ^ 0x1021;
+        crc = (crc << 1) ^ 0x1021;
       } else {
         crc <<= 1;
       }
@@ -139,7 +165,7 @@ class FourWay {
     // Fill header
     bufferView[0] = pc;
     bufferView[1] = command;
-    bufferView[2] = address >> 8 & 0xff;
+    bufferView[2] = (address >> 8) & 0xff;
     bufferView[3] = address & 0xff;
     bufferView[4] = params.length === 256 ? 0 : params.length;
 
@@ -153,7 +179,7 @@ class FourWay {
     const msgWithoutChecksum = bufferView.subarray(0, -2);
     const checksum = msgWithoutChecksum.reduce(this.crc16XmodemUpdate, 0);
 
-    bufferView[5 + params.length] = checksum >> 8 & 0xff;
+    bufferView[5 + params.length] = (checksum >> 8) & 0xff;
     bufferView[6 + params.length] = checksum & 0xff;
 
     return bufferOut;
@@ -183,9 +209,9 @@ class FourWay {
 
     const message = {
       command: view[1],
-      address: view[2] << 8 | view[3],
+      address: (view[2] << 8) | view[3],
       ack: view[5 + paramCount],
-      checksum: view[6 + paramCount] << 8 | view[7 + paramCount],
+      checksum: (view[6 + paramCount] << 8) | view[7 + paramCount],
       params: view.slice(5, 5 + paramCount),
     };
 
@@ -262,7 +288,7 @@ class FourWay {
       try {
         const interfaceMode = flash.params[3];
         flash.meta.input = flash.params[2];
-        flash.meta.signature = flash.params[1] << 8 | flash.params[0];
+        flash.meta.signature = (flash.params[1] << 8) | flash.params[0];
         flash.meta.interfaceMode = interfaceMode;
         flash.meta.available = true;
 
@@ -721,6 +747,10 @@ class FourWay {
           settingsDescriptions = am32SettingsDescriptions.COMMON;
           individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
         } break;
+
+        default: {
+          console.log('Unknown layout', newEsc.layout);
+        }
       }
 
       /**
@@ -999,7 +1029,7 @@ class FourWay {
     const endAddress = 0x200;
     const step = 0x80;
 
-    for (var address = beginAddress; address < endAddress; address += step) {
+    for (let address = beginAddress; address < endAddress; address += step) {
       const verifyErased = async(resolve, reject) => {
         const message = await this.read(address, step);
         const erased = message.params.every((x) => x === 0xFF);
@@ -1037,7 +1067,7 @@ class FourWay {
     const end_address = end * pageSize;
     const step = 0x80;
 
-    for (var address = beginAddress; address < end_address && address < image.length; address += step) {
+    for (let address = beginAddress; address < end_address && address < image.length; address += step) {
       const verifyPages = async (resolve, reject) => {
         const message = await this.read(address, Math.min(step, image.length - address));
         const reference = image.subarray(message.address, message.address + message.params.byteLength);
@@ -1053,7 +1083,7 @@ class FourWay {
         }
       };
 
-      // Verification might not always succeed on the first time
+      // Verification might not always succeed the first time
       await retry(verifyPages, 10);
     }
   }
@@ -1118,32 +1148,6 @@ class FourWay {
 
   writeEEprom(address, data) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceWriteEEprom, data, address);
-  }
-
-  reset(target) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
-  }
-
-  exit() {
-    clearInterval(this.interval);
-
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
-  }
-
-  testAlive() {
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
-  }
-
-  start() {
-    this.interval = setInterval(async() => {
-      if (Date.now() - this.lastCommandTimestamp > 900) {
-        try {
-          await this.testAlive();
-        } catch (error) {
-          console.debug('Alive Test failed');
-        }
-      }
-    }, 800);
   }
 }
 
