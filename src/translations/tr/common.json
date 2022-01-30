@@ -63,7 +63,7 @@
   "forceFlashHint": "(Uygun olmayan donanım yazılımını yüklemek ESC nize zarar verebilir, bunun sorumluluğu sizdedir)",
   "migrateFlashText": "Farklı donanım yazılımları arasında ayarları taşı?",
   "migrateFlashHint": "(Bu farklı donanım yazılımları arasında ayaraların taşınmasına sebep olacaktır, örnek olarak BLHeli_S den Bluejay e gibi)",
-  "migrationNote": "<b>Not:</b> Farklı donanımlar arası taşınmayan ayarlara dikkat ediniz, motor yönü ve taşımak istediğniz diğer ayarlarınızı not ediniz. Ayarlar aynı donanım yazılımının farklı versiyonları arasında da taşınabilir.",
+  "migrationNote": "Farklı donanımlar arası taşınmayan ayarlara dikkat ediniz, motor yönü ve taşımak istediğniz diğer ayarlarınızı not ediniz. Ayarlar aynı donanım yazılımının farklı versiyonları arasında da taşınabilir.",
   "escDirectionReversed": "Yön Ters Çevrildi",
   "escBidirectionalMode": "Çift Yön Modu",
   "escSinusoidalStartup": "Sinüzoidal Başlangıç",

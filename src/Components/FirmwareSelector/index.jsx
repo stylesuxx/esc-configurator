@@ -265,9 +265,15 @@ function FirmwareSelector({
         </div>
 
         <div className="note">
-          <p
-            dangerouslySetInnerHTML={{ __html: t('migrationNote') }}
-          />
+          <p>
+            <b>
+              { t('note') }
+            </b>
+
+            <span>
+              { t('migrationNote') }
+            </span>
+          </p>
         </div>
 
         {warning &&

@@ -63,7 +63,7 @@
   "forceFlashHint": "(燒錄不匹配的固件可能會損壞您的 ESC，請自行承擔風險)",
   "migrateFlashText": "在不同的固件之間遷移設定？",
   "migrateFlashHint": "(這將嘗試在不同固件之間遷移設定，例如從 BLHeli_S 遷移到 Bluejay)",
-  "migrationNote": "<b>注意：</b> 設定不能再不同的固件進行遷移，請務必注意您的電機轉向和其他您可能想要改動的設定。設定可以在同意固件的不同版本之間遷移。",
+  "migrationNote": "設定不能再不同的固件進行遷移，請務必注意您的電機轉向和其他您可能想要改動的設定。設定可以在同意固件的不同版本之間遷移。",
   "escDirectionReversed": "反轉方向",
   "escBidirectionalMode": "雙向模式",
   "escSinusoidalStartup": "正弦式啓動",

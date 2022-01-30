@@ -63,7 +63,7 @@
   "forceFlashHint": "(Flashear un firmware inapropiado puede dañar tu ESC, hazlo bajo tu propio riesgo)",
   "migrateFlashText": "¿Migrar ajustes entre diferentes firmwares?",
   "migrateFlashHint": "(Esto intentará migrar la configuración entre diferentes firmwares como por ejemplo de BLHeli_S a Bluejay)",
-  "migrationNote": "<b>Nota:</b> Tenga en cuenta que los ajustes no se migran entre diferentes firmwares, asegúrese de tener en cuenta las direcciones de su motor y otras configuraciones que podría querer mover. Los ajustes se migrarán entre diferentes versiones del mismo firmware.",
+  "migrationNote": "Tenga en cuenta que los ajustes no se migran entre diferentes firmwares, asegúrese de tener en cuenta las direcciones de su motor y otras configuraciones que podría querer mover. Los ajustes se migrarán entre diferentes versiones del mismo firmware.",
   "escDirectionReversed": "Dirección Invertida",
   "escBidirectionalMode": "Modo Bidireccional",
   "escSinusoidalStartup": "Inicio Sinusoidal",
