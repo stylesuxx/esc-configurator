@@ -78,4 +78,26 @@ describe('AppSettings', () => {
     userEvent.click(screen.getByText(/close/i));
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('should handle invalid setting type', () => {
+    const settings = {
+      testSetting: {
+        type: "string",
+        value: "something",
+      },
+    };
+
+    const onClose = jest.fn();
+    const onUpdate = jest.fn();
+
+    render(
+      <AppSettings
+        onClose={onClose}
+        onUpdate={onUpdate}
+        settings={settings}
+      />
+    );
+
+    expect(screen.getByText(/settingsHeader/i)).toBeInTheDocument();
+  });
 });

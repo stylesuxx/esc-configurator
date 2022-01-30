@@ -113,6 +113,10 @@ class Flash {
         case 0x05: {
           result.startLinearAddress = parseInt(content, 16);
         } break;
+
+        default: {
+          console.log('Unknown record type', recordType);
+        }
       }
     }
 

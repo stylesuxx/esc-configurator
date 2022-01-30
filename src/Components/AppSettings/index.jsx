@@ -38,6 +38,10 @@ function AppSettings({
           />
         );
       }
+
+      default: {
+        return null;
+      }
     }
 
     return null;

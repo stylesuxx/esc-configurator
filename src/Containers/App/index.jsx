@@ -929,12 +929,8 @@ class App extends Component {
     const { appSettings } = this.state;
     const settings = { ...appSettings.settings };
 
-    switch(name) {
-      case 'extendedDebug': {
-        if (this.serial) {
-          this.serial.setExtendedDebug(value);
-        }
-      } break;
+    if(name === 'extendedDebug' && this.serial) {
+      this.serial.setExtendedDebug(value);
     }
 
     settings[name].value = value;

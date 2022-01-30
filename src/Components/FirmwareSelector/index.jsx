@@ -38,6 +38,7 @@ function FirmwareSelector({
     pwm,
   } = configs;
 
+  const [preselected, setPreselected] = useState(false);
   const [escLayout, setEscLayout] = useState(null);
   const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
@@ -60,7 +61,7 @@ function FirmwareSelector({
   const file = useRef(null);
 
   // Pre select current firmware and ESC layout if valid
-  useEffect(async () => {
+  async function preselect() {
     const availableFirmware = Object.keys(escs);
     const validSources = getSupportedSources(esc.meta.signature);
     const validFirmware = availableFirmware.filter((name) =>
@@ -80,64 +81,73 @@ function FirmwareSelector({
     if(isValidLayout(esc.settings.LAYOUT)) {
       setEscLayout(esc.settings.LAYOUT);
     }
-  }, []);
+  }
+
+  if(!preselected) {
+    setPreselected(true);
+    preselect();
+  }
 
   // Update firmware options when firmware has changed
-  useEffect(async () => {
-    if(selection.firmware) {
-      /**
-       * Build the actual Option set for the selected firmware
-       */
-      const layouts = escs[selection.firmware];
-      const escOptions = Object.entries(layouts).map(([key, layout]) => ({
-        key: key,
-        value: key,
-        name: layout.name,
-      }));
+  useEffect(() => {
+    async function updateOptions() {
+      if(selection.firmware) {
+        /**
+         * Build the actual Option set for the selected firmware
+         */
+        const layouts = escs[selection.firmware];
+        const escOptions = Object.entries(layouts).map(([key, layout]) => ({
+          key: key,
+          value: key,
+          name: layout.name,
+        }));
 
-      const versionsSelected = Object.values(
-        versions[selection.firmware].filter((v) => showUnstable || !v.prerelease)
-      );
+        const versionsSelected = Object.values(
+          versions[selection.firmware].filter((v) => showUnstable || !v.prerelease)
+        );
 
-      const versionOptions = versionsSelected.map((version) => ({
-        key: version.key,
-        value: version.url,
-        name: version.name,
-      }));
+        const versionOptions = versionsSelected.map((version) => ({
+          key: version.key,
+          value: version.url,
+          name: version.name,
+        }));
 
-      const frequencies = pwm[selection.firmware];
-      const frequencyOptions = frequencies.map((item) => ({
-        key: item,
-        value: item,
-        name: item,
-      }));
+        const frequencies = pwm[selection.firmware];
+        const frequencyOptions = frequencies.map((item) => ({
+          key: item,
+          value: item,
+          name: item,
+        }));
 
-      const firmwareOptions = validFirmware.map((key) => ({
-        key,
-        value: key,
-        name: key,
-      }));
+        const firmwareOptions = validFirmware.map((key) => ({
+          key,
+          value: key,
+          name: key,
+        }));
 
-      const modeOptions = [];
-      for (const mode in blheliModes) {
-        modeOptions.push({
-          key: mode,
-          value: mode,
-          name: mode,
-        });
+        const modeOptions = [];
+        for (const mode in blheliModes) {
+          modeOptions.push({
+            key: mode,
+            value: mode,
+            name: mode,
+          });
+        }
+
+        const currentOptions = {
+          firmwares: firmwareOptions,
+          versions: versionOptions,
+          frequencies: frequencyOptions,
+          escs: escOptions,
+          modes: modeOptions,
+        };
+
+        setOptions(currentOptions);
       }
-
-      const currentOptions = {
-        firmwares: firmwareOptions,
-        versions: versionOptions,
-        frequencies: frequencyOptions,
-        escs: escOptions,
-        modes: modeOptions,
-      };
-
-      setOptions(currentOptions);
     }
-  }, [selection.firmware]);
+
+    updateOptions();
+  }, [selection.firmware, escs, pwm, showUnstable, validFirmware, versions]);
 
   const clickFile = useCallback(() => {
     file.current.click();
@@ -199,15 +209,15 @@ function FirmwareSelector({
     const source = sources.find((s) => s.getName() === selection.firmware);
     const firmwareUrl = source.getFirmwareUrl({
       escKey: escLayout,
-      version: selection.version,
-      pwm: selection.pwm,
       mode: mode,
-      url: selection.url,
+      pwm: selection.pwm,
       settings: esc.settings,
+      url: selection.url,
+      version: selection.version,
     });
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
-  }, [sources, escLayout, selection, mode]);
+  }, [esc, escLayout, selection, mode, force, migrate, onSubmit]);
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
 
@@ -335,6 +345,7 @@ function FirmwareSelector({
 
             <div className="default-btn">
               <input
+                data-testid="input-file"
                 onChange={handleLocalSubmit}
                 ref={file}
                 style={{ display: 'none' }}
@@ -382,7 +393,7 @@ FirmwareSelector.propTypes = {
   esc: PropTypes.shape({
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,
-    meta: PropTypes.shape({ signature: PropTypes.string }),
+    meta: PropTypes.shape({ signature: PropTypes.number }),
     settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
   }),
   onCancel: PropTypes.func.isRequired,

@@ -3,6 +3,7 @@
     "title": "Unreleased",
     "items": [
       "Enhancement: Upload coverage reports to codecov with github workflows",
+      "Chore: Improved linting warnings and rules",
       "Chore: Improved code coverage",
       "Chore: Code cleanup"
     ]
