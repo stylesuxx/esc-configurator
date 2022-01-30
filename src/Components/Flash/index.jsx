@@ -66,7 +66,7 @@ function Flash({
             onSettingsUpdate={onIndividualSettingsUpdate}
           />
 
-          {escCount !== escs.length &&
+          {escCount !== escs.length + 1 &&
             <CountWarning />}
         </div>
       </div>

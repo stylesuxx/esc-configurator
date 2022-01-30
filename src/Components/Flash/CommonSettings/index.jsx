@@ -95,9 +95,9 @@ function CommonSettings({
 
     if (unsupportedNames.includes(availableSettings.NAME)) {
       unsupportedText = (
-        <p
-          dangerouslySetInnerHTML={{ __html: t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }}
-        />
+        <p>
+          { t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
+        </p>
       );
     }
 
