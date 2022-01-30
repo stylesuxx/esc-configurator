@@ -17,11 +17,23 @@ function WarningWrapper() {
   return (
     <div className="note">
       <p>
+        <span>
+          <strong>
+            {t('note')}
+          </strong>
+        </span>
+
         <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
 
         <br />
 
-        <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
+        <span>
+          <strong>
+            {t('note')}
+          </strong>
+
+          {t('noteConnectPower')}
+        </span>
       </p>
     </div>
   );
