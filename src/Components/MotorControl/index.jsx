@@ -209,9 +209,19 @@ function MotorControl({
         </div>
 
         <div className="spacer-box">
-          <div
-            dangerouslySetInnerHTML={{ __html: t('motorControlText') }}
-          />
+          <div>
+            <p>
+              { t('motorControlTextLine1') }
+            </p>
+
+            <p>
+              { t('motorControlTextLine2') }
+            </p>
+
+            <p>
+              { t('motorControlTextLine3') }
+            </p>
+          </div>
 
           <div className="line-wrapper">
             <Checkbox
