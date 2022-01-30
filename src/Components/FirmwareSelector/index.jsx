@@ -84,7 +84,6 @@ function FirmwareSelector({
   }
 
   if(!preselected) {
-    console.log('Preselecting');
     setPreselected(true);
     preselect();
   }
@@ -394,7 +393,7 @@ FirmwareSelector.propTypes = {
   esc: PropTypes.shape({
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,
-    meta: PropTypes.shape({ signature: PropTypes.string }),
+    meta: PropTypes.shape({ signature: PropTypes.number }),
     settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
   }),
   onCancel: PropTypes.func.isRequired,
