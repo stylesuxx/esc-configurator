@@ -7,7 +7,7 @@
   "showLog": "Logları Göster",
   "hideLog": "Logları Gizle",
   "note": "Not: ",
-  "notePropsOff": "Bu sekmede herhangi bir işlem yapmadan önce pervaneleri <strong>SÖKTÜĞÜNÜZDEN</strong> emin olun.",
+  "notePropsOff": "Bu sekmede herhangi bir işlem yapmadan önce pervaneleri **SÖKTÜĞÜNÜZDEN** emin olun.",
   "noteConnectPower": "ESC lere güç veriniz.",
   "commonParameters": "Genel Parametreler",
   "unsupportedFirmware": "Desteklenmeyen Donanım Yazılımı",

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import Home from '../Home';
 import Flash from '../Flash';
@@ -23,7 +24,9 @@ function WarningWrapper() {
           </strong>
         </span>
 
-        <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('notePropsOff')}
+        </ReactMarkdown>
 
         <br />
 

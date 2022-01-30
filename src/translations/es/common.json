@@ -7,7 +7,7 @@
   "showLog": "Mostar Registro",
   "hideLog": "Ocultar registro",
   "note": "Nota: ",
-  "notePropsOff": "Asegúrate de que has removido las <strong>HELICES</strong> antes de hacer nada en esta pestaña.",
+  "notePropsOff": "Asegúrate de que has removido las **HELICES** antes de hacer nada en esta pestaña.",
   "noteConnectPower": "Conecta energía a los ESCs.",
   "commonParameters": "Parámetros Comunes",
   "unsupportedFirmware": "Firmware no soportado",

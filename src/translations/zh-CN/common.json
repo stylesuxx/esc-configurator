@@ -7,7 +7,7 @@
   "showLog": "显示日志",
   "hideLog": "隐藏日志",
   "note": "注意： ",
-  "notePropsOff": "在使用本页面前，请确保您已经 <strong>取下</strong> 所有螺旋桨。",
+  "notePropsOff": "在使用本页面前，请确保您已经 **取下** 所有螺旋桨。",
   "noteConnectPower": "请将电源连接至电调。",
   "commonParameters": "公共参数",
   "unsupportedFirmware": "不支持的固件",

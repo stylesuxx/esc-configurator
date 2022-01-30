@@ -7,7 +7,7 @@
   "showLog": "Show Log",
   "hideLog": "Hide Log",
   "note": "Note: ",
-  "notePropsOff": "Make sure you've taken the propellers <strong>OFF</strong> before doing anything on this tab.",
+  "notePropsOff": "Make sure you've taken the propellers **OFF** before doing anything on this tab.",
   "noteConnectPower": "Connect power to the ESCs.",
   "commonParameters": "Common Parameters",
   "unsupportedFirmware": "Unsupported Firmware",
