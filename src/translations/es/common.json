@@ -160,6 +160,11 @@
   "escMissing1": "El ESC aún no estaba listo. Esto puede suceder, por ejemplo, si **está reproduciendo una melodia**. También un flash anterior podría haber salido mal y necesita más tiempo para arrancar de lo habitual.",
   "escMissing2": "Simplemente **no hay más ESC conectados.**",
   "escMissing3": "La **MCU del ESC esta defectuosa.**",
-  "mistagged": "<p><b>Advertencia:</b> Parece que el firmware actualmente flasheado es erróneo!</p><p>Sólo procede si sabes lo que estás haciendo. Proceder aquí podría poner a su ESC en riesgo de recalentamiento y - en el peor de los casos- destrucción del ESC. Se recomienda flashear la versión detectada en lugar de la versión etiquetada - ¿Necesitas comprobar el <i>\"Ignorar diseño MCU inapropiado?\"</i> casilla de verificación en la parte superior de la página.</p><table><tr><td>Etiquetado</td><td>{{tagged}}</td></tr><tr><td>Detectado</td><td>{{detected}}</td></tr></table><p>Si ves este mensaje, por favor <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">considere añadir una entrada en la Wiki</a>, ayudándonos a documentar hardware problemático.</p><p><b>Si no comprende los riesgos que implica continuar, no dude en <a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\"> unirse a nosotros en Discord</a>.</b></p>",
+  "mistaggedLine1": "**Advertencia:** Parece que el firmware actualmente flasheado es erróneo!",
+  "mistaggedLine2": "Sólo procede si sabes lo que estás haciendo. Proceder aquí podría poner a su ESC en riesgo de recalentamiento y - en el peor de los casos- destrucción del ESC. Se recomienda flashear la versión detectada en lugar de la versión etiquetada - ¿Necesitas comprobar el *\"Ignorar diseño MCU inapropiado?\"* casilla de verificación en la parte superior de la página.",
+  "mistaggedLine3": "Si ves este mensaje, por favor [considere añadir una entrada en la Wiki](https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's), ayudándonos a documentar hardware problemático.",
+  "mistaggedLine4": "**Si no comprende los riesgos que implica continuar, no dude en [unirse a nosotros en Discord](https://discord.gg/QvSS5dk23C).**",
+  "mistaggedTagged": "Etiquetado",
+  "mistaggedDetected": "Detectado",
   "update": "Update available! To update the app, refresh or restart it."
 }

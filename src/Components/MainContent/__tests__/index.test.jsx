@@ -928,6 +928,6 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/mistagged/i)).toBeInTheDocument();
+    expect(screen.getByText(/mistaggedLine1/i)).toBeInTheDocument();
   });
 });

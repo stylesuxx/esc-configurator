@@ -278,9 +278,7 @@ function FirmwareSelector({
 
         {warning &&
           <div className="note alert">
-            <p
-              dangerouslySetInnerHTML={{ __html: warning }}
-            />
+            {warning}
           </div>}
 
         <div className="gui-box grey">
@@ -407,7 +405,7 @@ FirmwareSelector.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
   showUnstable: PropTypes.bool.isRequired,
-  warning: PropTypes.string,
+  warning: PropTypes.node,
 };
 
 export default FirmwareSelector;

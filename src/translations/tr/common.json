@@ -160,6 +160,11 @@
   "escMissing1": "ESC daha hazır olmayabilir. Bu ESC hala **melodi çalıyorsa** olabilir. Ayrıca önceki yazılım sorun oluşturmuş olabilir bu sebeple yeniden yüklenmesi normalden uzun sürebilir.",
   "escMissing2": "Basitçe **yeterli ESC bağlı değildir.**",
   "escMissing3": "**ESC nin MCU birimi arızalı.**",
-  "mistagged": "<p><b>Dikkat:</b> Görünüyor ki yazdırılan donanım yazılımı yanlış etiketlenmiş!</p><p>Sadece ne yaptığınızı biliyorsanız onaylayın. Onaylamanız durumunda ESC niz aşırı ısınabilir yada en kötü senoryada ESC niz kullanılamaz olabilir. Eğer onaylamak istiyorsanız en yüksek dead-time a sahip versiyonu yüklemeniz şiddetle tavsiye edilir - sizin sayfanın üstündeki <i>\"Uygunsuz MCU Düzeni yoksayılsın?\"</i> çek işaretini işaretlemeniz gerekir.</p><table><tr><td>İşaretleme</td><td>{{tagged}}</td></tr><tr><td>Bulunan</td><td>{{detected}}</td></tr></table><p>Eğer bu mesajı görüyorsanız, lütfen bize problemli donanımı kayda geçmeye yardım etmek için <a href=\"https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's\" target=\"_blank\">Wiki ye ekleme yapmayı bir düşünün</a>.</p><p><b>Eğer onayladığınıda oluşabilecek riskleri anlayamıyorsanız, <a target=\"_blank\" href=\"https://discord.gg/QvSS5dk23C\">discord da bize katılmaya</a> çekinmeyin.</b></p>",
+  "mistaggedLine1": "**Dikkat:** Görünüyor ki yazdırılan donanım yazılımı yanlış etiketlenmiş!",
+  "mistaggedLine2": "Sadece ne yaptığınızı biliyorsanız onaylayın. Onaylamanız durumunda ESC niz aşırı ısınabilir yada en kötü senoryada ESC niz kullanılamaz olabilir. Eğer onaylamak istiyorsanız en yüksek dead-time a sahip versiyonu yüklemeniz şiddetle tavsiye edilir - sizin sayfanın üstündeki *\"Uygunsuz MCU Düzeni yoksayılsın?\"* çek işaretini işaretlemeniz gerekir.",
+  "mistaggedLine3": "Eğer bu mesajı görüyorsanız, lütfen bize problemli donanımı kayda geçmeye yardım etmek için [Wiki ye ekleme yapmayı bir düşünün](https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's).",
+  "mistaggedLine4": "**Eğer onayladığınıda oluşabilecek riskleri anlayamıyorsanız, [discord da bize katılmaya](https://discord.gg/QvSS5dk23C) çekinmeyin.**",
+  "mistaggedTagged": "İşaretleme",
+  "mistaggedDetected": "Bulunan",
   "update": "Güncelleme mevcut! Uygulamayı güncellemek için yenileyin veya yeniden başlatın."
 }
