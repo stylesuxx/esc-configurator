@@ -1,10 +1,23 @@
 import { useTranslation } from 'react-i18next';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import './style.scss';
 
 function CountWarning() {
   const { t } = useTranslation('common');
+  const lines = [1, 2, 3].map((index) => {
+    const line = `escMissing${index}`;
+    return (
+      <ReactMarkdown
+        components={{ p: 'li' }}
+        key={line}
+      >
+        {t(line)}
+      </ReactMarkdown>
+    );
+  });
+
 
   return (
     <div className="gui-box grey missing-esc">
@@ -20,22 +33,12 @@ function CountWarning() {
         </p>
 
         <ul>
-          <li
-            dangerouslySetInnerHTML={{ __html: t('escMissing1') }}
-          />
-
-          <li
-            dangerouslySetInnerHTML={{ __html: t('escMissing2') }}
-          />
-
-          <li
-            dangerouslySetInnerHTML={{ __html: t('escMissing3') }}
-          />
+          {lines}
         </ul>
 
-        <p
-          dangerouslySetInnerHTML={{ __html: t('escMissingHint') }}
-        />
+        <ReactMarkdown>
+          {t('escMissingHint')}
+        </ReactMarkdown>
       </div>
     </div>
   );

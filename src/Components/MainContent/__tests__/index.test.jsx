@@ -84,16 +84,21 @@ describe('MainContent', () => {
     );
 
     expect(screen.getByText(/homeWelcome/i)).toBeInTheDocument();
-    expect(screen.getByText(/betaWarning/i)).toBeInTheDocument();
+    expect(screen.getByText(/betaWarningLine1/i)).toBeInTheDocument();
+    expect(screen.getByText(/betaWarningLine2/i)).toBeInTheDocument();
     expect(screen.getByText(/homeDisclaimerHeader/i)).toBeInTheDocument();
-    expect(screen.getByText(/homeDisclaimerText/i)).toBeInTheDocument();
+    expect(screen.getByText(/homeDisclaimerTextLine1/i)).toBeInTheDocument();
+    expect(screen.getByText(/homeDisclaimerTextLine2/i)).toBeInTheDocument();
     expect(screen.getByText(/homeAttributionHeader/i)).toBeInTheDocument();
     expect(screen.getByText(/homeAttributionText/i)).toBeInTheDocument();
     expect(screen.getByText(/homeExperimental/i)).toBeInTheDocument();
     expect(screen.getByText(/homeVersionInfo/i)).toBeInTheDocument();
-    expect(screen.getByText(/blhelisText/i)).toBeInTheDocument();
-    expect(screen.getByText(/bluejayText/i)).toBeInTheDocument();
-    expect(screen.getByText(/blheli32ToAM32/i)).toBeInTheDocument();
+    expect(screen.getByText(/blhelisTextLine1/i)).toBeInTheDocument();
+    expect(screen.getByText(/blhelisTextLine2/i)).toBeInTheDocument();
+    expect(screen.getByText(/bluejayTextLine1/i)).toBeInTheDocument();
+    expect(screen.getByText(/bluejayTextLine2/i)).toBeInTheDocument();
+    expect(screen.getByText(/blheli32ToAM32Line1/i)).toBeInTheDocument();
+    expect(screen.getByText(/blheli32ToAM32Line2/i)).toBeInTheDocument();
     expect(screen.getByText(/homeDiscordHeader/i)).toBeInTheDocument();
     expect(screen.getByText(/homeDiscordText/i)).toBeInTheDocument();
     expect(screen.getByText(/homeChinaHeader/i)).toBeInTheDocument();
@@ -923,6 +928,6 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/mistagged/i)).toBeInTheDocument();
+    expect(screen.getByText(/mistaggedLine1/i)).toBeInTheDocument();
   });
 });

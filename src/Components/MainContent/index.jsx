@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import Home from '../Home';
 import Flash from '../Flash';
@@ -17,11 +18,25 @@ function WarningWrapper() {
   return (
     <div className="note">
       <p>
-        <span dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
+        <span>
+          <strong>
+            {t('note')}
+          </strong>
+        </span>
+
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('notePropsOff')}
+        </ReactMarkdown>
 
         <br />
 
-        <span dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
+        <span>
+          <strong>
+            {t('note')}
+          </strong>
+
+          {t('noteConnectPower')}
+        </span>
       </p>
     </div>
   );
@@ -149,10 +164,47 @@ function MainContent({
     const esc = escs.find((esc) => esc.index === targetIndex);
     let warning = null;
     if(esc && esc.actualMake) {
-      warning = t('mistagged', {
-        tagged: esc.make,
-        detected: esc.actualMake,
-      });
+      warning = (
+        <>
+          <ReactMarkdown>
+            {t('mistaggedLine1')}
+          </ReactMarkdown>
+
+          <ReactMarkdown>
+            {t('mistaggedLine2')}
+          </ReactMarkdown>
+
+          <table>
+            <tr>
+              <td>
+                {t('mistaggedTagged')}
+              </td>
+
+              <td>
+                {esc.make}
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                {t('mistaggedDetected')}
+              </td>
+
+              <td>
+                {esc.actualMake}
+              </td>
+            </tr>
+          </table>
+
+          <ReactMarkdown>
+            {t('mistaggedLine3')}
+          </ReactMarkdown>
+
+          <ReactMarkdown>
+            {t('mistaggedLine4')}
+          </ReactMarkdown>
+        </>
+      );
     }
 
     return (

@@ -43,6 +43,8 @@ function AppSettings({
         return null;
       }
     }
+
+    return null;
   });
 
   return (
