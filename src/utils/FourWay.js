@@ -358,13 +358,15 @@ class FourWay {
 
           /*
            * If still no name, it might be BLHeli_M - this can unfortunately
-           * only be guessed based on the version - if it is 16.9, then it
-           * _might_ be BLHeli_M.
+           * only be guessed based on the version - if it is 16.8 or higher,
+           * then it _might_ be BLHeli_M with a high probability.
+           *
+           * This needs to be updated in case BLHeli_S ever gets an update.
            */
           if(flash.settings.NAME === '') {
             if(
               flash.settings.MAIN_REVISION === 16 &&
-              flash.settings.SUB_REVISION === 9
+              flash.settings.SUB_REVISION >= 8
             ) {
               flash.settings.NAME = 'BLHeli_M';
               layout = null;
