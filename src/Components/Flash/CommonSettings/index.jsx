@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import {
   getMasterSettings,
@@ -82,22 +83,26 @@ function CommonSettings({
     const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
     let unsupportedText = (
-      <p
-        dangerouslySetInnerHTML={{
-          __html: t('common:versionUnsupported', {
+      <>
+        <p>
+          {t('common:versionUnsupportedLine1', {
             version: version,
             name: availableSettings.NAME,
             layout: availableSettings.LAYOUT_REVISION,
-          }),
-        }}
-      />
+          })}
+        </p>
+
+        <ReactMarkdown>
+          {t('common:versionUnsupportedLine2')}
+        </ReactMarkdown>
+      </>
     );
 
     if (unsupportedNames.includes(availableSettings.NAME)) {
       unsupportedText = (
-        <p
-          dangerouslySetInnerHTML={{ __html: t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }}
-        />
+        <p>
+          { t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
+        </p>
       );
     }
 

@@ -51,7 +51,8 @@ describe('CommonSettings', () => {
       />
     );
 
-    expect(screen.getByText(/common:versionUnsupported/i)).toBeInTheDocument();
+    expect(screen.getByText(/common:versionUnsupportedLine1/i)).toBeInTheDocument();
+    expect(screen.getByText(/common:versionUnsupportedLine2/i)).toBeInTheDocument();
   });
 
   it('should display custom settings', () => {
