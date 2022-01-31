@@ -6,7 +6,7 @@ import './style.scss';
 
 function CountWarning() {
   const { t } = useTranslation('common');
-  const lines = [1, 2, 3].map((index) => {
+  const lines = [1, 2, 3, 4, 5].map((index) => {
     const line = `escMissing${index}`;
     return (
       <ReactMarkdown

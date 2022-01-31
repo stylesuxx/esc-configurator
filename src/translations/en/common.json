@@ -161,6 +161,8 @@
   "escMissing1": "The ESC was not ready yet. This can for example happen if it is **playing a melody**. Also a previous flash could have gone wrong and it needs longer to boot up than usual.",
   "escMissing2": "There are simply **not more ESCs connected.**",
   "escMissing3": "The **MCU of the ESC is defective.**",
+  "escMissing4": "Try a different USB cable - sometimes they are not properly shielded and might result in such errors.",
+  "escMissing5": "Should your radio be turned on, try again after switching it on. Switched on radios have been reported to cause issues with electro-magnetic interference and thus failed reads/writes.",
   "mistaggedLine1": "**Warning:** It seems that the currently flashed firmware is mistagged!",
   "mistaggedLine2": "Only proceed if you know what you are doing. Proceeding here might put your ESC at risk of overheating and - in the worst case - destruction of the ESC. If you want to proceed, it is highly advised to flash the version with the higher dead-time - you need to check the *\"Ignore inappropriate MCU Layout?\"* checkbox on top of the page.",
   "mistaggedLine3": "If you see this message, please [consider adding an entry to the Wiki](https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's), helping us to document problematic hardware.",
