@@ -5,7 +5,7 @@ const SETTINGS_DESCRIPTIONS = config.getSettingsDescriptions();
 describe('BLHeli', () => {
   it('should handle conditional visibility with general settings', () => {
     const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
-    const settings = { GOVERNOR_MODE: 3 };
+    const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
@@ -17,9 +17,7 @@ describe('BLHeli', () => {
         }
       }
 
-      for(let i = 0; i < visibleIf.length; i += 1) {
-        expect(visibleIf[i](settings)).toBeTruthy();
-      }
+      expect(visibleIf.length).toEqual(0);
     }
   });
 
@@ -30,20 +28,26 @@ describe('BLHeli', () => {
       MOTOR_DIRECTION: 3,
     };
 
-    const visibleIf = [];
+    let ppmFunction = null;
+    let ledFunction = null;
     for(let i = 0; i < keys.length; i += 1) {
       const base = SETTINGS_DESCRIPTIONS.INDIVIDUAL[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
-          visibleIf.push(current.visibleIf);
+          if(current.name === 'PPM_CENTER_THROTTLE') {
+            ppmFunction = current.visibleIf;
+          }
+
+          if(current.name === 'LED_CONTROL') {
+            ledFunction = current.visibleIf;
+          }
         }
       }
-
-      for(let i = 0; i < visibleIf.length; i += 1) {
-        expect(visibleIf[i](settings)).toBeTruthy();
-      }
     }
+
+    expect(ppmFunction(settings)).toBeTruthy();
+    expect(ledFunction(settings)).not.toBeTruthy();
   });
 
   it('should return display name', () => {
