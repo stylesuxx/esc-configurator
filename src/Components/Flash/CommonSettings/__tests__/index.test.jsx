@@ -798,6 +798,7 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported
       />
     );
 
