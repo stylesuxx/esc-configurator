@@ -18,4 +18,5 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           directory: ./coverage
+          files: clover.xml, coverage-final.json, lcov.info
           verbose: true
