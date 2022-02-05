@@ -12,6 +12,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -322,10 +323,13 @@ function HomeColumnRight() {
       </Typography>
 
       <Typography paragraph>
-        <a
-          className="discord-link"
+        <Link
           href="https://discord.gg/QvSS5dk23C"
           rel="noreferrer"
+          sx={{
+            textAlign: 'center',
+            display: 'block',
+          }}
           target="_blank"
         >
           <img
@@ -333,8 +337,9 @@ function HomeColumnRight() {
             className="discord"
             data-canonical-src="https://img.shields.io/discord/822952715944460368.svg?label=&amp;logo=discord&amp;logoColor=ffffff&amp;color=7389D8&amp;labelColor=6A7EC2"
             src="https://camo.githubusercontent.com/74d2e4746c6f20a2cf36068cd18d092724801f7ccd17e6bdce62e94d31f9ccb2/68747470733a2f2f696d672e736869656c64732e696f2f646973636f72642f3832323935323731353934343436303336382e7376673f6c6162656c3d266c6f676f3d646973636f7264266c6f676f436f6c6f723d66666666666626636f6c6f723d373338394438266c6162656c436f6c6f723d364137454332"
+            style={{ height: '50px' }}
           />
-        </a>
+        </Link>
       </Typography>
 
       <Typography
