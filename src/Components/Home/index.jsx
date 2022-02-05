@@ -215,31 +215,44 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
         Bluejay
       </Typography>
 
-      <img
-        alt="Bluejay"
-        src={bluejay}
-      />
+      <Grid container>
+        <Grid
+          item
+          xs={9}
+        >
+          <Typography paragraph>
+            <ReactMarkdown components={{ p: 'span' }}>
+              {t('bluejayTextLine1')}
+            </ReactMarkdown>
+          </Typography>
 
-      <Typography paragraph>
-        <ReactMarkdown components={{ p: 'span' }}>
-          {t('bluejayTextLine1')}
-        </ReactMarkdown>
-      </Typography>
+          <Typography paragraph>
+            <ReactMarkdown components={{ p: 'span' }}>
+              {t('bluejayTextLine2')}
+            </ReactMarkdown>
+          </Typography>
+        </Grid>
 
-      <Typography paragraph>
-        <ReactMarkdown components={{ p: 'span' }}>
-          {t('bluejayTextLine2')}
-        </ReactMarkdown>
-      </Typography>
+        <Grid
+          item
+          xs={3}
+        >
+          <img
+            alt="Bluejay"
+            src={bluejay}
+          />
+        </Grid>
+      </Grid>
 
-      <div className="default-btn melody-editor-button">
-        <button
+      <Stack sx={{ p: 2 }}>
+        <Button
           onClick={onOpenMelodyEditor}
           type="button"
+          variant="outlined"
         >
           {t('openMelodyEditor')}
-        </button>
-      </div>
+        </Button>
+      </Stack>
 
       <Typography paragraph>
         <ReactMarkdown components={{ p: 'span' }}>
