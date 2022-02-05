@@ -18,4 +18,5 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           directory: ./coverage
+          version: v0.1.15
           verbose: true
