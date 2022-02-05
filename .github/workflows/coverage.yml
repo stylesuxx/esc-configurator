@@ -17,5 +17,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
-          files: ./coverage/clover.xml, ./coverage/coverage-final.json, ./coverage/lcov.info
+          directory: ./coverage
+          version: v0.1.15
           verbose: true
