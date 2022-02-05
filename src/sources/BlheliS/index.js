@@ -1,22 +1,19 @@
 import { BLHeliSource } from '../Blheli';
 import eeprom from '../Blheli/eeprom';
-import settings from './settings';
+import settingsDescriptions from './settings';
 import escs from './escs.json';
 import versions from './versions.json';
 
 class BLHeliSSource extends BLHeliSource {
   async getVersions() {
-    this.setLocalVersions(versions);
     return versions;
   }
 }
 
 const blheliSSource = new BLHeliSSource(
   'BLHeli_S',
-  {
-    ...eeprom,
-    ...settings,
-  },
+  eeprom,
+  settingsDescriptions,
   escs
 );
 

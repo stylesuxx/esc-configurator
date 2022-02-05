@@ -9,5 +9,7 @@
   "disableCommon": "Allgemeine Einstellungen deaktivieren",
   "disableCommonHint": "Jeder ESC hat seine eigenen Einstellungen anstatt einem gemeinsamen Satz, der für alle ESCs gültig ist.",
   "enableAdvanced": "Erweiterte Einstellungen aktivieren",
-  "enableAdvancedHint": "Fügt fortgeschrittene Optionen wie das Dumpen von Firmware hinzu."
+  "enableAdvancedHint": "Fügt fortgeschrittene Optionen wie das Dumpen von Firmware hinzu.",
+  "unstableVersions": "Firmware Vorabversionen anzeigen",
+  "unstableVersionsHint": "Zeige instabile Firmware und Vorabversionen"
 }

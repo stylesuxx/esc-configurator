@@ -1,21 +1,40 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/all", "plugin:jest/recommended"],
-  "ignorePatterns": ["service-worker.js"],
-  "plugins": [
-    "react"
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": { "jsx": true }
+  },
+  "env": {
+    "es2021": true,
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/all",
+    "plugin:jest/recommended",
+    "react-app",
+    "react-app/jest"
   ],
+  "ignorePatterns": ["service-worker.js"],
+  "plugins": ["react", "jest"],
   "rules": {
     "react/jsx-max-depth": ["warn", { "max": 5 }],
-    "indent": ["warn", 2, { "SwitchCase": 1 }],
     "react/jsx-indent": ["warn", 2],
     "react/jsx-indent-props": ["warn", 2],
     "react/jsx-no-literals": "off",
     "react/no-multi-comp": "off",
     "react/no-set-state": "off",
-    "react/forbid-component-props": "off",
-    "no-unreachable": "off",
     "react/no-array-index-key": "warn",
     "react/no-danger": "warn",
+    "react/forbid-component-props": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "testing-library/no-container": "error",
+    "testing-library/no-node-access": "error",
+    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "no-lone-blocks": "off",
+    "no-mixed-operators": "error",
     "no-unused-vars": "warn",
     "new-cap": [
       "error", {
@@ -43,36 +62,14 @@
       "exports": "always-multiline",
       "functions": "never"
     }],
-    "object-property-newline": "error"
+    "object-property-newline": "error",
+    "default-case": "warn",
+    "no-template-curly-in-string": "off",
+    "no-unreachable": "warn"
   },
   "settings": {
     "react": {
       "version": "detect"
     }
-  },
-  "globals": {
-    "document": false,
-    "process": false,
-    "navigator": false,
-    "console": false,
-    "fetch": false,
-    "URL": false,
-    "window": false,
-    "setInterval": false,
-    "clearInterval": false,
-    "Uint8Array": false,
-    "ArrayBuffer": false,
-    "DataView": false,
-    "setTimeout": false,
-    "clearTimeout": false,
-    "Promise": false,
-    "FileReader": false,
-    "Blob": false,
-    "localStorage": false,
-    "__dirname": false,
-    "require": false,
-    "Set": false,
-    "Event": false
-  },
-  "parser": "babel-eslint"
+  }
 }

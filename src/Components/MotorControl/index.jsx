@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useMemo,
 } from 'react';
@@ -55,6 +56,84 @@ function BatteryState({ getBatteryState }) {
 }
 BatteryState.propTypes = { getBatteryState: PropTypes.func.isRequired };
 
+function MotorSlider({
+  disabled,
+  max,
+  min,
+  onChange,
+  startValue,
+}) {
+  const [value, setValue] = useState(startValue);
+
+  /* istanbul ignore next */
+  const update = useCallback((e) => {
+    const value = e.target.value;
+
+    setValue(value);
+    onChange(value);
+  }, [onChange]);
+
+  return(
+    <MuiSlider
+      aria-label="Small"
+      disabled={disabled}
+      max={max}
+      min={min}
+      onChange={update}
+      step={10}
+      value={value}
+      valueLabelDisplay="auto"
+    />
+  );
+}
+MotorSlider.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  max: PropTypes.number.isRequired,
+  min: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  startValue: PropTypes.number.isRequired,
+};
+
+function IndividualMotorSlider({
+  disabled,
+  index,
+  max,
+  min,
+  onChange,
+  startValue,
+}) {
+  const { t } = useTranslation('common');
+
+  /* istanbul ignore next */
+  const update = useCallback((value) => {
+    onChange(index + 1, value);
+  }, [index, onChange]);
+
+  return(
+    <div className={`slider slider-${index}`}>
+      <h3>
+        {t("motorNr", { index: index + 1 })}
+      </h3>
+
+      <MotorSlider
+        disabled={disabled}
+        max={max}
+        min={min}
+        onChange={update}
+        startValue={startValue}
+      />
+    </div>
+  );
+}
+IndividualMotorSlider.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  min: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  startValue: PropTypes.number.isRequired,
+};
+
 function MotorControl({
   getBatteryState,
   motorCount,
@@ -63,22 +142,21 @@ function MotorControl({
   startValue,
 }) {
   const { t } = useTranslation('common');
-
   const minValue = 1000;
   const maxValue = 2000;
 
   const [unlock, setUnlock] = useState(false);
   const [unlockIndividual, setUnlockIndividual] = useState(true);
 
-  function toggleUnlock() {
+  const toggleUnlock = useCallback(() => {
     setUnlock(!unlock);
     onAllUpdate(startValue);
-  }
+  }, [unlock, startValue, onAllUpdate]);
 
   // Makes no sense to test, component has its own test, we just assume that
   // the slider actually slides.
   /* istanbul ignore next */
-  function updateValue(value) {
+  const updateValue = useCallback((value) => {
     if(value !== startValue && unlockIndividual) {
       setUnlockIndividual(false);
     }
@@ -88,100 +166,37 @@ function MotorControl({
     }
 
     onAllUpdate(value);
-  }
+  }, [startValue, unlockIndividual, onAllUpdate]);
 
   /* istanbul ignore next */
-  function updateSingleValue(index, speed) {
+  const updateSingleValue = useCallback((index, speed) => {
     onSingleUpdate(index, speed);
-  }
-
-  function MotorSlider({
-    disabled,
-    key,
-    onChange,
-  }) {
-    const [value, setValue] = useState(startValue);
-    /* istanbul ignore next */
-    function update(e) {
-      const newValue = e.target.value;
-      if(newValue !== value) {
-        console.log(newValue);
-        setValue(newValue);
-        onChange(newValue);
-      }
-    }
-
-    return(
-      <MuiSlider
-        aria-label="Small"
-        disabled={disabled}
-        key={key}
-        max={maxValue}
-        min={minValue}
-        onChange={update}
-        step={10}
-        value={value}
-        valueLabelDisplay="auto"
-      />
-    );
-  }
-  MotorSlider.propTypes = {
-    disabled: PropTypes.bool.isRequired,
-    key: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
-  function MasterSlider() {
-    return(
-      <MotorSlider
-        disabled={!unlock}
-        onChange={updateValue}
-      />
-    );
-  }
-
-  function IndividualMotorSlider({
-    index,
-    onChange,
-  }) {
-    /* istanbul ignore next */
-    function update(value) {
-      onChange(index + 1, value);
-    }
-
-    return(
-      <div className={`slider slider-${index}`}>
-        <Typography>
-          {t("motorNr", { index: index + 1 })}
-        </Typography>
-
-        <MotorSlider
-          disabled={!unlock || !unlockIndividual}
-          key={index + 1}
-          onChange={update}
-        />
-      </div>
-    );
-  }
-  IndividualMotorSlider.propTypes = {
-    index: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
+  }, [onSingleUpdate]);
 
   const singleSliderElements = [];
   for(let i = 0; i < motorCount; i += 1) {
     singleSliderElements.push(
       <IndividualMotorSlider
+        disabled={!unlock || !unlockIndividual}
         index={i}
         key={i}
+        max={maxValue}
+        min={minValue}
         onChange={updateSingleValue}
+        startValue={startValue}
       />
     );
   }
 
   const memoizedMasterSlider = useMemo(() => (
-    <MasterSlider />
-  ), [unlock]);
+    <MotorSlider
+      disabled={!unlock}
+      max={maxValue}
+      min={minValue}
+      onChange={updateValue}
+      startValue={startValue}
+    />
+  ), [startValue, unlock, updateValue]);
 
   return (
     <Grid
@@ -202,15 +217,15 @@ function MotorControl({
       >
         <MainCard title={t('motorControl')}>
           <Typography paragraph>
-            {t('motorControlText-1')}
+            {t('motorControlTextLine1')}
           </Typography>
 
           <Typography paragraph>
-            {t('motorControlText-2')}
+            {t('motorControlTextLine2')}
           </Typography>
 
           <Typography paragraph>
-            {t('motorControlText-3')}
+            {t('motorControlTextLine3')}
           </Typography>
 
           <div className="line-wrapper">

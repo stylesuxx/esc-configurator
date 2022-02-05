@@ -10,6 +10,15 @@ let FirmwareSelector;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
+const mockJsonResponse = (content) =>
+  new window.Response(content, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Time-Cached': Date.now().toString(),
+    },
+  });
+
 describe('FirmwareSelector', () => {
   beforeAll(async () => {
     /**
@@ -48,10 +57,19 @@ describe('FirmwareSelector', () => {
     expect(screen.getByText('buttonCancel')).toBeInTheDocument();
 
     expect(screen.getByRole('button', { name: 'selectFirmware selectFirmware' })).toBeInTheDocument();
-    expect(screen.getByText('selectTarget')).toBeInTheDocument();
+    expect(screen.getByText('selectTarget (UNKNOWN)')).toBeInTheDocument();
   });
 
   it('should allow changing firmware options for BLHeli_S', async() => {
+    const json = `[{ "tag_name": "0.15 (Test)", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
     const configs = {
       versions: {},
       escs: {},
@@ -76,7 +94,7 @@ describe('FirmwareSelector', () => {
       meta: { signature: 0xE8B2 },
     };
 
-    const { container } = render(
+    render(
       <FirmwareSelector
         configs={configs}
         esc={escMock}
@@ -97,42 +115,44 @@ describe('FirmwareSelector', () => {
     expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
     expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
 
-    // Firmware selection
+    // Select Bluejay
     fireEvent.mouseDown(screen.getByRole('button', { name: 'selectFirmware BLHeli_S' }));
-
     let element = screen.getByRole('option', { name: 'Bluejay' });
     userEvent.click(element);
 
-    // Layout selection
-    fireEvent.mouseDown(screen.getByRole('button', { name: 'selectEsc S-H-90' }));
+    // Layout selection not needed since it should be auto-detected
 
-    element = screen.getByRole('option', { 'name': 'S-H-50' });
-    userEvent.click(element);
-
-    // Version selection
+    // Select a version
     fireEvent.mouseDown(screen.getByRole('button', { name: 'selectVersion selectVersion' }));
-
-    element = screen.getByRole('option', { 'name': '0.15 (Test)' });
+    element = screen.getByRole('option', { name: '0.15 (Test)' });
     userEvent.click(element);
 
-    // PWM selection
+    // Select PWM frequency
     fireEvent.mouseDown(screen.getByRole('button', { name: 'selectPwmFrequency selectPwmFrequency' }));
-
-    element = screen.getByRole('option', { 'name': '96' });
+    element = screen.getByRole('option', { name: '96' });
     userEvent.click(element);
 
     userEvent.click(screen.getByText('escButtonSelect'));
     expect(onSubmit).toHaveBeenCalled();
 
     userEvent.click(screen.getByText('escButtonSelectLocally'));
-    fireEvent.change(container.querySelector('input[type=file]'));
+    fireEvent.change(screen.getByTestId('input-file'));
     expect(onLocalSubmit).toHaveBeenCalled();
 
     userEvent.click(screen.getByText('buttonCancel'));
     expect(onCancel).toHaveBeenCalled();
   });
 
-  it('should allow changing firmware options for AM32', async() => {
+  it('should display title', async() => {
+    const json = `[{ "tag_name": "v0.10", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
     const configs = {
       versions: {},
       escs: {},
@@ -153,7 +173,55 @@ describe('FirmwareSelector', () => {
     const onCancel = jest.fn();
 
     const escMock = {
-      settings: { LAYOUT: "T-MOTOR 55A" },
+      displayName: 'Display Name',
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
+    render(
+      <FirmwareSelector
+        configs={configs}
+        esc={escMock}
+        onCancel={onCancel}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />
+    );
+
+    expect(screen.getByText('selectTarget (Display Name)')).toBeInTheDocument();
+  });
+
+  it('should allow changing firmware options for AM32', async() => {
+    const json = `[{ "tag_name": "v1.78", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
+    const configs = {
+      versions: {},
+      escs: {},
+      pwm: {},
+    };
+
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = source.getEscLayouts();
+      configs.pwm[name] = source.getPwm();
+    }
+
+    const onSubmit = jest.fn();
+    const onLocalSubmit = jest.fn();
+    const onCancel = jest.fn();
+
+    const escMock = {
+      settings: { LAYOUT: "IFlight_50A" },
       meta: { signature: 0x1F06 },
     };
 
@@ -164,6 +232,7 @@ describe('FirmwareSelector', () => {
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
+        showUnstable={false}
       />
     );
 

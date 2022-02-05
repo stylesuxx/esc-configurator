@@ -7,7 +7,10 @@ import userEvent from '@testing-library/user-event';
 let App;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
-jest.mock('i18next', () => ({ changeLanguage: () => null }));
+jest.mock('i18next', () => ({
+  changeLanguage: () => null,
+  t: () => null,
+}));
 
 describe('App', () => {
   beforeAll(async () => {

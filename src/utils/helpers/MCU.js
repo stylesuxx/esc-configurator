@@ -18,22 +18,27 @@ class MCU {
     this.interfaceMode = interfaceMode;
     this.mcu = ((interfaceMode) => {
       switch(interfaceMode) {
-        case MODES.SiLBLB: 
+        case MODES.SiLBLB: {
           return (
-            findMCU(signature, bluejaySource.getMcuSignatures()) ||
-            findMCU(signature, blheliSSource.getMcuSignatures()) ||
-            findMCU(signature, blheliSilabsSource.getMcuSignatures())
+            findMCU(signature, bluejaySource.getMcus()) ||
+            findMCU(signature, blheliSSource.getMcus()) ||
+            findMCU(signature, blheliSilabsSource.getMcus())
           );
+        }
 
+        case MODES.SiLC2:
         case MODES.AtmBLB:
-        case MODES.AtmSK:
-          return findMCU(signature, blheliSource.getMcuSignatures());
+        case MODES.AtmSK: {
+          return findMCU(signature, blheliSource.getMcus());
+        }
 
-        case MODES.ARMBLB: 
-          return findMCU(signature, am32Source.getMcuSignatures());
+        case MODES.ARMBLB: {
+          return findMCU(signature, am32Source.getMcus());
+        }
 
-        default: 
+        default: {
           throw new UnknownInterfaceError(interfaceMode);
+        }
       }
     })(interfaceMode);
 
@@ -43,14 +48,17 @@ class MCU {
   }
 
   getFlashSize() {
-    const blheliEeprom = blheliSource.getEeprom();
-
     switch(this.interfaceMode) {
-      case MODES.SiLC2:
-        return blheliEeprom.SILABS.FLASH_SIZE;
-    }
+      case MODES.SiLC2: {
+        const blheliEeprom = blheliSource.getEeprom();
 
-    return this.mcu.flash_size;
+        return blheliEeprom.SILABS.FLASH_SIZE;
+      }
+
+      default: {
+        return this.mcu.flash_size;
+      }
+    }
   }
 
   getFlashOffset() {

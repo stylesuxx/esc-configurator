@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Grid from '@mui/material/Grid';
@@ -10,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import GenericButton from './GenericButton';
 
 function Buttonbar({
+  onClearLog,
   onOpenMelodyEditor,
   onReadSetup,
   onWriteSetup,
@@ -64,6 +64,11 @@ function Buttonbar({
               <GenericButton
                 onClick={onSaveLog}
                 text={t('escButtonSaveLog')}
+              />
+
+              <GenericButton
+                onClick={onClearLog}
+                text={t('escButtonClearLog')}
               />
 
               <GenericButton
@@ -135,6 +140,7 @@ Buttonbar.propTypes = {
   canRead: PropTypes.bool.isRequired,
   canResetDefaults: PropTypes.bool.isRequired,
   canWrite: PropTypes.bool.isRequired,
+  onClearLog: PropTypes.func.isRequired,
   onOpenMelodyEditor: PropTypes.func.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,

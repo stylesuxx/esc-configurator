@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useEffect,
 } from 'react';
@@ -43,23 +44,21 @@ function Slider({
   };
 
   /* istanbul ignore next */
-  function updateValue(e) {
+  const updateValue = useCallback((e) => {
     const newValue = e.target.value;
     const newValueScaled = Math.floor((newValue - offset) / factor);
 
     if(currentValue !== newValueScaled) {
       setCurrentValue(newValueScaled);
     }
-  }
+  }, [offset, factor, currentValue]);
 
   /* istanbul ignore next */
-  function handleUpdate() {
+  const handleUpdate = useCallback(() => {
     onChange(name, currentValue);
-  }
+  }, [onChange, name, currentValue]);
 
-  function format(value) {
-    return `${value}${suffix}`;
-  }
+  const format = useCallback((value) => `${value}${suffix}`, [suffix]);
 
   return (
     <FormControl

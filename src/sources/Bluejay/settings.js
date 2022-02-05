@@ -1,7 +1,7 @@
-const SETTINGS_DESCRIPTIONS = {};
+const COMMON = {};
 
 // V0.9
-SETTINGS_DESCRIPTIONS['200'] = {
+COMMON['200'] = {
   base: [{
     name: 'RPM_POWER_SLOPE',
     type: 'enum',
@@ -158,10 +158,10 @@ SETTINGS_DESCRIPTIONS['200'] = {
 };
 
 // V0.10
-SETTINGS_DESCRIPTIONS['201'] = {
+COMMON['201'] = {
   base: [{
     name: 'STARTUP_POWER_MIN',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'STARTUP_POWER_MAX',
     type: 'number',
@@ -175,13 +175,13 @@ SETTINGS_DESCRIPTIONS['201'] = {
     displayPrecision: 0,
   }, {
     name: 'TEMPERATURE_PROTECTION',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'COMMUTATION_TIMING',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'DEMAG_COMPENSATION',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'RPM_POWER_SLOPE',
     type: 'enum',
@@ -231,22 +231,22 @@ SETTINGS_DESCRIPTIONS['201'] = {
     label: 'escRampupPower',
   }, {
     name: 'BEEP_STRENGTH',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'BEACON_STRENGTH',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'BEACON_DELAY',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'STARTUP_BEEP',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'DITHERING',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }, {
     name: 'BRAKE_ON_STOP',
-    inherit: SETTINGS_DESCRIPTIONS['200'],
+    inherit: COMMON['200'],
   }],
 };
 
@@ -259,12 +259,12 @@ function merge_inherited_descriptions (descs) {
   }
 }
 
-merge_inherited_descriptions(SETTINGS_DESCRIPTIONS['201']);
+merge_inherited_descriptions(COMMON['201']);
 
 // 201 with damping mode
-SETTINGS_DESCRIPTIONS['202'] = {
+COMMON['202'] = {
   base: [
-    ...SETTINGS_DESCRIPTIONS['201'].base,
+    ...COMMON['201'].base,
     {
       name: 'BRAKING_STRENGTH',
       type: 'enum',
@@ -282,15 +282,15 @@ SETTINGS_DESCRIPTIONS['202'] = {
     }],
 };
 
-SETTINGS_DESCRIPTIONS['203'] = {
+COMMON['203'] = {
   base: [
-    ...SETTINGS_DESCRIPTIONS['201'].base.filter((s) => s.name !== 'STARTUP_BEEP'),
+    ...COMMON['201'].base.filter((s) => s.name !== 'STARTUP_BEEP'),
   ],
 };
 
-SETTINGS_DESCRIPTIONS['204'] = {
+COMMON['204'] = {
   base: [
-    ...SETTINGS_DESCRIPTIONS['203'].base,
+    ...COMMON['203'].base,
     {
       name: 'BRAKING_STRENGTH',
       type: 'number',
@@ -302,26 +302,42 @@ SETTINGS_DESCRIPTIONS['204'] = {
   ],
 };
 
-const INDIVIDUAL_SETTINGS = [{
-  name: 'MOTOR_DIRECTION',
-  type: 'enum',
-  label: 'escMotorDirection',
-  options: [{
-    value: '1',
-    label: 'Normal',
-  }, {
-    value: '2',
-    label: 'Reversed',
-  }, {
-    value: '3',
-    label: 'Bidirectional',
-  }, {
-    value: '4',
-    label: 'Bidirectional Reversed',
-  }],
-}];
+COMMON['205'] = {
+  base: [
+    ...COMMON['204'].base,
+    {
+      name: 'STARTUP_BEEP',
+      type: 'enum',
+      label: 'escStartupBeep',
+      options: [{
+        value: '0',
+        label: 'Off',
+      }, {
+        value: '1',
+        label: 'Normal',
+      }, {
+        value: '2',
+        label: 'Custom',
+      }],
+    }, {
+      name: 'PWM_FREQUENCY',
+      type: 'enum',
+      label: 'escPwmFrequency',
+      options: [{
+        value: '24',
+        label: '24',
+      }, {
+        value: '48',
+        label: '48',
+      }, {
+        value: '96',
+        label: '96',
+      }],
+    },
+  ],
+};
 
-const INDIVIDUAL_SETTINGS_203 = [{
+const INDIVIDUAL_SETTINGS_200 = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',
   label: 'escMotorDirection',
@@ -339,19 +355,52 @@ const INDIVIDUAL_SETTINGS_203 = [{
     label: 'Bidirectional Reversed',
   }],
 }, {
-  name: 'STARTUP_MELODY',
-  type: 'melody',
-  label: 'startupMelody',
-  value: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  melodyLength: 128,
+  name: 'LED_CONTROL',
+  type: 'enum',
+  label: 'escLedControl',
+  visibleIf: (settings) => ('LAYOUT' in settings) && ['E', 'J', 'M', 'Q', 'U'].includes(settings.LAYOUT[1]),
+  options: [{
+    value: 0x00,
+    label: 'Off',
+  }, {
+    value: 0x03,
+    label: 'Blue',
+  }, {
+    value: 0x0C,
+    label: 'Green',
+  }, {
+    value: 0x30,
+    label: 'Red',
+  }, {
+    value: 0x0F,
+    label: 'Cyan',
+  }, {
+    value: 0x33,
+    label: 'Magenta',
+  }, {
+    value: 0x3C,
+    label: 'Yellow',
+  }, {
+    value: 0x3F,
+    label: 'White',
+  }],
 }];
 
-const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
+const INDIVIDUAL_SETTINGS_203 = [
+  ...INDIVIDUAL_SETTINGS_200,
+  {
+    name: 'STARTUP_MELODY',
+    type: 'melody',
+  },
+];
+
+const INDIVIDUAL = {
+  '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
-  '202': { base: INDIVIDUAL_SETTINGS },
-  '201': { base: INDIVIDUAL_SETTINGS },
-  '200': { base: INDIVIDUAL_SETTINGS },
+  '202': { base: INDIVIDUAL_SETTINGS_200 },
+  '201': { base: INDIVIDUAL_SETTINGS_200 },
+  '200': { base: INDIVIDUAL_SETTINGS_200 },
 };
 
 const DEFAULTS = {};
@@ -387,7 +436,7 @@ DEFAULTS['202'] = { // unreleased
 
 DEFAULTS['203'] = { // v0.12
   ...DEFAULTS['201'],
-  STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  STARTUP_MELODY: [2, 58, 4, 32, 52, 66, 13, 0, 69, 45, 13, 0, 52, 66, 13, 0, 78, 39, 211, 0, 69, 45, 208, 25, 52, 25, 0],
 };
 delete DEFAULTS['203'].STARTUP_BEEP;
 
@@ -396,10 +445,17 @@ DEFAULTS['204'] = { // v0.15
   BRAKING_STRENGTH: 255,
 };
 
+DEFAULTS['205'] = {
+  ...DEFAULTS['204'],
+  STARTUP_BEEP: 1,
+  STARTUP_MELODY_WAIT_MS: 0,
+  PWM_FREQUENCY: 24,
+};
+
 const settings = {
   DEFAULTS,
-  INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-  SETTINGS_DESCRIPTIONS,
+  INDIVIDUAL,
+  COMMON,
 };
 
 export default settings;

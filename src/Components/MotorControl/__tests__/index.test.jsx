@@ -54,12 +54,12 @@ describe('MotorControl', () => {
   });
 
   it('should show battery state', async () => {
-    function getBatteryState() {
-      return {
+    const getBatteryState = jest.fn(() => (
+      {
         cellCount: 1,
         voltage: 3.8,
-      };
-    }
+      }
+    ));
 
     render(
       <MotorControl
@@ -81,17 +81,17 @@ describe('MotorControl', () => {
       });
     });
 
-
+    expect(getBatteryState).toHaveBeenCalled();
     expect(screen.getByText(/battery 1S @ 3.8V/i)).toBeInTheDocument();
   });
 
   it('should highlight battery low', async () => {
-    function getBatteryState() {
-      return {
+    const getBatteryState = jest.fn(() => (
+      {
         cellCount: 1,
         voltage: 2.8,
-      };
-    }
+      }
+    ));
 
     render(
       <MotorControl
@@ -113,7 +113,7 @@ describe('MotorControl', () => {
       });
     });
 
-
+    expect(getBatteryState).toHaveBeenCalled();
     expect(screen.getByText(/battery 1S @ 2.8V/i)).toBeInTheDocument();
   });
 });

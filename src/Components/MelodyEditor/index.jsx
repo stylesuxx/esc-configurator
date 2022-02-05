@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useState,
   useEffect,
   useRef,
@@ -20,14 +21,15 @@ import Overlay from '../Overlay';
 function SaveMelody({ onSave }) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
-  function updateName(e) {
+
+  const updateName = useCallback((e) => {
     const name = e.target.value;
     setName(name);
-  }
+  }, []);
 
-  function handleSave() {
+  const handleSave = useCallback(() => {
     onSave(name);
-  }
+  }, [name, onSave]);
 
   return (
     <Grid
@@ -41,6 +43,7 @@ function SaveMelody({ onSave }) {
       >
         <Input
           aria-label="save-melody"
+          data-testid="save-melody-input"
           fullWidth
           name="save-melody-name"
           onChange={updateName}
@@ -92,9 +95,9 @@ function PresetSelect({
     }
 
     setCanDelete(canDelete);
-  }, [selectedPreset]);
+  }, [selectedPreset, customMelodies]);
 
-  function handleUpdate(e) {
+  const handleUpdate = useCallback((e) => {
     const value = e.target.value;
     let selected = [];
     let match = null;
@@ -111,36 +114,28 @@ function PresetSelect({
 
     setSelectedPreset(e.target.value);
     onUpdateMelodies(selected);
-  }
+  }, [defaultMelodies, customMelodies, onUpdateMelodies]);
 
-  function handleDelete() {
+  const handleDelete = useCallback(() => {
     setSelectedPreset(defaultMelodies[0].name);
     onUpdateMelodies(defaultMelodies[0].tracks);
 
     onDelete(selectedPreset);
-  }
+  }, [onUpdateMelodies, defaultMelodies, onDelete, selectedPreset]);
 
   const defaultPossibilities = defaultMelodies.filter((item) => item.tracks.length <= escs );
-  const defaultOptions = defaultPossibilities.map((melody) => {
-    if(melody.tracks.length <= escs) {
-      return {
-        key: `preset-${melody.name}`,
-        name: melody.name,
-        value: `preset-${melody.name}`,
-      };
-    }
-  });
+  const defaultOptions = defaultPossibilities.map((item) => ({
+    key: `preset-${item.name}`,
+    name: item.name,
+    value: `preset-${item.name}`,
+  }));
 
   const customPossibilities = customMelodies.filter((item) => item.tracks.length <= escs );
-  const customOptions = customPossibilities.map((melody) => {
-    if(melody.tracks.length <= escs) {
-      return {
-        key: melody.name,
-        name: melody.name,
-        value: melody.name,
-      };
-    }
-  });
+  const customOptions = customPossibilities.map((item) => ({
+    key: item.name,
+    name: item.name,
+    value: item.name,
+  }));
 
   const options = [
     ...defaultOptions,
@@ -202,6 +197,61 @@ PresetSelect.propTypes = {
   ]),
 };
 
+function IndexedMelodyElement ({
+  accepted,
+  disabled,
+  dummy,
+  index,
+  label,
+  melody,
+  onAccept,
+  onAddRef,
+  onPlay,
+  onStop,
+  onUpdate,
+}) {
+  const handleAcceptMelody = useCallback((accept) => {
+    onAccept(index, accept);
+  }, [index, onAccept]);
+
+  const handleUpdate = useCallback((melody) => {
+    onUpdate(index, melody);
+  }, [index, onUpdate]);
+
+  const handleAddRef = useCallback((ref) => {
+    onAddRef(index, ref);
+  }, [index, onAddRef]);
+
+  return (
+    <MelodyElement
+      accepted={accepted}
+      disabled={disabled}
+      dummy={dummy}
+      label={label}
+      melody={melody}
+      onAccept={handleAcceptMelody}
+      onPlay={onPlay}
+      onStop={onStop}
+      onUpdate={handleUpdate}
+      ref={handleAddRef}
+    />
+  );
+}
+
+IndexedMelodyElement.propTypes = {
+  accepted: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  dummy: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  melody: PropTypes.string.isRequired,
+  onAccept: PropTypes.func.isRequired,
+  onAddRef: PropTypes.func.isRequired,
+  onPlay: PropTypes.func.isRequired,
+  onStop: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+};
+
 function MelodyEditor({
   dummy,
   melodies,
@@ -217,7 +267,7 @@ function MelodyEditor({
   const { t } = useTranslation();
 
   const defaultAccepted = melodies.map(() => null);
-  const references = melodies.map(() => useRef());
+  const melodyElementReferences = useRef({});
   const uniqueMelodies = [...new Set(melodies)];
   const [allAccepted, setAllAccepted] = useState(false);
   const [sync, setSync] = useState(uniqueMelodies.length <= 1);
@@ -229,17 +279,7 @@ function MelodyEditor({
   const totalPlaying = useRef(0);
   const audioContext = useRef(0);
 
-  useEffect(() => {
-    checkAcceptedAll();
-  }, [acceptedMelodies]);
-
-  function handleClose() {
-    if(!isAnyPlaying) {
-      onClose();
-    }
-  }
-
-  function checkAcceptedAll() {
+  const checkAcceptedAll = useCallback(() => {
     let allAccepted = true;
     for(let i = 0; i < acceptedMelodies.length; i += 1) {
       if(!acceptedMelodies[i]) {
@@ -249,29 +289,39 @@ function MelodyEditor({
     }
 
     setAllAccepted(allAccepted);
-  }
+  }, [acceptedMelodies]);
 
-  function handleAcceptAll(accept) {
+  useEffect(() => {
+    checkAcceptedAll();
+  }, [acceptedMelodies, checkAcceptedAll]);
+
+  const handleClose = useCallback(() => {
+    if(!isAnyPlaying) {
+      onClose();
+    }
+  }, [isAnyPlaying, onClose]);
+
+  const handleAcceptAll = useCallback((accept) => {
     const acceptedMelodiesNew = acceptedMelodies.map(() => accept);
     setAcceptedMelodies(acceptedMelodiesNew);
-  }
+  }, [acceptedMelodies]);
 
-  function handleAccept(index, accept) {
+  const handleAccept = useCallback((index, accept) => {
     acceptedMelodies[index] = accept;
     setAcceptedMelodies([...acceptedMelodies]);
-  }
+  }, [acceptedMelodies]);
 
-  function handleSave() {
+  const handleSave = useCallback(() => {
     setCurrentMelodies([...acceptedMelodies]);
     onWrite(acceptedMelodies);
-  }
+  }, [acceptedMelodies, onWrite]);
 
-  function handlePlay() {
+  const handlePlay = useCallback(() => {
     totalPlaying.current += 1;
     setIsAnyPlaying(true);
-  }
+  }, [totalPlaying]);
 
-  function handleStop() {
+  const handleStop = useCallback(() => {
     totalPlaying.current -= 1;
     if(totalPlaying.current === 0) {
       setIsAnyPlaying(false);
@@ -280,37 +330,40 @@ function MelodyEditor({
         audioContext.current = null;
       }
     }
-  }
+  }, [totalPlaying, audioContext]);
 
-  function handlePlayAll() {
+  const handlePlayAll = useCallback(() => {
     setIsAnyPlaying(true);
 
     audioContext.current = new window.AudioContext();
-    for(let i = 0; i < references.length; i += 1) {
-      const child = references[i];
-      child.current.play(audioContext.current, 1 / references.length);
+    const length = Object.keys(melodyElementReferences.current).length;
+    for(let i = 0; i < length; i += 1) {
+      const child = melodyElementReferences.current[i];
+      child.play(audioContext.current, 1 / length);
     }
-  }
+  }, [audioContext, melodyElementReferences]);
 
-  function handleStopAll() {
-    for(let i = 0; i < references.length; i += 1) {
-      const child = references[i];
-      child.current.stop();
+  /* istanbul ignore next */
+  const handleStopAll = useCallback(() => {
+    const length = Object.keys(melodyElementReferences.current).length;
+    for(let i = 0; i < length; i += 1) {
+      const child = melodyElementReferences.current[i];
+      child.stop();
     }
-  }
+  }, [melodyElementReferences]);
 
-  function toggleSync() {
+  const toggleSync = useCallback(() => {
     handleAcceptAll(false);
     setSync(!sync);
-  }
+  }, [sync, handleAcceptAll]);
 
-  function handleMelodiesSave(name) {
+  const handleMelodiesSave = useCallback((name) => {
     selectedMelody.current = name;
     const unique = [...new Set(latestMelodies.current)];
     onSave(name, unique);
-  }
+  }, [selectedMelody, latestMelodies, onSave]);
 
-  function handleMelodiesSelected(selected) {
+  const handleMelodiesSelected = useCallback((selected) => {
     const newMelodies = [];
     let currentTrack = 0;
     while(newMelodies.length < melodies.length) {
@@ -320,50 +373,45 @@ function MelodyEditor({
 
     setSync(selected.length === 1);
     setCurrentMelodies(newMelodies);
-  }
+  }, [melodies]);
 
-  function handleMelodiesUpdate(index, melody) {
+  const handleMelodiesUpdate = useCallback((index, melody) => {
     latestMelodies.current[index] = melody;
-  }
+  }, [latestMelodies]);
 
-  function handleMelodiesUpdateAll(melody) {
+  const handleMelodiesUpdateAll = useCallback((melody) => {
     for(let i = 0; i < melodies.length; i += 1) {
       latestMelodies.current[i] = melody;
     }
-  }
+  }, [melodies, latestMelodies]);
 
-  const melodyElements = currentMelodies.map((melody, index) => {
-    function handleAcceptMelody(accept) {
-      handleAccept(index, accept);
-    }
+  const handleAddRef = useCallback((index, ref) => {
+    melodyElementReferences.current[index] = ref;
+  }, [melodyElementReferences]);
 
-    function handleUpdate(melody) {
-      handleMelodiesUpdate(index, melody);
-    }
-
-    return (
-      <Grid
-        item
+  const melodyElements = currentMelodies.map((melody, index) => (
+    <Grid
+      item
+      key={index}
+      md={6}
+      xs={12}
+    >
+      <IndexedMelodyElement
+        accepted={acceptedMelodies[index] ? true : false}
+        disabled={writing}
+        dummy={dummy}
+        index={index}
         key={index}
-        md={6}
-        xs={12}
-      >
-        <MelodyElement
-          accepted={acceptedMelodies[index] ? true : false}
-          disabled={writing}
-          dummy={dummy}
-          key={index}
-          label={`ESC ${index + 1}`}
-          melody={melody}
-          onAccept={handleAcceptMelody}
-          onPlay={handlePlay}
-          onStop={handleStop}
-          onUpdate={handleUpdate}
-          ref={references[index]}
-        />
-      </Grid>
-    );
-  });
+        label={`ESC ${index + 1}`}
+        melody={melody}
+        onAccept={handleAccept}
+        onAddRef={handleAddRef}
+        onPlay={handlePlay}
+        onStop={handleStop}
+        onUpdate={handleMelodiesUpdate}
+      />
+    </Grid>
+  ));
 
   return (
     <Overlay

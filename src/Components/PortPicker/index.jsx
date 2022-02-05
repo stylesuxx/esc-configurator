@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import CompatibilityWarning from './CompatibilityWarning';
 
@@ -116,13 +116,13 @@ function PortPicker({
 }) {
   const { t } = useTranslation('common');
 
-  function handleBaudRateChange(e) {
+  const handleBaudRateChange = useCallback((e) => {
     onSetBaudRate(e.target.value);
-  }
+  }, [onSetBaudRate]);
 
-  function handlePortChange(e) {
+  const handlePortChange = useCallback((e) => {
     onChangePort(e.target.value);
-  }
+  }, [onChangePort]);
 
   if(!hasSerial) {
     return <CompatibilityWarning />;

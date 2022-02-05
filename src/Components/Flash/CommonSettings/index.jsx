@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   useEffect,
   useState,
 } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -52,9 +54,9 @@ function CommonSettings({
     if(settings) {
       onSettingsUpdate(settings);
     }
-  }, [settings]);
+  }, [settings, onSettingsUpdate]);
 
-  function handleCheckboxChange(e) {
+  const handleCheckboxChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
     const {
       name,
@@ -62,9 +64,9 @@ function CommonSettings({
     } = e.target;
     newSettings[name] = checked ? 1 : 0;
     setSettings(newSettings);
-  }
+  }, [availableSettings]);
 
-  function handleSelectChange(e) {
+  const handleSelectChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
     const {
       name,
@@ -72,30 +74,32 @@ function CommonSettings({
     } = e.target;
     newSettings[name] = value;
     setSettings(newSettings);
-  }
+  }, [availableSettings]);
 
-  function handleNumberChange(name, value) {
+  const handleNumberChange = useCallback((name, value) => {
     const newSettings = { ...availableSettings };
 
     newSettings[name] = value;
     setSettings(newSettings);
-  }
+  }, [availableSettings]);
 
   if (!settingsDescriptions) {
-    const unsupportedNames = ['JESC', 'BLHeli_M'];
+    const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
     const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
     let unsupportedText = (
       <Typography>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t('common:versionUnsupported', {
-              version: version,
-              name: availableSettings.NAME,
-              layout: availableSettings.LAYOUT_REVISION,
-            }),
-          }}
-        />
+        <p>
+          {t('common:versionUnsupportedLine1', {
+            version: version,
+            name: availableSettings.NAME,
+            layout: availableSettings.LAYOUT_REVISION,
+          })}
+        </p>
+
+        <ReactMarkdown>
+          {t('common:versionUnsupportedLine2')}
+        </ReactMarkdown>
       </Typography>
     );
 

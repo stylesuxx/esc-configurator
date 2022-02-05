@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, {
+  useCallback,
+  useState,
+} from 'react';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -11,8 +14,8 @@ function Log({ messages }) {
   const { t } = useTranslation('common');
   const [ expanded, setExpanded] = useState(false);
 
-  const messageElements = messages.slice(0).reverse().
-    map((message, index) => (
+  const messageElements = messages.slice(0).reverse()
+    .map((message, index) => (
       <Typography
         key={index}
         variant="body2"
@@ -21,9 +24,9 @@ function Log({ messages }) {
       </Typography>
     ));
 
-  function toggleExpanded() {
+  const toggleExpanded = useCallback(() => {
     setExpanded(!expanded);
-  }
+  }, [expanded]);
 
   return (
     <div

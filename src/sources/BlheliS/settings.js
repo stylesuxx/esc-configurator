@@ -376,7 +376,7 @@ const SETTINGS_LAYOUT_32 = [
   },
 ];
 
-const SETTINGS_DESCRIPTIONS = {
+const COMMON = {
   33: { base: SETTINGS_LAYOUT_33 },
   32: { base: SETTINGS_LAYOUT_32 },
 };
@@ -440,9 +440,40 @@ const INDIVIDUAL_SETTINGS = [
     suffix: " μs",
     visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
   },
+  {
+    name: 'LED_CONTROL',
+    type: 'enum',
+    label: 'escLedControl',
+    visibleIf: (settings) => ('LAYOUT' in settings) && ['E', 'J', 'M', 'Q', 'U'].includes(settings.LAYOUT[1]),
+    options: [{
+      value: 0x00,
+      label: 'Off',
+    }, {
+      value: 0x03,
+      label: 'Blue',
+    }, {
+      value: 0x0C,
+      label: 'Green',
+    }, {
+      value: 0x30,
+      label: 'Red',
+    }, {
+      value: 0x0F,
+      label: 'Cyan',
+    }, {
+      value: 0x33,
+      label: 'Magenta',
+    }, {
+      value: 0x3C,
+      label: 'Yellow',
+    }, {
+      value: 0x3F,
+      label: 'White',
+    }],
+  },
 ];
 
-const INDIVIDUAL_SETTINGS_DESCRIPTIONS = {
+const INDIVIDUAL = {
   33: { base: INDIVIDUAL_SETTINGS },
   32: { base: INDIVIDUAL_SETTINGS },
 };
@@ -486,8 +517,8 @@ const DEFAULTS = {
 
 const settings = {
   DEFAULTS,
-  INDIVIDUAL_SETTINGS_DESCRIPTIONS,
-  SETTINGS_DESCRIPTIONS,
+  INDIVIDUAL,
+  COMMON,
 };
 
 export default settings;

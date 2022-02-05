@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import FormControl from '@mui/material/FormControl';
 import Stack from '@mui/material/Stack';
@@ -16,12 +16,12 @@ function AppSettings({
 }) {
   const { t } = useTranslation('settings');
 
-  function handleCheckboxChange(e) {
+  const handleCheckboxChange = useCallback((e) => {
     const name = e.target.name;
     const value = e.target.checked;
 
     onUpdate(name, value);
-  }
+  }, [onUpdate]);
 
   const settingKeys = Object.keys(settings);
   const settingElements = settingKeys.map((key) => {
@@ -40,7 +40,13 @@ function AppSettings({
           />
         );
       }
+
+      default: {
+        return null;
+      }
     }
+
+    return null;
   });
 
   return (

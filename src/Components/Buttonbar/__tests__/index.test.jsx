@@ -96,16 +96,16 @@ describe('Buttonbar', () => {
       />
     );
 
-    userEvent.click(screen.queryAllByText(/resetDefaults/i)[1]);
+    expect(screen.queryAllByText(/resetDefaults/i)[1]).toHaveAttribute('disabled');
     expect(onResetDefaults).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/escButtonRead/i));
+    expect(screen.getByText(/escButtonRead/i)).toHaveAttribute('disabled');
     expect(onReadSetup).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/escButtonWrite/i));
+    expect(screen.getByText(/escButtonWrite/i)).toHaveAttribute('disabled');
     expect(onWriteSetup).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/escButtonFlashAll/i));
+    expect(screen.getByText(/escButtonFlashAll/i)).toHaveAttribute('disabled');
     expect(onSelectFirmwareForAll).not.toHaveBeenCalled();
   });
 

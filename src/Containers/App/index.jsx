@@ -1,3 +1,4 @@
+import UAParser from 'ua-parser-js';
 import TagManager from 'react-gtm-module';
 import React, { Component } from 'react';
 import Rtttl from 'bluejay-rtttl-parse';
@@ -17,6 +18,7 @@ import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
 import {
+  clearLog,
   loadLanguage,
   loadLog,
   loadMelodies,
@@ -110,14 +112,27 @@ class App extends Component {
 
   async componentDidMount() {
     this.onMount(async() => {
+
+      const uaParser = new UAParser();
+      const browser = uaParser.getBrowser();
+      const os = uaParser.getOS();
+      this.addLogMessage('browser', {
+        ...browser,
+        os: os.name,
+      });
+
       if (this.serialApi) {
+        /**
+         * Fetch configs in the background - some of them are fetched via
+         * github API and might take some time to be fetched.
+         */
+        this.fetchConfigs().then((configs) => this.setState({ configs }));
+
         this.serialApi.removeEventListener('connect', this.serialConnectHandler);
         this.serialApi.removeEventListener('disconnect', this.serialDisconnectHandler);
 
         this.serialApi.addEventListener('connect', this.serialConnectHandler);
         this.serialApi.addEventListener('disconnect', this.serialDisconnectHandler);
-
-        this.setState({ configs: await this.fetchConfigs() });
         this.serialConnectHandler();
       } else {
         this.setSerial({ checked: true });
@@ -141,7 +156,7 @@ class App extends Component {
         ...settings,
       },
     });
-  }
+  };
 
   setEscs = (settings, cb = null) => {
     const { escs } = this.state;
@@ -151,7 +166,7 @@ class App extends Component {
         ...settings,
       },
     }, cb);
-  }
+  };
 
   setActions = (settings) => {
     const { actions } = this.state;
@@ -161,7 +176,7 @@ class App extends Component {
         ...settings,
       },
     });
-  }
+  };
 
   setMelodies = (settings) => {
     const { melodies } = this.state;
@@ -171,13 +186,13 @@ class App extends Component {
         ...settings,
       },
     });
-  }
+  };
 
   updateLog = (message) => {
     const now = dateFormat(new Date(), 'yyyy/mm/dd HH:MM:ss');
     this.log.push(`${now}: ${message}`);
     localStorage.setItem('log', JSON.stringify(this.log));
-  }
+  };
 
   addLogMessage = async(message, params = {}) => {
     const {
@@ -197,7 +212,7 @@ class App extends Component {
     const log = [ ...serial.log ];
     log.push(this.formatLogMessage(translation));
     this.setSerial({ log });
-  }
+  };
 
   fetchConfigs = async() => {
     const { configs } = this.state;
@@ -219,7 +234,7 @@ class App extends Component {
     }
 
     return configs;
-  }
+  };
 
   formatLogMessage = (html) => {
     const now = new Date();
@@ -239,7 +254,7 @@ class App extends Component {
         {html}
       </div>
     );
-  }
+  };
 
   flash = async(text, force, migrate) => {
     const { escs } = this.state;
@@ -272,7 +287,7 @@ class App extends Component {
 
     this.setEscs({ master: getMasterSettings(individual) });
     this.setActions({ isFlashing: false });
-  }
+  };
 
   serialConnectHandler = async() => {
     let connected = false;
@@ -303,7 +318,7 @@ class App extends Component {
       hasSerial: true,
       portNames: portNames,
     });
-  }
+  };
 
   serialDisconnectHandler = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
@@ -330,7 +345,7 @@ class App extends Component {
     });
 
     this.setEscs({ individual: [] });
-  }
+  };
 
   handlePacketErrors = (count) => {
     const { stats } = this.state;
@@ -340,7 +355,7 @@ class App extends Component {
         packetErrors: stats.packetErrors + count,
       },
     });
-  }
+  };
 
   handleSaveLog = () => {
     const element = document.createElement("a");
@@ -349,11 +364,17 @@ class App extends Component {
     element.download = "esc-configurator-log.txt";
     document.body.appendChild(element);
     element.click();
-  }
+
+    this.handleClearLog();
+  };
+
+  handleClearLog = () => {
+    this.log = clearLog();
+  };
 
   handleSettingsUpdate = (master) => {
     this.setEscs({ master });
-  }
+  };
 
   handleIndividualSettingsUpdate = (index, individualSettings) => {
     const  { escs } = this.state;
@@ -367,7 +388,7 @@ class App extends Component {
     }
 
     this.setEscs({ individual });
-  }
+  };
 
   handleCommonSettingsUpdate = (index, commonSettings) => {
     const  { escs } = this.state;
@@ -381,7 +402,7 @@ class App extends Component {
     }
 
     this.setEscs({ individual });
-  }
+  };
 
   handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
@@ -408,7 +429,7 @@ class App extends Component {
     this.setActions({ isWriting: false });
 
     this.handleReadEscs();
-  }
+  };
 
   handleReadEscs = async() => {
     const { escs } = this.state;
@@ -498,7 +519,7 @@ class App extends Component {
       individual,
       master: getMasterSettings(individual),
     });
-  }
+  };
 
   handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
@@ -541,7 +562,7 @@ class App extends Component {
     this.setActions({ isWriting: false });
 
     this.setEscs({ individual });
-  }
+  };
 
   handleFirmwareDump = async (target) => {
     const { escs } = this.state;
@@ -568,12 +589,12 @@ class App extends Component {
     element.download = "firmware.bin";
     document.body.appendChild(element);
     element.click();
-  }
+  };
 
   handleSingleFlash = (index) => {
     this.setEscs({ targets: [index] });
     this.setActions({ isSelecting: true });
-  }
+  };
 
   handleSelectFirmwareForAll = () => {
     const { escs } = this.state;
@@ -586,12 +607,12 @@ class App extends Component {
 
     this.setActions({ isSelecting: true });
     this.setEscs({ targets });
-  }
+  };
 
   handleCancelFirmwareSelection = () => {
     this.setActions({ isSelecting: false });
     this.setEscs({ targets: [] });
-  }
+  };
 
   handleLocalSubmit = (e, force, migrate) => {
     e.preventDefault();
@@ -620,7 +641,7 @@ class App extends Component {
       this.flash(text, force, migrate);
     };
     reader.readAsText(e.target.files[0]);
-  }
+  };
 
   /**
    * Acquires the hex file from an URL. Before doing so, the local storage is
@@ -691,7 +712,7 @@ class App extends Component {
       this.addLogMessage('getFileFailed');
       this.setActions({ isFlashing: false });
     }
-  }
+  };
 
   handleSetPort = async() => {
     try {
@@ -716,7 +737,7 @@ class App extends Component {
       // No port selected, do nothing
       console.debug(e);
     }
-  }
+  };
 
   handleChangePort = (index) => {
     const { serial } = this.state;
@@ -724,11 +745,11 @@ class App extends Component {
 
     this.addLogMessage('portChanged');
     this.setSerial({ chosenPort: serial.availablePorts[index] });
-  }
+  };
 
   handleSetBaudRate = (rate) => {
     this.setSerial({ baudRate: rate });
-  }
+  };
 
   handleConnect = async(e) => {
     e.preventDefault();
@@ -821,7 +842,7 @@ class App extends Component {
     }
 
     this.setActions({ isConnecting: false });
-  }
+  };
 
   handleDisconnect = async(e) => {
     e.preventDefault();
@@ -862,15 +883,15 @@ class App extends Component {
     });
 
     this.addLogMessage('closedPort');
-  }
+  };
 
   handleAllMotorSpeed = async(speed) => {
     await this.serial.spinAllMotors(speed);
-  }
+  };
 
   handleSingleMotorSpeed = async(index, speed) => {
     await this.serial.spinMotor(index, speed);
-  }
+  };
 
   handleCookieAccept = () => {
     if(!this.gtmActive) {
@@ -879,7 +900,7 @@ class App extends Component {
 
       this.gtmActive = true;
     }
-  }
+  };
 
   handleLanguageSelection = (e) => {
     const language = e.target.value;
@@ -887,7 +908,7 @@ class App extends Component {
     localStorage.setItem('language', language);
     i18next.changeLanguage(language);
     this.setState({ language });
-  }
+  };
 
   handleAppSettingsClose = () => {
     const { appSettings } = this.state;
@@ -897,7 +918,7 @@ class App extends Component {
         show: false,
       },
     });
-  }
+  };
 
   handleAppSettingsOpen = () => {
     const { appSettings } = this.state;
@@ -907,18 +928,14 @@ class App extends Component {
         show: true,
       },
     });
-  }
+  };
 
   handleAppSettingsUpdate = (name, value) => {
     const { appSettings } = this.state;
     const settings = { ...appSettings.settings };
 
-    switch(name) {
-      case 'extendedDebug': {
-        if (this.serial) {
-          this.serial.setExtendedDebug(value);
-        }
-      } break;
+    if(name === 'extendedDebug' && this.serial) {
+      this.serial.setExtendedDebug(value);
     }
 
     settings[name].value = value;
@@ -929,7 +946,7 @@ class App extends Component {
         settings,
       },
     });
-  }
+  };
 
   handleMelodySave = (name, tracks) => {
     const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
@@ -949,7 +966,7 @@ class App extends Component {
 
     localStorage.setItem('melodies', JSON.stringify(storedMelodies));
     this.setMelodies({ customMelodies: loadMelodies() });
-  }
+  };
 
   handleMelodyDelete = (name) => {
     const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
@@ -959,21 +976,27 @@ class App extends Component {
       localStorage.setItem('melodies', JSON.stringify(storedMelodies));
       this.setMelodies({ customMelodies: loadMelodies() });
     }
-  }
+  };
 
   handleMelodyWrite = (melodies) => {
     const { escs } = this.state;
     const individual = [ ...escs.individual ];
     const converted = melodies.map((melody) => Rtttl.toBluejayStartupMelody(melody));
+
+    // Set wait time after melody to synchronize playback on all ESCs
+    const melodyDurations = melodies.map((melody) => Rtttl.parse(melody).melody.reduce((a, b) => a + b.duration, 0));
+    const maxMelodyDuration = Math.max(...melodyDurations);
+
     for(let i = 0; i < converted.length; i += 1) {
       individual[i].individualSettings.STARTUP_MELODY = converted[i].data;
+      individual[i].individualSettings.STARTUP_MELODY_WAIT_MS = maxMelodyDuration - melodyDurations[i];
     }
 
     // Update individual settings, then write them.
     this.setEscs({ individual }, () => {
       this.handleWriteSettings();
     });
-  }
+  };
 
   handleMelodyEditorOpen = () => {
     const { escs } = this.state;
@@ -995,11 +1018,11 @@ class App extends Component {
         show: true,
       });
     }
-  }
+  };
 
   handleMelodyEditorClose = () => {
     this.setMelodies({ show: false });
-  }
+  };
 
   render() {
     const {
@@ -1065,6 +1088,7 @@ class App extends Component {
         }}
         msp={msp}
         onAllMotorSpeed={this.handleAllMotorSpeed}
+        onClearLog={this.handleClearLog}
         onCookieAccept={this.handleCookieAccept}
         onSaveLog={this.handleSaveLog}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}

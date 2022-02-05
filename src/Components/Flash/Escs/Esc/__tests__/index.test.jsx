@@ -133,7 +133,7 @@ describe('Esc', () => {
       />
     );
 
-    userEvent.click(screen.getByText(/escButtonFlash/i));
+    expect(screen.getByText(/escButtonFlash/i)).toHaveAttribute('disabled');
     expect(onFlash).not.toHaveBeenCalled();
   });
 

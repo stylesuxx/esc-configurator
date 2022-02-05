@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
-  useState, useEffect, useRef,
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
 } from 'react';
 
 import Alert from '@mui/material/Alert';
@@ -19,6 +22,7 @@ import {
 } from '../../utils/helpers/General';
 
 import { blheliSource } from '../../sources';
+import sources from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
 
@@ -31,6 +35,7 @@ function FirmwareSelector({
   onLocalSubmit,
   onSubmit,
   selectedMode,
+  showUnstable,
   warning,
 }) {
   const { t } = useTranslation('common');
@@ -40,6 +45,7 @@ function FirmwareSelector({
     pwm,
   } = configs;
 
+  const [preselected, setPreselected] = useState(false);
   const [escLayout, setEscLayout] = useState(null);
   const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
@@ -62,7 +68,7 @@ function FirmwareSelector({
   const file = useRef(null);
 
   // Pre select current firmware and ESC layout if valid
-  useEffect(async () => {
+  async function preselect() {
     const availableFirmware = Object.keys(escs);
     const validSources = getSupportedSources(esc.meta.signature);
     const validFirmware = availableFirmware.filter((name) =>
@@ -82,65 +88,77 @@ function FirmwareSelector({
     if(isValidLayout(esc.settings.LAYOUT)) {
       setEscLayout(esc.settings.LAYOUT);
     }
-  }, []);
+  }
+
+  if(!preselected) {
+    setPreselected(true);
+    preselect();
+  }
 
   // Update firmware options when firmware has changed
-  useEffect(async () => {
-    if(selection.firmware) {
-      /**
-       * Build the actual Option set for the selected firmware
-       */
-      const layouts = escs[selection.firmware];
-      const escOptions = Object.entries(layouts).map(([key, layout]) => ({
-        key: key,
-        value: key,
-        name: layout.name,
-      }));
+  useEffect(() => {
+    async function updateOptions() {
+      if(selection.firmware) {
+        /**
+         * Build the actual Option set for the selected firmware
+         */
+        const layouts = escs[selection.firmware];
+        const escOptions = Object.entries(layouts).map(([key, layout]) => ({
+          key: key,
+          value: key,
+          name: layout.name,
+        }));
 
-      const versionsSelected = versions[selection.firmware];
-      const versionOptions = Object.values(versionsSelected).map((version) => ({
-        key: version.key,
-        value: version.url,
-        name: version.name,
-      }));
+        const versionsSelected = Object.values(
+          versions[selection.firmware].filter((v) => showUnstable || !v.prerelease)
+        );
 
-      const frequencies = pwm[selection.firmware];
-      const frequencyOptions = frequencies.map((item) => ({
-        key: item,
-        value: item,
-        name: item,
-      }));
+        const versionOptions = versionsSelected.map((version) => ({
+          key: version.key,
+          value: version.url,
+          name: version.name,
+        }));
 
-      const firmwareOptions = validFirmware.map((key) => ({
-        key,
-        value: key,
-        name: key,
-      }));
+        const frequencies = pwm[selection.firmware];
+        const frequencyOptions = frequencies.map((item) => ({
+          key: item,
+          value: item,
+          name: item,
+        }));
 
-      const modeOptions = [];
-      for (const mode in blheliModes) {
-        modeOptions.push({
-          key: mode,
-          value: mode,
-          name: mode,
-        });
+        const firmwareOptions = validFirmware.map((key) => ({
+          key,
+          value: key,
+          name: key,
+        }));
+
+        const modeOptions = [];
+        for (const mode in blheliModes) {
+          modeOptions.push({
+            key: mode,
+            value: mode,
+            name: mode,
+          });
+        }
+
+        const currentOptions = {
+          firmwares: firmwareOptions,
+          versions: versionOptions,
+          frequencies: frequencyOptions,
+          escs: escOptions,
+          modes: modeOptions,
+        };
+
+        setOptions(currentOptions);
       }
-
-      const currentOptions = {
-        firmwares: firmwareOptions,
-        versions: versionOptions,
-        frequencies: frequencyOptions,
-        escs: escOptions,
-        modes: modeOptions,
-      };
-
-      setOptions(currentOptions);
     }
-  }, [selection.firmware]);
 
-  function clickFile() {
+    updateOptions();
+  }, [selection.firmware, escs, pwm, showUnstable, validFirmware, versions]);
+
+  const clickFile = useCallback(() => {
     file.current.click();
-  }
+  }, [file]);
 
   /*
   // TODO: Not yet implemented - this might only be needed for ATMEL
@@ -149,7 +167,7 @@ function FirmwareSelector({
   }
   */
 
-  function handleFirmwareChange(e) {
+  const handleFirmwareChange = useCallback((e) => {
     const firmware = e.target.value;
 
     setSelection({
@@ -157,58 +175,55 @@ function FirmwareSelector({
       url: null,
       pwm: null,
     });
-  }
+  }, []);
 
-  function handleEscChange(e) {
+  const handleEscChange = useCallback((e) => {
     setEscLayout(e.target.value);
-  }
+  }, [setEscLayout]);
 
-  function handleLocalSubmit(e) {
+  const handleLocalSubmit = useCallback((e) => {
     e.preventDefault();
     onLocalSubmit(e, force, migrate);
-  }
+  }, [onLocalSubmit, force, migrate]);
 
-  function handleVersionChange(e) {
-    const selected = e.target.value;
+  const handleVersionChange = useCallback((e) => {
+    const selectedItem = options.versions.filter((item) => item.value === e.target.value);
 
     setSelection({
       ...selection,
       url: e.target.value,
-      version: selected ? selected : 'N/A',
+      version: selectedItem.length > 0 ? selectedItem[0].key : 'N/A',
     });
-  }
+  }, [options, selection]);
 
-  function handleForceChange(e) {
+  const handleForceChange = useCallback((e) => {
     setForce(e.target.checked);
-  }
+  }, [setForce]);
 
-  function handleMigrateChange(e) {
+  const handleMigrateChange = useCallback((e) => {
     setMigrate(e.target.checked);
-  }
+  }, [setMigrate]);
 
-  function handlePwmChange(e) {
+  const handlePwmChange = useCallback((e) => {
     setSelection({
       ...selection,
       pwm: e.target.value,
     });
-  }
+  }, [selection]);
 
-  function handleSubmit() {
-    const escsAll = escs[selection.firmware];
+  const handleSubmit = useCallback(() => {
+    const source = sources.find((s) => s.getName() === selection.firmware);
+    const firmwareUrl = source.getFirmwareUrl({
+      escKey: escLayout,
+      mode: mode,
+      pwm: selection.pwm,
+      settings: esc.settings,
+      url: selection.url,
+      version: selection.version,
+    });
 
-    const format = (str2Format, ...args) =>
-      str2Format.replace(/(\{\d+\})/g, (a) => args[+(a.substr(1, a.length - 2)) || 0] );
-
-    const name = escsAll[escLayout].fileName || escsAll[escLayout].name.replace(/[\s-]/g, '_').toUpperCase();
-    const pwmSuffix = selection.pwm ? '_' + selection.pwm : '';
-    const formattedUrl = format(
-      selection.url,
-      `${name}${pwmSuffix}`,
-      mode
-    );
-
-    onSubmit(formattedUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
-  }
+    onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
+  }, [esc, escLayout, selection, mode, force, migrate, onSubmit]);
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
 
@@ -316,9 +331,7 @@ function FirmwareSelector({
 
           {warning &&
             <Alert severity="error">
-              <p
-                dangerouslySetInnerHTML={{ __html: warning }}
-              />
+              {warning}
             </Alert>}
 
           <Button
@@ -331,6 +344,7 @@ function FirmwareSelector({
           </Button>
 
           <input
+            data-testid='input-file'
             onChange={handleLocalSubmit}
             ref={file}
             style={{ display: 'none' }}
@@ -357,6 +371,8 @@ function FirmwareSelector({
 }
 FirmwareSelector.defaultProps = {
   esc: {
+    displayName: 'UNKNOWN',
+    firmwareName: 'UNKNOWN',
     meta: {},
     settings: {},
   },
@@ -372,14 +388,15 @@ FirmwareSelector.propTypes = {
   esc: PropTypes.shape({
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,
-    meta: PropTypes.shape({ signature: PropTypes.string }),
+    meta: PropTypes.shape({ signature: PropTypes.number }),
     settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
   }),
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
-  warning: PropTypes.string,
+  showUnstable: PropTypes.bool.isRequired,
+  warning: PropTypes.node,
 };
 
 export default FirmwareSelector;

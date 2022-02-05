@@ -1,17 +1,16 @@
-import escs from './escs.json';
-
-import bluejaySource from '../../../sources/Bluejay';
-const BLUEJAY_EEPROM = bluejaySource.getEeprom();
-
-import am32Source from '../../../sources/AM32';
-const AM32_EEPROM = am32Source.getEeprom();
-
 import {
   getMasterSettings,
   getIndividualSettingsDescriptions,
   getIndividualSettings,
   canMigrate,
 } from '../Settings';
+
+import escs from './escs.json';
+import bluejaySource from '../../../sources/Bluejay';
+import am32Source from '../../../sources/AM32';
+
+const AM32_SETTINGS_DESCRIPTIONS = am32Source.getSettingsDescriptions();
+const BLUEJAY_SETTINGS_DESCRIPTIONS = bluejaySource.getSettingsDescriptions();
 
 test('get master settings object', () => {
   const settings = getMasterSettings(escs);
@@ -75,16 +74,16 @@ test('can migrate invalid setting', () => {
 });
 
 test('can migrate valid setting', () => {
-  const settingsDescriptions = BLUEJAY_EEPROM.SETTINGS_DESCRIPTIONS;
-  const individualSettingsDescriptions = BLUEJAY_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+  const settingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS.COMMON;
+  const individualSettingsDescriptions = BLUEJAY_SETTINGS_DESCRIPTIONS.INDIVIDUAL;
   const result = canMigrate('MOTOR_DIRECTION', escs[0].settings, escs[1].settings, settingsDescriptions, individualSettingsDescriptions);
 
   expect(result).toBeTruthy();
 });
 
 test('can migrate from different platforms', () => {
-  const settingsDescriptions = AM32_EEPROM.SETTINGS_DESCRIPTIONS;
-  const individualSettingsDescriptions = AM32_EEPROM.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+  const settingsDescriptions = AM32_SETTINGS_DESCRIPTIONS.COMMON;
+  const individualSettingsDescriptions = AM32_SETTINGS_DESCRIPTIONS.INDIVIDUAL;
   const result = canMigrate('MOTOR_DIRECTION', escs[0].settings, escs[1].settings, settingsDescriptions, individualSettingsDescriptions);
 
   expect(result).not.toBeTruthy();

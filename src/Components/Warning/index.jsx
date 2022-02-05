@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -12,12 +13,16 @@ function Warning() {
     <Card elevation={5}>
       <Alert severity="warning">
         <AlertTitle>
-          {t('noteTitle')}
+          {t('note')}
         </AlertTitle>
 
-        <p dangerouslySetInnerHTML={{ __html: t('notePropsOff') }} />
+        <ReactMarkdown>
+          {t('notePropsOff')}
+        </ReactMarkdown>
 
-        <p dangerouslySetInnerHTML={{ __html: t('noteConnectPower') }} />
+        <ReactMarkdown>
+          {t('noteConnectPower')}
+        </ReactMarkdown>
       </Alert>
     </Card>
   );

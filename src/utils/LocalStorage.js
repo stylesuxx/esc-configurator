@@ -14,7 +14,7 @@ function loadLanguage() {
   if(!storedLanguage) {
     const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
     if(browserLanguage) {
-      for(let [key, value] of Object.entries(availableLanguages)) {
+      for(let [, value] of Object.entries(availableLanguages)) {
         if(value.value === browserLanguage) {
           storedLanguage = browserLanguage;
           break;
@@ -23,7 +23,7 @@ function loadLanguage() {
 
       if(!storedLanguage && browserLanguage.split('-').length > 1) {
         const part = browserLanguage.split('-')[0];
-        for(let [key, value] of Object.entries(availableLanguages)) {
+        for(let [, value] of Object.entries(availableLanguages)) {
           if(value.value === part) {
             storedLanguage = part;
             break;
@@ -50,6 +50,12 @@ function loadLog() {
   return [];
 }
 
+function clearLog() {
+  localStorage.setItem('log', JSON.stringify([]));
+
+  return [];
+}
+
 function loadMelodies() {
   const storedMelodies = JSON.parse(localStorage.getItem('melodies'));
   if(storedMelodies) {
@@ -72,7 +78,11 @@ function loadSerialApi() {
     return navigator.serial;
   }
 
-  if('usb' in navigator) {
+  // Brave has USB support but it does not work properly with the polyfill
+  if(
+    'usb' in navigator &&
+    !('brave' in navigator)
+  ) {
     return serialPolyfill;
   }
 
@@ -80,6 +90,7 @@ function loadSerialApi() {
 }
 
 export {
+  clearLog,
   loadLanguage,
   loadLog,
   loadMelodies,

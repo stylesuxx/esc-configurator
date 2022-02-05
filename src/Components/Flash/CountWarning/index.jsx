@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
@@ -10,6 +11,18 @@ import MainCard from '../../MainCard';
 
 function CountWarning() {
   const { t } = useTranslation('common');
+  const lines = [1, 2, 3, 4, 5].map((index) => {
+    const line = `escMissing${index}`;
+    return (
+      <ListItem key={line}>
+        <ListItemText>
+          <ReactMarkdown components={{ p: 'span' }} >
+            {t(line)}
+          </ReactMarkdown>
+        </ListItemText>
+      </ListItem>
+    );
+  });
 
   return (
     <MainCard
@@ -20,29 +33,13 @@ function CountWarning() {
       </Typography>
 
       <List dense>
-        <ListItem>
-          <ListItemText
-            primary={<p dangerouslySetInnerHTML={{ __html: t('escMissing1') }} />}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemText
-            primary={<p dangerouslySetInnerHTML={{ __html: t('escMissing2') }} />}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemText
-            primary={<p dangerouslySetInnerHTML={{ __html: t('escMissing3') }} />}
-          />
-        </ListItem>
+        {lines}
       </List>
 
       <Typography>
-        <p
-          dangerouslySetInnerHTML={{ __html: t('escMissingHint') }}
-        />
+        <ReactMarkdown>
+          {t('escMissingHint')}
+        </ReactMarkdown>
       </Typography>
     </MainCard>
   );

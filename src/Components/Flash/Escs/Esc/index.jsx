@@ -1,18 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
+  useCallback,
   forwardRef,
   useImperativeHandle,
   useState,
 } from 'react';
 
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 
 import MainCard from '../../../MainCard';
 import SettingsHandler from './SettingsHandler';
@@ -47,21 +46,21 @@ const Esc = forwardRef(({
     },
   }));
 
-  function updateSettings() {
+  const updateSettings = useCallback(() => {
     onSettingsUpdate(index, settings);
-  }
+  }, [onSettingsUpdate, index, settings]);
 
-  function updateCommonSettings(settings) {
+  const updateCommonSettings = useCallback((settings) => {
     onCommonSettingsUpdate(index, settings);
-  }
+  }, [onCommonSettingsUpdate, index]);
 
-  function handleFirmwareFlash() {
+  const handleFirmwareFlash = useCallback(() => {
     onFlash(index);
-  }
+  }, [onFlash, index]);
 
-  function handleFirmwareDump() {
+  const handleFirmwareDump = useCallback(() => {
     onFirmwareDump(index);
-  }
+  }, [onFirmwareDump, index]);
 
   return (
     <MainCard title={title}>

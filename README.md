@@ -42,6 +42,8 @@ Translations are managed via [crowdin](https://crowdin.com/project/esc-configura
 ## Contributing
 Contributions are very welcome. Feel free to submit PR's and discuss feature requests - I am open for all suggestions. If you submit a PR please also **provide tests** where it makes sense. Some tests can not (yet) be easily automated, like playing music or the actual flashing process without having to heavily mock those components.
 
+If you do submit a PR, please do so against the **develop** branch. Also make sure that your code matches the linting rules. If you get warnings, try to adapt your code accordingly. If the rule makes no sense or can't really be satisfied it's OK to submit your PR anyway.
+
 ### Dev Setup
 Simply clone the repository, install dependencies and run the dev server. Pull requests are more than welcome.
 

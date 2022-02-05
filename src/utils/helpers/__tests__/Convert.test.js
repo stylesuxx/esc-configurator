@@ -12,7 +12,7 @@ test('settingsUint8Array', () => {
 
   const settingsObject = Convert.arrayToSettingsObject(settingsArray, layout);
   const keys = Object.keys(settingsObject);
-  expect(keys.length).toEqual(44);
+  expect(keys.length).toEqual(45);
 
   layout.MAIN_REVISION.size = 0;
   expect(() => Convert.arrayToSettingsObject(settingsArray, layout)).toThrow();
@@ -24,7 +24,7 @@ test('settingsArray', () => {
   const shortArray = settingsArray.subarray(0, settingsArray.length - 2);
   const settingsObject = Convert.arrayToSettingsObject(shortArray, layout);
   const settingsArrayResult = Convert.objectToSettingsArray(settingsObject, layout, EEPROM.LAYOUT_SIZE);
-  expect(settingsArrayResult.length).toEqual(240);
+  expect(settingsArrayResult.length).toEqual(255);
 
   layout.MAIN_REVISION.size = 0;
   expect(() => Convert.objectToSettingsArray(settingsObject, layout, EEPROM.LAYOUT_SIZE)).toThrow();

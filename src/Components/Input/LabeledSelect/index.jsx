@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -13,7 +13,7 @@ function LabeledSelect({
   selected,
   onChange,
 }) {
-  function Select() {
+  const Select = useCallback(() => {
     const optionElements = options.map((item) => (
       <MenuItem
         disabled={item.disabled}
@@ -45,7 +45,7 @@ function LabeledSelect({
         {optionElements}
       </MuiSelect>
     );
-  }
+  }, [options, label, firstLabel, onChange, selected]);
 
   return (
     <div className="select">

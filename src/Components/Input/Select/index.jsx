@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -19,7 +19,7 @@ function Select({
   inSync,
   hint,
 }) {
-  function Select() {
+  const Select = useCallback(() => {
     const optionElements = options.map((option) => (
       <MenuItem
         key={option.value}
@@ -49,10 +49,9 @@ function Select({
         {optionElements}
       </MuiSelect>
     );
-  }
+  }, [options, disabled, name, onChange, inSync, value, label]);
 
   return (
-
     <FormControl
       fullWidth
       variant="standard"
@@ -115,7 +114,10 @@ Select.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
   })).isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,

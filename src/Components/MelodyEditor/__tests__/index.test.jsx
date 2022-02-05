@@ -38,7 +38,7 @@ describe('MelodyEditor', () => {
   });
 
   it('should display without melodies', () => {
-    const melodies = [null, null, null, null];
+    const melodies = ['', '', '', ''];
 
     render(
       <MelodyEditor
@@ -58,11 +58,10 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText('common:melodyEditorPlay').length).toEqual(1);
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(1);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
-    expect(screen.getAllByText(/Please supply a value and an onChange parameter./i).length).toEqual(2);
     expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText(/write/i));
+    expect(screen.getByText(/write/i)).toHaveAttribute('disabled');
     expect(onWrite).not.toHaveBeenCalled();
 
     userEvent.click(screen.getByTestId('CloseIcon'));
@@ -176,7 +175,7 @@ describe('MelodyEditor', () => {
     expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText(/write/i));
+    expect(screen.getByText(/write/i)).toHaveAttribute('disabled');
     expect(onWrite).not.toHaveBeenCalled();
 
     userEvent.click(screen.getByTestId('CloseIcon'));
@@ -216,7 +215,7 @@ describe('MelodyEditor', () => {
     expect(screen.getByText(/ESC 3/i)).toBeInTheDocument();
     expect(screen.getByText(/ESC 4/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText(/common:melodyEditorWrite/i));
+    expect(screen.getByText(/common:melodyEditorWrite/i)).toHaveAttribute('disabled');
     expect(onWrite).not.toHaveBeenCalled();
 
     const acceptButtons = screen.getAllByText(/common:melodyEditorAccept/i);
@@ -247,11 +246,10 @@ describe('MelodyEditor', () => {
 
     fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
 
-    const listbox = screen.getByRole('listbox');
-    const element = listbox.querySelector('li[data-value="preset-Bluejay Default"]');
+    const element = screen.getByRole('option', { name: 'Bluejay Default' });
     userEvent.click(element);
 
-    expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(2);
+    expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(1);
   });
 
   it('should update when custom melody is selected', () => {
@@ -275,18 +273,17 @@ describe('MelodyEditor', () => {
 
     fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
 
-    const listbox = screen.getByRole('listbox');
-    const element = listbox.querySelector(`li[data-value="Simpsons Theme"]`);
+    const element = screen.getByRole('option', { name: 'Simpsons Theme' });
     userEvent.click(element);
 
-    expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(2);
+    expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(1);
   });
 
   it('should be possible to delete custom melody', () => {
     const onDelete = jest.fn();
     const melodies = [melody, melody, melody, melody];
 
-    const { container } = render(
+    render(
       <MelodyEditor
         customMelodies={defaultMelodies}
         defaultMelodies={defaultMelodies}
@@ -304,8 +301,7 @@ describe('MelodyEditor', () => {
 
     fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
 
-    const listbox = screen.getByRole('listbox');
-    const element = listbox.querySelector(`li[data-value="Simpsons Theme"]`);
+    const element = screen.getAllByRole('option', { name: 'Simpsons Theme' })[1];
     userEvent.click(element);
 
     userEvent.click(screen.getByText(/melodyDelete/i));
@@ -316,7 +312,7 @@ describe('MelodyEditor', () => {
     const onDelete = jest.fn();
     const melodies = [melody, melody, melody, melody];
 
-    const { container } = render(
+    render(
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={defaultMelodies}
@@ -331,7 +327,7 @@ describe('MelodyEditor', () => {
       />
     );
 
-    userEvent.click(screen.getByText(/common:melodyEditorSave/i));
+    expect(screen.getByText(/common:melodyEditorSave/i)).toHaveAttribute('disabled');
     expect(onSave).not.toHaveBeenCalled();
 
     const element = screen.getAllByRole('textbox')[0];
@@ -345,8 +341,6 @@ describe('MelodyEditor', () => {
     });
     userEvent.click(screen.getByText(/common:melodyEditorSave/i));
     expect(onSave).toHaveBeenCalled();
-
-    userEvent.click(screen.getByText(/melodyDelete/i));
   });
 
   it('should be possible to play a melody', async() => {
@@ -377,12 +371,6 @@ describe('MelodyEditor', () => {
     );
 
     userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
-
-    await act(async()=> {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 400);
-      });
-    });
 
     expect(oscStart).toHaveBeenCalled();
     expect(oscStop).toHaveBeenCalled();
@@ -415,6 +403,12 @@ describe('MelodyEditor', () => {
     );
 
     userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
+
+    await act(async()=> {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+    });
 
     // Since playing is instantly over with the mocked class, we can not test
     // stopping.

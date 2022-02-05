@@ -13,6 +13,24 @@
     ]
   },
   {
+    "name": "AC/DC - Back in Black",
+    "tracks": [
+        "ACDCBack1:b=180,o=5,d=4:16b4,8p.,2p,16d,16p,16d,16p,16d,8p.,2p,16a4,16p,16a4,16p,16a4,8p.,2p.,8p,16g4,16p,16e4,16p,16d4,16p,16b3,16p,16a3,16b3,16a3,16p,16g3,16p",
+        "ACDCBack2:b=180,o=5,d=4:16g#4,8p.,2p,16d4,16p,16d4,16p,16d4,8p.,2p,16e4,16p,16e4,16p,16e4,8p.,2p.,1p",
+        "ACDCBack3:b=180,o=5,d=4:16e3,8p.,p,16e3,8p.,p,2p,16e3,8p.,p,2p,16e3,8p.,p,2p,16e3,8p.,p",
+        "ACDCBack4:b=180,o=5,d=4:16e4,8p.,2p,16a3,16p,16a3,16p,16a3,8p.,2p,16c#4,16p,16c#4,16p,16c#4,8p.,2p.,1p"
+    ]
+  },
+  {
+    "name": "AC/DC - TNT",
+    "tracks": [
+        "tnt1:d=4,o=3,b=250:2c6,4c6,2p,4d#6,4p,2f6,4f6,4p,4d#5,4f6,4d#5,4p,2c6",
+        "tnt2:d=4,o=3,b=250:2g5,4g5,2p,4a#5,4p,2c6,4c6,2p,4c6,2p,2g5",
+        "tnt3:d=4,o=3,b=250:2c5,4c5,2p,4d#5,4p,2f5,4f5,4p,4d#5,4f5,4d#5,4p,2c5",
+        "tnt4:d=4,o=3,b=250:8c4,8p,8c4,8p,8c4,8p,8c4,8p,8c4,8p,8d#4,8p,8d#4,8p,8f4,8p,8f4,8p,8f4,8p,8f4,8p,8d#4,8p,8f4,8p,8d#4,8p,8d#4,8p,2c4"
+    ]
+  },
+  {
     "name": "Batman Theme",
     "tracks": [
       "bm_0:b=180,o=4,d=32:8d#5,p,8d#5,p,8d5,p,8d5,p,8c#5,p,8c#5,p,8d5,p,8d5,p,4d#5,p,p,2d#5",
@@ -36,6 +54,15 @@
     ]
   },
   {
+    "name": "Britney Spears - Oops!... I Did It Again",
+    "tracks": [
+        "oops1:d=4,o=5,b=120:8a,8g,8f,8e,16d,16p,8d.,16p,8d.,16p,8c#,8d,8e,8d",
+        "oops2:d=4,o=5,b=120:8c,8p,8c,8a.4,16p,8a.4,16p,8a.4,16p,8a4,8b4,8c#,8a4",
+        "oops3:d=4,o=5,b=120:8c,8p,8c,8a.4,16p,8a.4,16p,8a.4,16p,8a4,8b4,8c#,8a4",
+        "oops4:d=4,o=5,b=120:p.,a3,2d4,2c#4"
+    ]
+  },
+  {
     "name": "Chiquitita - Abba",
     "tracks": [
       "ab_chiq_m1:b=104,o=5,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h4,c#,d,8f#,e6,e,e6,p,e6,e,e6,e,e6,e,e6,e,e6,e,g#6,g#,g#6,g#,g#6,g#,g#6,g#,a6,a,a6,a,a6,a,a6,a,g#6,g#,g#6,g#,a6,a,a6,a,h6,h,h6,h,8a6",
@@ -45,10 +72,37 @@
     ]
   },
   {
+    "name": "Everything is Awesome",
+    "tracks": [
+      "awesome1:d=4,o=5,b=160:2p,16a#,16p,a,8p,1p,2p,16f3,16p,16f4,16p,16f3,16p,16f4,16p,16f3,16p,16f4,16p,16f3,16p,16f4,16p,16c4,16p,16c5,16p,16c4,16p,16c5,16p,16c4,16p,16c5,16p,16c4,16p,16c5,16p,16g,16p,a,1p,2p",
+      "awesome2:d=4,o=5,b=160:2p,16f,16p,f,8p,2p,16c4,16p,16c5,16p,16c4,16p,16c5,16p,16c4,16p,16c5,16p,16c4,16p,16c5,16p,1p,4p.,16a#,8p.,16a#,16p,16a#,16p,16a#,16p,16a#,16p,c6,8p,1p,2p",
+      "awesome3:d=4,o=5,b=160:2p,16f3,16p,16f4,16p,16f3,16p,16f4,16p,16f3,16p,16f4,16p,16f3,16p,16f4,16p,2p,16a#,16p,16a#,16p,16a#,16p,16a#,16p,8a#,8p,16a,16p,16g,16p,16f,16p,16g,16p,16a,16p,g,4p.,1p,1p.",
+      "awesome4:d=4,o=5,b=160:16a#,16p,16a#,16p,16a#,16p,16a#,16p,2p,1p,1p,4p,16f,16p,e,1p,16a#3,16p,16a#4,16p,16a#3,16p,16a#4,16p,16a#3,16p,16a#4,16p,16a#3,16p,16a#4,8p.,16f,16p,16f,16p,16a,8p.,16g,16p,8g,8f"
+    ]
+  },
+  {
+    "name": "The Expanse Theme",
+    "tracks": [
+      "expance1:b=140,o=5,d=4:f,g,2a,8a.,16p,a,2g,2f,1d,p",
+      "expance2:b=140,o=4,d=4:p,p,2p,8d.,16p,p,2p,2d,1f,p",
+      "expance3:b=140,o=5,d=4:2p,8p,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8d4,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8d,8a3,8c4,8e4,8f4,8a4,8e4,8f4,p",
+      "expance4:b=140,o=3,d=4:p,p,2f,8f.,16p,f,2e,2p,1a,p"
+    ]
+  },
+  {
     "name": "Hall of Fame - The Script",
     "tracks": [
       "ts_hof_m:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
       "ts_hof_b:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4"
+    ]
+  },
+  {
+    "name": "Hanson - Mmmbop",
+    "tracks": [
+        "mmmbop1:d=4,o=5,b=104:8e6,16c#6,16b,8a,8a.,16p,8a.,8p.,8a,16p,8a.,8f#.,16p,8f#.,16p,16d6,16d6,8c#6,16p,8b.,8a.,16p,8a.,8p.,8a,16p,8a.,g#.,16e,16p,16e,16p,8f#,8b,8a",
+        "mmmbop2:d=4,o=5,b=104:p.,8c#.,16p,8c#.,8p.,8c#,16p,8c#.,8c#.,16p,8c#.,16p,16d,16d,8c#,16p,8b.4,8c#.,16p,8c#.,8p.,8c#,16p,8c#.,g#.4,16e4,16p,16e4,16p,8f#4,8b4,8a4",
+        "mmmbop3:d=4,o=5,b=104:8e3,8e.3,16p,8a.3,16p,8a.3,16p,8a3,16p,16a3,8p,8a3,8d.4,16p,8d.4,16p,8d4,16p,16d4,16p,16d4,8c#4,8a.3,16p,8a.3,16p,8a3,16p,16a3,8p,8a3,8g#.3,16p,8g#.3,8p.,16g#3,16g#3,8p,8g#3",
+        "mmmbop4:d=4,o=5,b=104:p.,8e.3,16p,8e.3,16p,8e3,16p,16e3,8p,8e3,8f#.3,16p,8f#.3,16p,8f#3,16p,16f#3,8p,8f#3,8e.3,16p,8e.3,16p,8e3,16p,16e3,8p,8e3"
     ]
   },
   {
@@ -75,7 +129,10 @@
   {
     "name": "Never gonna give you up - Rick Astley",
     "tracks": [
-      "never:d=4,o=3,b=210:8g3,8a3,8c4,8a3,4e4,8p,4e4,8p,4.d4,4p,8p,8g3,8a3,8c4,8a3,4d4,8p,4d4,8p,4c4,8b3,4.a3,8g3,8a3,8c4,8a3,2c4,4d4,4b3,4a3,4.g3,8p,4g3,2d4,2.c4,4p"
+      "never1:b=210,o=3,d=4:8d5,8e5,8g5,8d5,b5,8p,b5,8p,2a5,p,8d5,8e5,8g5,8d5,a5,8p,a5,8p,g5,8g5,8f#5,e5,2p",
+      "never2:b=210,o=3,d=4:2p,g5,8p,g5,8p,2f#5,p,2p,f#5,8p,f#5,8p,2e5,p,2p",
+      "never3:b=210,o=3,d=4:2p,e5,8p,e5,8p,2d5,p,2p,d5,8p,d5,8p,2b4,2p,8p.",
+      "never4:b=210,o=3,d=4:8d4,8e4,8g4,8d4,c4,c4,c4,d4,8p,8d4,8e4,8p,8g4,8p,8a4,8p,b4,b4,b4,e4,8e4,2p.,16p"
     ]
   },
   {
@@ -124,6 +181,15 @@
     ]
   },
   {
+    "name": "Starwars Imperial March",
+    "tracks": [
+      "imperial1:d=4,o=3,b=450:2g5,2p,2g5,2p,2g5,2p,2d#5,4p,4a#5,2g5,2p,2d#5,4p,4a#5,1g5,2p",
+      "imperial2:d=4,o=3,b=450:4g4,4p,4g4,4p,4g4,4p,4g4,4p,8g4,8p,8g4,8p,8g4,8g4,8g4,8g4,4d#4,4p,4d#4,4p,4g4,4p,4g4,4p,4d#4,4p,4d#4,4p,1g4,2p",
+      "imperial3:d=4,o=3,b=450:2d5,2p,2d5,2p,2d5,2p,2a#4,4p,4f5,2d5,2p,2a#4,4p,4f5,1d5,2p",
+      "imperial4:d=4,o=3,b=450:2g6,2p,2g6,2p,2g6,2p,2d#6,4p,4a#6,2g6,2p,2d#6,4p,4a#6,1g6,2p"
+    ]
+  },
+  {
     "name": "Super Mario One Up",
     "tracks": [
       "powerup_1: d=2,o=2,b=960:8c4,8g3,8c4,8e4,8g4,8c5,8g4,8g#3,8c4,8d#4,8g#4,8d#4,8g#4,8c5,8d#5,8g#5,8d#5,8d4,8f4,8a#4,8f4,8a#4,8d5,8f5,8d5,8f5,8a#5,8f5",
@@ -167,6 +233,15 @@
       "GON_GIVE_IT_TO_YA:d=2,o=2,b=384:2a#4,16p,2a#4,16p,4a#3,32p,4a#4,32p,4a#4,32p,4a#4,32p,2g#4,16p,2g#4,16p,4g#3,32p,4g#4,32p,4g#4,32p,4g#4,32p,2f#4,16p,2f#4,16p,4f#3,32p,4f#4,32p,4f#4,32p,4f#4,32p,2d#4,16p,2d#4,16p,4d#3,32p,4d#4,32p,4d#4,32p,4d#4,32p",
       "GON_GIVE_IT_TO_YA:d=2,o=2,b=384:2a#4,16p,2a#4,16p,4a#5,32p,4a#5,32p,4a#5,32p,4a#5,32p,2g#4,16p,2g#4,16p,4g#5,32p,4g#5,32p,4g#5,32p,4g#5,32p,2f#4,16p,2f#4,16p,4f#5,32p,4f#5,32p,4f#5,32p,4f#5,32p,2d#4,16p,2d#4,16p,4d#5,32p,4d#5,32p,4d#5,32p,4d#5,32p",
       "GON_GIVE_IT_TO_YA:d=2,o=2,b=384:2a#4,16p,2a#4,16p,4a#6,32p,4a#6,32p,4a#6,32p,4a#6,32p,2g#4,16p,2g#4,16p,4g#6,32p,4g#6,32p,4g#6,32p,4g#6,32p,2f#4,16p,2f#4,16p,4f#6,32p,4f#6,32p,4f#6,32p,4f#6,32p,2d#4,16p,2d#4,16p,4d#6,32p,4d#6,32p,4d#6,32p,4d#6,32p"
+    ]
+  },
+  {
+    "name": "Zelda Theme",
+    "tracks": [
+      "zelda1:d=4,o=5,b=80:a#,f.,16a#.,32p,16a#,16c6,16d6,16d#6,8f.6,2p,16p",
+      "zelda2:d=4,o=5,b=80:d,16d,32p,16d,16c,32p,8d,16p,32d,32p,16d,16d#,16f,16g,8g#.,16p,8g#4,8d#4,g#4",
+      "zelda3:d=4,o=5,b=80:8a#3,1p,16p,32a#,32p,16a#,16c6,16d6,16d#6,f6",
+      "zelda4:d=4,o=5,b=80:8p,8f4,8a#4,8f4,8a#4,8f4,8a#4,8f4,8g#3,8d#4,2p"
     ]
   }
 ]

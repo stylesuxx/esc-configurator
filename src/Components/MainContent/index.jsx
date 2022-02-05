@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import Box from '@mui/material/Box';
 
@@ -10,7 +11,6 @@ import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '../FirmwareSelector';
 import Changelog from '../../Components/Changelog';
 import MotorControl from '../../Components/MotorControl';
-import Warning from '../Warning';
 
 import './style.scss';
 
@@ -23,6 +23,7 @@ function MainContent({
   mspFeatures,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
+  onClearLog,
   onCommonSettingsUpdate,
   onOpenMelodyEditor,
   onSelectFirmwareForAll,
@@ -57,19 +58,7 @@ function MainContent({
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const showMelodyEditor = escs.length > 0 && escs[0].individualSettings.STARTUP_MELODY ? true : false;
 
-  if (!open) {
-    return (
-      <>
-        <Home
-          onOpenMelodyEditor={onOpenMelodyEditor}
-        />
-
-        <Changelog entries={changelogEntries} />
-      </>
-    );
-  }
-
-  function FlashWrapper() {
+  const FlashWrapper = useCallback(() => {
     if(fourWay) {
       return (
         <Flash
@@ -91,9 +80,22 @@ function MainContent({
     }
 
     return null;
-  }
+  }, [
+    fourWay,
+    settings,
+    canFlash,
+    appSettings,
+    connected,
+    escs,
+    progress,
+    onCommonSettingsUpdate,
+    onFirmwareDump,
+    onSingleFlash,
+    onIndividualSettingsUpdate,
+    onSettingsUpdate,
+  ]);
 
-  function MotorControlWrapper() {
+  const MotorControlWrapper = useCallback(() => {
     if(!fourWay && !actions.isReading) {
       return (
         <MotorControl
@@ -107,6 +109,26 @@ function MainContent({
     }
 
     return null;
+  }, [
+    fourWay,
+    actions.isReading,
+    port.getBatteryState,
+    connected,
+    onAllMotorSpeed,
+    onSingleMotorSpeed,
+    mspFeatures,
+  ]);
+
+  if (!open) {
+    return (
+      <>
+        <Home
+          onOpenMelodyEditor={onOpenMelodyEditor}
+        />
+
+        <Changelog entries={changelogEntries} />
+      </>
+    );
   }
 
   if (isSelecting) {
@@ -114,10 +136,47 @@ function MainContent({
     const esc = escs.find((esc) => esc.index === targetIndex);
     let warning = null;
     if(esc && esc.actualMake) {
-      warning = t('mistagged', {
-        tagged: esc.make,
-        detected: esc.actualMake,
-      });
+      warning = (
+        <>
+          <ReactMarkdown>
+            {t('mistaggedLine1')}
+          </ReactMarkdown>
+
+          <ReactMarkdown>
+            {t('mistaggedLine2')}
+          </ReactMarkdown>
+
+          <table>
+            <tr>
+              <td>
+                {t('mistaggedTagged')}
+              </td>
+
+              <td>
+                {esc.make}
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                {t('mistaggedDetected')}
+              </td>
+
+              <td>
+                {esc.actualMake}
+              </td>
+            </tr>
+          </table>
+
+          <ReactMarkdown>
+            {t('mistaggedLine3')}
+          </ReactMarkdown>
+
+          <ReactMarkdown>
+            {t('mistaggedLine4')}
+          </ReactMarkdown>
+        </>
+      );
     }
 
     return (
@@ -129,7 +188,7 @@ function MainContent({
             onCancel={onCancelFirmwareSelection}
             onLocalSubmit={onLocalSubmit}
             onSubmit={onFlashUrl}
-            showWarning={esc ? true : false}
+            showUnstable={appSettings.unstableVersions.value}
             warning={warning}
           />
         </Box>
@@ -157,6 +216,7 @@ function MainContent({
         canRead={canRead}
         canResetDefaults={canWrite}
         canWrite={canWrite}
+        onClearLog={onClearLog}
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
@@ -174,6 +234,7 @@ MainContent.defaultProps = {
     directInput: { value: false },
     disableCommon: { value: false },
     enableAdvanced: { value: false },
+    unstableVersions: { value: false },
   },
   changelogEntries: [],
   connected: 0,
@@ -198,6 +259,7 @@ MainContent.propTypes = {
     directInput: PropTypes.shape(),
     disableCommon: PropTypes.shape(),
     enableAdvanced: PropTypes.shape(),
+    unstableVersions: PropTypes.shape(),
   }),
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   configs: PropTypes.shape({
@@ -212,6 +274,7 @@ MainContent.propTypes = {
   mspFeatures: PropTypes.shape({ '3D': PropTypes.bool }),
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
+  onClearLog: PropTypes.func.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,

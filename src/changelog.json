@@ -2,7 +2,27 @@
   {
     "title": "Unreleased",
     "items": [
-      "Enhancement: Detect BLHeli_M and recommend to use dedicated configurator"
+      "Enhancement: Upload coverage reports to codecov with github workflows",
+      "Chore: Improved linting warnings and rules",
+      "Chore: Improved code coverage",
+      "Chore: Code cleanup"
+    ]
+  },
+  {
+    "title": "0.22.0",
+    "items": [
+      "Enhancement: Detect BLHeli_M and recommend to use dedicated configurator",
+      "Enhancement: Properly handle empty melody",
+      "Enhancement: More melodies",
+      "Enhancement: Allow logs to be cleared manually and after saving the log",
+      "Enhancement: Show warning if non AM32 ARM firmware has been detected - it then is very likely BLHeli_32",
+      "Enhancement: Log detected browser, version and OS",
+      "Enhancement: Detect Brave browser and show incompatibility message",
+      "Enhancement: Fetch available firmware versions from Github API (Bluejay and AM32)",
+      "Enhancement: Allow to set colors on certain ESCs with configurable LEDs",
+      "Enhancement: Allow older firmware versions to be blacklisted when fetching from Github",
+      "Update: Add settings layout for Bluejay v0.16",
+      "Update: Dependency updates"
     ]
   },
   {
