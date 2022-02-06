@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
   useCallback,
+  useEffect,
   useState,
   useMemo,
 } from 'react';
@@ -46,9 +47,9 @@ function BatteryState({ getBatteryState }) {
 
   if(batteryState.text) {
     return (
-      <span className={`battery-state ${batteryState.danger ? 'danger' : ''}`}>
+      <Typography color={batteryState.danger ? 'red' : 'text'}>
         {`${t('battery')} ${batteryState.text}`}
-      </span>
+      </Typography>
     );
   }
 
@@ -64,6 +65,10 @@ function MotorSlider({
   startValue,
 }) {
   const [value, setValue] = useState(startValue);
+
+  useEffect(() => {
+    setValue(startValue);
+  }, [startValue]);
 
   /* istanbul ignore next */
   const update = useCallback((e) => {
@@ -110,10 +115,10 @@ function IndividualMotorSlider({
   }, [index, onChange]);
 
   return(
-    <div className={`slider slider-${index}`}>
-      <h3>
+    <>
+      <Typography>
         {t("motorNr", { index: index + 1 })}
-      </h3>
+      </Typography>
 
       <MotorSlider
         disabled={disabled}
@@ -122,7 +127,7 @@ function IndividualMotorSlider({
         onChange={update}
         startValue={startValue}
       />
-    </div>
+    </>
   );
 }
 IndividualMotorSlider.propTypes = {
@@ -147,6 +152,7 @@ function MotorControl({
 
   const [unlock, setUnlock] = useState(false);
   const [unlockIndividual, setUnlockIndividual] = useState(true);
+  const [masterValue, setMasterValue] = useState(startValue);
 
   const toggleUnlock = useCallback(() => {
     setUnlock(!unlock);
@@ -165,6 +171,7 @@ function MotorControl({
       setUnlockIndividual(true);
     }
 
+    setMasterValue(value);
     onAllUpdate(value);
   }, [startValue, unlockIndividual, onAllUpdate]);
 
@@ -183,7 +190,7 @@ function MotorControl({
         max={maxValue}
         min={minValue}
         onChange={updateSingleValue}
-        startValue={startValue}
+        startValue={masterValue}
       />
     );
   }
@@ -228,18 +235,29 @@ function MotorControl({
             {t('motorControlTextLine3')}
           </Typography>
 
-          <div className="line-wrapper">
-            <Checkbox
-              label={t('enableMotorControl')}
-              name="enable-motor-control"
-              onChange={toggleUnlock}
-              value={unlock ? 1 : 0}
-            />
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              xs={6}
+            >
+              <Checkbox
+                label={t('enableMotorControl')}
+                name="enable-motor-control"
+                onChange={toggleUnlock}
+                value={unlock ? 1 : 0}
+              />
+            </Grid>
 
-            <BatteryState
-              getBatteryState={getBatteryState}
-            />
-          </div>
+            <Grid
+              item
+              xs={6}
+            >
+              <BatteryState getBatteryState={getBatteryState} />
+            </Grid>
+          </Grid>
 
           <br />
 
