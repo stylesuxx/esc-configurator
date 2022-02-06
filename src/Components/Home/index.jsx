@@ -85,22 +85,21 @@ function HomeColumnLeft() {
 
   return(
     <Stack sx={{ p: 2 }}>
-      <Typography
-        component="h3"
-        variant="h5"
-      >
-        {t('homeDisclaimerHeader')}
-      </Typography>
-
       <Alert
         severity="warning"
         sx={{ marginBottom: '16px' }}
       >
         <AlertTitle>
           <ReactMarkdown components={{ p: 'span' }}>
-            {t('betaWarningLine1')}
+            {t('homeDisclaimerHeader')}
           </ReactMarkdown>
         </AlertTitle>
+
+        <Typography>
+          <ReactMarkdown components={{ p: 'b' }}>
+            {t('betaWarningLine1')}
+          </ReactMarkdown>
+        </Typography>
 
         <Typography>
           <ReactMarkdown components={{ p: 'span' }}>
@@ -145,50 +144,9 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
         {t('homeExperimental')}
       </Typography>
 
-      <Typography>
+      <Typography paragraph>
         {t('homeVersionInfo')}
       </Typography>
-
-      <List dense>
-        <ListItem>
-          <ListItemText primary={(
-            <a
-              href="https://github.com/bitdump/BLHeli"
-              rel="noreferrer"
-              target="_blank"
-            >
-              BLHeli_S
-            </a>
-          )}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemText primary={(
-            <a
-              href="https://github.com/mathiasvr/bluejay"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Bluejay
-            </a>
-          )}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemText primary={(
-            <a
-              href="https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware"
-              rel="noreferrer"
-              target="_blank"
-            >
-              AM32
-            </a>
-          )}
-          />
-        </ListItem>
-      </List>
 
       <Typography
         component="h3"
