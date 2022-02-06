@@ -1,6 +1,12 @@
 [
   {
-    "title": "Unreleased",
+    "title": "Unreleased - MUI",
+    "items": [
+      "Enhancement: Refactoring to use MUI components"
+    ]
+  },
+  {
+    "title": "Unreleased - develop",
     "items": [
       "Enhancement: Upload coverage reports to codecov with github workflows",
       "Chore: Improved linting warnings and rules",
