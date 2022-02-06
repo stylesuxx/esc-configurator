@@ -13,13 +13,13 @@ describe('Number', () => {
 
     render(
       <Number
-        label="test"
+        label="Test Label"
         name="test"
         onChange={onChange}
       />
     );
 
-    expect(screen.getByText(/test/i)).toBeInTheDocument();
+    expect(screen.getByText(/Test Label/i)).toBeInTheDocument();
 
     fireEvent.change(screen.getByRole(/spinbutton/i), {
       target: {
@@ -52,13 +52,13 @@ describe('Number', () => {
     render(
       <Number
         inSync={false}
-        label="test"
+        label="Test Label"
         name="test"
         onChange={onChange}
       />
     );
 
-    expect(screen.getByText(/test/i)).toBeInTheDocument();
+    expect(screen.getByText(/Test Label/i)).toBeInTheDocument();
 
     fireEvent.change(screen.getByRole(/spinbutton/i), {
       target: {

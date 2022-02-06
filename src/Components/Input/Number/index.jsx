@@ -88,8 +88,6 @@ function Number({
           xs={6}
         >
           <Typography id={`${name}-select-label`} >
-            {label}
-
             <Info
               hint={hint}
               inSync={inSync}
