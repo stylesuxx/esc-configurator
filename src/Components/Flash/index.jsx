@@ -88,7 +88,7 @@ function Flash({
             onSettingsUpdate={onIndividualSettingsUpdate}
           />
 
-          {escCount + 1 !== escs.length &&
+          {escCount !== escs.length &&
             <CountWarning />}
         </Stack>
       </Grid>
