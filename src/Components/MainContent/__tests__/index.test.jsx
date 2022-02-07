@@ -109,7 +109,6 @@ describe('MainContent', () => {
     expect(screen.getByText(/whatsNextHeader/i)).toBeInTheDocument();
     expect(screen.getByText(/whatsNextText/i)).toBeInTheDocument();
     expect(screen.getByText(/defaultChangelogTitle/i)).toBeInTheDocument();
-    expect(screen.getByText(/defaultChangelogHead/i)).toBeInTheDocument();
   });
 
   it('should display with open port', () => {

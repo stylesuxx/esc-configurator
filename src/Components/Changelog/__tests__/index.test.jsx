@@ -25,7 +25,6 @@ describe('Changelog', () => {
       />
     );
 
-    expect(screen.getByText(/defaultChangelogHead/i)).toBeInTheDocument();
     expect(screen.getByText(/defaultChangelogTitle/i)).toBeInTheDocument();
     expect(screen.queryByText(/changelogClose/i)).not.toBeInTheDocument();
   });

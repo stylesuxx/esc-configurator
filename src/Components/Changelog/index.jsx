@@ -5,15 +5,29 @@ import React, {
   useCallback,
 } from 'react';
 
+import { useTheme } from '@mui/material/styles';
+
 import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 
 import Content from './Content';
 
-import './style.scss';
-
 function Changelog({ entries }) {
   const { t } = useTranslation('common');
+  const theme = useTheme();
+
+  const buttonStyle = {
+    transform: 'rotate(270deg)',
+    position: 'absolute',
+    top: 185,
+    right: '-32px',
+    color: 'white',
+    borderRadius: '5px 5px 0 0',
+    background: theme.palette.primary.bright,
+    p: '5px 10px',
+    cursor: 'pointer',
+  };
 
   const [state, setState] = useState({
     expanded: false,
@@ -29,30 +43,41 @@ function Changelog({ entries }) {
   }, [t, state.expanded]);
 
   return (
-    <div className={`changelog ${state.expanded ? "expanded" : ""}`}>
+    <>
       <Typography
         className="button"
         onClick={toggleExpanded}
+        sx={buttonStyle}
       >
         {state.title}
       </Typography>
 
-      <Box
-        className="wrapper"
-        sx={{
-          p: 1,
-          borderLeft: '5px solid #71B238',
-          overflowY: 'auto',
-          height: 1,
-        }}
+      <Drawer
+        anchor="right"
+        onClose={toggleExpanded}
+        open={state.expanded}
       >
-        <Typography variant="h6">
-          {t('defaultChangelogHead')}
-        </Typography>
+        <Box
+          className="wrapper"
+          sx={{
+            p: 2,
+            borderLeft: '5px solid',
+            borderColor: theme.palette.primary.bright,
+            overflowY: 'auto',
+            maxWidth: 300,
+          }}
+        >
+          <Typography
+            paragraph
+            variant="h6"
+          >
+            {t('defaultChangelogHead')}
+          </Typography>
 
-        <Content entries={entries} />
-      </Box>
-    </div>
+          <Content entries={entries} />
+        </Box>
+      </Drawer>
+    </>
   );
 }
 
