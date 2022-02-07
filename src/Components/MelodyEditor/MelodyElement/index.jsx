@@ -106,7 +106,6 @@ const MelodyElement = forwardRef(({
   }, [currentMelody, onUpdate]);
 
   const handleMelodyUpdate = useCallback((melody) => {
-    console.log('update');
     setCurrentMelody(melody);
 
     // If an accepted melody changes

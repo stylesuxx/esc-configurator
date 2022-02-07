@@ -232,20 +232,32 @@ describe('MeldodyElement', () => {
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
     expect(onAccept).toHaveBeenCalled();
 
-    // TODO: Find a way to reset the textarea before pasting new content into it
-    /*
+    /**
+     * Find the textbox and clear it's content. This is not very elegant but
+     * sending other key codes like [CTRL] + A is not registerd by the textbox
+     * neither is sending an A.
+     */
     const textarea = screen.getByRole('textbox');
+    for(let i = 0; i < melody.length; i += 1) {
+      fireEvent.keyDown(textarea, {
+        key: 'Delete',
+        code: 'Delete',
+        keyCode: 46,
+      });
+    }
+
     const event = createEvent.paste(textarea, {
       clipboardData: {
         types: ['text/plain'],
-        getData: () => 'Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g',
+        getData: () => 'simpsons:d=4,o=5,b=160:c.6',
       },
     });
     fireEvent(textarea, event);
 
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
-    expect(onAccept.callCount).toBe(2);
-    */
+
+    // +1 because it is called once when initializing the component
+    expect(onAccept.mock.calls.length).toBe(2 + 1);
   });
 
   it('should accept melody twice', async() => {
