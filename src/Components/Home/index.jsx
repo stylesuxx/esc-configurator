@@ -7,10 +7,13 @@ import React, {
 } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import { useTheme } from '@mui/material/styles';
+
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
@@ -40,28 +43,39 @@ function Install() {
   }, [deferredPrompt]);
 
   return(
-    <div className={`install-wrapper ${showInstall ? 'active' : ''}`}>
-      <div className="install">
-        <Typography className="description">
+    <Fade
+      in={showInstall}
+      timeout={1500}
+    >
+      <Stack
+        sx={{
+          p: 2,
+          m: 1,
+          marginRight: 5,
+          background: 'rgba(211, 211, 211, 0.25)',
+        }}
+      >
+        <Typography>
           <ReactMarkdown components={{ p: 'span' }}>
             {t('homeInstallLine1')}
           </ReactMarkdown>
         </Typography>
 
-        <Typography className="description">
+        <Typography paragraph>
           <ReactMarkdown components={{ p: 'span' }}>
             {t('homeInstallLine2')}
           </ReactMarkdown>
         </Typography>
 
         <Button
+          fullWidth
           onClick={handleInstallToHomescreen}
           variant="contained"
         >
           {t('addToHomeScreen')}
         </Button>
-      </div>
-    </div>
+      </Stack>
+    </Fade>
   );
 }
 
@@ -349,22 +363,57 @@ function HomeColumnRight() {
 
 function Home({ onOpenMelodyEditor }) {
   const { t } = useTranslation('common');
+  const theme = useTheme();
 
   return (
     <div id="content">
       <div id="tab-landing">
         <Box>
-          <div className="content_top">
-            <div className="logowrapper">
-              <Typography align="center">
-                <ReactMarkdown components={{ p: 'span' }}>
-                  {t('homeWelcome')}
-                </ReactMarkdown>
-              </Typography>
+          <Grid
+            alignItems="center"
+            className="content_top"
+            container
+            spacing={2}
+            sx={{
+              background: theme.palette.primary.main,
+              color: 'white',
+            }}
+          >
+            <Grid
+              item
+              md={3}
+              xs={12}
+            />
 
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <div className="content_top">
+                <div className="logowrapper">
+                  <Typography
+                    align="center"
+                  >
+                    <ReactMarkdown components={{ p: 'span' }}>
+                      {t('homeWelcome')}
+                    </ReactMarkdown>
+                  </Typography>
+
+
+                </div>
+              </div>
+            </Grid>
+
+            <Grid
+              item
+              md={3}
+              xs={12}
+            >
               <Install />
-            </div>
-          </div>
+            </Grid>
+
+          </Grid>
 
           <Grid
             container

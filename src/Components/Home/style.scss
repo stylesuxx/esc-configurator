@@ -1,18 +1,4 @@
 #tab-landing {
-  min-height: 100%;
-  overflow: hidden;
-
-  /* Needed so we can have p elements in the translations */
-  .MuiTypography-paragraph {
-    p {
-      margin-bottom: 16px
-    }
-
-    p:last-child {
-      margin-bottom: 0px;
-    }
-  }
-
   .MuiAlert-message {
     a {
       color: rgb(102, 60, 0);
@@ -22,71 +8,5 @@
 
   a {
     text-decoration: underline;
-  }
-
-  .install-wrapper {
-    position: absolute;
-    top: 142px;
-    right: 100px;
-    height: 0;
-    overflow: hidden;
-
-    @media only screen and (min-width: 1660px) {
-      &.active {
-        animation: slide 1s ease 0.5s forwards;
-      }
-    }
-  }
-
-  @keyframes slide {
-    from {height: 0;}
-    to {height: 180px;}
-  }
-
-  .install {
-    max-width: 400px;
-    padding: 8px;
-    background: rgba(211, 211, 211, 0.25);
-
-    .description {
-
-      p {
-        padding-bottom: 10px;
-      }
-    }
-
-    .default-btn {
-      margin: auto;
-      button {
-        max-width: 200px;
-      }
-    }
-  }
-
-  .content_top {
-    min-height: 140px;
-    background: var(--color-primary);
-    padding: 20px;
-    display: flex;
-
-    @media only screen and (max-width: 600px) {
-      padding-left: 30px;
-      padding-right: 30px;
-    }
-  }
-
-  .logowrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin-left: auto;
-    margin-right: auto;
-    width: 800px;
-    color: white;
-
-    img {
-      width: 420px;
-      margin: 5px;
-    }
   }
 }
