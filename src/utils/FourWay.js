@@ -366,7 +366,10 @@ class FourWay {
           if(flash.settings.NAME === '') {
             if(
               flash.settings.MAIN_REVISION === 16 &&
-              flash.settings.SUB_REVISION >= 8
+              (
+                flash.settings.SUB_REVISION === 8 ||
+                flash.settings.SUB_REVISION === 9
+              )
             ) {
               flash.settings.NAME = 'BLHeli_M';
               layout = null;
