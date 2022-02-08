@@ -210,7 +210,10 @@ class App extends Component {
     }
 
     const log = [ ...serial.log ];
-    log.push(this.formatLogMessage(translation));
+    log.push({
+      html: translation,
+      date: new Date(),
+    });
     this.setSerial({ log });
   };
 
@@ -234,26 +237,6 @@ class App extends Component {
     }
 
     return configs;
-  };
-
-  formatLogMessage = (html) => {
-    const now = new Date();
-    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
-    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
-
-    return (
-      <div>
-        <span className="date">
-          {formattedDate}
-        </span>
-
-        <span className="time">
-          {formattedTime}
-        </span>
-
-        {html}
-      </div>
-    );
   };
 
   flash = async(text, force, migrate) => {

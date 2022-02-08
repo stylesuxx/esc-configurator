@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
+import dateFormat from 'dateformat';
 import React, {
   useCallback,
   useState,
@@ -14,14 +15,27 @@ function Log({ messages }) {
   const [ expanded, setExpanded] = useState(false);
 
   const messageElements = messages.slice(0).reverse()
-    .map((message, index) => (
-      <Typography
-        key={index}
-        variant="body2"
-      >
-        {message}
-      </Typography>
-    ));
+    .map((message, index) => {
+      const formattedDate = dateFormat(message.date, 'yyyy-mm-dd @ ');
+      const formattedTime = dateFormat(message.date, 'HH:MM:ss -- ');
+
+      return (
+        <Typography
+          key={index}
+          variant="body2"
+        >
+          <span className="date">
+            {formattedDate}
+          </span>
+
+          <span className="time">
+            {formattedTime}
+          </span>
+
+          {message.html}
+        </Typography>
+      );
+    });
 
   const toggleExpanded = useCallback(() => {
     setExpanded(!expanded);
@@ -30,12 +44,11 @@ function Log({ messages }) {
   return (
     <Collapse
       collapsedSize={28}
-      entered={{ overflowY: 'scroll' }}
       in={expanded}
       sx={{
         background: '#242424',
         maxHeight: 206,
-        '&.MuiCollapse-entered': { overflowY: 'scroll' },
+        '&.MuiCollapse-entered': { overflowY: 'auto' },
       }}
     >
       <Box
