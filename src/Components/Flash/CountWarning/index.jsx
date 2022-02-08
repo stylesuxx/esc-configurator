@@ -16,7 +16,7 @@ function CountWarning() {
     return (
       <ListItem key={line}>
         <ListItemText>
-          <ReactMarkdown components={{ p: 'span' }} >
+          <ReactMarkdown components={{ p: 'span' }}>
             {t(line)}
           </ReactMarkdown>
         </ListItemText>
@@ -37,7 +37,7 @@ function CountWarning() {
       </List>
 
       <Typography>
-        <ReactMarkdown>
+        <ReactMarkdown components={{ p: 'span' }}>
           {t('escMissingHint')}
         </ReactMarkdown>
       </Typography>

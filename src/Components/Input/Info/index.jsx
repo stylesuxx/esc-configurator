@@ -33,8 +33,10 @@ function Info({
       {label}
 
       {hint &&
-        <div className="info-wrapper">
-          <BootstrapTooltip title={hint}>
+        <span className="info-wrapper">
+          <BootstrapTooltip
+            title={hint}
+          >
             <span
               className="info-icon"
               data-for={`hint-${name}`}
@@ -43,17 +45,20 @@ function Info({
               ?
             </span>
           </BootstrapTooltip>
-        </div>}
+        </span>}
     </span>
   );
 }
 
-Info.defaultProps = { hint: null };
+Info.defaultProps = {
+  hint: null,
+  label: null,
+};
 
 Info.propTypes = {
   hint: PropTypes.string,
   inSync: PropTypes.bool.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   name: PropTypes.string.isRequired,
 };
 

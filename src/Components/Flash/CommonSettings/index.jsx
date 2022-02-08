@@ -88,19 +88,21 @@ function CommonSettings({
     const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
     let unsupportedText = (
-      <Typography>
-        <p>
-          {t('common:versionUnsupportedLine1', {
-            version: version,
-            name: availableSettings.NAME,
-            layout: availableSettings.LAYOUT_REVISION,
-          })}
-        </p>
+      <>
+        <Typography paragraph>
+            {t('common:versionUnsupportedLine1', {
+              version: version,
+              name: availableSettings.NAME,
+              layout: availableSettings.LAYOUT_REVISION,
+            })}
+        </Typography>
 
-        <ReactMarkdown>
-          {t('common:versionUnsupportedLine2')}
-        </ReactMarkdown>
-      </Typography>
+        <Typography>
+          <ReactMarkdown>
+            {t('common:versionUnsupportedLine2')}
+          </ReactMarkdown>
+        </Typography>
+      </>
     );
 
     if (unsupportedNames.includes(availableSettings.NAME)) {
@@ -159,7 +161,10 @@ function CommonSettings({
     switch (setting.type) {
       case 'bool': {
         return (
-          <Grid container>
+          <Grid
+            container
+            key={setting.name}
+          >
             <Grid
               item
               xs={6}
@@ -174,7 +179,6 @@ function CommonSettings({
                 disabled={disabled}
                 hint={hint}
                 inSync={inSync}
-                key={setting.name}
                 label={t(setting.label)}
                 name={setting.name}
                 onChange={handleCheckboxChange}

@@ -75,11 +75,8 @@ function Slider({
           xs={6}
         >
           <MuiSlider
-            aria-label='xxx'
             aria-labelledby={`${name}-select-label`}
             disabled={disabled}
-            formatLabel={format}
-            labelSuffix={suffix}
             max={max}
             min={min}
             name={name}
@@ -88,6 +85,7 @@ function Slider({
             step={step}
             value={inSync ? getDisplayValue() : min}
             valueLabelDisplay="auto"
+            valueLabelFormat={format}
           />
         </Grid>
 
