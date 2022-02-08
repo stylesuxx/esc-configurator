@@ -89,8 +89,15 @@ function loadSerialApi() {
   return null;
 }
 
+function loadCookie() {
+  const cookie = localStorage.getItem('cookie');
+
+  return cookie === 'true';
+}
+
 export {
   clearLog,
+  loadCookie,
   loadLanguage,
   loadLog,
   loadMelodies,

@@ -69,7 +69,7 @@
   "betaWarningLine2": "Things might not work as expected yet - if you find any bugs please [report them](https://github.com/stylesuxx/esc-configurator/issues/new).",
   "findHelp": "For known browser issues please check [the wiki](https://github.com/stylesuxx/esc-configurator/wiki/Known-Browser-issues).",
   "escButtonSelectLocally": "Flash Local Firmware",
-  "cookieText": "This site or third-party tools used by this site make use of cookies necessary for the operation and useful for the purposes outlined in the cookie policy. By accepting, you consent to the use of cookies.",
+  "cookieText": "This site uses Google Analytics to track usage statistics in order to improve quality of service. This data is not (and will never be) shared with any other third party. The data collected is mostly ESC related like used layout and firmware.",
   "resetDefaults": "Restore Default Settings",
   "forceFlashText": "Ignore inappropriate MCU and Layout?",
   "forceFlashHint": "Flashing inappropriate firmware may damage your ESC, do so at your own risk",

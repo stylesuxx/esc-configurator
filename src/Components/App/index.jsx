@@ -37,6 +37,7 @@ function App({
   actions,
   appSettings,
   configs,
+  cookieDone,
   escs,
   language,
   melodies,
@@ -155,7 +156,10 @@ function App({
         writing={actions.isWriting}
       />
 
-      <CookieConsent onCookieAccept={onCookieAccept} />
+      <CookieConsent
+        onCookieAccept={onCookieAccept}
+        show={!cookieDone}
+      />
 
       <ToastContainer />
     </ThemeProvider>
@@ -188,6 +192,7 @@ App.propTypes = {
     show: PropTypes.bool.isRequired,
   }).isRequired,
   configs: PropTypes.shape({}).isRequired,
+  cookieDone: PropTypes.bool.isRequired,
   escs: PropTypes.shape({
     actions: PropTypes.shape({
       handleMasterUpdate: PropTypes.func.isRequired,
