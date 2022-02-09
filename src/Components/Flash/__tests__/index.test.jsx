@@ -22,6 +22,20 @@ jest.mock('react-i18next', () => ({
 }));
 
 describe('Flash', () => {
+  let onFirmwareDump;
+  let onFlash;
+  let onIndividualSettingsUpdate;
+  let onCommonSettingsUpdate;
+  let onSettingsUpdate;
+
+  beforeEach(() => {
+    onFirmwareDump = jest.fn();
+    onFlash = jest.fn();
+    onIndividualSettingsUpdate = jest.fn();
+    onCommonSettingsUpdate = jest.fn();
+    onSettingsUpdate = jest.fn();
+  });
+
   it('should load and display unsupported custom settings', () => {
     const availableSettings = {
       LAYOUT_REVISION: 203,
@@ -104,16 +118,16 @@ describe('Flash', () => {
       },
     ];
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Flash
         availableSettings={availableSettings}
         canFlash={false}
         escCount={1}
         escs={escs}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onSettingsUpdate={onSettingsUpdate}
       />
     );
@@ -203,9 +217,6 @@ describe('Flash', () => {
       },
     ];
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Flash
         availableSettings={availableSettings}
@@ -213,7 +224,10 @@ describe('Flash', () => {
         disableCommon
         escCount={1}
         escs={escs}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onSettingsUpdate={onSettingsUpdate}
       />
     );
@@ -304,16 +318,16 @@ describe('Flash', () => {
       },
     ];
 
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
     render(
       <Flash
         availableSettings={availableSettings}
         canFlash={false}
         escCount={4}
         escs={escs}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlash={onFlash}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onSettingsUpdate={onSettingsUpdate}
       />
     );

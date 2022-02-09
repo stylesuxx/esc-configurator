@@ -101,6 +101,7 @@ Flash.defaultProps = {
   directInput: false,
   disableCommon: false,
   enableAdvanced: false,
+  flashProgress: [],
 };
 
 Flash.propTypes = {
@@ -111,7 +112,7 @@ Flash.propTypes = {
   enableAdvanced: PropTypes.bool,
   escCount: PropTypes.number.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
+  flashProgress: PropTypes.arrayOf(PropTypes.number),
   onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlash: PropTypes.func.isRequired,
