@@ -98,7 +98,7 @@ function CommonSettings({
         </Typography>
 
         <Typography>
-          <ReactMarkdown>
+          <ReactMarkdown components={{ p: 'span' }}>
             {t('common:versionUnsupportedLine2')}
           </ReactMarkdown>
         </Typography>
