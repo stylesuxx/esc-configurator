@@ -6,6 +6,9 @@ import {
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
+let onClearLog;
+let onCommonSettingsUpdate;
+let onFirmwareDump;
 let onWriteSetup;
 let onSettingsUpdate;
 let onSingleMotorSpeed;
@@ -20,6 +23,7 @@ let onFlashUrl;
 let onCancelFirmwareSelection;
 let onAllMotorSpeed;
 let onOpenMelodyEditor;
+let port = {};
 let MainContent;
 
 describe('MainContent', () => {
@@ -32,6 +36,9 @@ describe('MainContent', () => {
   });
 
   beforeEach(() => {
+    onClearLog = jest.fn();
+    onCommonSettingsUpdate = jest.fn();
+    onFirmwareDump = jest.fn();
     onWriteSetup = jest.fn();
     onSettingsUpdate = jest.fn();
     onSingleMotorSpeed = jest.fn();
@@ -46,6 +53,7 @@ describe('MainContent', () => {
     onCancelFirmwareSelection = jest.fn();
     onAllMotorSpeed = jest.fn();
     onOpenMelodyEditor = jest.fn();
+    port.getBatteryState =  jest.fn();
   });
 
   it('should display main content', () => {
@@ -68,6 +76,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -112,21 +123,6 @@ describe('MainContent', () => {
   });
 
   it('should display with open port', () => {
-    const onWriteSetup = jest.fn();
-    const onSettingsUpdate = jest.fn();
-    const onSingleMotorSpeed = jest.fn();
-    const onSingleFlash = jest.fn();
-    const onSelectFirmwareForAll = jest.fn();
-    const onSaveLog = jest.fn();
-    const onResetDefaultls = jest.fn();
-    const onReadEscs = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onIndividualSettingsUpdate = jest.fn();
-    const onFlashUrl = jest.fn();
-    const onCancelFirmwareSelection = jest.fn();
-    const onAllMotorSpeed = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
-
     const actions = {
       isReading: false,
       isWriting: false,
@@ -146,6 +142,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -159,6 +158,7 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
       />
     );
 
@@ -190,6 +190,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -238,6 +241,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -251,6 +257,7 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
       />
     );
 
@@ -285,6 +292,9 @@ describe('MainContent', () => {
         mspFeatures={mspFeatures}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -298,6 +308,7 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
       />
     );
 
@@ -329,6 +340,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -460,6 +474,9 @@ describe('MainContent', () => {
         escs={escs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -590,6 +607,9 @@ describe('MainContent', () => {
         escs={escs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -603,6 +623,7 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
         settings={settings}
       />
     );
@@ -715,6 +736,9 @@ describe('MainContent', () => {
         flashTargets={[0]}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -757,6 +781,9 @@ describe('MainContent', () => {
         fourWay
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -892,6 +919,9 @@ describe('MainContent', () => {
         flashTargets={[0]}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}

@@ -147,25 +147,27 @@ function MainContent({
           </ReactMarkdown>
 
           <table>
-            <tr>
-              <td>
-                {t('mistaggedTagged')}
-              </td>
+            <tbody>
+              <tr>
+                <td>
+                  {t('mistaggedTagged')}
+                </td>
 
-              <td>
-                {esc.make}
-              </td>
-            </tr>
+                <td>
+                  {esc.make}
+                </td>
+              </tr>
 
-            <tr>
-              <td>
-                {t('mistaggedDetected')}
-              </td>
+              <tr>
+                <td>
+                  {t('mistaggedDetected')}
+                </td>
 
-              <td>
-                {esc.actualMake}
-              </td>
-            </tr>
+                <td>
+                  {esc.actualMake}
+                </td>
+              </tr>
+            </tbody>
           </table>
 
           <ReactMarkdown>
