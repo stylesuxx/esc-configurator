@@ -377,6 +377,7 @@ FirmwareSelector.defaultProps = {
     settings: {},
   },
   selectedMode: null,
+  showUnstable: false,
   warning: null,
 };
 FirmwareSelector.propTypes = {
@@ -395,7 +396,7 @@ FirmwareSelector.propTypes = {
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
-  showUnstable: PropTypes.bool.isRequired,
+  showUnstable: PropTypes.bool,
   warning: PropTypes.node,
 };
 
