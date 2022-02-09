@@ -158,7 +158,7 @@ describe('CommonSettings', () => {
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
   });
 
-  it('should allow updating settings', () => {
+  it('should allow updating a checkbox', () => {
     const availableSettings = {
       LAYOUT_REVISION: 203,
       MAIN_REVISION: 1,
@@ -291,6 +291,148 @@ describe('CommonSettings', () => {
     );
 
     userEvent.click(screen.getByRole(/checkbox/i));
+    expect(onSettingsUpdate).toHaveBeenCalled();
+  });
+
+  it('should allow updating a selectbox', () => {
+    const availableSettings = {
+      LAYOUT_REVISION: 203,
+      MAIN_REVISION: 1,
+      NAME: 'FW name',
+      SUB_REVISION: 100,
+      STARTUP_BEEP: 0,
+      MOTOR_DIRECTION: 1,
+    };
+
+    const esc = {
+      meta: { available: true },
+      settings: {
+        MODE: 0,
+        STARTUP_BEEP: 0,
+      },
+      make: 'make 1234',
+      settingsDescriptions: {
+        overrides: {
+          '0.201': [
+            {
+              name: 'MOTOR_DIRECTION',
+              type: 'enum',
+              label: 'escMotorDirection',
+              options: [
+                {
+                  value: '1',
+                  label: 'Normal',
+                },
+                {
+                  value: '2',
+                  label: 'Reversed',
+                },
+                {
+                  value: '3',
+                  label: 'Bidirectional',
+                },
+                {
+                  value: '4',
+                  label: 'Bidirectional Reversed',
+                },
+              ],
+            },
+          ],
+        },
+        base: [
+          {
+            name: 'MOTOR_DIRECTION',
+            type: 'enum',
+            label: 'escMotorDirection',
+            options: [
+              {
+                value: '1',
+                label: 'Normal',
+              },
+              {
+                value: '2',
+                label: 'Reversed',
+              },
+              {
+                value: '3',
+                label: 'Bidirectional',
+              },
+              {
+                value: '4',
+                label: 'Bidirectional Reversed',
+              },
+            ],
+          },
+          {
+            name: '_PPM_MIN_THROTTLE',
+            type: 'number',
+            min: 1000,
+            max: 1500,
+            step: 4,
+            label: 'escPPMMinThrottle',
+            offset: 1000,
+            factor: 4,
+            suffix: ' μs',
+          },
+          {
+            name: 'STARTUP_BEEP',
+            type: 'bool',
+            label: 'escStartupBeep',
+          },
+          {
+            name: 'IVALID',
+            type: 'IVALID',
+            label: 'invalid',
+          },
+          {
+            name: '_PPM_CENTER_THROTTLE',
+            type: 'number',
+            min: 1000,
+            max: 2020,
+            step: 4,
+            label: 'escPPMCenterThrottle',
+            offset: 1000,
+            factor: 4,
+            suffix: ' μs',
+            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
+          },
+        ],
+      },
+      individualSettings: {
+        MAIN_REVISION: 0,
+        SUB_REVISION: 201,
+        NAME: 'Bluejay (Beta)',
+      },
+    };
+
+    const escs = [];
+
+    for(let i = 0; i < 4; i += 1) {
+      const current = { ...esc };
+      escs.push(current);
+    }
+
+    const onFlash = jest.fn();
+    const onSettingsUpdate = jest.fn();
+
+    render(
+      <CustomSettings
+        availableSettings={availableSettings}
+        directInput={false}
+        escs={escs}
+        index={0}
+        onFlash={onFlash}
+        onSettingsUpdate={onSettingsUpdate}
+      />
+    );
+
+    const button = screen.getByRole('button', { name: 'escMotorDirection hints:MOTOR_DIRECTION Normal' });
+    expect(button).toBeInTheDocument();
+    fireEvent.mouseDown(button);
+
+    let option = screen.getByRole('option', { name: 'Reversed' });
+    userEvent.click(option);
+
     expect(onSettingsUpdate).toHaveBeenCalled();
   });
 
