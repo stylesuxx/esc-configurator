@@ -187,12 +187,14 @@ function FirmwareSelector({
   }, [onLocalSubmit, force, migrate]);
 
   const handleVersionChange = useCallback((e) => {
-    const selectedItem = options.versions.filter((item) => item.value === e.target.value);
+    const selectedValue = e.target.value;
+    const selectedItem = options.versions.filter((item) => item.value === selectedValue);
+    const selectedVersion = selectedItem[0].key;
 
     setSelection({
       ...selection,
-      url: e.target.value,
-      version: selectedItem.length > 0 ? selectedItem[0].key : 'N/A',
+      url: selectedValue,
+      version: selectedVersion,
     });
   }, [options, selection]);
 
