@@ -10,6 +10,7 @@ import React, {
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
+import LinearProgress from '@mui/material/LinearProgress';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 
@@ -95,15 +96,16 @@ const Esc = forwardRef(({
               item
               xs={12}
             >
-              <div className="flash-btn">
-                <progress
-                  className={progress > 0 ? 'progress' : 'hidden'}
-                  max="100"
-                  min="0"
+              {progress > 0 &&
+                <LinearProgress
+                  sx={{ height: 36.5 }}
                   value={progress}
-                />
+                  variant="determinate"
+                />}
 
+              {progress === 0 &&
                 <ButtonGroup
+                  fullWidth
                   variant="outlined"
                 >
                   <Button
@@ -120,8 +122,7 @@ const Esc = forwardRef(({
                     >
                       {t('escButtonFirmwareDump')}
                     </Button>}
-                </ButtonGroup>
-              </div>
+                </ButtonGroup>}
             </Grid>
           </Grid>
         </Stack>
