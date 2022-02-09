@@ -71,14 +71,14 @@ function CookieConsent({
                     onClick={handleDeny}
                     variant="contained"
                   >
-                    Deny
+                    {t('deny')}
                   </Button>
 
                   <Button
                     onClick={handleAccept}
                     variant="contained"
                   >
-                    Allow
+                    {t('allow')}
                   </Button>
                 </ButtonGroup>
               </Box>
