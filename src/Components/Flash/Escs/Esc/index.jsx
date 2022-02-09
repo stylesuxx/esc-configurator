@@ -131,12 +131,16 @@ const Esc = forwardRef(({
   );
 });
 Esc.displayName = 'Esc';
-Esc.defaultProps = { canFlash: true };
+Esc.defaultProps = {
+  canFlash: true,
+  disableCommon: false,
+  enableAdvanced: false,
+};
 Esc.propTypes = {
   canFlash: PropTypes.bool,
   directInput: PropTypes.bool.isRequired,
-  disableCommon: PropTypes.bool.isRequired,
-  enableAdvanced: PropTypes.bool.isRequired,
+  disableCommon: PropTypes.bool,
+  enableAdvanced: PropTypes.bool,
   esc: PropTypes.shape().isRequired,
   index: PropTypes.number.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,

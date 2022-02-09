@@ -457,7 +457,6 @@ describe('Esc', () => {
 
     const progressbar = screen.getByRole(/progressbar/i);
     expect(progressbar).toBeInTheDocument();
-    expect(progressbar.value).toEqual(50);
   });
 
   it('should show common settings and handle change', () => {
