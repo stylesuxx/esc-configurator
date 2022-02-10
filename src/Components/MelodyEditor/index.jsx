@@ -99,7 +99,7 @@ function PresetSelect({
 
   const handleUpdate = useCallback((e) => {
     const value = e.target.value;
-    let selected = [];
+
     let match = null;
     if(value.startsWith('preset-')) {
       const name = value.split('preset-')[1];
@@ -108,12 +108,8 @@ function PresetSelect({
       match = customMelodies.find((item) => item.name === value);
     }
 
-    if(match) {
-      selected = match.tracks;
-    }
-
     setSelectedPreset(e.target.value);
-    onUpdateMelodies(selected);
+    onUpdateMelodies(match.tracks);
   }, [defaultMelodies, customMelodies, onUpdateMelodies]);
 
   const handleDelete = useCallback(() => {
