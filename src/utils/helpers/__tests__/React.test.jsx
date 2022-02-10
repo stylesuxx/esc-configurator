@@ -17,9 +17,10 @@ function TestComponent({
     </div>
   );
 }
+TestComponent.defaultProps = { timeout: null };
 TestComponent.propTypes = {
   callback: PropTypes.func.isRequired,
-  timeout: PropTypes.number.isRequired,
+  timeout: PropTypes.number,
 };
 
 test('useInterval with proper delay', async () => {
@@ -28,12 +29,12 @@ test('useInterval with proper delay', async () => {
   render(
     <TestComponent
       callback={callback}
-      timeout={200}
+      timeout={100}
     />
   );
 
   await new Promise((r) => {
-    setTimeout(r, 500);
+    setTimeout(r, 150);
   });
 
   expect(callback).toHaveBeenCalled();
@@ -48,10 +49,6 @@ test('useInterval without delay', async () => {
       timeout={null}
     />
   );
-
-  await new Promise((r) => {
-    setTimeout(r, 500);
-  });
 
   expect(callback).toHaveBeenCalled();
 });
