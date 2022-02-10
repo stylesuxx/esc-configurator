@@ -17,8 +17,10 @@ import { QueueProcessor } from './helpers/QueueProcessor';
  * No command will be written until the previous one is finished processing.
  */
 class Serial {
-  constructor(port) {
+  constructor(port, timeout = 1000) {
     this.port = port;
+    this.timeout = timeout;
+
     this.baudRate = 115200;
     this.msp = null;
     this.fourWay = null;
@@ -90,7 +92,7 @@ class Serial {
       await this.writeBuffer(buffer);
     }.bind(this);
 
-    return this.qp.addCommand(sendHandler, responseHandler);
+    return this.qp.addCommand(sendHandler, responseHandler, this.timeout);
   }
 
   async writeBuffer(buffer) {
