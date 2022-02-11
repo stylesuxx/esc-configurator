@@ -105,8 +105,7 @@
       "**/?(*.)+(test).[jt]s?(x)"
     ],
     "coveragePathIgnorePatterns": [
-      ".*Mocked.*",
-      "sources/Blheli/.*"
+      ".*Mocked.*"
     ]
   },
   "pre-commit": [
