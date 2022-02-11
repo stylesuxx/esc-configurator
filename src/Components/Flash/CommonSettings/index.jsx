@@ -90,11 +90,11 @@ function CommonSettings({
     let unsupportedText = (
       <>
         <Typography paragraph>
-            {t('common:versionUnsupportedLine1', {
-              version: version,
-              name: availableSettings.NAME,
-              layout: availableSettings.LAYOUT_REVISION,
-            })}
+          {t('common:versionUnsupportedLine1', {
+            version: version,
+            name: availableSettings.NAME,
+            layout: availableSettings.LAYOUT_REVISION,
+          })}
         </Typography>
 
         <Typography>
