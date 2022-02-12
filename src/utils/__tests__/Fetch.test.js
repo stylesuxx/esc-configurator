@@ -42,8 +42,6 @@ describe('fetchJsonCached', () => {
           const response = new window.Response('{"layouts":{}}');
           response.headers = headers;
 
-          console.log(response);
-
           return response;
         },
         put: (request, options) => {},
