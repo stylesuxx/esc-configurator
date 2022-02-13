@@ -2,6 +2,10 @@
   min-height: 100%;
   overflow: hidden;
 
+  p {
+    padding-bottom: 10px;
+  }
+
   .line-1 {
     margin-bottom: 20px;
   }
@@ -32,10 +36,6 @@
 
     .description {
       text-align: center;
-
-      p {
-        padding-bottom: 10px;
-      }
     }
 
     .default-btn {

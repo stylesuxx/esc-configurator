@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import bluejay from './images/bluejay_logo.png';
 import './style.scss';
@@ -29,10 +30,15 @@ function Install() {
   return(
     <div className={`install-wrapper ${showInstall ? 'active' : ''}`}>
       <div className="install">
-        <div
-          className="description"
-          dangerouslySetInnerHTML={{ __html: t('homeInstall') }}
-        />
+        <div className="description">
+          <ReactMarkdown>
+            {t('homeInstallLine1')}
+          </ReactMarkdown>
+
+          <ReactMarkdown>
+            {t('homeInstallLine2')}
+          </ReactMarkdown>
+        </div>
 
         <div className="default-btn">
           <button
@@ -50,6 +56,16 @@ function Install() {
 function HomeColumnLeft() {
   const { t } = useTranslation('common');
 
+  const disclaimerLines = [1, 2, 3, 4, 5, 6].map((index) => {
+    const line = `homeDisclaimerTextLine${index}`;
+
+    return (
+      <ReactMarkdown key={line}>
+        {t(line)}
+      </ReactMarkdown>
+    );
+  });
+
   return(
     <div className="column third_left text1">
       <div className="wrap">
@@ -58,7 +74,9 @@ function HomeColumnLeft() {
             {t('homeDisclaimerHeader')}
           </h2>
 
-          <div dangerouslySetInnerHTML={{ __html: t('homeDisclaimerText') }} />
+          <div>
+            {disclaimerLines}
+          </div>
         </div>
 
         <div className="summary-section">
@@ -66,7 +84,11 @@ function HomeColumnLeft() {
             {t('homeAttributionHeader')}
           </h2>
 
-          <div dangerouslySetInnerHTML={{ __html: t('homeAttributionText') }} />
+          <div>
+            <ReactMarkdown>
+              {t('homeAttributionText')}
+            </ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>
@@ -127,7 +149,13 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
 
           <section>
             <div>
-              <div dangerouslySetInnerHTML={{ __html: t('blhelisText') }} />
+              <ReactMarkdown>
+                {t('blhelisTextLine1')}
+              </ReactMarkdown>
+
+              <ReactMarkdown>
+                {t('blhelisTextLine2')}
+              </ReactMarkdown>
             </div>
           </section>
         </div>
@@ -144,7 +172,15 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
             />
 
             <div>
-              <div dangerouslySetInnerHTML={{ __html: t('bluejayText') }} />
+              <div>
+                <ReactMarkdown>
+                  {t('bluejayTextLine1')}
+                </ReactMarkdown>
+
+                <ReactMarkdown>
+                  {t('bluejayTextLine2')}
+                </ReactMarkdown>
+              </div>
 
               <div className="default-btn melody-editor-button">
                 <button
@@ -155,7 +191,15 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
                 </button>
               </div>
 
-              <div dangerouslySetInnerHTML={{ __html: t('bluejaySupportedHardware') }} />
+              <div>
+                <ReactMarkdown>
+                  {t('bluejaySupportedHardwareLine1')}
+                </ReactMarkdown>
+
+                <ReactMarkdown>
+                  {t('bluejaySupportedHardwareLine2')}
+                </ReactMarkdown>
+              </div>
             </div>
           </section>
         </div>
@@ -166,7 +210,15 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
           </h3>
 
           <section>
-            <div dangerouslySetInnerHTML={{ __html: t('blheli32ToAM32') }} />
+            <div>
+              <ReactMarkdown>
+                {t('blheli32ToAM32Line1')}
+              </ReactMarkdown>
+
+              <ReactMarkdown>
+                {t('blheli32ToAM32Line2')}
+              </ReactMarkdown>
+            </div>
           </section>
         </div>
       </div>
@@ -177,6 +229,18 @@ HomeColumnCenter.propTypes = { onOpenMelodyEditor: PropTypes.func.isRequired };
 
 function HomeColumnRight() {
   const { t } = useTranslation('common');
+  const contributionItems = [1, 2, 3, 4, 5].map((index) => {
+    const line = `homeContributionItem${index}`;
+
+    return(
+      <ReactMarkdown
+        components={{ p: 'li' }}
+        key={line}
+      >
+        {t(line)}
+      </ReactMarkdown>
+    );
+  });
 
   return(
     <div className="column third_right text3">
@@ -186,7 +250,9 @@ function HomeColumnRight() {
             {t('homeDiscordHeader')}
           </h2>
 
-          <div dangerouslySetInnerHTML={{ __html: t('homeDiscordText') }} />
+          <div>
+            {t('homeDiscordText')}
+          </div>
 
           <a
             className="discord-link"
@@ -208,7 +274,9 @@ function HomeColumnRight() {
             {t('homeChinaHeader')}
           </h2>
 
-          <div dangerouslySetInnerHTML={{ __html: t('homeChinaText') }} />
+          <ReactMarkdown components={{ p: 'div' }}>
+            {t('homeChinaText')}
+          </ReactMarkdown>
         </div>
 
         <div className="summary-section">
@@ -216,7 +284,15 @@ function HomeColumnRight() {
             {t('homeContributionHeader')}
           </h2>
 
-          <div dangerouslySetInnerHTML={{ __html: t('homeContributionText') }} />
+          <div>
+            <ReactMarkdown components={{ p: 'div' }}>
+              {t('homeContributionText')}
+            </ReactMarkdown>
+
+            <ul>
+              {contributionItems}
+            </ul>
+          </div>
         </div>
 
         <div className="summary-section">
@@ -225,7 +301,9 @@ function HomeColumnRight() {
           </h3>
 
           <section>
-            <div dangerouslySetInnerHTML={{ __html: t('whatsNextText') }} />
+            <ReactMarkdown components={{ p: 'div' }}>
+              {t('whatsNextText')}
+            </ReactMarkdown>
           </section>
         </div>
       </div>
@@ -248,21 +326,32 @@ function Home({ onOpenMelodyEditor }) {
               <div
                 align="center"
                 className="line-1"
-                dangerouslySetInnerHTML={{ __html: t('homeWelcome') }}
-              />
+              >
+                <ReactMarkdown components={{ p: 'span' }}>
+                  {t('homeWelcome')}
+                </ReactMarkdown>
+              </div>
 
               <Install />
 
               <div>
-                <div
-                  align="center"
-                  dangerouslySetInnerHTML={{ __html: t('betaWarning') }}
-                />
+                <div align="center">
+                  <ReactMarkdown components={{ p: 'div' }}>
+                    {t('betaWarningLine1')}
+                  </ReactMarkdown>
 
-                <div
-                  align="center"
-                  dangerouslySetInnerHTML={{ __html: t('findHelp') }}
-                />
+                  <br />
+
+                  <ReactMarkdown components={{ p: 'div' }}>
+                    {t('betaWarningLine2')}
+                  </ReactMarkdown>
+                </div>
+
+                <div align="center">
+                  <ReactMarkdown components={{ p: 'div' }}>
+                    {t('findHelp')}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
           </div>

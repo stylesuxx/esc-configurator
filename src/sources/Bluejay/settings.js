@@ -358,6 +358,7 @@ const INDIVIDUAL_SETTINGS_200 = [{
   name: 'LED_CONTROL',
   type: 'enum',
   label: 'escLedControl',
+  visibleIf: (settings) => ('LAYOUT' in settings) && ['E', 'J', 'M', 'Q', 'U'].includes(settings.LAYOUT[1]),
   options: [{
     value: 0x00,
     label: 'Off',
