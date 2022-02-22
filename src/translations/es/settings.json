@@ -1,8 +1,8 @@
 {
   "settingsHeader": "Ajustes",
   "closeText": "Cerrar",
-  "directInput": "Numeric Input",
-  "directInputHint": "Use numeric input for numbers instead of sliders.",
+  "directInput": "Entrada numérica",
+  "directInputHint": "Utilice la entrada numérica para números en lugar de deslizadores.",
   "printLogs": "Imprimir registros",
   "printLogsHint": "Imprimirá los registros en la consola si está habilitado.",
   "extendedDebug": "Depuración extendida",
@@ -11,6 +11,6 @@
   "disableCommonHint": "Cada ESC tendrá su propia configuración en lugar de tener una sección común que sea válida para todos los ESC.",
   "enableAdvanced": "Activar opciones avanzadas",
   "enableAdvancedHint": "Añade ajustes avanzados como volcar el firmware.",
-  "unstableVersions": "Show firmware pre-releases",
-  "unstableVersionsHint": "Show unstable firmware versions and pre-releases"
+  "unstableVersions": "Mostrar pre-lanzamientos de firmware",
+  "unstableVersionsHint": "Mostrar versiones inestables del firmware y pre-lanzamientos"
 }
