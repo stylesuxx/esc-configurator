@@ -1,8 +1,13 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.23.0-RC1",
     "items": [
       "Enhancement: Upload coverage reports to codecov with github workflows",
+      "Enhancement: More melodies",
+      "Enhancement: Only show LED settings on layout that actually support them",
+      "Enhancement: Only show buttons if they can actually be used",
+      "Enhancement: Imporved some text messages",
+      "Bugfix: Properly detect BLHlei_M 16.8",
       "Chore: Improved linting warnings and rules",
       "Chore: Improved code coverage",
       "Chore: Code cleanup"
