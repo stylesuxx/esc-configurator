@@ -127,12 +127,21 @@
     ]
   },
   {
-    "name": "Never gonna give you up - Rick Astley",
+    "name": "Never gonna give you up - Rick Astley - Short",
     "tracks": [
       "never1:b=210,o=3,d=4:8d5,8e5,8g5,8d5,b5,8p,b5,8p,2a5,p,8d5,8e5,8g5,8d5,a5,8p,a5,8p,g5,8g5,8f#5,e5,2p",
       "never2:b=210,o=3,d=4:2p,g5,8p,g5,8p,2f#5,p,2p,f#5,8p,f#5,8p,2e5,p,2p",
       "never3:b=210,o=3,d=4:2p,e5,8p,e5,8p,2d5,p,2p,d5,8p,d5,8p,2b4,2p,8p.",
       "never4:b=210,o=3,d=4:8d4,8e4,8g4,8d4,c4,c4,c4,d4,8p,8d4,8e4,8p,8g4,8p,8a4,8p,b4,b4,b4,e4,8e4,2p.,16p"
+    ]
+  },
+  {
+    "name": "Never gonna give you up - Rick Astley - Extended",
+    "tracks": [
+      "never1:b=210,o=3,d=4:8d5,8e5,8g5,8d5,b5,8p,b5,8p,2a5,p,8d5,8e5,8g5,8d5,a5,8p,a5,8p,g5,8g5,8f#5,e5,8d5,8e5,8g5,8e5,2g5,a5,f#5,8f#5,8e5,d5,8d5,8p,8d5,8p,a5,8a5,8p,2g5",
+      "never2:b=210,o=3,d=4:2p,g5,8p,g5,8p,2f#5,p,2p,f#5,8p,f#5,8p,2e5,p,2p,2e5,p,2d5,p,2p,d5,8d5,8p,2e5",
+      "never3:b=210,o=3,d=4:2p,e5,8p,e5,8p,2d5,p,2p,d5,8p,d5,8p,2b4,p,2p,2c5,p,2a4,p,2p,b4,8b4,8p,2b4",
+      "never4:b=210,o=3,d=4:8d4,8e4,8g4,8d4,c4,c4,c4,d4,8p,8d4,8e4,8p,8g4,8p,8a4,8p,b4,b4,b4,e4,8e4,8f#4,8e4,8p,8d4,8e4,8g4,8e4,2a4,a4,2d5,8a4,8p,8d4,8p,8a4,8p,2f#4,2e4"
     ]
   },
   {
@@ -151,6 +160,15 @@
     ]
   },
   {
+    "name": "Pokémon Red/Blue Title Theme",
+    "tracks": [
+      "pokemon1:b=135,o=5,d=4:8p.,16d,16g,2p,16p,32g,32p,32g,32p,p,16g,8p.,16g,8p.,32f,32p,32f,32p,16f,16p,32f,16p.,2p,16b,16p,16d6,8p.,p,16f,8p.,p,16f6,p,8p.,16d6,p,8p.,16f,p.,16p,16b4",
+      "pokemon2:b=135,o=5,d=4:8p,16b4,16p,p,16g,p,16p,32d4,32p,32d4,32p,16g,8p.,16b4,8p.,16b4,16p,p,16c,8p,16f,16f#,16p,16g,p,16p,16g,16p,16b,p,8p.,16c,p,8p.,16c6,p,16p,16e6,16d#6,16b,8p.,p,16c,p,16p,16e,16d#,16d",
+      "pokemon3:b=135,o=5,d=4:16p,16g4,8p,p,16d4,p,8p.,16d4,8p.,16d4,8p.,16d4,16p,p,16f4,8p.,16d4,16p,16b4,8p.,16d4,16p,p,16d4,8p.,16d4,16p,16a4,8p.,16c4,8p.,16a,16p,16c4,8p.,16c4,16p,p,16d4,p,16p,16d4,8p.,16d4,16p,16g4",
+      "pokemon4:b=135,o=5,d=4:16d4,8p.,1p,16g3,8p.,16g3,8p.,32g3,32p,32g3,32p,16g3,16p,32g3,32p,32g3,32p,16g3,16p,16g3,p,16p,16g3,16p,p,16g3,8p.,16f3,16p,p,16f3,p,16p,16f3,8p.,16g3,p,16p,16g3,p,16p,16g3,8p.,16g3"
+    ]
+  },
+  {
     "name": "Rick & Morty Theme",
     "tracks": [
       "Rick&Morty:d=2,o=2,b=349:1a#5,2p,2c#6,2c6,2d#6,2g#5,2f#5,1f5",
@@ -160,9 +178,36 @@
     ]
   },
   {
+    "name": "Rush - XYZ",
+    "tracks": [
+      "Rush_yyz-1:d=4,o=5,b=160:16a4,16a4,16f#4,16a4,16f#4,16e4,8e4,2c#4,16a4,16a4,16f#4,16a4,16f#4,16e4,8c#4,8b.3,8c#.4,8f#3",
+      "Rush_yyz-2:d=4,o=5,b=160:16a5,16a5,16f#5,16a5,16f#5,16e5,8e5,2c#5,16a5,16a5,16f#5,16a5,16f#5,16e5,8c#5,8b.4,8c#.5,8f#4",
+      "Rush_yyz-3:d=4,o=5,b=160:16a5,16a5,16f#5,16a5,16f#5,16e5,8e5,2c#5,16a5,16a5,16f#5,16a5,16f#5,16e5,8c#5,8b.4,8c#.5,8f#4",
+      "Rush_yyz-4:d=4,o=5,b=160:16c#4,8p.,16a4,8p.,16c#4,8p.,16c#5,8p.,16c#4,8p.,16a4,8p.,16c#4,8p.,16c#5,8p."
+    ]
+  },
+  {
+    "name": "Salt-N-Pepa - Push it!",
+    "tracks": [
+      "PushIt:d=8,o=5,b=165:a,p,e,a,p,e,p,g,p,e,p,e,b,c6,b,g,a,p,e,a,p,e,p,g,p,e,p,e,b,c6,b,g,a,p,e6,d6,p,c6,p,b,p,g,p,g,b,c6,b,g,a"
+    ]
+  },
+  {
     "name": "Simpsons Theme",
     "tracks": [
       "simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6,g.6,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6"
+    ]
+  },
+  {
+    "name": "Slayer - Raining Blood",
+    "tracks": [
+      "RainingBlo:d=4,o=5,b=240:8d#3,8d#4,8a4,8a#4,a4,8f4,8a4,g#4,8e4,8g#4,g4,8d#3,8d#3,8d#3,8d#4,8a4,8a#4,a4,8f4,8a4,g#4,8e4,8g#4,g4,8d#3,8d#3,8d#3,8a#4,8e,8f,e,8c,8e,d#,8b4,8d#,d,8d#3,8d#3,8d#3,8a#4,8e,8f,e,8c,8e,d#,8b4,8d"
+    ]
+  },
+  {
+    "name": "Slayer - South of Heaven",
+    "tracks": [
+      "SouthHeaven:b=108,o=5,d=4:8d#3,8d#4,8a#4,8b4,d#,8b4,d,8a#4,8c#,8a4,8c#,c.,8d#3,8d#4,8a#4,8b4,d#,8b4,d,8a#4,8c#,8a"
     ]
   },
   {
