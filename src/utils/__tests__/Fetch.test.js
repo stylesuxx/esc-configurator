@@ -12,7 +12,7 @@ const jsonRawUrl = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator
 const jsonInvalidUrl = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/crowdin.yml';
 const json404Url = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/invalid.file';
 
-const mockResponse = (type, content) =>
+const mockResponse = (type, content, status = 200) =>
   new window.Response(content, {
     status: 200,
     headers: {
@@ -53,6 +53,22 @@ describe('Fetch', () => {
     expect(text).toEqual(hexContent);
   });
 
+  it('should fetch JSON file from Cache', async() => {
+    global.caches = {
+      open: jest.fn().mockImplementationOnce(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse('{}'))) });
+        })
+      ),
+    };
+
+    const json = await fetchJsonCached(jsonApiUrl);
+
+    expect(json).toStrictEqual({});
+  });
+
+  // Those tests are not repeatable since they relay on calling the Github API
+  /*
   it('should fetch hex file from url', async() => {
     const text = await fetchHexCached(hexFileUrl);
 
@@ -67,13 +83,10 @@ describe('Fetch', () => {
     expect(object).toHaveProperty('name', 'tag_name', 'prerelease', 'published_at');
   });
 
-  // This can only really be tested through the browser
-  /*
   it('should fetch JSON file via CORS Proxy', async() => {
     const json = await fetchJsonCached(jsonRawUrl);
     expect(json).toHaveProperty('name', 'version', 'license');
   });
-  */
 
   it('should throw on unavailable JSON file', async() => {
     await expect(() => fetchJsonCached(json404Url)).rejects.toThrow();
@@ -82,18 +95,5 @@ describe('Fetch', () => {
   it('should throw if body is not json', async() => {
     await expect(() => fetchJsonCached(jsonInvalidUrl)).rejects.toThrow();
   });
-
-  it('should fetch JSON file from Cache', async() => {
-    global.caches = {
-      open: jest.fn().mockImplementationOnce(() =>
-        new Promise((resolve) => {
-          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse('{}'))) });
-        })
-      ),
-    };
-
-    const json = await fetchJsonCached(jsonApiUrl);
-
-    expect(json).toStrictEqual({});
-  });
+  */
 });
