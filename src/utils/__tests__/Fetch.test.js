@@ -6,6 +6,14 @@ import {
 
 const hexFileUrl = 'https://github.com/mathiasvr/bluejay/releases/download/v0.16/S_H_50_24_v0.16.hex';
 const hexContent = fs.readFileSync(`${__dirname}/../helpers/__tests__/valid.hex`).toString();
+const jsonApiContent = [
+  {
+    name: 'name',
+    tag_name: 'tag_name',
+    prerelease: 'prerelease',
+    published_at: 'published_at',
+  },
+];
 
 const jsonApiUrl = 'https://api.github.com/repos/mathiasvr/bluejay/releases';
 const jsonRawUrl = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/package.json';
@@ -23,6 +31,7 @@ const mockResponse = (type, content, status = 200) =>
 
 const mockHexResponse = (content) => mockResponse('application/octet-stream', content);
 const mockJsonResponse = (content) => mockResponse('application/json', content);
+const mock404Response = () => mockResponse('application/json', '', 404);
 
 describe('Fetch', () => {
   beforeEach(async() => {
@@ -53,6 +62,16 @@ describe('Fetch', () => {
     expect(text).toEqual(hexContent);
   });
 
+  it('should fetch hex file from url', async() => {
+    global.fetch = jest.fn(() =>
+      new Promise((resolve) => resolve(mockHexResponse(hexContent)))
+    );
+
+    const text = await fetchHexCached(hexFileUrl);
+
+    expect(text).toEqual(hexContent);
+  });
+
   it('should fetch JSON file from Cache', async() => {
     global.caches = {
       open: jest.fn().mockImplementationOnce(() =>
@@ -67,15 +86,11 @@ describe('Fetch', () => {
     expect(json).toStrictEqual({});
   });
 
-  // Those tests are not repeatable since they relay on calling the Github API
-  /*
-  it('should fetch hex file from url', async() => {
-    const text = await fetchHexCached(hexFileUrl);
-
-    expect(text).toEqual(hexContent);
-  });
-
   it('should fetch JSON file via API', async() => {
+    global.fetch = jest.fn(() =>
+      new Promise((resolve) => resolve(mockJsonResponse(JSON.stringify(jsonApiContent))))
+    );
+
     const json = await fetchJsonCached(jsonApiUrl);
     expect(json.length > 0).toBeTruthy();
 
@@ -83,17 +98,27 @@ describe('Fetch', () => {
     expect(object).toHaveProperty('name', 'tag_name', 'prerelease', 'published_at');
   });
 
-  it('should fetch JSON file via CORS Proxy', async() => {
-    const json = await fetchJsonCached(jsonRawUrl);
-    expect(json).toHaveProperty('name', 'version', 'license');
-  });
-
   it('should throw on unavailable JSON file', async() => {
+    global.fetch = jest.fn(() =>
+      new Promise((resolve) => resolve(mock404Response()))
+    );
+
     await expect(() => fetchJsonCached(json404Url)).rejects.toThrow();
   });
 
   it('should throw if body is not json', async() => {
+    global.fetch = jest.fn(() =>
+      new Promise((resolve) => resolve(mockHexResponse(hexContent)))
+    );
+
     await expect(() => fetchJsonCached(jsonInvalidUrl)).rejects.toThrow();
+  });
+
+  // This could only really be tested from within the browser
+  /*
+  it('should fetch JSON file via CORS Proxy', async() => {
+    const json = await fetchJsonCached(jsonRawUrl);
+    expect(json).toHaveProperty('name', 'version', 'license');
   });
   */
 });
