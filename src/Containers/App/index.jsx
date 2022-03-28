@@ -10,6 +10,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+import { fetchHexCached } from '../../utils/Fetch';
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
@@ -29,7 +30,6 @@ import {
 
 const {
   availableLanguages,
-  corsProxy,
   version,
 } = settings;
 
@@ -645,35 +645,10 @@ class App extends Component {
 
     let type = 'remote';
     let text = null;
-    if (typeof Storage !== "undefined") {
-      text = localStorage.getItem(url);
-
-      if(text) {
-        type = 'localStorage';
-        console.debug('Got firmware from local storage');
-      }
-    }
-
-    if(!text) {
-      try {
-        console.debug('Fetching firmware from repository');
-        // TODO: In case of ATMEL an eep needs to be fetched
-
-        // Proxy is needed to bypass CORS on github
-        const proxy = `${corsProxy}${url}`;
-        const response = await fetch(proxy);
-
-        if(response.ok) {
-          text = await response.text();
-
-          if (typeof Storage !== "undefined") {
-            localStorage.setItem(url, text);
-            console.debug('Saved file to local storage');
-          }
-        }
-      } catch(e) {
-        console.debug('Failed fetching firmware');
-      }
+    try {
+      text = await fetchHexCached(url);
+    } catch(e) {
+      console.debug('Failed fetching firmware');
     }
 
     if(text) {
