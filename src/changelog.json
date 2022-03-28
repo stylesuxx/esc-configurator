@@ -1,12 +1,14 @@
 [
   {
-    "title": "0.23.0-RC1",
+    "title": "0.23.0-RC2",
     "items": [
       "Enhancement: Upload coverage reports to codecov with github workflows",
       "Enhancement: More melodies",
       "Enhancement: Only show LED settings on layout that actually support them",
       "Enhancement: Only show buttons if they can actually be used",
       "Enhancement: Imporved some text messages",
+      "Enhancement: Hex files are now cached for a year instead of being adding to local storage",
+      "Bugfix: Fetch releases only via CORS proxy if direct access fails",
       "Bugfix: Properly detect BLHlei_M 16.8",
       "Chore: Improved linting warnings and rules",
       "Chore: Improved code coverage",
