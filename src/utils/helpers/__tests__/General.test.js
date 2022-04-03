@@ -2,16 +2,7 @@ import fs from 'fs';
 
 import Flash from '../Flash';
 
-
 let retry, delay, compare, isValidFlash, isValidLayout;
-/*
-import {
-  retry,
-  delay,
-  compare,
-  isValidFlash, isValidLayout,
-} from '../General';
-*/
 
 describe('General', () => {
   beforeAll(async() => {

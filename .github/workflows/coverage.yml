@@ -1,0 +1,22 @@
+name: Coverage
+
+on: [push, pull_request]
+
+jobs:
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Generate coverage report
+        run: yarn test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ./coverage
+          version: v0.1.15
+          verbose: true

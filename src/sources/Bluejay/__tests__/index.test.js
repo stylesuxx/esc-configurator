@@ -1,15 +1,15 @@
-import config from '../';
+import source from '../';
 
-const eeprom = config.getEeprom();
+const SETTINGS_DESCRIPTIONS = source.getSettingsDescriptions();
 
 describe('Bluejay', () => {
   it('should handle conditional visibility with general settings', () => {
-    const keys = Object.keys(eeprom.SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
     const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = eeprom.SETTINGS_DESCRIPTIONS[keys[i]].base;
+      const base = SETTINGS_DESCRIPTIONS.COMMON[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
@@ -17,30 +17,28 @@ describe('Bluejay', () => {
         }
       }
 
-      for(let i = 0; i < visibleIf.length; i += 1) {
-        expect(visibleIf[i](settings)).toBeTruthy();
-      }
+      expect(visibleIf.length).toEqual(0);
     }
   });
 
   it('should handle conditional visibility with custom settings', () => {
-    const keys = Object.keys(eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS);
+    const keys = Object.keys(SETTINGS_DESCRIPTIONS.INDIVIDUAL);
     const settings = { MOTOR_DIRECTION: 3 };
 
-    const visibleIf = [];
+    let ledFunction = null;
     for(let i = 0; i < keys.length; i += 1) {
-      const base = eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS[keys[i]].base;
+      const base = SETTINGS_DESCRIPTIONS.INDIVIDUAL[keys[i]].base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
-          visibleIf.push(current.visibleIf);
+          if(current.name === 'LED_CONTROL') {
+            ledFunction = current.visibleIf;
+          }
         }
       }
-
-      for(let i = 0; i < visibleIf.length; i += 1) {
-        expect(visibleIf[i](settings)).toBeTruthy();
-      }
     }
+
+    expect(ledFunction(settings)).not.toBeTruthy();
   });
 
   it('should return display name', () => {
@@ -53,7 +51,7 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, 1.100, 24kHz');
   });
 
@@ -65,7 +63,7 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized, 24kHz');
   });
 
@@ -77,7 +75,18 @@ describe('Bluejay', () => {
       },
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - Bluejay, Unsupported/Unrecognized');
+  });
+
+  it('should return a firmware URL for PWM less files', () => {
+    const params = {
+      escKey: '#S_H_50#',
+      version: 'test-melody-pwm',
+      url: 'https://github.com/mathiasvr/bluejay/releases/download/test-melody-pwm/',
+    };
+    const url = source.getFirmwareUrl(params);
+
+    expect(url).toEqual('https://github.com/mathiasvr/bluejay/releases/download/test-melody-pwm/S_H_50_test-melody-pwm.hex');
   });
 });

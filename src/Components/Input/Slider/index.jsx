@@ -58,7 +58,7 @@ function Slider({
     setTimeout(() => {
       onChange(name, value);
     }, 100);
-  }, [onChange, offset, factor]);
+  }, [onChange, offset, factor, name]);
 
   const format = useCallback((value) => `${value}${suffix}`, [suffix]);
 

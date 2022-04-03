@@ -308,7 +308,7 @@ describe('MelodyEditor', () => {
     const onDelete = jest.fn();
     const melodies = [melody, melody, melody, melody];
 
-    const { container } = render(
+    render(
       <MelodyEditor
         customMelodies={[]}
         defaultMelodies={defaultMelodies}
@@ -325,7 +325,7 @@ describe('MelodyEditor', () => {
     userEvent.click(screen.getByText(/common:melodyEditorSave/i));
     expect(onSave).not.toHaveBeenCalled();
 
-    fireEvent.change(container.querySelector('input[type=text]'), {
+    fireEvent.change(screen.getByTestId('save-melody-input'), {
       target: {
         name: "",
         value: "TestName",
@@ -365,12 +365,6 @@ describe('MelodyEditor', () => {
 
     userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
 
-    await act(async()=> {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 400);
-      });
-    });
-
     expect(oscStart).toHaveBeenCalled();
     expect(oscStop).toHaveBeenCalled();
   });
@@ -401,6 +395,12 @@ describe('MelodyEditor', () => {
     );
 
     userEvent.click(screen.getByText(/common:melodyEditorPlayAll/i));
+
+    await act(async()=> {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
+    });
 
     // Since playing is instantly over with the mocked class, we can not test
     // stopping.

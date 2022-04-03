@@ -32,6 +32,19 @@ describe('MCU', () => {
     expect(firmwareStart).toEqual(0);
   });
 
+  it('should return details with BLHeli based MCU', () => {
+    let mcu = null;
+    expect(() => mcu = new MCU(MODES.SiLC2, 0x9307)).not.toThrow();
+
+    const flashSize = mcu.getFlashSize();
+    const flashOffset = mcu.getFlashOffset();
+    const firmwareStart = mcu.getFirmwareStart();
+
+    expect(flashSize).toEqual(8192);
+    expect(flashOffset).toEqual(0);
+    expect(firmwareStart).toEqual(0);
+  });
+
   it('should return details with AM32 based MCU', () => {
     let mcu = null;
     expect(() => mcu = new MCU(MODES.ARMBLB, 0x1f06)).not.toThrow();

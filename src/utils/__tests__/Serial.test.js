@@ -47,6 +47,7 @@ describe('Serial', () => {
     serial = new Serial();
 
     await expect(() => serial.open()).rejects.toThrow();
+    serial.setExtendedDebug(true);
     await serial.close();
   });
 

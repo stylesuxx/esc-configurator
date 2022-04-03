@@ -195,7 +195,7 @@ class Msp {
 
           this.increasePacketErrors(1);
           return reject(new Error(`code: ${code} - crc failed`));
-        } break;
+        }
 
         default: {
           return reject(new Error(`Unknown state detected: ${state}`));
@@ -508,15 +508,11 @@ class Msp {
         case MSP.MSP_FEATURE_CONFIG: {
           const featureBits = data.getUint32(0, 1);
           const features = {};
-          FEATURES.map((key, index) => {
+          FEATURES.forEach((key, index) => {
             if(key) {
               const mask = 1 << index;
-              const item = {
-                key,
-                enabled: (featureBits & mask) !== 0,
-              };
 
-              features[key] = item.enabled;
+              features[key] = (featureBits & mask) !== 0;
             }
           });
 

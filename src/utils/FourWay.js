@@ -42,8 +42,11 @@ import {
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
 const blheliEeprom = blheliSSource.getEeprom();
+const blheliSettingsDescriptions = blheliSSource.getSettingsDescriptions();
 const bluejayEeprom = bluejaySource.getEeprom();
+const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
 const am32Eeprom = am32Source.getEeprom();
+const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
 class FourWay {
   constructor(serial) {
@@ -61,6 +64,32 @@ class FourWay {
     this.parseMessage = this.parseMessage.bind(this);
 
     this.extendedDebug = false;
+  }
+
+  start() {
+    this.interval = setInterval(async() => {
+      if (Date.now() - this.lastCommandTimestamp > 900) {
+        try {
+          await this.testAlive();
+        } catch (error) {
+          console.debug('Alive Test failed');
+        }
+      }
+    }, 800);
+  }
+
+  exit() {
+    clearInterval(this.interval);
+
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
+  }
+
+  testAlive() {
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
+  }
+
+  reset(target) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
   }
 
   setExtendedDebug(extendedDebug) {
@@ -111,7 +140,7 @@ class FourWay {
     crc ^= byte << 8;
     for (let i = 0; i < 8; i += 1) {
       if (crc & 0x8000) {
-        crc = crc << 1 ^ 0x1021;
+        crc = (crc << 1) ^ 0x1021;
       } else {
         crc <<= 1;
       }
@@ -136,7 +165,7 @@ class FourWay {
     // Fill header
     bufferView[0] = pc;
     bufferView[1] = command;
-    bufferView[2] = address >> 8 & 0xff;
+    bufferView[2] = (address >> 8) & 0xff;
     bufferView[3] = address & 0xff;
     bufferView[4] = params.length === 256 ? 0 : params.length;
 
@@ -150,7 +179,7 @@ class FourWay {
     const msgWithoutChecksum = bufferView.subarray(0, -2);
     const checksum = msgWithoutChecksum.reduce(this.crc16XmodemUpdate, 0);
 
-    bufferView[5 + params.length] = checksum >> 8 & 0xff;
+    bufferView[5 + params.length] = (checksum >> 8) & 0xff;
     bufferView[6 + params.length] = checksum & 0xff;
 
     return bufferOut;
@@ -180,9 +209,9 @@ class FourWay {
 
     const message = {
       command: view[1],
-      address: view[2] << 8 | view[3],
+      address: (view[2] << 8) | view[3],
       ack: view[5 + paramCount],
-      checksum: view[6 + paramCount] << 8 | view[7 + paramCount],
+      checksum: (view[6 + paramCount] << 8) | view[7 + paramCount],
       params: view.slice(5, 5 + paramCount),
     };
 
@@ -259,7 +288,7 @@ class FourWay {
       try {
         const interfaceMode = flash.params[3];
         flash.meta.input = flash.params[2];
-        flash.meta.signature = flash.params[1] << 8 | flash.params[0];
+        flash.meta.signature = (flash.params[1] << 8) | flash.params[0];
         flash.meta.interfaceMode = interfaceMode;
         flash.meta.available = true;
 
@@ -269,7 +298,7 @@ class FourWay {
         let settingsArray = null;
         let layout = blheliEeprom.LAYOUT;
         let layoutSize = blheliEeprom.LAYOUT_SIZE;
-        let defaultSettings = blheliEeprom.DEFAULTS;
+        let defaultSettings = blheliSettingsDescriptions.DEFAULTS;
         let validFirmwareNames = blheliEeprom.NAMES;
         let displayName = 'UNKNOWN';
         let firmwareName = 'UNKNOWN';
@@ -281,7 +310,7 @@ class FourWay {
           validFirmwareNames = am32Eeprom.NAMES;
           layoutSize = am32Eeprom.LAYOUT_SIZE;
           layout = am32Eeprom.LAYOUT;
-          defaultSettings = am32Eeprom.DEFAULTS;
+          defaultSettings = am32SettingsDescriptions.DEFAULTS;
           settingsArray = (await this.read(am32Eeprom.EEPROM_OFFSET, layoutSize)).params;
         } else {
           throw new UnknownPlatformError('Neither SiLabs nor Arm');
@@ -304,7 +333,7 @@ class FourWay {
           validFirmwareNames = bluejayEeprom.NAMES;
           newLayout = bluejayEeprom.LAYOUT;
           layoutSize = bluejayEeprom.LAYOUT_SIZE;
-          defaultSettings = bluejayEeprom.DEFAULTS;
+          defaultSettings = bluejaySettingsDescriptions.DEFAULTS;
           settingsArray = (await this.read(bluejayEeprom.EEPROM_OFFSET, layoutSize)).params;
         }
 
@@ -329,13 +358,18 @@ class FourWay {
 
           /*
            * If still no name, it might be BLHeli_M - this can unfortunately
-           * only be guessed based on the version - if it is 16.9, then it
-           * _might_ be BLHeli_M.
+           * only be guessed based on the version - if it is 16.8 or higher,
+           * then it _might_ be BLHeli_M with a high probability.
+           *
+           * This needs to be updated in case BLHeli_S ever gets an update.
            */
           if(flash.settings.NAME === '') {
             if(
               flash.settings.MAIN_REVISION === 16 &&
-              flash.settings.SUB_REVISION === 9
+              (
+                flash.settings.SUB_REVISION === 8 ||
+                flash.settings.SUB_REVISION === 9
+              )
             ) {
               flash.settings.NAME = 'BLHeli_M';
               layout = null;
@@ -356,18 +390,18 @@ class FourWay {
         let settingsDescriptions = null;
         switch(layout) {
           case blheliEeprom.LAYOUT: {
-            settingsDescriptions = blheliEeprom.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = blheliEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = blheliSettingsDescriptions.COMMON;
+            individualSettingsDescriptions = blheliSettingsDescriptions.INDIVIDUAL;
           } break;
 
           case bluejayEeprom.LAYOUT: {
-            settingsDescriptions = bluejayEeprom.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = bluejayEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = bluejaySettingsDescriptions.COMMON;
+            individualSettingsDescriptions = bluejaySettingsDescriptions.INDIVIDUAL;
           } break;
 
           case am32Eeprom.LAYOUT: {
-            settingsDescriptions = am32Eeprom.SETTINGS_DESCRIPTIONS;
-            individualSettingsDescriptions = am32Eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+            settingsDescriptions = am32SettingsDescriptions.COMMON;
+            individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
           } break;
 
           default: {
@@ -703,21 +737,25 @@ class FourWay {
       switch(newEsc.layout) {
         case blheliEeprom.LAYOUT: {
           console.debug('BLHELI layout found');
-          settingsDescriptions = blheliEeprom.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = blheliEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = blheliSettingsDescriptions.COMMON;
+          individualSettingsDescriptions = blheliSettingsDescriptions.INDIVIDUAL;
         } break;
 
         case bluejayEeprom.LAYOUT: {
           console.debug('Bluejay layout found');
-          settingsDescriptions = bluejayEeprom.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = bluejayEeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = bluejaySettingsDescriptions.COMMON;
+          individualSettingsDescriptions = bluejaySettingsDescriptions.INDIVIDUAL;
         } break;
 
         case am32Eeprom.LAYOUT: {
           console.debug('AM32 layout found');
-          settingsDescriptions = am32Eeprom.SETTINGS_DESCRIPTIONS;
-          individualSettingsDescriptions = am32Eeprom.INDIVIDUAL_SETTINGS_DESCRIPTIONS;
+          settingsDescriptions = am32SettingsDescriptions.COMMON;
+          individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
         } break;
+
+        default: {
+          console.log('Unknown layout', newEsc.layout);
+        }
       }
 
       /**
@@ -996,7 +1034,7 @@ class FourWay {
     const endAddress = 0x200;
     const step = 0x80;
 
-    for (var address = beginAddress; address < endAddress; address += step) {
+    for (let address = beginAddress; address < endAddress; address += step) {
       const verifyErased = async(resolve, reject) => {
         const message = await this.read(address, step);
         const erased = message.params.every((x) => x === 0xFF);
@@ -1034,7 +1072,7 @@ class FourWay {
     const end_address = end * pageSize;
     const step = 0x80;
 
-    for (var address = beginAddress; address < end_address && address < image.length; address += step) {
+    for (let address = beginAddress; address < end_address && address < image.length; address += step) {
       const verifyPages = async (resolve, reject) => {
         const message = await this.read(address, Math.min(step, image.length - address));
         const reference = image.subarray(message.address, message.address + message.params.byteLength);
@@ -1050,7 +1088,7 @@ class FourWay {
         }
       };
 
-      // Verification might not always succeed on the first time
+      // Verification might not always succeed the first time
       await retry(verifyPages, 10);
     }
   }
@@ -1115,32 +1153,6 @@ class FourWay {
 
   writeEEprom(address, data) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceWriteEEprom, data, address);
-  }
-
-  reset(target) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
-  }
-
-  exit() {
-    clearInterval(this.interval);
-
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
-  }
-
-  testAlive() {
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
-  }
-
-  start() {
-    this.interval = setInterval(async() => {
-      if (Date.now() - this.lastCommandTimestamp > 900) {
-        try {
-          await this.testAlive();
-        } catch (error) {
-          console.debug('Alive Test failed');
-        }
-      }
-    }, 800);
   }
 }
 

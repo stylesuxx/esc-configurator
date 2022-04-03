@@ -22,7 +22,7 @@ describe('Invalid Source', () => {
   });
 
   it('should throw with invalid Source', async() => {
-    const invalidSource = new Source('invalid', 'invalid', 'invalid');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
 
     await expect(() => invalidSource.getRemoteVersionsList()).rejects.toThrow();
     expect(() => invalidSource.buildDisplayName()).toThrow();
@@ -38,7 +38,7 @@ describe('Invalid Source', () => {
       ),
     };
 
-    const invalidSource = new Source('invalid', 'invalid', 'invalid');
+    const invalidSource = new Source('invalid', 'invalid', 'invalid', 'invalid');
 
     const versions = await invalidSource.getRemoteVersionsList();
 
@@ -54,7 +54,7 @@ describe('Invalid Source', () => {
       ),
     };
 
-    const invalidGithubSource = new GithubSource('invalid', 'invalid', 'invalid');
+    const invalidGithubSource = new GithubSource('invalid', 'invalid', 'invalid', 'invalid');
 
     const versions = await invalidGithubSource.getRemoteVersionsList();
 
@@ -63,29 +63,39 @@ describe('Invalid Source', () => {
 });
 
 describe('BLHeli Source', () => {
-  it('should return BLHeli_S versions', async() => {
+  it('should return BLHeli versions', async() => {
     let versions = await blheliSource.getVersions();
     expect(versions).not.toBe({});
   });
 
-  it('should return BLHeli_S ESCs', async() => {
+  it('should return BLHeli ESCs', async() => {
     const escs = await blheliSource.getEscLayouts();
     expect(escs).not.toBe({});
   });
 
-  it('should return BLHeli_S MCU signatures', async() => {
+  it('should return BLHeli MCU signatures', async() => {
     const escs = await blheliSource.getMcus();
     expect(escs).not.toBe({});
   });
 
-  it('should return BLHeli_S name', async() => {
+  it('should return BLHeli name', async() => {
     const name = await blheliSource.getName();
     expect(name).toBe('BLHeli');
   });
 
-  it('should return BLHeli_S pwm', async() => {
+  it('should return BLHeli pwm', async() => {
     const pwm = await blheliSource.getPwm();
     expect(pwm.length).toBe(0);
+  });
+
+  it('should return a valid URL', async() => {
+    const url = await blheliSource.getFirmwareUrl({
+      escKey: '#AFRO_12A#',
+      mode: 23,
+      url: 'https://example.com/{0}/{1}',
+    });
+
+    expect(url).toEqual('https://example.com/AFRO_12A/23');
   });
 });
 
