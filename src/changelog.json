@@ -1,6 +1,6 @@
 [
   {
-    "title": "0.23.0-RC2",
+    "title": "0.23.0",
     "items": [
       "Enhancement: Upload coverage reports to codecov with github workflows",
       "Enhancement: More melodies",
