@@ -7,7 +7,7 @@
   "printLogsHint": "Will print logs to the console if enabled.",
   "extendedDebug": "Rozszerzone debugowanie",
   "extendedDebugHint": "Will additionally print addresses that are being read/written to and the sent/received payload.",
-  "disableCommon": "Disable common settings",
+  "disableCommon": "Wyłącz wspólne ustawienia",
   "disableCommonHint": "Each ESC will have its own set of settings instead of having a common section that is valid for all ESCs.",
   "enableAdvanced": "Włącz ustawienia zaawansowane",
   "enableAdvancedHint": "Adds advanced settings like dumping firmware.",
