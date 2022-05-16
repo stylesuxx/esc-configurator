@@ -1,6 +1,6 @@
 {
-  "STARTUP_BEEP": "Enable beep melody when the ESC is powered up.",
-  "BRAKE_ON_STOP": "Brake when motors are stopped.",
+  "STARTUP_BEEP": "Włącz melodię dźwiękową, gdy ESC jest włączony.",
+  "BRAKE_ON_STOP": "Hamulec przy zatrzymaniu silników.",
   "BEACON_DELAY": "After how much time of inactivity the beacon should start to go off.",
   "TEMPERATURE_PROTECTION": "At which temperature the ESC will shut down.",
   "BEEP_STRENGTH": "The volume of the startup beeps. Setting this too high might damage the motors.",
