@@ -6,7 +6,7 @@
   "portChanged": "Port zmieniony",
   "portOpened": "Otwarty port szeregowy",
   "mspApiVersion": "Otrzymana wersja MultiWii API: {{version}}",
-  "mspBuildInfo": "Działający firmware wydano dnia: {{info}}",
+  "mspBuildInfo": "Aktualne oprogramowanie firmware wydane w dniu: {{info}}",
   "mspBoardInfo": "Płyta: {{identifier}}, wersja: {{version}}",
   "mspUid": "Otrzymano unikalny ID urządzenia - 0x{{id}}",
   "mspFcInfo": "Informacje o kontrolerze lotu, identyfikator: {{id}} wersja: {{version}}",
