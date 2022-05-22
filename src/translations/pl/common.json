@@ -111,7 +111,7 @@
   "whatsNextText": "If you want to see which features are upcoming, drop by in the [github repository](https://github.com/stylesuxx/esc-configurator). Also feel free to add a feature request if you have an idea that you want to see implemented.",
   "openPortSelection": "Otwórz wybrany port",
   "versionUnsupportedLine1": "{{name}} wersja '{{version}}' (Layout {{layout}}) nie jest jeszcze obsługiwana.",
-  "versionUnsupportedLine2": "Let us know by opening an [issue](https://github.com/stylesuxx/esc-configurator).",
+  "versionUnsupportedLine2": "Daj nam znać poprzez otwarcie [issue](https://github.com/stylesuxx/esc-configurator).",
   "useDedicatedConfigurator": "{{name}} not supported, please use dedicated configurator.",
   "motorControl": "Kontrola silnika",
   "motorControlTextLine1": "Make sure your ESCs are properly set up to reflect the state of the sliders.",
