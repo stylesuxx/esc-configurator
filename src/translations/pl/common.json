@@ -59,7 +59,7 @@
   "homeContributionItem5": "Pomóż [przetłumacz](http://crowdin.com/project/esc-configuratorcom) interfejs na swój język",
   "homeDisclaimerHeader": "Wyłączenie odpowiedzialności",
   "homeDisclaimerTextLine1": "Aplikacja internetowa obsługuje ESC z BLHeli dla Atmel, BLHeli dla SiLabs i BLHeli_S.",
-  "homeDisclaimerTextLine2": "**Przesyłanie BLHeli ** to jedyny obecnie obsługiwany interfejs.",
+  "homeDisclaimerTextLine2": "**Przesyłanie BLHeli** to jedyny obecnie obsługiwany interfejs.",
   "homeDisclaimerTextLine3": "Jeśli napotkasz jakiekolwiek problemy, skorzystaj z przycisku **Zapisz dziennik debugowania** i prześlij nowy problem za pośrednictwem [GitHub](https://github.com/stylesuxx/esc-configurator/issues/new).",
   "homeDisclaimerTextLine4": "Kod źródłowy aplikacji można pobrać z [here](https://github.com/stylesuxx/esc-configurator).",
   "homeDisclaimerTextLine5": "Najnowszy [sterownik CP210x](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) można pobrać [tutaj](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).",
