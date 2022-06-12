@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.24.0",
+    "items": [
+      "Translation: Add polish translation"
+    ]
+  },
+  {
     "title": "0.23.1",
     "items": [
       "Chore: Add issue templates"
