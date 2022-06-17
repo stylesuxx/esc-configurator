@@ -1,8 +1,8 @@
 {
-  "STARTUP_BEEP": "Enable beep melody when the ESC is powered up.",
-  "BRAKE_ON_STOP": "Brake when motors are stopped.",
-  "BEACON_DELAY": "After how much time of inactivity the beacon should start to go off.",
-  "TEMPERATURE_PROTECTION": "At which temperature the ESC will shut down.",
+  "STARTUP_BEEP": "Activer la mélodie lorsque l'ESC est alimenté.",
+  "BRAKE_ON_STOP": "Freiner lorsque les moteurs sont arrêtés.",
+  "BEACON_DELAY": "Après combien de temps d'inactivité le bippeur devrait démarrer.",
+  "TEMPERATURE_PROTECTION": "À quelle température l'ESC doit s'éteindre.",
   "BEEP_STRENGTH": "The volume of the startup beeps. Setting this too high might damage the motors.",
   "BEACON_STRENGTH": "The volume of the beacon. Setting this too high might damage the motors.",
   "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to start up with low throttle input.",
