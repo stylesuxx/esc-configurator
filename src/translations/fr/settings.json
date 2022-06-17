@@ -6,7 +6,7 @@
   "printLogs": "Imprimer les journaux",
   "printLogsHint": "Imprimera les journaux dans la console si activé.",
   "extendedDebug": "Débogage avancé",
-  "extendedDebugHint": "Will additionally print addresses that are being read/written to and the sent/received payload.",
+  "extendedDebugHint": "Affichera aussi les adresses qui sont lu/écrites et les charges utiles envoyées/reçues.",
   "disableCommon": "Désactiver les paramètres communs",
   "disableCommonHint": "Chaque ESC aura ses propres réglages au lieu d'avoir des paramètres commun pour tout les ESCs.",
   "enableAdvanced": "Activer les réglages avancés",
