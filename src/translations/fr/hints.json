@@ -17,7 +17,7 @@
   "VARIABLE_PWM_FREQUENCY": "Augmente la fréquence PWM proportionnellement au tour minutes des moteurs de 24-48kHz afin d'éviter les perturbation des gaz.",
   "STUCK_ROTOR_PROTECTION": "Coupe l'alimentation du moteur et abandonne le redémarrage après 10 tentatives infructueuses.",
   "STALL_PROTECTION": "Augmente les gaz automatiquement en dessous d'un certain régime moteur afin d'éviter au moteur de caler. N'est pas recommandé au multirotors.",
-  "TIMING_ADVANCE": "Motor commutation advance timing. Higher timing are less prone to desyncs and can provide more power at the cost of efficiency.",
+  "TIMING_ADVANCE": "Réglage de la commutation du moteur. Un timming plus haut aura moins tendance à désynchroniser et peut donner plus de puissance en échange d'une moins bonne efficacité.",
   "MOTOR_KV": "KV du moteur stipulé par le fabriquant. La valeur est utilisée pour définir une limite de protection de bas régime.",
   "MOTOR_POLES": "Nombre de pole dans le moteur. Cette valeur est utilisée pour ajuster la vitesse sinusoïdale de démarrage.",
   "STARTUP_POWER": "Contrôle la puissance initiale envoyée au moteur lors du démarrage ainsi que le niveau minimum des gaz.",
