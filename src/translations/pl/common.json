@@ -158,7 +158,7 @@
   "escMissingHeader": "Brakuje ESC?",
   "escMissingText": "Ilość dostępnych ESC nie zgadza się z tym, co zgłasza kontroler lotu. Może to mieć wiele przyczyn:",
   "escMissingHint": "Jeśli wynik nie jest tym, czego oczekujesz, spróbuj ponownie kliknąć przycisk **Odczytaj ustawienia**.",
-  "escMissing1": "ESC nie była jeszcze gotowa. Może się to zdarzyć, jeśli **odtwórz melodie**. Także poprzedni flash mógł poszły nie tak i potrzebuje więcej czasu na uruchomienie się niż zwykle.",
+  "escMissing1": "ESC nie jest w pełni przygotowany. Może się to zdarzyć na przykład podczas **odtwarzania melodii**. Mogło się też zdarzyć, że poprzednie programowanie nie powiodło się i proces uruchamiania trwa dłużej niż zwykle.",
   "escMissing2": "Po prostu **nie ma więcej podłączonych ESC**",
   "escMissing3": "**MCU ESC jest uszkodzone.**",
   "escMissing4": "Spróbuj użyć innego kabla USB - czasami nie są one odpowiednio ekranowane i mogą powodować takie błędy.",
