@@ -279,6 +279,10 @@ class FourWay {
     return new Promise((resolve, reject) => process(resolve, reject));
   }
 
+  async initFlash(target, retries = 10) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
+  }
+
   async getInfo(target) {
     const flash = await this.initFlash(target, 0);
 
@@ -295,11 +299,14 @@ class FourWay {
         const isAtmel = ATMEL_MODES.includes(interfaceMode);
         const isSiLabs = SILABS_MODES.includes(interfaceMode);
         const isArm = interfaceMode === MODES.ARMBLB;
-        let settingsArray = null;
-        let layout = blheliEeprom.LAYOUT;
-        let layoutSize = blheliEeprom.LAYOUT_SIZE;
-        let defaultSettings = blheliSettingsDescriptions.DEFAULTS;
+
+        // Assume BLHeli as default
         let validFirmwareNames = blheliEeprom.NAMES;
+        let layoutSize = blheliEeprom.LAYOUT_SIZE;
+        let layout = blheliEeprom.LAYOUT;
+        let defaultSettings = blheliSettingsDescriptions.DEFAULTS;
+        let settingsArray = null;
+
         let displayName = 'UNKNOWN';
         let firmwareName = 'UNKNOWN';
 
@@ -534,24 +541,6 @@ class FourWay {
             displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
             firmwareName = flash.settings.NAME;
           } else {
-            /* Read version information direct from EEPROM so we can later
-             * compare to the settings object. This allows us to verify, that
-             * everything went well after flashing.
-             */
-            const [mainRevision, subRevision] = (await this.read(am32Eeprom.VERSION_OFFSET, am32Eeprom.VERSION_SIZE)).params;
-
-            if(
-              flash.settings.MAIN_REVISION !== mainRevision ||
-              flash.settings.SUB_REVISION !== subRevision
-            ) {
-              const flashFirmware = `${flash.settings.MAIN_REVISION}.${flash.settings.SUB_REVISION}`;
-              const eepromFirmware = `${mainRevision}.${subRevision}`;
-              this.addLogMessage('firmwareMismatch', {
-                flash: flashFirmware,
-                eeprom: eepromFirmware,
-              });
-            }
-
             flash.bootloader = {};
             if(flash.meta.input) {
               flash.bootloader.input = flash.meta.input;
@@ -569,8 +558,6 @@ class FourWay {
               }
             }
 
-            flash.settings.MAIN_REVISION = mainRevision;
-            flash.settings.SUB_REVISION = subRevision;
             flash.settings.LAYOUT = flash.settings.NAME;
 
             displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
@@ -611,10 +598,6 @@ class FourWay {
     }
 
     return flash;
-  }
-
-  async initFlash(target, retries = 10) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
   }
 
   async writeSettings(target, esc, settings) {
