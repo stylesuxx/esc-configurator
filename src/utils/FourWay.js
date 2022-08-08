@@ -939,11 +939,17 @@ class FourWay {
         const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
         const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
-        //TODO: Also check for the firmware name
-        // But we first need to get this moved to a fixed location
-        const firstBytes = flash.subarray(firmwareStart, firmwareStart + 4);
-        const vecTabStart = new Uint8Array([ 0x00, 0x20, 0x00, 0x20 ]);
-        if (!compare(firstBytes, vecTabStart)) {
+        /**
+         * Compare the first 4 bytes of the vector table of the firmware to be flashed
+         * against the currently flashed firmware.
+         *
+         * The vector table will not change between firmware versions, but will be
+         * different for different MCUs
+         */
+        const newVectorStartBytes = flash.subarray(firmwareStart, firmwareStart + 4);
+        const currentVectorStartBytes = (await this.read(0, 4, 10)).params;
+
+        if (!compare(newVectorStartBytes, currentVectorStartBytes)) {
           throw new InvalidHexFileError('Invalid hex file');
         }
 
