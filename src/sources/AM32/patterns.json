@@ -1,5 +1,6 @@
 {
   "1.77": "AM32_${name}_${version}.hex",
   "1.78": "AM32_${name}_${version}.hex",
-  "1.80": "AM32_${name}_${version}.hex"
+  "1.80": "AM32_${name}_${version}.hex",
+  "1.88": "AM32_${name}_${version}.hex"
 }
