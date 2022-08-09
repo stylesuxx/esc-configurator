@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import Box from '@mui/material/Box';
+
 import Home from '../Home';
 import Flash from '../Flash';
 import Buttonbar from '../Buttonbar';
@@ -11,36 +13,6 @@ import Changelog from '../../Components/Changelog';
 import MotorControl from '../../Components/MotorControl';
 
 import './style.scss';
-
-function WarningWrapper() {
-  const { t } = useTranslation('common');
-
-  return (
-    <div className="note">
-      <p>
-        <span>
-          <strong>
-            {t('note')}
-          </strong>
-        </span>
-
-        <ReactMarkdown components={{ p: 'span' }}>
-          {t('notePropsOff')}
-        </ReactMarkdown>
-
-        <br />
-
-        <span>
-          <strong>
-            {t('note')}
-          </strong>
-
-          {t('noteConnectPower')}
-        </span>
-      </p>
-    </div>
-  );
-}
 
 function MainContent({
   appSettings,
@@ -182,25 +154,27 @@ function MainContent({
           </ReactMarkdown>
 
           <table>
-            <tr>
-              <td>
-                {t('mistaggedTagged')}
-              </td>
+            <tbody>
+              <tr>
+                <td>
+                  {t('mistaggedTagged')}
+                </td>
 
-              <td>
-                {esc.make}
-              </td>
-            </tr>
+                <td>
+                  {esc.make}
+                </td>
+              </tr>
 
-            <tr>
-              <td>
-                {t('mistaggedDetected')}
-              </td>
+              <tr>
+                <td>
+                  {t('mistaggedDetected')}
+                </td>
 
-              <td>
-                {esc.actualMake}
-              </td>
-            </tr>
+                <td>
+                  {esc.actualMake}
+                </td>
+              </tr>
+            </tbody>
           </table>
 
           <ReactMarkdown>
@@ -216,19 +190,17 @@ function MainContent({
 
     return (
       <div id="content">
-        <div className="tab toolbar_fixed_bottom">
-          <div className="content_wrapper">
-            <FirmwareSelector
-              configs={configs}
-              esc={esc}
-              onCancel={onCancelFirmwareSelection}
-              onLocalSubmit={onLocalSubmit}
-              onSubmit={onFlashUrl}
-              showUnstable={appSettings.unstableVersions.value}
-              warning={warning}
-            />
-          </div>
-        </div>
+        <Box sx={{ p: 2 }}>
+          <FirmwareSelector
+            configs={configs}
+            esc={esc}
+            onCancel={onCancelFirmwareSelection}
+            onLocalSubmit={onLocalSubmit}
+            onSubmit={onFlashUrl}
+            showUnstable={appSettings.unstableVersions.value}
+            warning={warning}
+          />
+        </Box>
       </div>
     );
   }
@@ -236,15 +208,16 @@ function MainContent({
   return (
     <>
       <div id="content">
-        <div className="tab toolbar_fixed_bottom">
-          <div className="content_wrapper">
-            <WarningWrapper />
+        <Box
+          sx={{
+            p: 2,
+            marginBottom: '85px',
+          }}
+        >
+          <FlashWrapper />
 
-            <FlashWrapper />
-
-            <MotorControlWrapper />
-          </div>
-        </div>
+          <MotorControlWrapper />
+        </Box>
       </div>
 
       <Buttonbar

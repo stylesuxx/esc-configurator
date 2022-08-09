@@ -1,8 +1,7 @@
 {
   "settingsHeader": "Settings",
-  "closeText": "Close",
-  "directInput": "Numeric Input",
-  "directInputHint": "Use numeric input for numbers instead of sliders.",
+  "directInput": "Direct Input",
+  "directInputHint": "Use direct input for numbers instead of sliders.",
   "printLogs": "Print logs",
   "printLogsHint": "Will print logs to the console if enabled.",
   "extendedDebug": "Extended debugging",

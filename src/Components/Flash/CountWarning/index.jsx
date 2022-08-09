@@ -2,45 +2,46 @@ import { useTranslation } from 'react-i18next';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import './style.scss';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+
+import MainCard from '../../MainCard';
 
 function CountWarning() {
   const { t } = useTranslation('common');
   const lines = [1, 2, 3, 4, 5].map((index) => {
     const line = `escMissing${index}`;
     return (
-      <ReactMarkdown
-        components={{ p: 'li' }}
-        key={line}
-      >
-        {t(line)}
-      </ReactMarkdown>
+      <ListItem key={line}>
+        <ListItemText>
+          <ReactMarkdown components={{ p: 'span' }}>
+            {t(line)}
+          </ReactMarkdown>
+        </ListItemText>
+      </ListItem>
     );
   });
 
-
   return (
-    <div className="gui-box grey missing-esc">
-      <div className="gui-box-titlebar">
-        <div className="spacer-box-title">
-          {t('escMissingHeader')}
-        </div>
-      </div>
+    <MainCard
+      title={t('escMissingHeader')}
+    >
+      <Typography>
+        {t('escMissingText')}
+      </Typography>
 
-      <div className="spacer-box">
-        <p>
-          {t('escMissingText')}
-        </p>
+      <List dense>
+        {lines}
+      </List>
 
-        <ul>
-          {lines}
-        </ul>
-
-        <ReactMarkdown>
+      <Typography>
+        <ReactMarkdown components={{ p: 'span' }}>
           {t('escMissingHint')}
         </ReactMarkdown>
-      </div>
-    </div>
+      </Typography>
+    </MainCard>
   );
 }
 

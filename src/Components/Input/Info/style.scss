@@ -1,5 +1,8 @@
-.info-wrapper-wrapper {
-  margin-left: 15px;
+.select,
+.number {
+  .info-wrapper-wrapper {
+    margin-left: 15px;
+  }
 }
 
 .info-wrapper,
@@ -14,22 +17,18 @@
   }
 
   span.info-icon {
-    width: 15px;
-    height: 15px;
+    width: 1.2rem;
+    height: 1.2rem;
     border-radius: 50%;
     background: lightgray;
     display: inline-block;
     color: black;
     text-align: center;
-    line-height: 15px;
-    font-size: 12px;
+    font-size: 0.8rem;
+    line-height: 1.2rem;
     font-weight: bold;
     margin-right: 5px;
     cursor: pointer;
     z-index: -1;
-  }
-
-  .tooltip {
-    max-width: 200px;
   }
 }

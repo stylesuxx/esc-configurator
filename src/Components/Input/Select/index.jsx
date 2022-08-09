@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
-import Info from '../Info';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import MuiSelect from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
 
-import './style.scss';
+import Info from '../Info';
 
 function Select({
   name,
@@ -17,47 +21,74 @@ function Select({
 }) {
   const Select = useCallback(() => {
     const optionElements = options.map((option) => (
-      <option
+      <MenuItem
         key={option.value}
         value={option.value}
       >
         {option.label}
-      </option>
+      </MenuItem>
     ));
 
     return (
-      <select
+      <MuiSelect
         disabled={disabled}
+        id={`${name}-select`}
+        label={label}
+        labelId={`${name}-select-label`}
         name={name}
         onChange={onChange}
+        size="small"
         value={inSync ? value : -1}
       >
-        <option
+        <MenuItem
           className="hidden"
           disabled
           value="-1"
         />
 
         {optionElements}
-      </select>
+      </MuiSelect>
     );
-  }, [options, disabled, name, onChange, inSync, value]);
+  }, [options, disabled, name, onChange, inSync, value, label]);
 
   return (
-    <div className="select">
-      <label>
-        <div className="input-wrapper">
-          <Select />
-        </div>
+    <FormControl
+      fullWidth
+      variant="standard"
+    >
+      <Grid
+        alignItems="center"
+        container
+        spacing={2}
+      >
+        <Grid
+          item
+          xs={6}
+        >
+          <FormControl
+            fullWidth
+            variant="standard"
+          >
+            <Select />
+          </FormControl>
+        </Grid>
 
-        <Info
-          hint={hint}
-          inSync={inSync}
-          label={label}
-          name={name}
-        />
-      </label>
-    </div>
+        <Grid
+          item
+          xs={6}
+        >
+          <Typography id={`${name}-select-label`} >
+            {label}
+
+            <Info
+              hint={hint}
+              inSync={inSync}
+              name={name}
+            />
+          </Typography>
+        </Grid>
+      </Grid>
+    </FormControl>
   );
 }
 

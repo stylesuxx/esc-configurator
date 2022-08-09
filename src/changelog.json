@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased - MUI",
+    "items": [
+      "Enhancement: Refactoring to use MUI components"
+    ]
+  },
+  {
     "title": "0.24.0",
     "items": [
       "Translation: Add polish translation"

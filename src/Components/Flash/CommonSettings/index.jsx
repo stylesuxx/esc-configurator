@@ -7,6 +7,10 @@ import React, {
 } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 import {
   getMasterSettings,
   getMaster,
@@ -15,6 +19,7 @@ import {
 } from '../../../utils/helpers/Settings';
 
 import Checkbox from '../../Input/Checkbox';
+import MainCard from '../../MainCard';
 import Select from '../../Input/Select';
 import Slider from '../../Input/Slider';
 import Number from '../../Input/Number';
@@ -84,40 +89,34 @@ function CommonSettings({
 
     let unsupportedText = (
       <>
-        <p>
+        <Typography paragraph>
           {t('common:versionUnsupportedLine1', {
             version: version,
             name: availableSettings.NAME,
             layout: availableSettings.LAYOUT_REVISION,
           })}
-        </p>
+        </Typography>
 
-        <ReactMarkdown>
-          {t('common:versionUnsupportedLine2')}
-        </ReactMarkdown>
+        <Typography>
+          <ReactMarkdown components={{ p: 'span' }}>
+            {t('common:versionUnsupportedLine2')}
+          </ReactMarkdown>
+        </Typography>
       </>
     );
 
     if (unsupported) {
       unsupportedText = (
-        <p>
-          { t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
-        </p>
+        <Typography>
+          {t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
+        </Typography>
       );
     }
 
     return (
-      <div className="gui-box grey">
-        <div className="gui-box-titlebar">
-          <div className="spacer-box-title">
-            {t('unsupportedFirmware')}
-          </div>
-        </div>
-
-        <div className="spacer-box">
-          {unsupportedText}
-        </div>
-      </div>
+      <MainCard title={t('unsupportedFirmware')}>
+        {unsupportedText}
+      </MainCard>
     );
   }
 
@@ -162,16 +161,31 @@ function CommonSettings({
     switch (setting.type) {
       case 'bool': {
         return (
-          <Checkbox
-            disabled={disabled}
-            hint={hint}
-            inSync={inSync}
+          <Grid
+            container
             key={setting.name}
-            label={t(setting.label)}
-            name={setting.name}
-            onChange={handleCheckboxChange}
-            value={value}
-          />
+          >
+            <Grid
+              item
+              xs={6}
+            />
+
+            <Grid
+              className="inset"
+              item
+              xs={6}
+            >
+              <Checkbox
+                disabled={disabled}
+                hint={hint}
+                inSync={inSync}
+                label={t(setting.label)}
+                name={setting.name}
+                onChange={handleCheckboxChange}
+                value={value}
+              />
+            </Grid>
+          </Grid>
         );
       }
 
@@ -239,17 +253,11 @@ function CommonSettings({
   });
 
   return (
-    <div className="gui-box grey">
-      <div className="gui-box-titlebar">
-        <div className="spacer-box-title">
-          {t('commonParameters')}
-        </div>
-      </div>
-
-      <div className="spacer-box">
+    <MainCard title={t('commonParameters')}>
+      <Stack spacing={1}>
         {settingElements}
-      </div>
-    </div>
+      </Stack>
+    </MainCard>
   );
 }
 

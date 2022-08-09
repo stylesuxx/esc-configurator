@@ -50,6 +50,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -57,13 +58,13 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText('common:melodyEditorPlay').length).toEqual(1);
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(1);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText(/write/i));
+    expect(screen.getByText(/write/i)).toHaveAttribute('disabled');
     expect(onWrite).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/close/i));
+    userEvent.click(screen.getByTestId('CloseIcon'));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -80,6 +81,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -93,7 +95,7 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(4);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
     const acceptButtons = screen.getAllByText(/common:melodyEditorAccept/i);
@@ -103,7 +105,7 @@ describe('MelodyEditor', () => {
     userEvent.click(screen.getByText(/write/i));
     expect(onWrite).toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/close/i));
+    userEvent.click(screen.getByTestId('CloseIcon'));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -120,6 +122,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -133,7 +136,7 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(4);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
     const acceptButtons = screen.getAllByText(/common:melodyEditorAccept/i);
@@ -155,6 +158,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing
       />
     );
@@ -168,13 +172,13 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(4);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText(/write/i));
+    expect(screen.getByText(/write/i)).toHaveAttribute('disabled');
     expect(onWrite).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/close/i));
+    userEvent.click(screen.getByTestId('CloseIcon'));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -191,6 +195,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -200,7 +205,7 @@ describe('MelodyEditor', () => {
     expect(screen.getAllByText(/common:melodyEditorAccept/i).length).toEqual(1);
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Please supply a value and an onChange parameter./i)).not.toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
     expect(screen.getByText(/write/i)).toBeInTheDocument();
     expect(screen.getByRole(/checkbox/i)).toBeInTheDocument();
 
@@ -210,7 +215,7 @@ describe('MelodyEditor', () => {
     expect(screen.getByText(/ESC 3/i)).toBeInTheDocument();
     expect(screen.getByText(/ESC 4/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText(/common:melodyEditorWrite/i));
+    expect(screen.getByText(/common:melodyEditorWrite/i)).toHaveAttribute('disabled');
     expect(onWrite).not.toHaveBeenCalled();
 
     const acceptButtons = screen.getAllByText(/common:melodyEditorAccept/i);
@@ -234,16 +239,16 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
 
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: {
-        name: "",
-        value: "preset-Bluejay Default",
-      },
-    });
+    fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
+
+    const element = screen.getByRole('option', { name: 'Bluejay Default' });
+    userEvent.click(element);
+
     expect(screen.queryAllByText(/bluejay:b=570,o=4,d=32/i).length).toEqual(1);
   });
 
@@ -260,17 +265,17 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         selected="Bluejay Default"
         writing={false}
       />
     );
 
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: {
-        name: "",
-        value: "Simpsons Theme",
-      },
-    });
+    fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
+
+    const element = screen.getByRole('option', { name: 'Simpsons Theme' });
+    userEvent.click(element);
+
     expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(1);
   });
 
@@ -288,17 +293,16 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         selected="Bluejay Default"
         writing={false}
       />
     );
 
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: {
-        name: "",
-        value: "Simpsons Theme",
-      },
-    });
+    fireEvent.mouseDown(screen.getByText('melodyPresetsLabel'));
+
+    const element = screen.getAllByRole('option', { name: 'Simpsons Theme' })[1];
+    userEvent.click(element);
 
     userEvent.click(screen.getByText(/melodyDelete/i));
     expect(onDelete).toHaveBeenCalled();
@@ -318,14 +322,18 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
 
-    userEvent.click(screen.getByText(/common:melodyEditorSave/i));
+    expect(screen.getByText(/common:melodyEditorSave/i)).toHaveAttribute('disabled');
     expect(onSave).not.toHaveBeenCalled();
 
-    fireEvent.change(screen.getByTestId('save-melody-input'), {
+    const element = screen.getAllByRole('textbox')[0];
+    expect(element).toBeInTheDocument();
+
+    fireEvent.change(element, {
       target: {
         name: "",
         value: "TestName",
@@ -333,8 +341,6 @@ describe('MelodyEditor', () => {
     });
     userEvent.click(screen.getByText(/common:melodyEditorSave/i));
     expect(onSave).toHaveBeenCalled();
-
-    userEvent.click(screen.getByText(/melodyDelete/i));
   });
 
   it('should be possible to play a melody', async() => {
@@ -359,6 +365,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -390,6 +397,7 @@ describe('MelodyEditor', () => {
         onDelete={onDelete}
         onSave={onSave}
         onWrite={onWrite}
+        open
         writing={false}
       />
     );
@@ -398,7 +406,7 @@ describe('MelodyEditor', () => {
 
     await act(async()=> {
       await new Promise((resolve) => {
-        setTimeout(resolve, 1000);
+        setTimeout(resolve, 100);
       });
     });
 

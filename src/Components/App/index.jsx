@@ -4,6 +4,13 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import {
+  createTheme,
+  ThemeProvider,
+} from '@mui/material/styles';
+
+import Box from '@mui/material/Box';
+
 import AppSettings from '../AppSettings';
 import CookieConsent from '../CookieConsent';
 import LanguageSelection from '../LanguageSelection';
@@ -16,10 +23,21 @@ import Statusbar from '../Statusbar';
 import changelogEntries from '../../changelog.json';
 import './style.scss';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#6a8347',
+      bright: '#71b238',
+      ph: '',
+    },
+  },
+});
+
 function App({
   actions,
   appSettings,
   configs,
+  cookieDone,
   escs,
   language,
   melodies,
@@ -36,45 +54,47 @@ function App({
   const isIdle = !Object.values(actions).some((element) => element);
 
   return (
-    <div>
-      <div className="main">
+    <ThemeProvider theme={theme}>
+      <Box className="main">
         <header className="main__header">
-          <div className="main__bar">
-            <div className="main__logo" />
+          <Box className="mui-fixed">
+            <div className="main__bar">
+              <div className="main__logo" />
 
-            <PortPicker
-              hasPort={serial.connected}
-              hasSerial={serial.hasSerial}
-              isIdle={isIdle}
-              onChangePort={serial.actions.handleChangePort}
-              onConnect={serial.actions.handleConnect}
-              onDisconnect={serial.actions.handleDisconnect}
-              onSetBaudRate={serial.actions.handleSetBaudRate}
-              onSetPort={serial.actions.handleSetPort}
-              open={serial.open}
-              ports={serial.portNames}
-            />
-
-            <div className="main__settings">
-              <LanguageSelection
-                current={language.current}
-                languages={language.available}
-                onChange={language.actions.handleChange}
+              <PortPicker
+                hasPort={serial.connected}
+                hasSerial={serial.hasSerial}
+                isIdle={isIdle}
+                onChangePort={serial.actions.handleChangePort}
+                onConnect={serial.actions.handleConnect}
+                onDisconnect={serial.actions.handleDisconnect}
+                onSetBaudRate={serial.actions.handleSetBaudRate}
+                onSetPort={serial.actions.handleSetPort}
+                open={serial.open}
+                ports={serial.portNames}
               />
 
-              <div className="button button--dark">
-                <button
-                  onClick={appSettings.actions.handleOpen}
-                  type="button"
-                >
-                  {t('settings')}
-                </button>
+              <div className="main__settings">
+                <LanguageSelection
+                  current={language.current}
+                  languages={language.available}
+                  onChange={language.actions.handleChange}
+                />
+
+                <div className="button button--dark">
+                  <button
+                    onClick={appSettings.actions.handleOpen}
+                    type="button"
+                  >
+                    {t('settings')}
+                  </button>
+                </div>
+
               </div>
-
             </div>
-          </div>
 
-          <Log messages={serial.log} />
+            <Log messages={serial.log} />
+          </Box>
         </header>
 
         <MainContent
@@ -114,32 +134,35 @@ function App({
           packetErrors={stats.packetErrors}
           version={stats.version}
         />
-      </div>
+      </Box>
 
-      {appSettings.show &&
-        <AppSettings
-          onClose={appSettings.actions.handleClose}
-          onUpdate={appSettings.actions.handleUpdate}
-          settings={appSettings.settings}
-        />}
+      <AppSettings
+        onClose={appSettings.actions.handleClose}
+        onUpdate={appSettings.actions.handleUpdate}
+        open={appSettings.show}
+        settings={appSettings.settings}
+      />
 
-      {melodies.show &&
-        <MelodyEditor
-          customMelodies={melodies.customMelodies}
-          defaultMelodies={melodies.defaultMelodies}
-          dummy={melodies.dummy}
-          melodies={melodies.escs}
-          onClose={melodies.actions.handleClose}
-          onDelete={melodies.actions.handleDelete}
-          onSave={melodies.actions.handleSave}
-          onWrite={melodies.actions.handleWrite}
-          writing={actions.isWriting}
-        />}
+      <MelodyEditor
+        customMelodies={melodies.customMelodies}
+        defaultMelodies={melodies.defaultMelodies}
+        dummy={melodies.dummy}
+        melodies={melodies.escs}
+        onClose={melodies.actions.handleClose}
+        onDelete={melodies.actions.handleDelete}
+        onSave={melodies.actions.handleSave}
+        onWrite={melodies.actions.handleWrite}
+        open={melodies.show}
+        writing={actions.isWriting}
+      />
 
-      <CookieConsent onCookieAccept={onCookieAccept} />
+      <CookieConsent
+        onCookieAccept={onCookieAccept}
+        show={!cookieDone}
+      />
 
       <ToastContainer />
-    </div>
+    </ThemeProvider>
   );
 }
 
@@ -169,6 +192,7 @@ App.propTypes = {
     show: PropTypes.bool.isRequired,
   }).isRequired,
   configs: PropTypes.shape({}).isRequired,
+  cookieDone: PropTypes.bool.isRequired,
   escs: PropTypes.shape({
     actions: PropTypes.shape({
       handleMasterUpdate: PropTypes.func.isRequired,

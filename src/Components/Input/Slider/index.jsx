@@ -4,12 +4,13 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-import InputRange from 'react-input-range';
+
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import MuiSlider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 
 import Info from '../Info';
-
-import 'react-input-range/lib/css/index.css';
-import './style.scss';
 
 function Slider({
   name,
@@ -43,51 +44,67 @@ function Slider({
   };
 
   /* istanbul ignore next */
-  const updateValue = useCallback((value) => {
-    value = Math.floor((value - offset) / factor);
-    setCurrentValue(value);
-  }, [offset, factor]);
+  const updateValue = useCallback((e) => {
+    const newValue = e.target.value;
+    const newValueScaled = Math.floor((newValue - offset) / factor);
 
-  // Makes no sense to test, component has its own test, we just assume that
-  // the slider actually slides.
+    if(currentValue !== newValueScaled) {
+      setCurrentValue(newValueScaled);
+    }
+  }, [offset, factor, currentValue]);
+
   /* istanbul ignore next */
-  const handleUpdate = useCallback((value) => {
-    value = Math.floor((value - offset) / factor);
-
-    // Timout needed for individual settings
-    setTimeout(() => {
-      onChange(name, value);
-    }, 100);
-  }, [onChange, offset, factor, name]);
+  const handleUpdate = useCallback(() => {
+    onChange(name, currentValue);
+  }, [onChange, name, currentValue]);
 
   const format = useCallback((value) => `${value}${suffix}`, [suffix]);
 
   return (
-    <div className="number">
-      <label>
-        <div className="input-wrapper">
-          <InputRange
+    <FormControl
+      fullWidth
+      variant="standard"
+    >
+      <Grid
+        alignItems="center"
+        container
+        spacing={2}
+      >
+        <Grid
+          item
+          xs={6}
+        >
+          <MuiSlider
+            aria-labelledby={`${name}-select-label`}
             disabled={disabled}
-            formatLabel={format}
-            labelSuffix={suffix}
-            maxValue={max}
-            minValue={min}
+            max={max}
+            min={min}
             name={name}
             onChange={updateValue}
-            onChangeComplete={handleUpdate}
+            onChangeCommitted={handleUpdate}
             step={step}
             value={inSync ? getDisplayValue() : min}
+            valueLabelDisplay="auto"
+            valueLabelFormat={format}
           />
-        </div>
+        </Grid>
 
-        <Info
-          hint={hint}
-          inSync={inSync}
-          label={label}
-          name={name}
-        />
-      </label>
-    </div>
+        <Grid
+          item
+          xs={6}
+        >
+          <Typography id={`${name}-select-label`}>
+            {label}
+
+            <Info
+              hint={hint}
+              inSync={inSync}
+              name={name}
+            />
+          </Typography>
+        </Grid>
+      </Grid>
+    </FormControl>
   );
 }
 

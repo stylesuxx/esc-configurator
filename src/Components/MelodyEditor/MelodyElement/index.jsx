@@ -10,6 +10,12 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
+
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 import './style.scss';
 
 const MelodyElement = forwardRef(({
@@ -120,13 +126,14 @@ const MelodyElement = forwardRef(({
     onAccept(convertedMelody);
   }, [currentMelody, onAccept]);
 
-  // Can only be tested when the melody is acutally being played
   function highlightNote(index) {
     const elements = currentMelody.split(':');
     const notes = elements[2].split(',');
 
     let from = elements[0].length + elements[1].length + 2;
     for(let i = 0; i < index; i += 1) {
+      // Can only be tested when the melody is acutally being played
+      /* istanbul ignore next */
       from += notes[i].length + 1;
     }
     const to = from + notes[index].length;
@@ -189,6 +196,9 @@ const MelodyElement = forwardRef(({
 
     const hl = (i) => {
       // highlight note if this oscillator is still playing
+
+      // Can only be tested when the melody is acutally being played
+      /* istanbul ignore next */
       if(oscillator.current === osc && melody[i]) {
         setTimeout(() => hl(i + 1), melody[i].duration);
         highlightNote(i);
@@ -201,35 +211,33 @@ const MelodyElement = forwardRef(({
   }
 
   return (
-    <div className="esc-melody-wrapper">
-      <div className="esc-melody">
+    <div className="esc-melody">
+      <Stack spacing={1}>
         <header>
-          <div className="index">
-            <h4>
-              {label}
-            </h4>
-          </div>
+          <Typography>
+            {label}
+          </Typography>
 
-          <div className="default-btn">
-            <button
+          <ButtonGroup>
+            <Button
               className="play"
               disabled={!isPlayable || disabled}
               onClick={playing ? handleStopMelody : handlePlayMelody}
-              type="button"
+              variant='outlined'
             >
               {playing ? t('common:melodyEditorStop') : t('common:melodyEditorPlay')}
-            </button>
+            </Button>
 
             { !dummy &&
-              <button
+              <Button
                 className={`accept ${isAccepted ? 'accepted' : ''}`}
                 disabled={!isValid || playing || disabled}
                 onClick={handleAcceptMelody}
-                type="button"
+                variant='outlined'
               >
                 {t('common:melodyEditorAccept')}
-              </button>}
-          </div>
+              </Button>}
+          </ButtonGroup>
         </header>
 
         <div
@@ -242,7 +250,7 @@ const MelodyElement = forwardRef(({
             value={currentMelody}
           />
         </div>
-      </div>
+      </Stack>
     </div>
   );
 });

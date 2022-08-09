@@ -6,6 +6,9 @@ import {
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
+let onClearLog;
+let onCommonSettingsUpdate;
+let onFirmwareDump;
 let onWriteSetup;
 let onSettingsUpdate;
 let onSingleMotorSpeed;
@@ -20,6 +23,7 @@ let onFlashUrl;
 let onCancelFirmwareSelection;
 let onAllMotorSpeed;
 let onOpenMelodyEditor;
+let port = {};
 let MainContent;
 
 describe('MainContent', () => {
@@ -32,6 +36,9 @@ describe('MainContent', () => {
   });
 
   beforeEach(() => {
+    onClearLog = jest.fn();
+    onCommonSettingsUpdate = jest.fn();
+    onFirmwareDump = jest.fn();
     onWriteSetup = jest.fn();
     onSettingsUpdate = jest.fn();
     onSingleMotorSpeed = jest.fn();
@@ -46,6 +53,7 @@ describe('MainContent', () => {
     onCancelFirmwareSelection = jest.fn();
     onAllMotorSpeed = jest.fn();
     onOpenMelodyEditor = jest.fn();
+    port.getBatteryState =  jest.fn();
   });
 
   it('should display main content', () => {
@@ -68,6 +76,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -109,25 +120,9 @@ describe('MainContent', () => {
     expect(screen.getByText(/whatsNextHeader/i)).toBeInTheDocument();
     expect(screen.getByText(/whatsNextText/i)).toBeInTheDocument();
     expect(screen.getByText(/defaultChangelogTitle/i)).toBeInTheDocument();
-    expect(screen.getByText(/defaultChangelogHead/i)).toBeInTheDocument();
   });
 
   it('should display with open port', () => {
-    const onWriteSetup = jest.fn();
-    const onSettingsUpdate = jest.fn();
-    const onSingleMotorSpeed = jest.fn();
-    const onSingleFlash = jest.fn();
-    const onSelectFirmwareForAll = jest.fn();
-    const onSaveLog = jest.fn();
-    const onResetDefaultls = jest.fn();
-    const onReadEscs = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onIndividualSettingsUpdate = jest.fn();
-    const onFlashUrl = jest.fn();
-    const onCancelFirmwareSelection = jest.fn();
-    const onAllMotorSpeed = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
-
     const actions = {
       isReading: false,
       isWriting: false,
@@ -147,6 +142,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -160,11 +158,10 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.getByText('motorControl')).toBeInTheDocument();
     expect(screen.getByText(/enableMotorControl/i)).toBeInTheDocument();
     expect(screen.getByText(/masterSpeed/i)).toBeInTheDocument();
@@ -193,6 +190,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -209,18 +209,16 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
+    expect(screen.getByText('forceFlashText')).toBeInTheDocument();
+    expect(screen.getByText('migrateFlashText')).toBeInTheDocument();
+    expect(screen.getByText('forceFlashText')).toBeInTheDocument();
 
-    expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
-    expect(screen.getByText(/escButtonSelectLocally/i)).toBeInTheDocument();
-    expect(screen.getByText(/buttonCancel/i)).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelect')).toBeInTheDocument();
+    expect(screen.getByText('escButtonSelectLocally')).toBeInTheDocument();
+    expect(screen.getByText('buttonCancel')).toBeInTheDocument();
 
-    expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
-    expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'selectFirmware selectFirmware' })).toBeInTheDocument();
+    expect(screen.getByText('selectTarget (UNKNOWN)')).toBeInTheDocument();
   });
 
   it('should display when flashing', () => {
@@ -243,6 +241,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -256,11 +257,10 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.getByText('motorControl')).toBeInTheDocument();
     expect(screen.getByText(/enableMotorControl/i)).toBeInTheDocument();
     expect(screen.getByText(/masterSpeed/i)).toBeInTheDocument();
@@ -292,6 +292,9 @@ describe('MainContent', () => {
         mspFeatures={mspFeatures}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -305,11 +308,10 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.getByText('motorControl')).toBeInTheDocument();
     expect(screen.getByText(/enableMotorControl/i)).toBeInTheDocument();
     expect(screen.getByText(/masterSpeed/i)).toBeInTheDocument();
@@ -338,6 +340,9 @@ describe('MainContent', () => {
         configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -354,8 +359,6 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
     expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
@@ -471,6 +474,9 @@ describe('MainContent', () => {
         escs={escs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -488,8 +494,6 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
     expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
@@ -603,6 +607,9 @@ describe('MainContent', () => {
         escs={escs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -616,12 +623,11 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
+        port={port}
         settings={settings}
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
     expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
@@ -730,6 +736,9 @@ describe('MainContent', () => {
         flashTargets={[0]}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -747,9 +756,7 @@ describe('MainContent', () => {
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
   });
 
@@ -774,6 +781,9 @@ describe('MainContent', () => {
         fourWay
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}
@@ -790,8 +800,6 @@ describe('MainContent', () => {
       />
     );
 
-    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
-    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.queryByText('motorControl')).not.toBeInTheDocument();
     expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
     expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
@@ -911,6 +919,9 @@ describe('MainContent', () => {
         flashTargets={[0]}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onClearLog={onClearLog}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
         onFlashUrl={onFlashUrl}
         onIndividualSettingsUpdate={onIndividualSettingsUpdate}
         onLocalSubmit={onLocalSubmit}

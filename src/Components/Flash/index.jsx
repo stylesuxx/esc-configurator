@@ -2,11 +2,13 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+
 import CommonSettings from './CommonSettings';
 import CountWarning from './CountWarning';
 import Escs from './Escs';
-
-import './style.scss';
+import Warning from '../Warning';
 
 function Flash({
   availableSettings,
@@ -27,8 +29,22 @@ function Flash({
   const { t } = useTranslation('common');
 
   return (
-    <div className="flash">
-      <div className="flash__wrapper">
+    <Grid
+      container
+      spacing={2}
+    >
+      <Grid
+        item
+        xs={12}
+      >
+        <Warning />
+      </Grid>
+
+      <Grid
+        item
+        md={5}
+        xs={12}
+      >
         <div className="flash__common">
           {escs.length > 0 && !disableCommon &&
             <CommonSettings
@@ -53,8 +69,14 @@ function Flash({
               </div>
             </div>}
         </div>
+      </Grid>
 
-        <div className="flash__individual">
+      <Grid
+        item
+        md={7}
+        xs={12}
+      >
+        <Stack spacing={2}>
           <Escs
             canFlash={canFlash}
             directInput={directInput}
@@ -70,9 +92,9 @@ function Flash({
 
           {escCount !== escs.length &&
             <CountWarning />}
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </Grid>
+    </Grid>
   );
 }
 
@@ -81,6 +103,7 @@ Flash.defaultProps = {
   directInput: false,
   disableCommon: false,
   enableAdvanced: false,
+  flashProgress: [],
 };
 
 Flash.propTypes = {
@@ -91,7 +114,7 @@ Flash.propTypes = {
   enableAdvanced: PropTypes.bool,
   escCount: PropTypes.number.isRequired,
   escs: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  flashProgress: PropTypes.arrayOf(PropTypes.number).isRequired,
+  flashProgress: PropTypes.arrayOf(PropTypes.number),
   onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlash: PropTypes.func.isRequired,

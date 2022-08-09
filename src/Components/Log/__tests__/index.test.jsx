@@ -12,8 +12,14 @@ jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) 
 describe('Log', () => {
   it('should display log messages', () => {
     const messages = [
-      'line1',
-      'line2',
+      {
+        html: 'line1',
+        date: new Date(),
+      },
+      {
+        html: 'line2',
+        date: new Date(),
+      },
     ];
 
     render(

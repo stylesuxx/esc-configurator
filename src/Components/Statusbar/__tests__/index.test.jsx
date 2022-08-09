@@ -27,7 +27,7 @@ describe('Statusbar', () => {
         setTimeout(r, 1200);
       });
     });
-    expect(screen.getByText('statusbarPortUtilization D: 0% U: 0%')).toBeInTheDocument();
+    expect(screen.getByText(/statusbarPortUtilization D: 0% U: 0%/i)).toBeInTheDocument();
   });
 
   it('should render with utilization callback', async () => {
@@ -55,6 +55,6 @@ describe('Statusbar', () => {
     });
 
     expect(getUtilization).toHaveBeenCalled();
-    expect(screen.getByText('statusbarPortUtilization D: 20% U: 10%')).toBeInTheDocument();
+    expect(screen.getByText(/statusbarPortUtilization D: 20% U: 10%/i)).toBeInTheDocument();
   });
 });

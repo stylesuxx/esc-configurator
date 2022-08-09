@@ -2,15 +2,17 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
+import FormControl from '@mui/material/FormControl';
+import Stack from '@mui/material/Stack';
+
 import Checkbox from '../Input/Checkbox';
 import Overlay from '../Overlay';
-
-import './style.scss';
 
 function AppSettings({
   settings,
   onClose,
   onUpdate,
+  open,
 }) {
   const { t } = useTranslation('settings');
 
@@ -43,27 +45,33 @@ function AppSettings({
         return null;
       }
     }
-
-    return null;
   });
 
   return (
-    <div className="settings">
-      <Overlay
-        headline={t('settingsHeader')}
-        onClose={onClose}
+    <Overlay
+      headline={t('settingsHeader')}
+      maxWidth='sm'
+      onClose={onClose}
+      open={open}
+    >
+      <FormControl
+        fullWidth
+        variant="standard"
       >
-        <div>
+        <Stack
+          spacing={1}
+        >
           {settingElements}
-        </div>
-      </Overlay>
-    </div>
+        </Stack>
+      </FormControl>
+    </Overlay>
   );
 }
 
 AppSettings.propTypes = {
   onClose: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   settings: PropTypes.shape().isRequired,
 };
 

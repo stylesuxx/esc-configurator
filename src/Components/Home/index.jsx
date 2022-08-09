@@ -7,6 +7,21 @@ import React, {
 } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import { useTheme } from '@mui/material/styles';
+
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 import bluejay from './images/bluejay_logo.png';
 import './style.scss';
 
@@ -28,28 +43,39 @@ function Install() {
   }, [deferredPrompt]);
 
   return(
-    <div className={`install-wrapper ${showInstall ? 'active' : ''}`}>
-      <div className="install">
-        <div className="description">
-          <ReactMarkdown>
+    <Fade
+      in={showInstall}
+      timeout={1500}
+    >
+      <Stack
+        sx={{
+          p: 2,
+          m: 1,
+          marginRight: 5,
+          background: 'rgba(211, 211, 211, 0.25)',
+        }}
+      >
+        <Typography>
+          <ReactMarkdown components={{ p: 'span' }}>
             {t('homeInstallLine1')}
           </ReactMarkdown>
+        </Typography>
 
-          <ReactMarkdown>
+        <Typography paragraph>
+          <ReactMarkdown components={{ p: 'span' }}>
             {t('homeInstallLine2')}
           </ReactMarkdown>
-        </div>
+        </Typography>
 
-        <div className="default-btn">
-          <button
-            onClick={handleInstallToHomescreen}
-            type="button"
-          >
-            {t('addToHomeScreen')}
-          </button>
-        </div>
-      </div>
-    </div>
+        <Button
+          fullWidth
+          onClick={handleInstallToHomescreen}
+          variant="contained"
+        >
+          {t('addToHomeScreen')}
+        </Button>
+      </Stack>
+    </Fade>
   );
 }
 
@@ -60,38 +86,63 @@ function HomeColumnLeft() {
     const line = `homeDisclaimerTextLine${index}`;
 
     return (
-      <ReactMarkdown key={line}>
-        {t(line)}
-      </ReactMarkdown>
+      <Typography
+        key={line}
+        paragraph
+      >
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t(line)}
+        </ReactMarkdown>
+      </Typography>
     );
   });
 
   return(
-    <div className="column third_left text1">
-      <div className="wrap">
-        <div className="summary-section">
-          <h2>
+    <Stack sx={{ p: 2 }}>
+      <Alert
+        severity="warning"
+        sx={{ marginBottom: '16px' }}
+      >
+        <AlertTitle>
+          <ReactMarkdown components={{ p: 'span' }}>
             {t('homeDisclaimerHeader')}
-          </h2>
+          </ReactMarkdown>
+        </AlertTitle>
 
-          <div>
-            {disclaimerLines}
-          </div>
-        </div>
+        <Typography>
+          <ReactMarkdown components={{ p: 'b' }}>
+            {t('betaWarningLine1')}
+          </ReactMarkdown>
+        </Typography>
 
-        <div className="summary-section">
-          <h2>
-            {t('homeAttributionHeader')}
-          </h2>
+        <Typography>
+          <ReactMarkdown components={{ p: 'span' }}>
+            {t('betaWarningLine2')}
+          </ReactMarkdown>
+        </Typography>
 
-          <div>
-            <ReactMarkdown>
-              {t('homeAttributionText')}
-            </ReactMarkdown>
-          </div>
-        </div>
-      </div>
-    </div>
+        <Typography>
+          <ReactMarkdown components={{ p: 'span' }}>
+            {t('findHelp')}
+          </ReactMarkdown>
+        </Typography>
+      </Alert>
+
+      {disclaimerLines}
+
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        {t('homeAttributionHeader')}
+      </Typography>
+
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('homeAttributionText')}
+        </ReactMarkdown>
+      </Typography>
+    </Stack>
   );
 }
 
@@ -99,130 +150,114 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
   const { t } = useTranslation('common');
 
   return(
-    <div className="column third_center text2">
-      <div className="wrap">
+    <Stack sx={{ p: 2 }}>
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        {t('homeExperimental')}
+      </Typography>
 
-        <h2>
-          {t('homeExperimental')}
-        </h2>
+      <Typography paragraph>
+        {t('homeVersionInfo')}
+      </Typography>
 
-        <div>
-          {t('homeVersionInfo')}
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        BLHeli_S
+      </Typography>
 
-          <ul>
-            <li>
-              <a
-                href="https://github.com/bitdump/BLHeli"
-                rel="noreferrer"
-                target="_blank"
-              >
-                BLHeli_S
-              </a>
-            </li>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('blhelisTextLine1')}
+        </ReactMarkdown>
+      </Typography>
 
-            <li>
-              <a
-                href="https://github.com/mathiasvr/bluejay"
-                rel="noreferrer"
-                target="_blank"
-              >
-                Bluejay
-              </a>
-            </li>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('blhelisTextLine2')}
+        </ReactMarkdown>
+      </Typography>
 
-            <li>
-              <a
-                href="https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware"
-                rel="noreferrer"
-                target="_blank"
-              >
-                AM32
-              </a>
-            </li>
-          </ul>
-        </div>
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        Bluejay
+      </Typography>
 
-        <div className="summary-section">
-          <h3>
-            BLHeli_S
-          </h3>
+      <Grid container>
+        <Grid
+          item
+          xs={9}
+        >
+          <Typography paragraph>
+            <ReactMarkdown components={{ p: 'span' }}>
+              {t('bluejayTextLine1')}
+            </ReactMarkdown>
+          </Typography>
 
-          <section>
-            <div>
-              <ReactMarkdown>
-                {t('blhelisTextLine1')}
-              </ReactMarkdown>
+          <Typography paragraph>
+            <ReactMarkdown components={{ p: 'span' }}>
+              {t('bluejayTextLine2')}
+            </ReactMarkdown>
+          </Typography>
+        </Grid>
 
-              <ReactMarkdown>
-                {t('blhelisTextLine2')}
-              </ReactMarkdown>
-            </div>
-          </section>
-        </div>
+        <Grid
+          item
+          xs={3}
+        >
+          <img
+            alt="Bluejay"
+            src={bluejay}
+          />
+        </Grid>
+      </Grid>
 
-        <div className="summary-section">
-          <h3>
-            Bluejay
-          </h3>
+      <Stack sx={{ p: 2 }}>
+        <Button
+          onClick={onOpenMelodyEditor}
+          type="button"
+          variant="outlined"
+        >
+          {t('openMelodyEditor')}
+        </Button>
+      </Stack>
 
-          <section>
-            <img
-              alt="Bluejay"
-              src={bluejay}
-            />
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('bluejaySupportedHardwareLine1')}
+        </ReactMarkdown>
+      </Typography>
 
-            <div>
-              <div>
-                <ReactMarkdown>
-                  {t('bluejayTextLine1')}
-                </ReactMarkdown>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('bluejaySupportedHardwareLine2')}
+        </ReactMarkdown>
+      </Typography>
 
-                <ReactMarkdown>
-                  {t('bluejayTextLine2')}
-                </ReactMarkdown>
-              </div>
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        AM32
+      </Typography>
 
-              <div className="default-btn melody-editor-button">
-                <button
-                  onClick={onOpenMelodyEditor}
-                  type="button"
-                >
-                  {t('openMelodyEditor')}
-                </button>
-              </div>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('blheli32ToAM32Line1')}
+        </ReactMarkdown>
+      </Typography>
 
-              <div>
-                <ReactMarkdown>
-                  {t('bluejaySupportedHardwareLine1')}
-                </ReactMarkdown>
-
-                <ReactMarkdown>
-                  {t('bluejaySupportedHardwareLine2')}
-                </ReactMarkdown>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div className="summary-section">
-          <h3>
-            AM32
-          </h3>
-
-          <section>
-            <div>
-              <ReactMarkdown>
-                {t('blheli32ToAM32Line1')}
-              </ReactMarkdown>
-
-              <ReactMarkdown>
-                {t('blheli32ToAM32Line2')}
-              </ReactMarkdown>
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('blheli32ToAM32Line2')}
+        </ReactMarkdown>
+      </Typography>
+    </Stack>
   );
 }
 HomeColumnCenter.propTypes = { onOpenMelodyEditor: PropTypes.func.isRequired };
@@ -233,139 +268,184 @@ function HomeColumnRight() {
     const line = `homeContributionItem${index}`;
 
     return(
-      <ReactMarkdown
-        components={{ p: 'li' }}
-        key={line}
-      >
-        {t(line)}
-      </ReactMarkdown>
+      <ListItem key={line}>
+        <ListItemText primary={(
+          <ReactMarkdown components={{ p: 'span' }}>
+            {t(line)}
+          </ReactMarkdown>
+        )}
+        />
+      </ListItem>
     );
   });
 
   return(
-    <div className="column third_right text3">
-      <div className="wrap">
-        <div className="summary-section">
-          <h2>
-            {t('homeDiscordHeader')}
-          </h2>
+    <Stack sx={{ p: 2 }}>
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        {t('homeDiscordHeader')}
+      </Typography>
 
-          <div>
-            {t('homeDiscordText')}
-          </div>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('homeDiscordText')}
+        </ReactMarkdown>
+      </Typography>
 
-          <a
-            className="discord-link"
-            href="https://discord.gg/QvSS5dk23C"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <img
-              alt="Discord"
-              className="discord"
-              data-canonical-src="https://img.shields.io/discord/822952715944460368.svg?label=&amp;logo=discord&amp;logoColor=ffffff&amp;color=7389D8&amp;labelColor=6A7EC2"
-              src="https://camo.githubusercontent.com/74d2e4746c6f20a2cf36068cd18d092724801f7ccd17e6bdce62e94d31f9ccb2/68747470733a2f2f696d672e736869656c64732e696f2f646973636f72642f3832323935323731353934343436303336382e7376673f6c6162656c3d266c6f676f3d646973636f7264266c6f676f436f6c6f723d66666666666626636f6c6f723d373338394438266c6162656c436f6c6f723d364137454332"
-            />
-          </a>
-        </div>
+      <Typography paragraph>
+        <Link
+          href="https://discord.gg/QvSS5dk23C"
+          rel="noreferrer"
+          sx={{
+            textAlign: 'center',
+            display: 'block',
+          }}
+          target="_blank"
+        >
+          <img
+            alt="Discord"
+            className="discord"
+            data-canonical-src="https://img.shields.io/discord/822952715944460368.svg?label=&amp;logo=discord&amp;logoColor=ffffff&amp;color=7389D8&amp;labelColor=6A7EC2"
+            src="https://camo.githubusercontent.com/74d2e4746c6f20a2cf36068cd18d092724801f7ccd17e6bdce62e94d31f9ccb2/68747470733a2f2f696d672e736869656c64732e696f2f646973636f72642f3832323935323731353934343436303336382e7376673f6c6162656c3d266c6f676f3d646973636f7264266c6f676f436f6c6f723d66666666666626636f6c6f723d373338394438266c6162656c436f6c6f723d364137454332"
+            style={{ height: '50px' }}
+          />
+        </Link>
+      </Typography>
 
-        <div className="summary-section">
-          <h2>
-            {t('homeChinaHeader')}
-          </h2>
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        {t('homeChinaHeader')}
+      </Typography>
 
-          <ReactMarkdown components={{ p: 'div' }}>
-            {t('homeChinaText')}
-          </ReactMarkdown>
-        </div>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('homeChinaText')}
+        </ReactMarkdown>
+      </Typography>
 
-        <div className="summary-section">
-          <h2>
-            {t('homeContributionHeader')}
-          </h2>
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        {t('homeContributionHeader')}
+      </Typography>
 
-          <div>
-            <ReactMarkdown components={{ p: 'div' }}>
-              {t('homeContributionText')}
-            </ReactMarkdown>
+      <Typography>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('homeContributionText')}
+        </ReactMarkdown>
+      </Typography>
 
-            <ul>
-              {contributionItems}
-            </ul>
-          </div>
-        </div>
+      <List dense>
+        {contributionItems}
+      </List>
 
-        <div className="summary-section">
-          <h3>
-            {t('whatsNextHeader')}
-          </h3>
+      <Typography
+        component="h3"
+        variant="h5"
+      >
+        {t('whatsNextHeader')}
+      </Typography>
 
-          <section>
-            <ReactMarkdown components={{ p: 'div' }}>
-              {t('whatsNextText')}
-            </ReactMarkdown>
-          </section>
-        </div>
-      </div>
-    </div>
+      <Typography paragraph>
+        <ReactMarkdown components={{ p: 'span' }}>
+          {t('whatsNextText')}
+        </ReactMarkdown>
+      </Typography>
+
+    </Stack>
   );
 }
 
 function Home({ onOpenMelodyEditor }) {
   const { t } = useTranslation('common');
+  const theme = useTheme();
 
   return (
     <div id="content">
       <div id="tab-landing">
-        <div className="content_wrapper">
-          <div className="content_top">
-            <div
-              align="center"
-              className="logowrapper"
-            >
-              <div
-                align="center"
-                className="line-1"
-              >
-                <ReactMarkdown components={{ p: 'span' }}>
-                  {t('homeWelcome')}
-                </ReactMarkdown>
-              </div>
-
-              <Install />
-
-              <div>
-                <div align="center">
-                  <ReactMarkdown components={{ p: 'div' }}>
-                    {t('betaWarningLine1')}
-                  </ReactMarkdown>
-
-                  <br />
-
-                  <ReactMarkdown components={{ p: 'div' }}>
-                    {t('betaWarningLine2')}
-                  </ReactMarkdown>
-                </div>
-
-                <div align="center">
-                  <ReactMarkdown components={{ p: 'div' }}>
-                    {t('findHelp')}
-                  </ReactMarkdown>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="content_mid">
-            <HomeColumnLeft />
-
-            <HomeColumnCenter
-              onOpenMelodyEditor={onOpenMelodyEditor}
+        <Box>
+          <Grid
+            alignItems="center"
+            className="content_top"
+            container
+            spacing={2}
+            sx={{
+              background: theme.palette.primary.main,
+              color: 'white',
+            }}
+          >
+            <Grid
+              item
+              md={3}
+              xs={12}
             />
 
-            <HomeColumnRight />
-          </div>
-        </div>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <div className="content_top">
+                <div className="logowrapper">
+                  <Typography
+                    align="center"
+                  >
+                    <ReactMarkdown components={{ p: 'span' }}>
+                      {t('homeWelcome')}
+                    </ReactMarkdown>
+                  </Typography>
+
+
+                </div>
+              </div>
+            </Grid>
+
+            <Grid
+              item
+              md={3}
+              xs={12}
+            >
+              <Install />
+            </Grid>
+
+          </Grid>
+
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid
+              item
+              md={4}
+              xs={12}
+            >
+              <HomeColumnLeft />
+            </Grid>
+
+            <Grid
+              item
+              md={4}
+              xs={12}
+            >
+              <HomeColumnCenter
+                onOpenMelodyEditor={onOpenMelodyEditor}
+              />
+            </Grid>
+
+            <Grid
+              item
+              md={4}
+              xs={12}
+            >
+              <HomeColumnRight />
+            </Grid>
+          </Grid>
+        </Box>
       </div>
     </div>
   );

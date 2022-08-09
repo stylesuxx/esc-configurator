@@ -4,9 +4,12 @@ import React, {
   useState,
 } from 'react';
 
-import Info from '../Info';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import Typography from '@mui/material/Typography';
 
-import './style.scss';
+import Info from '../Info';
 
 function Number({
   name,
@@ -22,7 +25,8 @@ function Number({
   hint,
   disabled,
 }) {
-  const [displayValue, setDisplayValue] = useState(value * factor + offset);
+  const calculated = Math.round(value * factor + offset);
+  const [displayValue, setDisplayValue] = useState(calculated);
 
   const updateValue = useCallback(() => {
     let value = displayValue;
@@ -36,10 +40,11 @@ function Number({
       value = (max - offset) / factor;
     }
 
-    value = Math.round(value);
     if(isNaN(value)) {
       value = (min - offset) / factor;
     }
+
+    value = Math.round(value);
 
     setDisplayValue(value * factor + offset);
     onChange(name, value);
@@ -51,11 +56,22 @@ function Number({
   }, []);
 
   return (
-    <div className="number-text">
-      <label>
-        <div className="input-wrapper">
-          <input
+    <FormControl
+      fullWidth
+      variant="standard"
+    >
+      <Grid
+        alignItems="center"
+        container
+        spacing={2}
+      >
+        <Grid
+          item
+          xs={6}
+        >
+          <Input
             disabled={disabled}
+            fullWidth
             max={max}
             min={min}
             name={name}
@@ -65,16 +81,23 @@ function Number({
             type="number"
             value={inSync ? displayValue : 0}
           />
-        </div>
+        </Grid>
 
-        <Info
-          hint={hint}
-          inSync={inSync}
-          label={label}
-          name={name}
-        />
-      </label>
-    </div>
+        <Grid
+          item
+          xs={6}
+        >
+          <Typography id={`${name}-select-label`} >
+            <Info
+              hint={hint}
+              inSync={inSync}
+              label={label}
+              name={name}
+            />
+          </Typography>
+        </Grid>
+      </Grid>
+    </FormControl>
   );
 }
 

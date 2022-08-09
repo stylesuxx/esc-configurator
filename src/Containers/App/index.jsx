@@ -5,6 +5,11 @@ import Rtttl from 'bluejay-rtttl-parse';
 import dateFormat from 'dateformat';
 import i18next from 'i18next';
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import { fetchHexCached } from '../../utils/Fetch';
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
@@ -15,6 +20,7 @@ import Serial from '../../utils/Serial';
 import sources from '../../sources';
 import {
   clearLog,
+  loadCookie,
   loadLanguage,
   loadLog,
   loadMelodies,
@@ -35,6 +41,7 @@ class App extends Component {
     this.serialApi = loadSerialApi();
 
     this.gtmActive = false;
+
     this.serial = undefined;
     this.lastConnected = 0;
 
@@ -44,6 +51,7 @@ class App extends Component {
         show: false,
         settings: loadSettings(),
       },
+      cookieDone: loadCookie(),
       escs: {
         connected: 0,
         master: {},
@@ -205,7 +213,10 @@ class App extends Component {
     }
 
     const log = [ ...serial.log ];
-    log.push(this.formatLogMessage(translation));
+    log.push({
+      html: translation,
+      date: new Date(),
+    });
     this.setSerial({ log });
   };
 
@@ -229,26 +240,6 @@ class App extends Component {
     }
 
     return configs;
-  };
-
-  formatLogMessage = (html) => {
-    const now = new Date();
-    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
-    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
-
-    return (
-      <div>
-        <span className="date">
-          {formattedDate}
-        </span>
-
-        <span className="time">
-          {formattedTime}
-        </span>
-
-        {html}
-      </div>
-    );
   };
 
   flash = async(text, force, migrate) => {
@@ -863,13 +854,16 @@ class App extends Component {
     await this.serial.spinMotor(index, speed);
   };
 
-  handleCookieAccept = () => {
+  handleCookieAccept = (value) => {
     if(!this.gtmActive) {
       const tagManagerArgs = { gtmId: process.env.REACT_APP_GTM_ID };
       TagManager.initialize(tagManagerArgs);
 
-      this.gtmActive = true;
+      this.gtmActive = value;
     }
+
+    localStorage.setItem('cookie', true);
+    this.setState({ cookieDone: true });
   };
 
   handleLanguageSelection = (e) => {
@@ -999,6 +993,7 @@ class App extends Component {
       escs,
       actions,
       configs,
+      cookieDone,
       language,
       melodies,
       msp,
@@ -1024,6 +1019,7 @@ class App extends Component {
           show: appSettings.show,
         }}
         configs={configs}
+        cookieDone={cookieDone}
         escs={{
           actions: {
             handleMasterUpdate: this.handleSettingsUpdate,

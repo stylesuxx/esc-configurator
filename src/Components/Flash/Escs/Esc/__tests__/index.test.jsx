@@ -133,7 +133,7 @@ describe('Esc', () => {
       />
     );
 
-    userEvent.click(screen.getByText(/escButtonFlash/i));
+    expect(screen.getByText(/escButtonFlash/i)).toHaveAttribute('disabled');
     expect(onFlash).not.toHaveBeenCalled();
   });
 
@@ -256,14 +256,6 @@ describe('Esc', () => {
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
 
     userEvent.click(screen.getByRole(/checkbox/i));
-
-    // Change select
-    fireEvent.change(screen.getByRole(/combobox/i), {
-      taget: {
-        value: 3,
-        name: 'MOTOR_DIRECTION',
-      },
-    });
   });
 
   it('should show custom settings and handle direct input', () => {
@@ -465,7 +457,6 @@ describe('Esc', () => {
 
     const progressbar = screen.getByRole(/progressbar/i);
     expect(progressbar).toBeInTheDocument();
-    expect(progressbar.value).toEqual(50);
   });
 
   it('should show common settings and handle change', () => {
@@ -524,18 +515,9 @@ describe('Esc', () => {
       />
     );
 
-    expect(screen.getByText(/hints:COMMON_MOTOR_DIRECTION/i)).toBeInTheDocument();
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
 
     userEvent.click(screen.getByRole(/checkbox/i));
-
-    // Change select
-    fireEvent.change(screen.getByRole(/combobox/i), {
-      taget: {
-        value: 3,
-        name: 'COMMON_MOTOR_DIRECTION',
-      },
-    });
   });
 
   it('should trigger firmware dump', () => {

@@ -1,19 +1,20 @@
-import Slider, { createSliderWithTooltip } from 'rc-slider';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
   useCallback,
+  useEffect,
   useState,
   useMemo,
 } from 'react';
-import 'rc-slider/assets/index.css';
 
-import Checkbox from '../Input/Checkbox';
+import Grid from '@mui/material/Grid';
+import MuiSlider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
+
 import { useInterval } from '../../utils/helpers/React';
-
-import './style.scss';
-
-const SliderWithTooltip = createSliderWithTooltip(Slider);
+import Checkbox from '../Input/Checkbox';
+import MainCard from '../MainCard';
+import Warning from '../Warning';
 
 function BatteryState({ getBatteryState }) {
   const { t } = useTranslation('common');
@@ -46,9 +47,9 @@ function BatteryState({ getBatteryState }) {
 
   if(batteryState.text) {
     return (
-      <span className={`battery-state ${batteryState.danger ? 'danger' : ''}`}>
+      <Typography color={batteryState.danger ? 'red' : 'text'}>
         {`${t('battery')} ${batteryState.text}`}
-      </span>
+      </Typography>
     );
   }
 
@@ -65,24 +66,28 @@ function MotorSlider({
 }) {
   const [value, setValue] = useState(startValue);
 
+  useEffect(() => {
+    setValue(startValue);
+  }, [startValue]);
+
   /* istanbul ignore next */
-  const update = useCallback((value) => {
+  const update = useCallback((e) => {
+    const value = e.target.value;
+
     setValue(value);
     onChange(value);
   }, [onChange]);
 
   return(
-    <SliderWithTooltip
-      defaultValue={value}
+    <MuiSlider
+      aria-label="Small"
       disabled={disabled}
       max={max}
       min={min}
       onChange={update}
       step={10}
-      tipProps={{
-        visible: true,
-        placement: 'top',
-      }}
+      value={value}
+      valueLabelDisplay="auto"
     />
   );
 }
@@ -110,10 +115,10 @@ function IndividualMotorSlider({
   }, [index, onChange]);
 
   return(
-    <div className={`slider slider-${index}`}>
-      <h3>
+    <>
+      <Typography>
         {t("motorNr", { index: index + 1 })}
-      </h3>
+      </Typography>
 
       <MotorSlider
         disabled={disabled}
@@ -122,7 +127,7 @@ function IndividualMotorSlider({
         onChange={update}
         startValue={startValue}
       />
-    </div>
+    </>
   );
 }
 IndividualMotorSlider.propTypes = {
@@ -142,12 +147,12 @@ function MotorControl({
   startValue,
 }) {
   const { t } = useTranslation('common');
-
   const minValue = 1000;
   const maxValue = 2000;
 
   const [unlock, setUnlock] = useState(false);
   const [unlockIndividual, setUnlockIndividual] = useState(true);
+  const [masterValue, setMasterValue] = useState(startValue);
 
   const toggleUnlock = useCallback(() => {
     setUnlock(!unlock);
@@ -166,6 +171,7 @@ function MotorControl({
       setUnlockIndividual(true);
     }
 
+    setMasterValue(value);
     onAllUpdate(value);
   }, [startValue, unlockIndividual, onAllUpdate]);
 
@@ -184,7 +190,7 @@ function MotorControl({
         max={maxValue}
         min={minValue}
         onChange={updateSingleValue}
-        startValue={startValue}
+        startValue={masterValue}
       />
     );
   }
@@ -200,58 +206,86 @@ function MotorControl({
   ), [startValue, unlock, updateValue]);
 
   return (
-    <div id="motor-control-wrapper">
-      <div className="gui-box grey">
-        <div className="gui-box-titlebar">
-          <div className="spacer-box-title">
-            {t('motorControl')}
-          </div>
-        </div>
+    <Grid
+      container
+      spacing={2}
+    >
+      <Grid
+        item
+        xs={12}
+      >
+        <Warning />
+      </Grid>
 
-        <div className="spacer-box">
-          <div>
-            <p>
-              { t('motorControlTextLine1') }
-            </p>
+      <Grid
+        item
+        md={5}
+        xs={12}
+      >
+        <MainCard title={t('motorControl')}>
+          <Typography paragraph>
+            {t('motorControlTextLine1')}
+          </Typography>
 
-            <p>
-              { t('motorControlTextLine2') }
-            </p>
+          <Typography paragraph>
+            {t('motorControlTextLine2')}
+          </Typography>
 
-            <p>
-              { t('motorControlTextLine3') }
-            </p>
-          </div>
+          <Typography paragraph>
+            {t('motorControlTextLine3')}
+          </Typography>
 
-          <div className="line-wrapper">
-            <Checkbox
-              label={t('enableMotorControl')}
-              name="enable-motor-control"
-              onChange={toggleUnlock}
-              value={unlock ? 1 : 0}
-            />
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              xs={6}
+            >
+              <Checkbox
+                label={t('enableMotorControl')}
+                name="enable-motor-control"
+                onChange={toggleUnlock}
+                value={unlock ? 1 : 0}
+              />
+            </Grid>
 
-            <BatteryState
-              getBatteryState={getBatteryState}
-            />
-          </div>
+            <Grid
+              item
+              xs={6}
+            >
+              <BatteryState getBatteryState={getBatteryState} />
+            </Grid>
+          </Grid>
 
-          <div id="slider-wrapper">
-            <div id="single-slider">
+          <br />
+
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              xs={6}
+            >
               {singleSliderElements}
-            </div>
+            </Grid>
 
-            <div id="master-slider">
-              <h3>
+            <Grid
+              item
+              xs={6}
+            >
+              <Typography>
                 {t('masterSpeed')}
-              </h3>
+              </Typography>
 
               {memoizedMasterSlider}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Grid>
+          </Grid>
+        </MainCard>
+      </Grid>
+    </Grid>
   );
 }
 MotorControl.defaultProps = {

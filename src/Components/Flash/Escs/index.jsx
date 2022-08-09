@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Grid from '@mui/material/Grid';
+
 import Esc from './Esc';
 
 function Escs({
@@ -16,25 +18,37 @@ function Escs({
 }) {
   function EscElements() {
     return escs.map((esc) => (
-      <Esc
-        canFlash={canFlash}
-        directInput={directInput}
-        disableCommon={disableCommon}
-        enableAdvanced={enableAdvanced}
-        esc={esc}
-        index={esc.index}
+      <Grid
+        item
         key={esc.index}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
-        onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-        ref={esc.ref}
-      />
+        lg={6}
+        xs={12}
+      >
+        <Esc
+          canFlash={canFlash}
+          directInput={directInput}
+          disableCommon={disableCommon}
+          enableAdvanced={enableAdvanced}
+          esc={esc}
+          index={esc.index}
+          key={esc.index}
+          onCommonSettingsUpdate={onCommonSettingsUpdate}
+          onFirmwareDump={onFirmwareDump}
+          onFlash={onFlash}
+          onSettingsUpdate={onSettingsUpdate}
+          ref={esc.ref}
+        />
+      </Grid>
     ));
   }
 
   return (
-    <EscElements />
+    <Grid
+      container
+      spacing={2}
+    >
+      <EscElements />
+    </Grid>
   );
 }
 

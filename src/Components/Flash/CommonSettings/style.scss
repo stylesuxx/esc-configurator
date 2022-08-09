@@ -1,5 +1,9 @@
-.not-in-sync::before {
-  content: '*';
+.not-in-sync::after {
+  content: ' *';
   color: red;
   font-weight: bold;
+}
+
+.inset > * {
+  margin-left: -1.25rem;
 }

@@ -9,6 +9,18 @@ const {
   defaultLanguage,
 } = settings;
 
+function clearLog() {
+  localStorage.setItem('log', JSON.stringify([]));
+
+  return [];
+}
+
+function loadCookie() {
+  const cookie = localStorage.getItem('cookie');
+
+  return cookie === 'true';
+}
+
 function loadLanguage() {
   let storedLanguage = localStorage.getItem('language');
   if(!storedLanguage) {
@@ -50,12 +62,6 @@ function loadLog() {
   return [];
 }
 
-function clearLog() {
-  localStorage.setItem('log', JSON.stringify([]));
-
-  return [];
-}
-
 function loadMelodies() {
   const storedMelodies = JSON.parse(localStorage.getItem('melodies'));
   if(storedMelodies) {
@@ -63,14 +69,6 @@ function loadMelodies() {
   }
 
   return [];
-}
-
-function loadSettings() {
-  const settings = JSON.parse(localStorage.getItem('settings')) || {};
-  return {
-    ...defaultAppSettings,
-    ...settings,
-  };
 }
 
 function loadSerialApi() {
@@ -89,8 +87,17 @@ function loadSerialApi() {
   return null;
 }
 
+function loadSettings() {
+  const settings = JSON.parse(localStorage.getItem('settings')) || {};
+  return {
+    ...defaultAppSettings,
+    ...settings,
+  };
+}
+
 export {
   clearLog,
+  loadCookie,
   loadLanguage,
   loadLog,
   loadMelodies,

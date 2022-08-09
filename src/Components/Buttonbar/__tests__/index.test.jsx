@@ -8,15 +8,26 @@ import Buttonbar from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
-describe('Buttonbar', () => {
-  it('should display buttons', () => {
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
-    const onSeletFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
+let onClearLog;
+let onOpenMelodyEditor;
+let onReadSetup;
+let onResetDefaults;
+let onSaveLog;
+let onSelectFirmwareForAll;
+let onWriteSetup;
 
+describe('Buttonbar', () => {
+  beforeEach(() => {
+    onClearLog = jest.fn();
+    onWriteSetup = jest.fn();
+    onReadSetup = jest.fn();
+    onResetDefaults = jest.fn();
+    onSaveLog = jest.fn();
+    onSelectFirmwareForAll = jest.fn();
+    onOpenMelodyEditor = jest.fn();
+  });
+
+  it('should display buttons', () => {
     render(
       <Buttonbar
         canFlash={false}
@@ -24,11 +35,12 @@ describe('Buttonbar', () => {
         canReadDefaults={false}
         canResetDefaults={false}
         canWrite={false}
+        onClearLog={onClearLog}
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
         onSaveLog={onSaveLog}
-        onSeletFirmwareForAll={onSeletFirmwareForAll}
+        onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
         showMelodyEditor
       />
@@ -43,13 +55,6 @@ describe('Buttonbar', () => {
   });
 
   it('should always trigger log save', () => {
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
-    const onSeletFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
-
     render(
       <Buttonbar
         canFlash={false}
@@ -57,35 +62,7 @@ describe('Buttonbar', () => {
         canReadDefaults={false}
         canResetDefaults={false}
         canWrite={false}
-        onOpenMelodyEditor={onOpenMelodyEditor}
-        onReadSetup={onReadSetup}
-        onResetDefaults={onResetDefaults}
-        onSaveLog={onSaveLog}
-        onSeletFirmwareForAll={onSeletFirmwareForAll}
-        onWriteSetup={onWriteSetup}
-        showMelodyEditor
-      />
-    );
-
-    userEvent.click(screen.getByText(/escButtonSaveLog/i));
-    expect(onSaveLog).toHaveBeenCalled();
-  });
-
-  it('should not trigger handlers when disabled', () => {
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
-    const onSelectFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
-
-    render(
-      <Buttonbar
-        canFlash={false}
-        canRead={false}
-        canReadDefaults={false}
-        canResetDefaults={false}
-        canWrite={false}
+        onClearLog={onClearLog}
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
@@ -96,27 +73,66 @@ describe('Buttonbar', () => {
       />
     );
 
-    userEvent.click(screen.queryAllByText(/resetDefaults/i)[1]);
+    userEvent.click(screen.getByText(/escButtonSaveLog/i));
+    expect(onSaveLog).toHaveBeenCalled();
+  });
+
+  it('should always trigger log clear', () => {
+    render(
+      <Buttonbar
+        canFlash={false}
+        canRead={false}
+        canReadDefaults={false}
+        canResetDefaults={false}
+        canWrite={false}
+        onClearLog={onClearLog}
+        onOpenMelodyEditor={onOpenMelodyEditor}
+        onReadSetup={onReadSetup}
+        onResetDefaults={onResetDefaults}
+        onSaveLog={onSaveLog}
+        onSeletFirmwareForAll={onSelectFirmwareForAll}
+        onWriteSetup={onWriteSetup}
+        showMelodyEditor
+      />
+    );
+
+    userEvent.click(screen.getByText(/escButtonClearLog/i));
+    expect(onClearLog).toHaveBeenCalled();
+  });
+
+  it('should not trigger handlers when disabled', () => {
+    render(
+      <Buttonbar
+        canFlash={false}
+        canRead={false}
+        canReadDefaults={false}
+        canResetDefaults={false}
+        canWrite={false}
+        onClearLog={onClearLog}
+        onOpenMelodyEditor={onOpenMelodyEditor}
+        onReadSetup={onReadSetup}
+        onResetDefaults={onResetDefaults}
+        onSaveLog={onSaveLog}
+        onSeletFirmwareForAll={onSelectFirmwareForAll}
+        onWriteSetup={onWriteSetup}
+        showMelodyEditor
+      />
+    );
+
+    expect(screen.queryAllByText(/resetDefaults/i)[1]).toHaveAttribute('disabled');
     expect(onResetDefaults).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/escButtonRead/i));
+    expect(screen.getByText(/escButtonRead/i)).toHaveAttribute('disabled');
     expect(onReadSetup).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/escButtonWrite/i));
+    expect(screen.getByText(/escButtonWrite/i)).toHaveAttribute('disabled');
     expect(onWriteSetup).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/escButtonFlashAll/i));
+    expect(screen.getByText(/escButtonFlashAll/i)).toHaveAttribute('disabled');
     expect(onSelectFirmwareForAll).not.toHaveBeenCalled();
   });
 
   it('should trigger handlers when enabled', () => {
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
-    const onSelectFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
-
     render(
       <Buttonbar
         canFlash
@@ -124,6 +140,7 @@ describe('Buttonbar', () => {
         canReadDefaults
         canResetDefaults
         canWrite
+        onClearLog={onClearLog}
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}

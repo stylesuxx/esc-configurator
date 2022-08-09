@@ -34,7 +34,7 @@ describe('MeldodyElement', () => {
     onUpdate = jest.fn();
   });
 
-  it('should display without melody', () => {
+  it('should handle empty melody', () => {
     render(
       <MelodyElement
         accepted={false}
@@ -54,14 +54,14 @@ describe('MeldodyElement', () => {
     expect(screen.queryByText(/common:melodyEditorStop/i)).not.toBeInTheDocument();
     expect(screen.getByText(/common:melodyEditorAccept/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByText(/common:melodyEditorPlay/i));
+    expect(screen.getByText(/common:melodyEditorPlay/i)).toHaveAttribute('disabled');
     expect(onPlay).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
+    expect(screen.getByText(/common:melodyEditorAccept/i)).toHaveAttribute('disabled');
     expect(onAccept).not.toHaveBeenCalled();
   });
 
-  it('should display with unplayable melody', async() => {
+  it('should handle unplayable melody', async() => {
     render(
       <MelodyElement
         accepted={false}
@@ -82,14 +82,14 @@ describe('MeldodyElement', () => {
     expect(screen.getByText(/common:melodyEditorAccept/i)).toBeInTheDocument();
     expect(screen.queryAllByText(/Please supply a value and an onChange parameter./i).length).toEqual(0);
 
-    userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
+    expect(screen.getByText(/common:melodyEditorAccept/i)).toHaveAttribute('disabled');
     expect(onAccept).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/common:melodyEditorPlay/i));
+    expect(screen.getByText(/common:melodyEditorPlay/i)).toHaveAttribute('disabled');
     expect(onPlay).not.toHaveBeenCalled();
   });
 
-  it('should display with unsupported note', async() => {
+  it('should handle unsupported notes', async() => {
     render(
       <MelodyElement
         accepted={false}
@@ -111,14 +111,14 @@ describe('MeldodyElement', () => {
     expect(screen.getByText(/common:melodyEditorAccept/i)).toBeInTheDocument();
     expect(screen.queryAllByText(/Please supply a value and an onChange parameter./i).length).toEqual(0);
 
-    userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
+    expect(screen.getByText(/common:melodyEditorAccept/i)).toHaveAttribute('disabled');
     expect(onAccept).not.toHaveBeenCalled();
 
     userEvent.click(screen.getByText(/common:melodyEditorPlay/i));
     expect(onPlay).toHaveBeenCalled();
   });
 
-  it('should load with too long melody', async() => {
+  it('should handle too long melody', async() => {
     render(
       <MelodyElement
         accepted={false}
@@ -140,14 +140,14 @@ describe('MeldodyElement', () => {
     expect(screen.getByText(/common:melodyEditorAccept/i)).toBeInTheDocument();
     expect(screen.queryAllByText(/Please supply a value and an onChange parameter./i).length).toEqual(0);
 
-    userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
+    expect(screen.getByText(/common:melodyEditorAccept/i)).toHaveAttribute('disabled');
     expect(onAccept).not.toHaveBeenCalled();
 
     userEvent.click(screen.getByText(/common:melodyEditorPlay/i));
     expect(onPlay).toHaveBeenCalled();
   });
 
-  it('should display with valid melody', async() => {
+  it('should handle a valid melody', async() => {
     const melody = "simpsons:d=4,o=5,b=160:c.6, e6, f#6, 8a6, g.6, e6, c6, 8a, 8f#, 8f#, 8f#, 2g, 8p, 8p, 8f#, 8f#, 8f#, 8g, a#., 8c6, 8c6, 8c6, c6";
 
     render(
@@ -183,8 +183,7 @@ describe('MeldodyElement', () => {
     // expect(onStop).toHaveBeenCalled();
   });
 
-  it('should be able to change to valid melody', async() => {
-
+  it('should handle a change to a valid melody', async() => {
     render(
       <MelodyElement
         accepted={false}
@@ -199,11 +198,12 @@ describe('MeldodyElement', () => {
       />
     );
 
-    userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
+    expect(screen.getByText(/common:melodyEditorAccept/i)).toHaveAttribute('disabled');
+    expect(onAccept).not.toHaveBeenCalled();
 
     const textarea = screen.getByRole('textbox');
     const event = createEvent.paste(textarea, {
-      clipboardData:{
+      clipboardData: {
         types: ['text/plain'],
         getData: () => 'simpsons:d=4,o=5,b=160:c.6',
       },
@@ -211,11 +211,10 @@ describe('MeldodyElement', () => {
     fireEvent(textarea, event);
 
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
-
     expect(onAccept).toHaveBeenCalled();
   });
 
-  it('should be able to change to different melody', async() => {
+  it('should handle a change to different melody', async() => {
     render(
       <MelodyElement
         accepted={false}
@@ -231,19 +230,34 @@ describe('MeldodyElement', () => {
     );
 
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
+    expect(onAccept).toHaveBeenCalled();
 
+    /**
+     * Find the textbox and clear it's content. This is not very elegant but
+     * sending other key codes like [CTRL] + A is not registerd by the textbox
+     * neither is sending an A.
+     */
     const textarea = screen.getByRole('textbox');
+    for(let i = 0; i < melody.length; i += 1) {
+      fireEvent.keyDown(textarea, {
+        key: 'Delete',
+        code: 'Delete',
+        keyCode: 46,
+      });
+    }
+
     const event = createEvent.paste(textarea, {
-      clipboardData:{
+      clipboardData: {
         types: ['text/plain'],
-        getData: () => 'Melody:b=160,o=5,d=4:c6.,e6,f#6,8a6,g6.,e6,c6,8a,8f#,8f#,8f#,2g',
+        getData: () => 'simpsons:d=4,o=5,b=160:c.6',
       },
     });
     fireEvent(textarea, event);
 
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
-    expect(onAccept).toHaveBeenCalled();
+    // +1 because it is called once when initializing the component
+    expect(onAccept.mock.calls.length).toBe(2 + 1);
   });
 
   it('should accept melody twice', async() => {
@@ -255,7 +269,7 @@ describe('MeldodyElement', () => {
         disabled={false}
         dummy={false}
         label="Label comes here"
-        melody={melody}
+        melody=""
         onAccept={onAccept}
         onPlay={onPlay}
         onStop={onStop}
@@ -275,7 +289,8 @@ describe('MeldodyElement', () => {
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
     userEvent.click(screen.getByText(/common:melodyEditorAccept/i));
 
-    expect(onAccept).toHaveBeenCalled();
+    // +1 because it is called once when initializing the component
+    expect(onAccept.mock.calls.length).toBe(2 + 1);
   });
 
   it('should play and stop through imperative handle', async() => {
@@ -333,7 +348,7 @@ describe('MeldodyElement', () => {
     await act(async()=> {
       ref.current.play(context, 1);
       await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
+        setTimeout(resolve, 100);
       });
       ref.current.stop();
     });
@@ -373,7 +388,7 @@ describe('MeldodyElement', () => {
     await act(async()=> {
       ref.current.play(context, 1);
       await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
+        setTimeout(resolve, 100);
       });
       ref.current.stop();
     });
@@ -422,7 +437,7 @@ describe('MeldodyElement', () => {
 
     await act(async()=> {
       await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
+        setTimeout(resolve, 100);
       });
     });
 

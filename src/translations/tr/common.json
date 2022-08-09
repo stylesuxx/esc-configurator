@@ -65,7 +65,7 @@
   "homeDisclaimerTextLine5": "Güncel [CP210x Sürücüsünü](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) [buradan](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) indirebilirsiniz.",
   "homeDisclaimerTextLine6": "Güncel [STM USB VCP Sürücüsünü](https://www.st.com/en/development-tools/stsw-stm32102.html) [buradan](https://www.st.com/en/development-tools/stsw-stm32102.html) indirebilirsiniz.",
   "homeWelcome": "**ESC - Yapılandırma Aracına** Hoşgeldiniz, ESC lerinizi yapılandırma ve güncelleme işlerinizi kolaylaştırmak için tasarlanan araç.",
-  "betaWarningLine1": "**Bu araç BETA dır.**",
+  "betaWarningLine1": "Bu araç BETA dır.",
   "betaWarningLine2": "Beklenildiği üzere bazı şeyler çalışmayabilir - herhangi bir hata bulursanız lütfen [raporlayınız](https://github.com/stylesuxx/esc-configurator/issues/new).",
   "findHelp": "For known browser issues please check [the wiki](https://github.com/stylesuxx/esc-configurator/wiki/Known-Browser-issues).",
   "escButtonSelectLocally": "Donanım Yazılımı Yükle",

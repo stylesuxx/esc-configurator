@@ -7,9 +7,15 @@ import React, {
   useState,
 } from 'react';
 
-import SettingsHandler from './SettingsHandler';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Divider from '@mui/material/Divider';
+import LinearProgress from '@mui/material/LinearProgress';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 
-import './style.scss';
+import MainCard from '../../../MainCard';
+import SettingsHandler from './SettingsHandler';
 
 const Esc = forwardRef(({
   canFlash,
@@ -58,14 +64,11 @@ const Esc = forwardRef(({
   }, [onFirmwareDump, index]);
 
   return (
-    <div className="esc gui-box grey">
-      <div className="gui-box-titlebar">
-        <div className="spacer-box-title">
-          {title}
-        </div>
-      </div>
-
-      <div className="spacer-box">
+    <MainCard title={title}>
+      <Stack
+        divider={<Divider />}
+        spacing={1}
+      >
         {disableCommon && commonSettingsDescriptions &&
           <SettingsHandler
             descriptions={commonSettingsDescriptions.base}
@@ -84,45 +87,60 @@ const Esc = forwardRef(({
             settings={settings}
           />}
 
-        <div className="half">
-          <div className="default-btn flash-btn">
-            <progress
-              className={progress > 0 ? 'progress' : 'hidden'}
-              max="100"
-              min="0"
-              value={progress}
-            />
-
-            <button
-              disabled={!canFlash}
-              onClick={handleFirmwareFlash}
-              type="button"
+        <Stack>
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid
+              item
+              xs={12}
             >
-              {t('escButtonFlash')}
-            </button>
+              {progress > 0 &&
+                <LinearProgress
+                  sx={{ height: 36.5 }}
+                  value={progress}
+                  variant="determinate"
+                />}
 
-            {enableAdvanced &&
-              <button
-                className="firmware-dump"
-                disabled={!canFlash}
-                onClick={handleFirmwareDump}
-                type="button"
-              >
-                {t('escButtonFirmwareDump')}
-              </button>}
-          </div>
-        </div>
-      </div>
-    </div>
+              {progress === 0 &&
+                <ButtonGroup
+                  fullWidth
+                  variant="outlined"
+                >
+                  <Button
+                    disabled={!canFlash}
+                    onClick={handleFirmwareFlash}
+                  >
+                    {t('escButtonFlash')}
+                  </Button>
+
+                  {enableAdvanced &&
+                    <Button
+                      disabled={!canFlash}
+                      onClick={handleFirmwareDump}
+                    >
+                      {t('escButtonFirmwareDump')}
+                    </Button>}
+                </ButtonGroup>}
+            </Grid>
+          </Grid>
+        </Stack>
+      </Stack>
+    </MainCard>
   );
 });
 Esc.displayName = 'Esc';
-Esc.defaultProps = { canFlash: true };
+Esc.defaultProps = {
+  canFlash: true,
+  disableCommon: false,
+  enableAdvanced: false,
+};
 Esc.propTypes = {
   canFlash: PropTypes.bool,
   directInput: PropTypes.bool.isRequired,
-  disableCommon: PropTypes.bool.isRequired,
-  enableAdvanced: PropTypes.bool.isRequired,
+  disableCommon: PropTypes.bool,
+  enableAdvanced: PropTypes.bool,
   esc: PropTypes.shape().isRequired,
   index: PropTypes.number.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,

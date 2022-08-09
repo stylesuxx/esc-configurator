@@ -28,12 +28,13 @@ describe('AppSettings', () => {
       <AppSettings
         onClose={onClose}
         onUpdate={onUpdate}
+        open
         settings={settings}
       />
     );
 
     expect(screen.getByText(/settingsHeader/i)).toBeInTheDocument();
-    expect(screen.getByText(/close/i)).toBeInTheDocument();
+    expect(screen.getByTestId('CloseIcon')).toBeInTheDocument();
   });
 
   it('should handle clicks on checkbox', () => {
@@ -51,6 +52,7 @@ describe('AppSettings', () => {
       <AppSettings
         onClose={onClose}
         onUpdate={onUpdate}
+        open
         settings={settings}
       />
     );
@@ -71,11 +73,12 @@ describe('AppSettings', () => {
       <AppSettings
         onClose={onClose}
         onUpdate={onUpdate}
+        open
         settings={settings}
       />
     );
 
-    userEvent.click(screen.getByText(/close/i));
+    userEvent.click(screen.getByTestId('CloseIcon'));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -94,6 +97,7 @@ describe('AppSettings', () => {
       <AppSettings
         onClose={onClose}
         onUpdate={onUpdate}
+        open
         settings={settings}
       />
     );

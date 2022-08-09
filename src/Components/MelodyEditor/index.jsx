@@ -6,7 +6,12 @@ import React, {
   useRef,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import './style.scss';
+
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Input from '@mui/material/Input';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 
 import Checkbox from '../Input/Checkbox';
 import LabeledSelect from '../Input/LabeledSelect';
@@ -27,27 +32,40 @@ function SaveMelody({ onSave }) {
   }, [name, onSave]);
 
   return (
-    <div className="save-melody-wrapper">
-      <input
-        data-testid="save-melody-input"
-        name="save-melody-name"
-        onChange={updateName}
-        placeholder={t('common:melodyEditorName')}
-        type="text"
-        value={name}
-      />
+    <Grid
+      alignItems="end"
+      container
+      spacing={2}
+    >
+      <Grid
+        item
+        xs={4}
+      >
+        <Input
+          aria-label="save-melody"
+          data-testid="save-melody-input"
+          fullWidth
+          name="save-melody-name"
+          onChange={updateName}
+          placeholder={t('common:melodyEditorName')}
+          value={name}
+        />
+      </Grid>
 
-      <div className="default-btn">
-
-        <button
+      <Grid
+        item
+        xs={2}
+      >
+        <Button
           disabled={name === ''}
+          fullWidth
           onClick={handleSave}
-          type="button"
+          variant="outlined"
         >
           {t('common:melodyEditorSave')}
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 SaveMelody.propTypes = { onSave: PropTypes.func.isRequired };
@@ -81,7 +99,7 @@ function PresetSelect({
 
   const handleUpdate = useCallback((e) => {
     const value = e.target.value;
-    let selected = [];
+
     let match = null;
     if(value.startsWith('preset-')) {
       const name = value.split('preset-')[1];
@@ -90,12 +108,8 @@ function PresetSelect({
       match = customMelodies.find((item) => item.name === value);
     }
 
-    if(match) {
-      selected = match.tracks;
-    }
-
     setSelectedPreset(e.target.value);
-    onUpdateMelodies(selected);
+    onUpdateMelodies(match.tracks);
   }, [defaultMelodies, customMelodies, onUpdateMelodies]);
 
   const handleDelete = useCallback(() => {
@@ -130,24 +144,37 @@ function PresetSelect({
   ];
 
   return(
-    <div className="melody-selection-wrapper">
-      <LabeledSelect
-        firstLabel={t('melodyPresetsLabel')}
-        onChange={handleUpdate}
-        options={options}
-        selected={selectedPreset}
-      />
+    <Grid
+      alignItems="end"
+      container
+      spacing={2}
+    >
+      <Grid
+        item
+        xs={4}
+      >
+        <LabeledSelect
+          firstLabel={t('melodyPresetsLabel')}
+          onChange={handleUpdate}
+          options={options}
+          selected={selectedPreset}
+        />
+      </Grid>
 
-      <div className="default-btn">
-        <button
+      <Grid
+        item
+        xs={2}
+      >
+        <Button
           disabled={!canDelete}
+          fullWidth
           onClick={handleDelete}
-          type="button"
+          variant="outlined"
         >
           {t('melodyDelete')}
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 PresetSelect.defaultProps = { selected: -1 };
@@ -228,6 +255,7 @@ function MelodyEditor({
   onDelete,
   onSave,
   onWrite,
+  open,
   customMelodies,
   defaultMelodies,
   writing,
@@ -358,92 +386,120 @@ function MelodyEditor({
   }, [melodyElementReferences]);
 
   const melodyElements = currentMelodies.map((melody, index) => (
-    <IndexedMelodyElement
-      accepted={acceptedMelodies[index] ? true : false}
-      disabled={writing}
-      dummy={dummy}
-      index={index}
+    <Grid
+      item
       key={index}
-      label={`ESC ${index + 1}`}
-      melody={melody}
-      onAccept={handleAccept}
-      onAddRef={handleAddRef}
-      onPlay={handlePlay}
-      onStop={handleStop}
-      onUpdate={handleMelodiesUpdate}
-    />
+      md={6}
+      xs={12}
+    >
+      <IndexedMelodyElement
+        accepted={acceptedMelodies[index] ? true : false}
+        disabled={writing}
+        dummy={dummy}
+        index={index}
+        key={index}
+        label={`ESC ${index + 1}`}
+        melody={melody}
+        onAccept={handleAccept}
+        onAddRef={handleAddRef}
+        onPlay={handlePlay}
+        onStop={handleStop}
+        onUpdate={handleMelodiesUpdate}
+      />
+    </Grid>
   ));
 
   return (
-    <div id="melody-editor">
-      <Overlay
-        headline={t('common:melodyEditorHeader')}
-        onClose={handleClose}
-      >
-        <div className="line-wrapper">
-          <div className="sync-wrapper">
-            <Checkbox
-              disabled={isAnyPlaying || writing}
-              hint={t("common:syncMelodiesHint")}
-              label={t("common:syncMelodies")}
-              name="syncMelodies"
-              onChange={toggleSync}
-              value={sync ? 1 : 0}
+    <Overlay
+      headline={t('common:melodyEditorHeader')}
+      maxWidth='xl'
+      onClose={handleClose}
+      open={open}
+    >
+      <div id="melody-editor">
+        <Stack spacing={1}>
+          <Checkbox
+            disabled={isAnyPlaying || writing}
+            hint={t("common:syncMelodiesHint")}
+            label={t("common:syncMelodies")}
+            name="syncMelodies"
+            onChange={toggleSync}
+            value={sync ? 1 : 0}
+          />
+
+          <div>
+            <PresetSelect
+              customMelodies={customMelodies}
+              defaultMelodies={defaultMelodies}
+              escs={melodies.length}
+              onDelete={onDelete}
+              onUpdateMelodies={handleMelodiesSelected}
+              selected={selectedMelody.current}
             />
           </div>
 
-          <PresetSelect
-            customMelodies={customMelodies}
-            defaultMelodies={defaultMelodies}
-            escs={melodies.length}
-            onDelete={onDelete}
-            onUpdateMelodies={handleMelodiesSelected}
-            selected={selectedMelody.current}
-          />
-        </div>
+          <div>
+            <SaveMelody onSave={handleMelodiesSave} />
+          </div>
 
-        <SaveMelody
-          onSave={handleMelodiesSave}
-        />
+          <br />
 
-        <div className={`melody-editor-escs ${sync ? 'all' : 'single'}`}>
-          {!sync && melodyElements}
+          <div className={`melody-editor-escs ${sync ? 'all' : 'single'}`}>
+            {!sync &&
+              <Grid
+                container
+                spacing={2}
+              >
+                {melodyElements}
+              </Grid>}
 
-          {sync &&
-            <MelodyElement
-              accepted={acceptedMelodies[0] ? true : false}
-              disabled={writing}
-              dummy={dummy}
-              label={t("common:allEscs")}
-              melody={currentMelodies[0]}
-              onAccept={handleAcceptAll}
-              onPlay={handlePlay}
-              onStop={handleStop}
-              onUpdate={handleMelodiesUpdateAll}
-            />}
-        </div>
+            {sync &&
+              <Grid
+                item
+                md={12}
+                xs={12}
+              >
+                <MelodyElement
+                  accepted={acceptedMelodies[0] ? true : false}
+                  disabled={writing}
+                  dummy={dummy}
+                  label={t("common:allEscs")}
+                  melody={currentMelodies[0]}
+                  onAccept={handleAcceptAll}
+                  onPlay={handlePlay}
+                  onStop={handleStop}
+                  onUpdate={handleMelodiesUpdateAll}
+                />
+              </Grid>}
+          </div>
 
-        <div className="default-btn button-wrapper">
-          { !sync &&
-            <button
-              disabled={writing}
-              onClick={isAnyPlaying ? handleStopAll : handlePlayAll}
-              type="button"
-            >
-              {isAnyPlaying ? t('common:melodyEditorStopAll') : t('common:melodyEditorPlayAll')}
-            </button>}
+          <Grid
+            container
+            justifyContent="end"
+          >
+            <ButtonGroup>
+              { !sync &&
+                <Button
+                  disabled={writing}
+                  onClick={isAnyPlaying ? handleStopAll : handlePlayAll}
+                  variant='outlined'
+                >
+                  {isAnyPlaying ? t('common:melodyEditorStopAll') : t('common:melodyEditorPlayAll')}
+                </Button>}
 
-          { !dummy &&
-            <button
-              disabled={!allAccepted || isAnyPlaying || writing}
-              onClick={handleSave}
-              type="button"
-            >
-              {t('common:melodyEditorWrite')}
-            </button>}
-        </div>
-      </Overlay>
-    </div>
+              { !dummy &&
+                <Button
+                  disabled={!allAccepted || isAnyPlaying || writing}
+                  onClick={handleSave}
+                  variant='outlined'
+                >
+                  {t('common:melodyEditorWrite')}
+                </Button>}
+            </ButtonGroup>
+          </Grid>
+        </Stack>
+      </div>
+    </Overlay>
   );
 }
 
@@ -456,6 +512,7 @@ MelodyEditor.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onWrite: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   writing: PropTypes.bool.isRequired,
 };
 

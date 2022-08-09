@@ -1,8 +1,7 @@
 {
   "settingsHeader": "Einstellungen",
-  "closeText": "Schließen",
-  "directInput": "Numerische Eingabe",
-  "directInputHint": "Direkte Eingabe für Zahlen anstelle der Schieberegler.",
+  "directInput": "Direkteingabe",
+  "directInputHint": "Direkte Eingabe für Zahlen statt Schieberegler.",
   "printLogs": "Logs anzeigen",
   "printLogsHint": "Zeigt Logs in der Browser Konsole an, wenn aktiviert.",
   "extendedDebug": "Erweiterte Debug-Infos",

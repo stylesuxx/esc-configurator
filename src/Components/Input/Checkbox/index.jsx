@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Info from '../Info';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import MuiCheckbox from '@mui/material/Checkbox';
 
-import './style.scss';
+import Info from '../Info';
 
 function Checkbox({
   name,
@@ -13,34 +15,47 @@ function Checkbox({
   onChange,
   inSync,
   hint,
+  help,
 }) {
+  const formattedLabel = (
+    <Info
+      hint={hint}
+      inSync={inSync}
+      label={label}
+      name={name}
+    />
+  );
+
   return (
     <div className="checkbox">
-      <label>
-        <div className="input-wrapper">
-          <input
+      <FormControlLabel
+        control={
+          <MuiCheckbox
             checked={value === 1}
             disabled={disabled}
             name={name}
             onChange={onChange}
-            type="checkbox"
+            size="small"
+            sx={{
+              paddingTop: 0,
+              paddingBottom: 0,
+            }}
           />
-        </div>
-      </label>
-
-
-      <Info
-        hint={hint}
-        inSync={inSync}
-        label={label}
-        name={name}
+        }
+        label={formattedLabel}
       />
+
+      { help &&
+        <FormHelperText>
+          {help}
+        </FormHelperText>}
     </div>
   );
 }
 
 Checkbox.defaultProps = {
   disabled: false,
+  help: null,
   hint: null,
   inSync: true,
   value: 0,
@@ -48,6 +63,7 @@ Checkbox.defaultProps = {
 
 Checkbox.propTypes = {
   disabled: PropTypes.bool,
+  help: PropTypes.string,
   hint: PropTypes.string,
   inSync: PropTypes.bool,
   label: PropTypes.string.isRequired,

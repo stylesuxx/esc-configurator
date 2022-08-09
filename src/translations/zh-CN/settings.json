@@ -1,8 +1,7 @@
 {
   "settingsHeader": "设置",
-  "closeText": "关闭",
-  "directInput": "数值化输入",
-  "directInputHint": "直接输入数值以代替滑块。",
+  "directInput": "直接输入",
+  "directInputHint": "使用直接输入数值以代替滑块。",
   "printLogs": "打印日志",
   "printLogsHint": "如果启用，则会将日志打印到控制台。",
   "extendedDebug": "扩展调试中",

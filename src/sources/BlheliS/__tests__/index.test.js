@@ -2,10 +2,9 @@ import config from '../';
 
 const SETTINGS_DESCRIPTIONS = config.getSettingsDescriptions();
 
-describe('BLHeli', () => {
+describe('BLHeli_S', () => {
   it('should handle conditional visibility with general settings', () => {
     const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
-    const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
@@ -48,6 +47,30 @@ describe('BLHeli', () => {
 
     expect(ppmFunction(settings)).toBeTruthy();
     expect(ledFunction(settings)).not.toBeTruthy();
+  });
+
+  it('should show LED settings with supported layout', () => {
+    const keys = Object.keys(SETTINGS_DESCRIPTIONS.INDIVIDUAL);
+    const settings = {
+      GOVERNOR_MODE: 3,
+      MOTOR_DIRECTION: 3,
+      LAYOUT: '#E-H-90#',
+    };
+
+    let ledFunction = null;
+    for(let i = 0; i < keys.length; i += 1) {
+      const base = SETTINGS_DESCRIPTIONS.INDIVIDUAL[keys[i]].base;
+      for(let j = 0; j < base.length; j += 1) {
+        const current = base[j];
+        if(current.visibleIf) {
+          if(current.name === 'LED_CONTROL') {
+            ledFunction = current.visibleIf;
+          }
+        }
+      }
+    }
+
+    expect(ledFunction(settings)).toBeTruthy();
   });
 
   it('should return display name', () => {

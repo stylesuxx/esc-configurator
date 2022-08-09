@@ -11,6 +11,8 @@ let serial;
 let Serial;
 
 describe('Serial', () => {
+  const timeout = 50;
+
   beforeAll(async() => {
     /**
      * require component instead of import so that we can properly
@@ -40,7 +42,7 @@ describe('Serial', () => {
       },
     };
 
-    serial = new Serial(port);
+    serial = new Serial(port, timeout);
   });
 
   it('should throw without port', async() => {
@@ -87,7 +89,7 @@ describe('Serial', () => {
       },
     };
 
-    serial = new Serial(port);
+    serial = new Serial(port, timeout);
     expect(() => serial.open()).not.toThrow();
   });
 
@@ -107,7 +109,7 @@ describe('Serial', () => {
       },
     };
 
-    serial = new Serial(port);
+    serial = new Serial(port, timeout);
     expect(() => serial.open()).not.toThrow();
   });
 
@@ -133,7 +135,7 @@ describe('Serial', () => {
       },
     };
 
-    serial = new Serial(port);
+    serial = new Serial(port, timeout);
     await serial.open();
 
     // commands will all time out
@@ -173,7 +175,7 @@ describe('Serial', () => {
       },
     };
 
-    serial = new Serial(port);
+    serial = new Serial(port, timeout);
     await serial.open();
     expect(port.open).toHaveBeenCalled();
 
@@ -203,7 +205,7 @@ describe('Serial', () => {
       },
     };
 
-    serial = new Serial(port);
+    serial = new Serial(port, timeout);
     await serial.open();
 
     expect(serial.startFourWayInterface()).toBe(undefined);
