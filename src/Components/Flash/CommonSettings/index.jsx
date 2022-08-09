@@ -32,6 +32,7 @@ function CommonSettings({
   disabled,
   escs,
   onSettingsUpdate,
+  unsupported,
 }) {
   const {
     t,
@@ -84,7 +85,6 @@ function CommonSettings({
   }, [availableSettings]);
 
   if (!settingsDescriptions) {
-    const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
     const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
 
     let unsupportedText = (
@@ -105,7 +105,7 @@ function CommonSettings({
       </>
     );
 
-    if (unsupportedNames.includes(availableSettings.NAME)) {
+    if (unsupported) {
       unsupportedText = (
         <Typography>
           {t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
@@ -280,6 +280,7 @@ CommonSettings.propTypes = {
     settings: PropTypes.shape({ MODE: PropTypes.number.isRequired }).isRequired,
   })).isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
+  unsupported: PropTypes.bool.isRequired,
 };
 
 export default React.memo(CommonSettings);

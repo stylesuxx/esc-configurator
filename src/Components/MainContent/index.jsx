@@ -53,13 +53,18 @@ function MainContent({
     isReading,
     isWriting,
   } = actions;
-  const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting;
+
+  const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
+  const unsupported = unsupportedNames.includes(settings.NAME);
+
+  const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting && !unsupported;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const showMelodyEditor = escs.length > 0 && escs[0].individualSettings.STARTUP_MELODY ? true : false;
 
   const FlashWrapper = useCallback(() => {
     if(fourWay) {
+
       return (
         <Flash
           availableSettings={settings}
@@ -75,6 +80,7 @@ function MainContent({
           onFlash={onSingleFlash}
           onIndividualSettingsUpdate={onIndividualSettingsUpdate}
           onSettingsUpdate={onSettingsUpdate}
+          unsupported={unsupported}
         />
       );
     }
@@ -93,6 +99,7 @@ function MainContent({
     onSingleFlash,
     onIndividualSettingsUpdate,
     onSettingsUpdate,
+    unsupported,
   ]);
 
   const MotorControlWrapper = useCallback(() => {

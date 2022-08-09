@@ -1,5 +1,5 @@
 {
-  "version": "v0.22.0",
+  "version": "v0.24.0",
   "corsProxy": "https://cors.bubblesort.me/?",
   "availableLanguages": [
     {
@@ -13,6 +13,10 @@
     {
       "label": "Español",
       "value": "es"
+    },
+    {
+      "label": "Polski",
+      "value": "pl"
     },
     {
       "label": "简体中文",

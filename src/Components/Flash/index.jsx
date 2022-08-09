@@ -24,6 +24,7 @@ function Flash({
   onFlash,
   onIndividualSettingsUpdate,
   onSettingsUpdate,
+  unsupported,
 }) {
   const { t } = useTranslation('common');
 
@@ -52,6 +53,7 @@ function Flash({
               disabled={!canFlash}
               escs={escs}
               onSettingsUpdate={onSettingsUpdate}
+              unsupported={unsupported}
             />}
 
           {disableCommon &&
@@ -118,6 +120,7 @@ Flash.propTypes = {
   onFlash: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
+  unsupported: PropTypes.bool.isRequired,
 };
 
 export default Flash;
