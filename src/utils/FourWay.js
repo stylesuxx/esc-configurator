@@ -947,7 +947,7 @@ class FourWay {
          * different for different MCUs
          */
         const newVectorStartBytes = flash.subarray(firmwareStart, firmwareStart + 4);
-        const currentVectorStartBytes = (await this.read(0, 4, 10)).params;
+        const currentVectorStartBytes = (await this.read(firmwareStart, 4, 10)).params;
 
         if (!compare(newVectorStartBytes, currentVectorStartBytes)) {
           throw new InvalidHexFileError('Invalid hex file');
