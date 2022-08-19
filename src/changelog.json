@@ -1,5 +1,12 @@
 [
   {
+    "title": "0.25.0",
+    "items": [
+      "AM32: Add more ESC layouts",
+      "AM32: Compare beginning of vector tables before flashing new firmware"
+    ]
+  },
+  {
     "title": "0.24.0",
     "items": [
       "Translation: Add polish translation"
