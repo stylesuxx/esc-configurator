@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.25.0",
     "items": [
       "AM32: Add more ESC layouts",
       "AM32: Compare beginning of vector tables before flashing new firmware"
