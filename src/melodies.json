@@ -219,6 +219,15 @@
       "spider_dance_3:b=115,o=4,d=32:16f3,16c,16a#3,16c,16f3,16c,16a#3,16c,16c#,16b#,16a#3,16p,16c,16p,16g3,16a#3,16f3,16c,16a#3,16c,16f3,16c,16a#3,16c,16g#3,16c,16a#3,16c,16g#3,16c,16a#3,16c,16c#,16g#3,16g3,16g#3,16c#,16a#3,16g#3,16a#3,16c#,16c,16a#3,16c,c#,p,16c#,16c,16c#,2p.,4c6"
     ]
   },
+   {
+    "name": "Megalovania - Undertale OST",
+    "tracks": [
+      "Megalo:b=280,o=5,d=8: 4d,d6,p,a,4p,g#,p,g,p,4f,d,f,g, 4c,d6,p,a,4p,g#,p,g,p,4f,d,f,g, 4b,d6,p,a,4p,g#,p,g,p,4f,d,f,g, a#,a#,d6,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=6,d=8:4d,d7,p,a,4p,g#,p,g,p,4f,d,f,g, 4c,d7,p,a,4p,g#,p,g,p,4f,d,f,g, 4b,d7,p,a,4p,g#,p,g,p,4f,d,f,g, a#,a#,d7,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=4,d=8:4d,d5,p,a,4p,g#,p,g,p,4f,d,f,g, 4c,d5,p,a,4p,g#,p,g,p,4f,d,f,g, 4b,d5,p,a,4p,g#,p,g,p,4f,d,f,g, a#,a#,d5,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=4,d=8:d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p, 4e,4p,4e,4p,4e,4p,4e,4p, f,p,f,p,f,p,f,p,f,p,f,p,f,p,f,p, 4g,4p,4g,4p,4g,4p,4g,4p"
+    ]
+  },
   {
     "name": "Starwars Theme",
     "tracks": [
@@ -287,6 +296,15 @@
       "zelda2:d=4,o=5,b=80:d,16d,32p,16d,16c,32p,8d,16p,32d,32p,16d,16d#,16f,16g,8g#.,16p,8g#4,8d#4,g#4",
       "zelda3:d=4,o=5,b=80:8a#3,1p,16p,32a#,32p,16a#,16c6,16d6,16d#6,f6",
       "zelda4:d=4,o=5,b=80:8p,8f4,8a#4,8f4,8a#4,8f4,8a#4,8f4,8g#3,8d#4,2p"
+    ]
+  },
+  {
+    "name": "Giorno's Theme",
+    "tracks": [
+      "Girono:d=8,o=6,b=140: 4f#,f#,4d,d,4p,   f,32f,32p,e,32e,32p,p,c#,32c#,32p,d,32d,32p,p, 4f#5,f#5,4b5,b5,4p,   d65,32d,32p,16p,4p,c#,32c#,32p,a5,16a5,g5",
+      "Girono:d=8,o=5,b=140: 4f#,f#,4d,d,d,e,   f,16f,e,16e,d,c#,16c#,d,16d,e, 4p,p,4d,d,b4,c#,   d,16d,e,16e,d,c#,16c#",
+      "Girono:d=8,o=4,b=140: 4b#,b#,4a,a,4p,   a,32a,32p,16p,a,32a,32p,16p,g#,32g#,32p,16p,g#,32g#,32p,16p, 4b,b,4a,a,4p, a,32a,32p,16p,   a,32a,32p,16p,  g#,32g#,32p,16p,  g#,32g#,32p,16p",
+      "Girono:d=8,o=4,b=140: 4f#,f#,4f#,f#,4p,   f,32f,32p,16p,f,32f,32p,16p,e,32e,32p,16p,e,32e,32p,16p, 4f#,f#,p,2p, f,32f,32p,16p,   f,32f,32p,16p,  e,32e,32p,16p,  e,32e,32p,16p"
     ]
   }
 ]
