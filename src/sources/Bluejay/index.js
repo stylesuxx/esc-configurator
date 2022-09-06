@@ -13,7 +13,7 @@ const escs = {
   },
 };
 
-const GITHUB_REPO = 'mathiasvr/bluejay';
+const GITHUB_REPO = 'bird-sanctuary/bluejay';
 
 class BluejaySource extends GithubSource {
   constructor(name, eeprom, settingsDescriptions, escs, pwm) {

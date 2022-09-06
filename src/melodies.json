@@ -13,6 +13,12 @@
     ]
   },
   {
+    "name": "2Pac - Hit Em Up",
+    "tracks": [
+      "2pac_hit_em_up:d=4,o=5,b=200:a,8p,a,8g,a,p,a,c6,a,d6,8p,d6,8c6,d6,2p,8p,8d6,8d#6,e6,8p,e6,8d6,e6,p,c6,8b,8g,e,a.,a,8g,a"
+    ]
+  },
+  {
     "name": "AC/DC - Back in Black",
     "tracks": [
         "ACDCBack1:b=180,o=5,d=4:16b4,8p.,2p,16d,16p,16d,16p,16d,8p.,2p,16a4,16p,16a4,16p,16a4,8p.,2p.,8p,16g4,16p,16e4,16p,16d4,16p,16b3,16p,16a3,16b3,16a3,16p,16g3,16p",
@@ -90,6 +96,15 @@
     ]
   },
   {
+    "name": "Giorno's Theme",
+    "tracks": [
+      "Girono:d=8,o=6,b=140:4f#,f#,4d,d,4p,f,32f,32p,e,32e,32p,p,c#,32c#,32p,d,32d,32p,p,4f#5,f#5,4b5,b5,4p,d65,32d,32p,16p,4p,c#,32c#,32p,a5,16a5,g5",
+      "Girono:d=8,o=5,b=140:4f#,f#,4d,d,d,e,f,16f,e,16e,d,c#,16c#,d,16d,e,4p,p,4d,d,b4,c#,d,16d,e,16e,d,c#,16c#",
+      "Girono:d=8,o=4,b=140:4b#,b#,4a,a,4p,a,32a,32p,16p,a,32a,32p,16p,g#,32g#,32p,16p,g#,32g#,32p,16p,4b,b,4a,a,4p,a,32a,32p,16p,a,32a,32p,16p,g#,32g#,32p,16p,g#,32g#,32p,16p",
+      "Girono:d=8,o=4,b=140:4f#,f#,4f#,f#,4p,f,32f,32p,16p,f,32f,32p,16p,e,32e,32p,16p,e,32e,32p,16p,4f#,f#,p,2p,f,32f,32p,16p,f,32f,32p,16p,e,32e,32p,16p,e,32e,32p,16p"
+    ]
+  },
+  {
     "name": "Hall of Fame - The Script",
     "tracks": [
       "ts_hof_m:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
@@ -124,6 +139,15 @@
     "name": "Mega Man 2 Start Theme",
     "tracks": [
       "start:d=4,o=5,b=150:8p,16g,16p,16g,8f,2g,8p,16a,16p,16a,8g,2a,16a#,16a#,16p,16a#,p,16c#6,16c#6,16p,16c#6,p,16d6,16p,8c6,16a#,16c6,16c#6,32d6,32d#6,32d6,32d#6,32d6,32d#6,d.6"
+    ]
+  },
+  {
+    "name": "Megalovania - Undertale OST",
+    "tracks": [
+      "Megalo:b=280,o=5,d=8: 4d,d6,p,a,4p,g#,p,g,p,4f,d,f,g,4c,d6,p,a,4p,g#,p,g,p,4f,d,f,g,4b,d6,p,a,4p,g#,p,g,p,4f,d,f,g,a#,a#,d6,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=6,d=8:4d,d7,p,a,4p,g#,p,g,p,4f,d,f,g,4c,d7,p,a,4p,g#,p,g,p,4f,d,f,g,4b,d7,p,a,4p,g#,p,g,p,4f,d,f,g,a#,a#,d7,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=4,d=8:4d,d5,p,a,4p,g#,p,g,p,4f,d,f,g,4c,d5,p,a,4p,g#,p,g,p,4f,d,f,g,4b,d5,p,a,4p,g#,p,g,p,4f,d,f,g,a#,a#,d5,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=4,d=8:d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,4e,4p,4e,4p,4e,4p,4e,4p,f,p,f,p,f,p,f,p,f,p,f,p,f,p,f,p,4g,4p,4g,4p,4g,4p,4g,4p"
     ]
   },
   {
@@ -226,6 +250,18 @@
     ]
   },
   {
+    "name": "Star Trek - The Next Generation",
+    "tracks": [
+      "StarTrekTNG:d=32,o=6,b=63:8f#.5,b.5,d#.,8c#.,a.5,g#.,4f#."
+    ]
+  },
+  {
+    "name": "Star Trek - Voyagar",
+    "tracks": [
+      "StarTrekVoyager:d=4,o=6,b=45:8c.,8f.5,8f.,16e.,16c.,16c.,16d.,16d.,16c.,8c.,8a#5,32f.5,32c.,32f.5,8f.5"
+    ]
+  },
+  {
     "name": "Starwars Imperial March",
     "tracks": [
       "imperial1:d=4,o=3,b=450:2g5,2p,2g5,2p,2g5,2p,2d#5,4p,4a#5,2g5,2p,2d#5,4p,4a#5,1g5,2p",
@@ -269,6 +305,12 @@
     "tracks": [
       "le_unama_m:b=150,o=5,d=1:8h4,8c,8e,8g,8h,4a.,2e.,8e,8p,8h,8a,8h,8a,4h,4a,2e.,8e,8p,8h,8a,8h,8a,8h,4a.,2e.,8e,8p,16h,16p,16h,16p,16h,16p,8c6,16h,16p,8h,4a,2e,4e.",
       "le_unama_b:b=150,o=4,d=1:2p,8p,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8c5,8e,8c5,8e,8c5,8e,4c5,2p.,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8a,8e,8a,8e,8a,8e,4a"
+    ]
+  },
+  {
+    "name": "X-Files",
+    "tracks": [
+      "XFiles:b=125,o=5,d=4:e,b,a,b,d6,2b."
     ]
   },
   {
