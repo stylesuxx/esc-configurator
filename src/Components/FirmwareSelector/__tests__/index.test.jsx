@@ -161,7 +161,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/mathiasvr/bluejay/releases/download/v0.10/',
+        value: 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.10/',
         name: 'Version',
       },
     });
