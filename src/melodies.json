@@ -90,6 +90,15 @@
     ]
   },
   {
+    "name": "Giorno's Theme",
+    "tracks": [
+      "Girono:d=8,o=6,b=140:4f#,f#,4d,d,4p,f,32f,32p,e,32e,32p,p,c#,32c#,32p,d,32d,32p,p,4f#5,f#5,4b5,b5,4p,d65,32d,32p,16p,4p,c#,32c#,32p,a5,16a5,g5",
+      "Girono:d=8,o=5,b=140:4f#,f#,4d,d,d,e,f,16f,e,16e,d,c#,16c#,d,16d,e,4p,p,4d,d,b4,c#,d,16d,e,16e,d,c#,16c#",
+      "Girono:d=8,o=4,b=140:4b#,b#,4a,a,4p,a,32a,32p,16p,a,32a,32p,16p,g#,32g#,32p,16p,g#,32g#,32p,16p,4b,b,4a,a,4p,a,32a,32p,16p,a,32a,32p,16p,g#,32g#,32p,16p,g#,32g#,32p,16p",
+      "Girono:d=8,o=4,b=140:4f#,f#,4f#,f#,4p,f,32f,32p,16p,f,32f,32p,16p,e,32e,32p,16p,e,32e,32p,16p,4f#,f#,p,2p,f,32f,32p,16p,f,32f,32p,16p,e,32e,32p,16p,e,32e,32p,16p"
+    ]
+  },
+  {
     "name": "Hall of Fame - The Script",
     "tracks": [
       "ts_hof_m:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
@@ -124,6 +133,15 @@
     "name": "Mega Man 2 Start Theme",
     "tracks": [
       "start:d=4,o=5,b=150:8p,16g,16p,16g,8f,2g,8p,16a,16p,16a,8g,2a,16a#,16a#,16p,16a#,p,16c#6,16c#6,16p,16c#6,p,16d6,16p,8c6,16a#,16c6,16c#6,32d6,32d#6,32d6,32d#6,32d6,32d#6,d.6"
+    ]
+  },
+  {
+    "name": "Megalovania - Undertale OST",
+    "tracks": [
+      "Megalo:b=280,o=5,d=8: 4d,d6,p,a,4p,g#,p,g,p,4f,d,f,g,4c,d6,p,a,4p,g#,p,g,p,4f,d,f,g,4b,d6,p,a,4p,g#,p,g,p,4f,d,f,g,a#,a#,d6,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=6,d=8:4d,d7,p,a,4p,g#,p,g,p,4f,d,f,g,4c,d7,p,a,4p,g#,p,g,p,4f,d,f,g,4b,d7,p,a,4p,g#,p,g,p,4f,d,f,g,a#,a#,d7,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=4,d=8:4d,d5,p,a,4p,g#,p,g,p,4f,d,f,g,4c,d5,p,a,4p,g#,p,g,p,4f,d,f,g,4b,d5,p,a,4p,g#,p,g,p,4f,d,f,g,a#,a#,d5,p,a,4p,g#,p,g,p,4f,d,f,g",
+      "Megalo:b=280,o=4,d=8:d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,4e,4p,4e,4p,4e,4p,4e,4p,f,p,f,p,f,p,f,p,f,p,f,p,f,p,f,p,4g,4p,4g,4p,4g,4p,4g,4p"
     ]
   },
   {
