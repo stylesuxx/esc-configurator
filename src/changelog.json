@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Enhancement: More melodies"
+    ]
+  },
+  {
     "title": "0.25.0",
     "items": [
       "AM32: Add more ESC layouts",
