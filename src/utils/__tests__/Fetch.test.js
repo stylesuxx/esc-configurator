@@ -4,7 +4,7 @@ import {
   fetchJsonCached,
 } from '../Fetch';
 
-const hexFileUrl = 'https://github.com/mathiasvr/bluejay/releases/download/v0.16/S_H_50_24_v0.16.hex';
+const hexFileUrl = 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.16/S_H_50_24_v0.16.hex';
 const hexContent = fs.readFileSync(`${__dirname}/../helpers/__tests__/valid.hex`).toString();
 const jsonApiContent = [
   {
@@ -15,7 +15,7 @@ const jsonApiContent = [
   },
 ];
 
-const jsonApiUrl = 'https://api.github.com/repos/mathiasvr/bluejay/releases';
+const jsonApiUrl = 'https://api.github.com/repos/bird-sanctuary/bluejay/releases';
 const jsonRawUrl = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/package.json';
 const jsonInvalidUrl = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/crowdin.yml';
 const json404Url = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/invalid.file';

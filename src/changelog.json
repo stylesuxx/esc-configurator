@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.26.1",
+    "items": [
+      "Chore: Update Bluejay links to new source"
+    ]
+  },
+  {
     "title": "0.26.0",
     "items": [
       "Chore: Update Bluejay source to fetch files from new organisation",

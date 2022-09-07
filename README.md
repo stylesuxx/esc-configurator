@@ -22,7 +22,7 @@ Currently the SiLab EMF8 MCU's are supported with the following firmware:
 ### SiLab EFM8:
 
 * [BLHeli_S](https://github.com/bitdump/BLHeli)
-* [Bluejay](https://github.com/mathiasvr/bluejay)
+* [Bluejay](https://github.com/bird-sanctuary/bluejay)
 
 ### ARM:
 

@@ -83,10 +83,10 @@ describe('Bluejay', () => {
     const params = {
       escKey: '#S_H_50#',
       version: 'test-melody-pwm',
-      url: 'https://github.com/mathiasvr/bluejay/releases/download/test-melody-pwm/',
+      url: 'https://github.com/bird-sanctuary/bluejay/releases/download/test-melody-pwm/',
     };
     const url = source.getFirmwareUrl(params);
 
-    expect(url).toEqual('https://github.com/mathiasvr/bluejay/releases/download/test-melody-pwm/S_H_50_test-melody-pwm.hex');
+    expect(url).toEqual('https://github.com/bird-sanctuary/bluejay/releases/download/test-melody-pwm/S_H_50_test-melody-pwm.hex');
   });
 });
