@@ -122,7 +122,7 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
 
             <li>
               <a
-                href="https://github.com/mathiasvr/bluejay"
+                href="https://github.com/bird-sanctuary/bluejay"
                 rel="noreferrer"
                 target="_blank"
               >

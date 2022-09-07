@@ -101,7 +101,7 @@
   "escBrakeStrength": "Bremskraft",
   "bluejayTextLine1": "Bluejay ist eine auf BLHeli_S basierende Firmware die bi-direktionales DShot unterstützt - eine gute Wahl falls du RPM Filter verwenden möchtest. Dieses Projekt beschäftigt sich damit BLHeli_S zu vereinfachen und zu verbessern.",
   "bluejayTextLine2": "Als Bonus bekommst du noch einen Startmelodie Editor dazu.",
-  "bluejaySupportedHardwareLine1": "Bitte nimm dir die Zeit und [trage Hardware auf der du Bluejay getestet hast im Wiki ein](https://github.com/mathiasvr/bluejay/wiki/Tested-Hardware).",
+  "bluejaySupportedHardwareLine1": "Bitte nimm dir die Zeit und [trage Hardware auf der du Bluejay getestet hast im Wiki ein](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware).",
   "bluejaySupportedHardwareLine2": "Obwohl Bluejay auf jeder BLHeli kompatiblen Hardware funktionieren sollte, wollen wir dennoch eine Liste pflegen so dass Benutzer nachsehen können ob es mit Ihrer Hardware potentielle Probleme gibt.",
   "blheli32ToAM32Line1": "Die aufstrebende Firmware für ARM-basierte ESCs. Obwohl diese relativ neu in der Szene ist, hat sie viel Interesse, sowohl bei Anwendern als auch bei Herstellern erregt. AM32 ESCs werden in Kürze von diversen Herstellern erhältlich sein.",
   "blheli32ToAM32Line2": "**AM32 kann auf BLHELI_32 ESCs** geflashed werden. Aber du musst zuerst den AM32 Bootloader über [STM32 Cube Programmierer](https://www.st.com/en/development-tools/stm32cubeprog.html#get-software) und ST Link V2 flashen. Der erforderliche Bootloader befindet sich im [AM32 Bootloader Repository](https://github.com/AlkaMotors/AM32_Bootloader_F051/releases).",
