@@ -101,7 +101,7 @@
   "escBrakeStrength": "刹车强度",
   "bluejayTextLine1": "Bluejay 是一个基于 BLHeli_S 固件能够使用双向DShot的新固件 - 如果你想要在你的飞机上运行 RPM 滤波器，那么这是一个很好的选择。该项目还旨在清理和简化最初的 BLHeli_S 源代码。",
   "bluejayTextLine2": "启动音乐编辑器也是它的一个新功能。",
-  "bluejaySupportedHardwareLine1": "Please take the time to help us document hardware on which you have successfully flashed and tested Bluejay by [adding it to the Wiki](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware).",
+  "bluejaySupportedHardwareLine1": "请花一点时间来帮助我们将您的成功刷到 Bluejay 固件的硬件 [添加到 Wiki 上](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware)。",
   "bluejaySupportedHardwareLine2": "尽管它理论上能够兼容所有 BLHeli 的硬件，但我们仍然想保留一个列表。这样人们就可以确信，他们手中的硬件的确能够在 Bluejay 上正常工作。",
   "blheli32ToAM32Line1": "基于 ARM 的 ESC 的固件。虽然目前其较新，但用户和制造商都对此很感兴趣。预装 AM32 固件的 ESC 将很快可以从不同的制造商那里买到。",
   "blheli32ToAM32Line2": "**可以在 BLHeli_32 ESC 上刷入 AM32 固件**。 但是，您必须先通过 [STM32 Cube 程序](https://www.st.com/en/development-tools/stm32cubeprog.html#get-software) 和 STLink V2 编程适配器刷入 AM32 引导程序。所需要的引导程序可以在 [AM32 bootloader 仓库](https://github.com/AlkaMotors/AM32_Bootloader_F051/releases)中找到。",
