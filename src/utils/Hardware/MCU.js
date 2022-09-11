@@ -6,7 +6,6 @@ import { MODES } from '../FourWayConstants';
 import { findMCU } from '../helpers/General';
 
 import {
-  am32Source,
   blheliSource,
   blheliSilabsSource,
 } from '../../sources';
