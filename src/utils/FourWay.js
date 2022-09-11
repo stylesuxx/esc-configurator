@@ -30,7 +30,7 @@ import {
   isValidFlash,
 } from './helpers/General';
 
-import MCU from './helpers/MCU';
+import MCU from './Hardware/MCU';
 
 import {
   ACK,
@@ -307,12 +307,15 @@ class FourWay {
         let defaultSettings = blheliSettingsDescriptions.DEFAULTS;
         let settingsArray = null;
 
+        const mcu = new MCU(interfaceMode, flash.meta.signature);
+        let eepromOffset = mcu.getEepromOffset();
+
         let displayName = 'UNKNOWN';
         let firmwareName = 'UNKNOWN';
 
         if (isSiLabs) {
           layoutSize = blheliEeprom.LAYOUT_SIZE;
-          settingsArray = (await this.read(blheliEeprom.SILABS.EEPROM_OFFSET, layoutSize)).params;
+          settingsArray = (await this.read(eepromOffset, layoutSize)).params;
         } else if (isArm) {
           validFirmwareNames = am32Eeprom.NAMES;
           layoutSize = am32Eeprom.LAYOUT_SIZE;
@@ -341,7 +344,7 @@ class FourWay {
           newLayout = bluejayEeprom.LAYOUT;
           layoutSize = bluejayEeprom.LAYOUT_SIZE;
           defaultSettings = bluejaySettingsDescriptions.DEFAULTS;
-          settingsArray = (await this.read(bluejayEeprom.EEPROM_OFFSET, layoutSize)).params;
+          settingsArray = (await this.read(eepromOffset, layoutSize)).params;
         }
 
         // Try to guess firmware type if it was not properly set in the EEPROM
@@ -614,9 +617,9 @@ class FourWay {
       } else {
         let readbackSettings = null;
         if(esc.isSiLabs) {
-          const mcu = esc.settings.MCU;
-          if (mcu && mcu.startsWith('#BLHELI$EFM8')) {
-            const CODE_LOCK_BYTE_OFFSET = mcu.endsWith('B21#') ? 0xFBFF : 0x1FFF;
+          const mcuName = esc.settings.MCU;
+          if (mcuName && mcuName.startsWith('#BLHELI$EFM8')) {
+            const CODE_LOCK_BYTE_OFFSET = mcuName.endsWith('B21#') ? 0xFBFF : 0x1FFF;
             const codeLockByte = (await this.read(CODE_LOCK_BYTE_OFFSET, 1)).params[0];
             if (codeLockByte !== 0xFF) {
               this.addLogMessage('escLocked', {
@@ -626,9 +629,13 @@ class FourWay {
             }
           }
 
-          await this.pageErase(blheliEeprom.EEPROM_OFFSET / blheliEeprom.PAGE_SIZE);
-          await this.write(blheliEeprom.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(blheliEeprom.EEPROM_OFFSET, esc.layoutSize)).params;
+          const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
+          const eepromOffset = mcu.getEepromOffset();
+          const pageSize = mcu.getPageSize();
+
+          await this.pageErase(eepromOffset / pageSize);
+          await this.write(eepromOffset, newSettingsArray);
+          readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else if (esc.isArm) {
           await this.write(am32Eeprom.EEPROM_OFFSET, newSettingsArray);
           readbackSettings = (await this.read(am32Eeprom.EEPROM_OFFSET, esc.layoutSize)).params;
@@ -780,7 +787,7 @@ class FourWay {
       return newEsc;
     };
 
-    const flashSiLabs = async(flash) => {
+    const flashSiLabs = async(flash, mcu) => {
       /**
        * The size of the Flash is larger than the pages we write.
        * that is why we need to calculate the total Bytes by page size
@@ -789,10 +796,13 @@ class FourWay {
        * We then double that since we are also tracking the bytes read back
        * and update the progress bar accordingly.
        */
-      this.totalBytes = blheliEeprom.PAGE_SIZE * 14 * 2;
+      const eepromOffset = mcu.getEepromOffset();
+      const pageSize = mcu.getPageSize();
+
+      this.totalBytes = pageSize * 14 * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(blheliEeprom.SILABS.EEPROM_OFFSET, blheliEeprom.LAYOUT_SIZE);
+      const message = await this.read(eepromOffset, blheliEeprom.LAYOUT_SIZE);
 
       // checkESCAndMCU
       const escSettingArrayTmp = message.params;
@@ -800,7 +810,7 @@ class FourWay {
         blheliEeprom.LAYOUT.LAYOUT.offset,
         blheliEeprom.LAYOUT.LAYOUT.offset + blheliEeprom.LAYOUT.LAYOUT.size);
 
-      const settings_image = flash.subarray(blheliEeprom.EEPROM_OFFSET);
+      const settings_image = flash.subarray(eepromOffset);
       const fw_layout = settings_image.subarray(
         blheliEeprom.LAYOUT.LAYOUT.offset,
         blheliEeprom.LAYOUT.LAYOUT.offset + blheliEeprom.LAYOUT.LAYOUT.size);
@@ -838,7 +848,7 @@ class FourWay {
       // Erase 0x0D and only write **FLASH*FAILED** as ESC NAME.
       // This will be overwritten in case of sussessfull flash.
       await this.erasePage(0x0D);
-      await this.writeEEpromSafeguard(escSettingArrayTmp);
+      await this.writeEEpromSafeguard(escSettingArrayTmp, eepromOffset);
 
       // write `LJMP bootloader` to avoid bricking
       await this.writeBootoaderFailsafe();
@@ -846,22 +856,22 @@ class FourWay {
       // Skipp first two pages with bootloader failsafe
       // 0x02 - 0x0D: erase, write, verify
       await this.erasePages(0x02, 0x0D);
-      await this.writePages(0x02, 0x0D, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPages(0x02, 0x0D, blheliEeprom.PAGE_SIZE, flash);
+      await this.writePages(0x02, 0x0D, pageSize, flash);
+      await this.verifyPages(0x02, 0x0D, pageSize, flash);
 
       // write & verify first page
-      await this.writePage(0x00, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPage(0x00, blheliEeprom.PAGE_SIZE, flash);
+      await this.writePage(0x00, pageSize, flash);
+      await this.verifyPage(0x00, pageSize, flash);
 
       // Second page: erase, write, verify
       await this.erasePage(0x01);
-      await this.writePage(0x01, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPage(0x01, blheliEeprom.PAGE_SIZE, flash);
+      await this.writePage(0x01, pageSize, flash);
+      await this.verifyPage(0x01, pageSize, flash);
 
       // 14th page: erase, write, verify
       await this.erasePage(0x0D);
-      await this.writePage(0x0D, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPage(0x0D, blheliEeprom.PAGE_SIZE, flash);
+      await this.writePage(0x0D, pageSize, flash);
+      await this.verifyPage(0x0D, pageSize, flash);
     };
 
     const flashArm = async(flash) => {
@@ -895,7 +905,10 @@ class FourWay {
 
       switch (interfaceMode) {
         case MODES.SiLBLB: {
-          await flashSiLabs(flash);
+          const signature = (message.params[1] << 8) | message.params[0];
+          const mcu = new MCU(interfaceMode, signature);
+
+          await flashSiLabs(flash, mcu);
         } break;
 
         case MODES.ARMBLB: {
@@ -968,12 +981,13 @@ class FourWay {
         const flash = Flash.fillImage(parsed, flashSize, flashOffset);
 
         // Check pseudo-eeprom page for BLHELI signature
-        const mcu = Convert.bufferToAscii(
-          flash.subarray(blheliEeprom.SILABS.EEPROM_OFFSET)
+        const eepromOffset = mcu.getEepromOffset();
+        const mcuType = Convert.bufferToAscii(
+          flash.subarray(eepromOffset)
             .subarray(blheliEeprom.LAYOUT.MCU.offset)
             .subarray(0, blheliEeprom.LAYOUT.MCU.size));
 
-        if(!isValidFlash(mcu, flash)) {
+        if(!isValidFlash(mcuType, flash)) {
           throw new InvalidHexFileError('Invalid hex file');
         }
 
@@ -1039,9 +1053,9 @@ class FourWay {
     }
   }
 
-  async writeEEpromSafeguard(settings) {
+  async writeEEpromSafeguard(settings, eepromOffset) {
     settings.set(Convert.asciiToBuffer('**FLASH*FAILED**'), blheliEeprom.LAYOUT.NAME.offset);
-    const response = await this.write(blheliEeprom.EEPROM_OFFSET, settings);
+    const response = await this.write(eepromOffset, settings);
 
     const verifySafeguard = async (resolve, reject) => {
       const message = await this.read(response.address, blheliEeprom.LAYOUT_SIZE);

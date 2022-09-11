@@ -3,7 +3,7 @@ import {
   UnknownMcuError,
 } from '../Errors';
 import { MODES } from '../FourWayConstants';
-import { findMCU } from './General';
+import { findMCU } from '../helpers/General';
 
 import {
   am32Source,
@@ -59,6 +59,22 @@ class MCU {
         return this.mcu.flash_size;
       }
     }
+  }
+
+  getEepromOffset() {
+    if(this.mcu.eeprom_offset) {
+      return parseInt(this.mcu.eeprom_offset, 16);
+    }
+
+    return 0;
+  }
+
+  getPageSize() {
+    if(this.mcu.page_size) {
+      return this.mcu.page_size;
+    }
+
+    return 512;
   }
 
   getFlashOffset() {
