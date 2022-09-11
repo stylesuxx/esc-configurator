@@ -1,34 +1,10 @@
 const LAYOUT_SIZE = 0x70;
 
-/*
- * const MIN_SUPPORTED_LAYOUT_REVISION = 0x13;
- * const BLHELI_S_MIN_LAYOUT_REVISION = 0x20;
- */
-
 const MODES = {
   MAIN: 0xA55A,
   TAIL: 0x5AA5,
   MULTI: 0x55AA,
 };
-
-const SILABS = {
-  BOOTLOADER_ADDRESS: 0x1C00,
-  BOOTLOADER_SIZE: 0x0200,
-  FLASH_SIZE: 0x2000,
-  ADDRESS_SPACE_SIZE: 0x1C00,
-};
-
-/*
-const ATMEL = {
-  BLB_SIZE: 0x0200,
-  SK_SIZE: 0x0400,
-  BLB_ADDRESS_8: 0x1E00,
-  BLB_ADDRESS_16: 0x3E00,
-  SK_ADDRESS_8: 0x1C00,
-  SK_ADDRESS_16: 0x3C00,
-  EEPROM_SIZE: 0x0200,
-};
-*/
 
 const LAYOUT = {
   MAIN_REVISION: {
@@ -211,7 +187,6 @@ const EEPROM = {
   LAYOUT_SIZE,
   MODES,
   NAMES: [''],
-  SILABS,
 };
 
 export default EEPROM;

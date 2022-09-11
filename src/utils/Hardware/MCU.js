@@ -48,17 +48,11 @@ class MCU {
   }
 
   getFlashSize() {
-    switch(this.interfaceMode) {
-      case MODES.SiLC2: {
-        const blheliEeprom = blheliSource.getEeprom();
-
-        return blheliEeprom.SILABS.FLASH_SIZE;
-      }
-
-      default: {
-        return this.mcu.flash_size;
-      }
+    if(this.mcu.flash_size) {
+      return this.mcu.flash_size;
     }
+
+    return 0;
   }
 
   getEepromOffset() {
