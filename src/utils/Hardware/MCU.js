@@ -9,9 +9,9 @@ import {
   am32Source,
   blheliSource,
   blheliSilabsSource,
-  blheliSSource,
-  bluejaySource,
 } from '../../sources';
+
+import Silabs from "./Silabs";
 
 class MCU {
   constructor(interfaceMode, signature) {
@@ -20,8 +20,7 @@ class MCU {
       switch(interfaceMode) {
         case MODES.SiLBLB: {
           return (
-            findMCU(signature, bluejaySource.getMcus()) ||
-            findMCU(signature, blheliSSource.getMcus()) ||
+            Silabs.getMcu(signature) ||
             findMCU(signature, blheliSilabsSource.getMcus())
           );
         }
