@@ -11,6 +11,7 @@ import {
   blheliSilabsSource,
 } from '../../sources';
 
+import Arm from "./Arm";
 import Silabs from "./Silabs";
 
 class MCU {
@@ -32,7 +33,7 @@ class MCU {
         }
 
         case MODES.ARMBLB: {
-          return findMCU(signature, am32Source.getMcus());
+          return Arm.getMcu(signature);
         }
 
         default: {
