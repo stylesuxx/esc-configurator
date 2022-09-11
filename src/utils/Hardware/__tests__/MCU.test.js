@@ -26,10 +26,14 @@ describe('MCU', () => {
     const flashSize = mcu.getFlashSize();
     const flashOffset = mcu.getFlashOffset();
     const firmwareStart = mcu.getFirmwareStart();
+    const eepromOffset = mcu.getEepromOffset();
+    const pageSize = mcu.getPageSize();
 
     expect(flashSize).toEqual(8192);
     expect(flashOffset).toEqual(0);
     expect(firmwareStart).toEqual(0);
+    expect(eepromOffset).toEqual(6656);
+    expect(pageSize).toEqual(512);
   });
 
   it('should return details with BLHeli based MCU', () => {
@@ -39,10 +43,14 @@ describe('MCU', () => {
     const flashSize = mcu.getFlashSize();
     const flashOffset = mcu.getFlashOffset();
     const firmwareStart = mcu.getFirmwareStart();
+    const eepromOffset = mcu.getEepromOffset();
+    const pageSize = mcu.getPageSize();
 
     expect(flashSize).toEqual(8192);
     expect(flashOffset).toEqual(0);
     expect(firmwareStart).toEqual(0);
+    expect(eepromOffset).toEqual(0);
+    expect(pageSize).toEqual(32);
   });
 
   it('should return details with AM32 based MCU', () => {
