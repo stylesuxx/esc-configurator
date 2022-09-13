@@ -8,6 +8,7 @@ const mcus = {
     "flash_size": 8192,
     "bootloader_address": "0x1C00",
     "eeprom_offset": "0x1A00",
+    "lockbyte_address": "0x1FFF",
   },
   "E8B2": {
     "name": "EFM8BB21x",
@@ -16,6 +17,7 @@ const mcus = {
     "flash_size": 8192,
     "bootloader_address": "0x1C00",
     "eeprom_offset": "0x1A00",
+    "lockbyte_address": "0xFBFF",
   },
   "E8B5": {
     "name": "EFM8BB51x",
@@ -24,6 +26,7 @@ const mcus = {
     "flash_size": 63485,
     "bootloader_address": "0xF000",
     "eeprom_offset": "0x3000",
+    "lockbyte_address": "0xF7FF",
   },
 };
 

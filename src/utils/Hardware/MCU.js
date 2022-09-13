@@ -93,6 +93,14 @@ class MCU {
 
     return 0;
   }
+
+  geLockbyteAddress() {
+    if(this.mcu.lockbyte_address) {
+      return parseInt(this.mcu.lockbyte_address, 16);
+    }
+
+    return 0;
+  }
 }
 
 export default MCU;
