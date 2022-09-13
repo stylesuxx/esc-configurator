@@ -70,6 +70,14 @@ class MCU {
     return 512;
   }
 
+  getBootloaderAddress() {
+    if(this.mcu.bootloader_address) {
+      return parseInt(this.mcu.bootloader_address, 16);
+    }
+
+    return 0;
+  }
+
   getFlashOffset() {
     if(this.mcu.flash_offset) {
       return parseInt(this.mcu.flash_offset, 16);
