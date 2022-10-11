@@ -94,7 +94,7 @@ class MCU {
     return 0;
   }
 
-  geLockbyteAddress() {
+  getLockByteAddress() {
     if(this.mcu.lockbyte_address) {
       return parseInt(this.mcu.lockbyte_address, 16);
     }
