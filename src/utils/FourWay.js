@@ -686,8 +686,19 @@ class FourWay {
     this.progressCallback = cbProgress;
 
     const mcu = new MCU(interfaceMode, signature);
-    const flashSize = mcu.getFlashSize();
+    let flashSize = mcu.getFlashSize();
     const firmwareStart = mcu.getFirmwareStart();
+    const chunkSize = 0x80;
+
+    /**
+     * This cutoff is needed for dumping the firmware on BLHeli_S based
+     * firmware since the bootloader is not (yet) able to read above
+     * this address space.
+     */
+    const hardCutoff = 0x3800;
+    if(mcu.name.startsWith("EFM8BB") && flashSize > hardCutoff) {
+      flashSize = hardCutoff;
+    }
 
     this.totalBytes = flashSize - firmwareStart;
     this.bytesWritten = 0;
@@ -696,12 +707,12 @@ class FourWay {
     let pos = 0;
 
     await this.initFlash(target);
-    for (let address = firmwareStart; address < flashSize; address += 0x80) {
-      const currentData = (await this.read(address, 0x80)).params;
+    for (let address = firmwareStart; address < flashSize; address += chunkSize) {
+      const currentData = (await this.read(address, chunkSize)).params;
       data.set(currentData, pos);
-      pos += 0x80;
+      pos += chunkSize;
 
-      this.bytesWritten += 0x80;
+      this.bytesWritten += chunkSize;
       this.progressCallback((this.bytesWritten / this.totalBytes) * 100);
     }
 
@@ -867,7 +878,7 @@ class FourWay {
         // write `LJMP bootloader` to avoid bricking
         await this.writeBootoaderFailsafe(pageSize, bootloaderAddress);
 
-        // Skipp first two pages with bootloader failsafe
+        // Skip first two pages with bootloader failsafe
         // 0x02 - 0x0D: erase, write, verify
         await this.erasePages(0x02, 0x0D);
         await this.writePages(0x02, 0x0D, pageSize, flash);
