@@ -620,8 +620,8 @@ class FourWay {
           const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
           const eepromOffset = mcu.getEepromOffset();
           const pageSize = mcu.getPageSize();
-          const lockbyteAddress = mcu.getBootloaderAddress();
-          console.log(lockbyteAddress);
+          const lockbyteAddress = mcu.getLockByteAddress();
+
           let pageMultiplier = 1;
           if(pageSize !== 512) {
             pageMultiplier = 4;
