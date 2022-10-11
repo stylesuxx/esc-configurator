@@ -1,5 +1,10 @@
 [
   {
+    "name":"16.7 [Official] - latest master",
+    "url":"https://raw.githubusercontent.com/bitdump/BLHeli/master/BLHeli_S SiLabs/Hex files/{0}_REV16_7.HEX",
+    "key":"16.7"
+  },
+  {
     "name":"16.71 [Official, beta]",
     "url":"https://raw.githubusercontent.com/bitdump/BLHeli/b73b9b91564fb1104eaf26261c02e38d5eeab68f/BLHeli_S SiLabs/Hex files  16.71/{0}_REV16_71.HEX",
     "key":"16.71"
