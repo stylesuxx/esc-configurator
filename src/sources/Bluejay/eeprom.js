@@ -4,6 +4,7 @@ const NAMES = [
   'Bluejay',
   'Bluejay (BETA)',
   'Bluejay (TEST)',
+  'Bluejay (.*)',
 ];
 
 const LAYOUT = {

@@ -47,11 +47,7 @@ class MCU {
   }
 
   getFlashSize() {
-    if(this.mcu.flash_size) {
-      return this.mcu.flash_size;
-    }
-
-    return 0;
+    return this.mcu.flash_size;
   }
 
   getEepromOffset() {
@@ -71,11 +67,7 @@ class MCU {
   }
 
   getBootloaderAddress() {
-    if(this.mcu.bootloader_address) {
-      return parseInt(this.mcu.bootloader_address, 16);
-    }
-
-    return 0;
+    return parseInt(this.mcu.bootloader_address, 16);
   }
 
   getFlashOffset() {
