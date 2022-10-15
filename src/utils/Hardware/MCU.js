@@ -50,32 +50,24 @@ class MCU {
     return this.mcu.flash_size;
   }
 
-  getEepromOffset() {
-    if(this.mcu.eeprom_offset) {
-      return parseInt(this.mcu.eeprom_offset, 16);
-    }
+  getFlashOffset() {
+    return parseInt(this.mcu.flash_offset, 16);
+  }
 
-    return 0;
+  getEepromOffset() {
+    return parseInt(this.mcu.eeprom_offset, 16);
   }
 
   getPageSize() {
-    if(this.mcu.page_size) {
-      return this.mcu.page_size;
-    }
-
-    return 512;
+    return this.mcu.page_size;
   }
 
   getBootloaderAddress() {
-    return parseInt(this.mcu.bootloader_address, 16);
-  }
-
-  getFlashOffset() {
-    if(this.mcu.flash_offset) {
-      return parseInt(this.mcu.flash_offset, 16);
+    if(this.mcu.bootloader_address) {
+      return parseInt(this.mcu.bootloader_address, 16);
     }
 
-    return 0;
+    throw new Error("MCU does not have bootloader address");
   }
 
   getFirmwareStart() {
@@ -83,7 +75,7 @@ class MCU {
       return parseInt(this.mcu.firmware_start, 16);
     }
 
-    return 0;
+    throw new Error("MCU does not have firmware start address");
   }
 
   getLockByteAddress() {
@@ -91,7 +83,7 @@ class MCU {
       return parseInt(this.mcu.lockbyte_address, 16);
     }
 
-    return 0;
+    throw new Error("MCU does not have lock byte address");
   }
 }
 
