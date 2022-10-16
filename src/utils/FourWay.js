@@ -321,7 +321,7 @@ class FourWay {
           layoutSize = am32Eeprom.LAYOUT_SIZE;
           layout = am32Eeprom.LAYOUT;
           defaultSettings = am32SettingsDescriptions.DEFAULTS;
-          settingsArray = (await this.read(am32Eeprom.EEPROM_OFFSET, layoutSize)).params;
+          settingsArray = (await this.read(eepromOffset, layoutSize)).params;
         } else {
           throw new UnknownPlatformError('Neither SiLabs nor Arm');
         }
@@ -615,11 +615,13 @@ class FourWay {
       if(compare(newSettingsArray, esc.settingsArray)) {
         this.addLogMessage('escSettingsNoChange', { index: target + 1 });
       } else {
+        const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
+        const eepromOffset = mcu.getEepromOffset();
+        const pageSize = mcu.getPageSize();
+
         let readbackSettings = null;
+
         if(esc.isSiLabs) {
-          const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
-          const eepromOffset = mcu.getEepromOffset();
-          const pageSize = mcu.getPageSize();
           const lockbyteAddress = mcu.getLockByteAddress();
 
           let pageMultiplier = 1;
@@ -642,8 +644,8 @@ class FourWay {
           await this.write(eepromOffset, newSettingsArray);
           readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else if (esc.isArm) {
-          await this.write(am32Eeprom.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(am32Eeprom.EEPROM_OFFSET, esc.layoutSize)).params;
+          await this.write(eepromOffset, newSettingsArray);
+          readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else {
           // write only changed bytes for Atmel
           for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
@@ -931,27 +933,31 @@ class FourWay {
       }
     };
 
-    const flashArm = async(flash) => {
-      this.totalBytes = (flash.byteLength - (flash.firmwareStart ? flash.firmwareStart : 0)) * 2;
+    const flashArm = async(flash, mcu) => {
+      const eepromOffset = mcu.getEepromOffset();
+      const pageSize = mcu.getPageSize();
+      const firmwareStart = mcu.getFirmwareStart();
+
+      this.totalBytes = (flash.byteLength - firmwareStart) * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(am32Eeprom.EEPROM_OFFSET, am32Eeprom.LAYOUT_SIZE);
+      const message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
       const originalSettings = message.params;
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
       eepromInfo.set([originalSettings[1], originalSettings[2]], 1);
       eepromInfo.set(Convert.asciiToBuffer('FLASH FAIL  '), 5);
 
-      await this.write(am32Eeprom.EEPROM_OFFSET, eepromInfo);
+      await this.write(eepromOffset, eepromInfo);
 
-      await this.writePages(0x04, 0x40, am32Eeprom.PAGE_SIZE, flash);
-      await this.verifyPages(0x04, 0x40, am32Eeprom.PAGE_SIZE, flash);
+      await this.writePages(0x04, 0x40, pageSize, flash);
+      await this.verifyPages(0x04, 0x40, pageSize, flash);
 
       originalSettings[0] = 0x01;
       originalSettings.fill(0x00, 3, 5);
       originalSettings.set(Convert.asciiToBuffer('NOT READY   '), 5);
 
-      await this.write(am32Eeprom.EEPROM_OFFSET, originalSettings);
+      await this.write(eepromOffset, originalSettings);
     };
 
     const flashTarget = async(target, flash) => {
@@ -959,17 +965,16 @@ class FourWay {
 
       const message = await this.initFlash(target);
       const interfaceMode = message.params[3];
+      const signature = (message.params[1] << 8) | message.params[0];
+      const mcu = new MCU(interfaceMode, signature);
 
       switch (interfaceMode) {
         case MODES.SiLBLB: {
-          const signature = (message.params[1] << 8) | message.params[0];
-          const mcu = new MCU(interfaceMode, signature);
-
           await flashSiLabs(flash, mcu);
         } break;
 
         case MODES.ARMBLB: {
-          await flashArm(flash);
+          await flashArm(flash, mcu);
 
           // Reset after flashing to update name and settings
           await this.reset(target);
