@@ -68,13 +68,11 @@ describe('MCU', () => {
     const flashSize = mcu.getFlashSize();
     const flashOffset = mcu.getFlashOffset();
     const firmwareStart = mcu.getFirmwareStart();
-    const eepromOffset = mcu.getEepromOffset();
     const pageSize = mcu.getPageSize();
 
     expect(flashSize).toEqual(8192);
     expect(flashOffset).toEqual(0);
     expect(firmwareStart).toEqual(0);
-    expect(eepromOffset).toEqual(0);
     expect(pageSize).toEqual(32);
   });
 

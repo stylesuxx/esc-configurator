@@ -1,9 +1,41 @@
 {
   "mcus": [
-    { "name": "ATmega8(A)", "signature": "0x9307", "page_size": 32, "flash_size": 8192, "eeprom_size": 512 },
-    { "name": "ATmega88(A)", "signature": "0x930A", "page_size": 32, "flash_size": 8192, "eeprom_size": 512 },
-    { "name": "ATmega88P(A)", "signature": "0x930F", "page_size": 32, "flash_size": 8192, "eeprom_size": 512 },
-    { "name": "ATmega168P(A)", "signature": "0x940B", "page_size": 64, "flash_size": 16384, "eeprom_size": 512 }
+    {
+      "name": "ATmega8(A)",
+      "signature": "0x9307",
+      "firmware_start": "0x00",
+      "flash_offset": "0x00",
+      "page_size": 32,
+      "flash_size": 8192,
+      "eeprom_size": 512
+    },
+    {
+      "name": "ATmega88(A)",
+      "signature": "0x930A",
+      "firmware_start": "0x00",
+      "flash_offset": "0x00",
+      "page_size": 32,
+      "flash_size": 8192,
+      "eeprom_size": 512
+    },
+    {
+      "name": "ATmega88P(A)",
+      "signature": "0x930F",
+      "firmware_start": "0x00",
+      "flash_offset": "0x00",
+      "page_size": 32,
+      "flash_size": 8192,
+      "eeprom_size": 512
+    },
+    {
+      "name": "ATmega168P(A)",
+      "signature": "0x940B",
+      "firmware_start": "0x00",
+      "flash_offset": "0x00",
+      "page_size": 64,
+      "flash_size": 16384,
+      "eeprom_size": 512
+    }
   ],
   "layouts": {
     "#AFRO_12A#":       { "name": "Afro 12A",                   "damped_enabled": 1 },
