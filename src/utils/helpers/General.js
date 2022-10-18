@@ -25,14 +25,15 @@ function isValidFlash(mcu, flash) {
   // Check instruction at the start of address space
   const firstBytes = flash.subarray(0, 3);
   const ljmpReset = new Uint8Array([0x02, 0x19, 0xFD]);
+  const ljmpResetBB51 = new Uint8Array([0x02, 0x2F, 0xFD]);
   const ljmpCheckBootload = new Uint8Array([0x02, 0x19, 0xE0]);
 
   return !(
-    !(mcu.includes('#BLHELI#') ||
-    mcu.includes('#BLHELI$')) ||
+    !(mcu.includes('#BLHELI#') || mcu.includes('#BLHELI$')) ||
     (
       !compare(firstBytes, ljmpReset) &&
-      !compare(firstBytes, ljmpCheckBootload)
+      !compare(firstBytes, ljmpCheckBootload) &&
+      !compare(firstBytes, ljmpResetBB51)
     )
   );
 }

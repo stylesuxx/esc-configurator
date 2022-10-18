@@ -3,15 +3,15 @@ import {
   UnknownMcuError,
 } from '../Errors';
 import { MODES } from '../FourWayConstants';
-import { findMCU } from './General';
+import { findMCU } from '../helpers/General';
 
 import {
-  am32Source,
   blheliSource,
   blheliSilabsSource,
-  blheliSSource,
-  bluejaySource,
 } from '../../sources';
+
+import Arm from "./Arm";
+import Silabs from "./Silabs";
 
 class MCU {
   constructor(interfaceMode, signature) {
@@ -20,8 +20,7 @@ class MCU {
       switch(interfaceMode) {
         case MODES.SiLBLB: {
           return (
-            findMCU(signature, bluejaySource.getMcus()) ||
-            findMCU(signature, blheliSSource.getMcus()) ||
+            Silabs.getMcu(signature) ||
             findMCU(signature, blheliSilabsSource.getMcus())
           );
         }
@@ -33,7 +32,7 @@ class MCU {
         }
 
         case MODES.ARMBLB: {
-          return findMCU(signature, am32Source.getMcus());
+          return Arm.getMcu(signature);
         }
 
         default: {
@@ -48,25 +47,27 @@ class MCU {
   }
 
   getFlashSize() {
-    switch(this.interfaceMode) {
-      case MODES.SiLC2: {
-        const blheliEeprom = blheliSource.getEeprom();
-
-        return blheliEeprom.SILABS.FLASH_SIZE;
-      }
-
-      default: {
-        return this.mcu.flash_size;
-      }
-    }
+    return this.mcu.flash_size;
   }
 
   getFlashOffset() {
-    if(this.mcu.flash_offset) {
-      return parseInt(this.mcu.flash_offset, 16);
+    return parseInt(this.mcu.flash_offset, 16);
+  }
+
+  getEepromOffset() {
+    return parseInt(this.mcu.eeprom_offset, 16);
+  }
+
+  getPageSize() {
+    return this.mcu.page_size;
+  }
+
+  getBootloaderAddress() {
+    if(this.mcu.bootloader_address) {
+      return parseInt(this.mcu.bootloader_address, 16);
     }
 
-    return 0;
+    throw new Error("MCU does not have bootloader address");
   }
 
   getFirmwareStart() {
@@ -74,7 +75,15 @@ class MCU {
       return parseInt(this.mcu.firmware_start, 16);
     }
 
-    return 0;
+    throw new Error("MCU does not have firmware start address");
+  }
+
+  getLockByteAddress() {
+    if(this.mcu.lockbyte_address) {
+      return parseInt(this.mcu.lockbyte_address, 16);
+    }
+
+    throw new Error("MCU does not have lock byte address");
   }
 }
 

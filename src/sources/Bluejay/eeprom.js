@@ -1,11 +1,10 @@
-const EEPROM_OFFSET = 0x1A00;
-const PAGE_SIZE = 0x0200;
 const LAYOUT_SIZE = 0xFF;
 
 const NAMES = [
   'Bluejay',
   'Bluejay (BETA)',
   'Bluejay (TEST)',
+  'Bluejay (.*)',
 ];
 
 const LAYOUT = {
@@ -195,11 +194,9 @@ const LAYOUT = {
 };
 
 const EEPROM = {
-  EEPROM_OFFSET,
   LAYOUT,
   LAYOUT_SIZE,
   NAMES,
-  PAGE_SIZE,
 };
 
 export default EEPROM;
