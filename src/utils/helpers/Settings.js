@@ -1,4 +1,4 @@
-import { blheliSource } from '../../sources';
+import { blheliAtmelSource as blheliSource } from '../../sources';
 
 const blheliEeprom = blheliSource.getEeprom();
 

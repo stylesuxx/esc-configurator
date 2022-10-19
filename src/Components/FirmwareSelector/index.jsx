@@ -12,7 +12,7 @@ import {
   getSupportedSources,
 } from '../../utils/helpers/General';
 
-import { blheliSource } from '../../sources';
+import { blheliAtmelSource as blheliSource } from '../../sources';
 import sources from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';

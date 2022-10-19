@@ -1,4 +1,4 @@
-import source from '../';
+import { source } from '../';
 
 const SETTINGS_DESCRIPTIONS = source.getSettingsDescriptions();
 

@@ -1,8 +1,8 @@
 import Convert from '../Convert';
-import config from '../../../sources/Bluejay';
+import { source } from '../../../sources/Bluejay';
 import bluejaySettingsArrayObject from './bluejaySettingsArray.json';
 
-const EEPROM = config.getEeprom();
+const EEPROM = source.getEeprom();
 
 // Melody missing last byte
 const settingsArray = new Uint8Array(Object.values(bluejaySettingsArrayObject));

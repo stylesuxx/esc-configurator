@@ -12,10 +12,10 @@ import {
 
 import {
   am32Source,
-  blheliSource,
-  blheliSilabsSource,
+  blheliAtmelSource as blheliSource,
   blheliSSource,
   bluejaySource,
+  classes as sources,
 } from '../sources';
 
 import {
@@ -290,61 +290,55 @@ class FourWay {
       flash.meta = {};
 
       try {
-        const interfaceMode = flash.params[3];
-        flash.meta.input = flash.params[2];
         flash.meta.signature = (flash.params[1] << 8) | flash.params[0];
-        flash.meta.interfaceMode = interfaceMode;
+        flash.meta.input = flash.params[2];
+        flash.meta.interfaceMode = flash.params[3];
         flash.meta.available = true;
+        flash.supported = true;
 
-        const isAtmel = ATMEL_MODES.includes(interfaceMode);
-        const isSiLabs = SILABS_MODES.includes(interfaceMode);
-        const isArm = interfaceMode === MODES.ARMBLB;
+        flash.isAtmel = ATMEL_MODES.includes(flash.meta.interfaceMode);
+        flash.isSiLabs = SILABS_MODES.includes(flash.meta.interfaceMode);
+        flash.isArm = flash.meta.interfaceMode === MODES.ARMBLB;
+
+        const mcu = new MCU(flash.meta.interfaceMode, flash.meta.signature);
+        const eepromOffset = mcu.getEepromOffset();
 
         // Assume BLHeli as default
-        let validFirmwareNames = blheliEeprom.NAMES;
-        let layoutSize = blheliEeprom.LAYOUT_SIZE;
-        let layout = blheliEeprom.LAYOUT;
-        let defaultSettings = blheliSettingsDescriptions.DEFAULTS;
-        let settingsArray = null;
-
-        const mcu = new MCU(interfaceMode, flash.meta.signature);
-        let eepromOffset = mcu.getEepromOffset();
+        let source = blheliSSource;
 
         let displayName = 'UNKNOWN';
         let firmwareName = 'UNKNOWN';
 
-        if (isSiLabs) {
-          layoutSize = blheliEeprom.LAYOUT_SIZE;
-          settingsArray = (await this.read(eepromOffset, layoutSize)).params;
-        } else if (isArm) {
-          validFirmwareNames = am32Eeprom.NAMES;
-          layoutSize = am32Eeprom.LAYOUT_SIZE;
-          layout = am32Eeprom.LAYOUT;
-          defaultSettings = am32SettingsDescriptions.DEFAULTS;
-          settingsArray = (await this.read(eepromOffset, layoutSize)).params;
+        if (flash.isSiLabs) {
+          source = blheliSSource;
+
+          flash.layout = source.getLayout();
+          flash.layoutSize = source.getLayoutSize();
+          flash.settingsArray = (await this.read(eepromOffset, flash.layoutSize)).params;
+          flash.settings = Convert.arrayToSettingsObject(flash.settingsArray, flash.layout);
+        } else if (flash.isArm) {
+          source = am32Source;
+
+          flash.layout = source.getLayout();
+          flash.layoutSize = source.getLayoutSize();
+          flash.settingsArray = (await this.read(eepromOffset, flash.layoutSize)).params;
+          flash.settings = Convert.arrayToSettingsObject(flash.settingsArray, flash.layout);
         } else {
           throw new UnknownPlatformError('Neither SiLabs nor Arm');
         }
-
-        flash.isSiLabs = isSiLabs;
-        flash.isArm = isArm;
-        flash.isAtmel = isAtmel;
-
-        flash.settingsArray = settingsArray;
-        flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
 
         /**
          * Based on the name we can decide if the initially guessed layout
          * was correct, if not, we need to build a new settings object.
          */
         let name = flash.settings.NAME;
-        let newLayout = null;
-        if(bluejayEeprom.NAMES.includes(name)) {
-          validFirmwareNames = bluejayEeprom.NAMES;
-          newLayout = bluejayEeprom.LAYOUT;
-          layoutSize = bluejayEeprom.LAYOUT_SIZE;
-          defaultSettings = bluejaySettingsDescriptions.DEFAULTS;
-          settingsArray = (await this.read(eepromOffset, layoutSize)).params;
+        if(bluejaySource.isValidName(name)) {
+          source = bluejaySource;
+
+          flash.layout = source.getLayout();
+          flash.layoutSize = bluejaySource.getLayoutSize();
+          flash.settingsArray = (await this.read(eepromOffset, flash.layoutSize)).params;
+          flash.settings = Convert.arrayToSettingsObject(flash.settingsArray, flash.layout);
         }
 
         // Try to guess firmware type if it was not properly set in the EEPROM
@@ -360,7 +354,7 @@ class FourWay {
               data[i + 3] === 0x43
             ) {
               flash.settings.NAME = 'JESC';
-              layout = null;
+              flash.layout = null;
 
               break;
             }
@@ -382,46 +376,15 @@ class FourWay {
               )
             ) {
               flash.settings.NAME = 'BLHeli_M';
-              layout = null;
+              flash.layout = null;
             }
           }
-
-        }
-
-        if(newLayout) {
-          layout = newLayout;
-          flash.settingsArray = settingsArray;
-          flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
         }
 
         const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
-
-        let individualSettingsDescriptions = null;
-        let settingsDescriptions = null;
-        switch(layout) {
-          case blheliEeprom.LAYOUT: {
-            settingsDescriptions = blheliSettingsDescriptions.COMMON;
-            individualSettingsDescriptions = blheliSettingsDescriptions.INDIVIDUAL;
-          } break;
-
-          case bluejayEeprom.LAYOUT: {
-            settingsDescriptions = bluejaySettingsDescriptions.COMMON;
-            individualSettingsDescriptions = bluejaySettingsDescriptions.INDIVIDUAL;
-          } break;
-
-          case am32Eeprom.LAYOUT: {
-            settingsDescriptions = am32SettingsDescriptions.COMMON;
-            individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
-          } break;
-
-          default: {
-            settingsDescriptions = {};
-            individualSettingsDescriptions = {};
-          }
-        }
-
-        flash.settingsDescriptions = settingsDescriptions[layoutRevision];
-        flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
+        flash.settingsDescriptions = source.getCommonSettings(layoutRevision);
+        flash.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
+        flash.defaultSettings = source.getDefaultSettings(layoutRevision);
 
         if(!flash.settingsDescriptions) {
           this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
@@ -430,24 +393,22 @@ class FourWay {
           * If Arm is detected and we have no matching layout, it might be
           * BLHeli_32.
           */
-          if(isArm) {
+          if(flash.isArm) {
             flash.settings.NAME = 'BLHeli_32';
-            layout = null;
+            flash.layout = null;
           }
         }
 
         const layoutName = (flash.settings.LAYOUT || '').trim();
         let make = null;
-        if (isSiLabs) {
-          const blheliSilabsLayouts = blheliSilabsSource.getEscLayouts();
-          const blheliSLayouts = blheliSSource.getEscLayouts();
-          const bluejayLayouts = bluejaySource.getEscLayouts();
+        if (flash.isSiLabs) {
+          const layouts = source.getEscLayouts();
+          make = layouts[layoutName].name;
 
           if (
             flash.settings.NAME === 'JESC' ||
             flash.settings.NAME === 'BLHeli_M'
           ) {
-            make = blheliSLayouts[layoutName].name;
             const settings = flash.settings;
             let revision = 'Unsupported/Unrecognized';
             if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
@@ -456,14 +417,13 @@ class FourWay {
 
             displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
             firmwareName = flash.settings.NAME;
-          } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
-            make = bluejayLayouts[layoutName].name;
+
+            flash.supported = false;
+          } else if (source instanceof sources.BluejaySource) {
+
             displayName = bluejaySource.buildDisplayName(flash, make);
             firmwareName = bluejaySource.getName();
-          } else if (layoutName in blheliSilabsLayouts) {
-            make = blheliSilabsLayouts[layoutName].name;
-          } else if (layoutName in blheliSLayouts) {
-            make = blheliSLayouts[layoutName].name;
+          } else if (source instanceof sources.BLHeliSSource) {
             const splitMake =  make.split('-');
             const taggedTiming = splitMake[2];
             const mcuType = splitMake[1];
@@ -534,7 +494,7 @@ class FourWay {
             displayName = blheliSSource.buildDisplayName(flash, make);
             firmwareName = blheliSSource.getName();
           }
-        } else if (isArm) {
+        } else if (flash.isArm) {
           if (
             flash.settings.NAME === 'BLHeli_32'
           ) {
@@ -543,6 +503,8 @@ class FourWay {
 
             displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
             firmwareName = flash.settings.NAME;
+
+            flash.supported = false;
           } else {
             flash.bootloader = {};
             if(flash.meta.input) {
@@ -566,19 +528,11 @@ class FourWay {
             displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
             firmwareName = am32Source.getName();
           }
-        } else {
-          const blheliAtmelLayouts = blheliSource.getEscLayouts();
-          if (layoutName in blheliAtmelLayouts) {
-            make = blheliAtmelLayouts[layoutName].name;
-          }
         }
 
-        flash.canMigrateTo = validFirmwareNames;
-        flash.defaultSettings = defaultSettings[layoutRevision];
+        flash.canMigrateTo = source.getValidNames();
         flash.displayName = displayName;
         flash.firmwareName = firmwareName;
-        flash.layoutSize = layoutSize;
-        flash.layout = layout;
         flash.make = make;
       } catch (e) {
         console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
@@ -828,7 +782,7 @@ class FourWay {
       this.totalBytes = pageSize * pageCount * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(eepromOffset, blheliEeprom.LAYOUT_SIZE);
+      const message = await this.read(eepromOffset, blheliSource.getLayoutSize());
 
       // checkESCAndMCU
       const escSettingArrayTmp = message.params;
@@ -1117,7 +1071,7 @@ class FourWay {
     const response = await this.write(eepromOffset, settings);
 
     const verifySafeguard = async (resolve, reject) => {
-      const message = await this.read(response.address, blheliEeprom.LAYOUT_SIZE);
+      const message = await this.read(response.address, blheliSource.getLayoutSize());
 
       if (!compare(settings, message.params)) {
         reject(new Error('failed to verify write **FLASH*FAILED**'));

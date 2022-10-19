@@ -59,7 +59,7 @@ class BluejaySource extends GithubSource {
 }
 
 const pwmOptions = [24, 48, 96];
-const config = new BluejaySource(
+const source = new BluejaySource(
   'Bluejay',
   eeprom,
   settingsDescriptions,
@@ -67,4 +67,7 @@ const config = new BluejaySource(
   pwmOptions
 );
 
-export default config;
+export default BluejaySource;
+export {
+  source,
+};

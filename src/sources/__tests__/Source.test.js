@@ -2,7 +2,7 @@ import Source from '../Source';
 import GithubSource from '../GithubSource';
 
 import {
-  blheliSource,
+  blheliAtmelSource as blheliSource,
   blheliSilabsSource,
   blheliSSource,
 } from '../index';

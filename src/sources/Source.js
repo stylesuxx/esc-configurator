@@ -50,12 +50,40 @@ class Source {
     return this.settings;
   }
 
+  getCommonSettings(revision) {
+    return this.settings.COMMON[revision];
+  }
+
+  getIndividualSettings(revision) {
+    return this.settings.INDIVIDUAL[revision];
+  }
+
+  getDefaultSettings(revision) {
+    return this.settings.DEFAULTS[revision];
+  }
+
   getName() {
     return this.name;
   }
 
   getPwm() {
     return this.pwm;
+  }
+
+  getValidNames() {
+    return this.eeprom.NAMES;
+  }
+
+  isValidName(name) {
+    return this.eeprom.NAMES.includes(name);
+  }
+
+  getLayoutSize() {
+    return this.eeprom.LAYOUT_SIZE;
+  }
+
+  getLayout() {
+    return this.eeprom.LAYOUT;
   }
 }
 

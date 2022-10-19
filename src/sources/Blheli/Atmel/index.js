@@ -1,4 +1,4 @@
-import { BLHeliSource } from '..';
+import BLHeliSource from '..';
 import eeprom from '../eeprom';
 import settingsDescriptions from '../settings';
 import escs from './escs.json';
@@ -10,11 +10,14 @@ class BLHeliAtmelSource extends BLHeliSource {
   }
 }
 
-const blheliSource = new BLHeliAtmelSource(
+const source = new BLHeliAtmelSource(
   'BLHeli',
   eeprom,
   settingsDescriptions,
   escs
 );
 
-export default blheliSource;
+export default BLHeliAtmelSource;
+export {
+  source,
+};
