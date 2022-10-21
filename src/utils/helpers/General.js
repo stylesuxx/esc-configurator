@@ -1,5 +1,12 @@
 import sources from '../../sources';
 
+/**
+ * Deeply compare two ByteArrays to each other
+ *
+ * @param {ByteArray} a
+ * @param {ByteArray} b
+ * @returns {boolean}
+ */
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;

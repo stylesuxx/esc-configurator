@@ -30,6 +30,8 @@ import {
   isValidFlash,
 } from './helpers/General';
 
+import FourWayHelper from './helpers/FourWay';
+
 import MCU from './Hardware/MCU';
 
 import {
@@ -46,7 +48,22 @@ const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
 const am32Eeprom = am32Source.getEeprom();
 const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
+/**
+ * @typedef Response
+ * @property {number} ack
+ * @property {number} address
+ * @property {number} checksum
+ * @property {number} command
+ * @property {Uint8Array} params
+ */
+
 class FourWay {
+  /**
+   * Wrapper class to communicate with the four way interface via an established
+   * serial connection.
+   *
+   * @param {function} serial
+   */
   constructor(serial) {
     this.serial = serial;
 
@@ -64,6 +81,60 @@ class FourWay {
     this.extendedDebug = false;
   }
 
+  /**
+   * Setter to control extended debugging
+   *
+   * @param {boolean} extendedDebug Enable or disable extended debug
+   */
+  setExtendedDebug(extendedDebug) {
+    this.extendedDebug = extendedDebug;
+  }
+
+  /**
+   * Setter for log callback
+   *
+   * @param {function} logCallback
+   */
+  setLogCallback(logCallback) {
+    this.logCallback = logCallback;
+  }
+
+  /**
+   * Setter for packet error callback
+   *
+   * @param {function} packetErrorsCallback
+   */
+  setPacketErrorsCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
+  }
+
+  /**
+   * Invoke log callback if available
+   *
+   * @param {string} message
+   * @param {array} params
+   */
+  addLogMessage(message, params) {
+    if(this.logCallback) {
+      this.logCallback(message, params);
+    }
+  }
+
+  /**
+   * Invoke packet error callback with count
+   *
+   * @param {number} count Packet error count
+   */
+  increasePacketErrors(count) {
+    if(this.packetErrorsCallback) {
+      this.packetErrorsCallback(count);
+    }
+  }
+
+  /**
+   * Triggers sending a keep alive command if enough time has past between now
+   * and the last command.
+   */
   start() {
     this.interval = setInterval(async() => {
       if (Date.now() - this.lastCommandTimestamp > 900) {
@@ -76,69 +147,19 @@ class FourWay {
     }, 800);
   }
 
-  exit() {
-    clearInterval(this.interval);
-
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
-  }
-
-  testAlive() {
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
-  }
-
-  reset(target) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
-  }
-
-  setExtendedDebug(extendedDebug) {
-    this.extendedDebug = extendedDebug;
-  }
-
-  setLogCallback(logCallback) {
-    this.logCallback = logCallback;
-  }
-
-  addLogMessage(message, params) {
-    if(this.logCallback) {
-      this.logCallback(message, params);
-    }
-  }
-
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-  }
-
-  increasePacketErrors(count) {
-    if(this.packetErrorsCallback) {
-      this.packetErrorsCallback(count);
-    }
-  }
-
-  commandToString(command) {
-    for (const field in COMMANDS) {
-      if (COMMANDS[field] === command) {
-        return field;
-      }
-    }
-
-    return null;
-  }
-
-  ackToString(ack) {
-    for (const field in ACK) {
-      if (ACK[field] === ack) {
-        return field;
-      }
-    }
-
-    return null;
-  }
-
+  /**
+   * Calculate a X-Modem checksum
+   *
+   * @param {number} crc
+   * @param {number} byte
+   * @returns {number}
+   */
   crc16XmodemUpdate(crc, byte) {
+    const polynomic = 0x1021;
     crc ^= byte << 8;
     for (let i = 0; i < 8; i += 1) {
       if (crc & 0x8000) {
-        crc = (crc << 1) ^ 0x1021;
+        crc = (crc << 1) ^ polynomic;
       } else {
         crc <<= 1;
       }
@@ -147,6 +168,14 @@ class FourWay {
     return crc & 0xffff;
   }
 
+  /**
+   * Create a message ready to be sent to the four way interface
+   *
+   * @param {number} command
+   * @param {Array.<number>} params
+   * @param {number} address
+   * @returns {ArrayBuffer}
+   */
   createMessage(command, params, address) {
     const pc = 0x2f;
 
@@ -183,6 +212,14 @@ class FourWay {
     return bufferOut;
   }
 
+  /**
+   * Parse a message and invoke either resolve or reject callback
+   *
+   * @param {ArrayBuffer} buffer
+   * @param {function} resolve
+   * @param {function} reject
+   * @returns {Promise}
+   */
   parseMessage(buffer, resolve, reject) {
     const fourWayIf = 0x2e;
 
@@ -227,6 +264,18 @@ class FourWay {
     return resolve(message);
   }
 
+  /**
+   * Send a message
+   *
+   * If it does not succees, sending the command is retried a given amount of
+   * times before it is finally rejected.
+   *
+   * @param {number} command
+   * @param {Array.<number>} params
+   * @param {number} address
+   * @param {number} retries
+   * @returns {Promise}
+   */
   sendMessagePromised(command, params = [0], address = 0, retries = 10) {
     const process = async (resolve, reject) => {
       this.lastCommandTimestamp = Date.now();
@@ -235,7 +284,7 @@ class FourWay {
       // Debug print all messages except the keep alive messages
       if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
         const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
-        console.debug(`TX: ${this.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+        console.debug(`TX: ${FourWayHelper.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
 
       const processMessage = async(resolve, reject) => {
@@ -253,12 +302,12 @@ class FourWay {
           if (msg && msg.ack === ACK.ACK_OK) {
             if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
               const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
-              console.debug(`RX: ${this.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+              console.debug(`RX: ${FourWayHelper.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
             }
             return resolve(msg);
           }
         } catch(e) {
-          console.debug(`Command ${this.commandToString(command)} failed: ${e.message}`);
+          console.debug(`Command ${FourWayHelper.commandToString(command)} failed: ${e.message}`);
           return reject(e);
         }
 
@@ -269,7 +318,7 @@ class FourWay {
         const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
-        console.debug(`Failed processing command ${this.commandToString(command)} after ${retries} retries.`);
+        console.debug(`Failed processing command ${FourWayHelper.commandToString(command)} after ${retries} retries.`);
         reject(e);
       }
     };
@@ -277,10 +326,12 @@ class FourWay {
     return new Promise((resolve, reject) => process(resolve, reject));
   }
 
-  async initFlash(target, retries = 10) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
-  }
-
+  /**
+   * Get information of a certain ESC
+   *
+   * @param {number} target
+   * @returns {object}
+   */
   async getInfo(target) {
     const flash = await this.initFlash(target, 0);
     const info = Flash.getInfo(flash);
@@ -296,6 +347,7 @@ class FourWay {
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
+        console.log((await this.read(eepromOffset, info.layoutSize)));
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
         info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
 
@@ -543,6 +595,14 @@ class FourWay {
     return info;
   }
 
+  /**
+   * Write settings to selected ESC if they changed
+   *
+   * @param {number} target
+   * @param {object} esc
+   * @param {Array} settings
+   * @returns {Array}
+   */
   async writeSettings(target, esc, settings) {
     const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
@@ -580,7 +640,7 @@ class FourWay {
             }
           }
 
-          await this.pageErase(eepromOffset / pageSize * pageMultiplier);
+          await this.erasePage(eepromOffset / pageSize * pageMultiplier);
           await this.write(eepromOffset, newSettingsArray);
           readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else if (esc.isArm) {
@@ -620,6 +680,14 @@ class FourWay {
     throw new EscInitError();
   }
 
+  /**
+   * Read firmware from a selected ESC
+   *
+   * @param {number} target
+   * @param {object} esc
+   * @param {function} cbProgress
+   * @returns {Uint8Array}
+   */
   async readFirmware(target, esc, cbProgress) {
     const {
       interfaceMode, signature,
@@ -661,9 +729,19 @@ class FourWay {
     return data;
   }
 
+  /**
+   * Write hex to MCU
+   *
+   * @param {number} target
+   * @param {object} esc
+   * @param {object} hex
+   * @param {boolean} force
+   * @param {boolean} migrate
+   * @param {function} cbProgress
+   * @returns
+   */
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
     const { source } = esc;
-    console.log("Source", source);
     const {
       interfaceMode, signature,
     } = esc.meta;
@@ -1013,6 +1091,19 @@ class FourWay {
     }
   }
 
+  /**
+   * Write bootloader failsafe
+   *
+   * The booloader failsafe helps in recovering from a failed flash, attempting
+   * to jump from address 0x00 into the bootloader.
+   *
+   * pageMultiplier is a workaround for BB51 MCU since the BLHeli_S bootloader
+   * does not account for bigger page sizes.
+   *
+   * @param {number} pageSize
+   * @param {number} bootloaderAddress
+   * @param {number} pageMultiplier
+   */
   async writeBootoaderFailsafe(pageSize, bootloaderAddress, pageMultiplier = 1) {
     const bootloaderByteHi = (bootloaderAddress >> 8) & 0xFF;
     const bootloaderByteLo = bootloaderAddress & 0xFF;
@@ -1058,7 +1149,20 @@ class FourWay {
     }
   }
 
+  /**
+   * Write the EEprom safeguard
+   *
+   * This writes in the area that will be read when infos are being fetched.
+   * This info is then used to indicate that the flash failed. When in this
+   * state, flashing is still possible, although MCU layout ignore box has to
+   * be checked.
+   *
+   * @param {Uint8Array} settings
+   * @param {number} eepromOffset
+   */
   async writeEEpromSafeguard(settings, eepromOffset) {
+    console.log("write EEpromSafeguard", settings);
+
     settings.set(Convert.asciiToBuffer('**FLASH*FAILED**'), blheliEeprom.LAYOUT.NAME.offset);
     const response = await this.write(eepromOffset, settings);
 
@@ -1075,15 +1179,23 @@ class FourWay {
     await retry(verifySafeguard, 10);
   }
 
-  async verifyPages(begin, end, pageSize, image) {
+  /**
+   * Verify multiple pages up to (but not including) end page
+   *
+   * @param {number} begin
+   * @param {number} end
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  async verifyPages(begin, end, pageSize, data) {
     const beginAddress = begin * pageSize;
     const end_address = end * pageSize;
     const step = 0x80;
 
-    for (let address = beginAddress; address < end_address && address < image.length; address += step) {
+    for (let address = beginAddress; address < end_address && address < data.length; address += step) {
       const verifyPages = async (resolve, reject) => {
-        const message = await this.read(address, Math.min(step, image.length - address));
-        const reference = image.subarray(message.address, message.address + message.params.byteLength);
+        const message = await this.read(address, Math.min(step, data.length - address));
+        const reference = data.subarray(message.address, message.address + message.params.byteLength);
 
         if (!compare(message.params,reference)) {
           console.debug('Verification failed - retry');
@@ -1101,43 +1213,134 @@ class FourWay {
     }
   }
 
-  verifyPage(page, pageSize, image) {
-    return this.verifyPages(page, page + 1, pageSize, image);
+  /**
+   * Verify a single page against given data
+   *
+   * @param {number} page
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  verifyPage(page, pageSize, data) {
+    return this.verifyPages(page, page + 1, pageSize, data);
   }
 
-  async writePages(begin, end, pageSize, image) {
+  /**
+   * Write data to multiple pages up to (but not including) end page
+   *
+   * @param {number} begin
+   * @param {number} end
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  async writePages(begin, end, pageSize, data) {
     const beginAddress = begin * pageSize;
     const endAddress = end * pageSize;
     const step = 0x100;
 
-    for (let address = beginAddress; address < endAddress && address < image.length; address += step) {
+    for (let address = beginAddress; address < endAddress && address < data.length; address += step) {
       await this.write(
         address,
-        image.subarray(address, Math.min(address + step, image.length)));
+        data.subarray(address, Math.min(address + step, data.length)));
 
       this.bytesWritten += step;
       this.progressCallback((this.bytesWritten / this.totalBytes) * 100);
     }
   }
 
-  writePage(page, pageSize, image) {
-    return this.writePages(page, page + 1, pageSize, image);
+  /**
+   * Write a page with a given size
+   *
+   * @param {number} page
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  writePage(page, pageSize, data) {
+    return this.writePages(page, page + 1, pageSize, data);
   }
 
-  erasePage(page) {
-    return this.erasePages(page, page + 1);
-  }
-
+  /**
+   * Erase multiple pages up till (but not including) stop page
+   *
+   * @param {number} startPage
+   * @param {number} stopPage
+   */
   async erasePages(startPage, stopPage) {
     for(let page = startPage; page < stopPage; page += 1) {
-      await this.pageErase(page);
+      await this.erasePage(page);
     }
   }
 
-  pageErase(page) {
+  /**
+   * The following functions send commands directly to the four way interface
+   * and thus the bootloader. All other functions rely on this functions or
+   * wrap them in some way.
+   *
+   * All of this functions will return a Promise that resolves to a Response
+   * object.
+   */
+
+  /**
+   * Clear TestAlive interval and send Exit command
+   *
+   * @returns {Promise<Response>}
+   */
+  exit() {
+    clearInterval(this.interval);
+
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
+  }
+
+  /**
+   * Send TestAlive command
+   *
+   * @returns {Promise<Response>}
+   */
+  testAlive() {
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
+  }
+
+  /**
+   * Reset a target
+   *
+   * Depending on the exact firmware different things might happen during
+   * the reset process.
+   *
+   * @param {number} target
+   * @returns {Promise<Response>}
+   */
+  reset(target) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
+  }
+
+  /**
+   * Initialize the flash
+   *
+   * @param {number} target
+   * @param {number} retries
+   * @returns {Promise<Response>}
+   */
+  async initFlash(target, retries = 10) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
+  }
+
+  /**
+   * Erase a single page
+   *
+   * @param {number} page
+   * @returns {Promise<Response>}
+   */
+  erasePage(page) {
     return this.sendMessagePromised(COMMANDS.cmd_DevicePageErase, [page]);
   }
 
+  /**
+   * Read a specified amount of bytes from a starting address
+   *
+   * @param {number} address
+   * @param {number} bytes
+   * @param {number} retries
+   * @returns {Promise<Response>}
+   */
   read(address, bytes, retries = 10) {
     return this.sendMessagePromised(
       COMMANDS.cmd_DeviceRead,
@@ -1147,6 +1350,13 @@ class FourWay {
     );
   }
 
+  /**
+   * Read a number of bytes from a given address
+   *
+   * @param {number} address
+   * @param {number} bytes
+   * @returns {Promise<Response>}
+   */
   readEEprom(address, bytes) {
     return this.sendMessagePromised(
       COMMANDS.cmd_DeviceReadEEprom,
@@ -1155,10 +1365,24 @@ class FourWay {
     );
   }
 
+  /**
+   * Write data to address
+   *
+   * @param {number} address
+   * @param {Array<number>} data
+   * @returns {Promise<Response>}
+   */
   write(address, data) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceWrite, data, address);
   }
 
+  /**
+   * Write data to EEprom address
+   *
+   * @param {number} address
+   * @param {Array<number>} data
+   * @returns {Promise<Response>}
+   */
   writeEEprom(address, data) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceWriteEEprom, data, address);
   }

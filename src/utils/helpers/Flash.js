@@ -28,6 +28,12 @@ class Flash {
     return image;
   }
 
+  /**
+   * Parse string to HEX objext
+   *
+   * @param {string} string
+   * @returns {object}
+   */
   static parseHex(string) {
     string = string.split("\n");
 
