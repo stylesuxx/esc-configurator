@@ -7,7 +7,7 @@ import {
 
 import escs from './escs.json';
 import { source as bluejaySource } from '../../../sources/Bluejay';
-import am32Source from '../../../sources/AM32';
+import { source as am32Source } from '../../../sources/AM32';
 
 const AM32_SETTINGS_DESCRIPTIONS = am32Source.getSettingsDescriptions();
 const BLUEJAY_SETTINGS_DESCRIPTIONS = bluejaySource.getSettingsDescriptions();

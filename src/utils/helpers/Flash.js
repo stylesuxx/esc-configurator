@@ -1,3 +1,9 @@
+import {
+  ATMEL_MODES,
+  MODES,
+  SILABS_MODES,
+} from '../FourWayConstants';
+
 class Flash {
 
   // Pad data to fixed size
@@ -125,6 +131,25 @@ class Flash {
     }
 
     return null;
+  }
+
+  static getInfo(flash) {
+    const info = {
+      meta: {
+        signature: (flash.params[1] << 8) | flash.params[0],
+        input: flash.params[2],
+        interfaceMode: flash.params[3],
+        available: true,
+      },
+      displayName: 'UNKNOWN',
+      firmwareName: 'UNKNOWN',
+      supported: true,
+    };
+    info.isAtmel = ATMEL_MODES.includes(info.meta.interfaceMode);
+    info.isSiLabs = SILABS_MODES.includes(info.meta.interfaceMode);
+    info.isArm = info.meta.interfaceMode === MODES.ARMBLB;
+
+    return info;
   }
 }
 

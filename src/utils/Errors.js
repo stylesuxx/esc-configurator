@@ -40,14 +40,6 @@ class UnknownInterfaceError extends Error {
   }
 }
 
-class UnknownMcuError extends Error {
-  constructor(signature) {
-    super(`unknown mcu: ${signature}`);
-    this.signature = signature;
-    this.name = 'UnknownMcuError';
-  }
-}
-
 class InvalidHexFileError extends Error {
   constructor(message) {
     super(message);
@@ -102,6 +94,5 @@ export {
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
-  UnknownMcuError,
   UnknownPlatformError,
 };

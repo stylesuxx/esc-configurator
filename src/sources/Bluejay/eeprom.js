@@ -1,12 +1,5 @@
 const LAYOUT_SIZE = 0xFF;
 
-const NAMES = [
-  'Bluejay',
-  'Bluejay (BETA)',
-  'Bluejay (TEST)',
-  'Bluejay (.*)',
-];
-
 const LAYOUT = {
   MAIN_REVISION: {
     offset: 0x00,
@@ -196,7 +189,6 @@ const LAYOUT = {
 const EEPROM = {
   LAYOUT,
   LAYOUT_SIZE,
-  NAMES,
 };
 
 export default EEPROM;

@@ -56,6 +56,23 @@ class BluejaySource extends GithubSource {
   async getVersions() {
     return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
   }
+
+  isValidName(name) {
+    const regexes = [ /Bluejay( \(.*\))?/g ];
+    for(let i = 0; i < regexes.length; i += 1){
+      const regex = new RegExp(regexes[i]);
+      const match = regex.test(name);
+      if (match) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  canMigrateTo(name) {
+    return this.isValidName(name);
+  }
 }
 
 const pwmOptions = [24, 48, 96];

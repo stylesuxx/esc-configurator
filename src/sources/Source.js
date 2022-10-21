@@ -6,7 +6,7 @@ import { fetchJsonCached } from '../utils/Fetch';
 
 /* Abstract Base Class for firmware sources
  *
- * Every source needs to implement thi abstract Source class and implement all
+ * Every source needs to implement this abstract Source class and implement all
  * required methods.
  */
 class Source {
@@ -50,6 +50,11 @@ class Source {
     return this.settings;
   }
 
+  getRevisions() {
+    const revisions = Object.keys(this.settings.COMMON);
+    return revisions;
+  }
+
   getCommonSettings(revision) {
     return this.settings.COMMON[revision];
   }
@@ -78,6 +83,10 @@ class Source {
     return this.eeprom.NAMES.includes(name);
   }
 
+  canMigrateTo(name) {
+    return this.isValidName(name);
+  }
+
   getLayoutSize() {
     return this.eeprom.LAYOUT_SIZE;
   }
@@ -86,7 +95,5 @@ class Source {
     return this.eeprom.LAYOUT;
   }
 }
-
-
 
 export default Source;

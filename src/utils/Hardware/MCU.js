@@ -1,7 +1,4 @@
-import {
-  UnknownInterfaceError,
-  UnknownMcuError,
-} from '../Errors';
+import { UnknownInterfaceError } from '../Errors';
 import { MODES } from '../FourWayConstants';
 import { findMCU } from '../helpers/General';
 
@@ -40,10 +37,6 @@ class MCU {
         }
       }
     })(interfaceMode);
-
-    if(!this.mcu) {
-      throw new UnknownMcuError(signature);
-    }
   }
 
   getFlashSize() {

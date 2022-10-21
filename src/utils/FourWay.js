@@ -34,10 +34,8 @@ import MCU from './Hardware/MCU';
 
 import {
   ACK,
-  ATMEL_MODES,
   COMMANDS,
   MODES,
-  SILABS_MODES,
 } from './FourWayConstants';
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
@@ -285,276 +283,264 @@ class FourWay {
 
   async getInfo(target) {
     const flash = await this.initFlash(target, 0);
+    const info = Flash.getInfo(flash);
 
-    if (flash) {
-      flash.meta = {};
+    try {
+      const mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
+      const eepromOffset = mcu.getEepromOffset();
 
-      try {
-        flash.meta.signature = (flash.params[1] << 8) | flash.params[0];
-        flash.meta.input = flash.params[2];
-        flash.meta.interfaceMode = flash.params[3];
-        flash.meta.available = true;
-        flash.supported = true;
+      // Assume BLHeli as default
+      let source = null;
+      if (info.isSiLabs) {
+        source = blheliSSource;
 
-        flash.isAtmel = ATMEL_MODES.includes(flash.meta.interfaceMode);
-        flash.isSiLabs = SILABS_MODES.includes(flash.meta.interfaceMode);
-        flash.isArm = flash.meta.interfaceMode === MODES.ARMBLB;
+        info.layout = source.getLayout();
+        info.layoutSize = source.getLayoutSize();
+        info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
 
-        const mcu = new MCU(flash.meta.interfaceMode, flash.meta.signature);
-        const eepromOffset = mcu.getEepromOffset();
-
-        // Assume BLHeli as default
-        let source = blheliSSource;
-
-        let displayName = 'UNKNOWN';
-        let firmwareName = 'UNKNOWN';
-
-        if (flash.isSiLabs) {
-          source = blheliSSource;
-
-          flash.layout = source.getLayout();
-          flash.layoutSize = source.getLayoutSize();
-          flash.settingsArray = (await this.read(eepromOffset, flash.layoutSize)).params;
-          flash.settings = Convert.arrayToSettingsObject(flash.settingsArray, flash.layout);
-        } else if (flash.isArm) {
-          source = am32Source;
-
-          flash.layout = source.getLayout();
-          flash.layoutSize = source.getLayoutSize();
-          flash.settingsArray = (await this.read(eepromOffset, flash.layoutSize)).params;
-          flash.settings = Convert.arrayToSettingsObject(flash.settingsArray, flash.layout);
-        } else {
-          throw new UnknownPlatformError('Neither SiLabs nor Arm');
-        }
-
-        /**
-         * Based on the name we can decide if the initially guessed layout
-         * was correct, if not, we need to build a new settings object.
-         */
-        let name = flash.settings.NAME;
-        if(bluejaySource.isValidName(name)) {
+        // Check if Bluejay
+        if(bluejaySource.isValidName(info.settings.NAME)) {
           source = bluejaySource;
 
-          flash.layout = source.getLayout();
-          flash.layoutSize = bluejaySource.getLayoutSize();
-          flash.settingsArray = (await this.read(eepromOffset, flash.layoutSize)).params;
-          flash.settings = Convert.arrayToSettingsObject(flash.settingsArray, flash.layout);
+          info.layout = source.getLayout();
+          info.layoutSize = bluejaySource.getLayoutSize();
+          info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+          info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+        }
+      }
+
+      if (info.isArm) {
+        source = am32Source;
+
+        info.layout = source.getLayout();
+        info.layoutSize = source.getLayoutSize();
+        info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+      }
+
+      if (!info.isArm && !info.isSiLabs){
+        throw new UnknownPlatformError('Neither SiLabs nor Arm');
+      }
+
+      /**
+       * Try to guess firmware type if it was not properly set in the EEPROM
+       */
+      if(info.settings.NAME === '') {
+        const start = 0x80;
+        const amount = 0x80;
+        const data = (await this.read(start, amount)).params;
+        for (let i = 0; i < amount - 5; i += 1) {
+          if (
+            data[i] === 0x4A &&
+            data[i + 1] === 0x45 &&
+            data[i + 2] === 0x53 &&
+            data[i + 3] === 0x43
+          ) {
+            info.settings.NAME = 'JESC';
+            info.layout = null;
+
+            break;
+          }
         }
 
-        // Try to guess firmware type if it was not properly set in the EEPROM
-        if(name === '') {
-          const start = 0x80;
-          const amount = 0x80;
-          const data = (await this.read(start, amount)).params;
-          for (let i = 0; i < amount - 5; i += 1) {
+        /*
+          * If still no name, it might be BLHeli_M - this can unfortunately
+          * only be guessed based on the version - if it is 16.8 or higher,
+          * then it _might_ be BLHeli_M with a high probability.
+          *
+          * This needs to be updated in case BLHeli_S ever gets an update.
+          */
+        if(info.settings.NAME === '') {
+          if(
+            info.settings.MAIN_REVISION === 16 &&
+            (
+              info.settings.SUB_REVISION === 8 ||
+              info.settings.SUB_REVISION === 9
+            )
+          ) {
+            info.settings.NAME = 'BLHeli_M';
+            info.layout = null;
+          }
+        }
+      }
+
+      const layoutRevision = info.settings.LAYOUT_REVISION.toString();
+      info.settingsDescriptions = source.getCommonSettings(layoutRevision);
+      info.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
+      info.defaultSettings = source.getDefaultSettings(layoutRevision);
+
+      if(!info.settingsDescriptions) {
+        this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
+
+        /**
+        * If Arm is detected and we have no matching layout, it might be
+        * BLHeli_32.
+        */
+        if(info.isArm) {
+          info.settings.NAME = 'BLHeli_32';
+          info.layout = null;
+        }
+      }
+
+      const layoutName = (info.settings.LAYOUT || '').trim();
+      let make = null;
+
+      // SiLabs EFM8 based
+      if (info.isSiLabs) {
+        const layouts = source.getEscLayouts();
+        make = layouts[layoutName].name;
+
+        if (source instanceof sources.BluejaySource) {
+          info.displayName = source.buildDisplayName(info, make);
+          info.firmwareName = source.getName();
+        }
+
+        if (source instanceof sources.BLHeliSSource) {
+          const splitMake =  make.split('-');
+          const taggedTiming = splitMake[2];
+          const mcuType = splitMake[1];
+
+          /**
+           * Some manufacturers mistag their firmware so that the actual
+           * deadtime is higher than the reported one. Try to read the timing
+           * from the currently flashed hex.
+           *
+           * Read bytes of data in 128 byte increments starting at address 0x250
+           * - 16.7:  0x300 bytes are enough
+           * - 16.71: 0x500 bytes are enough
+           */
+          const start = 0x250;
+          const amount = 0x500;
+          const data = new Uint8Array(amount);
+          let pos = 0;
+          for (let address = start; address < start + amount; address += 0x80) {
+            const currentData = (await this.read(address, 0x80)).params;
+            data.set(currentData, pos);
+            pos += 0x80;
+          }
+
+          /* Scan the gathered data to find the actual deadtime - looking for
+            * a section that looks like this in asm:
+            *
+            * MOV R1, A
+            * CLR C
+            * MOV A, R0
+            * SUBB A, #data (#data being data[i + 4])
+            *
+            * This is the relevant section in BLHeli_S source code:
+            * https://github.com/bitdump/BLHeli/blob/467834db443a887534c1f2c9fb0ff61fd6b40e3e/BLHeli_S%20SiLabs/BLHeli_S.asm#L1433
+            */
+          let timing = 0;
+          for (var i = 0; i < amount - 5; i += 1) {
             if (
-              data[i] === 0x4A &&
-              data[i + 1] === 0x45 &&
-              data[i + 2] === 0x53 &&
-              data[i + 3] === 0x43
+              data[i] === 0xf9 &&
+              data[i + 1] === 0xc3 &&
+              data[i + 2] === 0xe8 &&
+              data[i + 3] === 0x94
             ) {
-              flash.settings.NAME = 'JESC';
-              flash.layout = null;
+              timing = data[i + 4];
+
+              // If an H or X type MCU is detected, half the timing.
+              if(mcuType === 'H' || mcuType === 'X') {
+                timing /= 2;
+              }
 
               break;
             }
           }
 
-          /*
-           * If still no name, it might be BLHeli_M - this can unfortunately
-           * only be guessed based on the version - if it is 16.8 or higher,
-           * then it _might_ be BLHeli_M with a high probability.
-           *
-           * This needs to be updated in case BLHeli_S ever gets an update.
-           */
-          if(flash.settings.NAME === '') {
-            if(
-              flash.settings.MAIN_REVISION === 16 &&
-              (
-                flash.settings.SUB_REVISION === 8 ||
-                flash.settings.SUB_REVISION === 9
-              )
-            ) {
-              flash.settings.NAME = 'BLHeli_M';
-              flash.layout = null;
+          if(timing) {
+            timing = String(timing);
+
+            if(taggedTiming !== timing) {
+              splitMake[2] = timing;
+              const actualMake = splitMake.join('-');
+              this.addLogMessage('timingMismatch', {
+                tagged: make,
+                actual: actualMake,
+              });
+
+              info.actualMake = actualMake;
             }
           }
+
+          info.displayName = source.buildDisplayName(info, make);
+          info.firmwareName = source.getName();
         }
 
-        const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
-        flash.settingsDescriptions = source.getCommonSettings(layoutRevision);
-        flash.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
-        flash.defaultSettings = source.getDefaultSettings(layoutRevision);
-
-        if(!flash.settingsDescriptions) {
-          this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
-
-          /*
-          * If Arm is detected and we have no matching layout, it might be
-          * BLHeli_32.
-          */
-          if(flash.isArm) {
-            flash.settings.NAME = 'BLHeli_32';
-            flash.layout = null;
-          }
-        }
-
-        const layoutName = (flash.settings.LAYOUT || '').trim();
-        let make = null;
-        if (flash.isSiLabs) {
-          const layouts = source.getEscLayouts();
-          make = layouts[layoutName].name;
-
-          if (
-            flash.settings.NAME === 'JESC' ||
-            flash.settings.NAME === 'BLHeli_M'
+        if (
+          info.settings.NAME === 'JESC' ||
+          info.settings.NAME === 'BLHeli_M'
+        ) {
+          const settings = info.settings;
+          let revision = 'Unsupported/Unrecognized';
+          if(
+            settings.MAIN_REVISION !== undefined &&
+            settings.SUB_REVISION !== undefined
           ) {
-            const settings = flash.settings;
-            let revision = 'Unsupported/Unrecognized';
-            if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-              revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
-            }
-
-            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
-            firmwareName = flash.settings.NAME;
-
-            flash.supported = false;
-          } else if (source instanceof sources.BluejaySource) {
-
-            displayName = bluejaySource.buildDisplayName(flash, make);
-            firmwareName = bluejaySource.getName();
-          } else if (source instanceof sources.BLHeliSSource) {
-            const splitMake =  make.split('-');
-            const taggedTiming = splitMake[2];
-            const mcuType = splitMake[1];
-
-            /* Some manufacturers mistag their firmware so that the actual
-             * deadtime is higher than the reported one. Try to read the timing
-             * from the currently flashed hex.
-             *
-             * Read bytes of data in 128 byte increments starting at address 0x250
-             * - 16.7:  0x300 bytes are enough
-             * - 16.71: 0x500 bytes are enough
-             */
-            const start = 0x250;
-            const amount = 0x500;
-            const data = new Uint8Array(amount);
-            let pos = 0;
-            for (let address = start; address < start + amount; address += 0x80) {
-              const currentData = (await this.read(address, 0x80)).params;
-              data.set(currentData, pos);
-              pos += 0x80;
-            }
-
-            /* Scan the gathered data to find the actual deadtime - looking for
-             * a section that looks like this in asm:
-             *
-             * MOV R1, A
-             * CLR C
-             * MOV A, R0
-             * SUBB A, #data (#data being data[i + 4])
-             *
-             * This is the relevant section in BLHeli_S source code:
-             * https://github.com/bitdump/BLHeli/blob/467834db443a887534c1f2c9fb0ff61fd6b40e3e/BLHeli_S%20SiLabs/BLHeli_S.asm#L1433
-             */
-            let timing = 0;
-            for (var i = 0; i < amount - 5; i += 1) {
-              if (
-                data[i] === 0xf9 &&
-                data[i + 1] === 0xc3 &&
-                data[i + 2] === 0xe8 &&
-                data[i + 3] === 0x94
-              ) {
-                timing = data[i + 4];
-
-                // If an H or X type MCU is detected, half the timing.
-                if(mcuType === 'H' || mcuType === 'X') {
-                  timing /= 2;
-                }
-
-                break;
-              }
-            }
-
-            if(timing) {
-              timing = String(timing);
-
-              if(taggedTiming !== timing) {
-                splitMake[2] = timing;
-                const actualMake = splitMake.join('-');
-                this.addLogMessage('timingMismatch', {
-                  tagged: make,
-                  actual: actualMake,
-                });
-
-                flash.actualMake = actualMake;
-              }
-            }
-
-            displayName = blheliSSource.buildDisplayName(flash, make);
-            firmwareName = blheliSSource.getName();
+            revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
           }
-        } else if (flash.isArm) {
-          if (
-            flash.settings.NAME === 'BLHeli_32'
-          ) {
-            let revision = 'Unsupported/Unrecognized';
-            make = 'Unknown';
 
-            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
-            firmwareName = flash.settings.NAME;
+          info.displayName = `${make} - ${info.settings.NAME}, ${revision}`;
+          info.firmwareName = info.settings.NAME;
 
-            flash.supported = false;
-          } else {
-            flash.bootloader = {};
-            if(flash.meta.input) {
-              flash.bootloader.input = flash.meta.input;
-              flash.bootloader.valid = false;
-            }
-
-            /* Bootloader input pins are limited. If something different is set,
-             * then the user probably has an old fw flashed.
-             */
-            for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
-              if(value === flash.bootloader.input) {
-                flash.bootloader.valid = true;
-                flash.bootloader.pin = key;
-                flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
-              }
-            }
-
-            flash.settings.LAYOUT = flash.settings.NAME;
-
-            displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
-            firmwareName = am32Source.getName();
-          }
+          info.supported = false;
         }
-
-        flash.canMigrateTo = source.getValidNames();
-        flash.displayName = displayName;
-        flash.firmwareName = firmwareName;
-        flash.make = make;
-      } catch (e) {
-        console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
-        throw new Error(e);
       }
 
-      try {
-        flash.individualSettings = getIndividualSettings(flash);
-      } catch(e) {
-        console.debug('Could not get individual settings');
-        throw new Error(e);
+      // Arm
+      if (info.isArm) {
+        if (
+          info.settings.NAME === 'BLHeli_32'
+        ) {
+          let revision = 'Unsupported/Unrecognized';
+          make = 'Unknown';
+
+          info.displayName = `${make} - ${info.settings.NAME}, ${revision}`;
+          info.firmwareName = info.settings.NAME;
+
+          info.supported = false;
+        } else if (source instanceof sources.AM32Source) {
+          info.bootloader = {};
+          if(info.meta.input) {
+            info.bootloader.input = info.meta.input;
+            info.bootloader.valid = false;
+          }
+
+          /* Bootloader input pins are limited. If something different is set,
+            * then the user probably has an old fw flashed.
+            */
+          for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
+            if(value === info.bootloader.input) {
+              info.bootloader.valid = true;
+              info.bootloader.pin = key;
+              info.bootloader.version = info.settings.BOOT_LOADER_REVISION;
+            }
+          }
+
+          info.settings.LAYOUT = info.settings.NAME;
+
+          info.displayName = am32Source.buildDisplayName(info, info.settings.NAME);
+          info.firmwareName = am32Source.getName();
+        }
       }
 
-      // Delete some things that we do not need to pass on to the client
-      delete flash.ack;
-      delete flash.params;
-      delete flash.address;
-      delete flash.command;
-      delete flash.checksum;
+      info.source = source;
+      info.make = make;
+    } catch (e) {
+      console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
+      throw new Error(e);
     }
 
-    return flash;
+    try {
+      info.individualSettings = getIndividualSettings(info);
+    } catch(e) {
+      console.debug('Could not get individual settings');
+      throw new Error(e);
+    }
+
+    return info;
   }
 
   async writeSettings(target, esc, settings) {
@@ -676,6 +662,8 @@ class FourWay {
   }
 
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
+    const { source } = esc;
+    console.log("Source", source);
     const {
       interfaceMode, signature,
     } = esc.meta;
@@ -949,7 +937,7 @@ class FourWay {
 
       const sameFirmware = (
         esc.individualSettings && newEsc.individualSettings &&
-        esc.canMigrateTo.includes(newEsc.individualSettings.NAME)
+        esc.source.canMigrateTo(newEsc.individualSettings.NAME)
       );
 
       /* Only migrate settings if new and old Firmware are the same or if user
@@ -991,7 +979,9 @@ class FourWay {
         console.debug('Failed flashing Arm:', e);
         return null;
       }
-    } else if(!esc.isAtmel) {
+    }
+
+    if(esc.isSiLabs) {
       try {
         const parsed = Flash.parseHex(hex);
         const flash = Flash.fillImage(parsed, flashSize, flashOffset);
@@ -1016,7 +1006,9 @@ class FourWay {
         console.debug('Failed flashing SiLabs:', e);
         return null;
       }
-    } else {
+    }
+
+    if(!esc.isArm || !esc.isSiLabs) {
       throw new UnknownInterfaceError(interfaceMode);
     }
   }
