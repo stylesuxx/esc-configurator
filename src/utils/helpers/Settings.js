@@ -2,6 +2,12 @@ import { blheliAtmelSource as blheliSource } from '../../sources';
 
 const blheliEeprom = blheliSource.getEeprom();
 
+/**
+ * Get master settings from a set of settings
+ *
+ * @param {Array<object>} escs
+ * @returns {object}
+ */
 const getMasterSettings = (escs) => {
   const master = getMaster(escs);
   if(master) {
@@ -13,6 +19,9 @@ const getMasterSettings = (escs) => {
 
 /**
  * Return the individaul settings for each ESC - include fixed fields
+ *
+ * @param {object} esc
+ * @returns {Array<string>}
  */
 const getIndividualSettingsDescriptions = (esc) => {
   if(esc && esc.individualSettingsDescriptions) {
@@ -33,6 +42,12 @@ const getIndividualSettingsDescriptions = (esc) => {
   return [];
 };
 
+/**
+ * Return individual settings for a  given ESC
+ *
+ * @param {object} esc
+ * @returns {object}
+ */
 const getIndividualSettings = (esc) => {
   const individualSettings = {};
   const individualKeep = getIndividualSettingsDescriptions(esc);
@@ -45,12 +60,40 @@ const getIndividualSettings = (esc) => {
   return individualSettings;
 };
 
+/**
+ * Get master ESC from a list of ESCs
+ *
+ * @param {Array<object>} escs
+ * @returns {object}
+ */
 const getMaster = (escs) => escs.find((esc) => esc.meta.available);
 
+/**
+ * Get the settings for all given ESCs
+ *
+ * @param {Array<object>} escs
+ * @returns {Array<object>}
+ */
 const getAllSettings = (escs) => escs.map((esc) => esc.settings);
 
+/**
+ * Check if all ESCs are in multi mode
+ *
+ * @param {Array<object>} escs
+ * @returns {boolean}
+ */
 const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === blheliEeprom.MODES.MULTI);
 
+/**
+ * Check if a specific setting can be migrated from one firmware to another
+ *
+ * @param {string} settingName
+ * @param {object} from
+ * @param {object} to
+ * @param {object} toSettingsDescriptions
+ * @param {object} toIndividualSettingsDescriptions
+ * @returns {boolean}
+ */
 function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualSettingsDescriptions) {
   if (from.MODE === to.MODE) {
     if (!toSettingsDescriptions[from.LAYOUT_REVISION] ||

@@ -3,7 +3,13 @@ import {
   useRef,
 } from 'react';
 
-function useInterval(callback, delay) {
+/**
+ * Invoke a callback in a given interval
+ *
+ * @param {function} callback
+ * @param {number} interval
+ */
+const useInterval = (callback, interval) => {
   const savedCallback = useRef();
 
   // Remember the latest callback.
@@ -17,14 +23,14 @@ function useInterval(callback, delay) {
       savedCallback.current();
     }
 
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
+    if (interval !== null) {
+      let id = setInterval(tick, interval);
       return () => clearInterval(id);
     } else {
       savedCallback.current();
     }
-  }, [delay]);
-}
+  }, [interval]);
+};
 
 export {
   useInterval,

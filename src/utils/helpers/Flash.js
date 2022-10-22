@@ -5,8 +5,14 @@ import {
 } from '../FourWayConstants';
 
 class Flash {
-
-  // Pad data to fixed size
+  /**
+   * Fill an image up to a certain size
+   *
+   * @param {Uint8Array} data
+   * @param {number} size
+   * @param {number} flashOffset
+   * @returns {Uint8Array}
+   */
   static fillImage(data, size, flashOffset) {
     var image = new Uint8Array(size).fill(0xFF);
 
@@ -139,6 +145,12 @@ class Flash {
     return null;
   }
 
+  /**
+   * Get information form a flash object
+   *
+   * @param {object} flash
+   * @returns {object}
+   */
   static getInfo(flash) {
     const info = {
       meta: {

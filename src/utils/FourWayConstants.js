@@ -1,3 +1,13 @@
+/**
+ * This constants are being used during communication with the four way
+ * interface.
+ */
+
+/**
+ * Those commands are the commands that the booloader supoorts. This has to be
+ * the same for every firmware, although the firmware might implement the
+ * underlying functionality in whichever way it sees fit.
+ */
 const COMMANDS = {
   cmd_InterfaceTestAlive: 0x30,
   cmd_ProtocolGetVersion: 0x31,
@@ -16,15 +26,19 @@ const COMMANDS = {
   cmd_InterfaceSetMode: 0x3f,
 };
 
+/**
+ * Ack are confirmation messages returned by the bootloader after sending one of
+ * the above commands.
+ */
 const ACK = {
   ACK_OK: 0x00,
-  ACK_I_UNKNOWN_ERROR: 0x01, // Unused
+  ACK_I_UNKNOWN_ERROR: 0x01,
   ACK_I_INVALID_CMD: 0x02,
   ACK_I_INVALID_CRC: 0x03,
   ACK_I_VERIFY_ERROR: 0x04,
-  ACK_D_INVALID_COMMAND: 0x05, // Unused
-  ACK_D_COMMAND_FAILED: 0x06, // Unused
-  ACK_D_UNKNOWN_ERROR: 0x07, // Unused
+  ACK_D_INVALID_COMMAND: 0x05,
+  ACK_D_COMMAND_FAILED: 0x06,
+  ACK_D_UNKNOWN_ERROR: 0x07,
   ACK_I_INVALID_CHANNEL: 0x08,
   ACK_I_INVALID_PARAM: 0x09,
   ACK_D_GENERAL_ERROR: 0x0f,

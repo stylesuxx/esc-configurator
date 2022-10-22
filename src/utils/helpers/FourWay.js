@@ -26,7 +26,7 @@ class FourWayHelper {
    * @param {number} ack
    * @returns {(string|null)}
    */
-   static ackToString(ack) {
+  static ackToString(ack) {
     for (const field in ACK) {
       if (ACK[field] === ack) {
         return field;

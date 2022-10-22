@@ -110,11 +110,21 @@ describe('Msp', () => {
     expect(result.byteLength).toEqual(9);
   });
 
-  it('should encode V2', async() => {
+  it('should calculate correct DVB-S2 checksum', async() => {
+    const data = new Uint8Array([220, 5, 220, 5, 220, 5, 220, 5, 0, 0, 0, 0, 0, 0, 0, 0]);
+    const expectedResult = 144;
+
+    const result = msp.crc8DvbS2Data(data, 0, data.length);
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should encode V2 with data', async() => {
     const code = 114;
     const data = new Uint8Array([220, 5, 220, 5, 220, 5, 220, 5, 0, 0, 0, 0, 0, 0, 0, 0]);
 
     const result = msp.encodeV2(code, data);
     expect(result.byteLength).toEqual(25);
+
+    console.log(result);
   });
 });

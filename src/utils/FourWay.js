@@ -741,7 +741,6 @@ class FourWay {
    * @returns
    */
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
-    const { source } = esc;
     const {
       interfaceMode, signature,
     } = esc.meta;
