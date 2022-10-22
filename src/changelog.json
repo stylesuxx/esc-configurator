@@ -6,7 +6,8 @@
       "AM32: Add support for G071 MCUs",
       "Chore: Improved test coverage",
       "Chore: Improved documentation",
-      "Bugfix: Properly update UI after flashing only one ESC"
+      "Bugfix: Properly update UI after flashing only one ESC",
+      "Bugfix: Stop motors when disconnecting from configurator"
     ]
   },
   {

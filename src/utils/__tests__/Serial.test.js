@@ -149,6 +149,7 @@ describe('Serial', () => {
     await expect(() => serial.getUid()).rejects.toThrow();
     await expect(() => serial.spinAllMotors()).rejects.toThrow();
     await expect(() => serial.spinMotor()).rejects.toThrow();
+    await expect(() => serial.stopAllMotors()).rejects.toThrow();
   });
 
   it('should toggle extended debugging', async() => {

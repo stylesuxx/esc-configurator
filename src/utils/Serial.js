@@ -201,6 +201,11 @@ class Serial {
   async close() {
     this.running = false;
 
+    // Attempt to stop motors
+    if(this.msp) {
+      await this.stopAllMotors();
+    }
+
     if(this.reader) {
       this.reader.cancel();
       await this.reader.releaseLock();
@@ -235,6 +240,7 @@ class Serial {
   getUid = () => this.msp.getUid();
   spinAllMotors = (speed) => this.msp.spinAllMotors(speed);
   spinMotor = (index, speed) => this.msp.spinMotor(index, speed);
+  stopAllMotors = () => this.msp.stopAllMotors();
 
   /**
    * Four Way interface - see the respective class for in depth documentation of
