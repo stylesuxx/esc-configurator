@@ -1,5 +1,12 @@
 import sources from '../../sources';
 
+/**
+ * Deeply compare two ByteArrays to each other
+ *
+ * @param {ByteArray} a
+ * @param {ByteArray} b
+ * @returns {boolean}
+ */
 function compare(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
@@ -14,6 +21,11 @@ function compare(a, b) {
   return true;
 }
 
+/**
+ * Delay for a given amount of ms
+ *
+ * @param {number} ms
+ */
 async function delay(ms) {
   await new Promise((resolve) => setTimeout(
     resolve,
@@ -21,6 +33,13 @@ async function delay(ms) {
   ));
 }
 
+/**
+ * Check if given flash is valid
+ *
+ * @param {string} mcu
+ * @param {Uint8Array} flash
+ * @returns {boolean}
+ */
 function isValidFlash(mcu, flash) {
   // Check instruction at the start of address space
   const firstBytes = flash.subarray(0, 3);
@@ -39,10 +58,14 @@ function isValidFlash(mcu, flash) {
 }
 
 /**
- * Expects a function to be resolved or rejected. Retries for a given
- * amount of times.
+ * Expects a function to be resolved or rejected. Retries for a given amount of
+ * times
+ *
+ * @param {function} func
+ * @param {number} maxRetries
+ * @param {number} iterationDelay
  */
-async function retry(func, maxRetries, iterationDelay = null) {
+async function retry(func, maxRetries, iterationDelay = 0) {
   function wrapped() {
     return new Promise((resolve,reject) => func(resolve, reject));
   }
@@ -76,11 +99,30 @@ async function retry(func, maxRetries, iterationDelay = null) {
   return new Promise((resolve, reject) => process(resolve, reject));
 }
 
+/**
+ * Check if a given signature can be found in a given list
+ *
+ * @param {number} signature
+ * @param {Array<string>} MCUList
+ * @returns
+ */
 const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signature, 16) === signature);
 
-// Check if a given layout is available in any of the sources
+/**
+ * Check if the given layout matches any of the available layouts from any of
+ * the sources
+ *
+ * @param {object} layout
+ * @returns {boolean}
+ */
 const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
 
+/**
+ * Return a list of matching sources for a given signature
+ *
+ * @param {number} signature
+ * @returns {Array<sources>}
+ */
 const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcus()));
 
 export {

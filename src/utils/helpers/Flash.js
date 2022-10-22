@@ -1,6 +1,18 @@
-class Flash {
+import {
+  ATMEL_MODES,
+  MODES,
+  SILABS_MODES,
+} from '../FourWayConstants';
 
-  // Pad data to fixed size
+class Flash {
+  /**
+   * Fill an image up to a certain size
+   *
+   * @param {Uint8Array} data
+   * @param {number} size
+   * @param {number} flashOffset
+   * @returns {Uint8Array}
+   */
   static fillImage(data, size, flashOffset) {
     var image = new Uint8Array(size).fill(0xFF);
 
@@ -22,6 +34,12 @@ class Flash {
     return image;
   }
 
+  /**
+   * Parse string to HEX objext
+   *
+   * @param {string} string
+   * @returns {object}
+   */
   static parseHex(string) {
     string = string.split("\n");
 
@@ -125,6 +143,31 @@ class Flash {
     }
 
     return null;
+  }
+
+  /**
+   * Get information form a flash object
+   *
+   * @param {object} flash
+   * @returns {object}
+   */
+  static getInfo(flash) {
+    const info = {
+      meta: {
+        signature: (flash.params[1] << 8) | flash.params[0],
+        input: flash.params[2],
+        interfaceMode: flash.params[3],
+        available: true,
+      },
+      displayName: 'UNKNOWN',
+      firmwareName: 'UNKNOWN',
+      supported: true,
+    };
+    info.isAtmel = ATMEL_MODES.includes(info.meta.interfaceMode);
+    info.isSiLabs = SILABS_MODES.includes(info.meta.interfaceMode);
+    info.isArm = info.meta.interfaceMode === MODES.ARMBLB;
+
+    return info;
   }
 }
 

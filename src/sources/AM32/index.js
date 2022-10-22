@@ -60,4 +60,7 @@ const source = new AM32Source(
   escs
 );
 
-export default source;
+export default AM32Source;
+export {
+  source,
+};

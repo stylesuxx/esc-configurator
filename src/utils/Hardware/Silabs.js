@@ -1,6 +1,7 @@
 import Hardware from './Hardware';
 
-const mcus = {
+class Silabs extends Hardware {}
+Silabs.mcus = {
   "E8B1": {
     "name": "EFM8BB10x",
     "signature": "0xE8B1",
@@ -35,8 +36,5 @@ const mcus = {
     "lockbyte_address": "0xF7FF",
   },
 };
-
-class Silabs extends Hardware {}
-Silabs.mcus = mcus;
 
 export default Silabs;

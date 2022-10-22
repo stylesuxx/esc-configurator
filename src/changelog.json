@@ -1,5 +1,15 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "BB: Add support for BB51 based ESCs",
+      "AM32: Add support for G071 MCUs",
+      "Chore: Improved test coverage",
+      "Chore: Improved documentation",
+      "Bugfix: Properly update UI after flashing only one ESC"
+    ]
+  },
+  {
     "title": "0.26.1",
     "items": [
       "Chore: Update Bluejay links to new source"
