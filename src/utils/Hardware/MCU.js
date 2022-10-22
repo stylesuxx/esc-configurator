@@ -11,6 +11,15 @@ import Arm from "./Arm";
 import Silabs from "./Silabs";
 
 class MCU {
+  /**
+   * Instanciate a MCU based on interface mode and signature
+   *
+   * The constructor will try to guess based on provided information which type
+   * of MCU this is. Arm based and SiLab EFM8 based platforms are supported.
+   *
+   * @param {number} interfaceMode
+   * @param {number} signature
+   */
   constructor(interfaceMode, signature) {
     this.interfaceMode = interfaceMode;
     this.mcu = ((interfaceMode) => {
@@ -39,22 +48,47 @@ class MCU {
     })(interfaceMode);
   }
 
+  /**
+   * Get flash siye in bytes
+   *
+   * @returns {number}
+   */
   getFlashSize() {
     return this.mcu.flash_size;
   }
 
+  /**
+   * Get address of flash offset
+   *
+   * @returns {number}
+   */
   getFlashOffset() {
     return parseInt(this.mcu.flash_offset, 16);
   }
 
+  /**
+   * Get address of EEprom offset
+   *
+   * @returns {number}
+   */
   getEepromOffset() {
     return parseInt(this.mcu.eeprom_offset, 16);
   }
 
+  /**
+   * Get page size
+   *
+   * @returns {number}
+   */
   getPageSize() {
     return this.mcu.page_size;
   }
 
+  /**
+   * Get bootloader address
+   *
+   * @returns {number}
+   */
   getBootloaderAddress() {
     if(this.mcu.bootloader_address) {
       return parseInt(this.mcu.bootloader_address, 16);
@@ -63,6 +97,11 @@ class MCU {
     throw new Error("MCU does not have bootloader address");
   }
 
+  /**
+   * Get firmware start address
+   *
+   * @returns {number}
+   */
   getFirmwareStart() {
     if(this.mcu.firmware_start) {
       return parseInt(this.mcu.firmware_start, 16);
@@ -71,6 +110,11 @@ class MCU {
     throw new Error("MCU does not have firmware start address");
   }
 
+  /**
+   * Get lock byte address
+   *
+   * @returns {number}
+   */
   getLockByteAddress() {
     if(this.mcu.lockbyte_address) {
       return parseInt(this.mcu.lockbyte_address, 16);

@@ -1,6 +1,7 @@
 import Hardware from './Hardware';
 
-const mcus = {
+class Arm extends Hardware {}
+Arm.mcus = {
   "1F06": {
     "name": "STM32F051",
     "signature": "0x1f06",
@@ -20,8 +21,5 @@ const mcus = {
     "eeprom_offset": "0xF800",
   },
 };
-
-class Arm extends Hardware {}
-Arm.mcus = mcus;
 
 export default Arm;

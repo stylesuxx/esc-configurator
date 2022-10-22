@@ -2,7 +2,7 @@
   {
     "title": "Unreleased",
     "items": [
-      "Update: Add support for BB51 ESCs",
+      "BB: Add support for BB51 based ESCs",
       "AM32: Add support for G071 MCUs",
       "Chore: Improved test coverage",
       "Chore: Improved documentation",
