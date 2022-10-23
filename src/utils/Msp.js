@@ -83,6 +83,7 @@ class Msp {
 
     const speedBufferOut = new ArrayBuffer(16);
     this.speedBufView = new Uint8Array(speedBufferOut);
+    this.motorsSpinning = false;
 
     this.version = null;
   }
@@ -578,6 +579,8 @@ class Msp {
    * @returns {Promise<>}
    */
   spinMotor(motor, speed) {
+    this.motorsSpinning = true;
+
     const offset = (motor - 1) * 2;
 
     this.speedBufView[offset] = 0x00ff & speed;
@@ -593,12 +596,25 @@ class Msp {
    * @returns  {Promise}
    */
   spinAllMotors(speed) {
+    this.motorsSpinning = true;
+
     for(let i = 0; i < 8; i += 2) {
       this.speedBufView[i] = 0x00ff & speed;
       this.speedBufView[i + 1] = speed >> 8;
     }
 
     return this.setMotor(this.speedBufView);
+  }
+
+  /**
+   * Stop all motors if they have been spun up before
+   *
+   * @returns {Promise}
+   */
+  stopAllMotors() {
+    if(this.motorsSpinning) {
+      return this.spinAllMotors(0);
+    }
   }
 
   /**
