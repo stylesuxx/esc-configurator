@@ -347,7 +347,6 @@ class FourWay {
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
-        console.log((await this.read(eepromOffset, info.layoutSize)));
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
         info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
 
@@ -699,6 +698,7 @@ class FourWay {
     let flashSize = mcu.getFlashSize();
     const firmwareStart = mcu.getFirmwareStart();
     const chunkSize = 0x80;
+    const name = mcu.getName();
 
     /**
      * This cutoff is needed for dumping the firmware on BLHeli_S based
@@ -706,7 +706,7 @@ class FourWay {
      * this address space.
      */
     const hardCutoff = 0x3800;
-    if(mcu.name.startsWith("EFM8BB") && flashSize > hardCutoff) {
+    if(name.startsWith("EFM8BB") && flashSize > hardCutoff) {
       flashSize = hardCutoff;
     }
 
@@ -1160,8 +1160,6 @@ class FourWay {
    * @param {number} eepromOffset
    */
   async writeEEpromSafeguard(settings, eepromOffset) {
-    console.log("write EEpromSafeguard", settings);
-
     settings.set(Convert.asciiToBuffer('**FLASH*FAILED**'), blheliEeprom.LAYOUT.NAME.offset);
     const response = await this.write(eepromOffset, settings);
 
