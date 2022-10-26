@@ -49,7 +49,16 @@ class MCU {
   }
 
   /**
-   * Get flash siye in bytes
+   * Get MCU name
+   *
+   * @returns {string}
+   */
+  getName() {
+    return this.mcu.name;
+  }
+
+  /**
+   * Get flash size in bytes
    *
    * @returns {number}
    */
