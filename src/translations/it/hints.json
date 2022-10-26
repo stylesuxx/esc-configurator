@@ -12,7 +12,7 @@
   "MOTOR_DIRECTION": "La rotazione del motore può essere normale o invertita. In modalità bidirezionale, il centro dell'acceleratore è zero.",
   "COMMUTATION_TIMING": "Timing avanzato della commutazione motore. Tempi più elevati sono meno soggetti a desync e possono fornire più potenza a scapito dell'efficienza.",
   "DEMAG_COMPENSATION": "La misura in cui l'alimentazione deve essere interrotta per proteggere dallo stallo del motore causato dal lungo tempo di smagnetizzazione dell'avvolgimento dopo la commutazione.",
-  "SINUSOIDAL_STARTUP": "During the first 10 percent of throttle the motor is stepped in sinusoidal open loop commutation.",
+  "SINUSOIDAL_STARTUP": "Durante il primo 10 percento di accelerazione, il motore entra in commutazione sinusoidale a loop.",
   "COMPLEMENTARY_PWM": "Consente la frenata attiva utilizzando interruttori sul lato basso per il decadimento della corrente invece dei diodi del MOSFET.",
   "VARIABLE_PWM_FREQUENCY": "Aumenta la frequenza PWM proporzionalmente al numero di giri del motore da 24-48 khz per evitare disturbi dell'acceleratore.",
   "STUCK_ROTOR_PROTECTION": "Toglie alimentazione al motore e interrompe il tentativo di riavvio dopo 10 tentativi di avviamento falliti. Toglie alimentazione al motore e interrompe il tentativo di riavvio dopo 10 tentativi di avviamento falliti.",
