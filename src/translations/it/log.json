@@ -1,10 +1,10 @@
 {
-  "closedPort": "Closed port",
-  "pluggedIn": "Plugged in",
-  "unplugged": "Unplugged",
-  "portSelected": "Port selected",
-  "portChanged": "Port changed",
-  "portOpened": "Opened serial port",
+  "closedPort": "Chiudi porta",
+  "pluggedIn": "Inserito",
+  "unplugged": "Disinserito",
+  "portSelected": "Porta selezionata",
+  "portChanged": "Porta cambiata",
+  "portOpened": "Apri porta seriale",
   "mspApiVersion": "MultiWii API version received: {{version}}",
   "mspBuildInfo": "Running firmware released on: {{info}}",
   "mspBoardInfo": "Board: {{identifier}}, version: {{version}}",
@@ -36,5 +36,5 @@
   "firmwareMismatch": "Firmware mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Firmware is tagged as {{tagged}} but actualy seems to be {{actual}}",
-  "browser": "{{name}} ({{version}}) on {{os}}"
+  "browser": "{{name}} ({{version}}) su {{os}}"
 }
