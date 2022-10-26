@@ -1,6 +1,6 @@
 {
-  "settingsHeader": "Settings",
-  "closeText": "Close",
+  "settingsHeader": "Impostazioni",
+  "closeText": "Chiudi",
   "directInput": "Numeric Input",
   "directInputHint": "Use numeric input for numbers instead of sliders.",
   "printLogs": "Print logs",
