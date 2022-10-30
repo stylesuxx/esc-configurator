@@ -7,6 +7,7 @@
       "Chore: Improved test coverage",
       "Chore: Improved documentation",
       "Translation: Added Italian translation",
+      "Chore: Text improvements",
       "Bugfix: Properly update UI after flashing only one ESC",
       "Bugfix: Stop motors when disconnecting from configurator"
     ]
