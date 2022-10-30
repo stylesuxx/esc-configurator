@@ -4,6 +4,7 @@
     "items": [
       "BB: Add support for BB51 based ESCs",
       "AM32: Add support for G071 MCUs",
+      "AM32: Update layouts and versions",
       "Chore: Improved test coverage",
       "Chore: Improved documentation",
       "Bugfix: Properly update UI after flashing only one ESC",

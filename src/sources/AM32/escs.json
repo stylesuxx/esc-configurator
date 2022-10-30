@@ -1,20 +1,88 @@
 {
   "layouts": {
+    "Aikon AK32": {
+      "name": "Aikon AK32",
+      "fileName": "AIKONSINGLE"
+    },
+    "AIKON PRO 50": {
+      "name": "AIKON PRO 50",
+      "fileName": "AIKON_PRO_G071"
+    },
+    "AM32 Ref-ESC": {
+      "name": "AM32 Ref-ESC",
+      "fileName": "AM32REF"
+    },
+    "BlPwr-ESC": {
+      "name": "BlPwr-ESC",
+      "fileName": "BLPWR"
+    },
+    "cr hilariesc": {
+      "name": "Crteensy Hilariesc",
+      "fileName": "CRTEENSY_HILARIESC"
+    },
     "DIATONE GEN": {
       "name": "Diatone",
       "fileName": "DIATONE"
+    },
+    "G071 120 DT": {
+      "name": "G071 120 DT",
+      "fileName": "DT120_G071"
+    },
+    "G071 120 64K": {
+      "name": "G071 120 64K",
+      "fileName": "DT120_G071_64K"
+    },
+    "G071 160 64K": {
+      "name": "G071 160 64K",
+      "fileName": "DT160_G071_64K"
     },
     "FD6288_PA2": {
       "name": "FD6288 based",
       "fileName": "FD6288"
     },
+    "Flycolor Gen": {
+      "name": "Flycolor Gen",
+      "fileName": "FLYCOLOR"
+    },
+    "G071 PWM_EN": {
+      "name": "G071 PWM_EN",
+      "fileName": "G071ENABLE"
+    },
+    "G071 DevESC": {
+      "name": "G071 DevESC",
+      "fileName": "G071ESC"
+    },
+    "G071 64kESC": {
+      "name": "G071 64kESC",
+      "fileName": "G071_64K"
+    },
+    "G071 TEENSY": {
+      "name": "G071 TEENSY",
+      "fileName": "G071_OPEN_DRAIN"
+    },
+    "G071 TEENSYB": {
+      "name": "G071 TEENSYB",
+      "fileName": "G071_OPEN_DRAIN_B"
+    },
+    "SkyStars KM55": {
+      "name": "SkyStars KM55",
+      "fileName": "GD32E_SKYSTARS_KM55"
+    },
     "HGLRC_60A": {
       "name": "HGLRC 60A",
       "fileName": "HGLRC"
     },
+    "FLYCOLOR HV": {
+      "name": "FLYCOLOR HV",
+      "fileName": "HVFLYCOLOR"
+    },
     "IFlight_50A": {
       "name": "iFlight 50A",
       "fileName": "IFLIGHT"
+    },
+    "Blitz 55 G0": {
+      "name": "Blitz 55 G0",
+      "fileName": "IFLIGHT_BLITZ_G"
     },
     "MAMBA F40PRO": {
       "name": "Mamba F40 Pro",
@@ -32,9 +100,17 @@
       "name": "MP6531 based",
       "fileName": "MP6531"
     },
+    "Neutron G071": {
+      "name": "Neutron G071",
+      "fileName": "G071_NEUTRON"
+    },
     "SISKIN_PA2": {
       "name": "Sunrise Siskin",
       "fileName": "SISKIN"
+    },
+    "SkyStars K55": {
+      "name": "SkyStars K55",
+      "fileName": "SKYSTARS"
     },
     "T-MOTOR 45A": {
       "name": "T-motor 45A",
@@ -44,85 +120,13 @@
       "name": "T-motor 55A",
       "fileName": "TMOTOR55"
     },
+    "T-MOTOR G071": {
+      "name": "T-MOTOR G071",
+      "fileName": "TMOTORG071"
+    },
     "Wraith_32": {
       "name": "Wraith 32",
       "fileName": "WRAITH32"
-    },
-    "Aikon 20x20": {
-      "name": "Aikon 20x20",
-      "fileName": "AIKON20X20"
-    },
-    "Aikon AK32": {
-      "name": "Aikon AK32",
-      "fileName": "AIKONSINGLE"
-    },
-    "cr hilariesc": {
-      "name": "Crteensy Hilariesc",
-      "fileName": "CRTEENSY_HILARIESC"
-    },
-    "Flycolor Gen": {
-      "name": "Flycolor Gen",
-      "fileName": "FLYCOLOR"
-    },
-    "FLYCOLOR HV": {
-      "name": "FLYCOLOR HV",
-      "fileName": "HVFLYCOLOR"
-    },
-    "SkyStars K55": {
-      "name": "SkyStars K55",
-      "fileName": "SKYSTARS"
-    },
-    "HK Micro": {
-      "name": "HK Micro",
-      "fileName": "HKMICRO"
-    },
-    "BlPwr-ESC": {
-      "name": "BlPwr-ESC",
-      "fileName": "BLPWR"
-    },
-    "AM32 Ref-ESC": {
-      "name": "AM32 Ref-ESC",
-      "fileName": "AM32REF"
-    },
-    "G071 64kESC": {
-      "name": "G071 64kESC",
-      "fileName": "G071_64K"
-    },
-    "Neutron G071": {
-      "name": "Neutron G071",
-      "fileName": "G071_NEUTRON"
-    },
-    "Aikon Pro 55": {
-      "name": "Aikon Pro 55",
-      "fileName": "G071N_AIKON"
-    },
-    "G071 DevESC": {
-      "name": "G071 DevESC",
-      "fileName": "G071ESC"
-    },
-    "Blitz 55 G0": {
-      "name": "Blitz 55 G0",
-      "fileName": "IFLIGHT_BLITZ_G"
-    },
-    "G071 120 DT": {
-      "name": "G071 120 DT",
-      "fileName": "DT120_G071"
-    },
-    "G071 120 64K": {
-      "name": "G071 120 64K",
-      "fileName": "DT120_G071_64K"
-    },
-    "G071 PWM_EN": {
-      "name": "G071 PWM_EN",
-      "fileName": "G071ENABLE"
-    },
-    "G071 TEENSY": {
-      "name": "G071 TEENSY",
-      "fileName": "G071_OPEN_DRAIN"
-    },
-    "G071 TEENSYB": {
-      "name": "G071 TEENSYB",
-      "fileName": "G071_OPEN_DRAIN_B"
     }
   }
 }
