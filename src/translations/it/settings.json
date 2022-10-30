@@ -1,0 +1,16 @@
+{
+  "settingsHeader": "Impostazioni",
+  "closeText": "Chiudi",
+  "directInput": "Immissione numerica",
+  "directInputHint": "Usa l'immissione numerica per i numeri invece dei cursori.",
+  "printLogs": "Stampa i Log",
+  "printLogsHint": "Se abilitato, stamperà i log sulla console.",
+  "extendedDebug": "Debug esteso",
+  "extendedDebugHint": "Stamperà inoltre gli indirizzi in fase di lettura/scrittura e il totale inviato/ricevuto.",
+  "disableCommon": "Disabilita le impostazioni comuni",
+  "disableCommonHint": "Ogni ESC avrà un proprio set di impostazioni invece di avere una sezione comune valida per tutti gli ESC.",
+  "enableAdvanced": "Abilita impostazioni avanzate",
+  "enableAdvancedHint": "Aggiunge impostazioni avanzate come il dump del firmware.",
+  "unstableVersions": "Mostra pre-release del firmware",
+  "unstableVersionsHint": "Mostra versioni del firmware instabili e pre-release"
+}
