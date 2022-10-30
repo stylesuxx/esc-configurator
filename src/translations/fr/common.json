@@ -6,7 +6,7 @@
   "serialPermission": "Sélectionner un port série",
   "showLog": "Afficher le journal",
   "hideLog": "Masquer le journal",
-  "note": "Remarque :",
+  "note": "Remarque: ",
   "notePropsOff": "**ENLEVEZ LES HÉLICES** avant de toucher à quoique ce soit dans cet onglet.",
   "noteConnectPower": "Alimentez les ESCs.",
   "commonParameters": "Paramètres communs",
