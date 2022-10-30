@@ -162,7 +162,7 @@
   "escMissing2": "Semplicemente **nessun altro ESC collegato.**",
   "escMissing3": "La **MCU dell'ESC è difettosa**",
   "escMissing4": "Prova un altro cavo USB - a volte non sono schermati correttamente e potrebbero causare tali errori.",
-  "escMissing5": "Assicurati di spegnere la radio quando usi il configuratore. Le radio accese sono causa di problemi per interferenze elettromagnetiche e quindi letture/scritture fallite.",
+  "escMissing5": "Make sure your radio is turned off while interacting with the configurator. Switched on radios have been reported to cause issues with electro-magnetic interference and thus failed read/writes.",
   "mistaggedLine1": "**Attenzione:** Sembra che il firmware attualmente flashato non corrisponda!",
   "mistaggedLine2": "Procedi solo se sai cosa stai facendo. Continuare da qui potrebbe mettere l'ESC a rischio di surriscaldamento e - nel peggiore dei casi - la distruzione dell'ESC stesso. Se vuoi procedere, si consiglia vivamente di flashare la versione con il più alto tempo di inattivita' - è necessario marcare la casella *\"Ignorare MCU Layout inappropriato? * di controllo in cima alla pagina.",
   "mistaggedLine3": "Se vedi questo messaggio, [considera di aggiungere una voce a Wiki](https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO), aiutandoci a documentare hardware problematico.",
