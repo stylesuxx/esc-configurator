@@ -166,8 +166,8 @@
   "mistaggedLine1": "**Upozornění:** Zdá se, že aktuálně nahraný firmware je nesprávný!",
   "mistaggedLine2": "Pokračujte pouze v případě, že víte, co děláte. Postup zde může vystavit ESC riziku přehřátí a - v nejhorším případě - zničení ESC. Chcete-li pokračovat, důrazně se doporučuje flashovat verze s vyšší mrtvou dobou - musíte zaškrtnout políčko *\"Ignorovat nevhodné rozvržení MCU?\"* v horní části stránky.",
   "mistaggedLine3": "Pokud vidíte tuto zprávu, prosím zvažte umístění na [wiki](https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's), pomozte nám zdokumentovat problematický Hardware.",
-  "mistaggedLine4": "**If you do not understand the risks involved in proceeding, do not hesitate to [join us on discord](https://discord.gg/QvSS5dk23C).**",
-  "mistaggedTagged": "Tagged",
-  "mistaggedDetected": "Detected",
-  "update": "Update available! To update the app, refresh or restart it."
+  "mistaggedLine4": "**Pokud nerozumíte rizikům spojeným s postupem, neváhejte se připojit k nám na [discord](https://discord.gg/QvSS5dk23C).**",
+  "mistaggedTagged": "Označení",
+  "mistaggedDetected": "Zjištěno",
+  "update": "Je dostupná aktualizace! Chcete-li aplikaci aktualizovat, obnovte ji nebo restartujte."
 }
