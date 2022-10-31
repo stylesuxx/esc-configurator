@@ -5,7 +5,6 @@ const SETTINGS_DESCRIPTIONS = source.getSettingsDescriptions();
 describe('BLHeli_S', () => {
   it('should handle conditional visibility with general settings', () => {
     const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
-    const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
