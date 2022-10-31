@@ -162,7 +162,7 @@
   "escMissing2": "只是 **没有连接更多的 ESC** 。",
   "escMissing3": "ESC 的 ** MCU 存在缺陷** 。",
   "escMissing4": "请尝试使用不同的 USB 线缆 - 有些线缆并没有得到良好的屏蔽，并可能导致这种错误出现。",
-  "escMissing5": "Make sure your radio is turned off while interacting with the configurator. Switched on radios have been reported to cause issues with electro-magnetic interference and thus failed read/writes.",
+  "escMissing5": "请确保您的遥控器在使用配置程序调参期间保持关闭。根据报告，遥控器开机或许会造成电磁干扰从而导致读写失败。",
   "mistaggedLine1": "**警告：** 当前烧录的固件似乎被标记为错误！",
   "mistaggedLine2": "仅当您知晓您自己在做什么时再继续。在这里继续可能会导致您的电调面临过热的风险，甚至最糟糕的情况是电调烧毁。强烈建议烧录检测到的版本的更高死区固件，而不是这个被标记的版本，你需要勾选顶部的 *“忽略不匹配的 MCU 和布局？”* 选项。",
   "mistaggedLine3": "如果您看到此条消息，请[考虑在 Wiki 上添加一个词条](https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's)，来帮助我们记录有问题的硬件。",
