@@ -36,5 +36,6 @@
   "firmwareMismatch": "Incompatibilité du micrologiciel ! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "bootloaderMismatch": "Incompatibilité du chargeur de démarrage ! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Le micrologiciel est marqué comme {{tagged}} mais semble être {{actual}}",
-  "browser": "{{name}} ({{version}}) sur {{os}}"
+  "browser": "{{name}} ({{version}}) sur {{os}}",
+  "dumpingEsc": "Dumping ESC {{index}}"
 }

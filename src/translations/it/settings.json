@@ -6,7 +6,7 @@
   "printLogs": "Stampa i Log",
   "printLogsHint": "Se abilitato, stamperà i log sulla console.",
   "extendedDebug": "Debug esteso",
-  "extendedDebugHint": "Stamperà inoltre gli indirizzi in fase di lettura/scrittura e il totale inviato/ricevuto.",
+  "extendedDebugHint": "Stamperà inoltre gli indirizzi in fase di lettura/scrittura e il carico inviato/ricevuto.",
   "disableCommon": "Disabilita le impostazioni comuni",
   "disableCommonHint": "Ogni ESC avrà un proprio set di impostazioni invece di avere una sezione comune valida per tutti gli ESC.",
   "enableAdvanced": "Abilita impostazioni avanzate",

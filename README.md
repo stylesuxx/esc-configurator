@@ -98,5 +98,6 @@ To continue the legacy of everyone who was mentioned as author or contributor in
 * Asier Ruiz aka. Asizon - Spanish translation
 * djtms - Polish translation
 * Mat Cron - Italian translation
+* psicho100pro - Czech translation
 
 If you feel that your name should be mentioned in the authors section, please do not hesitate to submit a pull request.

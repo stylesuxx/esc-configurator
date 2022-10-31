@@ -12,7 +12,7 @@
   "mspFcInfo": "Informazioni sul controllore di volo, identificatore: {{id}} versione: {{version}}",
   "portUsed": "Porta già in uso da un'altra applicazione - prova a riconnetterti",
   "fourWayFailed": "Impossibile abilitare l'interfaccia a 4 vie - riconnettere il controllore di volo",
-  "readEscs": "Prova lettura {{connected}} ESC",
+  "readEscs": "Tentativo lettura {{connected}} ESC",
   "readEscsSuccess": "Lettura ESC completata",
   "readEscsFailed": "Lettura ESC fallita",
   "readEsc": "Lettura ESC {{index}}: {{name}}",
@@ -36,5 +36,6 @@
   "firmwareMismatch": "Firmware non corrisponde! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "bootloaderMismatch": "Bootloader non corrisponde! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Il firmware è etichettato come {{tagged}} ma sembra essere {{actual}}",
-  "browser": "{{name}} ({{version}}) su {{os}}"
+  "browser": "{{name}} ({{version}}) su {{os}}",
+  "dumpingEsc": "Dumping ESC {{index}}"
 }

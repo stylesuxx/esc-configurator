@@ -5,10 +5,11 @@
       "BB: Add support for BB51 based ESCs",
       "AM32: Add support for G071 MCUs",
       "AM32: Update layouts and versions",
+      "Translation: Add Italian translation",
+      "Translation: Add Czech translation",
+      "Chore: Text improvements",
       "Chore: Improved test coverage",
       "Chore: Improved documentation",
-      "Translation: Added Italian translation",
-      "Chore: Text improvements",
       "Bugfix: Properly update UI after flashing only one ESC",
       "Bugfix: Stop motors when disconnecting from configurator"
     ]

@@ -3,6 +3,10 @@
   "corsProxy": "https://cors.bubblesort.me/?",
   "availableLanguages": [
     {
+      "label": "Čeština",
+      "value": "cs"
+    },
+    {
       "label": "Deutsch",
       "value": "de"
     },

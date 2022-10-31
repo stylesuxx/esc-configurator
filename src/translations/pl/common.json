@@ -162,7 +162,7 @@
   "escMissing2": "Po prostu **nie ma więcej podłączonych ESC**",
   "escMissing3": "**MCU ESC jest uszkodzone.**",
   "escMissing4": "Spróbuj użyć innego kabla USB - czasami nie są one odpowiednio ekranowane i mogą powodować takie błędy.",
-  "escMissing5": "Jeśli radio zostanie włączone, spróbuj ponownie po włączeniu go. Zgłoszono, że włączenie radia powoduje problemy z zakłóceniami elektromagnetycznymi i w związku z tym nie powiodło się odczytu/zapisy.",
+  "escMissing5": "Make sure your radio is turned off while interacting with the configurator. Switched on radios have been reported to cause issues with electro-magnetic interference and thus failed read/writes.",
   "mistaggedLine1": "**Ostrzeżenie:** Wygląda na to, że aktualnie zainstalowane oprogramowanie układowe jest błędnie rozpoznawane!",
   "mistaggedLine2": "Kontynuuj tylko, jeśli wiesz co robisz. Dalsze działania mogą narazić ESC na ryzyko przegrzania, a w najgorszym przypadku zniszczenia ESC. Jeśli chcesz kontynuować, Zaleca się wgranie wersji z wyższym czasem opóźnienia - musisz zaznaczyć pole *\"Ignorój nieodpowiedni układ MCU? * na pierwszej stronie.",
   "mistaggedLine3": "Jeśli widzisz tę wiadomość, [rozważ dodanie wpisu do Wiki](https://github.com/stylesuxx/esc-configurator/wiki/Wrongly-Tagged-AIO's), pomagając nam udokumentować problematyczny sprzęt.",
