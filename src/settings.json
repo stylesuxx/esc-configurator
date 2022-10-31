@@ -11,12 +11,16 @@
       "value": "en"
     },
     {
+      "label": "Español",
+      "value": "es"
+    },
+    {
       "label": "Français",
       "value": "fr"
     },
     {
-      "label": "Español",
-      "value": "es"
+      "label": "Italiano",
+      "value": "it"
     },
     {
       "label": "Polski",
