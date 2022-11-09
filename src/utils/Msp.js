@@ -2,6 +2,10 @@ import compareVersions from 'compare-versions';
 
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
+/**
+ * Relevant MSP commands, this is not a full mapping, rather just a selectiotn
+ * for the functionality we actually need.
+ */
 const MSP = {
   MSP_API_VERSION: 1,
   MSP_FC_VARIANT: 2,
@@ -56,6 +60,15 @@ const FEATURES = [
 ];
 
 class Msp {
+  /**
+   * MSP - Multiwii Serial Protocol implementation
+   *
+   * Communicates with the flight controller firmware which is implementing this
+   * protocol. Those are (but not limited to): Betaflight, iNav, Emu,
+   * Cleanflight, Baseflight.
+   *
+   * @param {Serial} serial
+   */
   constructor(serial) {
     this.serial = serial;
 
@@ -70,32 +83,96 @@ class Msp {
 
     const speedBufferOut = new ArrayBuffer(16);
     this.speedBufView = new Uint8Array(speedBufferOut);
+    this.motorsSpinning = false;
 
     this.version = null;
   }
 
+  /**
+   * Setter for log callback
+   *
+   * @param {function} logCallback
+   */
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
   }
 
+  /**
+   * Setter for packet error callback
+   *
+   * @param {function} packetErrorsCallback
+   */
+  setPacketErrorsCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
+  }
+
+  /**
+   * Invoke log callback if available
+   *
+   * @param {string} message
+   * @param {array} params
+   */
   addLogMessage(message, params) {
     if(this.logCallback) {
       this.logCallback(message, params);
     }
   }
 
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-  }
-
+  /**
+   * Invoke packet error callback with count
+   *
+   * @param {number} count Packet error count
+   */
   increasePacketErrors(count) {
     if(this.packetErrorsCallback) {
       this.packetErrorsCallback(count);
     }
   }
 
+  /**
+   * Send a command with data to the MSP
+   *
+   * @param {number} command
+   * @param {Uint8Array} data
+   * @returns {Promise}
+   */
+  async send(command, data) {
+    const process = async (resolve, reject) => {
+      let bufferOut;
+
+      if(command <= 254) {
+        bufferOut = this.encodeV1(command, data);
+      } else {
+        bufferOut = this.encodeV2(command, data);
+      }
+
+      try {
+        const result = await this.serial(bufferOut, this.read);
+        resolve(result);
+      } catch(e) {
+        console.debug('MSP command failed:', e.message);
+        reject(e);
+      }
+    };
+
+    return new Promise((resolve, reject) => process(resolve, reject));
+  }
+
+  /**
+   * Processes incoming chunks of data
+   *
+   * Invokes resolve callback if a valid response message could be parsed  from
+   * the given amount of data.
+   *
+   * Will invoke reject method in any other case and throw according error.
+   *
+   * @param {Uint8Array} data
+   * @param {function} resolve
+   * @param {function} reject
+   * @returns {void}
+   */
   read(data, resolve, reject) {
-    let code = 0;
+    let command = 0;
     let state = 0;
     let messageBuffer = null;
     let messageChecksum = null;
@@ -156,7 +233,7 @@ class Msp {
         } break;
 
         case 4: {
-          code = data[i];
+          command = data[i];
           messageChecksum ^= data[i];
 
           // Process payload
@@ -183,7 +260,7 @@ class Msp {
           // Message received, process
           if (messageChecksum === data[i]) {
             const response = this.processData(
-              code,
+              command,
               messageBuffer,
               messageLengthExpected
             );
@@ -194,7 +271,7 @@ class Msp {
           }
 
           this.increasePacketErrors(1);
-          return reject(new Error(`code: ${code} - crc failed`));
+          return reject(new Error(`command: ${command} - crc failed`));
         }
 
         default: {
@@ -208,7 +285,14 @@ class Msp {
     return reject(new NotEnoughDataError());
   }
 
-  encodeV1(code, data = []) {
+  /**
+   * Encode a MSP V1 command
+   *
+   * @param {number} command
+   * @param {Uint8Array} data
+   * @returns {ArrayBuffer}
+   */
+  encodeV1(command, data = []) {
     // Always reserve 6 bytes for protocol overhead !
     const size = 6 + data.length;
     const bufferOut = new ArrayBuffer(size);
@@ -218,7 +302,7 @@ class Msp {
     bufView[1] = 77; // M
     bufView[2] = 60; // <
     bufView[3] = data.length;
-    bufView[4] = code;
+    bufView[4] = command;
 
     if (data.length > 0) {
       let checksum = bufView[3] ^ bufView[4];
@@ -236,30 +320,16 @@ class Msp {
     return bufferOut;
   }
 
-  crc8DvbS2(crc, ch) {
-    crc ^= ch;
-    for (let i = 0; i < 8; i += 1) {
-      if (crc & 0x80) {
-        crc = ((crc << 1) & 0xFF) ^ 0xD5;
-      } else {
-        crc = (crc << 1) & 0xFF;
-      }
-    }
-
-    return crc;
-  }
-
-  crc8DvbS2Data(data, start, end) {
-    let crc = 0;
-    for (let i = start; i < end; i += 1) {
-      crc = this.crc8DvbS2(crc, data[i]);
-    }
-
-    return crc;
-  }
-
-  encodeV2(code, data = []) {
-    // Always reserve 9 bytes for protocol overhead !
+  /**
+   * Encode a MSP V2 command
+   *
+   * @param {number} command
+   * @param {Uint8Array} data
+   * @returns {ArrayBuffer}
+   */
+  encodeV2(command, data = []) {
+    console.log("V2 command:", command);
+    // Always reserve 9 bytes for protocol overhead!
     const dataLength = data.length;
     const size = 9 + dataLength;
     const bufferOut = new ArrayBuffer(size);
@@ -269,8 +339,8 @@ class Msp {
     bufView[1] = 88; // X
     bufView[2] = 60; // <
     bufView[3] = 0;  // flag
-    bufView[4] = code & 0xFF;
-    bufView[5] = (code >> 8) & 0xFF;
+    bufView[4] = command & 0xFF;
+    bufView[5] = (command >> 8) & 0xFF;
     bufView[6] = dataLength & 0xFF;
     bufView[7] = (dataLength >> 8) & 0xFF;
 
@@ -283,87 +353,40 @@ class Msp {
     return bufferOut;
   }
 
-  async send(code, data) {
-    const process = async (resolve, reject) => {
-      let bufferOut;
-
-      if(code <= 254) {
-        bufferOut = this.encodeV1(code, data);
-      } else {
-        bufferOut = this.encodeV2(code, data);
+  /**
+   * Calculate the DVB-S2 checksum for a chunk of data
+   *
+   * @param {Uint8Array} data
+   * @param {number} start
+   * @param {number} end
+   * @returns {number}
+   */
+  crc8DvbS2Data(data, start, end) {
+    let crc = 0;
+    for (let i = start; i < end; i += 1) {
+      const ch = data[i];
+      crc ^= ch;
+      for (let i = 0; i < 8; i += 1) {
+        if (crc & 0x80) {
+          crc = ((crc << 1) & 0xFF) ^ 0xD5;
+        } else {
+          crc = (crc << 1) & 0xFF;
+        }
       }
-
-      try {
-        const result = await this.serial(bufferOut, this.read);
-        resolve(result);
-      } catch(e) {
-        console.debug('MSP command failed:', e.message);
-        reject(e);
-      }
-    };
-
-    return new Promise((resolve, reject) => process(resolve, reject));
-  }
-
-  getApiVersion () {
-    return this.send(MSP.MSP_API_VERSION);
-  }
-
-  getFcVariant() {
-    return this.send(MSP.MSP_FC_VARIANT);
-  }
-
-  getFcVersion() {
-    return this.send(MSP.MSP_FC_VERSION);
-  }
-
-  getBuildInfo() {
-    return this.send(MSP.MSP_BUILD_INFO);
-  }
-
-  getBoardInfo() {
-    return this.send(MSP.MSP_BOARD_INFO);
-  }
-
-  getUid() {
-    return this.send(MSP.MSP_UID);
-  }
-
-  getMotorData() {
-    return this.send(MSP.MSP_MOTOR);
-  }
-
-  getBatteryState() {
-    return this.send(MSP.MSP_BATTERY_STATE);
-  }
-
-  getFeatures() {
-    return this.send(MSP.MSP_FEATURE_CONFIG);
-  }
-
-  set4WayIf() {
-    return this.send(MSP.MSP_SET_PASSTHROUGH);
-  }
-
-  spinAllMotors(speed) {
-    for(let i = 0; i < 8; i += 2) {
-      this.speedBufView[i] = 0x00ff & speed;
-      this.speedBufView[i + 1] = speed >> 8;
     }
 
-    return this.send(MSP.MSP_SET_MOTOR, this.speedBufView);
+    return crc;
   }
 
-  spinMotor(motor, speed) {
-    const offset = (motor - 1) * 2;
-
-    this.speedBufView[offset] = 0x00ff & speed;
-    this.speedBufView[offset + 1] = speed >> 8;
-
-    return this.send(MSP.MSP_SET_MOTOR, this.speedBufView);
-  }
-
-  processData(code, messageBuffer, messageLength) {
+  /**
+   * Return an object parsef rom message buffer according tto a given command
+   *
+   * @param {number} command
+   * @param {Uint8Array} messageBuffer
+   * @param {number} messageLength
+   * @returns {object}
+   */
+  processData(command, messageBuffer, messageLength) {
     // DataView (allowing us to view arrayBuffer as struct/union)
     const data = new DataView(
       messageBuffer,
@@ -374,7 +397,7 @@ class Msp {
     const motorData = [];
 
     if (!this.unsupported) {
-      switch (code) {
+      switch (command) {
         case MSP.MSP_IDENT: {
           console.debug('Using deprecated msp command: MSP_IDENT');
 
@@ -414,12 +437,6 @@ class Msp {
 
           return escConfig;
         }
-
-        case MSP.MSP_SET_MOTOR: {
-          // Motor speeds updated
-        } break;
-
-        // Additional baseflight commands that are not compatible with MultiWii
         case MSP.MSP_UID: {
           config.uid = [];
           config.uid[0] = data.getUint32(0, 1);
@@ -429,11 +446,6 @@ class Msp {
           return config;
         }
 
-        /*
-       *
-       * Cleanflight specific
-       *
-       */
         case MSP.MSP_API_VERSION: {
           let offset = 0;
           config.mspProtocolVersion = data.getUint8(offset++);
@@ -542,17 +554,236 @@ class Msp {
           console.debug('3D settings saved');
         } break;
 
+        case MSP.MSP_SET_MOTOR: {
+          // Motor speeds updated
+        } break;
+
         default: {
-          console.debug('Unknown code detected:', code);
+          console.debug('Unknown command detected:', command);
         }
       }
-    } else if (code === MSP.MSP_SET_PASSTHROUGH) {
+    } else if (command === MSP.MSP_SET_PASSTHROUGH) {
       this.addLogMessage('passthroughNotSupported');
     } else {
-      console.debug('FC reports unsupported message error:', code);
+      console.debug('FC reports unsupported message error:', command);
     }
 
     return null;
+  }
+
+  /**
+   * Spin a motor at a given speed
+   *
+   * @param {number} motor
+   * @param {number} speed
+   * @returns {Promise<>}
+   */
+  spinMotor(motor, speed) {
+    this.motorsSpinning = true;
+
+    const offset = (motor - 1) * 2;
+
+    this.speedBufView[offset] = 0x00ff & speed;
+    this.speedBufView[offset + 1] = speed >> 8;
+
+    return this.setMotor(this.speedBufView);
+  }
+
+  /**
+   * Spin all motors at a given speed
+   *
+   * @param {number} speed
+   * @returns  {Promise}
+   */
+  spinAllMotors(speed) {
+    this.motorsSpinning = true;
+
+    for(let i = 0; i < 8; i += 2) {
+      this.speedBufView[i] = 0x00ff & speed;
+      this.speedBufView[i + 1] = speed >> 8;
+    }
+
+    return this.setMotor(this.speedBufView);
+  }
+
+  /**
+   * Stop all motors if they have been spun up before
+   *
+   * @returns {Promise}
+   */
+  stopAllMotors() {
+    if(this.motorsSpinning) {
+      return this.spinAllMotors(0);
+    }
+  }
+
+  /**
+   * Following are atomic functions for MSP related communications. All other
+   * functionality is built on top of this functions.
+   */
+
+  /**
+   * @typeof MspApiVersion
+   * @property {string} apiVersion
+   * @property {number} mspProtocolVersion
+   */
+
+  /**
+   * @typeof MspFcVariant
+   * @property {string} flightControllerIdentifier
+   */
+
+  /**
+   * @typeof MspFcVersion
+   * @property {string} flightControllerVersion
+   */
+
+  /**
+   * @typeof MspBuildInfo
+   * @property {string} buildInfo
+   */
+
+  /**
+   * @typeof MspBoardInfo
+   * @property {string} boardIdentifier
+   * @property {string} boardVersion
+   */
+
+  /**
+   * @typeof MspUid
+   * @property {Uint32Array} uid
+   */
+
+  /**
+   * @typeof MspBatteryState
+   * @property {number} cellCount
+   * @property {number} capacity
+   * @property {number} voltage
+   * @property {number} draw
+   * @property {number} amps
+   * @property {number} state
+   */
+
+  /**
+   * @typeof MspFeatureConfig
+   * @property {boolean} RX_PPM
+   * @property {boolean} INFLIGHT_ACC_CAL
+   * @property {boolean} RX_SERIAL
+   * @property {boolean} MOTOR_STOP
+   * @property {boolean} SERVO_TILT
+   * @property {boolean} SOFTSERIAL
+   * @property {boolean} GPS
+   * @property {boolean} SONAR
+   * @property {boolean} TELEMETRY
+   * @property {boolean} 3D
+   * @property {boolean} RX_PARALLEL_PWM
+   * @property {boolean} RX_MSP
+   * @property {boolean} RSSI_ADC
+   * @property {boolean} LED_STRIP
+   * @property {boolean} DISPLAY
+   */
+
+  /**
+   * Get API and protocol version
+   *
+   * @returns {Promise<MspApiVersion>}
+   */
+  getApiVersion () {
+    return this.send(MSP.MSP_API_VERSION);
+  }
+
+  /**
+   * Get FC variant
+   *
+   * @returns {Promise<MspFcVariant>}
+   */
+  getFcVariant() {
+    return this.send(MSP.MSP_FC_VARIANT);
+  }
+
+  /**
+   * Get FC version
+   *
+   * @returns {Promise<MspFcVersion>}
+   */
+  getFcVersion() {
+    return this.send(MSP.MSP_FC_VERSION);
+  }
+
+  /**
+   * Get build info
+   *
+   * @returns {Promise<MspBuildInfo>}
+   */
+  getBuildInfo() {
+    return this.send(MSP.MSP_BUILD_INFO);
+  }
+
+  /**
+   * Get board info
+   *
+   * @returns {Promise<MspBoardInfo>}
+   */
+  getBoardInfo() {
+    return this.send(MSP.MSP_BOARD_INFO);
+  }
+
+  /**
+   * Get board info
+   *
+   * @returns {Promise<MspUid>}
+   */
+  getUid() {
+    return this.send(MSP.MSP_UID);
+  }
+
+  /**
+   * Get motor data
+   *
+   * @returns {Promise<Uint16Array>}
+   */
+  getMotorData() {
+    return this.send(MSP.MSP_MOTOR);
+  }
+
+  /**
+   * Get battery info
+   *
+   * @returns {Promise<MspBatteryState>}
+   */
+  getBatteryState() {
+    return this.send(MSP.MSP_BATTERY_STATE);
+  }
+
+  /**
+   * Get feature config
+   *
+   * @returns {Promise<MspFeatureConfig>}
+   */
+  getFeatures() {
+    return this.send(MSP.MSP_FEATURE_CONFIG);
+  }
+
+  /**
+   * Set Motor speed
+   *
+   * @returns {Promise}
+   */
+  setMotor(params) {
+    return this.send(MSP.MSP_SET_MOTOR, params);
+  }
+
+  /**
+   * Enable four way interface
+   *
+   * Once the four way interface is enabled, the device needs to either be reset
+   * via four way interface or powere cycled in order for the MSP to pick up
+   * normal communication.
+   *
+   * @returns {Promise}
+   */
+  set4WayIf() {
+    return this.send(MSP.MSP_SET_PASSTHROUGH);
   }
 }
 

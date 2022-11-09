@@ -1,15 +1,16 @@
-import config from '../';
+import { source } from '../';
 
-const SETTINGS_DESCRIPTIONS = config.getSettingsDescriptions();
+const SETTINGS_DESCRIPTIONS = source.getSettingsDescriptions();
 
-describe('BLHeli', () => {
+describe('BLHeli_S', () => {
   it('should handle conditional visibility with general settings', () => {
     const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
-    const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
-      const base = SETTINGS_DESCRIPTIONS.COMMON[keys[i]].base;
+      const revision = keys[i];
+      const commonSettings = source.getCommonSettings(revision);
+      const base = commonSettings.base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
@@ -31,7 +32,9 @@ describe('BLHeli', () => {
     let ppmFunction = null;
     let ledFunction = null;
     for(let i = 0; i < keys.length; i += 1) {
-      const base = SETTINGS_DESCRIPTIONS.INDIVIDUAL[keys[i]].base;
+      const revision = keys[i];
+      const individualSettings = source.getIndividualSettings(revision);
+      const base = individualSettings.base;
       for(let j = 0; j < base.length; j += 1) {
         const current = base[j];
         if(current.visibleIf) {
@@ -58,7 +61,7 @@ describe('BLHeli', () => {
       },
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - BLHeli_S, 1.100');
   });
 
@@ -72,14 +75,14 @@ describe('BLHeli', () => {
       actualMake: wrongTag,
     };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual(`MAKE (Probably mistagged: ${wrongTag}) - BLHeli_S, 1.100`);
   });
 
   it('should return display name when revision is missing', () => {
     const flash = { settings: {} };
 
-    const name = config.buildDisplayName(flash, 'MAKE');
+    const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual('MAKE - BLHeli_S, Unsupported/Unrecognized');
   });
 });

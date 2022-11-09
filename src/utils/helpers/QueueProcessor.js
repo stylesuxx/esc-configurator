@@ -22,6 +22,13 @@ class QueueProcessor {
     this.currentCommand = null;
   }
 
+  /**
+   * Append one buffer to another on
+   *
+   * @param {Uint8Array} buffer1
+   * @param {Uint8Array} buffer2
+   * @returns {Uint8Array}
+   */
   appendBuffer(buffer1, buffer2) {
     const tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
     tmp.set(new Uint8Array(buffer1), 0);
@@ -31,8 +38,9 @@ class QueueProcessor {
   }
 
   /**
-   * New incoming data is added to the buffer and the command processor is
-   * triggered.
+   * Append new incoming data to the buffer and trigger the command processor
+   *
+   * @param {Uint8Array} buffer
    */
   addData(buffer) {
     this.buffer = this.appendBuffer(this.buffer, buffer.buffer);
@@ -41,6 +49,9 @@ class QueueProcessor {
     this.processCommands();
   }
 
+  /**
+   * Reset instance to inital state
+   */
   cleanUp() {
     this.buffer = new Uint8Array([]);
     this.newData = false;
@@ -50,7 +61,8 @@ class QueueProcessor {
   }
 
   /**
-   * Timeout reached, reject the command, clear the buffer and reset states
+   * Resolve timeout by rejecting the command, clearing the buffer and
+   * resetetting thestates
    */
   resolveTimeout() {
     const error = `Timed out after ${this.currentCommand.timeout}ms`;
@@ -60,6 +72,9 @@ class QueueProcessor {
     this.processCommands();
   }
 
+  /**
+   * Start processing the commands
+   */
   async startCommand() {
     this.cleanUp();
     this.currentCommand = this.commands.shift();
@@ -95,6 +110,9 @@ class QueueProcessor {
     }
   }
 
+  /**
+   * Process the queue if it is not yet processing but new data is available
+   */
   async processCommand() {
     while(!this.processing && this.newData) {
       this.processing = true;
@@ -166,7 +184,8 @@ class QueueProcessor {
   }
 
   /**
-   * Add a command to the queue and return a promise.
+   * Add a command to the queue and return a promise
+   *
    * The promise is resolved once all the data is available and could be
    * processed.
    *
@@ -178,6 +197,11 @@ class QueueProcessor {
    * reject:  Should be triggered by the function once it rejects. There is one
    *          special case of rejection - not enough data. In this case the
    *          accoring error should be thrown
+   *
+   * @param {function} transmit
+   * @param {function} receive
+   * @param {number} timeout
+   * @returns {Promise}
    */
   addCommand(transmit, receive = null, timeout = 1000) {
     return new Promise((resolve, reject) => {

@@ -1,5 +1,21 @@
 [
   {
+    "title": "0.27.0",
+    "items": [
+      "BB: Add support for BB51 based ESCs",
+      "AM32: Add support for G071 MCUs",
+      "AM32: Update layouts and versions",
+      "Translation: Add Italian translation",
+      "Translation: Add Czech translation",
+      "Translation: Remove incomplete French translation",
+      "Chore: Text improvements",
+      "Chore: Improved test coverage",
+      "Chore: Improved documentation",
+      "Bugfix: Properly update UI after flashing only one ESC",
+      "Bugfix: Stop motors when disconnecting from configurator"
+    ]
+  },
+  {
     "title": "0.26.1",
     "items": [
       "Chore: Update Bluejay links to new source"

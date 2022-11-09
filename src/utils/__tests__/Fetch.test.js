@@ -16,7 +16,6 @@ const jsonApiContent = [
 ];
 
 const jsonApiUrl = 'https://api.github.com/repos/bird-sanctuary/bluejay/releases';
-const jsonRawUrl = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/package.json';
 const jsonInvalidUrl = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/crowdin.yml';
 const json404Url = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator/master/invalid.file';
 

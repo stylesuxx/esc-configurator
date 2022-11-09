@@ -12,10 +12,10 @@ import {
 
 import {
   am32Source,
-  blheliSource,
-  blheliSilabsSource,
+  blheliAtmelSource as blheliSource,
   blheliSSource,
   bluejaySource,
+  classes as sources,
 } from '../sources';
 
 import {
@@ -30,14 +30,14 @@ import {
   isValidFlash,
 } from './helpers/General';
 
-import MCU from './helpers/MCU';
+import FourWayHelper from './helpers/FourWay';
+
+import MCU from './Hardware/MCU';
 
 import {
   ACK,
-  ATMEL_MODES,
   COMMANDS,
   MODES,
-  SILABS_MODES,
 } from './FourWayConstants';
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
@@ -48,7 +48,22 @@ const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
 const am32Eeprom = am32Source.getEeprom();
 const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
+/**
+ * @typedef Response
+ * @property {number} ack
+ * @property {number} address
+ * @property {number} checksum
+ * @property {number} command
+ * @property {Uint8Array} params
+ */
+
 class FourWay {
+  /**
+   * Wrapper class to communicate with the four way interface via an established
+   * serial connection.
+   *
+   * @param {function} serial
+   */
   constructor(serial) {
     this.serial = serial;
 
@@ -66,6 +81,60 @@ class FourWay {
     this.extendedDebug = false;
   }
 
+  /**
+   * Setter to control extended debugging
+   *
+   * @param {boolean} extendedDebug Enable or disable extended debug
+   */
+  setExtendedDebug(extendedDebug) {
+    this.extendedDebug = extendedDebug;
+  }
+
+  /**
+   * Setter for log callback
+   *
+   * @param {function} logCallback
+   */
+  setLogCallback(logCallback) {
+    this.logCallback = logCallback;
+  }
+
+  /**
+   * Setter for packet error callback
+   *
+   * @param {function} packetErrorsCallback
+   */
+  setPacketErrorsCallback(packetErrorsCallback) {
+    this.packetErrorsCallback = packetErrorsCallback;
+  }
+
+  /**
+   * Invoke log callback if available
+   *
+   * @param {string} message
+   * @param {array} params
+   */
+  addLogMessage(message, params) {
+    if(this.logCallback) {
+      this.logCallback(message, params);
+    }
+  }
+
+  /**
+   * Invoke packet error callback with count
+   *
+   * @param {number} count Packet error count
+   */
+  increasePacketErrors(count) {
+    if(this.packetErrorsCallback) {
+      this.packetErrorsCallback(count);
+    }
+  }
+
+  /**
+   * Triggers sending a keep alive command if enough time has past between now
+   * and the last command.
+   */
   start() {
     this.interval = setInterval(async() => {
       if (Date.now() - this.lastCommandTimestamp > 900) {
@@ -78,69 +147,19 @@ class FourWay {
     }, 800);
   }
 
-  exit() {
-    clearInterval(this.interval);
-
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
-  }
-
-  testAlive() {
-    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
-  }
-
-  reset(target) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
-  }
-
-  setExtendedDebug(extendedDebug) {
-    this.extendedDebug = extendedDebug;
-  }
-
-  setLogCallback(logCallback) {
-    this.logCallback = logCallback;
-  }
-
-  addLogMessage(message, params) {
-    if(this.logCallback) {
-      this.logCallback(message, params);
-    }
-  }
-
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-  }
-
-  increasePacketErrors(count) {
-    if(this.packetErrorsCallback) {
-      this.packetErrorsCallback(count);
-    }
-  }
-
-  commandToString(command) {
-    for (const field in COMMANDS) {
-      if (COMMANDS[field] === command) {
-        return field;
-      }
-    }
-
-    return null;
-  }
-
-  ackToString(ack) {
-    for (const field in ACK) {
-      if (ACK[field] === ack) {
-        return field;
-      }
-    }
-
-    return null;
-  }
-
+  /**
+   * Calculate a X-Modem checksum
+   *
+   * @param {number} crc
+   * @param {number} byte
+   * @returns {number}
+   */
   crc16XmodemUpdate(crc, byte) {
+    const polynomic = 0x1021;
     crc ^= byte << 8;
     for (let i = 0; i < 8; i += 1) {
       if (crc & 0x8000) {
-        crc = (crc << 1) ^ 0x1021;
+        crc = (crc << 1) ^ polynomic;
       } else {
         crc <<= 1;
       }
@@ -149,6 +168,14 @@ class FourWay {
     return crc & 0xffff;
   }
 
+  /**
+   * Create a message ready to be sent to the four way interface
+   *
+   * @param {number} command
+   * @param {Array.<number>} params
+   * @param {number} address
+   * @returns {ArrayBuffer}
+   */
   createMessage(command, params, address) {
     const pc = 0x2f;
 
@@ -185,6 +212,14 @@ class FourWay {
     return bufferOut;
   }
 
+  /**
+   * Parse a message and invoke either resolve or reject callback
+   *
+   * @param {ArrayBuffer} buffer
+   * @param {function} resolve
+   * @param {function} reject
+   * @returns {Promise}
+   */
   parseMessage(buffer, resolve, reject) {
     const fourWayIf = 0x2e;
 
@@ -229,6 +264,18 @@ class FourWay {
     return resolve(message);
   }
 
+  /**
+   * Send a message
+   *
+   * If it does not succees, sending the command is retried a given amount of
+   * times before it is finally rejected.
+   *
+   * @param {number} command
+   * @param {Array.<number>} params
+   * @param {number} address
+   * @param {number} retries
+   * @returns {Promise}
+   */
   sendMessagePromised(command, params = [0], address = 0, retries = 10) {
     const process = async (resolve, reject) => {
       this.lastCommandTimestamp = Date.now();
@@ -237,7 +284,7 @@ class FourWay {
       // Debug print all messages except the keep alive messages
       if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
         const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
-        console.debug(`TX: ${this.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+        console.debug(`TX: ${FourWayHelper.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
 
       const processMessage = async(resolve, reject) => {
@@ -255,12 +302,12 @@ class FourWay {
           if (msg && msg.ack === ACK.ACK_OK) {
             if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
               const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
-              console.debug(`RX: ${this.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+              console.debug(`RX: ${FourWayHelper.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
             }
             return resolve(msg);
           }
         } catch(e) {
-          console.debug(`Command ${this.commandToString(command)} failed: ${e.message}`);
+          console.debug(`Command ${FourWayHelper.commandToString(command)} failed: ${e.message}`);
           return reject(e);
         }
 
@@ -271,7 +318,7 @@ class FourWay {
         const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
-        console.debug(`Failed processing command ${this.commandToString(command)} after ${retries} retries.`);
+        console.debug(`Failed processing command ${FourWayHelper.commandToString(command)} after ${retries} retries.`);
         reject(e);
       }
     };
@@ -279,327 +326,282 @@ class FourWay {
     return new Promise((resolve, reject) => process(resolve, reject));
   }
 
-  async initFlash(target, retries = 10) {
-    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
-  }
-
+  /**
+   * Get information of a certain ESC
+   *
+   * @param {number} target
+   * @returns {object}
+   */
   async getInfo(target) {
     const flash = await this.initFlash(target, 0);
+    const info = Flash.getInfo(flash);
 
-    if (flash) {
-      flash.meta = {};
+    try {
+      const mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
+      const eepromOffset = mcu.getEepromOffset();
 
-      try {
-        const interfaceMode = flash.params[3];
-        flash.meta.input = flash.params[2];
-        flash.meta.signature = (flash.params[1] << 8) | flash.params[0];
-        flash.meta.interfaceMode = interfaceMode;
-        flash.meta.available = true;
+      // Assume BLHeli as default
+      let source = null;
+      if (info.isSiLabs) {
+        source = blheliSSource;
 
-        const isAtmel = ATMEL_MODES.includes(interfaceMode);
-        const isSiLabs = SILABS_MODES.includes(interfaceMode);
-        const isArm = interfaceMode === MODES.ARMBLB;
+        info.layout = source.getLayout();
+        info.layoutSize = source.getLayoutSize();
+        info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
 
-        // Assume BLHeli as default
-        let validFirmwareNames = blheliEeprom.NAMES;
-        let layoutSize = blheliEeprom.LAYOUT_SIZE;
-        let layout = blheliEeprom.LAYOUT;
-        let defaultSettings = blheliSettingsDescriptions.DEFAULTS;
-        let settingsArray = null;
+        // Check if Bluejay
+        if(bluejaySource.isValidName(info.settings.NAME)) {
+          source = bluejaySource;
 
-        let displayName = 'UNKNOWN';
-        let firmwareName = 'UNKNOWN';
+          info.layout = source.getLayout();
+          info.layoutSize = bluejaySource.getLayoutSize();
+          info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+          info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+        }
+      }
 
-        if (isSiLabs) {
-          layoutSize = blheliEeprom.LAYOUT_SIZE;
-          settingsArray = (await this.read(blheliEeprom.SILABS.EEPROM_OFFSET, layoutSize)).params;
-        } else if (isArm) {
-          validFirmwareNames = am32Eeprom.NAMES;
-          layoutSize = am32Eeprom.LAYOUT_SIZE;
-          layout = am32Eeprom.LAYOUT;
-          defaultSettings = am32SettingsDescriptions.DEFAULTS;
-          settingsArray = (await this.read(am32Eeprom.EEPROM_OFFSET, layoutSize)).params;
-        } else {
-          throw new UnknownPlatformError('Neither SiLabs nor Arm');
+      if (info.isArm) {
+        source = am32Source;
+
+        info.layout = source.getLayout();
+        info.layoutSize = source.getLayoutSize();
+        info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+      }
+
+      if (!info.isArm && !info.isSiLabs){
+        throw new UnknownPlatformError('Neither SiLabs nor Arm');
+      }
+
+      /**
+       * Try to guess firmware type if it was not properly set in the EEPROM
+       */
+      if(info.settings.NAME === '') {
+        const start = 0x80;
+        const amount = 0x80;
+        const data = (await this.read(start, amount)).params;
+        for (let i = 0; i < amount - 5; i += 1) {
+          if (
+            data[i] === 0x4A &&
+            data[i + 1] === 0x45 &&
+            data[i + 2] === 0x53 &&
+            data[i + 3] === 0x43
+          ) {
+            info.settings.NAME = 'JESC';
+            info.layout = null;
+
+            break;
+          }
         }
 
-        flash.isSiLabs = isSiLabs;
-        flash.isArm = isArm;
-        flash.isAtmel = isAtmel;
+        /*
+          * If still no name, it might be BLHeli_M - this can unfortunately
+          * only be guessed based on the version - if it is 16.8 or higher,
+          * then it _might_ be BLHeli_M with a high probability.
+          *
+          * This needs to be updated in case BLHeli_S ever gets an update.
+          */
+        if(info.settings.NAME === '') {
+          if(
+            info.settings.MAIN_REVISION === 16 &&
+            (
+              info.settings.SUB_REVISION === 8 ||
+              info.settings.SUB_REVISION === 9
+            )
+          ) {
+            info.settings.NAME = 'BLHeli_M';
+            info.layout = null;
+          }
+        }
+      }
 
-        flash.settingsArray = settingsArray;
-        flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
+      const layoutRevision = info.settings.LAYOUT_REVISION.toString();
+      info.settingsDescriptions = source.getCommonSettings(layoutRevision);
+      info.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
+      info.defaultSettings = source.getDefaultSettings(layoutRevision);
+
+      if(!info.settingsDescriptions) {
+        this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
 
         /**
-         * Based on the name we can decide if the initially guessed layout
-         * was correct, if not, we need to build a new settings object.
-         */
-        let name = flash.settings.NAME;
-        let newLayout = null;
-        if(bluejayEeprom.NAMES.includes(name)) {
-          validFirmwareNames = bluejayEeprom.NAMES;
-          newLayout = bluejayEeprom.LAYOUT;
-          layoutSize = bluejayEeprom.LAYOUT_SIZE;
-          defaultSettings = bluejaySettingsDescriptions.DEFAULTS;
-          settingsArray = (await this.read(bluejayEeprom.EEPROM_OFFSET, layoutSize)).params;
+        * If Arm is detected and we have no matching layout, it might be
+        * BLHeli_32.
+        */
+        if(info.isArm) {
+          info.settings.NAME = 'BLHeli_32';
+          info.layout = null;
+        }
+      }
+
+      const layoutName = (info.settings.LAYOUT || '').trim();
+      let make = null;
+
+      // SiLabs EFM8 based
+      if (info.isSiLabs) {
+        const layouts = source.getEscLayouts();
+        make = layouts[layoutName].name;
+
+        if (source instanceof sources.BluejaySource) {
+          info.displayName = source.buildDisplayName(info, make);
+          info.firmwareName = source.getName();
         }
 
-        // Try to guess firmware type if it was not properly set in the EEPROM
-        if(name === '') {
-          const start = 0x80;
-          const amount = 0x80;
-          const data = (await this.read(start, amount)).params;
-          for (let i = 0; i < amount - 5; i += 1) {
+        if (source instanceof sources.BLHeliSSource) {
+          const splitMake =  make.split('-');
+          const taggedTiming = splitMake[2];
+          const mcuType = splitMake[1];
+
+          /**
+           * Some manufacturers mistag their firmware so that the actual
+           * deadtime is higher than the reported one. Try to read the timing
+           * from the currently flashed hex.
+           *
+           * Read bytes of data in 128 byte increments starting at address 0x250
+           * - 16.7:  0x300 bytes are enough
+           * - 16.71: 0x500 bytes are enough
+           */
+          const start = 0x250;
+          const amount = 0x500;
+          const data = new Uint8Array(amount);
+          let pos = 0;
+          for (let address = start; address < start + amount; address += 0x80) {
+            const currentData = (await this.read(address, 0x80)).params;
+            data.set(currentData, pos);
+            pos += 0x80;
+          }
+
+          /* Scan the gathered data to find the actual deadtime - looking for
+            * a section that looks like this in asm:
+            *
+            * MOV R1, A
+            * CLR C
+            * MOV A, R0
+            * SUBB A, #data (#data being data[i + 4])
+            *
+            * This is the relevant section in BLHeli_S source code:
+            * https://github.com/bitdump/BLHeli/blob/467834db443a887534c1f2c9fb0ff61fd6b40e3e/BLHeli_S%20SiLabs/BLHeli_S.asm#L1433
+            */
+          let timing = 0;
+          for (var i = 0; i < amount - 5; i += 1) {
             if (
-              data[i] === 0x4A &&
-              data[i + 1] === 0x45 &&
-              data[i + 2] === 0x53 &&
-              data[i + 3] === 0x43
+              data[i] === 0xf9 &&
+              data[i + 1] === 0xc3 &&
+              data[i + 2] === 0xe8 &&
+              data[i + 3] === 0x94
             ) {
-              flash.settings.NAME = 'JESC';
-              layout = null;
+              timing = data[i + 4];
+
+              // If an H or X type MCU is detected, half the timing.
+              if(mcuType === 'H' || mcuType === 'X') {
+                timing /= 2;
+              }
 
               break;
             }
           }
 
-          /*
-           * If still no name, it might be BLHeli_M - this can unfortunately
-           * only be guessed based on the version - if it is 16.8 or higher,
-           * then it _might_ be BLHeli_M with a high probability.
-           *
-           * This needs to be updated in case BLHeli_S ever gets an update.
-           */
-          if(flash.settings.NAME === '') {
-            if(
-              flash.settings.MAIN_REVISION === 16 &&
-              (
-                flash.settings.SUB_REVISION === 8 ||
-                flash.settings.SUB_REVISION === 9
-              )
-            ) {
-              flash.settings.NAME = 'BLHeli_M';
-              layout = null;
+          if(timing) {
+            timing = String(timing);
+
+            if(taggedTiming !== timing) {
+              splitMake[2] = timing;
+              const actualMake = splitMake.join('-');
+              this.addLogMessage('timingMismatch', {
+                tagged: make,
+                actual: actualMake,
+              });
+
+              info.actualMake = actualMake;
             }
           }
 
+          info.displayName = source.buildDisplayName(info, make);
+          info.firmwareName = source.getName();
         }
 
-        if(newLayout) {
-          layout = newLayout;
-          flash.settingsArray = settingsArray;
-          flash.settings = Convert.arrayToSettingsObject(settingsArray, layout);
-        }
-
-        const layoutRevision = flash.settings.LAYOUT_REVISION.toString();
-
-        let individualSettingsDescriptions = null;
-        let settingsDescriptions = null;
-        switch(layout) {
-          case blheliEeprom.LAYOUT: {
-            settingsDescriptions = blheliSettingsDescriptions.COMMON;
-            individualSettingsDescriptions = blheliSettingsDescriptions.INDIVIDUAL;
-          } break;
-
-          case bluejayEeprom.LAYOUT: {
-            settingsDescriptions = bluejaySettingsDescriptions.COMMON;
-            individualSettingsDescriptions = bluejaySettingsDescriptions.INDIVIDUAL;
-          } break;
-
-          case am32Eeprom.LAYOUT: {
-            settingsDescriptions = am32SettingsDescriptions.COMMON;
-            individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
-          } break;
-
-          default: {
-            settingsDescriptions = {};
-            individualSettingsDescriptions = {};
-          }
-        }
-
-        flash.settingsDescriptions = settingsDescriptions[layoutRevision];
-        flash.individualSettingsDescriptions = individualSettingsDescriptions[layoutRevision];
-
-        if(!flash.settingsDescriptions) {
-          this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
-
-          /*
-          * If Arm is detected and we have no matching layout, it might be
-          * BLHeli_32.
-          */
-          if(isArm) {
-            flash.settings.NAME = 'BLHeli_32';
-            layout = null;
-          }
-        }
-
-        const layoutName = (flash.settings.LAYOUT || '').trim();
-        let make = null;
-        if (isSiLabs) {
-          const blheliSilabsLayouts = blheliSilabsSource.getEscLayouts();
-          const blheliSLayouts = blheliSSource.getEscLayouts();
-          const bluejayLayouts = bluejaySource.getEscLayouts();
-
-          if (
-            flash.settings.NAME === 'JESC' ||
-            flash.settings.NAME === 'BLHeli_M'
+        if (
+          info.settings.NAME === 'JESC' ||
+          info.settings.NAME === 'BLHeli_M'
+        ) {
+          const settings = info.settings;
+          let revision = 'Unsupported/Unrecognized';
+          if(
+            settings.MAIN_REVISION !== undefined &&
+            settings.SUB_REVISION !== undefined
           ) {
-            make = blheliSLayouts[layoutName].name;
-            const settings = flash.settings;
-            let revision = 'Unsupported/Unrecognized';
-            if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-              revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
-            }
-
-            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
-            firmwareName = flash.settings.NAME;
-          } else if (bluejayEeprom.NAMES.includes(name) && layoutName in bluejayLayouts) {
-            make = bluejayLayouts[layoutName].name;
-            displayName = bluejaySource.buildDisplayName(flash, make);
-            firmwareName = bluejaySource.getName();
-          } else if (layoutName in blheliSilabsLayouts) {
-            make = blheliSilabsLayouts[layoutName].name;
-          } else if (layoutName in blheliSLayouts) {
-            make = blheliSLayouts[layoutName].name;
-            const splitMake =  make.split('-');
-            const taggedTiming = splitMake[2];
-            const mcuType = splitMake[1];
-
-            /* Some manufacturers mistag their firmware so that the actual
-             * deadtime is higher than the reported one. Try to read the timing
-             * from the currently flashed hex.
-             *
-             * Read bytes of data in 128 byte increments starting at address 0x250
-             * - 16.7:  0x300 bytes are enough
-             * - 16.71: 0x500 bytes are enough
-             */
-            const start = 0x250;
-            const amount = 0x500;
-            const data = new Uint8Array(amount);
-            let pos = 0;
-            for (let address = start; address < start + amount; address += 0x80) {
-              const currentData = (await this.read(address, 0x80)).params;
-              data.set(currentData, pos);
-              pos += 0x80;
-            }
-
-            /* Scan the gathered data to find the actual deadtime - looking for
-             * a section that looks like this in asm:
-             *
-             * MOV R1, A
-             * CLR C
-             * MOV A, R0
-             * SUBB A, #data (#data being data[i + 4])
-             *
-             * This is the relevant section in BLHeli_S source code:
-             * https://github.com/bitdump/BLHeli/blob/467834db443a887534c1f2c9fb0ff61fd6b40e3e/BLHeli_S%20SiLabs/BLHeli_S.asm#L1433
-             */
-            let timing = 0;
-            for (var i = 0; i < amount - 5; i += 1) {
-              if (
-                data[i] === 0xf9 &&
-                data[i + 1] === 0xc3 &&
-                data[i + 2] === 0xe8 &&
-                data[i + 3] === 0x94
-              ) {
-                timing = data[i + 4];
-
-                // If an H type MCU is detected, half the timing.
-                if(mcuType === 'H') {
-                  timing /= 2;
-                }
-
-                break;
-              }
-            }
-
-            if(timing) {
-              timing = String(timing);
-
-              if(taggedTiming !== timing) {
-                splitMake[2] = timing;
-                const actualMake = splitMake.join('-');
-                this.addLogMessage('timingMismatch', {
-                  tagged: make,
-                  actual: actualMake,
-                });
-
-                flash.actualMake = actualMake;
-              }
-            }
-
-            displayName = blheliSSource.buildDisplayName(flash, make);
-            firmwareName = blheliSSource.getName();
+            revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
           }
-        } else if (isArm) {
-          if (
-            flash.settings.NAME === 'BLHeli_32'
-          ) {
-            let revision = 'Unsupported/Unrecognized';
-            make = 'Unknown';
 
-            displayName = `${make} - ${flash.settings.NAME}, ${revision}`;
-            firmwareName = flash.settings.NAME;
-          } else {
-            flash.bootloader = {};
-            if(flash.meta.input) {
-              flash.bootloader.input = flash.meta.input;
-              flash.bootloader.valid = false;
-            }
+          info.displayName = `${make} - ${info.settings.NAME}, ${revision}`;
+          info.firmwareName = info.settings.NAME;
 
-            /* Bootloader input pins are limited. If something different is set,
-             * then the user probably has an old fw flashed.
-             */
-            for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
-              if(value === flash.bootloader.input) {
-                flash.bootloader.valid = true;
-                flash.bootloader.pin = key;
-                flash.bootloader.version = flash.settings.BOOT_LOADER_REVISION;
-              }
-            }
-
-            flash.settings.LAYOUT = flash.settings.NAME;
-
-            displayName = am32Source.buildDisplayName(flash, flash.settings.NAME);
-            firmwareName = am32Source.getName();
-          }
-        } else {
-          const blheliAtmelLayouts = blheliSource.getEscLayouts();
-          if (layoutName in blheliAtmelLayouts) {
-            make = blheliAtmelLayouts[layoutName].name;
-          }
+          info.supported = false;
         }
-
-        flash.canMigrateTo = validFirmwareNames;
-        flash.defaultSettings = defaultSettings[layoutRevision];
-        flash.displayName = displayName;
-        flash.firmwareName = firmwareName;
-        flash.layoutSize = layoutSize;
-        flash.layout = layout;
-        flash.make = make;
-      } catch (e) {
-        console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
-        throw new Error(e);
       }
 
-      try {
-        flash.individualSettings = getIndividualSettings(flash);
-      } catch(e) {
-        console.debug('Could not get individual settings');
-        throw new Error(e);
+      // Arm
+      if (info.isArm) {
+        if (
+          info.settings.NAME === 'BLHeli_32'
+        ) {
+          let revision = 'Unsupported/Unrecognized';
+          make = 'Unknown';
+
+          info.displayName = `${make} - ${info.settings.NAME}, ${revision}`;
+          info.firmwareName = info.settings.NAME;
+
+          info.supported = false;
+        } else if (source instanceof sources.AM32Source) {
+          info.bootloader = {};
+          if(info.meta.input) {
+            info.bootloader.input = info.meta.input;
+            info.bootloader.valid = false;
+          }
+
+          /* Bootloader input pins are limited. If something different is set,
+            * then the user probably has an old fw flashed.
+            */
+          for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
+            if(value === info.bootloader.input) {
+              info.bootloader.valid = true;
+              info.bootloader.pin = key;
+              info.bootloader.version = info.settings.BOOT_LOADER_REVISION;
+            }
+          }
+
+          info.settings.LAYOUT = info.settings.NAME;
+
+          info.displayName = am32Source.buildDisplayName(info, info.settings.NAME);
+          info.firmwareName = am32Source.getName();
+        }
       }
 
-      // Delete some things that we do not need to pass on to the client
-      delete flash.ack;
-      delete flash.params;
-      delete flash.address;
-      delete flash.command;
-      delete flash.checksum;
+      info.source = source;
+      info.make = make;
+    } catch (e) {
+      console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
+      throw new Error(e);
     }
 
-    return flash;
+    try {
+      info.individualSettings = getIndividualSettings(info);
+    } catch(e) {
+      console.debug('Could not get individual settings');
+      throw new Error(e);
+    }
+
+    return info;
   }
 
+  /**
+   * Write settings to selected ESC if they changed
+   *
+   * @param {number} target
+   * @param {object} esc
+   * @param {Array} settings
+   * @returns {Array}
+   */
   async writeSettings(target, esc, settings) {
     const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
@@ -612,12 +614,23 @@ class FourWay {
       if(compare(newSettingsArray, esc.settingsArray)) {
         this.addLogMessage('escSettingsNoChange', { index: target + 1 });
       } else {
+        const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
+        const eepromOffset = mcu.getEepromOffset();
+        const pageSize = mcu.getPageSize();
+
         let readbackSettings = null;
+
         if(esc.isSiLabs) {
-          const mcu = esc.settings.MCU;
-          if (mcu && mcu.startsWith('#BLHELI$EFM8')) {
-            const CODE_LOCK_BYTE_OFFSET = mcu.endsWith('B21#') ? 0xFBFF : 0x1FFF;
-            const codeLockByte = (await this.read(CODE_LOCK_BYTE_OFFSET, 1)).params[0];
+          const lockbyteAddress = mcu.getLockByteAddress();
+
+          let pageMultiplier = 1;
+          if(pageSize !== 512) {
+            pageMultiplier = 4;
+          }
+
+          const mcuName = esc.settings.MCU;
+          if (mcuName && mcuName.startsWith('#BLHELI$EFM8')) {
+            const codeLockByte = (await this.read(lockbyteAddress, 1)).params[0];
             if (codeLockByte !== 0xFF) {
               this.addLogMessage('escLocked', {
                 index: target + 1,
@@ -626,12 +639,12 @@ class FourWay {
             }
           }
 
-          await this.pageErase(blheliEeprom.EEPROM_OFFSET / blheliEeprom.PAGE_SIZE);
-          await this.write(blheliEeprom.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(blheliEeprom.EEPROM_OFFSET, esc.layoutSize)).params;
+          await this.erasePage(eepromOffset / pageSize * pageMultiplier);
+          await this.write(eepromOffset, newSettingsArray);
+          readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else if (esc.isArm) {
-          await this.write(am32Eeprom.EEPROM_OFFSET, newSettingsArray);
-          readbackSettings = (await this.read(am32Eeprom.EEPROM_OFFSET, esc.layoutSize)).params;
+          await this.write(eepromOffset, newSettingsArray);
+          readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else {
           // write only changed bytes for Atmel
           for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
@@ -666,6 +679,14 @@ class FourWay {
     throw new EscInitError();
   }
 
+  /**
+   * Read firmware from a selected ESC
+   *
+   * @param {number} target
+   * @param {object} esc
+   * @param {function} cbProgress
+   * @returns {Uint8Array}
+   */
   async readFirmware(target, esc, cbProgress) {
     const {
       interfaceMode, signature,
@@ -674,8 +695,20 @@ class FourWay {
     this.progressCallback = cbProgress;
 
     const mcu = new MCU(interfaceMode, signature);
-    const flashSize = mcu.getFlashSize();
+    let flashSize = mcu.getFlashSize();
     const firmwareStart = mcu.getFirmwareStart();
+    const chunkSize = 0x80;
+    const name = mcu.getName();
+
+    /**
+     * This cutoff is needed for dumping the firmware on BLHeli_S based
+     * firmware since the bootloader is not (yet) able to read above
+     * this address space.
+     */
+    const hardCutoff = 0x3800;
+    if(name.startsWith("EFM8BB") && flashSize > hardCutoff) {
+      flashSize = hardCutoff;
+    }
 
     this.totalBytes = flashSize - firmwareStart;
     this.bytesWritten = 0;
@@ -684,18 +717,29 @@ class FourWay {
     let pos = 0;
 
     await this.initFlash(target);
-    for (let address = firmwareStart; address < flashSize; address += 0x80) {
-      const currentData = (await this.read(address, 0x80)).params;
+    for (let address = firmwareStart; address < flashSize; address += chunkSize) {
+      const currentData = (await this.read(address, chunkSize)).params;
       data.set(currentData, pos);
-      pos += 0x80;
+      pos += chunkSize;
 
-      this.bytesWritten += 0x80;
+      this.bytesWritten += chunkSize;
       this.progressCallback((this.bytesWritten / this.totalBytes) * 100);
     }
 
     return data;
   }
 
+  /**
+   * Write hex to MCU
+   *
+   * @param {number} target
+   * @param {object} esc
+   * @param {object} hex
+   * @param {boolean} force
+   * @param {boolean} migrate
+   * @param {function} cbProgress
+   * @returns
+   */
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
     const {
       interfaceMode, signature,
@@ -780,19 +824,30 @@ class FourWay {
       return newEsc;
     };
 
-    const flashSiLabs = async(flash) => {
+    const flashSiLabs = async(flash, mcu) => {
       /**
-       * The size of the Flash is larger than the pages we write.
-       * that is why we need to calculate the total Bytes by page size
-       * and actual pages we write, which in this case is 14.
+       * The size of the Flash is larger(full flash size) than the pages we write.
+       * This is why we need to calculate the total Bytes by page size
+       * and actual pages we write, which in case of BB1 and BB2 is 14 and 7 on
+       * the BB51.
        *
        * We then double that since we are also tracking the bytes read back
        * and update the progress bar accordingly.
        */
-      this.totalBytes = blheliEeprom.PAGE_SIZE * 14 * 2;
+      const eepromOffset = mcu.getEepromOffset();
+      const pageSize = mcu.getPageSize();
+      const bootloaderAddress = mcu.getBootloaderAddress();
+      let pageCount = 14;
+
+      // Bigger pages on BB51
+      if(pageSize === 2048) {
+        pageCount = 7;
+      }
+
+      this.totalBytes = pageSize * pageCount * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(blheliEeprom.SILABS.EEPROM_OFFSET, blheliEeprom.LAYOUT_SIZE);
+      const message = await this.read(eepromOffset, blheliSource.getLayoutSize());
 
       // checkESCAndMCU
       const escSettingArrayTmp = message.params;
@@ -800,7 +855,7 @@ class FourWay {
         blheliEeprom.LAYOUT.LAYOUT.offset,
         blheliEeprom.LAYOUT.LAYOUT.offset + blheliEeprom.LAYOUT.LAYOUT.size);
 
-      const settings_image = flash.subarray(blheliEeprom.EEPROM_OFFSET);
+      const settings_image = flash.subarray(eepromOffset);
       const fw_layout = settings_image.subarray(
         blheliEeprom.LAYOUT.LAYOUT.offset,
         blheliEeprom.LAYOUT.LAYOUT.offset + blheliEeprom.LAYOUT.LAYOUT.size);
@@ -835,56 +890,93 @@ class FourWay {
         }
       }
 
-      // Erase 0x0D and only write **FLASH*FAILED** as ESC NAME.
-      // This will be overwritten in case of sussessfull flash.
-      await this.erasePage(0x0D);
-      await this.writeEEpromSafeguard(escSettingArrayTmp);
+      if(pageSize === 512) {
+        // Erase 0x0D and only write **FLASH*FAILED** as ESC NAME.
+        // This will be overwritten in case of sussessfull flash.
+        await this.erasePage(0x0D);
+        await this.writeEEpromSafeguard(escSettingArrayTmp, eepromOffset);
 
-      // write `LJMP bootloader` to avoid bricking
-      await this.writeBootoaderFailsafe();
+        // write `LJMP bootloader` to avoid bricking
+        await this.writeBootoaderFailsafe(pageSize, bootloaderAddress);
 
-      // Skipp first two pages with bootloader failsafe
-      // 0x02 - 0x0D: erase, write, verify
-      await this.erasePages(0x02, 0x0D);
-      await this.writePages(0x02, 0x0D, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPages(0x02, 0x0D, blheliEeprom.PAGE_SIZE, flash);
+        // Skip first two pages with bootloader failsafe
+        // 0x02 - 0x0D: erase, write, verify
+        await this.erasePages(0x02, 0x0D);
+        await this.writePages(0x02, 0x0D, pageSize, flash);
+        await this.verifyPages(0x02, 0x0D, pageSize, flash);
 
-      // write & verify first page
-      await this.writePage(0x00, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPage(0x00, blheliEeprom.PAGE_SIZE, flash);
+        // write & verify first page - has been erased when writing bootloader failsafe
+        await this.writePage(0x00, pageSize, flash);
+        await this.verifyPage(0x00, pageSize, flash);
 
-      // Second page: erase, write, verify
-      await this.erasePage(0x01);
-      await this.writePage(0x01, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPage(0x01, blheliEeprom.PAGE_SIZE, flash);
+        // Second page: erase, write, verify
+        await this.erasePage(0x01);
+        await this.writePage(0x01, pageSize, flash);
+        await this.verifyPage(0x01, pageSize, flash);
 
-      // 14th page: erase, write, verify
-      await this.erasePage(0x0D);
-      await this.writePage(0x0D, blheliEeprom.PAGE_SIZE, flash);
-      await this.verifyPage(0x0D, blheliEeprom.PAGE_SIZE, flash);
+        // 14th page: erase, write, verify (EEprom)
+        await this.erasePage(0x0D);
+        await this.writePage(0x0D, pageSize, flash);
+        await this.verifyPage(0x0D, pageSize, flash);
+      }
+
+      if(pageSize === 2048) {
+        /**
+         * Mutliplier is needed to properly erase pages since the bootloader
+         * does not account for the bigger pages of the BB51.
+         */
+        const multiplier = 4;
+
+        // write `LJMP bootloader` to avoid bricking
+        await this.writeBootoaderFailsafe(pageSize, bootloaderAddress, multiplier);
+
+        // Skipp first two pages with bootloader failsafe
+        // 0x02 - 0x06: erase, write, verify
+        await this.erasePages(0x02 * multiplier, 0x06 * multiplier);
+        await this.writePages(0x02, 0x06, pageSize, flash);
+        await this.verifyPages(0x02, 0x06, pageSize, flash);
+
+        // write & verify first page - has been erased when writing bootloader failsafe
+        await this.writePage(0x00, pageSize, flash);
+        await this.verifyPage(0x00, pageSize, flash);
+
+        // Second page: erase, write, verify
+        await this.erasePage(0x01 * multiplier);
+        await this.writePage(0x01, pageSize, flash);
+        await this.verifyPage(0x01, pageSize, flash);
+
+        // 6th page: erase, write, verify (EEprom)
+        await this.erasePage(0x06 * multiplier);
+        await this.writePage(0x06, pageSize, flash);
+        await this.verifyPage(0x06, pageSize, flash);
+      }
     };
 
-    const flashArm = async(flash) => {
-      this.totalBytes = (flash.byteLength - (flash.firmwareStart ? flash.firmwareStart : 0)) * 2;
+    const flashArm = async(flash, mcu) => {
+      const eepromOffset = mcu.getEepromOffset();
+      const pageSize = mcu.getPageSize();
+      const firmwareStart = mcu.getFirmwareStart();
+
+      this.totalBytes = (flash.byteLength - firmwareStart) * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(am32Eeprom.EEPROM_OFFSET, am32Eeprom.LAYOUT_SIZE);
+      const message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
       const originalSettings = message.params;
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
       eepromInfo.set([originalSettings[1], originalSettings[2]], 1);
       eepromInfo.set(Convert.asciiToBuffer('FLASH FAIL  '), 5);
 
-      await this.write(am32Eeprom.EEPROM_OFFSET, eepromInfo);
+      await this.write(eepromOffset, eepromInfo);
 
-      await this.writePages(0x04, 0x40, am32Eeprom.PAGE_SIZE, flash);
-      await this.verifyPages(0x04, 0x40, am32Eeprom.PAGE_SIZE, flash);
+      await this.writePages(0x04, 0x40, pageSize, flash);
+      await this.verifyPages(0x04, 0x40, pageSize, flash);
 
       originalSettings[0] = 0x01;
       originalSettings.fill(0x00, 3, 5);
       originalSettings.set(Convert.asciiToBuffer('NOT READY   '), 5);
 
-      await this.write(am32Eeprom.EEPROM_OFFSET, originalSettings);
+      await this.write(eepromOffset, originalSettings);
     };
 
     const flashTarget = async(target, flash) => {
@@ -892,14 +984,16 @@ class FourWay {
 
       const message = await this.initFlash(target);
       const interfaceMode = message.params[3];
+      const signature = (message.params[1] << 8) | message.params[0];
+      const mcu = new MCU(interfaceMode, signature);
 
       switch (interfaceMode) {
         case MODES.SiLBLB: {
-          await flashSiLabs(flash);
+          await flashSiLabs(flash, mcu);
         } break;
 
         case MODES.ARMBLB: {
-          await flashArm(flash);
+          await flashArm(flash, mcu);
 
           // Reset after flashing to update name and settings
           await this.reset(target);
@@ -920,7 +1014,7 @@ class FourWay {
 
       const sameFirmware = (
         esc.individualSettings && newEsc.individualSettings &&
-        esc.canMigrateTo.includes(newEsc.individualSettings.NAME)
+        esc.source.canMigrateTo(newEsc.individualSettings.NAME)
       );
 
       /* Only migrate settings if new and old Firmware are the same or if user
@@ -962,18 +1056,21 @@ class FourWay {
         console.debug('Failed flashing Arm:', e);
         return null;
       }
-    } else if(!esc.isAtmel) {
+    }
+
+    if(esc.isSiLabs) {
       try {
         const parsed = Flash.parseHex(hex);
         const flash = Flash.fillImage(parsed, flashSize, flashOffset);
 
         // Check pseudo-eeprom page for BLHELI signature
-        const mcu = Convert.bufferToAscii(
-          flash.subarray(blheliEeprom.SILABS.EEPROM_OFFSET)
+        const eepromOffset = mcu.getEepromOffset();
+        const mcuType = Convert.bufferToAscii(
+          flash.subarray(eepromOffset)
             .subarray(blheliEeprom.LAYOUT.MCU.offset)
             .subarray(0, blheliEeprom.LAYOUT.MCU.size));
 
-        if(!isValidFlash(mcu, flash)) {
+        if(!isValidFlash(mcuType, flash)) {
           throw new InvalidHexFileError('Invalid hex file');
         }
 
@@ -986,28 +1083,39 @@ class FourWay {
         console.debug('Failed flashing SiLabs:', e);
         return null;
       }
-    } else {
+    }
+
+    if(!esc.isArm || !esc.isSiLabs) {
       throw new UnknownInterfaceError(interfaceMode);
     }
   }
 
-  async writeBootoaderFailsafe() {
-    //const ljmpReset = new Uint8Array([0x02, 0x19, 0xFD]);
-    const ljmpBootloader = new Uint8Array([0x02, 0x1C, 0x00]);
+  /**
+   * Write bootloader failsafe
+   *
+   * The booloader failsafe helps in recovering from a failed flash, attempting
+   * to jump from address 0x00 into the bootloader.
+   *
+   * pageMultiplier is a workaround for BB51 MCU since the BLHeli_S bootloader
+   * does not account for bigger page sizes.
+   *
+   * @param {number} pageSize
+   * @param {number} bootloaderAddress
+   * @param {number} pageMultiplier
+   */
+  async writeBootoaderFailsafe(pageSize, bootloaderAddress, pageMultiplier = 1) {
+    const bootloaderByteHi = (bootloaderAddress >> 8) & 0xFF;
+    const bootloaderByteLo = bootloaderAddress & 0xFF;
 
-    /*
-    const message = await this.read(0, 3);
+    const ljmpAsm = 0x02;
+    const ljmpBootloader = new Uint8Array([ljmpAsm, bootloaderByteHi, bootloaderByteLo]);
 
-    if(!compare(ljmpReset, message.params)) {
-      // @todo LJMP bootloader is probably already there and we could skip some steps
-    }
-    */
-
-    await this.erasePage(0x01);
-    await this.write(0x200, ljmpBootloader);
+    // Erase page 1 and write the jump instruction to the beginning of page 1
+    await this.erasePage(0x01 * pageMultiplier);
+    await this.write(pageSize, ljmpBootloader);
 
     const verifyBootloader = async (resolve, reject) => {
-      const response = await this.read(0x200, ljmpBootloader.byteLength);
+      const response = await this.read(pageSize, ljmpBootloader.byteLength);
 
       if(!compare(ljmpBootloader, response.params)) {
         reject(new Error('failed to verify `LJMP bootloader` write'));
@@ -1018,9 +1126,10 @@ class FourWay {
 
     await retry(verifyBootloader, 10);
 
-    await this.erasePage(0x00);
+    // Erase page 0
+    await this.erasePage(0x00 * pageMultiplier);
     const beginAddress = 0x00;
-    const endAddress = 0x200;
+    const endAddress = pageSize;
     const step = 0x80;
 
     for (let address = beginAddress; address < endAddress; address += step) {
@@ -1039,12 +1148,23 @@ class FourWay {
     }
   }
 
-  async writeEEpromSafeguard(settings) {
+  /**
+   * Write the EEprom safeguard
+   *
+   * This writes in the area that will be read when infos are being fetched.
+   * This info is then used to indicate that the flash failed. When in this
+   * state, flashing is still possible, although MCU layout ignore box has to
+   * be checked.
+   *
+   * @param {Uint8Array} settings
+   * @param {number} eepromOffset
+   */
+  async writeEEpromSafeguard(settings, eepromOffset) {
     settings.set(Convert.asciiToBuffer('**FLASH*FAILED**'), blheliEeprom.LAYOUT.NAME.offset);
-    const response = await this.write(blheliEeprom.EEPROM_OFFSET, settings);
+    const response = await this.write(eepromOffset, settings);
 
     const verifySafeguard = async (resolve, reject) => {
-      const message = await this.read(response.address, blheliEeprom.LAYOUT_SIZE);
+      const message = await this.read(response.address, blheliSource.getLayoutSize());
 
       if (!compare(settings, message.params)) {
         reject(new Error('failed to verify write **FLASH*FAILED**'));
@@ -1056,15 +1176,23 @@ class FourWay {
     await retry(verifySafeguard, 10);
   }
 
-  async verifyPages(begin, end, pageSize, image) {
+  /**
+   * Verify multiple pages up to (but not including) end page
+   *
+   * @param {number} begin
+   * @param {number} end
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  async verifyPages(begin, end, pageSize, data) {
     const beginAddress = begin * pageSize;
     const end_address = end * pageSize;
     const step = 0x80;
 
-    for (let address = beginAddress; address < end_address && address < image.length; address += step) {
+    for (let address = beginAddress; address < end_address && address < data.length; address += step) {
       const verifyPages = async (resolve, reject) => {
-        const message = await this.read(address, Math.min(step, image.length - address));
-        const reference = image.subarray(message.address, message.address + message.params.byteLength);
+        const message = await this.read(address, Math.min(step, data.length - address));
+        const reference = data.subarray(message.address, message.address + message.params.byteLength);
 
         if (!compare(message.params,reference)) {
           console.debug('Verification failed - retry');
@@ -1082,43 +1210,134 @@ class FourWay {
     }
   }
 
-  verifyPage(page, pageSize, image) {
-    return this.verifyPages(page, page + 1, pageSize, image);
+  /**
+   * Verify a single page against given data
+   *
+   * @param {number} page
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  verifyPage(page, pageSize, data) {
+    return this.verifyPages(page, page + 1, pageSize, data);
   }
 
-  async writePages(begin, end, pageSize, image) {
+  /**
+   * Write data to multiple pages up to (but not including) end page
+   *
+   * @param {number} begin
+   * @param {number} end
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  async writePages(begin, end, pageSize, data) {
     const beginAddress = begin * pageSize;
     const endAddress = end * pageSize;
     const step = 0x100;
 
-    for (let address = beginAddress; address < endAddress && address < image.length; address += step) {
+    for (let address = beginAddress; address < endAddress && address < data.length; address += step) {
       await this.write(
         address,
-        image.subarray(address, Math.min(address + step, image.length)));
+        data.subarray(address, Math.min(address + step, data.length)));
 
       this.bytesWritten += step;
       this.progressCallback((this.bytesWritten / this.totalBytes) * 100);
     }
   }
 
-  writePage(page, pageSize, image) {
-    return this.writePages(page, page + 1, pageSize, image);
+  /**
+   * Write a page with a given size
+   *
+   * @param {number} page
+   * @param {number} pageSize
+   * @param {Uint8Array} data
+   */
+  writePage(page, pageSize, data) {
+    return this.writePages(page, page + 1, pageSize, data);
   }
 
-  erasePage(page) {
-    return this.erasePages(page, page + 1);
-  }
-
+  /**
+   * Erase multiple pages up till (but not including) stop page
+   *
+   * @param {number} startPage
+   * @param {number} stopPage
+   */
   async erasePages(startPage, stopPage) {
     for(let page = startPage; page < stopPage; page += 1) {
-      await this.pageErase(page);
+      await this.erasePage(page);
     }
   }
 
-  pageErase(page) {
+  /**
+   * The following functions send commands directly to the four way interface
+   * and thus the bootloader. All other functions rely on this functions or
+   * wrap them in some way.
+   *
+   * All of this functions will return a Promise that resolves to a Response
+   * object.
+   */
+
+  /**
+   * Clear TestAlive interval and send Exit command
+   *
+   * @returns {Promise<Response>}
+   */
+  exit() {
+    clearInterval(this.interval);
+
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
+  }
+
+  /**
+   * Send TestAlive command
+   *
+   * @returns {Promise<Response>}
+   */
+  testAlive() {
+    return this.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
+  }
+
+  /**
+   * Reset a target
+   *
+   * Depending on the exact firmware different things might happen during
+   * the reset process.
+   *
+   * @param {number} target
+   * @returns {Promise<Response>}
+   */
+  reset(target) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceReset, [target], 0);
+  }
+
+  /**
+   * Initialize the flash
+   *
+   * @param {number} target
+   * @param {number} retries
+   * @returns {Promise<Response>}
+   */
+  async initFlash(target, retries = 10) {
+    return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
+  }
+
+  /**
+   * Erase a single page
+   *
+   * @param {number} page
+   * @returns {Promise<Response>}
+   */
+  erasePage(page) {
     return this.sendMessagePromised(COMMANDS.cmd_DevicePageErase, [page]);
   }
 
+  /**
+   * Read a specified amount of bytes from a starting address
+   *
+   * @param {number} address
+   * @param {number} bytes
+   * @param {number} retries
+   * @returns {Promise<Response>}
+   */
   read(address, bytes, retries = 10) {
     return this.sendMessagePromised(
       COMMANDS.cmd_DeviceRead,
@@ -1128,6 +1347,13 @@ class FourWay {
     );
   }
 
+  /**
+   * Read a number of bytes from a given address
+   *
+   * @param {number} address
+   * @param {number} bytes
+   * @returns {Promise<Response>}
+   */
   readEEprom(address, bytes) {
     return this.sendMessagePromised(
       COMMANDS.cmd_DeviceReadEEprom,
@@ -1136,10 +1362,24 @@ class FourWay {
     );
   }
 
+  /**
+   * Write data to address
+   *
+   * @param {number} address
+   * @param {Array<number>} data
+   * @returns {Promise<Response>}
+   */
   write(address, data) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceWrite, data, address);
   }
 
+  /**
+   * Write data to EEprom address
+   *
+   * @param {number} address
+   * @param {Array<number>} data
+   * @returns {Promise<Response>}
+   */
   writeEEprom(address, data) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceWriteEEprom, data, address);
   }

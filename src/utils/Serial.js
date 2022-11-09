@@ -17,6 +17,11 @@ import { QueueProcessor } from './helpers/QueueProcessor';
  * No command will be written until the previous one is finished processing.
  */
 class Serial {
+  /**
+   * Wrapper for serial communication via MSP and Four Way interface.
+   *
+   * @param {SerialPort} port
+   */
   constructor(port) {
     this.port = port;
     this.baudRate = 115200;
@@ -39,35 +44,23 @@ class Serial {
     this.receivedTotal = 0;
   }
 
-  /* MSP commands */
-  enable4WayInterface = () => this.msp.set4WayIf();
-  getApiVersion = () => this.msp.getApiVersion();
-  getBatteryState = () => this.msp.getBatteryState();
-  getBoardInfo = () => this.msp.getBoardInfo();
-  getBuildInfo = () => this.msp.getBuildInfo();
-  getFcVariant = () => this.msp.getFcVariant();
-  getFcVersion = () => this.msp.getFcVersion();
-  getFeatures = () => this.msp.getFeatures();
-  getMotorData = () => this.msp.getMotorData();
-  getUid = () => this.msp.getUid();
-  spinAllMotors = (speed) => this.msp.spinAllMotors(speed);
-  spinMotor = (index, speed) => this.msp.spinMotor(index, speed);
-
-  /* 4 Way interface commands */
-  exitFourWayInterface = () => this.fourWay.exit();
-  getFourWayInterfaceInfo = (esc) => this.fourWay.getInfo(esc);
-  resetFourWayInterface = (esc) => this.fourWay.reset(esc);
-  startFourWayInterface = () => this.fourWay.start();
-  writeHex = (index, esc, hex, force, migrate, cbProgress) => this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
-  readFirmware = (index, esc, cbProgress) => this.fourWay.readFirmware(index, esc, cbProgress);
-  writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
-
+  /**
+   * Setter to control extended debugging
+   *
+   * @param {boolean} extendedDebug Enable or disable extended debug
+   */
   setExtendedDebug(extendedDebug) {
     if(this.fourWay) {
       this.fourWay.setExtendedDebug(extendedDebug);
     }
   }
 
+  /**
+   * Setter for log callback - sets log callback on both, MSP and Four Way
+   * interface
+   *
+   * @param {function} logCallback
+   */
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
 
@@ -75,6 +68,12 @@ class Serial {
     this.msp.setLogCallback(logCallback);
   }
 
+  /**
+   * Setter for packet error callback - sets log callback on both, MSP and Four
+   * Way interface
+   *
+   * @param {function} packetErrorsCallback
+   */
   setPacketErrorsCallback(packetErrorsCallback) {
     this.packetErrorsCallback = packetErrorsCallback;
 
@@ -84,6 +83,10 @@ class Serial {
 
   /**
    * Send a buffer via serial and process response with the response handler
+   *
+   * @param {ArrayBuffer} buffer
+   * @param {function} responseHandler
+   * @returns {Promise}
    */
   async executeCommand(buffer, responseHandler) {
     const sendHandler = async function() {
@@ -93,6 +96,11 @@ class Serial {
     return this.qp.addCommand(sendHandler, responseHandler);
   }
 
+  /**
+   * Write a buffer
+   *
+   * @param {ArrayBuffer} buffer
+   */
   async writeBuffer(buffer) {
     if(this.writer) {
       this.sent += buffer.byteLength;
@@ -100,6 +108,10 @@ class Serial {
     }
   }
 
+  /**
+   * Invoke the serial reader. As soon as data becomes available it is beeing
+   * pushed to the queue processor which does the actual processing.
+   */
   async startReader() {
     while(this.running) {
       try {
@@ -117,6 +129,17 @@ class Serial {
     }
   }
 
+  /**
+   * @typeof Utilization
+   * @property {number} up
+   * @property {number} down
+   */
+
+  /**
+   * Get utilization of the serial port
+   *
+   * @returns {Utilization}
+   */
   getUtilization() {
     const up = Math.round((this.sent * 10 / this.baudRate) * 100);
     const down = Math.round((this.received * 10 / this.baudRate) * 100);
@@ -133,6 +156,12 @@ class Serial {
     };
   }
 
+  /**
+   * Attempt to open connection to the serial port and start reading as soon as
+   * the connection is successful.
+   *
+   * @param {number} baudRate
+   */
   async open(baudRate = 115200) {
     this.baudRate = baudRate;
 
@@ -152,6 +181,10 @@ class Serial {
     this.startReader();
   }
 
+  /**
+   * Stop reader and writer, attempt closing four way connection should it be
+   * available.
+   */
   async disconnect() {
     this.running = false;
     this.reader = null;
@@ -162,8 +195,16 @@ class Serial {
     }
   }
 
+  /**
+   * Attmept to cleanly close the serial connection
+   */
   async close() {
     this.running = false;
+
+    // Attempt to stop motors
+    if(this.msp) {
+      await this.stopAllMotors();
+    }
 
     if(this.reader) {
       this.reader.cancel();
@@ -182,6 +223,36 @@ class Serial {
 
     this.disconnect();
   }
+
+  /**
+   * MSP commands - see the respective class for in depth documentation of the
+   * functions.
+   */
+  enable4WayInterface = () => this.msp.set4WayIf();
+  getApiVersion = () => this.msp.getApiVersion();
+  getBatteryState = () => this.msp.getBatteryState();
+  getBoardInfo = () => this.msp.getBoardInfo();
+  getBuildInfo = () => this.msp.getBuildInfo();
+  getFcVariant = () => this.msp.getFcVariant();
+  getFcVersion = () => this.msp.getFcVersion();
+  getFeatures = () => this.msp.getFeatures();
+  getMotorData = () => this.msp.getMotorData();
+  getUid = () => this.msp.getUid();
+  spinAllMotors = (speed) => this.msp.spinAllMotors(speed);
+  spinMotor = (index, speed) => this.msp.spinMotor(index, speed);
+  stopAllMotors = () => this.msp.stopAllMotors();
+
+  /**
+   * Four Way interface - see the respective class for in depth documentation of
+   * the functions.
+   */
+  exitFourWayInterface = () => this.fourWay.exit();
+  getFourWayInterfaceInfo = (esc) => this.fourWay.getInfo(esc);
+  resetFourWayInterface = (esc) => this.fourWay.reset(esc);
+  startFourWayInterface = () => this.fourWay.start();
+  writeHex = (index, esc, hex, force, migrate, cbProgress) => this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
+  readFirmware = (index, esc, cbProgress) => this.fourWay.readFirmware(index, esc, cbProgress);
+  writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
 }
 
 export default Serial;

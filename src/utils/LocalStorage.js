@@ -9,6 +9,14 @@ const {
   defaultLanguage,
 } = settings;
 
+const MAX_LOG_LENGTH = 10000;
+
+/**
+ * Returns a previously stored language, an auto detected language or the
+ * default language as a last fallback.
+ *
+ * @returns {string}
+ */
 function loadLanguage() {
   let storedLanguage = localStorage.getItem('language');
   if(!storedLanguage) {
@@ -40,22 +48,37 @@ function loadLanguage() {
   return(storedLanguage || defaultLanguage);
 }
 
+/**
+ * Returns the log. If the log is longer than a set amount of lines, a truncated
+ * version of the log is returned.
+ *
+ * @returns {Array<string>}
+ */
 function loadLog() {
-  // Load previously stored log messages and sanitize to a max line count
   const storedLog = JSON.parse(localStorage.getItem('log'));
   if(storedLog) {
-    return storedLog.slice(-10000);
+    return storedLog.slice(-MAX_LOG_LENGTH);
   }
 
   return [];
 }
 
+/**
+ * Clears the log
+ *
+ * @returns {Array<string>}
+ */
 function clearLog() {
   localStorage.setItem('log', JSON.stringify([]));
 
   return [];
 }
 
+/**
+ * Returns an array of previously stored melodies
+ *
+ * @returns {Array<object>}
+ */
 function loadMelodies() {
   const storedMelodies = JSON.parse(localStorage.getItem('melodies'));
   if(storedMelodies) {
@@ -65,6 +88,11 @@ function loadMelodies() {
   return [];
 }
 
+/**
+ * Returns a settings object overwriting the defaults with user saved settings
+ *
+ * @returns {object}
+ */
 function loadSettings() {
   const settings = JSON.parse(localStorage.getItem('settings')) || {};
   return {
@@ -73,6 +101,11 @@ function loadSettings() {
   };
 }
 
+/**
+ * Checks browser and returns preferred serial API.
+ *
+ * @returns {Serial}
+ */
 function loadSerialApi() {
   if('serial' in navigator) {
     return navigator.serial;

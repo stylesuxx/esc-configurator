@@ -4,9 +4,9 @@ import settingsDescriptions from './settings';
 import escsBlheliS from '../BlheliS/escs.json';
 import escsBluejay from './escs.json';
 import blacklist from './blacklist.json';
+import Silabs from '../../utils/Hardware/Silabs';
 
 const escs = {
-  mcus: escsBlheliS.mcus,
   layouts: {
     ...escsBlheliS.layouts,
     ...escsBluejay.layouts,
@@ -37,10 +37,6 @@ class BluejaySource extends GithubSource {
     return `${make} - ${name}, ${revision}${pwm}`;
   }
 
-  async getVersions() {
-    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
-  }
-
   getFirmwareUrl({
     escKey, version, pwm, url, settings,
   }) {
@@ -52,10 +48,35 @@ class BluejaySource extends GithubSource {
 
     return `${url}${name}_${pwm}_${version}.hex`;
   }
+
+  getMcus() {
+    return Silabs.getMcus();
+  }
+
+  async getVersions() {
+    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
+  }
+
+  isValidName(name) {
+    const regexes = [ /Bluejay( \(.*\))?/g ];
+    for(let i = 0; i < regexes.length; i += 1){
+      const regex = new RegExp(regexes[i]);
+      const match = regex.test(name);
+      if (match) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  canMigrateTo(name) {
+    return this.isValidName(name);
+  }
 }
 
 const pwmOptions = [24, 48, 96];
-const config = new BluejaySource(
+const source = new BluejaySource(
   'Bluejay',
   eeprom,
   settingsDescriptions,
@@ -63,4 +84,7 @@ const config = new BluejaySource(
   pwmOptions
 );
 
-export default config;
+export default BluejaySource;
+export {
+  source,
+};

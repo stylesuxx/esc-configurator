@@ -4,6 +4,7 @@ import settingsDescriptions from './settings';
 import escs from './escs.json';
 import blacklist from './blacklist.json';
 import patterns from './patterns.json';
+import Arm from '../../utils/Hardware/Arm';
 
 const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
 
@@ -24,10 +25,6 @@ class AM32Source extends GithubSource {
     return `${make} - ${this.name}, ${revision}${bootloader}`;
   }
 
-  async getVersions() {
-    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
-  }
-
   getFirmwareUrl({
     escKey, version, url,
   }) {
@@ -46,6 +43,14 @@ class AM32Source extends GithubSource {
 
     return pattern;
   }
+
+  getMcus() {
+    return Arm.getMcus();
+  }
+
+  async getVersions() {
+    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
+  }
 }
 
 const source = new AM32Source(
@@ -55,4 +60,7 @@ const source = new AM32Source(
   escs
 );
 
-export default source;
+export default AM32Source;
+export {
+  source,
+};

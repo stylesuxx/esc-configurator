@@ -272,7 +272,7 @@ class App extends Component {
       if(result) {
         result.index = target;
         result.ref = React.createRef();
-        individual[i] = result;
+        individual[target] = result;
 
         await this.setEscs({ individual });
       } else {

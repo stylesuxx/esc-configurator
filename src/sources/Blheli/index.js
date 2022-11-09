@@ -35,6 +35,4 @@ class BLHeliSource extends Source {
   }
 }
 
-export {
-  BLHeliSource,
-};
+export default BLHeliSource;

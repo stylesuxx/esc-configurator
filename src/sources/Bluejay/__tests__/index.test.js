@@ -1,11 +1,10 @@
-import source from '../';
+import { source } from '../';
 
 const SETTINGS_DESCRIPTIONS = source.getSettingsDescriptions();
 
 describe('Bluejay', () => {
   it('should handle conditional visibility with general settings', () => {
     const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
-    const settings = { MOTOR_DIRECTION: 3 };
 
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
@@ -88,5 +87,55 @@ describe('Bluejay', () => {
     const url = source.getFirmwareUrl(params);
 
     expect(url).toEqual('https://github.com/bird-sanctuary/bluejay/releases/download/test-melody-pwm/S_H_50_test-melody-pwm.hex');
+  });
+
+  it('should recognice invalid names', async() => {
+    let valid = await source.isValidName("Blheli_S");
+    expect(valid).not.toBeTruthy();
+
+    valid = await source.isValidName("JESC");
+    expect(valid).not.toBeTruthy();
+  });
+
+  it('should recognice valid names', async() => {
+    let valid = await source.isValidName("Bluejay");
+    expect(valid).toBeTruthy();
+
+    valid = await source.isValidName("Bluejay (BETA)");
+    expect(valid).toBeTruthy();
+
+    valid = await source.isValidName("Bluejay (TEST)");
+    expect(valid).toBeTruthy();
+
+    valid = await source.isValidName("Bluejay (RC-1)");
+    expect(valid).toBeTruthy();
+
+    valid = await source.isValidName("Bluejay (RC-199)");
+    expect(valid).toBeTruthy();
+  });
+
+  it('should recognice invalid migration options', async() => {
+    let valid = await source.canMigrateTo("Blheli_S");
+    expect(valid).not.toBeTruthy();
+
+    valid = await source.canMigrateTo("JESC");
+    expect(valid).not.toBeTruthy();
+  });
+
+  it('should recognice valid migration options', async() => {
+    let valid = await source.canMigrateTo("Bluejay");
+    expect(valid).toBeTruthy();
+
+    valid = await source.canMigrateTo("Bluejay (BETA)");
+    expect(valid).toBeTruthy();
+
+    valid = await source.canMigrateTo("Bluejay (TEST)");
+    expect(valid).toBeTruthy();
+
+    valid = await source.canMigrateTo("Bluejay (RC-1)");
+    expect(valid).toBeTruthy();
+
+    valid = await source.canMigrateTo("Bluejay (RC-199)");
+    expect(valid).toBeTruthy();
   });
 });
