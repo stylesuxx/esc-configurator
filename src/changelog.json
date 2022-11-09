@@ -1,12 +1,13 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.27.0",
     "items": [
       "BB: Add support for BB51 based ESCs",
       "AM32: Add support for G071 MCUs",
       "AM32: Update layouts and versions",
       "Translation: Add Italian translation",
       "Translation: Add Czech translation",
+      "Translation: Remove incomplete French translation",
       "Chore: Text improvements",
       "Chore: Improved test coverage",
       "Chore: Improved documentation",
