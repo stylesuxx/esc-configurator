@@ -1,6 +1,6 @@
 [
   {
-    "title": "0.27.0",
+    "title": "0.27.1",
     "items": [
       "Bugfix: Do not cache 404 hex files"
     ]
