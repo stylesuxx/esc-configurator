@@ -29,7 +29,7 @@
   "SERVO_NEUTRAL": "For bi-directional modes this is the zero throttle position in microseconds.",
   "SERVO_DEAD_BAND": "Applied to either side of Servo Neutral, anything in this range is considered zero throttle.",
   "LOW_VOLTAGE_CUTOFF": "When enabled will cut power to the motor when the voltage drops below the low voltage threshold.",
-  "LOW_VOLTAGE_THRESHOLD": "Voltage level per cell where power is cut. Units in volts * 10. To cut off at 3.3v enter 330 for example.",
+  "LOW_VOLTAGE_THRESHOLD": "Voltage level per cell where power is cut. Units in volts * 100. To cut off at 3.3v enter 330 for example.",
   "RC_CAR_REVERSING": "For ground vehicles only. Overrides user settings and places ESC into bi-directional mode with double tap to reverse type control.",
   "USE_HALL_SENSORS": "For speed controllers with a hall sensor input to be used with sensored motors.",
   "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",

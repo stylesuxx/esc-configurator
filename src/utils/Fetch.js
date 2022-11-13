@@ -86,6 +86,11 @@ function cloneResponse(response) {
  */
 async function fetchAndCacheHexResponse(cache, url) {
   const response = await fetchProxy(url);
+
+  if(!response.ok) {
+    throw new Error(response.statusText);
+  }
+
   const clonedResponse = cloneResponse(response);
   cache.put(url, clonedResponse);
 
