@@ -18,8 +18,8 @@ class GithubSource extends Source {
    * @param {Array<string>} blacklist
    * @returns
    */
-  async getRemoteVersionsList(repo, blacklist = []) {
-    const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases`);
+  async getRemoteVersionsList(repo, blacklist = [], amount = 100) {
+    const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases?per_page=${amount}&page=1`);
     const releasesWithAssets = githubReleases.filter(
       (release) => release.assets.length && !blacklist.includes(release.tag_name)
     );

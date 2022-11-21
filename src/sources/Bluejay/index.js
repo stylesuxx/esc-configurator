@@ -54,7 +54,7 @@ class BluejaySource extends GithubSource {
   }
 
   async getVersions() {
-    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
+    return this.getRemoteVersionsList(GITHUB_REPO, blacklist, 5);
   }
 
   isValidName(name) {
