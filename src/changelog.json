@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.27.2",
+    "items": [
+      "Bugfix: Limit fetching release list for Bluejay to the last 5 releases"
+    ]
+  },
+  {
     "title": "0.27.1",
     "items": [
       "Bugfix: Do not cache 404 hex files"
