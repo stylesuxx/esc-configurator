@@ -447,7 +447,17 @@ class FourWay {
           info.firmwareName = source.getName();
         }
 
-        if (source instanceof sources.BLHeliSSource) {
+        /**
+         * Check if firmware is mistagged
+         *
+         * This will only work for BLHeli_S, not JESC or BLHeli_M, if either of
+         * those is detected we don't even attempt it.
+         */
+        if (
+          source instanceof sources.BLHeliSSource &&
+          info.settings.NAME !== 'JESC' &&
+          info.settings.NAME !== 'BLHeli_M'
+        ) {
           const splitMake =  make.split('-');
           const taggedTiming = splitMake[2];
           const mcuType = splitMake[1];
