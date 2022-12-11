@@ -60,6 +60,10 @@
     "unstableVersions": {
       "type": "boolean",
       "value": false
+    },
+    "skipCache": {
+      "type": "boolean",
+      "value": false
     }
   }
 }

@@ -57,6 +57,7 @@ describe('Invalid Source', () => {
     const invalidGithubSource = new GithubSource('invalid', 'invalid', 'invalid', 'invalid');
 
     const versions = await invalidGithubSource.getRemoteVersionsList();
+    console.log(versions);
 
     expect(versions).toStrictEqual([]);
   });

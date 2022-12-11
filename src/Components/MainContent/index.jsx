@@ -16,29 +16,41 @@ function WarningWrapper() {
   const { t } = useTranslation('common');
 
   return (
-    <div className="note">
-      <p>
+    <>
+      <div className="note warning">
         <span>
-          <strong>
-            {t('note')}
-          </strong>
-        </span>
-
-        <ReactMarkdown components={{ p: 'span' }}>
-          {t('notePropsOff')}
-        </ReactMarkdown>
-
-        <br />
-
-        <span>
-          <strong>
-            {t('note')}
+          <strong sx={{ color: "red" }}>
+            {t('warning')}
           </strong>
 
-          {t('noteConnectPower')}
+          {t('warningRadio')}
         </span>
-      </p>
-    </div>
+      </div>
+
+      <div className="note">
+        <p>
+          <span>
+            <strong>
+              {t('note')}
+            </strong>
+          </span>
+
+          <ReactMarkdown components={{ p: 'span' }}>
+            {t('notePropsOff')}
+          </ReactMarkdown>
+
+          <br />
+
+          <span>
+            <strong>
+              {t('note')}
+            </strong>
+
+            {t('noteConnectPower')}
+          </span>
+        </p>
+      </div>
+    </>
   );
 }
 

@@ -210,10 +210,14 @@ class App extends Component {
   };
 
   fetchConfigs = async() => {
-    const { configs } = this.state;
+    const {
+      appSettings,
+      configs,
+    } = this.state;
     for(let i = 0; i < sources.length; i += 1) {
       const source = sources[i];
       const name = source.getName();
+      source.setSkipCache(appSettings.settings.skipCache.value);
 
       try {
         configs.versions[name] = await source.getVersions();
