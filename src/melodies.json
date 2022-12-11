@@ -114,6 +114,12 @@
     ]
   },
   {
+    "name": "Guns n Roses - Sweet Child O Mine",
+    "tracks": [
+      "SweetChi:d=4,o=5,b=125:8f6,8g#,8d#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#,8d#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#"
+    ]
+  },
+  {
     "name": "Giorno's Theme",
     "tracks": [
       "Girono:d=8,o=6,b=140:4f#,f#,4d,d,4p,f,32f,32p,e,32e,32p,p,c#,32c#,32p,d,32d,32p,p,4f#5,f#5,4b5,b5,4p,d65,32d,32p,16p,4p,c#,32c#,32p,a5,16a5,g5",
@@ -136,6 +142,15 @@
         "mmmbop2:d=4,o=5,b=104:p.,8c#.,16p,8c#.,8p.,8c#,16p,8c#.,8c#.,16p,8c#.,16p,16d,16d,8c#,16p,8b.4,8c#.,16p,8c#.,8p.,8c#,16p,8c#.,g#.4,16e4,16p,16e4,16p,8f#4,8b4,8a4",
         "mmmbop3:d=4,o=5,b=104:8e3,8e.3,16p,8a.3,16p,8a.3,16p,8a3,16p,16a3,8p,8a3,8d.4,16p,8d.4,16p,8d4,16p,16d4,16p,16d4,8c#4,8a.3,16p,8a.3,16p,8a3,16p,16a3,8p,8a3,8g#.3,16p,8g#.3,8p.,16g#3,16g#3,8p,8g#3",
         "mmmbop4:d=4,o=5,b=104:p.,8e.3,16p,8e.3,16p,8e3,16p,16e3,8p,8e3,8f#.3,16p,8f#.3,16p,8f#3,16p,16f#3,8p,8f#3,8e.3,16p,8e.3,16p,8e3,16p,16e3,8p,8e3"
+    ]
+  },
+  {
+    "name": "Kino - A Pack of Cigarettes",
+    "tracks": [
+        "Kino1:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
+        "Kino2:b=128,o=7,d=8:e4,e3,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4,4e4,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4",
+        "Kino3:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
+        "Kino4:b=128,o=7,d=8:e4,e3,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4,4e4,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4"
     ]
   },
   {
@@ -332,6 +347,18 @@
     "tracks": [
       "le_unama_m:b=150,o=5,d=1:8h4,8c,8e,8g,8h,4a.,2e.,8e,8p,8h,8a,8h,8a,4h,4a,2e.,8e,8p,8h,8a,8h,8a,8h,4a.,2e.,8e,8p,16h,16p,16h,16p,16h,16p,8c6,16h,16p,8h,4a,2e,4e.",
       "le_unama_b:b=150,o=4,d=1:2p,8p,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8c5,8e,8c5,8e,8c5,8e,4c5,2p.,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8a,8e,8a,8e,8a,8e,4a"
+    ]
+  },
+  {
+    "name": "Violent Femmes - Blister In the Sun",
+    "tracks": [
+      "BlisterI:d=4,o=5,b=285:e.,8g#.,8e.,a.,8g#.,e.,g#.,8e.,a.,g#.,e.,8g#.,8e.,a.,8g#.,e.,p,p,p,p,p,e.,8g#.,8e.,a.,8g#.,e.,g#.,8e.,a.,g#.,e.,8g#.,8e.,a.,8g#.,e."
+    ]
+  },
+  {
+    "name": "Violent Femmes - Blister In the Sun (short)",
+    "tracks": [
+      "BlisterI:d=4,o=5,b=285:e.,8g#.,8e.,a.,8g#.,e.,g#.,8e.,a.,g#.,e.,8g#.,8e.,a.,8g#.,e."
     ]
   },
   {
