@@ -12,5 +12,7 @@
   "enableAdvanced": "Gelişmiş Ayarları aktifleştir",
   "enableAdvancedHint": "Firmware dumping gibi gelişmiş ayarları ekler.",
   "unstableVersions": "Önceki Yayınlanmamış Firmwareleri göster",
-  "unstableVersionsHint": "Önceki Yayınlanmamış ve stabil olmayan Firmwareleri göster"
+  "unstableVersionsHint": "Önceki Yayınlanmamış ve stabil olmayan Firmwareleri göster",
+  "skipCache": "Skip cache",
+  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
 }
