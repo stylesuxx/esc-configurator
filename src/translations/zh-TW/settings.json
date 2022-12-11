@@ -12,5 +12,7 @@
   "enableAdvanced": "啓用高級設定",
   "enableAdvancedHint": "添加一些高級設定，如轉儲固件。",
   "unstableVersions": "顯示預發佈固件版本",
-  "unstableVersionsHint": "顯示不穩定的固件版本和預發佈版本"
+  "unstableVersionsHint": "顯示不穩定的固件版本和預發佈版本",
+  "skipCache": "Skip cache",
+  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
 }
