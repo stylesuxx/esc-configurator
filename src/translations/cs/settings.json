@@ -12,5 +12,7 @@
   "enableAdvanced": "Povolit pokročilá nastavení",
   "enableAdvancedHint": "Přidá pokročilá nastavení jako je dumping firmware.",
   "unstableVersions": "Zobrazit předběžná uvolnění firmwaru",
-  "unstableVersionsHint": "Zobrazit nestabilní verze firmwaru a předběžná vydání"
+  "unstableVersionsHint": "Zobrazit nestabilní verze firmwaru a předběžná vydání",
+  "skipCache": "Skip cache",
+  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
 }
