@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Rtttl from 'bluejay-rtttl-parse';
 import dateFormat from 'dateformat';
 import i18next from 'i18next';
+import BinToHex from 'bin-to-hex';
 
 import { fetchHexCached } from '../../utils/Fetch';
 import { getMasterSettings } from '../../utils/helpers/Settings';
@@ -576,16 +577,18 @@ class App extends Component {
     this.setActions({ isFlashing: true });
 
     this.addLogMessage('dumpingEsc', { index: target + 1 });
-    const data = await this.serial.readFirmware(target, esc, updateProgress);
+    const dataBin = await this.serial.readFirmware(target, esc, updateProgress);
+    const binToHex = new BinToHex(16, 0x00, 0xFF);
+    const dataHex = binToHex.convert(dataBin);
     updateProgress(0);
 
     this.setActions({ isFlashing: false });
 
 
     const element = document.createElement("a");
-    const file = new Blob([data], { type: 'application/octet/stream' });
+    const file = new Blob([dataHex], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
-    element.download = "firmware.bin";
+    element.download = "dump.hex";
     document.body.appendChild(element);
     element.click();
   };
