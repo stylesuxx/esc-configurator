@@ -13,6 +13,6 @@
   "enableAdvancedHint": "Fügt fortgeschrittene Optionen wie das Dumpen von Firmware hinzu.",
   "unstableVersions": "Firmware Vorabversionen anzeigen",
   "unstableVersionsHint": "Zeige instabile Firmware und Vorabversionen",
-  "skipCache": "Skip cache",
-  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
+  "skipCache": "Cache überspringen",
+  "skipCacheHint": "Aktiviere dise Option, falls du die neuesten Versionen nicht in der Firmware Auswahl siehst."
 }
