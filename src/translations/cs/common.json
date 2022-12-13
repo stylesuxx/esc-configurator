@@ -10,7 +10,7 @@
   "warning": "Varování: ",
   "notePropsOff": "Předtím, než na této kartě cokoliv provedete, ujistěte se, že jste odmontovali vrtule.",
   "noteConnectPower": "Připojte napájení k ESC.",
-  "warningRadio": "Vypněte vysílač! Jinak by flashování mohlo selhat, zejména na vysoce integrovaných AIO.",
+  "warningRadio": "Vypněte vysílač! Jinak by nahrávání mohlo selhat, zejména na vysoce integrovaných AIO.",
   "commonParameters": "Běžné parametry",
   "unsupportedFirmware": "Nepodporovaný firmware",
   "commonSettingsDisabled": "Běžná nastavení zakázána",
