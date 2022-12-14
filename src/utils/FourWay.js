@@ -340,9 +340,9 @@ class FourWay {
       const mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
       const eepromOffset = mcu.getEepromOffset();
 
-      // Assume BLHeli as default
       let source = null;
       if (info.isSiLabs) {
+        // Assume BLHeli_S to be the default
         source = blheliSSource;
 
         info.layout = source.getLayout();

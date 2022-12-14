@@ -2,8 +2,9 @@ import Source from '../Source';
 
 class BLHeliSource extends Source {
   buildDisplayName(flash, make) {
+    const flashFailedString = "**FLASH*FAILED**";
     const {
-      MAIN_REVISION, SUB_REVISION,
+      MAIN_REVISION, SUB_REVISION, NAME,
     } = flash.settings;
     let revision = 'Unsupported/Unrecognized';
     if(MAIN_REVISION !== undefined && SUB_REVISION !== undefined) {
@@ -12,6 +13,10 @@ class BLHeliSource extends Source {
 
     if (flash.actualMake) {
       make += ` (Probably mistagged: ${flash.actualMake})`;
+    }
+
+    if(NAME === flashFailedString) {
+      return flashFailedString;
     }
 
     return `${make} - ${this.name}, ${revision}`;
