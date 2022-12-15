@@ -2,13 +2,18 @@
   {
     "title": "Unreleased",
     "items": [
-      "Enhancement: More melodies"
+      "Enhancement: More melodies",
+      "Enhancement: Show warning to turn off radio",
+      "Enhancement: Dump firmware as HEX file instead of BIN",
+      "Enhancement: Allow skipping cache for new releases",
+      "Bugifx: Do not check for mistagging if JESC is detected",
+      "Bugfix: Properly display flashed fail in ESC name"
     ]
   },
   {
     "title": "0.27.2",
     "items": [
-      "Bugfix: Do not check JESC for mistagged firmware"
+      "Chore: Limit to fetching last 5 releases"
     ]
   },
   {
