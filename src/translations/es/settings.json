@@ -13,6 +13,6 @@
   "enableAdvancedHint": "Añade ajustes avanzados como volcar el firmware.",
   "unstableVersions": "Mostrar pre-lanzamientos de firmware",
   "unstableVersionsHint": "Mostrar versiones inestables del firmware y pre-lanzamientos",
-  "skipCache": "Skip cache",
-  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
+  "skipCache": "Ignorar caché",
+  "skipCacheHint": "Activa esta opción si no ves la última versión en la selección del firmware."
 }
