@@ -10,7 +10,7 @@
   "warning": "Warnung: ",
   "notePropsOff": "Stelle sicher, dass die Propeller **entfernt** wurden, bevor du den Konfigurator verwendest.",
   "noteConnectPower": "Stelle sicher, dass eine Batterie angesteckt ist.",
-  "warningRadio": "Schalte deine Fernbedienung aus! Sonst kann es zu Problemen beim flashen kommen, insbesondere mit hoch integrierten AIOs.",
+  "warningRadio": "Schalte deine Fernsteuerung aus! Ansonsten kann es zu Problemen beim Flashen kommen, insbesondere bei hoch integrierten AIOs.",
   "commonParameters": "Allgemeine Parameter",
   "unsupportedFirmware": "Nicht unterstützte Firmware",
   "commonSettingsDisabled": "Allgemeine Einstellungen deaktiviert",
