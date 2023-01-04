@@ -14,5 +14,5 @@
   "unstableVersions": "Firmware Vorabversionen anzeigen",
   "unstableVersionsHint": "Zeige instabile Firmware und Vorabversionen",
   "skipCache": "Cache überspringen",
-  "skipCacheHint": "Aktiviere dise Option, falls du die neuesten Versionen nicht in der Firmware Auswahl siehst."
+  "skipCacheHint": "Aktiviere diese Option, falls die neuesten Versionen in der Firmwareauswahl nicht zur Verfügung stehen."
 }
