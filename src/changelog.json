@@ -8,6 +8,7 @@
       "Enhancement: Allow skipping cache for new releases",
       "Bugifx: Do not check for mistagging if JESC is detected",
       "Bugfix: Properly display flashed fail in ESC name",
+      "Bugfix: Allow re-flashing if firmware is broken",
       "Bugfix: Do not cut off hint text for melody sync checkbox"
     ]
   },
