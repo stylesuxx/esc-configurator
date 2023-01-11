@@ -439,8 +439,18 @@ class FourWay {
 
       // SiLabs EFM8 based
       if (info.isSiLabs) {
+        /**
+         * If we don't have a valid layout, something is wrong with the current
+         * firmware. It means the ESC can still be flashed, but we can't say
+         * for sure which firmware it is running
+         */
         const layouts = source.getEscLayouts();
-        make = layouts[layoutName].name;
+        const layout = layouts[layoutName];
+        if(!layout) {
+          source = null;
+        } else {
+          make = layout.name;
+        }
 
         if (source instanceof sources.BluejaySource) {
           info.displayName = source.buildDisplayName(info, make);
