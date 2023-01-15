@@ -1,6 +1,12 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.28.1",
+    "items": [
+      "Chore: Fixed version"
+    ]
+  },
+  {
+    "title": "0.28.0",
     "items": [
       "Enhancement: More melodies",
       "Enhancement: Show warning to turn off radio",
