@@ -16,29 +16,41 @@ function WarningWrapper() {
   const { t } = useTranslation('common');
 
   return (
-    <div className="note">
-      <p>
+    <>
+      <div className="note warning">
         <span>
-          <strong>
-            {t('note')}
-          </strong>
-        </span>
-
-        <ReactMarkdown components={{ p: 'span' }}>
-          {t('notePropsOff')}
-        </ReactMarkdown>
-
-        <br />
-
-        <span>
-          <strong>
-            {t('note')}
+          <strong sx={{ color: "red" }}>
+            {t('warning')}
           </strong>
 
-          {t('noteConnectPower')}
+          {t('warningRadio')}
         </span>
-      </p>
-    </div>
+      </div>
+
+      <div className="note">
+        <p>
+          <span>
+            <strong>
+              {t('note')}
+            </strong>
+          </span>
+
+          <ReactMarkdown components={{ p: 'span' }}>
+            {t('notePropsOff')}
+          </ReactMarkdown>
+
+          <br />
+
+          <span>
+            <strong>
+              {t('note')}
+            </strong>
+
+            {t('noteConnectPower')}
+          </span>
+        </p>
+      </div>
+    </>
   );
 }
 
@@ -85,8 +97,11 @@ function MainContent({
   const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
   const unsupported = unsupportedNames.includes(settings.NAME);
 
+  const disableFlashingNames = ['BLHeli_32'];
+  const disableFlashing = disableFlashingNames.includes(settings.NAME);
+
   const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting && !unsupported;
-  const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading;
+  const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading && !disableFlashing;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
   const showMelodyEditor = escs.length > 0 && escs[0].individualSettings.STARTUP_MELODY ? true : false;
 

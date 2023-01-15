@@ -1,5 +1,5 @@
 {
-  "version": "v0.27.2",
+  "version": "v0.29.0",
   "corsProxy": "https://cors.bubblesort.me/?",
   "availableLanguages": [
     {
@@ -58,6 +58,10 @@
       "value": false
     },
     "unstableVersions": {
+      "type": "boolean",
+      "value": false
+    },
+    "skipCache": {
       "type": "boolean",
       "value": false
     }

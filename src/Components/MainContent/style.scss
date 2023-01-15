@@ -12,8 +12,10 @@
 
   .note {
     margin-bottom: 20px;
-    background-color: #fff7cd;
-    border: 1px solid #ffe55f;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+
     margin-top: 5px;
     margin-bottom: 25px;
     border-radius: 3px;
@@ -23,6 +25,13 @@
 
     @media screen and (max-width: 768px) {
       margin-bottom: 18px;
+    }
+
+    &.warning {
+      margin-bottom: 10px;
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
     }
   }
 

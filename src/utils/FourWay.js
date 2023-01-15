@@ -340,9 +340,9 @@ class FourWay {
       const mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
       const eepromOffset = mcu.getEepromOffset();
 
-      // Assume BLHeli as default
       let source = null;
       if (info.isSiLabs) {
+        // Assume BLHeli_S to be the default
         source = blheliSSource;
 
         info.layout = source.getLayout();
@@ -368,6 +368,17 @@ class FourWay {
         info.layoutSize = source.getLayoutSize();
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
         info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+
+        /**
+         * If not AM32, then very likely BLHeli_32, even if not - we can't
+         * handle it.
+         */
+        const validNames = source.getValidNames();
+        if(!validNames.includes(info.settings.NAME)) {
+          source = null;
+
+          info.settings.NAME = 'BLHeli_32';
+        }
       }
 
       if (!info.isArm && !info.isSiLabs){
@@ -417,21 +428,14 @@ class FourWay {
       }
 
       const layoutRevision = info.settings.LAYOUT_REVISION.toString();
-      info.settingsDescriptions = source.getCommonSettings(layoutRevision);
-      info.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
-      info.defaultSettings = source.getDefaultSettings(layoutRevision);
+      if(source) {
+        info.settingsDescriptions = source.getCommonSettings(layoutRevision);
+        info.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
+        info.defaultSettings = source.getDefaultSettings(layoutRevision);
+      }
 
       if(!info.settingsDescriptions) {
         this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
-
-        /**
-        * If Arm is detected and we have no matching layout, it might be
-        * BLHeli_32.
-        */
-        if(info.isArm) {
-          info.settings.NAME = 'BLHeli_32';
-          info.layout = null;
-        }
       }
 
       const layoutName = (info.settings.LAYOUT || '').trim();
@@ -439,15 +443,39 @@ class FourWay {
 
       // SiLabs EFM8 based
       if (info.isSiLabs) {
+        /**
+         * If we don't have a valid layout, something is wrong with the current
+         * firmware. It means the ESC can still be flashed, but we can't say
+         * for sure which firmware it is running
+         */
         const layouts = source.getEscLayouts();
-        make = layouts[layoutName].name;
+        const layout = layouts[layoutName];
+        if(!layout) {
+          source = null;
+
+          info.layout = {};
+          info.settingsDescriptions = { base: [] };
+          info.individualSettingsDescriptions = { base: [] };
+        } else {
+          make = layout.name;
+        }
 
         if (source instanceof sources.BluejaySource) {
           info.displayName = source.buildDisplayName(info, make);
           info.firmwareName = source.getName();
         }
 
-        if (source instanceof sources.BLHeliSSource) {
+        /**
+         * Check if firmware is mistagged
+         *
+         * This will only work for BLHeli_S, not JESC or BLHeli_M, if either of
+         * those is detected we don't even attempt it.
+         */
+        if (
+          source instanceof sources.BLHeliSSource &&
+          info.settings.NAME !== 'JESC' &&
+          info.settings.NAME !== 'BLHeli_M'
+        ) {
           const splitMake =  make.split('-');
           const taggedTiming = splitMake[2];
           const mcuType = splitMake[1];
@@ -1013,11 +1041,14 @@ class FourWay {
       let newEsc = await this.getInfo(target);
 
       const sameFirmware = (
-        esc.individualSettings && newEsc.individualSettings &&
+        esc.individualSettings &&
+        newEsc.individualSettings &&
+        esc.source &&
         esc.source.canMigrateTo(newEsc.individualSettings.NAME)
       );
 
-      /* Only migrate settings if new and old Firmware are the same or if user
+      /**
+       * Only migrate settings if new and old Firmware are the same or if user
        * forces override.
        */
       if(migrate || sameFirmware) {

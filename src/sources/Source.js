@@ -30,6 +30,14 @@ class Source {
     this.settings = settingsDescriptions;
     this.escs = escs;
     this.pwm = [];
+    this.skipCache = false;
+  }
+
+  /**
+   * @param {boolean} skipCache
+   */
+  setSkipCache(skipCache) {
+    this.skipCache = skipCache;
   }
 
   /**

@@ -69,12 +69,39 @@
     ]
   },
   {
+    "name": "Bobby Helms - Jingle Bell Rock",
+    "tracks": [
+      "jingle1:b=200,o=5,d=4:f#,32p,8f#,32p,8f#,p,f#,32p,8f#,32p,8f#,p,f#,32p,8a,32p,d,32p,8e,64p,f,32p,8e,32p,d,32p,8b4,32p,2a4",
+      "jingle2:b=200,o=5,d=4:d,32p,8d,32p,8d,p,c#,32p,8c#,32p,8c#,p,d,32p,8e,32p,a4,32p,8b4,32p,c,32p,8b4,64p,a4,32p,8g4,32p,2f#4",
+      "jingle3:b=200,o=5,d=4:f#,32p,8f#,32p,8f#,p,f#,32p,8f#,32p,8f#,p,f#,32p,8a,32p,d,32p,8e,64p,f,32p,8e,32p,d,32p,8b4,32p,2a4",
+      "jingle4:b=200,o=5,d=4:d,32p,8d,32p,8d,p,c#,32p,8c#,32p,8c#,p,d,32p,8e,32p,a4,32p,8b4,32p,c,32p,8b4,64p,a4,32p,8g4,32p,2f#4"
+    ]
+  },
+  {
     "name": "Chiquitita - Abba",
     "tracks": [
       "ab_chiq_m1:b=104,o=5,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h4,c#,d,8f#,e6,e,e6,p,e6,e,e6,e,e6,e,e6,e,e6,e,g#6,g#,g#6,g#,g#6,g#,g#6,g#,a6,a,a6,a,a6,a,a6,a,g#6,g#,g#6,g#,a6,a,a6,a,h6,h,h6,h,8a6",
       "ab_chiq_m2:b=104,o=6,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h5,c#,d,8f#,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,8d",
       "ab_chiq_b1:b=104,o=4,d=16:a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,h3,p,c#,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,8a",
       "ab_chiq_b2:b=104,o=4,d=16:a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a,p,a,p,h,p,c#5,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,8d5"
+    ]
+  },
+  {
+    "name": "Cheech and Chong - Earache my eye",
+    "tracks": [
+      "Earache:d=4,o=3,b=180:8b,8a#,a,8b,8a#,a,d4,32p,d4,1b,1b",
+      "Earache:d=4,o=4,b=180:8b,8a#,a,8b,8a#,a,d5,32p,d5,1b,1b",
+      "Earache:d=4,o=3,b=180:8b,8a#,a,8b,8a#,a,d4,32p,d4,1b,1b",
+      "Earache:d=4,o=4,b=180:8f#,8f,e,8f#,8f,e,a,32p,a,1f#,1f#"
+    ]
+  },
+  {
+    "name": "Doom Theme",
+    "tracks": [
+      "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1f#4",
+      "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1c4",
+      "e1m1:b=420,o=4,d=32:4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,2c4,4p,4c4,2p,4p,4c4,2p,4p,4c4,4p,4c4,1c4",
+      "e1m1:b=420,o=4,d=32:8c5,8p,4c5,4c6,8c5,8p,4c5,4a#5,8c5,8p,4c5,4g#5,8c5,8p,4c5,4f#5,8c5,8p,4c5,4g5,4g#5,8c5,8p,4c5,4c6,8c5,8p,4c5,4a#5,8c5,8p,4c5,4g#5,8c5,8p,4c5,1f#4"
     ]
   },
   {
@@ -93,6 +120,12 @@
       "expance2:b=140,o=4,d=4:p,p,2p,8d.,16p,p,2p,2d,1f,p",
       "expance3:b=140,o=5,d=4:2p,8p,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8d4,8a3,8d4,8e4,8f4,8a4,8e4,8f4,8d,8a3,8c4,8e4,8f4,8a4,8e4,8f4,p",
       "expance4:b=140,o=3,d=4:p,p,2f,8f.,16p,f,2e,2p,1a,p"
+    ]
+  },
+  {
+    "name": "Guns n Roses - Sweet Child O Mine",
+    "tracks": [
+      "SweetChi:d=4,o=5,b=125:8f6,8g#,8d#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#,8d#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#"
     ]
   },
   {
@@ -118,6 +151,15 @@
         "mmmbop2:d=4,o=5,b=104:p.,8c#.,16p,8c#.,8p.,8c#,16p,8c#.,8c#.,16p,8c#.,16p,16d,16d,8c#,16p,8b.4,8c#.,16p,8c#.,8p.,8c#,16p,8c#.,g#.4,16e4,16p,16e4,16p,8f#4,8b4,8a4",
         "mmmbop3:d=4,o=5,b=104:8e3,8e.3,16p,8a.3,16p,8a.3,16p,8a3,16p,16a3,8p,8a3,8d.4,16p,8d.4,16p,8d4,16p,16d4,16p,16d4,8c#4,8a.3,16p,8a.3,16p,8a3,16p,16a3,8p,8a3,8g#.3,16p,8g#.3,8p.,16g#3,16g#3,8p,8g#3",
         "mmmbop4:d=4,o=5,b=104:p.,8e.3,16p,8e.3,16p,8e3,16p,16e3,8p,8e3,8f#.3,16p,8f#.3,16p,8f#3,16p,16f#3,8p,8f#3,8e.3,16p,8e.3,16p,8e3,16p,16e3,8p,8e3"
+    ]
+  },
+  {
+    "name": "Kino - A Pack of Cigarettes",
+    "tracks": [
+        "Kino1:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
+        "Kino2:b=128,o=7,d=8:e4,e3,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4,4e4,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4",
+        "Kino3:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
+        "Kino4:b=128,o=7,d=8:e4,e3,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4,4e4,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4"
     ]
   },
   {
@@ -193,6 +235,15 @@
     ]
   },
   {
+    "name": "Pokémon Red/Blue Title Theme (Short)",
+    "tracks": [
+      "PkmnOpening1:d=8,o=7,b=198:16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a#4,16d4,16p,16d4,16p,4c5,16d4,16p,16d4,16p,4c#5,1d5",
+      "PkmnOpening2:d=8,o=7,b=198:16a3,16p,16a3,16p,4d4,16a3,16p,16a3,16p,4d#4,16a3,16p,16a3,16p,4f4,16a3,16p,16a3,16p,4g4,1f#4",
+      "PkmnOpening3:d=8,o=7,b=198:16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a#4,16d4,16p,16d4,16p,4a#4,1a4",
+      "PkmnOpening4:d=8,o=7,b=198:16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a#4,16d4,16p,16d4,16p,4c5,16d4,16p,16d4,16p,4c#5,1d5"
+    ]
+  },
+  {
     "name": "Rick & Morty Theme",
     "tracks": [
       "Rick&Morty:d=2,o=2,b=349:1a#5,2p,2c#6,2c6,2d#6,2g#5,2f#5,1f5",
@@ -244,9 +295,15 @@
     ]
   },
   {
-    "name": "Starwars Theme",
+    "name": "Star Wars Theme",
     "tracks": [
       "starwars:d=4,o=5,b=180:8f,8f,8f,2a#.,2f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8d#6,2c6"
+    ]
+  },
+  {
+    "name": "Star Wars - Cantina Song",
+    "tracks": [
+      "Cantina:d=4,o=5,b=250:8a,8p,8d6,8p,8a,8p,8d6,8p,8a,8d6,8p,8a,8p,8g#,a,8a,8g#,8a,g,8f#,8g,8f#,f.,8d.,16p,p.,8a,8p,8d6,8p,8a,8p,8d6,8p,8a,8d6,8p,8a,8p,8g#,8a,8p,8g,8p,g.,8f#,8g,8p,8c6,a#,a,g"
     ]
   },
   {
@@ -308,6 +365,26 @@
     ]
   },
   {
+    "name": "Violent Femmes - Blister In the Sun",
+    "tracks": [
+      "BlisterI:d=4,o=5,b=285:e.,8g#.,8e.,a.,8g#.,e.,g#.,8e.,a.,g#.,e.,8g#.,8e.,a.,8g#.,e.,p,p,p,p,p,e.,8g#.,8e.,a.,8g#.,e.,g#.,8e.,a.,g#.,e.,8g#.,8e.,a.,8g#.,e."
+    ]
+  },
+  {
+    "name": "Violent Femmes - Blister In the Sun (short)",
+    "tracks": [
+      "BlisterI:d=4,o=5,b=285:e.,8g#.,8e.,a.,8g#.,e.,g#.,8e.,a.,g#.,e.,8g#.,8e.,a.,8g#.,e."
+    ]
+  },
+  {
+    "name":"We wish you a merry christmas",
+    "tracks":[
+      "WE_WISH_YOU:d=2,o=2,b=384:2c#4,16p,2f#4,16p,4f#4,32p,4g#4,32p,4f#4,32p,4f4,32p,2d#4,32p,2d#4,16p,2d#4,16p,2g#4,16p,4g#4,32p,4a#4,32p,4g#4,32p,4f#4,32p,2f4,16p,2c#4,16p,2c#4,16p,2a#4,16p,4a#4,32p,4b4,32p,4a#4,32p,4g#4,32p,2f#4,16p,2d#4,16p,4c#4,32p,4c#4,16p,2d#4,16p,2g#4,16p,2f4,16p,1f#4",
+      "WE_WISH_YOU:d=2,o=2,b=384:2c#4,16p,2f#4,16p,2f#4,16p,2f#4,16p,2d#4,16p,2d#4,16p,2d#4,16p,2g#4,16p,2g#4,16p,2g#4,16p,2f4,16p,2c#4,16p,2c#4,16p,2a#4,16p,2a#4,16p,2a#4,16p,2f#4,16p,2f#4,16p,2c#4,16p,2d#4,16p,2g#4,16p,2f4,16p,1a#4",
+      "WE_WISH_YOU:d=2,o=2,b=384:2c#4,16p,2a#4,16p,2a#4,16p,2a#4,16p,2b#5,16p,2b#5,16p,2d#4,16p,2c5,16p,2c5,16p,2c5,16p,2c#5,16p,2c#5,16p,2c#4,16p,2d4,16p,2d4,16p,2f#4,16p,2d#4,16p,2c#4,16p,2c#4,16p,2f#4,16p,2b#4,16p,2c#4,16p,1c#4"
+    ]
+  },
+  {
     "name": "X-Files",
     "tracks": [
       "XFiles:b=125,o=5,d=4:e,b,a,b,d6,2b."
@@ -320,6 +397,15 @@
       "GON_GIVE_IT_TO_YA:d=2,o=2,b=384:2a#4,16p,2a#4,16p,4a#3,32p,4a#4,32p,4a#4,32p,4a#4,32p,2g#4,16p,2g#4,16p,4g#3,32p,4g#4,32p,4g#4,32p,4g#4,32p,2f#4,16p,2f#4,16p,4f#3,32p,4f#4,32p,4f#4,32p,4f#4,32p,2d#4,16p,2d#4,16p,4d#3,32p,4d#4,32p,4d#4,32p,4d#4,32p",
       "GON_GIVE_IT_TO_YA:d=2,o=2,b=384:2a#4,16p,2a#4,16p,4a#5,32p,4a#5,32p,4a#5,32p,4a#5,32p,2g#4,16p,2g#4,16p,4g#5,32p,4g#5,32p,4g#5,32p,4g#5,32p,2f#4,16p,2f#4,16p,4f#5,32p,4f#5,32p,4f#5,32p,4f#5,32p,2d#4,16p,2d#4,16p,4d#5,32p,4d#5,32p,4d#5,32p,4d#5,32p",
       "GON_GIVE_IT_TO_YA:d=2,o=2,b=384:2a#4,16p,2a#4,16p,4a#6,32p,4a#6,32p,4a#6,32p,4a#6,32p,2g#4,16p,2g#4,16p,4g#6,32p,4g#6,32p,4g#6,32p,4g#6,32p,2f#4,16p,2f#4,16p,4f#6,32p,4f#6,32p,4f#6,32p,4f#6,32p,2d#4,16p,2d#4,16p,4d#6,32p,4d#6,32p,4d#6,32p,4d#6,32p"
+    ]
+  },
+  {
+    "name": "Zelda Chest opening",
+    "tracks": [
+      "ZeldaChest1:b=122,o=7,d=8:16b4,16c#5,16d#5,16f5,16c5,16d5,16e5,16f#5,16c#5,16d#5,16f5,16g5,16d5,16e5,16f#5,16g#5,4p,a5,e5,f5,2f#5",
+      "ZeldaChest2:b=122,o=7,d=8:4c#4,4d4,4d#4,4e4,4p,c5,c#5,d5,2d#5",
+      "ZeldaChest3:b=122,o=7,d=8:16b3,16c#4,16d#4,16f4,16c4,16d4,16e4,16f#4,16c#4,16d#4,16f4,16g4,16d4,16e4,16f#4,16g#4,4p,d#5,a#5,g4,2g#4",
+      "ZeldaChest4:b=122,o=7,d=8:16b4,16c#5,16d#5,16f5,16c5,16d5,16e5,16f#5,16c#5,16d#5,16f5,16g5,16d5,16e5,16f#5,16g#5,4p,f4,f#4,b5,2c6"
     ]
   },
   {

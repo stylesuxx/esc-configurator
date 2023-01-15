@@ -29,7 +29,7 @@
   "SERVO_NEUTRAL": "Pro dvousměrné režimy se jedná o nulovou polohu plynu v mikrosekundách.",
   "SERVO_DEAD_BAND": "Aplikováno na obě strany servo neutrálu, cokoliv v tomto rozsahu je považováno za nulový plyn.",
   "LOW_VOLTAGE_CUTOFF": "Pokud je povoleno, přeruší napájení motoru, když napětí klesne pod práh nízkého napětí.",
-  "LOW_VOLTAGE_THRESHOLD": "Úroveň napětí na článek, kde je přerušeno napájení. Jednotky ve voltech * 10. Například pro vypnutí při 3,3V zadejte 330.",
+  "LOW_VOLTAGE_THRESHOLD": "Úroveň napětí na článek, kde je přerušeno napájení. Jednotky ve voltech * 100. Například pro vypnutí při 3,3V zadejte 330.",
   "RC_CAR_REVERSING": "Pouze pro pozemní vozidla. Přepíše uživatelská nastavení a přepne ESC do obousměrného režimu s dvojitým klepnutím pro ovládání typu vzad.",
   "USE_HALL_SENSORS": "Pro regulátory otáček pro použití se senzorovými motory se vstupem Hallova čidla.",
   "SINE_MODE_RANGE": "Množství plynu v procentech použité pro sinusoidální startování.",

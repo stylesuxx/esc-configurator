@@ -12,5 +12,7 @@
   "enableAdvanced": "Erweiterte Einstellungen aktivieren",
   "enableAdvancedHint": "Fügt fortgeschrittene Optionen wie das Dumpen von Firmware hinzu.",
   "unstableVersions": "Firmware Vorabversionen anzeigen",
-  "unstableVersionsHint": "Zeige instabile Firmware und Vorabversionen"
+  "unstableVersionsHint": "Zeige instabile Firmware und Vorabversionen",
+  "skipCache": "Cache überspringen",
+  "skipCacheHint": "Aktiviere diese Option, falls die neuesten Versionen in der Firmwareauswahl nicht zur Verfügung stehen."
 }
