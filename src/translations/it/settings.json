@@ -12,5 +12,7 @@
   "enableAdvanced": "Abilita impostazioni avanzate",
   "enableAdvancedHint": "Aggiunge impostazioni avanzate come il dump del firmware.",
   "unstableVersions": "Mostra pre-release del firmware",
-  "unstableVersionsHint": "Mostra versioni del firmware instabili e pre-release"
+  "unstableVersionsHint": "Mostra versioni del firmware instabili e pre-release",
+  "skipCache": "Ignora la cache",
+  "skipCacheHint": "Abilita questa impostazione se non vedi l'ultima versione nella selezione del firmware."
 }

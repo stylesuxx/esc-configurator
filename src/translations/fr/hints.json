@@ -29,7 +29,7 @@
   "SERVO_NEUTRAL": "Postion neutre pour le mode bidirectionnel, en microsecondes.",
   "SERVO_DEAD_BAND": "Appliqué de chaque côté du neutre servo. Tout signal inclus dans cette bande est considéré comme zéro gaz.",
   "LOW_VOLTAGE_CUTOFF": "Quand activé, coupera l'alimentation du moteur lorsque la tension descend en dessous du seuil de basse tension.",
-  "LOW_VOLTAGE_THRESHOLD": "Niveau de tension par cellule où l'alimentation est coupée. Unités en volts * 10. Pour couper à 3,3v entrer 330 par exemple.",
+  "LOW_VOLTAGE_THRESHOLD": "Niveau de tension par cellule où l'alimentation est coupée. Unités en volts * 100. Pour couper à 3,3v entrer 330 par exemple.",
   "RC_CAR_REVERSING": "Pour véhicules terrestre uniquement. Remplace les paramètres de l'utilisateur et passe l'ESC en mode bidirectionnel avec double appui pour inverser le type de contrôle.",
   "USE_HALL_SENSORS": "For speed controllers with a hall sensor input to be used with sensored motors.",
   "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",

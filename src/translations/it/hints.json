@@ -29,7 +29,7 @@
   "SERVO_NEUTRAL": "Per le modalità bidirezionali questa è la posizione di zero acceleratore in microsecondi.",
   "SERVO_DEAD_BAND": "Applicato su entrambi i lati del Servo Neutral, qualsiasi cosa in questa gamma è considerata a zero acceleratore.",
   "LOW_VOLTAGE_CUTOFF": "Quando abilitato taglierà energia al motore quando la tensione scende al di sotto della soglia di bassa tensione.",
-  "LOW_VOLTAGE_THRESHOLD": "Livello di tensione per cella in cui viene interrotta l'alimentazione. Unità in volt * 10. Per interrompere a 3.3v immettere 330 ad esempio.",
+  "LOW_VOLTAGE_THRESHOLD": "Livello di tensione per cella in cui viene interrotta l'alimentazione. Unità in volt * 100. Per interrompere a 3.3v immettere 330 ad esempio.",
   "RC_CAR_REVERSING": "Solo per i veicoli di terra. Sovrascrive le impostazioni dell'utente e posiziona ESC in modalità bidirezionale con doppio tocco per invertire il tipo di controllo.",
   "USE_HALL_SENSORS": "Per i regolatori di velocità con sensore d'ingresso hall da utilizzare con motori sensored.",
   "SINE_MODE_RANGE": "La quantità di acceleratore in percentuale utilizzata per l'avvio sinusoidale.",

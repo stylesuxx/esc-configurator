@@ -12,5 +12,7 @@
   "enableAdvanced": "启用高级设置",
   "enableAdvancedHint": "添加一些高级设置，如转储固件。",
   "unstableVersions": "显示预发布固件版本",
-  "unstableVersionsHint": "显示不稳定的固件版本和预发布版本"
+  "unstableVersionsHint": "显示不稳定的固件版本和预发布版本",
+  "skipCache": "跳过缓存",
+  "skipCacheHint": "如果您在固件选择中看不到最新版本，请启用此设置。"
 }

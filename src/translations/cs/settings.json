@@ -6,11 +6,13 @@
   "printLogs": "Tisk logů",
   "printLogsHint": "Pokud je povoleno, vypíše protokoly do konzoly.",
   "extendedDebug": "Rozšířené ladění",
-  "extendedDebugHint": "Dále vytiskne adresy, které jsou čteny/zapsány a odeslané/přijaté užitečné zatížení.",
+  "extendedDebugHint": "Dále vytiskne adresy, které jsou čteny/zapisovány a odeslané/přijímané zatížení.",
   "disableCommon": "Zakázat společná nastavení",
   "disableCommonHint": "Každý ESC bude mít vlastní sadu nastavení místo toho, aby měl společnou sekci, která je platná pro všechny ESC.",
   "enableAdvanced": "Povolit pokročilá nastavení",
   "enableAdvancedHint": "Přidá pokročilá nastavení jako je dumping firmware.",
   "unstableVersions": "Zobrazit předběžná uvolnění firmwaru",
-  "unstableVersionsHint": "Zobrazit nestabilní verze firmwaru a předběžná vydání"
+  "unstableVersionsHint": "Zobrazit nestabilní verze firmwaru a předběžná vydání",
+  "skipCache": "Přeskočit vyrovnávací paměť",
+  "skipCacheHint": "Povolte toto nastavení, pokud ve výběru firmwaru nevidíte nejnovější verzi."
 }

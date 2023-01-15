@@ -12,5 +12,7 @@
   "enableAdvanced": "Activer les réglages avancés",
   "enableAdvancedHint": "Ajoute les réglages avancés comme le déchargement du micrologiciel.",
   "unstableVersions": "Afficher les versions non officielles",
-  "unstableVersionsHint": "Afficher les versions instables et les versions non officielles"
+  "unstableVersionsHint": "Afficher les versions instables et les versions non officielles",
+  "skipCache": "Skip cache",
+  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
 }
