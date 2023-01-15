@@ -448,6 +448,10 @@ class FourWay {
         const layout = layouts[layoutName];
         if(!layout) {
           source = null;
+
+          info.layout = {};
+          info.settingsDescriptions = { base: [] };
+          info.individualSettingsDescriptions = { base: [] };
         } else {
           make = layout.name;
         }
@@ -1033,11 +1037,14 @@ class FourWay {
       let newEsc = await this.getInfo(target);
 
       const sameFirmware = (
-        esc.individualSettings && newEsc.individualSettings &&
+        esc.individualSettings &&
+        newEsc.individualSettings &&
+        esc.source &&
         esc.source.canMigrateTo(newEsc.individualSettings.NAME)
       );
 
-      /* Only migrate settings if new and old Firmware are the same or if user
+      /**
+       * Only migrate settings if new and old Firmware are the same or if user
        * forces override.
        */
       if(migrate || sameFirmware) {
