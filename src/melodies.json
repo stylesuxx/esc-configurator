@@ -87,6 +87,15 @@
     ]
   },
   {
+    "name": "Cheech and Chong - Earache my eye",
+    "tracks": [
+      "Earache:d=4,o=3,b=180:8b,8a#,a,8b,8a#,a,d4,32p,d4,1b,1b",
+      "Earache:d=4,o=4,b=180:8b,8a#,a,8b,8a#,a,d5,32p,d5,1b,1b",
+      "Earache:d=4,o=3,b=180:8b,8a#,a,8b,8a#,a,d4,32p,d4,1b,1b",
+      "Earache:d=4,o=4,b=180:8f#,8f,e,8f#,8f,e,a,32p,a,1f#,1f#"
+    ]
+  },
+  {
     "name": "Doom Theme",
     "tracks": [
       "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1f#4",
@@ -286,9 +295,15 @@
     ]
   },
   {
-    "name": "Starwars Theme",
+    "name": "Star Wars Theme",
     "tracks": [
       "starwars:d=4,o=5,b=180:8f,8f,8f,2a#.,2f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8c6,2a#.6,f.6,8d#6,8d6,8d#6,2c6"
+    ]
+  },
+  {
+    "name": "Star Wars - Cantina Song",
+    "tracks": [
+      "Cantina:d=4,o=5,b=250:8a,8p,8d6,8p,8a,8p,8d6,8p,8a,8d6,8p,8a,8p,8g#,a,8a,8g#,8a,g,8f#,8g,8f#,f.,8d.,16p,p.,8a,8p,8d6,8p,8a,8p,8d6,8p,8a,8d6,8p,8a,8p,8g#,8a,8p,8g,8p,g.,8f#,8g,8p,8c6,a#,a,g"
     ]
   },
   {
