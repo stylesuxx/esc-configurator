@@ -51,6 +51,10 @@ class AM32Source extends GithubSource {
   async getVersions() {
     return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
   }
+
+  getValidNames() {
+    return Object.keys(escs.layouts);
+  }
 }
 
 const source = new AM32Source(
