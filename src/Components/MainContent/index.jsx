@@ -85,6 +85,7 @@ function MainContent({
   connected,
   fourWay,
   port,
+  radioOn,
 }) {
   const { t } = useTranslation('common');
   const {
@@ -102,7 +103,7 @@ function MainContent({
 
   const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting && !unsupported;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading && !disableFlashing;
-  const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
+  const canRead = !isReading && !isWriting && !isSelecting && !isFlashing && !radioOn;
   const showMelodyEditor = escs.length > 0 && escs[0].individualSettings.STARTUP_MELODY ? true : false;
 
   const FlashWrapper = useCallback(() => {
@@ -343,6 +344,7 @@ MainContent.propTypes = {
   open: PropTypes.bool,
   port: PropTypes.shape({ getBatteryState:PropTypes.func }),
   progress: PropTypes.arrayOf(PropTypes.number),
+  radioOn: PropTypes.bool.isRequired,
   settings: PropTypes.shape(),
 };
 

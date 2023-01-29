@@ -106,6 +106,7 @@ function App({
           onWriteSetup={escs.actions.handleWriteSetup}
           open={serial.open}
           port={serial.port}
+          radioOn={msp.radioOn}
           settings={escs.master}
         />
 
@@ -208,7 +209,10 @@ App.propTypes = {
     escs: PropTypes.arrayOf(PropTypes.string).isRequired,
     show: PropTypes.bool.isRequired,
   }).isRequired,
-  msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,
+  msp: PropTypes.shape({
+    features: PropTypes.shape({}).isRequired,
+    radioOn: PropTypes.func.isRequired,
+  }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onClearLog: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,

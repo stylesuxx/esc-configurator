@@ -415,7 +415,21 @@ class Msp {
           config.i2cError = data.getUint16(2, 1);
           config.activeSensors = data.getUint16(4, 1);
           config.mode = data.getUint32(6, 1);
-          config.profile = data.getUint8(10);
+          config.currentProfile = data.getUint8(10);
+          config.averageSysytemLoadPercent = data.getUint16(11, 1);
+
+          config.pidProfileCount = data.getUint8(13);
+          config.currentRateProfile = data.getUint8(14);
+
+          config.byteCount = data.getUint8(15);
+
+          config.armingDisableFlagsCount = data.getUint8(16 + config.byteCount);
+          config.armingDisableFlags = data.getUint32(17 + config.byteCount, 1);
+
+          const rxFailsafe = (config.armingDisableFlags & (1 << 2)) === 0x04;
+          config.armingDisableFlagsReasons = { RX_FAILSAFE: rxFailsafe };
+
+          config.rebootRequired = data.getUint8(21 + config.byteCount);
 
           return config;
         }
@@ -726,6 +740,15 @@ class Msp {
    */
   getBoardInfo() {
     return this.send(MSP.MSP_BOARD_INFO);
+  }
+
+  /**
+   * Get Status
+   *
+   * @returns {Promise<MspStatus>}
+   */
+  getStatus() {
+    return this.send(MSP.MSP_STATUS);
   }
 
   /**

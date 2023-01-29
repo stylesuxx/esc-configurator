@@ -40,7 +40,10 @@ class App extends Component {
     this.lastConnected = 0;
 
     this.state = {
-      msp: { features: {} },
+      msp: {
+        features: {},
+        radioOn: false,
+      },
       appSettings: {
         show: false,
         settings: loadSettings(),
@@ -793,6 +796,11 @@ class App extends Component {
       }
       this.addLogMessage('mspUid', { id: uidHex });
 
+      const status = await this.serial.getStatus();
+      if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
+        this.addLogMessage('radioOn');
+      }
+
       let motorData = await this.serial.getMotorData();
       motorData = motorData.filter((motor) => motor > 0);
 
@@ -810,7 +818,12 @@ class App extends Component {
         },
       });
 
-      this.setState({ msp: { features } });
+      this.setState({
+        msp: {
+          features,
+          radioOn: !status.armingDisableFlagsReasons.RX_FAILSAFE,
+        },
+      });
       this.setSerial({ open: true });
       this.setEscs({ connected: motorData.length });
     } catch(e) {
