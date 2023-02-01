@@ -9,6 +9,7 @@
   "mspBuildInfo": "Fonctionne avec le micrologiciel sorti le : {{info}}",
   "mspBoardInfo": "Carte : {{identifier}}, version : {{version}}",
   "mspUid": "ID unique du périphérique reçue - 0x{{id}}",
+  "radioOn": "Your radio has been detected to be on! Reading and Flashing disabled. Turn off your radio and try again.",
   "mspFcInfo": "Infos de la carte de vol, identifiant : {{id}} version : {{version}}",
   "portUsed": "Le port est déjà utilisé par une autre application - essayez de reconnecter",
   "fourWayFailed": "Impossible d'activer l'interface 4 voies - reconnecter le contrôleur de vol",
