@@ -9,6 +9,7 @@
   "mspBuildInfo": "Spuštěný firmware byl vydán: {{info}}",
   "mspBoardInfo": "Deska: {{identifier}}, verze: {{version}}",
   "mspUid": "Obdrženo jedinečné ID zařízení - 0x{{id}}",
+  "radioOn": "Your radio has been detected to be on! Reading and Flashing disabled. Turn off your radio and try again.",
   "mspFcInfo": "Informace o letovém ovladači, identifikátor: {{id}} verze: {{version}}",
   "portUsed": "Port je již používán jinou aplikací - zkuste se znovu připojit",
   "fourWayFailed": "Nelze povolit 4 směrové rozhraní - znovu připojit řídící jednotku",
