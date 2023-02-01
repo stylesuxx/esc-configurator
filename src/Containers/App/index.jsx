@@ -440,6 +440,16 @@ class App extends Component {
     let connected = 0;
 
     this.setActions({ isReading: true });
+
+    // Prevent reading if radio is detected to be on
+    const status = await this.serial.getStatus();
+    if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
+      this.addLogMessage('radioOn');
+      this.setActions({ isReading: false });
+
+      return;
+    }
+
     try {
       if(this.lastConnected === 0) {
         const escs = await this.serial.enable4WayInterface();

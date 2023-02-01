@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Enhancement: Detect if radio is on and do not allow reading/flashing"
+    ]
+  },
+  {
     "title": "0.28.1",
     "items": [
       "Chore: Fixed version"

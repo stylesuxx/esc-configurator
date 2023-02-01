@@ -9,6 +9,7 @@
   "mspBuildInfo": "Running firmware released on: {{info}}",
   "mspBoardInfo": "Board: {{identifier}}, version: {{version}}",
   "mspUid": "Unique device ID received - 0x{{id}}",
+  "radioOn": "Your radio has been detected to be on! Reading and Flashing disabled. Turn off your radio and try again.",
   "mspFcInfo": "Flight controller info, identifier: {{id}} version: {{version}}",
   "portUsed": "Port already in use by another application - try re-connecting",
   "fourWayFailed": "Could not enable 4 way interface - reconnect flight controller",
