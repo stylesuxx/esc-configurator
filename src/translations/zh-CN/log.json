@@ -9,7 +9,7 @@
   "mspBuildInfo": "运行已发布的固件: {{info}}",
   "mspBoardInfo": "主板: {{identifier}}, 版本: {{version}}",
   "mspUid": "已收到唯一设备ID - 0x{{id}}",
-  "radioOn": "Your radio has been detected to be on! Reading and Flashing disabled. Turn off your radio and try again.",
+  "radioOn": "您的遥控器已被检测到开启！读取和烧录已被禁用。请关闭您的遥控器，然后重试。",
   "mspFcInfo": "飞行控制器信息，标识符: {{id}} 版本: {{version}}",
   "portUsed": "端口已被另一个应用程序使用 - 请尝试重新连接",
   "fourWayFailed": "无法启用 4 路接口 - 请重新连接飞行控制器",
