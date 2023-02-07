@@ -46,6 +46,7 @@
   "escButtonWrite": "Ayarı Kaydet",
   "buttonCancel": "İptal",
   "escButtonSelect": "Kaydet",
+  "escPowerRading": "Power Rating",
   "defaultChangelogTitle": "Değişim günlüğü",
   "changelogClose": "Kapat",
   "escDampingMode": "Sönümleme modu (Complementary PWM)",
