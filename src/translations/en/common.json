@@ -46,6 +46,7 @@
   "escButtonWrite": "Write Settings",
   "buttonCancel": "Cancel",
   "escButtonSelect": "Flash",
+  "escPowerRading": "Power Rating",
   "defaultChangelogTitle": "Changelog",
   "changelogClose": "Close",
   "escDampingMode": "Damping mode (Complementary PWM)",

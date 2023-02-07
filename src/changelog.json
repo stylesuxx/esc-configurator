@@ -2,7 +2,8 @@
   {
     "title": "Unreleased",
     "items": [
-      "Enhancement: Detect if radio is on and do not allow reading/flashing"
+      "Enhancement: Detect if radio is on and do not allow reading/flashing",
+      "Bluejay: New layout including power settings"
     ]
   },
   {

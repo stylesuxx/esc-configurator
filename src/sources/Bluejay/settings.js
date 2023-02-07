@@ -337,6 +337,24 @@ COMMON['205'] = {
   ],
 };
 
+COMMON['206'] = {
+  base: [
+    ...COMMON['204'].base,
+    {
+      name: 'POWER_RATING',
+      type: 'enum',
+      label: 'escPowerRating',
+      options: [{
+        value: '1',
+        label: '1S',
+      }, {
+        value: '2',
+        label: '2S+',
+      }],
+    },
+  ],
+};
+
 const INDIVIDUAL_SETTINGS_200 = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',
@@ -395,6 +413,7 @@ const INDIVIDUAL_SETTINGS_203 = [
 ];
 
 const INDIVIDUAL = {
+  '206': { base: INDIVIDUAL_SETTINGS_203 },
   '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
@@ -445,11 +464,16 @@ DEFAULTS['204'] = { // v0.15
   BRAKING_STRENGTH: 255,
 };
 
-DEFAULTS['205'] = {
+DEFAULTS['205'] = { // unreleased
   ...DEFAULTS['204'],
   STARTUP_BEEP: 1,
   STARTUP_MELODY_WAIT_MS: 0,
   PWM_FREQUENCY: 24,
+};
+
+DEFAULTS['206'] = { // v0.19
+  ...DEFAULTS['204'],
+  POWER_RATING: 2,
 };
 
 const settings = {

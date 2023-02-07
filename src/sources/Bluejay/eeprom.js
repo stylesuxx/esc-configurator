@@ -162,6 +162,10 @@ const LAYOUT = {
     offset: 0x28,
     size: 1,
   },
+  POWER_RATING: {
+    offset: 0x29,
+    size: 1,
+  },
 
   LAYOUT: {
     offset: 0x40,
