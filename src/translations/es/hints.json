@@ -29,10 +29,11 @@
   "SERVO_NEUTRAL": "Para los modos bidireccionales esta es la posición cero del acelerador en microsegundos.",
   "SERVO_DEAD_BAND": "Aplicado a ambos lados del Neutral, cualquier cosa en este rango se considera de cero acelerador.",
   "LOW_VOLTAGE_CUTOFF": "Cuando está habilitado cortará energía al motor cuando el voltaje caiga por debajo del umbral de baja tensión.",
-  "LOW_VOLTAGE_THRESHOLD": "Nivel de voltaje por celda donde se corta. Unidades en voltios * 100. Para cortar a 3.3v introduzca 330 por ejemplo.",
+  "LOW_VOLTAGE_THRESHOLD": "Voltage level per cell where power is cut. Units in volts * 100. To cut off at 3.3v enter 330 for example.",
   "RC_CAR_REVERSING": "Solo para vehículos terrestres. Anula la configuración del usuario y coloca los ESC en modo bidireccional con doble toque para controlar el tipo inverso.",
   "USE_HALL_SENSORS": "Para usar controladores de velocidad con sensor Hall para el uso de motores con sensores.",
   "SINE_MODE_RANGE": "La cantidad de acelerador en porcentaje usada para el arranque sinusoidal.",
   "BRAKE_STRENGTH": "El nivel de retención del freno aplicado cuando brake on stop está activado.",
-  "BRAKING_STRENGTH": "Máxima cantidad de frenadas aplicadas (ciclo de trabajo complementario de PWM)."
+  "BRAKING_STRENGTH": "Máxima cantidad de frenadas aplicadas (ciclo de trabajo complementario de PWM).",
+  "POWER_RATING": "If using EDT on 1S setups, the temperature readings will be off if this is not set to 1S. All setups with 2S and more do not need to change this setting."
 }
