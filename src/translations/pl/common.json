@@ -46,6 +46,7 @@
   "escButtonWrite": "Zapisz ustawienia",
   "buttonCancel": "Anuluj",
   "escButtonSelect": "Flash",
+  "escPowerRading": "Power Rating",
   "defaultChangelogTitle": "Lista zmian",
   "changelogClose": "Zamknij",
   "escDampingMode": "Tryb tłumienia (Uzupełniający PWM)",
