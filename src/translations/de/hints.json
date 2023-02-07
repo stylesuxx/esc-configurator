@@ -29,7 +29,7 @@
   "SERVO_NEUTRAL": "Im bidirektionalen Modus ist dies die Null-Position in Mikrosekunden.",
   "SERVO_DEAD_BAND": "Wird auf beiden Seiten der Servo Neutralstellung angewendet. Alles in diesem Bereich wird als Null interpretiert.",
   "LOW_VOLTAGE_CUTOFF": "Wenn aktiviert, wird die Stromversorgung zum Motor getrennt falls die Versorgungsspannung unter einen bestimmten Wert fällt.",
-  "LOW_VOLTAGE_THRESHOLD": "Voltage level per cell where power is cut. Units in volts * 100. To cut off at 3.3v enter 330 for example.",
+  "LOW_VOLTAGE_THRESHOLD": "Zellenspannung bei der die Stromzufuhr unterbrochen wird. Einheiten in 10mV. Um beispielsweise bei 3.3V zu unterbrechen muss 330 eingegeben werden.",
   "RC_CAR_REVERSING": "Nur für Bodenfahrzeuge. Überschreibt die Benutzereinstellungen und versetzt den ESC in den bidirektionalen Modus. Mit Doppeltipp, um den Motor rückwärts zu drehen.",
   "USE_HALL_SENSORS": "Für ESCs mit Hall-Sensoreingang, wenn Motoren mit Drehzahlgeber verwendet werden.",
   "SINE_MODE_RANGE": "Schub in Prozent für sinusförmigen Startup.",
