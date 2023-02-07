@@ -46,6 +46,7 @@
   "escButtonWrite": "Écrire les paramètres",
   "buttonCancel": "Annuler",
   "escButtonSelect": "Installer",
+  "escPowerRading": "Power Rating",
   "defaultChangelogTitle": "Journal des modifications",
   "changelogClose": "Fermer",
   "escDampingMode": "Damping mode (Complementary PWM)",
