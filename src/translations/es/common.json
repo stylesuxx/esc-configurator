@@ -46,7 +46,7 @@
   "escButtonWrite": "Escribir Configuración",
   "buttonCancel": "Cancelar",
   "escButtonSelect": "Flashear",
-  "escPowerRading": "Power Rating",
+  "escPowerRading": "Potencia nominal",
   "defaultChangelogTitle": "Registro de cambios",
   "changelogClose": "Cerrar",
   "escDampingMode": "Modo de amortiguación (PWM Complementario)",
