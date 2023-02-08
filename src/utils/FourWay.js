@@ -334,10 +334,7 @@ class FourWay {
    */
   async getInfo(target) {
     const flash = await this.initFlash(target, 0);
-
     const info = Flash.getInfo(flash);
-
-    console.log(info);
 
     try {
       const mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
@@ -372,6 +369,10 @@ class FourWay {
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
         info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
 
+        /**
+         * If not AM32, then very likely BLHeli_32, even if not - we can't
+         * handle it.
+         */
         if(!Object.values(am32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
           source = null;
 
@@ -1347,10 +1348,6 @@ class FourWay {
    */
   async initFlash(target, retries = 10) {
     return this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target], 0, retries);
-  }
-
-  async sendCommand(command, target) {
-    return this.sendMessagePromised(command, [target], 0, 1);
   }
 
   /**
