@@ -33,6 +33,8 @@ import {
 import FourWayHelper from './helpers/FourWay';
 
 import MCU from './Hardware/MCU';
+import Silabs from './Hardware/Silabs';
+import Arm from './Hardware/Arm';
 
 import {
   ACK,
@@ -337,13 +339,28 @@ class FourWay {
     const info = Flash.getInfo(flash);
 
     try {
-      const mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
-      const eepromOffset = mcu.getEepromOffset();
+      console.log(info);
+
+      let mcu = null;
+      try {
+        mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
+        if (!mcu.class) {
+          console.debug('Unknown MCU class.');
+          throw new UnknownPlatformError('Neither SiLabs nor Arm');
+        }
+      } catch(e) {
+        console.log('Unknown interface', e);
+        throw new UnknownPlatformError('Neither SiLabs nor Arm');
+      }
+
+      console.log(mcu);
 
       let source = null;
-      if (info.isSiLabs) {
+      if (mcu.class === Silabs) {
         // Assume BLHeli_S to be the default
         source = blheliSSource;
+
+        const eepromOffset = mcu.getEepromOffset();
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
@@ -361,8 +378,11 @@ class FourWay {
         }
       }
 
-      if (info.isArm) {
+      if (mcu.class === Arm) {
+        // Assume AM32 to be the default
         source = am32Source;
+
+        const eepromOffset = mcu.getEepromOffset();
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
@@ -378,10 +398,6 @@ class FourWay {
 
           info.settings.NAME = 'BLHeli_32';
         }
-      }
-
-      if (!info.isArm && !info.isSiLabs){
-        throw new UnknownPlatformError('Neither SiLabs nor Arm');
       }
 
       /**

@@ -46,6 +46,22 @@ class MCU {
         }
       }
     })(interfaceMode);
+
+    this.class = ((interfaceMode) => {
+      switch(interfaceMode) {
+        case MODES.SiLBLB: {
+          return Silabs;
+        }
+
+        case MODES.ARMBLB: {
+          return Arm;
+        }
+
+        default: {
+          return null;
+        }
+      }
+    })(interfaceMode);
   }
 
   /**
