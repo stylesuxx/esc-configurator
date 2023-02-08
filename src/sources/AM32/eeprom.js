@@ -4,7 +4,7 @@ const BOOT_LOADER_PINS = {
 };
 
 const RESET_DELAY_MS = 2500;
-const LAYOUT_SIZE = 0xB0;
+const LAYOUT_SIZE = 0xB5;
 
 const BOOT_LOADER_VERSION_OFFSET = 0x00C0;
 const BOOT_LOADER_VERSION_SIZE = 1;
@@ -33,6 +33,10 @@ const LAYOUT = {
   NAME: {
     offset: 0x05,
     size: 12,
+  },
+  TYPE: {
+    offset: 0xB0,
+    size: 4,
   },
   MOTOR_DIRECTION: {
     offset: 0x11,

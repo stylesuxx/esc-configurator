@@ -368,13 +368,14 @@ class FourWay {
         info.layoutSize = source.getLayoutSize();
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
         info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
-
+        
         /**
          * If not AM32, then very likely BLHeli_32, even if not - we can't
          * handle it.
          */
         const validNames = source.getValidNames();
-        if(!validNames.includes(info.settings.NAME)) {
+
+        if(info.settings.TYPE !== 'AM32' && !validNames.includes(info.settings.NAME)) {
           source = null;
 
           info.settings.NAME = 'BLHeli_32';
