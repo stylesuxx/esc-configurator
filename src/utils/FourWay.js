@@ -373,8 +373,7 @@ class FourWay {
          * If not AM32, then very likely BLHeli_32, even if not - we can't
          * handle it.
          */
-        const validNames = source.getValidNames();
-        if(!validNames.includes(info.settings.NAME)) {
+        if(!Object.values(am32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
           source = null;
 
           info.settings.NAME = 'BLHeli_32';
