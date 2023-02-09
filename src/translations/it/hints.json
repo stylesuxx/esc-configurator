@@ -29,11 +29,11 @@
   "SERVO_NEUTRAL": "Per le modalità bidirezionali questa è la posizione di zero acceleratore in microsecondi.",
   "SERVO_DEAD_BAND": "Applicato su entrambi i lati del Servo Neutral, qualsiasi cosa in questa gamma è considerata a zero acceleratore.",
   "LOW_VOLTAGE_CUTOFF": "Quando abilitato taglierà energia al motore quando la tensione scende al di sotto della soglia di bassa tensione.",
-  "LOW_VOLTAGE_THRESHOLD": "Voltage level per cell where power is cut. Units in volts * 100. To cut off at 3.3v enter 330 for example.",
+  "LOW_VOLTAGE_THRESHOLD": "Livello di tensione per cella per cui viene interrotta l'alimentazione. Ad esempio per interrompere a 3.3v, inserire 330 (unità in volt * 100).",
   "RC_CAR_REVERSING": "Solo per i veicoli di terra. Sovrascrive le impostazioni dell'utente e posiziona ESC in modalità bidirezionale con doppio tocco per invertire il tipo di controllo.",
   "USE_HALL_SENSORS": "Per i regolatori di velocità con sensore d'ingresso hall da utilizzare con motori sensored.",
   "SINE_MODE_RANGE": "La quantità di acceleratore in percentuale utilizzata per l'avvio sinusoidale.",
   "BRAKE_STRENGTH": "Il livello di tenuta del freno applicato quando il freno è attivato su stop.",
   "BRAKING_STRENGTH": "Livello massimo di frenata applicata (ciclo di servizio PWM complementare).",
-  "POWER_RATING": "If using EDT on 1S setups, the temperature readings will be off if this is not set to 1S. All setups with 2S and more do not need to change this setting."
+  "POWER_RATING": "Se si utilizza EDT su impostazioni 1S, le letture della temperatura saranno disattivate se questa non è impostata su 1S. Tutte le configurazioni con 2S o più non hanno bisogno di cambiare questa impostazione."
 }
