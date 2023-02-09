@@ -40,6 +40,14 @@ class UnknownInterfaceError extends Error {
   }
 }
 
+class UnknownSignatureError extends Error {
+  constructor(signature) {
+    super(`unknown signature: ${signature}`);
+    this.signature = signature;
+    this.name = 'UnknownSignatureError';
+  }
+}
+
 class InvalidHexFileError extends Error {
   constructor(message) {
     super(message);
@@ -94,5 +102,6 @@ export {
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
+  UnknownSignatureError,
   UnknownPlatformError,
 };

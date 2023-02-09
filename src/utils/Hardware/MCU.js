@@ -1,4 +1,7 @@
-import { UnknownInterfaceError } from '../Errors';
+import {
+  UnknownInterfaceError,
+  UnknownSignatureError,
+} from '../Errors';
 import { MODES } from '../FourWayConstants';
 import { findMCU } from '../helpers/General';
 
@@ -62,6 +65,10 @@ class MCU {
         }
       }
     })(interfaceMode);
+
+    if(!this.mcu) {
+      throw new UnknownSignatureError(signature);
+    }
   }
 
   /**
