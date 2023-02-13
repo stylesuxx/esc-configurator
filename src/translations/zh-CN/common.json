@@ -46,7 +46,7 @@
   "escButtonWrite": "写入设置",
   "buttonCancel": "取消",
   "escButtonSelect": "烧录",
-  "escPowerRading": "Power Rating",
+  "escPowerRading": "额定功率",
   "defaultChangelogTitle": "更新日志",
   "changelogClose": "关闭",
   "escDampingMode": "阻尼模式 (互补 PWM)",
