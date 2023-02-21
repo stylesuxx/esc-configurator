@@ -22,6 +22,7 @@
   "fetchingFilesFailed": "Nie udało się pobrać plików dla {{name}}",
   "readEscFailed": "Nie udało się odczytywać ESC {{index}}",
   "resetEscFailed": "Resetowanie ESC {{index}} nie powiodło się",
+  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
   "writeSettingsFailed": "Zapisywanie ustawień do ESC {{index}} nie powiodło się",
   "restoreSettingsFailed": "Nie udało się przywrócić domyślnych ustawień na ESC {{index}}",
   "getFileFailed": "Nie można otworzyć pliku do zapisu.",
