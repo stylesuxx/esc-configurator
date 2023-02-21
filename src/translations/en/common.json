@@ -51,6 +51,7 @@
   "changelogClose": "Close",
   "escDampingMode": "Damping mode (Complementary PWM)",
   "escBrakingStrength": "Maximum Braking Strength",
+  "escPowerRating": "ESC Power Rating",
   "homeExperimental": "This is an experimental web app to configure ESC firmware online.",
   "homeVersionInfo": "You will always find the latest stable version here. Currently the following firmware are supported:",
   "homeContributionHeader": "Contributing",
