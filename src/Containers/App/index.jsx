@@ -779,6 +779,7 @@ class App extends Component {
     try {
       const apiVersion = await this.serial.getApiVersion().catch(async (e) => {
         if (e.message.includes("Timed out after")) {
+          let hasResets = false;
           let i = 0;
           let esc = await this.serial.getFourWayInterfaceInfo(i).catch(() => null);
           while (esc !== null) {
@@ -789,6 +790,7 @@ class App extends Component {
 
             try {
               await this.serial.resetFourWayInterface(i);
+              hasResets = true;
             } catch(e) {
               this.addLogMessage('resetEscFailed', { index: i + 1 });
             }
@@ -796,7 +798,11 @@ class App extends Component {
             i = i + 1;
             esc = await this.serial.getFourWayInterfaceInfo(i).catch(() => null);
           }
-          await this.serial.exitFourWayInterface();
+
+          if (hasResets) {
+            await this.serial.exitFourWayInterface();
+          }
+          
         }
         return await this.serial.getApiVersion();
       });
