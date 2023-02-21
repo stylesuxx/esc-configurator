@@ -4,6 +4,7 @@ import {
   BufferLengthMismatchError,
   EscInitError,
   InvalidHexFileError,
+  MessageNotOkError,
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
@@ -313,7 +314,7 @@ class FourWay {
           return reject(e);
         }
 
-        return reject(new Error('Message not OK'));
+        return reject(new MessageNotOkError('Message not OK'));
       };
 
       try {
