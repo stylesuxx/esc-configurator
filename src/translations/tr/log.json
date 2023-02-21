@@ -22,6 +22,7 @@
   "fetchingFilesFailed": "Failed fetching files for {{name}}",
   "readEscFailed": "Failed reading ESC {{index}}",
   "resetEscFailed": "Failed resetting ESC {{index}}",
+  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
   "writeSettingsFailed": "Failed writing settings to ESC {{index}}",
   "restoreSettingsFailed": "Failed restoring default settings on ESC {{index}}",
   "getFileFailed": "Could not get file for flashing.",
