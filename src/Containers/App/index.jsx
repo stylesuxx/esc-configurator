@@ -23,6 +23,7 @@ import {
   loadSerialApi,
   loadSettings,
 } from '../../utils/LocalStorage';
+import { MessageNotOkError } from '../../utils/Errors';
 
 const {
   availableLanguages,
@@ -787,15 +788,18 @@ class App extends Component {
           let hasResets = false;
           let i = 0;
 
-          while ((await this.serial.getFourWayInterfaceInfo(i).catch(() => null)) !== null) {
-            try {
+          try {
+            while ((await this.serial.getFourWayInterfaceInfo(i))) {
               await this.serial.resetFourWayInterface(i);
-              hasResets = true;
-            } catch(e) {
-              this.addLogMessage('resetEscFailed', { index: i + 1 });
+              i += 1;
             }
-            
-            i += 1;
+          } catch (ex) {
+            if (!(ex instanceof MessageNotOkError)) {
+              this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
+              throw ex;
+            }
+          } finally {
+            hasResets = i > 0;
           }
 
           if (hasResets) {
@@ -803,8 +807,9 @@ class App extends Component {
           }
 
           apiVersion = await this.serial.getApiVersion();
+        } else {
+          throw e;
         }
-        throw e;
       }
 
       this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });

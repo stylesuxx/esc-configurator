@@ -91,6 +91,13 @@ class MissingParametersError extends Error {
   }
 }
 
+class MessageNotOkError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'MessageNotOkError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   ConversionError,
@@ -104,4 +111,5 @@ export {
   UnknownInterfaceError,
   UnknownSignatureError,
   UnknownPlatformError,
+  MessageNotOkError,
 };
