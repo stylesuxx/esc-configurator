@@ -22,6 +22,7 @@
   "fetchingFilesFailed": "Fehler beim Abrufen der Dateien für {{name}}",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
   "resetEscFailed": "Reset von ESC {{index}} fehlgeschlagen",
+  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
   "writeSettingsFailed": "Fehler beim Schreiben der Einstellungen auf ESC {{index}}",
   "restoreSettingsFailed": "Fehler beim Wiederherstellen der Standardeinstellungen auf ESC {{index}}",
   "getFileFailed": "Konnte Datei zum flashen nicht holen.",
