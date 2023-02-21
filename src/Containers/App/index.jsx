@@ -777,35 +777,34 @@ class App extends Component {
     }
 
     try {
-      const apiVersion = await this.serial.getApiVersion().catch(async (e) => {
+      let apiVersion = await this.serial.getApiVersion().catch((e) => {
         if (e.message.includes("Timed out after")) {
-          let hasResets = false;
-          let i = 0;
-          let esc = await this.serial.getFourWayInterfaceInfo(i).catch(() => null);
-          while (esc !== null) {
+          return null;
+        }
+        throw e;
+      });
+      
+      if (apiVersion === null) {
+        let hasResets = false;
+        let i = 0;
 
-            if (!esc) {
-              break;
-            }
-
-            try {
-              await this.serial.resetFourWayInterface(i);
-              hasResets = true;
-            } catch(e) {
-              this.addLogMessage('resetEscFailed', { index: i + 1 });
-            }
-            
-            i = i + 1;
-            esc = await this.serial.getFourWayInterfaceInfo(i).catch(() => null);
-          }
-
-          if (hasResets) {
-            await this.serial.exitFourWayInterface();
+        while ((await this.serial.getFourWayInterfaceInfo(i).catch(() => null)) !== null) {
+          try {
+            await this.serial.resetFourWayInterface(i);
+            hasResets = true;
+          } catch(e) {
+            this.addLogMessage('resetEscFailed', { index: i + 1 });
           }
           
+          i += 1;
         }
-        return await this.serial.getApiVersion();
-      });
+
+        if (hasResets) {
+          await this.serial.exitFourWayInterface();
+        }
+
+        apiVersion = await this.serial.getApiVersion();
+      }
 
       this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
