@@ -43,7 +43,7 @@
     },
     "printLogs": {
       "type": "boolean",
-      "value": false
+      "value": true
     },
     "extendedDebug": {
       "type": "boolean",

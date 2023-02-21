@@ -340,6 +340,7 @@ class FourWay {
     const info = Flash.getInfo(flash);
 
     try {
+
       console.log(info);
 
       let mcu = null;
@@ -384,6 +385,14 @@ class FourWay {
         source = am32Source;
 
         const eepromOffset = mcu.getEepromOffset();
+
+        const fileNameRead = await this.read(eepromOffset - 32, 16);
+        const fileName = new TextDecoder().decode(fileNameRead.params.slice(0, fileNameRead.params.indexOf(0x00)));
+        
+        if (/[A-Z0-9_]+/.test(fileName)) {
+          info.meta.am32.fileName = fileName;
+          info.meta.am32.mcuType = fileName.slice(fileName.lastIndexOf('_') + 1);
+        }
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
@@ -616,7 +625,7 @@ class FourWay {
 
           info.settings.LAYOUT = info.settings.NAME;
 
-          info.displayName = am32Source.buildDisplayName(info, info.settings.NAME);
+          info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = am32Source.getName();
         }
       }

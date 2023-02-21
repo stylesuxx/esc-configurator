@@ -18,6 +18,7 @@
   "readEscsFailed": "Failed reading ESCs",
   "readEsc": "Read ESC {{index}}: {{name}}",
   "flashingEsc": "Flashing ESC {{index}}",
+  "flashingEscMissmatch": "Failed flashing ESC {{index}} - {{message}}",
   "flashingEscFailed": "Failed flashing ESC {{index}} - check file type",
   "fetchingFilesFailed": "Failed fetching files for {{name}}",
   "readEscFailed": "Failed reading ESC {{index}}",

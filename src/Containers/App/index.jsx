@@ -14,6 +14,7 @@ import MainApp from '../../Components/App';
 import settings from '../../settings.json';
 import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
+import Flash from '../../utils/helpers/Flash';
 import sources from '../../sources';
 import {
   clearLog,
@@ -24,6 +25,7 @@ import {
   loadSettings,
 } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
+import MCU from '../../utils/Hardware/MCU';
 
 const {
   availableLanguages,
@@ -267,6 +269,46 @@ class App extends Component {
       const target = escs.targets[i];
       const esc = escs.individual.find((esc) => esc.index === target);
 
+      const info = await this.serial.getFourWayInterfaceInfo();
+
+      // if current firmware version is 1.93 or higher, we will only flash firmware matching MCU type and throw a error if fileName is different
+      if (info.isArm && info.meta.am32.fileName) {
+
+        const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
+        const eepromOffset = mcu.getEepromOffset();
+        const offset = 134217728; // 0x8000000
+        const fileNamePlaceOffset = 30;
+
+        const fileFlash = Flash.parseHex(text);
+
+        const findFileNameBlock = fileFlash.data.find((d) =>
+          (eepromOffset - fileNamePlaceOffset) > (d.address - offset) && (eepromOffset - fileNamePlaceOffset) < (d.address - offset) + d.bytes
+        );
+
+        if (!findFileNameBlock) {
+          throw new Error(JSON.stringify({
+            index: i,
+            message: 'File name not found in hex file, please check your hex file version!',
+          }));
+        }
+
+        const hexFileName = new TextDecoder().decode(new Uint8Array(findFileNameBlock.data).slice(0, findFileNameBlock.data.indexOf(0x00)));
+
+        if (!hexFileName.endsWith(info.meta.am32.mcuType)) {
+          throw new Error(JSON.stringify({
+            index: i,
+            message: 'Not matching MCU type, please check your hex file!',
+          }));
+        }
+
+        if (!force && hexFileName.slice(0, hexFileName.lastIndexOf('_')) !== info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_'))) {
+          throw new Error(JSON.stringify({
+            index: i,
+            message: 'Different ESC firmware file, than in current ESC flash!',
+          }));
+        }
+      }
+
       const updateProgress = async(percent) => {
         if(esc.ref && esc.ref.current) {
           esc.ref.current.setProgress((percent));
@@ -274,6 +316,7 @@ class App extends Component {
       };
 
       this.addLogMessage('flashingEsc', { index: target + 1 });
+
       const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
       updateProgress(0);
 
@@ -655,7 +698,15 @@ class App extends Component {
       console.debug('Flashing local file');
 
       const text = (e.target.result);
-      this.flash(text, force, migrate);
+
+      this.flash(text, force, migrate).catch((e) => {
+        const error = JSON.parse(e.message);
+        console.log(error);
+
+        this.addLogMessage('flashingEscMissmatch', error);
+
+        this.setActions({ isFlashing: false });
+      });
     };
     reader.readAsText(e.target.files[0]);
   };

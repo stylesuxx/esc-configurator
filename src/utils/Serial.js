@@ -252,6 +252,7 @@ class Serial {
   resetFourWayInterface = (esc) => this.fourWay.reset(esc);
   startFourWayInterface = () => this.fourWay.start();
   writeHex = (index, esc, hex, force, migrate, cbProgress) => this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
+  readAddress = (address, bytes, retries = 10) => this.fourWay.read(address, bytes, retries);
   readFirmware = (index, esc, cbProgress) => this.fourWay.readFirmware(index, esc, cbProgress);
   writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
 }
