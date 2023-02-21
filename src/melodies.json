@@ -78,6 +78,15 @@
     ]
   },
   {
+    "name":"The Chemical Brothers - Galvanize",
+    "tracks": [
+      "Galvanize:d=16,o=3,b=104:8f,p,8f,p,8g,p,g5,4p,a#,8p,8a,8p,8g#",
+      "Galvanize:d=16,o=4,b=104:8f,p,8f,p,8g,8p,g,p,a,p,c5,a#,p,a#,a,a#,g,a,f",
+      "Galvanize:d=16,o=3,b=104:8b,p,8b,p,8b,8p,g5,p,a5,p,c6,a#5,p,a#5,a5,a#5,g5,a5,f5",
+      "Galvanize:d=16,o=3,b=104:8g,p,8g,p,8g,p,g5,4p,a#,8p,8a,8p,8g#"
+    ]
+  },
+  {
     "name": "Chiquitita - Abba",
     "tracks": [
       "ab_chiq_m1:b=104,o=5,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h4,c#,d,8f#,e6,e,e6,p,e6,e,e6,e,e6,e,e6,e,e6,e,g#6,g#,g#6,g#,g#6,g#,g#6,g#,a6,a,a6,a,a6,a,a6,a,g#6,g#,g#6,g#,a6,a,a6,a,h6,h,h6,h,8a6",
@@ -172,6 +181,12 @@
     ]
   },
   {
+    "name": "Maxwell the cat Theme",
+    "tracks": [
+      "maxwell:d=32, f=16:d5,p,d5,p,d5,p,e5,p,f5,p,p,p,f5,p,p,p,b5,p,b5,p,b5,p,a5,p,g5,p,p,p,g5,p,p,p,c5,c5,c5,c5,c5,c5,p,a4,a4,a4,a4,a4,a4,p,e5,e5,e5,e5,e5,e5,p,c5,c5,c5,c5,c5,c5."
+    ]
+  },
+  {
     "name": "Mobilnik - Sergey Shnurov",
     "tracks": [
       "mobilnik:d=4,o=5,b=145:8e6,4g.6,4p,8g6,4e.6,4p,8a6,8g6,8a6,8g6,8a6,8g6,8a6,8g6,8a6,4b.6"
@@ -208,6 +223,15 @@
       "never2:b=210,o=3,d=4:2p,g5,8p,g5,8p,2f#5,p,2p,f#5,8p,f#5,8p,2e5,p,2p,2e5,p,2d5,p,2p,d5,8d5,8p,2e5",
       "never3:b=210,o=3,d=4:2p,e5,8p,e5,8p,2d5,p,2p,d5,8p,d5,8p,2b4,p,2p,2c5,p,2a4,p,2p,b4,8b4,8p,2b4",
       "never4:b=210,o=3,d=4:8d4,8e4,8g4,8d4,c4,c4,c4,d4,8p,8d4,8e4,8p,8g4,8p,8a4,8p,b4,b4,b4,e4,8e4,8f#4,8e4,8p,8d4,8e4,8g4,8e4,2a4,a4,2d5,8a4,8p,8d4,8p,8a4,8p,2f#4,2e4"
+    ]
+  },
+  {
+    "name": "Owl City - Fireflies",
+    "tracks": [
+      "Fireflies1:d=8,o=5,b=180:a#3,a#4,d6,a#3,a#4,a#5,p,d#,d#4,a#,f,d#,f,a#,p,d#,g#3,c,a#,c,d#,d#4,g#3,p,a#,c,a#,c4,a#,d#,f,a#3,a#4,d6,d,f4,a#,p,d#,d#4,a#4,f,d#,g#,g,d#,a#4,g#3,c,d#4,g#3,a#4,p,d#4,c,g#3,c,a#4,c4,d#,f",
+      "Fireflies2:d=8,o=4,b=180:4p,a#3,f.,16p,4f,d#,4f,4d#,4a#3,4p,4p,a#3,c.,16p,4c,a#3,4c,4d#,4f.,4p,4g,4f,d#,a#3.,16p,16a#3.,32p,4a#3,f,4d#,4c,1p,2p",
+      "Fireflies3:d=8,o=4,b=180:4p,a#3,f.,16p,4f,d#,4f,4d#,4a#3,4p,4p,a#3,c.,16p,4c,a#3,4c,4d#,4f.,4p,4g,4f,d#,a#3.,16p,16a#3.,32p,4a#3,f,4d#,4c,1p,2p",
+      "Fireflies4:d=8,o=4,b=180:4p,a#3,f.,16p,4f,d#,4f,4d#,4a#3,4p,4p,a#3,c.,16p,4c,a#3,4c,4d#,4f.,4p,4g,4f,d#,a#3.,16p,16a#3.,32p,4a#3,f,4d#,4c,1p,2p"
     ]
   },
   {
@@ -283,6 +307,15 @@
     "name": "Slayer - South of Heaven",
     "tracks": [
       "SouthHeaven:b=108,o=5,d=4:8d#3,8d#4,8a#4,8b4,d#,8b4,d,8a#4,8c#,8a4,8c#,c.,8d#3,8d#4,8a#4,8b4,d#,8b4,d,8a#4,8c#,8a"
+    ]
+  },
+  {
+    "name": "Snap! - Rythm Is A Dancer",
+    "tracks": [
+      "motor1:b=280,o=5,d=16:p,4e,p,4c,p,4d,p,4c,p,4f4,p,4f4,p,4a4,p,4f4,p,4g4,p,4g4,p,4b4,p,4g4,p,4a4,p,4a4,p,4c,p,4a4",
+      "motor2:b=280,o=4,d=32:8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8f,p,8f,p,8f,p,8f,p,8f,p,8f,p,8f,p,8f,p,8g,p,8g,p,8g,p,8g,p,8g,p,8g,p,8g,p,8g,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,8p",
+      "motor3:b=280,o=4,d=32:8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8f,p,8f,p,8f,p,8f,p,8f,p,8f,p,8f,p,8f,p,8g,p,8g,p,8g,p,8g,p,8g,p,8g,p,8g,p,8g,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,p,8a,8p",
+      "motor4:b=280,o=5,d=16:4e,p,4c,p,4d,p,4c,p,4f4,p,4f4,p,4a4,p,4f4,p,4g4,p,4g4,p,4b4,p,4g4,p,4a4,p,4a4,p,4c,p,4a4,p"
     ]
   },
   {
@@ -382,6 +415,15 @@
       "WE_WISH_YOU:d=2,o=2,b=384:2c#4,16p,2f#4,16p,4f#4,32p,4g#4,32p,4f#4,32p,4f4,32p,2d#4,32p,2d#4,16p,2d#4,16p,2g#4,16p,4g#4,32p,4a#4,32p,4g#4,32p,4f#4,32p,2f4,16p,2c#4,16p,2c#4,16p,2a#4,16p,4a#4,32p,4b4,32p,4a#4,32p,4g#4,32p,2f#4,16p,2d#4,16p,4c#4,32p,4c#4,16p,2d#4,16p,2g#4,16p,2f4,16p,1f#4",
       "WE_WISH_YOU:d=2,o=2,b=384:2c#4,16p,2f#4,16p,2f#4,16p,2f#4,16p,2d#4,16p,2d#4,16p,2d#4,16p,2g#4,16p,2g#4,16p,2g#4,16p,2f4,16p,2c#4,16p,2c#4,16p,2a#4,16p,2a#4,16p,2a#4,16p,2f#4,16p,2f#4,16p,2c#4,16p,2d#4,16p,2g#4,16p,2f4,16p,1a#4",
       "WE_WISH_YOU:d=2,o=2,b=384:2c#4,16p,2a#4,16p,2a#4,16p,2a#4,16p,2b#5,16p,2b#5,16p,2d#4,16p,2c5,16p,2c5,16p,2c5,16p,2c#5,16p,2c#5,16p,2c#4,16p,2d4,16p,2d4,16p,2f#4,16p,2d#4,16p,2c#4,16p,2c#4,16p,2f#4,16p,2b#4,16p,2c#4,16p,1c#4"
+    ]
+  },
+  {
+    "name":"Windows XP Startup Sound",
+    "tracks":[
+      "WinXPStartup1:b=100,o=7,d=8:4f3.,4g#3.,4d#3",
+      "WinXPStartup2:b=100,o=7,d=8:4c4.,4d#4.,4a#3",
+      "WinXPStartup3:b=100,o=7,d=8:4g#4.,4g#4.,4d#4",
+      "WinXPStartup4:b=100,o=7,d=8:d#5,16d#4,a#4.,g#4,d#4,d#5,4a#4"
     ]
   },
   {
