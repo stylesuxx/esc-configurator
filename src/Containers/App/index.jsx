@@ -7,6 +7,7 @@ import i18next from 'i18next';
 import BinToHex from 'bin-to-hex';
 
 import { fetchHexCached } from '../../utils/Fetch';
+import { TimeoutError } from '../../utils/helpers/QueueProcessor';
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
@@ -777,33 +778,33 @@ class App extends Component {
     }
 
     try {
-      let apiVersion = await this.serial.getApiVersion().catch((e) => {
-        if (e.message.includes("Timed out after")) {
-          return null;
+      let apiVersion = null;
+      
+      try {
+        apiVersion = await this.serial.getApiVersion();
+      } catch(e) {
+        if (e instanceof TimeoutError) {
+          let hasResets = false;
+          let i = 0;
+
+          while ((await this.serial.getFourWayInterfaceInfo(i).catch(() => null)) !== null) {
+            try {
+              await this.serial.resetFourWayInterface(i);
+              hasResets = true;
+            } catch(e) {
+              this.addLogMessage('resetEscFailed', { index: i + 1 });
+            }
+            
+            i += 1;
+          }
+
+          if (hasResets) {
+            await this.serial.exitFourWayInterface();
+          }
+
+          apiVersion = await this.serial.getApiVersion();
         }
         throw e;
-      });
-      
-      if (apiVersion === null) {
-        let hasResets = false;
-        let i = 0;
-
-        while ((await this.serial.getFourWayInterfaceInfo(i).catch(() => null)) !== null) {
-          try {
-            await this.serial.resetFourWayInterface(i);
-            hasResets = true;
-          } catch(e) {
-            this.addLogMessage('resetEscFailed', { index: i + 1 });
-          }
-          
-          i += 1;
-        }
-
-        if (hasResets) {
-          await this.serial.exitFourWayInterface();
-        }
-
-        apiVersion = await this.serial.getApiVersion();
       }
 
       this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
