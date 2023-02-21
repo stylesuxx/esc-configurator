@@ -22,6 +22,7 @@
   "fetchingFilesFailed": "Échec de la récupération des fichiers pour {{name}}",
   "readEscFailed": "Échec de la lecture de l'ESC {{index}}",
   "resetEscFailed": "Échec de la réinitialisation de l'ESC {{index}}",
+  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
   "writeSettingsFailed": "Échec de l'écriture des paramètres dans l'ESC {{index}}",
   "restoreSettingsFailed": "Échec de la restauration des paramètres par défaut de l'ESC {{index}}",
   "getFileFailed": "Impossible d'ouvrir le fichier pour l'écriture.",
