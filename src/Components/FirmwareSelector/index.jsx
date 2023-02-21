@@ -38,6 +38,7 @@ function FirmwareSelector({
     getPwm,
   } = configs;
 
+  const [hasAM32FileName, setHasAM32FileName] = useState(false);
   const [preselected, setPreselected] = useState(false);
   const [escLayout, setEscLayout] = useState(null);
   const [mode, setMode] = useState(null);
@@ -78,7 +79,7 @@ function FirmwareSelector({
     setValidFirmware(validFirmware);
     setMode(selectedMode);
 
-    if (esc.meta.am32.fileName) {
+    if (esc.meta?.am32?.fileName) {
       setEscLayout(esc.meta.am32.fileName);
     } else if(isValidLayout(esc.settings.LAYOUT)) {
       setEscLayout(esc.settings.LAYOUT);
@@ -139,6 +140,8 @@ function FirmwareSelector({
 
         setOptions(currentOptions);
       }
+
+      setHasAM32FileName(esc.meta?.am32?.fileName !== undefined);
     }
 
     updateOptions();
@@ -301,7 +304,7 @@ function FirmwareSelector({
 
           <div className="spacer-box">
             <LabeledSelect
-              disabled={!!esc.meta.am32.fileName}
+              disabled={hasAM32FileName}
               firstLabel={t("selectFirmware")}
               label="Firmware"
               onChange={handleFirmwareChange}
@@ -312,7 +315,7 @@ function FirmwareSelector({
             {selection.firmware &&
               <>
                 <LabeledSelect
-                  disabled={!!esc.meta.am32.fileName}
+                  disabled={hasAM32FileName}
                   firstLabel={t('selectEsc')}
                   label="ESC"
                   onChange={handleEscChange}

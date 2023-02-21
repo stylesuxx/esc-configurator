@@ -41,6 +41,29 @@ describe('AM32', () => {
     expect(name).toEqual('MAKE - AM32, 1.100, Bootloader v8 (PB2)');
   });
 
+  it('should return a mcu type', () => {
+    const flash = {
+      settings: {
+        MAIN_REVISION: 1,
+        SUB_REVISION: 100,
+      },
+      meta: {
+        am32: {
+          mcuType: 'F051',
+          fileName: 'DIATONE_F051',
+        },
+      },
+      bootloader: {
+        valid: true,
+        pin: 'PB2',
+        version: 8,
+      },
+    };
+
+    const name = source.buildDisplayName(flash, 'MAKE');
+    expect(name).toEqual('MAKE - AM32, 1.100, Bootloader v8 (PB2), MCU: F051');
+  });
+
   it('should return display name when revision is missing', () => {
     const flash = {
       settings: {},
