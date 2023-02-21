@@ -777,7 +777,30 @@ class App extends Component {
     }
 
     try {
-      const apiVersion = await this.serial.getApiVersion();
+      const apiVersion = await this.serial.getApiVersion().catch(async (e) => {
+        if (e.message.includes("Timed out after")) {
+          let i = 0;
+          let esc = await this.serial.getFourWayInterfaceInfo(i).catch(() => null);
+          while (esc !== null) {
+
+            if (!esc) {
+              break;
+            }
+
+            try {
+              await this.serial.resetFourWayInterface(i);
+            } catch(e) {
+              this.addLogMessage('resetEscFailed', { index: i + 1 });
+            }
+            
+            i = i + 1;
+            esc = await this.serial.getFourWayInterfaceInfo(i).catch(() => null);
+          }
+          await this.serial.exitFourWayInterface();
+        }
+        return await this.serial.getApiVersion();
+      });
+
       this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
       const fcVariant = await this.serial.getFcVariant();
