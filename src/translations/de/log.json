@@ -9,7 +9,7 @@
   "mspBuildInfo": "Aktuelle Firmware veröffentlicht am: {{info}}",
   "mspBoardInfo": "Board: {{identifier}}, Version: {{version}}",
   "mspUid": "Eindeutige ID erhalten - 0x{{id}}",
-  "radioOn": "Your radio has been detected to be on! Reading and Flashing disabled. Turn off your radio and try again.",
+  "radioOn": "Deine Fernsteuerung wurde als eingeschalten erkannt. Bitte schalte diese aus und versuche es erneut.",
   "mspFcInfo": "Flug-controller Info, ID: {{id}} Version: {{version}}",
   "portUsed": "Port wird möglicherweise schon von einer anderen Anwendung verwendet - bitte neu anstecken",
   "fourWayFailed": "4-way interface konnte nicht aktiviert werden - bitte neu anstecken",
