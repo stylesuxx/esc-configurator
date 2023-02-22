@@ -31,6 +31,10 @@ class BluejaySource extends GithubSource {
     let pwm = '';
     if(settings.PWM_FREQUENCY && settings.PWM_FREQUENCY !== 0xFF) {
       pwm = `, ${settings.PWM_FREQUENCY}kHz`;
+
+      if(settings.PWM_FREQUENCY === 192) {
+        pwm = ', Dynamic PWM';
+      }
     }
     const name = `${settings.NAME.trim()}`;
 

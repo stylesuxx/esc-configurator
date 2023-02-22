@@ -89,6 +89,7 @@
   "escStallProtection": "Stall Protection",
   "escTimingAdvance": "Timing Advance [degrees]",
   "escPwmFrequency": "PWM Frequency [kHz]",
+  "escPwmFrequencyBluejay": "PWM Frequency",
   "escMotorKv": "Motor [Kv]",
   "escMotorPoles": "Motor Poles",
   "escBeepVolume": "Beeper Volume",
