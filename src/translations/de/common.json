@@ -46,7 +46,7 @@
   "escButtonWrite": "Einstellungen schreiben",
   "buttonCancel": "Abbrechen",
   "escButtonSelect": "Flashen",
-  "escPowerRading": "Nennleistung",
+  "escPowerRading": "Eingangsspannung",
   "defaultChangelogTitle": "Changelog",
   "changelogClose": "Schließen",
   "escDampingMode": "Dämpfungsmodus (komplementäres PWM)",
