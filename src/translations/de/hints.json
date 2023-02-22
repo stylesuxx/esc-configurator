@@ -35,5 +35,5 @@
   "SINE_MODE_RANGE": "Schub in Prozent für sinusförmigen Startup.",
   "BRAKE_STRENGTH": "Die Menge an Bremskraft die angewendet wird wenn \"Beim Stoppen der Motoren bremsen\" aktiviert ist.",
   "BRAKING_STRENGTH": "Maximale Bremsstärke (komplementärer PWM-Arbeitszyklus).",
-  "POWER_RATING": "If using EDT on 1S setups, the temperature readings will be off if this is not set to 1S. All setups with 2S and more do not need to change this setting."
+  "POWER_RATING": "Bei Verwendung von EDT auf 1S Setups sind die Temperaturmessungen ausgeschaltet, falls die Einstellung nicht auf 1S gesetzt ist. Alle Setups mit 2S und mehr brauchen diese Einstellung nicht ändern."
 }
