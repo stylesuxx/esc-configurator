@@ -22,7 +22,7 @@
   "fetchingFilesFailed": "获取 {{name}} 文件失败",
   "readEscFailed": "读取 ESC {{index}} 失败",
   "resetEscFailed": "重置 ESC {{index}} 失败",
-  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
+  "resetEscFailedPowerCycle": "无法重置 ESC {{index}} - 重新上电，然后重试。",
   "writeSettingsFailed": "无法将设置写入到 ESC {{index}}",
   "restoreSettingsFailed": "无法将默认设置恢复至 ESC {{index}}",
   "getFileFailed": "无法打开要烧录的文件",
