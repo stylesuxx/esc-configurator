@@ -35,5 +35,7 @@
   "SINE_MODE_RANGE": "La quantità di acceleratore in percentuale utilizzata per l'avvio sinusoidale.",
   "BRAKE_STRENGTH": "Il livello di tenuta del freno applicato quando il freno è attivato su stop.",
   "BRAKING_STRENGTH": "Livello massimo di frenata applicata (ciclo di servizio PWM complementare).",
-  "POWER_RATING": "Se si utilizza EDT su impostazioni 1S, le letture della temperatura saranno disattivate se questa non è impostata su 1S. Tutte le configurazioni con 2S o più non hanno bisogno di cambiare questa impostazione."
+  "POWER_RATING": "Se si utilizza EDT su impostazioni 1S, le letture della temperatura saranno disattivate se questa non è impostata su 1S. Tutte le configurazioni con 2S o più non hanno bisogno di cambiare questa impostazione.",
+  "PWM_THRESHOLD_LOW": "Below this throttle, a 96kHz PWM signal will be used. Between low and high, a 48kHz PWM signal will beused.",
+  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used."
 }
