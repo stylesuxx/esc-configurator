@@ -90,6 +90,8 @@
   "escTimingAdvance": "Timing Advance [degrees]",
   "escPwmFrequency": "PWM Frequency [kHz]",
   "escPwmFrequencyBluejay": "PWM Frequency",
+  "escPwmThresholdLow": "PWM low threshold",
+  "escPwmThresholdHigh": "PWM high threshold",
   "escMotorKv": "Motor [Kv]",
   "escMotorPoles": "Motor Poles",
   "escBeepVolume": "Beeper Volume",
