@@ -22,7 +22,7 @@
   "fetchingFilesFailed": "獲取 {{name}} 資料失敗",
   "readEscFailed": "讀取 ESC {{index}} 失敗",
   "resetEscFailed": "重置 ESC {{index}} 失敗",
-  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
+  "resetEscFailedPowerCycle": "無法重啓 ESC {{index}} - 重新上電，然後重試。",
   "writeSettingsFailed": "無法將設定寫入到 {{index}}",
   "restoreSettingsFailed": "無法將默認設定恢復至 ESC {{index}}",
   "getFileFailed": "無法打開要燒錄的文件",
