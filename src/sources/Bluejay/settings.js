@@ -337,6 +337,73 @@ COMMON['205'] = {
   ],
 };
 
+COMMON['206'] = {
+  base: [
+    ...COMMON['204'].base,
+    {
+      name: 'POWER_RATING',
+      type: 'enum',
+      label: 'escPowerRating',
+      options: [{
+        value: '1',
+        label: '1S',
+      }, {
+        value: '2',
+        label: '2S+',
+      }],
+    },
+  ],
+};
+
+COMMON['207'] = {
+  base: [
+    ...COMMON['206'].base,
+    {
+      name: 'PWM_FREQUENCY',
+      type: 'enum',
+      label: 'escPwmFrequencyBluejay',
+      options: [{
+        value: 24,
+        label: '24kHz',
+      }, {
+        value: 48,
+        label: '48kHz',
+      }, {
+        value: 96,
+        label: '96kHz',
+      }, {
+        value: 192,
+        label: 'Dynamic',
+      }],
+    }, {
+      name: 'PWM_THRESHOLD_LOW',
+      type: 'number',
+      min: 0,
+      max: 100,
+      step: 1,
+      displayFactor: 100 / 255,
+      label: 'escPwmThresholdLow',
+      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 192),
+      sanitize: (value, settings) => {
+        if(value > settings.PWM_THRESHOLD_HIGH) {
+          return settings.PWM_THRESHOLD_HIGH;
+        }
+
+        return value;
+      },
+    }, {
+      name: 'PWM_THRESHOLD_HIGH',
+      type: 'number',
+      min: 0,
+      max: 100,
+      step: 1,
+      displayFactor: 100 / 255,
+      label: 'escPwmThresholdHigh',
+      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 192),
+    },
+  ],
+};
+
 const INDIVIDUAL_SETTINGS_200 = [{
   name: 'MOTOR_DIRECTION',
   type: 'enum',
@@ -395,6 +462,8 @@ const INDIVIDUAL_SETTINGS_203 = [
 ];
 
 const INDIVIDUAL = {
+  '207': { base: INDIVIDUAL_SETTINGS_203 },
+  '206': { base: INDIVIDUAL_SETTINGS_203 },
   '205': { base: INDIVIDUAL_SETTINGS_203 },
   '204': { base: INDIVIDUAL_SETTINGS_203 },
   '203': { base: INDIVIDUAL_SETTINGS_203 },
@@ -445,11 +514,23 @@ DEFAULTS['204'] = { // v0.15
   BRAKING_STRENGTH: 255,
 };
 
-DEFAULTS['205'] = {
+DEFAULTS['205'] = { // unreleased
   ...DEFAULTS['204'],
   STARTUP_BEEP: 1,
   STARTUP_MELODY_WAIT_MS: 0,
   PWM_FREQUENCY: 24,
+};
+
+DEFAULTS['206'] = { // v0.19
+  ...DEFAULTS['204'],
+  POWER_RATING: 2,
+};
+
+DEFAULTS['207'] = { // v0.20
+  ...DEFAULTS['206'],
+  PWM_FREQUENCY: 24,
+  PWM_THRESHOLD_LOW: 100,
+  PWM_THRESHOLD_HIGH: 150,
 };
 
 const settings = {

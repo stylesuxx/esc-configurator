@@ -7,6 +7,7 @@ import i18next from 'i18next';
 import BinToHex from 'bin-to-hex';
 
 import { fetchHexCached } from '../../utils/Fetch';
+import { TimeoutError } from '../../utils/helpers/QueueProcessor';
 import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
@@ -22,6 +23,7 @@ import {
   loadSerialApi,
   loadSettings,
 } from '../../utils/LocalStorage';
+import { MessageNotOkError } from '../../utils/Errors';
 
 const {
   availableLanguages,
@@ -440,6 +442,18 @@ class App extends Component {
     let connected = 0;
 
     this.setActions({ isReading: true });
+
+    // Prevent reading if radio is detected to be on and not connected yet
+    if(!escs.connected) {
+      const status = await this.serial.getStatus();
+      if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
+        this.addLogMessage('radioOn');
+        this.setActions({ isReading: false });
+
+        return;
+      }
+    }
+
     try {
       if(this.lastConnected === 0) {
         const escs = await this.serial.enable4WayInterface();
@@ -767,7 +781,39 @@ class App extends Component {
     }
 
     try {
-      const apiVersion = await this.serial.getApiVersion();
+      let apiVersion = null;
+
+      try {
+        apiVersion = await this.serial.getApiVersion();
+      } catch(e) {
+        if (e instanceof TimeoutError) {
+          let hasResets = false;
+          let i = 0;
+
+          try {
+            while ((await this.serial.getFourWayInterfaceInfo(i))) {
+              await this.serial.resetFourWayInterface(i);
+              i += 1;
+            }
+          } catch (ex) {
+            if (!(ex instanceof MessageNotOkError)) {
+              this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
+              throw ex;
+            }
+          } finally {
+            hasResets = i > 0;
+          }
+
+          if (hasResets) {
+            await this.serial.exitFourWayInterface();
+          }
+
+          apiVersion = await this.serial.getApiVersion();
+        } else {
+          throw e;
+        }
+      }
+
       this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
       const fcVariant = await this.serial.getFcVariant();

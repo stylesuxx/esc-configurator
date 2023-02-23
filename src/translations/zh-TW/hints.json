@@ -29,10 +29,13 @@
   "SERVO_NEUTRAL": "对于双向模式，这是零油门位置。",
   "SERVO_DEAD_BAND": "施加在伺服輸入中位的兩側，這個範圍內的任何信號都將被視為零。",
   "LOW_VOLTAGE_CUTOFF": "啟用後，當電壓降到低電壓閾值以下時，將會切斷電源。",
-  "LOW_VOLTAGE_THRESHOLD": "切斷電源時每節電池的電壓等級。電壓單位為 *100伏。例如，要在在 3.3V 切斷，請輸入 330。",
+  "LOW_VOLTAGE_THRESHOLD": "切斷電源時每節電池的電壓等級。電壓單位為 0.01 伏。例如，要在在 3.3V 切斷，請輸入 330。",
   "RC_CAR_REVERSING": "僅適用於地面車輛。將會覆蓋用戶設置，并將 ESC 設置為雙向模式。",
   "USE_HALL_SENSORS": "用於與帶有霍爾傳感器輸入的速度控制器來感應電機",
   "SINE_MODE_RANGE": "用於正弦式啟動的油門量%",
   "BRAKE_STRENGTH": "當停止時剎車啟用時的剎車等級",
-  "BRAKING_STRENGTH": "應用的最大刹車量 (互補 PWM 的占空比)。"
+  "BRAKING_STRENGTH": "應用的最大刹車量 (互補 PWM 的占空比)。",
+  "POWER_RATING": "如果在 1S 設備上使用 EDT ，若該選項未被設置為 1S 溫度讀數將被關閉。所有 2S 及以上電壓設備不需要更改此設置。",
+  "PWM_THRESHOLD_LOW": "Below this throttle, a 96kHz PWM signal will be used. Between low and high, a 48kHz PWM signal will beused.",
+  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used."
 }

@@ -40,6 +40,14 @@ class UnknownInterfaceError extends Error {
   }
 }
 
+class UnknownSignatureError extends Error {
+  constructor(signature) {
+    super(`unknown signature: ${signature}`);
+    this.signature = signature;
+    this.name = 'UnknownSignatureError';
+  }
+}
+
 class InvalidHexFileError extends Error {
   constructor(message) {
     super(message);
@@ -83,6 +91,13 @@ class MissingParametersError extends Error {
   }
 }
 
+class MessageNotOkError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'MessageNotOkError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   ConversionError,
@@ -94,5 +109,7 @@ export {
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
+  UnknownSignatureError,
   UnknownPlatformError,
+  MessageNotOkError,
 };
