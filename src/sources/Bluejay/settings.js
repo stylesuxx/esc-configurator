@@ -383,6 +383,13 @@ COMMON['207'] = {
       step: 1,
       label: 'escPwmThresholdLow',
       visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 192),
+      sanitize: (value, settings) => {
+        if(value > settings.PWM_THRESHOLD_HIGH) {
+          return settings.PWM_THRESHOLD_HIGH;
+        }
+
+        return value;
+      },
     }, {
       name: 'PWM_THRESHOLD_HIGH',
       type: 'number',
