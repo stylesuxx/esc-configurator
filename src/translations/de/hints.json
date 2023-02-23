@@ -29,10 +29,13 @@
   "SERVO_NEUTRAL": "Im bidirektionalen Modus ist dies die Null-Position in Mikrosekunden.",
   "SERVO_DEAD_BAND": "Wird auf beiden Seiten der Servo Neutralstellung angewendet. Alles in diesem Bereich wird als Null interpretiert.",
   "LOW_VOLTAGE_CUTOFF": "Wenn aktiviert, wird die Stromversorgung zum Motor getrennt falls die Versorgungsspannung unter einen bestimmten Wert fällt.",
-  "LOW_VOLTAGE_THRESHOLD": "Spannungswert pro Zelle bei dem der Strom unterbrochen wird. Einheit in Volt x 100. Um bei 3.3V abzuschalten, gib 330 ein.",
+  "LOW_VOLTAGE_THRESHOLD": "Zellenspannung bei der die Stromzufuhr unterbrochen wird. Einheiten in 10mV. Um beispielsweise bei 3.3V zu unterbrechen muss 330 eingegeben werden.",
   "RC_CAR_REVERSING": "Nur für Bodenfahrzeuge. Überschreibt die Benutzereinstellungen und versetzt den ESC in den bidirektionalen Modus. Mit Doppeltipp, um den Motor rückwärts zu drehen.",
   "USE_HALL_SENSORS": "Für ESCs mit Hall-Sensoreingang, wenn Motoren mit Drehzahlgeber verwendet werden.",
   "SINE_MODE_RANGE": "Schub in Prozent für sinusförmigen Startup.",
   "BRAKE_STRENGTH": "Die Menge an Bremskraft die angewendet wird wenn \"Beim Stoppen der Motoren bremsen\" aktiviert ist.",
-  "BRAKING_STRENGTH": "Maximale Bremsstärke (komplementärer PWM-Arbeitszyklus)."
+  "BRAKING_STRENGTH": "Maximale Bremsstärke (komplementärer PWM-Arbeitszyklus).",
+  "POWER_RATING": "Bei Verwendung von EDT auf 1S Setups sind die Temperaturmessungen ausgeschaltet, falls die Einstellung nicht auf 1S gesetzt ist. Alle Setups mit 2S und mehr brauchen diese Einstellung nicht ändern.",
+  "PWM_THRESHOLD_LOW": "Unterhalb dieser Gasstellung wird mit 96kHz moduliert. Zwischen unteren und oberen Schwellenwert mit 48kHz.",
+  "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet."
 }
