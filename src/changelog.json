@@ -5,6 +5,7 @@
       "Enhancement: More melodies",
       "Enhancement: Detect if FC is in 4 way interface mode after reconnection and reset",
       "Enhancement: Detect if radio is on and do not allow reading/flashing",
+      "Bluejay: New layout including pwm settings",
       "Bluejay: New layout including power settings"
     ]
   },

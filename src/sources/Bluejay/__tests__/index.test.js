@@ -15,9 +15,9 @@ describe('Bluejay', () => {
           visibleIf.push(current.visibleIf);
         }
       }
-
-      expect(visibleIf.length).toEqual(0);
     }
+
+    expect(visibleIf.length).toEqual(2);
   });
 
   it('should handle conditional visibility with custom settings', () => {

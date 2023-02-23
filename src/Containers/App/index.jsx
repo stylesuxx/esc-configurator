@@ -443,13 +443,15 @@ class App extends Component {
 
     this.setActions({ isReading: true });
 
-    // Prevent reading if radio is detected to be on
-    const status = await this.serial.getStatus();
-    if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
-      this.addLogMessage('radioOn');
-      this.setActions({ isReading: false });
+    // Prevent reading if radio is detected to be on and not connected yet
+    if(!escs.connected) {
+      const status = await this.serial.getStatus();
+      if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
+        this.addLogMessage('radioOn');
+        this.setActions({ isReading: false });
 
-      return;
+        return;
+      }
     }
 
     try {
@@ -780,7 +782,7 @@ class App extends Component {
 
     try {
       let apiVersion = null;
-      
+
       try {
         apiVersion = await this.serial.getApiVersion();
       } catch(e) {

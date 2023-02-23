@@ -166,6 +166,14 @@ const LAYOUT = {
     offset: 0x29,
     size: 1,
   },
+  PWM_THRESHOLD_LOW: {
+    offset: 0x2A,
+    size: 1,
+  },
+  PWM_THRESHOLD_HIGH: {
+    offset: 0x2B,
+    size: 1,
+  },
 
   LAYOUT: {
     offset: 0x40,

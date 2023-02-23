@@ -156,8 +156,14 @@ function CommonSettings({
         setting = settingOverride;
       }
     }
-    const value = availableSettings[setting.name];
     const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
+
+    // Sanitize a value if it is depended on another value
+    let value = availableSettings[setting.name];
+    if (description.sanitize) {
+      value = description.sanitize(value, availableSettings);
+      availableSettings[setting.name] = value;
+    }
 
     switch (setting.type) {
       case 'bool': {
