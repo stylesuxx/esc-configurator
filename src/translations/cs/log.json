@@ -22,7 +22,7 @@
   "fetchingFilesFailed": "Nepodařilo se načíst soubory pro {{name}}",
   "readEscFailed": "Selhalo čtení ESC {{index}}",
   "resetEscFailed": "Resetování ESC {{index}} selhalo",
-  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
+  "resetEscFailedPowerCycle": "Resetování ESC {{index}} selhalo - odpojte a připojte napájení a zkuste to znovu",
   "writeSettingsFailed": "Nepodařilo se zapsat nastavení do ESC {{index}}",
   "restoreSettingsFailed": "Obnovení výchozích nastavení na ESC {{index}} se nezdařilo",
   "getFileFailed": "Nelze získat soubor pro nahrávání.",
