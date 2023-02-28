@@ -22,7 +22,7 @@
   "fetchingFilesFailed": "Recupero file per {{name}} fallito",
   "readEscFailed": "Lettura ESC {{index}} fallita",
   "resetEscFailed": "Ripristino ESC {{index}} fallito",
-  "resetEscFailedPowerCycle": "Reset dell' ESC {{index}} fallito - riprova disconnettendo e riconnettendo l'alimentazione",
+  "resetEscFailedPowerCycle": "Reset dell' ESC {{index}} fallito - riprova a disconnettere e riconnettere l'alimentazione",
   "writeSettingsFailed": "Impossibile scrivere le impostazioni su ESC {{index}}",
   "restoreSettingsFailed": "Impossibile ripristinare le impostazioni predefinite su ESC {{index}}",
   "getFileFailed": "Impossibile ottenere il file da flashare.",
