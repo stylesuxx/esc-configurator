@@ -109,11 +109,7 @@ function FirmwareSelector({
           versions[selection.firmware].filter((v) => showUnstable || !v.prerelease)
         );
 
-        const versionOptions = versionsSelected.map((version) => ({
-          key: version.key,
-          value: version.url,
-          name: version.name,
-        }));
+        console.log(versionsSelected);
 
         const firmwareOptions = validFirmware.map((key) => ({
           key,
@@ -141,7 +137,9 @@ function FirmwareSelector({
         setOptions(currentOptions);
       }
 
-      setHasAM32FileName(esc.meta?.am32?.fileName !== undefined);
+      console.log(esc.meta?.am32?.fileName);
+
+      setHasAM32FileName(esc.meta?.am32?.fileName !== undefined && esc.meta?.am32?.fileName !== null);
     }
 
     updateOptions();
@@ -220,6 +218,7 @@ function FirmwareSelector({
 
   const handleSubmit = useCallback(() => {
     const source = sources.find((s) => s.getName() === selection.firmware);
+    console.log(esc.meta);
 
     const firmwareUrl = source.getFirmwareUrl({
       escKey: escLayout,
@@ -228,7 +227,7 @@ function FirmwareSelector({
       settings: esc.settings,
       url: selection.url,
       version: selection.version,
-    }, !!esc.meta.am32.fileName);
+    }, esc.meta?.am32?.fileName ? esc.meta.am32.mcuType : null);
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
   }, [esc, escLayout, selection, mode, force, migrate, onSubmit]);

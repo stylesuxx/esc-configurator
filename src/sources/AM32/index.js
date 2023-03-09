@@ -27,12 +27,12 @@ class AM32Source extends GithubSource {
 
   getFirmwareUrl({
     escKey, version, url,
-  }, detected = false) {
-    const name = detected ? escKey : this.escs.layouts[escKey].fileName;
+  }, detected = null) {
+    const name = detected ? escKey + '_' + detected : this.escs.layouts[escKey].fileName;
 
     version = version.replace(/^v/, '');
 
-    let pattern = `${url}${name}_${version}.hex`;
+    let pattern = `${url}AM32_${name}_${version}.hex`;
     if (version in patterns) {
       const replaced = patterns[version]
         .replace('${name}', name)
