@@ -106,69 +106,25 @@ describe('AM32', () => {
     expect(name).toEqual('NOT READY - AM32, FLASH FIRMWARE, Bootloader v8 (PB2)');
   });
 
-  it('should return valid URL for version 1.64', () => {
+  it('should return valid URL for version 1.92', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
-      version: '1.64',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.64/',
+      version: '1.92',
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.92/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.64/IFLIGHT_1.64.hex');
+    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.92/AM32_IFLIGHT_F051_1.92.hex');
   });
 
-  it('should return valid URL for version 1.65', () => {
+  it('should return valid URL for version 1.93', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
-      version: '1.65',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/',
+      version: '1.93',
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.93/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.65/IFLIGHT_1.65.hex');
-  });
-
-  it('should return valid URL for version 1.74', () => {
-    const firmwareConfig = {
-      escKey: 'IFlight_50A',
-      version: '1.74',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.74/',
-    };
-
-    const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.74/IFLIGHT_1.74.hex');
-  });
-
-  it('should return valid URL for version 1.77', () => {
-    const firmwareConfig = {
-      escKey: 'IFlight_50A',
-      version: '1.77',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.77/',
-    };
-
-    const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.77/AM32_IFLIGHT_1.77.hex');
-  });
-
-  it('should return valid URL for version 1.78', () => {
-    const firmwareConfig = {
-      escKey: 'IFlight_50A',
-      version: '1.78',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.78/',
-    };
-
-    const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.78/AM32_IFLIGHT_1.78.hex');
-  });
-
-  it('should return valid URL for version 1.80', () => {
-    const firmwareConfig = {
-      escKey: 'IFlight_50A',
-      version: '1.80',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.80/',
-    };
-
-    const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.80/AM32_IFLIGHT_1.80.hex');
+    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.93/AM32_IFLIGHT_F051_1.93.hex');
   });
 });
