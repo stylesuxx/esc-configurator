@@ -340,9 +340,6 @@ class FourWay {
     const info = Flash.getInfo(flash);
 
     try {
-
-      console.log(info);
-
       let mcu = null;
       try {
         mcu = new MCU(info.meta.interfaceMode, info.meta.signature);

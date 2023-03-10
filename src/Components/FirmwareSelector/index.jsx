@@ -218,7 +218,6 @@ function FirmwareSelector({
 
   const handleSubmit = useCallback(() => {
     const source = sources.find((s) => s.getName() === selection.firmware);
-    console.log(esc.meta);
 
     const firmwareUrl = source.getFirmwareUrl({
       escKey: escLayout,

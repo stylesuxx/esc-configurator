@@ -20,7 +20,10 @@ class AM32Source extends GithubSource {
       revision = 'FLASH FIRMWARE';
     }
 
-    const bootloader = flash.bootloader.valid ? `, Bootloader v${flash.bootloader.version} (${flash.bootloader.pin})${flash.meta?.am32?.mcuType ? `, MCU: ${flash.meta.am32.mcuType}` : ''}` : ', Bootloader unknown';
+    //if we can extract the AM32 mcutype, display it here
+    const mcuType = flash.meta?.am32?.mcuType ? `, MCU: ${flash.meta.am32.mcuType}` : '';
+
+    const bootloader = flash.bootloader.valid ? `, Bootloader v${flash.bootloader.version} (${flash.bootloader.pin})${mcuType}` : ', Bootloader unknown';
 
     return `${make} - ${this.name}, ${revision}${bootloader}`;
   }

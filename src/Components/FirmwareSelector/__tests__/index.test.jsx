@@ -104,7 +104,6 @@ describe('FirmwareSelector', () => {
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-        showUnstable={false}
       />
     );
 
@@ -230,7 +229,6 @@ describe('FirmwareSelector', () => {
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-        showUnstable={false}
       />
     );
 
