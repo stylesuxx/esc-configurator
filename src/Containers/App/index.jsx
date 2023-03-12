@@ -286,6 +286,7 @@ class App extends Component {
         );
 
         if (!findFileNameBlock) {
+          this.addLogMessage('flashingEscMissmatchFileNameMissing', { index: i });
           throw new Error(JSON.stringify({
             index: i,
             message: 'File name not found in hex file, please check your hex file version!',
@@ -295,6 +296,7 @@ class App extends Component {
         const hexFileName = new TextDecoder().decode(new Uint8Array(findFileNameBlock.data).slice(0, findFileNameBlock.data.indexOf(0x00)));
 
         if (!hexFileName.endsWith(info.meta.am32.mcuType)) {
+          this.addLogMessage('flashingEscMissmatchMcuType', { index: i });
           throw new Error(JSON.stringify({
             index: i,
             message: 'Not matching MCU type, please check your hex file!',
@@ -302,6 +304,7 @@ class App extends Component {
         }
 
         if (!force && hexFileName.slice(0, hexFileName.lastIndexOf('_')) !== info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_'))) {
+          this.addLogMessage('flashingEscMissmatchFileName', { index: i });
           throw new Error(JSON.stringify({
             index: i,
             message: 'Different ESC firmware file, than in current ESC flash!',
@@ -701,9 +704,9 @@ class App extends Component {
 
       this.flash(text, force, migrate).catch((e) => {
         const error = JSON.parse(e.message);
-        console.log(error);
+        console.error(error);
 
-        this.addLogMessage('flashingEscMissmatch', error);
+        //this.addLogMessage('flashingEscMissmatch', error);
 
         this.setActions({ isFlashing: false });
       });

@@ -1,3 +1,5 @@
+import semver from 'semver';
+
 import Source from './Source';
 import { fetchJsonCached } from '../utils/Fetch';
 
@@ -24,11 +26,11 @@ class GithubSource extends Source {
       (release) => release.assets.length && !blacklist?.default.includes(release.tag_name)
     );
 
-    const minVersion = parseFloat(blacklist?.min_version?.slice(1) ?? '-1.0');
+    const minVersion = semver.valid(blacklist?.min_version) ? semver.clean(blacklist.min_version) : "0.0.0";
 
     const validReleases = releasesWithAssets.map((release) => ({
       name: release.name || release.tag_name.replace(/^v/, ''),
-      passesMinVersion: parseFloat(release.tag_name.slice(1)) >= minVersion,
+      passesMinVersion: semver.gt(release.tag_name.splice(1), minVersion),
       key: release.tag_name,
       url: `https://github.com/${repo}/releases/download/${release.tag_name}/`,
       prerelease: release.prerelease,
