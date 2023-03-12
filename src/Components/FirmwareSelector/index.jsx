@@ -137,8 +137,6 @@ function FirmwareSelector({
         setOptions(currentOptions);
       }
 
-      console.log(esc.meta?.am32?.fileName);
-
       setHasAM32FileName(esc.meta?.am32?.fileName !== undefined && esc.meta?.am32?.fileName !== null);
     }
 
