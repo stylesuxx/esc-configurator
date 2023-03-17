@@ -37,5 +37,6 @@
   "BRAKING_STRENGTH": "Maximum amount of braking applied (complementary PWM duty cycle).",
   "POWER_RATING": "If using EDT on 1S setups, the temperature readings will be off if this is not set to 1S. All setups with 2S and more do not need to change this setting.",
   "PWM_THRESHOLD_LOW": "Below this throttle, a 96kHz PWM signal will be used. Between low and high, a 48kHz PWM signal will beused.",
-  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used."
+  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used.",
+  "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature."
 }
