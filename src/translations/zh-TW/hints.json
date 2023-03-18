@@ -37,5 +37,6 @@
   "BRAKING_STRENGTH": "應用的最大刹車量 (互補 PWM 的占空比)。",
   "POWER_RATING": "如果在 1S 設備上使用 EDT ，若該選項未被設置為 1S 溫度讀數將被關閉。所有 2S 及以上電壓設備不需要更改此設置。",
   "PWM_THRESHOLD_LOW": "低於此油門將使用 96kHz PWM 信號。在低位與高位之間將使用 48kHz PWM 信號。",
-  "PWM_THRESHOLD_HIGH": "高於此油門將使用 24kHz PWM 信號。"
+  "PWM_THRESHOLD_HIGH": "高於此油門將使用 24kHz PWM 信號。",
+  "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature."
 }
