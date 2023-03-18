@@ -90,6 +90,7 @@
   "escTimingAdvance": "電機近角 [degrees]",
   "escPwmFrequency": "PWM 頻率 [kHz]",
   "escPwmFrequencyBluejay": "PWM 頻率",
+  "escForceEdtArm": "Force EDT arm",
   "escPwmThresholdLow": "PWM 低位閾值",
   "escPwmThresholdHigh": "PWM 高位閾值",
   "escMotorKv": "電機 [Kv]",
