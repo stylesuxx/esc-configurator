@@ -37,5 +37,6 @@
   "BRAKING_STRENGTH": "Maximale Bremsstärke (komplementärer PWM-Arbeitszyklus).",
   "POWER_RATING": "Bei Verwendung von EDT auf 1S Setups sind die Temperaturmessungen ausgeschaltet, falls die Einstellung nicht auf 1S gesetzt ist. Alle Setups mit 2S und mehr brauchen diese Einstellung nicht ändern.",
   "PWM_THRESHOLD_LOW": "Unterhalb dieser Gasstellung wird mit 96kHz moduliert. Zwischen unteren und oberen Schwellenwert mit 48kHz.",
-  "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet."
+  "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet.",
+  "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature."
 }
