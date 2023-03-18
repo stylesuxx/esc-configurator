@@ -90,6 +90,7 @@
   "escTimingAdvance": "Předstih [degrees]",
   "escPwmFrequency": "Frekvence PWM [kHz]",
   "escPwmFrequencyBluejay": "Frekvence PWM",
+  "escForceEdtArm": "Force EDT arm",
   "escPwmThresholdLow": "PWM nejnižší limit",
   "escPwmThresholdHigh": "PWM nejvyšší limit",
   "escMotorKv": "Motor [Kv]",
