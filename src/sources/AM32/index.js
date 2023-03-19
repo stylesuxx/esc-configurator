@@ -5,10 +5,42 @@ import escs from './escs.json';
 import blacklist from './blacklist.json';
 import patterns from './patterns.json';
 import Arm from '../../utils/Hardware/Arm';
+import semver from 'semver';
+import { fetchJsonCached } from '../../utils/Fetch';
 
 const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
 
 class AM32Source extends GithubSource {
+  minVersion = "1.94";
+
+  async getRemoteVersionsList(repo, blacklist = null, amount = 100) {
+    const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases?per_page=${amount}&page=1`, this.skipCache);
+
+    const minVersion = semver.coerce(this.minVersion).version;
+
+    const releasesWithAssets = githubReleases.filter(
+      (release) => semver.satisfies(semver.coerce(release.tag_name.slice(1)), `>=${minVersion}`)
+    );
+
+    const validReleases = releasesWithAssets.map((release) => ({
+      name: release.name || release.tag_name.replace(/^v/, ''),
+      key: release.tag_name,
+      url: `https://github.com/${repo}/releases/download/${release.tag_name}/`,
+      prerelease: release.prerelease,
+      published_at: release.published_at,
+    }));
+
+    return validReleases;
+  }
+
+  getDisabledLayoutSelection(flash) {
+    return !!flash.meta?.am32?.mcuType;
+  }
+
+  getEscName(flash) {
+    return flash.meta?.am32?.fileName;
+  }
+  
   buildDisplayName(flash, make) {
     const settings = flash.settings;
     let revision = 'Unsupported/Unrecognized';

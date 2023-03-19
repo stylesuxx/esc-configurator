@@ -1,5 +1,3 @@
-import semver from 'semver';
-
 import Source from './Source';
 import { fetchJsonCached } from '../utils/Fetch';
 
@@ -20,18 +18,14 @@ class GithubSource extends Source {
    * @param {object} blacklist
    * @returns
    */
-  async getRemoteVersionsList(repo, blacklist = null, amount = 100) {
+  async getRemoteVersionsList(repo, blacklist = [], amount = 100) {
     const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases?per_page=${amount}&page=1`, this.skipCache);
     const releasesWithAssets = githubReleases.filter(
-      (release) => release.assets.length && !blacklist?.default.includes(release.tag_name)
+      (release) => release.assets.length && !blacklist.includes(release.tag_name)
     );
-
-    const minVersion = semver.valid(semver.coerce(blacklist?.min_version))
-      ? semver.coerce(blacklist.min_version).version : "0.0.0";
 
     const validReleases = releasesWithAssets.map((release) => ({
       name: release.name || release.tag_name.replace(/^v/, ''),
-      passesMinVersion: semver.satisfies(semver.coerce(release.tag_name.slice(1)), `>=${minVersion}`),
       key: release.tag_name,
       url: `https://github.com/${repo}/releases/download/${release.tag_name}/`,
       prerelease: release.prerelease,

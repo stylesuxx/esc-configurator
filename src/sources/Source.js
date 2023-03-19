@@ -208,6 +208,28 @@ class Source {
   getLayout() {
     return this.eeprom.LAYOUT;
   }
+
+  /**
+   * Get if the layout selection shall be disabled
+   * 
+   * @param {object} flash 
+   * 
+   * @returns {boolean}
+   */
+  getDisabledLayoutSelection(flash) {
+    return false;
+  }
+
+  /**
+   * Get the ESC name
+   * 
+   * @param {object} flash
+   * 
+   * @returns {string|null}
+   */
+  getEscName(flash) {
+    return null;
+  }
 }
 
 export default Source;

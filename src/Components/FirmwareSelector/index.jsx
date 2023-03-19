@@ -38,7 +38,6 @@ function FirmwareSelector({
     getPwm,
   } = configs;
 
-  const [hasAM32FileName, setHasAM32FileName] = useState(false);
   const [preselected, setPreselected] = useState(false);
   const [escLayout, setEscLayout] = useState(null);
   const [mode, setMode] = useState(null);
@@ -58,6 +57,8 @@ function FirmwareSelector({
     url: null,
     pwm: null,
   });
+
+  const [layoutSelectionDisabled, setLayoutSelectionDisabled] = useState(false);
 
   const file = useRef(null);
 
@@ -79,9 +80,7 @@ function FirmwareSelector({
     setValidFirmware(validFirmware);
     setMode(selectedMode);
 
-    if (esc.meta?.am32?.fileName) {
-      setEscLayout(esc.meta.am32.fileName);
-    } else if(isValidLayout(esc.settings.LAYOUT)) {
+    if(isValidLayout(esc.settings.LAYOUT)) {
       setEscLayout(esc.settings.LAYOUT);
     }
   }
@@ -109,7 +108,11 @@ function FirmwareSelector({
           versions[selection.firmware].filter((v) => showUnstable || !v.prerelease)
         );
 
-        console.log(versionsSelected);
+        const versionOptions = versionsSelected.map((version) => ({
+          key: version.key,
+          value: version.url,
+          name: version.name,
+        }));
 
         const firmwareOptions = validFirmware.map((key) => ({
           key,
@@ -126,22 +129,28 @@ function FirmwareSelector({
           });
         }
 
+        const source = sources.find((s) => s.getName() === selection.firmware);
+        const layoutSelectionDisabled = source.getDisabledLayoutSelection(esc);
+        setLayoutSelectionDisabled(layoutSelectionDisabled);
+
         const currentOptions = {
           firmwares: firmwareOptions,
           versions: versionOptions,
           frequencies: [],
-          escs: escOptions,
+          escs: layoutSelectionDisabled ? [{
+            key: 0,
+            value: 0,
+            name: source.getEscName(esc),
+          }] : escOptions,
           modes: modeOptions,
         };
 
         setOptions(currentOptions);
       }
-
-      setHasAM32FileName(esc.meta?.am32?.fileName !== undefined && esc.meta?.am32?.fileName !== null);
     }
 
     updateOptions();
-  }, [selection.firmware, escs, showUnstable, validFirmware, versions]);
+  }, [selection.firmware, escs, showUnstable, validFirmware, versions, esc]);
 
   const clickFile = useCallback(() => {
     file.current.click();
@@ -216,7 +225,6 @@ function FirmwareSelector({
 
   const handleSubmit = useCallback(() => {
     const source = sources.find((s) => s.getName() === selection.firmware);
-
     const firmwareUrl = source.getFirmwareUrl({
       escKey: escLayout,
       mode: mode,
@@ -224,7 +232,7 @@ function FirmwareSelector({
       settings: esc.settings,
       url: selection.url,
       version: selection.version,
-    }, esc.meta?.am32?.fileName ? esc.meta.am32.mcuType : null);
+    });
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
   }, [esc, escLayout, selection, mode, force, migrate, onSubmit]);
@@ -300,8 +308,8 @@ function FirmwareSelector({
 
           <div className="spacer-box">
             <LabeledSelect
-              disabled={hasAM32FileName}
-              firstLabel={t("selectFirmware")}
+              disabled={layoutSelectionDisabled}
+              firstLabel={t('selectFirmware')}
               label="Firmware"
               onChange={handleFirmwareChange}
               options={options.firmwares}
@@ -311,7 +319,7 @@ function FirmwareSelector({
             {selection.firmware &&
               <>
                 <LabeledSelect
-                  disabled={hasAM32FileName}
+                  disabled={layoutSelectionDisabled}
                   firstLabel={t('selectEsc')}
                   label="ESC"
                   onChange={handleEscChange}
@@ -409,13 +417,7 @@ FirmwareSelector.propTypes = {
   esc: PropTypes.shape({
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,
-    meta: PropTypes.shape({
-      signature: PropTypes.number,
-      am32: PropTypes.shape({
-        fileName: PropTypes.string,
-        mcuType: PropTypes.string,
-      }),
-    }),
+    meta: PropTypes.shape({ signature: PropTypes.number }),
     settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
   }),
   onCancel: PropTypes.func.isRequired,
