@@ -35,7 +35,7 @@ function FirmwareSelector({
   const {
     escs,
     versions,
-    pwm,
+    getPwm,
   } = configs;
 
   const [preselected, setPreselected] = useState(false);
@@ -112,13 +112,6 @@ function FirmwareSelector({
           name: version.name,
         }));
 
-        const frequencies = pwm[selection.firmware];
-        const frequencyOptions = frequencies.map((item) => ({
-          key: item,
-          value: item,
-          name: item,
-        }));
-
         const firmwareOptions = validFirmware.map((key) => ({
           key,
           value: key,
@@ -137,7 +130,7 @@ function FirmwareSelector({
         const currentOptions = {
           firmwares: firmwareOptions,
           versions: versionOptions,
-          frequencies: frequencyOptions,
+          frequencies: [],
           escs: escOptions,
           modes: modeOptions,
         };
@@ -147,7 +140,7 @@ function FirmwareSelector({
     }
 
     updateOptions();
-  }, [selection.firmware, escs, pwm, showUnstable, validFirmware, versions]);
+  }, [selection.firmware, escs, showUnstable, validFirmware, versions]);
 
   const clickFile = useCallback(() => {
     file.current.click();
@@ -183,12 +176,27 @@ function FirmwareSelector({
     const selected = e.target.options.selectedIndex;
     const selectedOption = e.target.options[selected];
 
+    const firmwareName = selection.firmware;
+    const firmwareVersion = options.versions[selected - 1].key;
+
+    const frequencies = getPwm[firmwareName](firmwareVersion);
+    const frequencyOptions = frequencies.map((item) => ({
+      key: item,
+      value: item,
+      name: item,
+    }));
+
+    setOptions({
+      ...options,
+      frequencies: frequencyOptions,
+    });
+
     setSelection({
       ...selection,
       url: e.target.value,
       version: selectedOption && options.versions[selected - 1].key,
     });
-  }, [options, selection]);
+  }, [getPwm, options, selection]);
 
   const handleForceChange = useCallback((e) => {
     setForce(e.target.checked);
@@ -391,8 +399,8 @@ FirmwareSelector.defaultProps = {
 FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
+    getPwm: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
-    pwm: PropTypes.shape().isRequired,
   }).isRequired,
   esc: PropTypes.shape({
     displayName: PropTypes.string,

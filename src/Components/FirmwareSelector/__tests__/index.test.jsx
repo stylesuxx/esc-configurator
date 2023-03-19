@@ -64,7 +64,7 @@ describe('FirmwareSelector', () => {
   });
 
   it('should allow changing firmware options for BLHeli_S', async() => {
-    const json = `[{ "tag_name": "v0.10", "assets": [{}] }]`;
+    const json = `[{ "tag_name": "v0.10.0", "assets": [{}] }]`;
     global.caches = {
       open: jest.fn().mockImplementation(() =>
         new Promise((resolve) => {
@@ -76,7 +76,7 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      pwm: {},
+      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -85,7 +85,7 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.pwm[name] = source.getPwm();
+      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -136,7 +136,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: '16.7 [Official]',
+        value: 'https://raw.githubusercontent.com/bitdump/BLHeli/master/BLHeli_S SiLabs/Hex files/{0}_REV16_7.HEX',
         name: 'Version',
       },
     });
@@ -162,11 +162,12 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.10/',
+        value: 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.10.0/',
         name: 'Version',
       },
     });
 
+    expect(screen.getByText(/96/i)).toBeInTheDocument();
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'PWM Frequency' }), {
       target: {
         value: '96',
@@ -174,6 +175,7 @@ describe('FirmwareSelector', () => {
       },
     });
 
+    expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
     userEvent.click(screen.getByText('escButtonSelect'));
     expect(onSubmit).toHaveBeenCalled();
 
@@ -186,7 +188,7 @@ describe('FirmwareSelector', () => {
   });
 
   it('should display title', async() => {
-    const json = `[{ "tag_name": "v0.10", "assets": [{}] }]`;
+    const json = `[{ "tag_name": "v0.10.0", "assets": [{}] }]`;
     global.caches = {
       open: jest.fn().mockImplementation(() =>
         new Promise((resolve) => {
@@ -198,7 +200,7 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      pwm: {},
+      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -207,7 +209,7 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.pwm[name] = source.getPwm();
+      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -246,7 +248,7 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      pwm: {},
+      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -255,7 +257,7 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.pwm[name] = source.getPwm();
+      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -300,4 +302,85 @@ describe('FirmwareSelector', () => {
     userEvent.click(screen.getByText('escButtonSelect'));
     expect(onSubmit).toHaveBeenCalled();
   });
+
+  //TODO: Once v0.20.0 is released, add this test
+  /*
+  it('should not show PMW selection for Bluejay v0.20.0 and up', async() => {
+    const json = `[{ "tag_name": "v0.20.0", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
+    const configs = {
+      versions: {},
+      escs: {},
+      getPwm: {},
+    };
+
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = source.getEscLayouts();
+      configs.getPwm[name] = (version) => source.getPwm(version);
+    }
+
+    const onSubmit = jest.fn();
+    const onLocalSubmit = jest.fn();
+    const onCancel = jest.fn();
+
+    const escMock = {
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
+    render(
+      <FirmwareSelector
+        configs={configs}
+        esc={escMock}
+        onCancel={onCancel}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />
+    );
+
+    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
+    expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
+    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
+    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
+    expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
+
+    expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
+    expect(screen.getByText(/escButtonSelectLocally/i)).toBeInTheDocument();
+    expect(screen.getByText(/buttonCancel/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
+    expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
+      target: {
+        value: 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.20.0/',
+        name: 'Version',
+      },
+    });
+
+    expect(screen.queryByText(/96/i)).not.toBeInTheDocument();
+
+    expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
+    userEvent.click(screen.getByText('escButtonSelect'));
+    expect(onSubmit).toHaveBeenCalled();
+
+    userEvent.click(screen.getByText('escButtonSelectLocally'));
+    fireEvent.change(screen.getByTestId('input-file'));
+    expect(onLocalSubmit).toHaveBeenCalled();
+
+    userEvent.click(screen.getByText('buttonCancel'));
+    expect(onCancel).toHaveBeenCalled();
+  });
+  */
 });
