@@ -235,8 +235,10 @@ describe('FirmwareSelector', () => {
     expect(screen.getByText('selectTarget (Display Name)')).toBeInTheDocument();
   });
 
-  it('should allow changing firmware options for AM32', async() => {
-    const json = `[{ "tag_name": "v1.93", "assets": [{}] }]`;
+
+  /** no we dont want to change firmware anymore */
+  /* it('should allow changing firmware options for AM32', async() => {
+    const json = `[{ "tag_name": "v1.88", "assets": [{}] }]`;
     global.caches = {
       open: jest.fn().mockImplementation(() =>
         new Promise((resolve) => {
@@ -265,14 +267,8 @@ describe('FirmwareSelector', () => {
     const onCancel = jest.fn();
 
     const escMock = {
-      settings: {},
-      meta: {
-        signature: 0x1F06,
-        am32: {
-          mcuType: 'F051',
-          fileName: 'DIATONE_F051',
-        },
-      },
+      settings: { LAYOUT: "T-MOTOR 55A" },
+      meta: { signature: 0x1F06 },
     };
 
     render(
@@ -282,7 +278,6 @@ describe('FirmwareSelector', () => {
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-        showUnstable={false}
       />
     );
 
@@ -301,14 +296,14 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.93/',
+        value: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.88/',
         name: 'Version',
       },
     });
 
     userEvent.click(screen.getByText('escButtonSelect'));
     expect(onSubmit).toHaveBeenCalled();
-  });
+  }); */
 
   //TODO: Once v0.20.0 is released, add this test
   /*

@@ -106,25 +106,14 @@ describe('AM32', () => {
     expect(name).toEqual('NOT READY - AM32, FLASH FIRMWARE, Bootloader v8 (PB2)');
   });
 
-  it('should return valid URL for version 1.92', () => {
+  it('should return valid URL for version 1.94', () => {
     const firmwareConfig = {
       escKey: 'IFlight_50A',
-      version: '1.92',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.92/',
+      version: '1.94',
+      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.94/',
     };
 
     const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.92/AM32_IFLIGHT_F051_1.92.hex');
-  });
-
-  it('should return valid URL for version 1.93', () => {
-    const firmwareConfig = {
-      escKey: 'IFlight_50A',
-      version: '1.93',
-      url: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.93/',
-    };
-
-    const url = source.getFirmwareUrl(firmwareConfig);
-    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.93/AM32_IFLIGHT_F051_1.93.hex');
+    expect(url).toEqual('https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.94/AM32_IFLIGHT_F051_1.94.hex');
   });
 });

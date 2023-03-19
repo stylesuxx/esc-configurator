@@ -2,7 +2,6 @@ import GithubSource from '../GithubSource';
 import eeprom from './eeprom';
 import settingsDescriptions from './settings';
 import escs from './escs.json';
-import blacklist from './blacklist.json';
 import patterns from './patterns.json';
 import Arm from '../../utils/Hardware/Arm';
 import semver from 'semver';
@@ -84,7 +83,7 @@ class AM32Source extends GithubSource {
   }
 
   async getVersions() {
-    return this.getRemoteVersionsList(GITHUB_REPO, blacklist);
+    return this.getRemoteVersionsList(GITHUB_REPO);
   }
 
   getValidNames() {
