@@ -73,6 +73,7 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
+        getPwm: {},
       },
       actions: {
         isReading: false,
@@ -225,13 +226,13 @@ class App extends Component {
       try {
         configs.versions[name] = await source.getVersions();
         configs.escs[name] = source.getEscLayouts();
-        configs.pwm[name] = source.getPwm();
+        configs.getPwm[name] = (version) => source.getPwm(version);
       } catch(e) {
         this.addLogMessage('fetchingFilesFailed', { name: name });
 
         configs.versions[name] = [];
         configs.escs[name] = [];
-        configs.pwm[name] = [];
+        configs.getPwm[name] = null;
       }
     }
 

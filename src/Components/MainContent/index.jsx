@@ -315,7 +315,7 @@ MainContent.propTypes = {
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
-    pwm: PropTypes.shape().isRequired,
+    getPwm: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
   }).isRequired,
   connected: PropTypes.number,
