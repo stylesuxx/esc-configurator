@@ -82,6 +82,7 @@
   "migrationNote": "Uvědomte si, že nastavení nejsou migrována mezi různými firmwary, nezapomeňte si poznamenat směry motoru a další nastavení, která byste mohli chtít přesunout. Nastavení budou migrována mezi různými verzemi stejného firmwaru.",
   "escDirectionReversed": "Opačný směr",
   "escBidirectionalMode": "Obousměrný režim",
+  "escSelectProtocol": "Select ESC Protocol",
   "escSinusoidalStartup": "Sinusové spuštění",
   "escComplementaryPwm": "Doplňkové PWM",
   "escVariablePwmFrequency": "Proměnná frekvence PWM",
