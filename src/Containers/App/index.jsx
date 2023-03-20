@@ -661,15 +661,16 @@ class App extends Component {
       console.debug('Flashing local file');
 
       const text = (e.target.result);
-
-      this.flash(text, force, migrate).catch((e) => {
+      try {
+        await this.flash(text, force, migrate);
+      } catch(e) {
         const error = JSON.parse(e.message);
         console.error(error);
 
         //this.addLogMessage('flashingEscMissmatch', error);
 
         this.setActions({ isFlashing: false });
-      });
+      }
     };
     reader.readAsText(e.target.files[0]);
   };
