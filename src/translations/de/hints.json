@@ -39,5 +39,5 @@
   "PWM_THRESHOLD_LOW": "Unterhalb dieser Gasstellung wird mit 96kHz moduliert. Zwischen unteren und oberen Schwellenwert mit 48kHz.",
   "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet.",
   "FORCE_EDT_ARM": "Nur nach erfolgreichem EDT Handshake armen. Die Flugcontroller Firmware muss diese Funktion unterstützen.",
-  "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!"
+  "ESC_PROTOCOL": "Wähle das ESC-Protokoll, das du verwenden möchtest. Dies dient der Sicherheit, durch ein vorausgewähltes ESC-Protokoll, können falsche Signale für die Gasstellung verhindert werden!"
 }
