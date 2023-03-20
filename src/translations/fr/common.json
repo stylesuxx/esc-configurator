@@ -82,6 +82,7 @@
   "migrationNote": "Be aware that settings are not migrated between different firmwares, make sure to take note of your motor directions and other settings you might want to move over. Settings will be migrated between different versions of the same firmware.",
   "escDirectionReversed": "Direction inversée",
   "escBidirectionalMode": "Mode bidirectionnel",
+  "escSelectProtocol": "Select ESC Protocol",
   "escSinusoidalStartup": "Sinusoidal Startup",
   "escComplementaryPwm": "Complementary PWM",
   "escVariablePwmFrequency": "Variable PWM Frequency",
