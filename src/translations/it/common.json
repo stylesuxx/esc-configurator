@@ -82,6 +82,7 @@
   "migrationNote": "Tieni presente che le impostazioni non sono trasferite tra firmware diversi, assicurati di prendere nota delle direzioni del motore e di altre impostazioni che potresti voler inserire dopo. Le impostazioni verranno trasferite tra diverse versioni dello stesso firmware.",
   "escDirectionReversed": "Direzione Invertita",
   "escBidirectionalMode": "Modo Bidirezionale",
+  "escSelectProtocol": "Select ESC Protocol",
   "escSinusoidalStartup": "Avvio Sinusoidale",
   "escComplementaryPwm": "PWM Complementare",
   "escVariablePwmFrequency": "Frequenza Variabile PWM",
