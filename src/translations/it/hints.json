@@ -38,5 +38,6 @@
   "POWER_RATING": "Se si utilizza EDT su impostazioni 1S, le letture della temperatura saranno disattivate se questa non è impostata su 1S. Tutte le configurazioni con 2S o più non hanno bisogno di cambiare questa impostazione.",
   "PWM_THRESHOLD_LOW": "Sotto questo punto dell'acceleratore, verrà ' usato un segnale PWM a 96kHz. Tra basso e alto, si userà un segnale PWM a 48kHz.",
   "PWM_THRESHOLD_HIGH": "Sopra questo punto dell' acceleratore, verrà utilizzato un segnale PWM a 24kHz.",
-  "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature."
+  "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
+  "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!"
 }
