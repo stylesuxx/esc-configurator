@@ -82,6 +82,7 @@
   "migrationNote": "Farklı donanımlar arası taşınmayan ayarlara dikkat ediniz, motor yönü ve taşımak istediğniz diğer ayarlarınızı not ediniz. Ayarlar aynı donanım yazılımının farklı versiyonları arasında da taşınabilir.",
   "escDirectionReversed": "Yön Ters Çevrildi",
   "escBidirectionalMode": "Çift Yön Modu",
+  "escSelectProtocol": "Select ESC Protocol",
   "escSinusoidalStartup": "Sinüzoidal Başlangıç",
   "escComplementaryPwm": "Tamamlayıcı PWM",
   "escVariablePwmFrequency": "Değişken PWM Frekansı",
