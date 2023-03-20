@@ -82,6 +82,7 @@
   "migrationNote": "設定不能再不同的固件進行遷移，請務必注意您的電機轉向和其他您可能想要改動的設定。設定可以在同意固件的不同版本之間遷移。",
   "escDirectionReversed": "反轉方向",
   "escBidirectionalMode": "雙向模式",
+  "escSelectProtocol": "Select ESC Protocol",
   "escSinusoidalStartup": "正弦式啓動",
   "escComplementaryPwm": "互補 PWM",
   "escVariablePwmFrequency": "可變 PWM 頻率",
