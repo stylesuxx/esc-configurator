@@ -140,7 +140,7 @@ function FirmwareSelector({
           escs: layoutSelectionDisabled ? [{
             key: 0,
             value: 0,
-            name: source.getEscName(esc),
+            name: esc.settings.NAME,
           }] : escOptions,
           modes: modeOptions,
         };
@@ -308,7 +308,6 @@ function FirmwareSelector({
 
           <div className="spacer-box">
             <LabeledSelect
-              disabled={layoutSelectionDisabled}
               firstLabel={t('selectFirmware')}
               label="Firmware"
               onChange={handleFirmwareChange}
@@ -418,7 +417,10 @@ FirmwareSelector.propTypes = {
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,
     meta: PropTypes.shape({ signature: PropTypes.number }),
-    settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
+    settings: PropTypes.shape({
+      LAYOUT: PropTypes.string,
+      NAME: PropTypes.string,
+    }),
   }),
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,

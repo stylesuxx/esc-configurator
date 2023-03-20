@@ -219,17 +219,6 @@ class Source {
   getDisabledLayoutSelection(flash) {
     return false;
   }
-
-  /**
-   * Get the ESC name
-   * 
-   * @param {object} flash
-   * 
-   * @returns {string|null}
-   */
-  getEscName(flash) {
-    return null;
-  }
 }
 
 export default Source;

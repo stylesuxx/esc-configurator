@@ -35,10 +35,6 @@ class AM32Source extends GithubSource {
   getDisabledLayoutSelection(flash) {
     return !!flash.meta?.am32?.mcuType;
   }
-
-  getEscName(flash) {
-    return flash.meta?.am32?.fileName;
-  }
   
   buildDisplayName(flash, make) {
     const settings = flash.settings;
