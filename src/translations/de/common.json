@@ -82,7 +82,7 @@
   "migrationNote": "Beachte, dass Einstellungen nicht zwischen unterschiedlichen Firmwares migriert werden. Stelle sicher, dass du diverse Einstellungen wie zum Beispiel die Drehrichtung der Motoren notiert hast. Bei verschiedenen Versionen derselben Firmware werden die Einstellungen übernommen.",
   "escDirectionReversed": "Richtung umgekehrt",
   "escBidirectionalMode": "Bidirektionaler Modus",
-  "escSelectProtocol": "Select ESC Protocol",
+  "escSelectProtocol": "Wähle das ESC-Protokoll",
   "escSinusoidalStartup": "Sinusförmiges Starten",
   "escComplementaryPwm": "Komplementäres PWM",
   "escVariablePwmFrequency": "Variable PWM Frequenz",
