@@ -58,6 +58,8 @@ function FirmwareSelector({
     pwm: null,
   });
 
+  const [layoutSelectionDisabled, setLayoutSelectionDisabled] = useState(false);
+
   const file = useRef(null);
 
   // Pre select current firmware and ESC layout if valid
@@ -127,11 +129,19 @@ function FirmwareSelector({
           });
         }
 
+        const source = sources.find((s) => s.getName() === selection.firmware);
+        const layoutSelectionDisabled = source.getDisabledLayoutSelection(esc);
+        setLayoutSelectionDisabled(layoutSelectionDisabled);
+
         const currentOptions = {
           firmwares: firmwareOptions,
           versions: versionOptions,
           frequencies: [],
-          escs: escOptions,
+          escs: layoutSelectionDisabled ? [{
+            key: 0,
+            value: 0,
+            name: esc.settings.NAME,
+          }] : escOptions,
           modes: modeOptions,
         };
 
@@ -140,7 +150,7 @@ function FirmwareSelector({
     }
 
     updateOptions();
-  }, [selection.firmware, escs, showUnstable, validFirmware, versions]);
+  }, [selection.firmware, escs, showUnstable, validFirmware, versions, esc]);
 
   const clickFile = useCallback(() => {
     file.current.click();
@@ -308,6 +318,7 @@ function FirmwareSelector({
             {selection.firmware &&
               <>
                 <LabeledSelect
+                  disabled={layoutSelectionDisabled}
                   firstLabel={t('selectEsc')}
                   label="ESC"
                   onChange={handleEscChange}
@@ -406,7 +417,10 @@ FirmwareSelector.propTypes = {
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,
     meta: PropTypes.shape({ signature: PropTypes.number }),
-    settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
+    settings: PropTypes.shape({
+      LAYOUT: PropTypes.string,
+      NAME: PropTypes.string,
+    }),
   }),
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,

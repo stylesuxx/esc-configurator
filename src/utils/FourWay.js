@@ -330,6 +330,61 @@ class FourWay {
   }
 
   /**
+   * Flash preflight for making sure that the provided hex works with the current esc hardware
+   * 
+   * @param {object} esc
+   * @param {object} hex
+   * @param {boolean} force
+   * @param {number} i
+   * 
+   * @throws {Error} if the firmware file does not match the MCU type or filename
+   */
+  async flashPreflight(esc, hex, force, i) {
+    const info = await this.getInfo(esc);
+
+    // if current firmware version is 1.93 or higher, we will only flash firmware matching MCU type and throw a error if fileName is different
+    if (info.isArm && info.meta.am32.fileName) {
+
+      const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
+      const eepromOffset = mcu.getEepromOffset();
+      const offset = 134217728; // 0x8000000
+      const fileNamePlaceOffset = 30;
+
+      const fileFlash = Flash.parseHex(hex);
+
+      const findFileNameBlock = fileFlash.data.find((d) =>
+        (eepromOffset - fileNamePlaceOffset) > (d.address - offset) && (eepromOffset - fileNamePlaceOffset) < (d.address - offset) + d.bytes
+      );
+
+      if (!findFileNameBlock) {
+        this.addLogMessage('flashingEscMissmatchFileNameMissing', { index: i });
+        throw new Error(JSON.stringify({
+          index: i,
+          message: 'File name not found in hex file, please check your hex file version!',
+        }));
+      }
+
+      const hexFileName = new TextDecoder().decode(new Uint8Array(findFileNameBlock.data).slice(0, findFileNameBlock.data.indexOf(0x00)));
+
+      if (!hexFileName.endsWith(info.meta.am32.mcuType)) {
+        this.addLogMessage('flashingEscMissmatchMcuType', { index: i });
+        throw new Error(JSON.stringify({
+          index: i,
+          message: 'Not matching MCU type, please check your hex file!',
+        }));
+      }
+
+      if (!force && hexFileName.slice(0, hexFileName.lastIndexOf('_')) !== info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_'))) {
+        this.addLogMessage('flashingEscMissmatchFileName', { index: i });
+        throw new Error(JSON.stringify({
+          index: i,
+          message: 'Different ESC firmware file, than in current ESC flash!',
+        }));
+      }
+    }
+  }
+
+  /**
    * Get information of a certain ESC
    *
    * @param {number} target
@@ -340,8 +395,6 @@ class FourWay {
     const info = Flash.getInfo(flash);
 
     try {
-      console.log(info);
-
       let mcu = null;
       try {
         mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
@@ -384,6 +437,14 @@ class FourWay {
         source = am32Source;
 
         const eepromOffset = mcu.getEepromOffset();
+
+        const fileNameRead = await this.read(eepromOffset - 32, 16);
+        const fileName = new TextDecoder().decode(fileNameRead.params.slice(0, fileNameRead.params.indexOf(0x00)));
+        
+        if (/[A-Z0-9_]+/.test(fileName)) {
+          info.meta.am32.fileName = fileName;
+          info.meta.am32.mcuType = fileName.slice(fileName.lastIndexOf('_') + 1);
+        }
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
@@ -616,7 +677,7 @@ class FourWay {
 
           info.settings.LAYOUT = info.settings.NAME;
 
-          info.displayName = am32Source.buildDisplayName(info, info.settings.NAME);
+          info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = am32Source.getName();
         }
       }

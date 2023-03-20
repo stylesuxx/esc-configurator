@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
 function LabeledSelect({
+  disabled,
   label,
   firstLabel,
   options,
@@ -21,6 +22,7 @@ function LabeledSelect({
 
     return (
       <select
+        disabled={disabled}
         name={label || firstLabel}
         onChange={onChange}
         value={selected || -1}
@@ -36,7 +38,7 @@ function LabeledSelect({
         {optionElements}
       </select>
     );
-  }, [options, label, firstLabel, onChange, selected]);
+  }, [disabled, options, label, firstLabel, onChange, selected]);
 
   return (
     <div className="select">
@@ -54,11 +56,13 @@ function LabeledSelect({
 }
 
 LabeledSelect.defaultProps = {
+  disabled: false,
   label: null,
   selected: null,
 };
 
 LabeledSelect.propTypes = {
+  disabled: PropTypes.bool,
   firstLabel: PropTypes.string.isRequired,
   label: PropTypes.string,
   onChange: PropTypes.func.isRequired,

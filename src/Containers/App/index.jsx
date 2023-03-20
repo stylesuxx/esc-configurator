@@ -267,6 +267,9 @@ class App extends Component {
       const target = escs.targets[i];
       const esc = escs.individual.find((esc) => esc.index === target);
 
+      // this will throw a exception when preflight fails
+      await this.serial.flashPreflight(esc, text, force, i);
+
       const updateProgress = async(percent) => {
         if(esc.ref && esc.ref.current) {
           esc.ref.current.setProgress((percent));
@@ -655,7 +658,13 @@ class App extends Component {
       console.debug('Flashing local file');
 
       const text = (e.target.result);
-      this.flash(text, force, migrate);
+      try {
+        await this.flash(text, force, migrate);
+      } catch(e) {
+        const error = JSON.parse(e.message);
+        console.error(error);
+        this.setActions({ isFlashing: false });
+      }
     };
     reader.readAsText(e.target.files[0]);
   };

@@ -158,6 +158,10 @@ class Flash {
         input: flash.params[2],
         interfaceMode: flash.params[3],
         available: true,
+        am32: {
+          fileName: null,
+          mcuType: null,
+        },
       },
       displayName: 'UNKNOWN',
       firmwareName: 'UNKNOWN',

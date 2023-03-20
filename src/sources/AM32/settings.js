@@ -173,6 +173,33 @@ const SETTINGS_LAYOUT_2 = [
     max: 10,
     step: 1,
   },
+  {
+    name: 'ESC_PROTOCOL',
+    type: 'enum',
+    label: 'escSelectProtocol',
+    options: [
+      {
+        value: 0,
+        label: 'Auto',
+      },
+      {
+        value: 1,
+        label: 'DShot',
+      },
+      {
+        value: 2,
+        label: 'Servo',
+      },
+      {
+        value: 3,
+        label: 'Serial',
+      },
+      {
+        value: 4,
+        label: 'EDT ARM',
+      },
+    ],
+  },
 ];
 
 const COMMON = {
@@ -257,6 +284,7 @@ const DEFAULT_SETTINGS_2 = {
   USE_HALL_SENSORS: 0,
   SINE_MODE_RANGE: 8,
   BRAKE_STRENGTH: 10,
+  ESC_PROTOCOL: 0,
 };
 
 const DEFAULTS = {

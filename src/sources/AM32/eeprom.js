@@ -134,6 +134,10 @@ const LAYOUT = {
     offset: 0x29,
     size: 1,
   },
+  ESC_PROTOCOL: {
+    offset: 0x2E,
+    size: 1,
+  },
   STARTUP_MELODY: {
     offset: 0x30,
     size: 128,
