@@ -82,6 +82,7 @@
   "migrationNote": "Należy pamiętać, że ustawienia nie są migrowane między różnymi wersjami oprogramowania układowego, należy pamiętać o kierunkach silnika i innych ustawieniach, które możesz chcieć przenieść. Ustawienia zostaną przeniesione między różnymi wersjami tego samego oprogramowania układowego.",
   "escDirectionReversed": "Kierunek odwrócony",
   "escBidirectionalMode": "Tryb dwukierunkowy",
+  "escSelectProtocol": "Select ESC Protocol",
   "escSinusoidalStartup": "Uruchomienie sinusoidalne",
   "escComplementaryPwm": "Uzupełniający PWM",
   "escVariablePwmFrequency": "Zmienna częstotliwość PWM",
