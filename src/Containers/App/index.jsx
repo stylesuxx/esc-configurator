@@ -14,7 +14,6 @@ import MainApp from '../../Components/App';
 import settings from '../../settings.json';
 import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
-import Flash from '../../utils/helpers/Flash';
 import sources from '../../sources';
 import {
   clearLog,
@@ -25,7 +24,6 @@ import {
   loadSettings,
 } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
-import MCU from '../../utils/Hardware/MCU';
 
 const {
   availableLanguages,
@@ -279,7 +277,6 @@ class App extends Component {
       };
 
       this.addLogMessage('flashingEsc', { index: target + 1 });
-
       const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
       updateProgress(0);
 
@@ -667,7 +664,7 @@ class App extends Component {
         const error = JSON.parse(e.message);
         console.error(error);
 
-        //this.addLogMessage('flashingEscMissmatch', error);
+        // this.addLogMessage('flashingEscMissmatch', error);
 
         this.setActions({ isFlashing: false });
       }

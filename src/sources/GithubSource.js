@@ -15,7 +15,7 @@ class GithubSource extends Source {
    * firmware versions.
    *
    * @param {string} repo
-   * @param {object} blacklist
+   * @param {Array<string>} blacklist
    * @returns
    */
   async getRemoteVersionsList(repo, blacklist = [], amount = 100) {
