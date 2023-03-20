@@ -105,6 +105,12 @@
     ]
   },
   {
+    "name": "Dixie Horn",
+    "tracks": [
+      "DixieHorn:b=300,o=5,d=32:8g.,p,8e.,p,4c,p,4c,p,8c.,p,8d.,p,8e.,p,8f.,p,4g,p,4g,p,4g,p,4e"
+    ]
+  },
+  {
     "name": "Doom Theme",
     "tracks": [
       "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1f#4",
@@ -238,6 +244,15 @@
     "name": "Pacman Theme",
     "tracks": [
       "pacman:d=4,o=5,b=112:32b,32p,32b6,32p,32f#6,32p,32d#6,32p,32b6,32f#6,16p,16d#6,16p,32c6,32p,32c7,32p,32g6,32p,32e6,32p,32c7,32g6,16p,16e6,16p,32b,32p,32b6,32p,32f#6,32p,32d#6,32p,32b6,32f#6,16p,16d#6,16p,32d#6,32e6,32f6,32p,32f6,32f#6,32g6,32p,32g6,32g#6,32a6,32p,32b.6"
+    ]
+  },
+  {
+    "name": "The Pink Panther Theme",
+    "tracks": [
+      "PinkPanther:d=4,o=5,b=100:16c#4,8d4,32p,16d#4,1e4,8p,16d#4,8d4,32p,16c#4,1c4,16p",
+      "PinkPanther:d=4,o=5,b=100:p,16d#4,e4,8p,16f#4,g4,16p,16d#4,8e4,64p,16f#4,8g4,64p,16c5,8b4,64p,16e4,8g4,64p,16b4,2a#4,16a4,16g4,16e4,16d4,e4,16p",
+      "PinkPanther:d=4,o=5,b=100:p,16d#4,e4,8p,16f#4,g4,16p,16d#4,8e4,64p,16f#4,8g4,64p,16c5,8b4,64p,16e4,8g4,64p,16b4,2a#4,16a4,16g4,16e4,16d4,e4,16p",
+      "PinkPanther:d=4,o=5,b=100:p,16d#4,e4,8p,16f#4,g4,16p,16d#4,8e4,64p,16f#4,8g4,64p,16c5,8b4,64p,16e4,8g4,64p,16b4,2a#4,16a4,16g4,16e4,16d4,e4,16p"
     ]
   },
   {
