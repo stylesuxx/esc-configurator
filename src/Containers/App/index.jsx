@@ -663,9 +663,6 @@ class App extends Component {
       } catch(e) {
         const error = JSON.parse(e.message);
         console.error(error);
-
-        // this.addLogMessage('flashingEscMissmatch', error);
-
         this.setActions({ isFlashing: false });
       }
     };
