@@ -35,7 +35,7 @@ class AM32Source extends GithubSource {
   getDisabledLayoutSelection(flash) {
     return !!flash.meta?.am32?.mcuType;
   }
-  
+
   buildDisplayName(flash, make) {
     const settings = flash.settings;
     let revision = 'Unsupported/Unrecognized';

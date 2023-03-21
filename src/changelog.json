@@ -2,7 +2,11 @@
   {
     "title": "Unreleased",
     "items": [
-      "Enhancement: More melodies"
+      "Enhancement: More melodies",
+      "AM32: New layout support",
+      "AM32: Read correct firmware name from hex file",
+      "Bluejay: Add 'Force EDT arm' setting",
+      "Bluejay: Preparations for Bluejay versions without PWM selection on flash"
     ]
   },
   {
