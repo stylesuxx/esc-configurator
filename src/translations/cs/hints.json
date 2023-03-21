@@ -38,6 +38,6 @@
   "POWER_RATING": "Pokud používáte EDT při nastaveních 1S, budou hodnoty teploty vypnuty, pokud nebudou nastaveny na 1S. Všechna nastavení s 2S a více není třeba měnit toto nastavení.",
   "PWM_THRESHOLD_LOW": "Pod tímto plynem, bude signál PWM 96kHz. Mezi nízkým a vysokým, bude použit signál PWM 48kHz.",
   "PWM_THRESHOLD_HIGH": "Nad tímto plynem, bude signál PWM 24kHz.",
-  "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
-  "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!"
+  "FORCE_EDT_ARM": "Odjištění pouze po úspěšném startu EDT. Firmware řídící jednotky musí tuto funkci podporovat.",
+  "ESC_PROTOCOL": "Vyberte protokol ESC, který chcete použít. Je to v zájmu bezpečnosti, s předvoleným esc protokolem je zabráněno rozpoznání falešného plynu!"
 }
