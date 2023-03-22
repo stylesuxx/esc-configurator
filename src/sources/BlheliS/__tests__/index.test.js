@@ -99,4 +99,28 @@ describe('BLHeli_S', () => {
     const name = source.buildDisplayName(flash, 'MAKE');
     expect(name).toEqual(flashFailedString);
   });
+
+  it('should handle LED control enabled', () => {
+    const revision = 33;
+    const settings = {
+      GOVERNOR_MODE: 3,
+      MOTOR_DIRECTION: 3,
+      LAYOUT: [0, 'E'],
+    };
+
+    let ledFunction = null;
+
+    const individualSettings = source.getIndividualSettings(revision);
+    const base = individualSettings.base;
+    for(let j = 0; j < base.length; j += 1) {
+      const current = base[j];
+      if(current.visibleIf) {
+        if(current.name === 'LED_CONTROL') {
+          ledFunction = current.visibleIf;
+        }
+      }
+    }
+
+    expect(ledFunction(settings)).toBeTruthy();
+  });
 });
