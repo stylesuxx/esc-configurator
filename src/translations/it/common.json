@@ -91,7 +91,7 @@
   "escTimingAdvance": "Avanzamento Timing [gradi]",
   "escPwmFrequency": "Frequenza PWM [kHz]",
   "escPwmFrequencyBluejay": "Frequenza PWM",
-  "escForceEdtArm": "Force EDT arm",
+  "escForceEdtArm": "Forza l'arm EDT",
   "escPwmThresholdLow": "Limite basso PWM",
   "escPwmThresholdHigh": "Limite alto PWM",
   "escMotorKv": "Motore [Kv]",
