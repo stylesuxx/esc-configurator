@@ -39,5 +39,5 @@
   "PWM_THRESHOLD_LOW": "Sotto questo punto dell'acceleratore, verrà ' usato un segnale PWM a 96kHz. Tra basso e alto, si userà un segnale PWM a 48kHz.",
   "PWM_THRESHOLD_HIGH": "Sopra questo punto dell' acceleratore, verrà utilizzato un segnale PWM a 24kHz.",
   "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
-  "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!"
+  "ESC_PROTOCOL": "Seleziona il protocollo ESC che vuoi usare. Per sicurezza, con un protocollo esc preselezionato, si prevengono falsi segnali dell'acceleratore!"
 }
