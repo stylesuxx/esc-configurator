@@ -268,7 +268,7 @@ class App extends Component {
       const esc = escs.individual.find((esc) => esc.index === target);
 
       // this will throw a exception when preflight fails
-      await this.serial.flashPreflight(esc, text, force, i);
+      await this.serial.flashPreflight(esc, text, force);
 
       const updateProgress = async(percent) => {
         if(esc.ref && esc.ref.current) {
@@ -661,8 +661,7 @@ class App extends Component {
       try {
         await this.flash(text, force, migrate);
       } catch(e) {
-        const error = JSON.parse(e.message);
-        console.error(error);
+        console.error(e);
         this.setActions({ isFlashing: false });
       }
     };
