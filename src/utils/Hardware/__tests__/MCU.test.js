@@ -15,8 +15,20 @@ describe('MCU', () => {
     expect(() => new MCU(null, null)).toThrow();
   });
 
-  it('should throw with unknown signature', () => {
-    expect(() => new MCU(MODES.SiLBLB, null)).toThrow();
+  it('should throw without signature (Arm)', () => {
+    expect(() => new MCU(MODES.ARMBLB)).toThrow();
+  });
+
+  it('should throw with unknown signature (Arm)', () => {
+    expect(() => new MCU(MODES.ARMBLB, 'asdf')).toThrow();
+  });
+
+  it('should throw without signature (SiLabs)', () => {
+    expect(() => new MCU(MODES.SiLBLB)).toThrow();
+  });
+
+  it('should throw with unknown signature (SiLabs)', () => {
+    expect(() => new MCU(MODES.SiLBLB, 'asdf')).toThrow();
   });
 
   it('should return details with BLHeli_S based MCU (BB2)', () => {
@@ -118,5 +130,16 @@ describe('MCU', () => {
     expect(eepromOffset).toEqual(63488);
     expect(pageSize).toEqual(1024);
     expect(name).toEqual("ARM64K");
+  });
+
+  it('should throw when fields are not available', () => {
+    let mcu = null;
+    expect(() => mcu = new MCU(MODES.ARMBLB, 0x3506)).not.toThrow();
+
+    expect(() => mcu.getBootloaderAddress()).toThrow();
+    expect(() => mcu.getLockByteAddress()).toThrow();
+
+    mcu.mcu.firmware_start = null;
+    expect(() => mcu.getFirmwareStart()).toThrow();
   });
 });
