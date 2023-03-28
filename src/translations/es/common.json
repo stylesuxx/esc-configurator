@@ -121,6 +121,7 @@
   "openPortSelection": "Abrir Selección de Puertos",
   "versionUnsupportedLine1": "{{name}} version '{{version}}' (Layout {{layout}}) no esta soportada.",
   "versionUnsupportedLine2": "Haznoslo saber abriendo un [problema](https://github.com/stylesuxx/esc-configurator).",
+  "versionUnsupportedLine3": "Only flash firmware if you are fully aware what you are doing.",
   "useDedicatedConfigurator": "{{name}} no soportado, por favor use un configurador dedicado.",
   "motorControl": "Control de Motor",
   "motorControlTextLine1": "Asegúrate de que tus ESC estén correctamente configurados para reflejar el estado de los deslizadores.",
