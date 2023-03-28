@@ -121,6 +121,7 @@
   "openPortSelection": "打开端口选择",
   "versionUnsupportedLine1": "{{name}} 版本 '{{version}}' (布局 {{layout}}) 尚未支持。",
   "versionUnsupportedLine2": "请打开一个[问题](https://github.com/stylesuxx/esc-configurator)来让我们知道。",
+  "versionUnsupportedLine3": "Only flash firmware if you are fully aware what you are doing.",
   "useDedicatedConfigurator": "{{name}} 不支持，请使用专用配置程序。",
   "motorControl": "电机控制",
   "motorControlTextLine1": "请确保您的ESC正确设置以反映滑块的状态。",
