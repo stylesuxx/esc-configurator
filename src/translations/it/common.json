@@ -121,6 +121,7 @@
   "openPortSelection": "Apri Selezione Porta",
   "versionUnsupportedLine1": "{{name}} versione '{{version}}' (Layout {{layout}}) non è ancora supportato.",
   "versionUnsupportedLine2": "Informaci aprendo un [issue](https://github.com/stylesuxx/esc-configurator).",
+  "versionUnsupportedLine3": "Only flash firmware if you are fully aware what you are doing.",
   "useDedicatedConfigurator": "{{name}} non supportato, utilizza il configuratore dedicato.",
   "motorControl": "Controllo Motori",
   "motorControlTextLine1": "Assicurarsi che i propri ESC siano configurati correttamente per riflettere lo stato dei cursori.",
