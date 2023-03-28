@@ -121,6 +121,7 @@
   "openPortSelection": "Açık Bağlantı Noktası Seçimi",
   "versionUnsupportedLine1": "{{name}} '{{version}}' versiyonu ({{layout}} yerleşimi) daha desteklenmemektedir.",
   "versionUnsupportedLine2": "Bir [konu](https://github.com/stylesuxx/esc-configurator) açarak bizi bilgilendirin.",
+  "versionUnsupportedLine3": "Only flash firmware if you are fully aware what you are doing.",
   "useDedicatedConfigurator": "{{name}} desteklenmemektedir, lütfen uygun aracı kullanın.",
   "motorControl": "Motor Kontrolü",
   "motorControlTextLine1": "ESC lerinizin sliderların konumunu yansıtcak şekilde ayarlandığından emin olun.",
