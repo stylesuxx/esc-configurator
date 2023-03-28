@@ -342,7 +342,7 @@ class FourWay {
     const info = await this.getInfo(esc.index);
 
     // if current firmware version is 1.93 or higher, we will only flash firmware matching MCU type and throw a error if fileName is different
-    if (info.isArm && info.meta.am32.fileName) {
+    if (info.isArm && info.meta.am32.fileName && !force) {
       const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
       const eepromOffset = mcu.getEepromOffset();
       const offset = 0x8000000;
@@ -355,18 +355,18 @@ class FourWay {
       );
 
       if (!findFileNameBlock) {
-        this.addLogMessage('flashingEscMissmatchFileNameMissing', { index: esc.index });
+        this.addLogMessage('flashingEscMissmatchFileNameMissing', { index: esc.index + 1 });
         throw new Error('File name not found in hex file, please check your hex file version!');
       }
 
       const hexFileName = new TextDecoder().decode(new Uint8Array(findFileNameBlock.data).slice(0, findFileNameBlock.data.indexOf(0x00)));
       if (!hexFileName.endsWith(info.meta.am32.mcuType)) {
-        this.addLogMessage('flashingEscMissmatchMcuType', { index: esc.index });
+        this.addLogMessage('flashingEscMissmatchMcuType', { index: esc.index + 1 });
         throw new Error('No matching MCU type, please check your hex file!');
       }
 
-      if (!force && hexFileName.slice(0, hexFileName.lastIndexOf('_')) !== info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_'))) {
-        this.addLogMessage('flashingEscMissmatchFileName', { index: esc.index });
+      if (hexFileName.slice(0, hexFileName.lastIndexOf('_')) !== info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_'))) {
+        this.addLogMessage('flashingEscMissmatchFileName', { index: esc.index + 1 });
         throw new Error('Different ESC firmware file, than in current ESC flash!');
       }
     }
@@ -394,8 +394,6 @@ class FourWay {
         console.log('Unknown interface', e);
         throw new UnknownPlatformError('Neither SiLabs nor Arm');
       }
-
-      console.log(mcu);
 
       let source = null;
       if (mcu.class === Silabs) {
@@ -426,18 +424,25 @@ class FourWay {
 
         const eepromOffset = mcu.getEepromOffset();
 
-        const fileNameRead = await this.read(eepromOffset - 32, 16);
-        const fileName = new TextDecoder().decode(fileNameRead.params.slice(0, fileNameRead.params.indexOf(0x00)));
+        //Attempt reading filename
+        try {
+          const fileNameRead = await this.read(eepromOffset - 32, 16);
+          const fileName = new TextDecoder().decode(fileNameRead.params.slice(0, fileNameRead.params.indexOf(0x00)));
 
-        if (/[A-Z0-9_]+/.test(fileName)) {
-          info.meta.am32.fileName = fileName;
-          info.meta.am32.mcuType = fileName.slice(fileName.lastIndexOf('_') + 1);
+          if (/[A-Z0-9_]+/.test(fileName)) {
+            info.meta.am32.fileName = fileName;
+            info.meta.am32.mcuType = fileName.slice(fileName.lastIndexOf('_') + 1);
+          }
+        } catch(e) {
+          // Failed reading filename - could be old version of AM32
         }
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
         info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+
+        console.log(info.meta);
 
         /**
          * If not AM32, then very likely BLHeli_32, even if not - we can't
@@ -446,7 +451,10 @@ class FourWay {
         if(!Object.values(am32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
           source = null;
 
-          info.settings.NAME = 'BLHeli_32';
+          info.settings.NAME = 'Unknown';
+
+          // TODO: Find out if there is a way to reliably identify BLHeli_32
+          // info.settings.NAME = 'BLHeli_32';
         }
       }
 

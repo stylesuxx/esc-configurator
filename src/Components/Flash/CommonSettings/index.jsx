@@ -95,6 +95,10 @@ function CommonSettings({
         <ReactMarkdown>
           {t('common:versionUnsupportedLine2')}
         </ReactMarkdown>
+
+        <ReactMarkdown>
+          {t('common:versionUnsupportedLine3')}
+        </ReactMarkdown>
       </>
     );
 
