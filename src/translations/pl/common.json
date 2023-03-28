@@ -121,6 +121,7 @@
   "openPortSelection": "Otwórz wybrany port",
   "versionUnsupportedLine1": "{{name}} wersja '{{version}}' (Layout {{layout}}) nie jest jeszcze obsługiwana.",
   "versionUnsupportedLine2": "Daj nam znać poprzez otwarcie [issue](https://github.com/stylesuxx/esc-configurator).",
+  "versionUnsupportedLine3": "Only flash firmware if you are fully aware what you are doing.",
   "useDedicatedConfigurator": "{{name}} nie jest obsługiwane, proszę użyć dedykowanego konfiguratora.",
   "motorControl": "Sterowanie silnikiem",
   "motorControlTextLine1": "Upewnij się, że Twoje ESC są poprawnie skonfigurowane, aby odzwierciedlić stan suwaków.",
