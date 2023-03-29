@@ -121,7 +121,7 @@
   "openPortSelection": "Portauswahl öffnen",
   "versionUnsupportedLine1": "{{name}} Version '{{version}}' (Layout {{layout}}) wird noch nicht unterstützt.",
   "versionUnsupportedLine2": "Lass es uns wissen indem du einen [Fehlerbericht erstellst](https://github.com/stylesuxx/esc-configurator).",
-  "versionUnsupportedLine3": "Only flash firmware if you are fully aware what you are doing.",
+  "versionUnsupportedLine3": "Flashe Firmware nur, wenn du dir vollkommen bewusst bist was du tust!",
   "useDedicatedConfigurator": "{{name}} wird nicht unterstützt, bitte verwende einen dedizierten Konfigurator.",
   "motorControl": "Motorsteuerung",
   "motorControlTextLine1": "Stelle sicher das deine ESCs entsprechend der Slider Positionen konfiguriert sind.",
