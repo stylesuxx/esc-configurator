@@ -39,5 +39,5 @@
   "PWM_THRESHOLD_LOW": "低於此油門將使用 96kHz PWM 信號。在低位與高位之間將使用 48kHz PWM 信號。",
   "PWM_THRESHOLD_HIGH": "高於此油門將使用 24kHz PWM 信號。",
   "FORCE_EDT_ARM": "只有在 EDT 握手成功之後才能解鎖。飛控固件必須支持此功能。",
-  "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!"
+  "ESC_PROTOCOL": "選擇您想要使用的 ESC 協議。這是為了安全，預先設置一個 ESC 協議可以拒絕錯誤的油門信號！"
 }
