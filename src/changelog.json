@@ -5,7 +5,7 @@
       "Enhancement: More melodies",
       "AM32: New layout support",
       "AM32: Read correct firmware name from hex file",
-      "Bluejay: Add 'Force EDT arm' setting",
+      "Bluejay: Add multiple new settings for v0.20.x",
       "Bluejay: Preparations for Bluejay versions without PWM selection on flash"
     ]
   },
