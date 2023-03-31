@@ -437,6 +437,12 @@ class App extends Component {
     this.handleReadEscs();
   };
 
+  handleReadEsc = async(target) => {
+    const settings = await this.serial.getFourWayInterfaceInfo(target);
+
+    return settings;
+  };
+
   handleReadEscs = async() => {
     const { escs } = this.state;
     const newEscs = { ...escs };
@@ -483,7 +489,7 @@ class App extends Component {
 
     for (let i = 0; i < connected; i += 1) {
       try {
-        const settings = await this.serial.getFourWayInterfaceInfo(i);
+        const settings = await this.handleReadEsc(i);
         settings.index = i;
         settings.ref = React.createRef();
         individual.push(settings);
@@ -569,9 +575,15 @@ class App extends Component {
       };
 
       try {
-        const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
-        individual[i].settingsArray = newSettingsArray;
-        individual[i].settings = mergedSettings;
+        await this.serial.writeSettings(target, esc, mergedSettings);
+
+        const newInfo = await this.handleReadEsc(target);
+        individual[i] = {
+          ...individual[i],
+          settingsArray: newInfo.settingsArray,
+          settings: newInfo.settings,
+          displayName: newInfo.displayName,
+        };
       } catch(e) {
         this.addLogMessage('writeSettingsFailed', { index: i + 1 });
         console.debug(e);
