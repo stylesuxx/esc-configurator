@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet.",
   "FORCE_EDT_ARM": "Nur nach erfolgreichem EDT Handshake armen. Die Flugcontroller Firmware muss diese Funktion unterstützen.",
   "ESC_PROTOCOL": "Wähle das ESC-Protokoll, das du verwenden möchtest. Dies dient der Sicherheit! Durch ein vorausgewähltes ESC-Protokoll, können falsche Signale für die Gasstellung verhindert werden!",
-  "ENABLE_RCPULSE_FILTER": "Filters RC pulses to compensate for bad tunes and prevents motors to get hot or potentially fry."
+  "ENABLE_RCPULSE_FILTER": "RC-Pulse vom Flugcontroller werden gefiltert, um die Motoren bei schlechtem Tuning, gegen Überhitzung oder ein Abfackeln zu schützen."
 }
