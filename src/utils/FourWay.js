@@ -994,28 +994,30 @@ class FourWay {
       if(pageSize === 512) {
         // Erase 0x0D and only write **FLASH*FAILED** as ESC NAME.
         // This will be overwritten in case of sussessfull flash.
+        console.debug("### Step 1: Erasing EEPROM and writing safeguards");
         await this.erasePage(0x0D);
         await this.writeEEpromSafeguard(escSettingArrayTmp, eepromOffset);
 
         // write `LJMP bootloader` to avoid bricking
+        console.debug("### Step 2: Writing bootloader failsafe (brick protection)");
         await this.writeBootoaderFailsafe(pageSize, bootloaderAddress);
 
         // Skip first two pages with bootloader failsafe
         // 0x02 - 0x0D: erase, write, verify
+        console.debug("### Step 3: Erase, write and verify Pages 0x02-0x0D");
         await this.erasePages(0x02, 0x0D);
         await this.writePages(0x02, 0x0D, pageSize, flash);
         await this.verifyPages(0x02, 0x0D, pageSize, flash);
 
-        // write & verify first page - has been erased when writing bootloader failsafe
-        await this.writePage(0x00, pageSize, flash);
-        await this.verifyPage(0x00, pageSize, flash);
-
-        // Second page: erase, write, verify
-        await this.erasePage(0x01);
-        await this.writePage(0x01, pageSize, flash);
-        await this.verifyPage(0x01, pageSize, flash);
+        // Override first two pages that had bootloader failsafe
+        // 0x00 - 0x02: erase, write, verify
+        console.debug("### Step 4: Erase, write and verify Pages 0x00-0x02");
+        await this.erasePages(0x00, 0x02);
+        await this.writePages(0x00, 0x02, pageSize, flash);
+        await this.verifyPages(0x00, 0x02, pageSize, flash);
 
         // 14th page: erase, write, verify (EEprom)
+        console.debug("### Step 5: Write EEPROM section");
         await this.erasePage(0x0D);
         await this.writePage(0x0D, pageSize, flash);
         await this.verifyPage(0x0D, pageSize, flash);
@@ -1028,25 +1030,32 @@ class FourWay {
          */
         const multiplier = 4;
 
+        // Erase 0x06 and only write **FLASH*FAILED** as ESC NAME.
+        // This will be overwritten in case of sussessfull flash.
+        console.debug("### Step 1: Erasing EEPROM and writing safeguards");
+        await this.erasePage(0x06 * multiplier);
+        await this.writeEEpromSafeguard(escSettingArrayTmp, eepromOffset);
+
         // write `LJMP bootloader` to avoid bricking
+        console.debug("### Step 2: Writing bootloader failsafe (brick protection)");
         await this.writeBootoaderFailsafe(pageSize, bootloaderAddress, multiplier);
 
         // Skipp first two pages with bootloader failsafe
         // 0x02 - 0x06: erase, write, verify
+        console.debug("### Step 3: Erase, write and verify Pages 0x02-0x0D");
         await this.erasePages(0x02 * multiplier, 0x06 * multiplier);
         await this.writePages(0x02, 0x06, pageSize, flash);
         await this.verifyPages(0x02, 0x06, pageSize, flash);
 
-        // write & verify first page - has been erased when writing bootloader failsafe
-        await this.writePage(0x00, pageSize, flash);
-        await this.verifyPage(0x00, pageSize, flash);
-
-        // Second page: erase, write, verify
-        await this.erasePage(0x01 * multiplier);
-        await this.writePage(0x01, pageSize, flash);
-        await this.verifyPage(0x01, pageSize, flash);
+        // Override first two pages that had bootloader failsafe
+        // 0x00 - 0x02: erase, write, verify
+        console.debug("### Step 4: Erase, write and verify Pages 0x00-0x02");
+        await this.erasePages(0x00, 0x02 * multiplier);
+        await this.writePages(0x00, 0x02, pageSize, flash);
+        await this.verifyPages(0x00, 0x02, pageSize, flash);
 
         // 6th page: erase, write, verify (EEprom)
+        console.debug("### Step 5: Write EEPROM section");
         await this.erasePage(0x06 * multiplier);
         await this.writePage(0x06, pageSize, flash);
         await this.verifyPage(0x06, pageSize, flash);

@@ -2,6 +2,8 @@
   {
     "title": "Unreleased",
     "items": [
+      "Bugfix: Read back settings after writing",
+      "Chore: Improved logging",
       "Enhancement: More melodies",
       "AM32: New layout support",
       "AM32: Read correct firmware name from hex file",
