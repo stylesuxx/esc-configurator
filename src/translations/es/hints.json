@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used.",
   "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
   "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!",
-  "ENABLE_RCPULSE_FILTER": "Filters RC pulses to compensate for bad tunes and prevents motors to get hot or potentially fry."
+  "ENABLE_RCPULSE_FILTER": "Filtra las pulsaciones de RC para compensar los malos ajustes y evita que los motores se calienten o se frían potencialmente."
 }
