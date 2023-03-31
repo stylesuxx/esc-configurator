@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Nad tímto plynem, bude signál PWM 24kHz.",
   "FORCE_EDT_ARM": "Odjištění pouze po úspěšném startu EDT. Firmware řídící jednotky musí tuto funkci podporovat.",
   "ESC_PROTOCOL": "Vyberte protokol ESC, který chcete použít. Je to v zájmu bezpečnosti, s předvoleným esc protokolem je zabráněno rozpoznání falešného plynu!",
-  "ENABLE_RCPULSE_FILTER": "Filters RC pulses to compensate for bad tunes and prevents motors to get hot or potentially fry."
+  "ENABLE_RCPULSE_FILTER": "Filtry RC pulzů kompenzují špatné naladění a zabraňují zahřátí nebo případnému usmažení motorů."
 }
