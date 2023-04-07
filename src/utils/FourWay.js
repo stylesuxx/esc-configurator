@@ -1153,11 +1153,15 @@ class FourWay {
          * The vector table will not change between firmware versions, but will be
          * different for different MCUs
          */
+        //call initFlash before call to read, or the read will read from the last (the 4th) esc
+        await this.initFlash(target);
         const newVectorStartBytes = flash.subarray(firmwareStart, firmwareStart + 4);
         const currentVectorStartBytes = (await this.read(firmwareStart, 4, 10)).params;
 
         if (!compare(newVectorStartBytes, currentVectorStartBytes)) {
-          throw new InvalidHexFileError('Invalid hex file');
+          if (!force) {
+            throw new InvalidHexFileError('Invalid hex file');
+          }
         }
 
         if (firmwareStart) {
