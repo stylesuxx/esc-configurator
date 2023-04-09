@@ -211,12 +211,10 @@ class Source {
 
   /**
    * Get if the layout selection shall be disabled
-   * 
-   * @param {object} flash 
-   * 
+   *
    * @returns {boolean}
    */
-  getDisabledLayoutSelection(flash) {
+  getDisabledLayoutSelection() {
     return false;
   }
 }

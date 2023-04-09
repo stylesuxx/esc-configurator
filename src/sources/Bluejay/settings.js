@@ -407,9 +407,12 @@ COMMON['207'] = {
       label: 'escForceEdtArm',
     },
     {
-      name: 'ENABLE_RCPULSE_FILTER',
-      type: 'bool',
-      label: 'escEnableRcpulseFilter',
+      name: 'RCPULSE_FILTER',
+      type: 'number',
+      min: 0,
+      max: 255,
+      step: 1,
+      label: 'escRcpulseFilter',
     },
   ],
 };
@@ -542,7 +545,7 @@ DEFAULTS['207'] = { // v0.20
   PWM_THRESHOLD_LOW: 100,
   PWM_THRESHOLD_HIGH: 150,
   FORCE_EDT_ARM: 0,
-  ENABLE_RCPULSE_FILTER: 1,
+  RCPULSE_FILTER: 0,
 };
 
 const settings = {
