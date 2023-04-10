@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "Legt die maximale Temperatur fest, welche der ESC erreichen darf bis dieser sich abschält.",
   "BEEP_STRENGTH": "Die Lautstärke der Startmelodie. Wenn diese zu hoch gesetzt wird besteht Gefahr die Motoren zu beschädigen.",
   "BEACON_STRENGTH": "Die Lautstärke des Beacon. Wenn diese zu hoch gesetzt wird besteht Gefahr die Motoren zu beschädigen.",
-  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
+  "STARTUP_POWER_MIN": "Minimale Leistung, welche für das Andrehen der Motoren verwendet wird. Erhöhe diese, wenn sich die Motoren nach dem Armen nicht zuverlässig drehen.",
   "DITHERING": "Erhöht die effektive PWM Auflösung auf 2000 Schritte. Es empfiehlt sich diese Einstellung aktiviert zu lassen - im Speziellen bei PWM Frequenzen über 24kHz.",
   "STARTUP_POWER_MAX": "Limitiert die Leistung wenn die Motoren gestartet oder die Drehrichtung geändert wird.",
   "RPM_POWER_SLOPE": "Beschränkt wie sehr die Leistung, basierend auf der momentanen Drehzahl, erhöht werden kann. Niedrige Werte verhindern Leistungsspitzen, können aber auch zu verminderter Beschleunigung und verminderter maximal Geschwindigkeit führen.",
@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet.",
   "FORCE_EDT_ARM": "Nur nach erfolgreichem EDT Handshake armen. Die Flugcontroller Firmware muss diese Funktion unterstützen.",
   "ESC_PROTOCOL": "Wähle das ESC-Protokoll, das du verwenden möchtest. Dies dient der Sicherheit! Durch ein vorausgewähltes ESC-Protokoll, können falsche Signale für die Gasstellung verhindert werden!",
-  "RCPULSE_FILTER": "Values above 0 will enable the RC pulse filter, the higher the number the more aggressive the filter. Only use to compensate for really bad tunes."
+  "RCPULSE_FILTER": "Werte über 0 aktivieren den RC Pulsfilter, je höher die Zahl, desto aggressiver der Filter. Verwende diesen nur, um schlecht getuntes Flugverhalten auszugleichen."
 }
