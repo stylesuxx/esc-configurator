@@ -91,7 +91,7 @@
   "escTimingAdvance": "Przesunięcie faz [degrees]",
   "escPwmFrequency": "Częstotliwość PWM [kHz]",
   "escPwmFrequencyBluejay": "Częstotliwość PWM",
-  "escForceEdtArm": "Force EDT arm",
+  "escForceEdtArm": "Wymuszone uzbrajanie EDT",
   "escRcpulseFilter": "Filtr impulsowy RC",
   "escPwmThresholdLow": "Niski próg PWM",
   "escPwmThresholdHigh": "Wysoki próg PWM",
