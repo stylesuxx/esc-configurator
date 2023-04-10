@@ -3,6 +3,7 @@
     "title": "Unreleased",
     "items": [
       "Bugfix: Read back settings after writing",
+      "Bugfix: Check 3D mode when stopping motors on disconnect",
       "Chore: Improved logging",
       "Enhancement: More melodies",
       "AM32: New layout support",
