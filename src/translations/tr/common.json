@@ -92,7 +92,7 @@
   "escPwmFrequency": "PWM Frekansı [kHz]",
   "escPwmFrequencyBluejay": "PWM Frekansı",
   "escForceEdtArm": "Force EDT arm",
-  "escEnableRcpulseFilter": "Enable RC pulse filter",
+  "escRcpulseFilter": "RC pulse filter",
   "escPwmThresholdLow": "PWM alt eşik değeri",
   "escPwmThresholdHigh": "PWM üst eşik değeri",
   "escMotorKv": "Motor [Kv]",
