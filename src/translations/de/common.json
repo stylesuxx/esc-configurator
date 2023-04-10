@@ -92,7 +92,7 @@
   "escPwmFrequency": "PWM-Frequenz [kHz]",
   "escPwmFrequencyBluejay": "PWM-Frequenz",
   "escForceEdtArm": "EDT-Armen erzwingen",
-  "escEnableRcpulseFilter": "RC-Pulsfilter aktivieren",
+  "escRcpulseFilter": "RC pulse filter",
   "escPwmThresholdLow": "PWM unterer Schwellenwert",
   "escPwmThresholdHigh": "PWM oberer Schwellenwert",
   "escMotorKv": "Motor [Kv]",
