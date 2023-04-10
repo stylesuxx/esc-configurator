@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "À quelle température l'ESC doit s'éteindre.",
   "BEEP_STRENGTH": "Volume des bip de démarrage. Un réglage trop intense peut endommager les moteurs.",
   "BEACON_STRENGTH": "Volume des bip de balise. Un réglage trop intense peut endommager les moteurs.",
-  "STARTUP_POWER_MIN": "Puissance minimal appliquée lors du démarrage des moteurs. Augmentez si les moteurs ne sont pas en mesure de démarrer avec peu de gaz.",
+  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
   "DITHERING": "Augmente la résolution efficace PWM à 2000 étapes. Il est recommandé de le laissé activé pour une fréquence PWM au-dessus de 24kHz.",
   "STARTUP_POWER_MAX": "Limite la puissance lors du démarrage des moteurs ou du changement de direction.",
   "RPM_POWER_SLOPE": "Limite l'ajout de puissance en fonction de la vitesse du moteur. Des valeurs plus basses vont éviter les piques d'électricité mais vont réduire l'accélération et la vitesse maximum atteignable.",
@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used.",
   "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
   "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!",
-  "ENABLE_RCPULSE_FILTER": "Filters RC pulses to compensate for bad tunes and prevents motors to get hot or potentially fry."
+  "RCPULSE_FILTER": "Values above 0 will enable the RC pulse filter, the higher the number the more aggressive the filter. Only use to compensate for really bad tunes."
 }
