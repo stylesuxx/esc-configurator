@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "Hangi sıcaklık derecesinde ESC kapanacak.",
   "BEEP_STRENGTH": "Başlangıç beep ses seviyesi. Bunu çok yükseğe ayarlamak motorlara zarar verebilir.",
   "BEACON_STRENGTH": "Beacon ses seviyesi. Bunu çok yükseğe ayarlamak motorlara zarar verebilir.",
-  "STARTUP_POWER_MIN": "Motorlar başlatılırken uygulanacak en az güç. Düşük gaz miktarıyla motorlar dönmüyorsa bu ayarı attırın.",
+  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
   "DITHERING": "Efektif Pwm sinyalini 2000 basamağa çıkartır. Bu ayarı 24kHz üstünde bırakmanız tavsiye edilir.",
   "STARTUP_POWER_MAX": "Motorlar başlarken ya da yön değiştirirken gücü sınırlandırır.",
   "RPM_POWER_SLOPE": "Motor dönerken uygulanabilecek gücü sınırlandırır. Düşük değerler ani güç sıçramalarını engeller ancak aynı zamanda maximum hızı ve yavaşlamayı azaltır.",
@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used.",
   "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
   "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!",
-  "ENABLE_RCPULSE_FILTER": "Filters RC pulses to compensate for bad tunes and prevents motors to get hot or potentially fry."
+  "RCPULSE_FILTER": "Values above 0 will enable the RC pulse filter, the higher the number the more aggressive the filter. Only use to compensate for really bad tunes."
 }
