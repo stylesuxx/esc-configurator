@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "Při jaké teplotě se ESC vypne.",
   "BEEP_STRENGTH": "Hlasitost spouštěcích pípnutí. Příliš vysoké nastavení může poškodit motory.",
   "BEACON_STRENGTH": "Hlasitost majáku. Příliš vysoké nastavení může poškodit motory.",
-  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
+  "STARTUP_POWER_MIN": "Nejmenší množství energie použité při spouštění motorů. Zvýšit, pokud motory nejsou schopny se roztočit s nízkým vstupem plynu.",
   "DITHERING": "Zvyšuje efektivní rozlišení pwm na 2000 kroků. Doporučuje se ponechat toto s frekvencí pwm nad 24kHz.",
   "STARTUP_POWER_MAX": "Omezuje výkon při spouštění motorů nebo při zpětném chodu.",
   "RPM_POWER_SLOPE": "Omezuje, jak moc lze zvýšit výkon podle toho, jak rychle se motor otáčí. Nižší hodnoty zabrání výkonovým špičkám, ale mohou také snížit zrychlení a maximální dosažitelnou rychlost.",
@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Nad tímto plynem, bude signál PWM 24kHz.",
   "FORCE_EDT_ARM": "Odjištění pouze po úspěšném startu EDT. Firmware řídící jednotky musí tuto funkci podporovat.",
   "ESC_PROTOCOL": "Vyberte protokol ESC, který chcete použít. Je to v zájmu bezpečnosti, s předvoleným esc protokolem je zabráněno rozpoznání falešného plynu!",
-  "RCPULSE_FILTER": "Values above 0 will enable the RC pulse filter, the higher the number the more aggressive the filter. Only use to compensate for really bad tunes."
+  "RCPULSE_FILTER": "Hodnoty nad 0 umožní filtr impulzů RC, čím větší je filtr, tím agresivnější. Použití pouze pro kompenzaci opravdu špatných nastavení."
 }
