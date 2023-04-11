@@ -92,7 +92,7 @@
   "escPwmFrequency": "Frekvence PWM [kHz]",
   "escPwmFrequencyBluejay": "Frekvence PWM",
   "escForceEdtArm": "Vynutit EDT odjištění",
-  "escRcpulseFilter": "RC pulse filter",
+  "escRcpulseFilter": "RC pulzní filtr",
   "escPwmThresholdLow": "PWM nejnižší limit",
   "escPwmThresholdHigh": "PWM nejvyšší limit",
   "escMotorKv": "Motor [Kv]",
