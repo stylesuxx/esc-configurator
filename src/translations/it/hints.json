@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "Sopra questo punto dell' acceleratore, verrà utilizzato un segnale PWM a 24kHz.",
   "FORCE_EDT_ARM": "L' arm avviene solo dopo un riconoscimento EDT con successo. Il firmware del controllore di volo deve supportare questa funzione.",
   "ESC_PROTOCOL": "Seleziona il protocollo ESC che vuoi usare. Per sicurezza, con un protocollo esc preselezionato, si prevengono falsi segnali dell'acceleratore!",
-  "RCPULSE_FILTER": "Values above 0 will enable the RC pulse filter, the higher the number the more aggressive the filter. Only use to compensate for really bad tunes."
+  "RCPULSE_FILTER": "I valori sopra 0 attiveranno il filtro impulso RC, maggiore è il numero più aggressivo il filtro. Usare solo per compensare una messa a punto errata."
 }
