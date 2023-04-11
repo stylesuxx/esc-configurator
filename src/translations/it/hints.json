@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "A quale temperatura l'ESC deve spegnersi.",
   "BEEP_STRENGTH": "Il volume dei beep all'avvio. Impostandolo troppo alto potrebbe danneggiare i motori.",
   "BEACON_STRENGTH": "Il volume del beacon. Impostandolo troppo alto potrebbe danneggiare i motori.",
-  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
+  "STARTUP_POWER_MIN": "La quantità minima di potenza applicata all'avvio dei motori. Aumentare se i motori non sono in grado di girare dopo l'armamento.",
   "DITHERING": "Aumenta l'effettiva risoluzione dei pwm con passi di 2000. Si raccomanda d'inserirlo con una frequenza pwm oltre i 24Hz.",
   "STARTUP_POWER_MAX": "Limita la potenza all'avvio dei motori o cambiando direzione.",
   "RPM_POWER_SLOPE": "Limita la quantità di potenza che può essere aumentata in base alla velocità di rotazione del motore. Valori più bassi eviteranno picchi di potenza ma possono anche diminuire l'accelerazione e la velocità massima raggiungibile.",
