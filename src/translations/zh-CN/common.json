@@ -92,7 +92,7 @@
   "escPwmFrequency": "PWM 频率 [kHz]",
   "escPwmFrequencyBluejay": "PWM 频率",
   "escForceEdtArm": "强制 EDT 解锁",
-  "escRcpulseFilter": "RC pulse filter",
+  "escRcpulseFilter": "RC 脉冲滤波器",
   "escPwmThresholdLow": "PWM 低位阈值",
   "escPwmThresholdHigh": "PWM 高位阈值",
   "escMotorKv": "电机 [Kv]",
