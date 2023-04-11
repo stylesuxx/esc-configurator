@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "当温度高于多少时 ESC 停止工作。",
   "BEEP_STRENGTH": "上电时电调音乐的音量。此数值设置过高会伤害电机。",
   "BEACON_STRENGTH": "信标的音量。将此值设置得过高可能会损害电机。",
-  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
+  "STARTUP_POWER_MIN": "启动电机时施加的最小功率。如果解锁后电机无法转动，请提高此值。",
   "DITHERING": "将有效 PWM 分辨率提升为 2000 步。通常建议保持开启，尤其是在 PWM 频率高于 24kHz 时。",
   "STARTUP_POWER_MAX": "限制启动电机或反转方向时的功率。",
   "RPM_POWER_SLOPE": "根据电机的转速快慢来限制功率的增加量。较低的值可以避免功率尖峰，但同时也会降低加速速度和最大可达速度。",
@@ -40,5 +40,5 @@
   "PWM_THRESHOLD_HIGH": "高于此油门将使用 24kHz PWM 信号。",
   "FORCE_EDT_ARM": "只有在 EDT 握手成功之后才能解锁。飞控固件必须支持此功能。",
   "ESC_PROTOCOL": "选择您想要使用的 ESC 协议。这是为了安全，预先设置一个 ESC 协议可以拒绝错误的油门信号！",
-  "RCPULSE_FILTER": "Values above 0 will enable the RC pulse filter, the higher the number the more aggressive the filter. Only use to compensate for really bad tunes."
+  "RCPULSE_FILTER": "当该值大于 0 时将会启用 RC 脉冲滤波器，值越高滤波越激进。仅适用于补偿很烂的参数。"
 }
