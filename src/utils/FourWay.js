@@ -1146,20 +1146,20 @@ class FourWay {
         const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
         const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
-        /**
-         * Compare the first 4 bytes of the vector table of the firmware to be flashed
-         * against the currently flashed firmware.
-         *
-         * The vector table will not change between firmware versions, but will be
-         * different for different MCUs
-         */
-        //call initFlash before call to read, or the read will read from the last (the 4th) esc
-        await this.initFlash(target);
-        const newVectorStartBytes = flash.subarray(firmwareStart, firmwareStart + 4);
-        const currentVectorStartBytes = (await this.read(firmwareStart, 4, 10)).params;
+        if (!force) {
+          /**
+           * Compare the first 4 bytes of the vector table of the firmware to be flashed
+           * against the currently flashed firmware.
+           *
+           * The vector table will not change between firmware versions, but will be
+           * different for different MCUs
+           */
+          //call initFlash before call to read, or the read will read from the last (the 4th) esc
+          await this.initFlash(target);
+          const newVectorStartBytes = flash.subarray(firmwareStart, firmwareStart + 4);
+          const currentVectorStartBytes = (await this.read(firmwareStart, 4, 10)).params;
 
-        if (!compare(newVectorStartBytes, currentVectorStartBytes)) {
-          if (!force) {
+          if (!compare(newVectorStartBytes, currentVectorStartBytes)) {
             throw new InvalidHexFileError('Invalid hex file');
           }
         }
