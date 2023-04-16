@@ -180,5 +180,6 @@
   "mistaggedLine4": "**Jeśli nie rozumiesz zagrożeń związanych z postępowaniem, nie wahaj się [dołącz do nas na discord](https://discord.gg/QvSS5dk23C).**",
   "mistaggedTagged": "Oznaczono",
   "mistaggedDetected": "Wykryto",
-  "update": "Aktualizacja dostępna! Aby zaktualizować aplikację, odśwież ją lub uruchom ponownie."
+  "update": "Aktualizacja dostępna! Aby zaktualizować aplikację, odśwież ją lub uruchom ponownie.",
+  "resettingDevice": "Resetting device..."
 }
