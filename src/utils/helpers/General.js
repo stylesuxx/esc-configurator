@@ -112,10 +112,10 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
  * Check if the given layout matches any of the available layouts from any of
  * the sources
  *
- * @param {object} layout
+ * @param {string} layout
  * @returns {boolean}
  */
-const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
+const isValidLayout = (layout) => sources.some((source) => source.isValidLayout(layout));
 
 /**
  * Return a list of matching sources for a given signature

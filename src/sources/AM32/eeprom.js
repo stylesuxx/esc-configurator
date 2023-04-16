@@ -3,7 +3,7 @@ const BOOT_LOADER_PINS = {
   PB4: 0x14,
 };
 
-const RESET_DELAY_MS = 2500;
+const RESET_DELAY_MS = 5000;
 const LAYOUT_SIZE = 0xB0;
 
 const BOOT_LOADER_VERSION_OFFSET = 0x00C0;

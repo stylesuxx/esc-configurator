@@ -4,6 +4,7 @@ import {
   BufferLengthMismatchError,
   EscInitError,
   InvalidHexFileError,
+  LayoutMismatchError,
   MessageNotOkError,
   SettingsVerificationError,
   TooManyParametersError,
@@ -340,9 +341,10 @@ class FourWay {
    */
   async flashPreflight(esc, hex, force) {
     const info = await this.getInfo(esc.index);
+    const meta = info.meta;
 
     // if current firmware version is 1.93 or higher, we will only flash firmware matching MCU type and throw a error if fileName is different
-    if (info.isArm && info.meta.am32.fileName && !force) {
+    if (info.isArm && meta.am32.fileName && !force) {
       const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
       const eepromOffset = mcu.getEepromOffset();
       const offset = 0x8000000;
@@ -356,18 +358,20 @@ class FourWay {
 
       if (!findFileNameBlock) {
         this.addLogMessage('flashingEscMissmatchFileNameMissing', { index: esc.index + 1 });
-        throw new Error('File name not found in hex file, please check your hex file version!');
+        throw new InvalidHexFileError('File name not found in hex file.');
       }
 
       const hexFileName = new TextDecoder().decode(new Uint8Array(findFileNameBlock.data).slice(0, findFileNameBlock.data.indexOf(0x00)));
-      if (!hexFileName.endsWith(info.meta.am32.mcuType)) {
+      if (!hexFileName.endsWith(meta.am32.mcuType)) {
         this.addLogMessage('flashingEscMissmatchMcuType', { index: esc.index + 1 });
-        throw new Error('No matching MCU type, please check your hex file!');
+        throw new InvalidHexFileError('Invalid MCU type in hex file.');
       }
 
-      if (hexFileName.slice(0, hexFileName.lastIndexOf('_')) !== info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_'))) {
+      const currentFileName = hexFileName.slice(0, hexFileName.lastIndexOf('_'));
+      const expectedFileName = meta.am32.fileName.slice(0, meta.am32.fileName.lastIndexOf('_'));
+      if ( currentFileName !== expectedFileName) {
         this.addLogMessage('flashingEscMissmatchFileName', { index: esc.index + 1 });
-        throw new Error('Different ESC firmware file, than in current ESC flash!');
+        throw new LayoutMismatchError(expectedFileName, currentFileName);
       }
     }
   }
@@ -441,8 +445,6 @@ class FourWay {
         info.layoutSize = source.getLayoutSize();
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
         info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
-
-        console.log(info.meta);
 
         /**
          * If not AM32, then very likely BLHeli_32, even if not - we can't

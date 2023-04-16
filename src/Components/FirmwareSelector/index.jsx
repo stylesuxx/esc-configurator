@@ -90,6 +90,17 @@ function FirmwareSelector({
     preselect();
   }
 
+  useEffect(() => {
+    // If layou selection is disabled, automatically set the 1st layout to be
+    // selected.
+    if(layoutSelectionDisabled) {
+      if(options.escs.length > 0) {
+        setEscLayout(options.escs[0].name);
+        setPreselected(true);
+      }
+    }
+  }, [options, layoutSelectionDisabled]);
+
   // Update firmware options when firmware has changed
   useEffect(() => {
     async function updateOptions() {
@@ -131,7 +142,6 @@ function FirmwareSelector({
 
         const source = sources.find((s) => s.getName() === selection.firmware);
         const layoutSelectionDisabled = source.getDisabledLayoutSelection(esc);
-        setLayoutSelectionDisabled(layoutSelectionDisabled);
 
         const currentOptions = {
           firmwares: firmwareOptions,
@@ -146,6 +156,7 @@ function FirmwareSelector({
         };
 
         setOptions(currentOptions);
+        setLayoutSelectionDisabled(layoutSelectionDisabled);
       }
     }
 
@@ -232,6 +243,7 @@ function FirmwareSelector({
       settings: esc.settings,
       url: selection.url,
       version: selection.version,
+      esc: esc,
     });
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);

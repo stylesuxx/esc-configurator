@@ -217,6 +217,16 @@ class Source {
   getDisabledLayoutSelection() {
     return false;
   }
+
+  /**
+   * Check if the provided layout is valid
+   *
+   * @param {string} name
+   * @returns {boolean}
+   */
+  isValidLayout(name) {
+    return name in this.getEscLayouts();
+  }
 }
 
 export default Source;
