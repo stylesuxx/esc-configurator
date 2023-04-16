@@ -93,6 +93,11 @@ const Esc = forwardRef(({
               value={progress}
             />
 
+            {progress === 100 &&
+              <div className="progress-text">
+                {t('resettingDevice')}
+              </div>}
+
             <button
               disabled={!canFlash}
               onClick={handleFirmwareFlash}
