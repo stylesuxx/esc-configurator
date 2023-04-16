@@ -180,5 +180,6 @@
   "mistaggedLine4": "**Pokud nerozumíte rizikům spojeným s postupem, neváhejte se připojit k nám na [discord](https://discord.gg/QvSS5dk23C).**",
   "mistaggedTagged": "Označení",
   "mistaggedDetected": "Zjištěno",
-  "update": "Je dostupná aktualizace! Chcete-li aplikaci aktualizovat, obnovte ji nebo restartujte."
+  "update": "Je dostupná aktualizace! Chcete-li aplikaci aktualizovat, obnovte ji nebo restartujte.",
+  "resettingDevice": "Resetting device..."
 }
