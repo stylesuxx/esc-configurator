@@ -180,5 +180,6 @@
   "mistaggedLine4": "**If you do not understand the risks involved in proceeding, do not hesitate to [join us on discord](https://discord.gg/QvSS5dk23C).**",
   "mistaggedTagged": "Tagged",
   "mistaggedDetected": "Detected",
-  "update": "Update available! To update the app, refresh or restart it."
+  "update": "Update available! To update the app, refresh or restart it.",
+  "resettingDevice": "Resetting device..."
 }
