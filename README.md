@@ -93,11 +93,30 @@ To continue the legacy of everyone who was mentioned as author or contributor in
 #### Authors & Contributors for esc-configurator
 * Mathias Rasmussen aka. mathiasvr - primary motivator and contributor for [esc-configurator](https://github.com/stylesuxx/esc-configurator)
 * Chris Landa aka. stylesuxx - primary author and maintainer of [esc-configurator](https://github.com/stylesuxx/esc-configurator)
-* Georg Oberleitner aka. Noctaro - German translation & Logo
+* Georg Oberleitner aka. Noctaro - Logo
+
+##### Translations
+Thank you to everyone who contributed their time and added [translations via crowdin](https://crowdin.com/project/esc-configuratorcom):
+
 * Hugo Chiang aka. DusKing1 - Chinese translation
 * Asier Ruiz aka. Asizon - Spanish translation
 * djtms - Polish translation
 * Mat Cron - Italian translation
 * psicho100pro - Czech translation
+* Noctaro - German translation
+
+##### Startup Melodies
+A big shout out goes to all the talented people submitting startup melodies:
+
+* Airwolf359
+* arwebSE
+* cypher1591
+* GKLove
+* kilozebra
+* Lordnibbler
+* Noctaro
+* Ryano12
+* Shadow0624
+* Thorondor
 
 If you feel that your name should be mentioned in the authors section, please do not hesitate to submit a pull request.
