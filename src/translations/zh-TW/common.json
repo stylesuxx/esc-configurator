@@ -180,5 +180,6 @@
   "mistaggedLine4": "**如果您不明白此步驟中包含的風險，請不要猶豫，立刻[加入我們的 Discord 服務器](https://discord.gg/QvSS5dk23C)。**",
   "mistaggedTagged": "被標記",
   "mistaggedDetected": "檢測到",
-  "update": "有更新可用！要更新應用程式，請刷新或重新啓動。"
+  "update": "有更新可用！要更新應用程式，請刷新或重新啓動。",
+  "resettingDevice": "Resetting device..."
 }
