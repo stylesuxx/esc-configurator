@@ -12,6 +12,7 @@ import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
 import settings from '../../settings.json';
+import packages from '../../../package.json';
 import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
@@ -25,10 +26,8 @@ import {
 } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
 
-const {
-  availableLanguages,
-  version,
-} = settings;
+const { availableLanguages } = settings;
+const { version } = packages;
 
 class App extends Component {
   constructor() {
