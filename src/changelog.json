@@ -5,9 +5,11 @@
       "Bugfix: Read back settings after writing",
       "Bugfix: Check 3D mode when stopping motors on disconnect",
       "Chore: Improved logging",
+      "Chore: Read version from package.json",
       "Enhancement: More melodies",
       "AM32: New layout support",
-      "AM32: Read correct firmware name from hex file",
+      "AM32: Improved firmware detection",
+      "AM32: Increased reset timeout after flashing",
       "Bluejay: Add multiple new settings for v0.20.x",
       "Bluejay: Preparations for Bluejay versions without PWM selection on flash"
     ]
