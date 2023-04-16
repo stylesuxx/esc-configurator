@@ -56,9 +56,22 @@ class AM32Source extends GithubSource {
   }
 
   getFirmwareUrl({
-    escKey, version, url,
-  }, detected = null) {
-    const name = detected ? escKey + '_' + detected : this.escs.layouts[escKey].fileName;
+    escKey,
+    version,
+    url,
+    esc,
+  }) {
+    /**
+     * AM32 Versions 1.94 and up have the file name baked into the firmware
+     * if it is available, we use it, otherwise we fall back to the legacy
+     * file name detection.
+     */
+    let name = null;
+    if(esc.meta.am32) {
+      name = esc.meta.am32.fileName;
+    } else {
+      name = this.escs.layouts[escKey].fileName;
+    }
 
     version = version.replace(/^v/, '');
 

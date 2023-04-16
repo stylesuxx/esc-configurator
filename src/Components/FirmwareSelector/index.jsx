@@ -232,6 +232,7 @@ function FirmwareSelector({
       settings: esc.settings,
       url: selection.url,
       version: selection.version,
+      esc: esc,
     });
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
