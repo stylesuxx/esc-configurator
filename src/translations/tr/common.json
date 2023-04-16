@@ -180,5 +180,6 @@
   "mistaggedLine4": "**Eğer onayladığınıda oluşabilecek riskleri anlayamıyorsanız, [discord da bize katılmaya](https://discord.gg/QvSS5dk23C) çekinmeyin.**",
   "mistaggedTagged": "İşaretleme",
   "mistaggedDetected": "Bulunan",
-  "update": "Güncelleme mevcut! Uygulamayı güncellemek için yenileyin veya yeniden başlatın."
+  "update": "Güncelleme mevcut! Uygulamayı güncellemek için yenileyin veya yeniden başlatın.",
+  "resettingDevice": "Resetting device..."
 }
