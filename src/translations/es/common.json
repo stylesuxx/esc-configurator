@@ -180,5 +180,6 @@
   "mistaggedLine4": "**Si no comprende los riesgos que implica continuar, no dude en [unirse a nosotros en Discord](https://discord.gg/QvSS5dk23C).**",
   "mistaggedTagged": "Etiquetado",
   "mistaggedDetected": "Detectado",
-  "update": "¡Actualización disponible! Para actualizar la aplicación, refresque o reinicie."
+  "update": "¡Actualización disponible! Para actualizar la aplicación, refresque o reinicie.",
+  "resettingDevice": "Resetting device..."
 }
