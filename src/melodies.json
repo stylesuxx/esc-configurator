@@ -126,6 +126,12 @@
     ]
   },
   {
+    "name": "Devil's Swing",
+    "tracks": [
+      "Melody:b=125,o=5,d=16:a#6,p,f#6,p,32f#6,32p,32f#6,32p,f#6,d#6,f#6,g6,p,g#6,8p,f#6,d#6,g#6,p,f#6,p,f#6,p,f#6,d#6,32f#6,32p,f#6,p,f#6,8p,f#6,d#6,f#6,p,f#6,p,32f#6,32p,32f#6,32p,f#6,d#6,f#6,g#6,p,a6,8p,a6,p,a6,p,a6,p,a6,p,g#6,p,a6,g#6,p,f#6"
+    ]
+  },
+  {
     "name": "DMX - X Gon' Give It To Ya",
     "tracks": [
       "GON_GIVE_IT_TO_YA:d=2,o=2,b=384:2a#4,16p,2a#4,16p,4a#4,32p,4a#4,32p,4a#4,32p,4a#4,32p,2g#4,16p,2g#4,16p,4g#4,32p,4g#4,32p,4g#4,32p,4g#4,32p,2f#4,16p,2f#4,16p,4f#4,32p,4f#4,32p,4f#4,32p,4f#4,32p,2d#4,16p,2d#4,16p,4d#4,32p,4d#4,32p,4d#4,32p,4d#4,32p",
@@ -235,12 +241,24 @@
     ]
   },
   {
+    "name": "Initial D - Rage Your Dream",
+    "tracks": [
+      "Melody:b=120,o=5,d=8:g,a#,c6,g4,c6,d#6,c6,g#4,d#,d#6,d6,a#4,a#5,g5,a#5,g4,g#5,a#5,c6,a#4,d#5,c6c,f5,c4,d#5,f5,g5,a#4,d6,16a#5,32a#5,32p,a#5,d5"
+    ]
+  },
+  {
     "name": "Kino - A Pack of Cigarettes",
     "tracks": [
         "Kino1:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
         "Kino2:b=128,o=7,d=8:e4,e3,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4,4e4,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4",
         "Kino3:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
         "Kino4:b=128,o=7,d=8:e4,e3,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4,4e4,4a3,p,a3,4c4,p,c4,4d4,p,d4,4e4"
+    ]
+  },
+  {
+    "name": "Kirby - Gourmet Race",
+    "tracks": [
+      "Melody:b=176,o=5,d=16:g5,d#5,c5,g#4,g4,g#4,c5,d#5,f5,d5,a#4,a4,f4,a4,a#4,d5,d#5,c5,g#4,g4,d#4,f4,g4,c5,f5,d5,a#4,g4,f4,g4,a#4,d5,d#5,c5,g#4,g4,d#5,c5,g#4,g4,d5,a#4,a4,f4,d5,a#4,a4,f4,c5,a4,f4,d4,c5,a4,f4,d4,g5,p,8p,g5"
     ]
   },
   {
@@ -420,6 +438,12 @@
     ]
   },
   {
+    "name": "Ryuichi Sakamoto - Merry Christmas, Mr. Lawrence",
+    "tracks": [
+        "Melody:b=96,o=5,d=8:d#5,f5,d#5,a#4,2d#5,d#5,p,d#5,f5,d#5,f5,g#5,f5,d#5,f5,d#5,a#4,2c#5,c#5,p,4c#6,c6,g#5,4f5,d#5,f5,d#5,a#4,2d#5,d#5,p,d#5,f5,d#5,f5,g#5,f5,d#5,f5,d#5,c#5,2a#4"
+    ]
+  },
+  {
     "name": "Salt-N-Pepa - Push it!",
     "tracks": [
       "PushIt:d=8,o=5,b=165:a,p,e,a,p,e,p,g,p,e,p,e,b,c6,b,g,a,p,e,a,p,e,p,g,p,e,p,e,b,c6,b,g,a,p,e6,d6,p,c6,p,b,p,g,p,g,b,c6,b,g,a"
@@ -565,6 +589,15 @@
     "tracks": [
       "le_unama_m:b=150,o=5,d=1:8h4,8c,8e,8g,8h,4a.,2e.,8e,8p,8h,8a,8h,8a,4h,4a,2e.,8e,8p,8h,8a,8h,8a,8h,4a.,2e.,8e,8p,16h,16p,16h,16p,16h,16p,8c6,16h,16p,8h,4a,2e,4e.",
       "le_unama_b:b=150,o=4,d=1:2p,8p,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8c5,8e,8c5,8e,8c5,8e,4c5,2p.,8f3,8c,8a,8c,8a,8c,8a,8c,8g3,8d,8h,8d,8h,8d,8h,8d,8a3,8e,8a,8e,8a,8e,8a,8e,4a"
+    ]
+  },
+  {
+    "name": "Undertale OST - Bonetrousle",
+    "tracks": [
+      "Melody:b=150,o=5,d=16:c5,p,g5,p,c6,p,d#6,p,8p,c6,p,8p,b5,p,c6,p,d6,p,8p,c6,p,g5,p,d#5,p,c5,p,d5,p,d#5,p,f#5,p,8p,g5,p,d#5,p,c5,p,g4,p,b4,p,c5,p,d5,p,8p,c5",
+      "Melody:b=150,o=5,d=16:c5,p,g5,p,c6,p,d#6,p,8p,c6,p,8p,b5,p,c6,p,d6,p,8p,c6,p,g5,p,d#5,p,c5,p,d5,p,d#5,p,f#5,p,8p,g5,p,d#5,p,c5,p,g4,p,b4,p,c5,p,d5,p,8p,c5",
+      "Melody:b=150,o=5,d=16:8p,d#4,p,8p,f#4,p,8p,d#4,p,8p,d4,p,8p,d#4,p,8p,f#4,p,8p,d#4,p,8p,d4,p,8p,d#4,p,8p,f#4,p,8p,d#4,p,8p,d4,p,8p,d#4,p,8p,f#4",
+      "Melody:b=150,o=5,d=16:d#3,p,g4,p,d#3,p,a4,p,d#3,p,g4,p,d#3,p,f#4,p,d#3,p,g4,p,d#3,p,a4,p,d#3,p,g4,p,d#3,p,f#4,p,d#3,p,g4,p,d#3,p,a4,p,d#3,p,g4,p,d#3,p,f#4,p,d#3,p,g4,p,d#3,p,a4"
     ]
   },
   {
