@@ -132,6 +132,24 @@
     ]
   },
   {
+    "name": "Final Fantasy 7 - Victory Fanfare",
+    "tracks": [
+      "FF7Victory1:b=240,o=4,d=16:c5,p,c5,p,c5,p,4c5.,4g#.,4a#.,8c5,8p,8a#,1c5,8p",
+      "FF7Victory2:b=240,o=4,d=16:a,p,g,p,f,p,4e.,4c#.,4d.,8c,8p,8c,1d#,8p",
+      "FF7Victory3:b=240,o=4,d=16:c5,p,c5,p,c5,p,4c5.,4g#.,4a#.,8c5,8p,8a#,1f,8p",
+      "FF7Victory4:b=240,o=4,d=8:c,e,g,c5,g,e,c#,d#,g#,a#,d5,f5,f,g#,c5,c#5,f5,g#5,c6,g#5,f5,c5,g#,f"
+    ]
+  },
+  {
+    "name": "Final Fantasy 8 - Laguna's Theme",
+    "tracks": [
+      "FF8Laguna1:d=16,o=4,b=140:d,p,f,p,a,p,d,f,p,a,p,d,8e,8g,d,p,f,p,a,p,d,f,p,a,p,d,8c5,8b,d,p,f,p,a,p,d,f,p,a,p,d,8e,8g,d,p,f,p,a,p,d,f,p,a,p,d,8c5,8b,4d,4a#3.",
+      "FF8Laguna2:d=16,o=4,b=140:2c5,4c5.,b,a,2b,4b.,a,g,2a,4a.,f,a,2g,4g.,f,e,4f,4d.",
+      "FF8Laguna3:d=16,o=5,b=140:2c6,4c6.,b,a,2b,4b.,a,g,2a,4a.,f,a,2g,4g.,f,e,4f,4d.",
+      "FF8Laguna4:d=16,o=4,b=140:a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,2c,8c"
+    ]
+  },
+  {
     "name": "Guns n Roses - Sweet Child O Mine",
     "tracks": [
       "SweetChi:d=4,o=5,b=125:8f6,8g#,8d#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#,8d#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#"
@@ -241,6 +259,24 @@
     ]
   },
   {
+    "name": "Pacman Theme 2",
+    "tracks": [
+      "pacman1:d=32,o=5,b=112:c#,p,c#6,p,g#,p,f,p,c#6,g#,16p,16f.,p,d,p,d6,p,a,p,f#,p,d6,a,16p,16f#.,p,c#,p,c#6,p,g#,p,f,p,c#6,g#,16p,16f.,p,e,f,f#,p,f#,g,g#,p,g#,a,a#,p,16c#6",
+      "pacman2:d=16,o=4,b=112:c#,8p,g#,c#,8p,g#,d,8p,a,d,8p,a,c#,8p,g#,c#,8p,32g#.,64p,g#,p,a#,p,c5,p,c#5",
+      "pacman3:d=32,o=6,b=112:c#,p,c#7,p,g#,p,f,p,c#7,g#,16p,16f.,p,d,p,d7,p,a,p,f#,p,d7,a,16p,16f#.,p,c#,p,c#7,p,g#,p,f,p,c#7,g#,16p,16f.,p,e,f,f#,p,f#,g,g#,p,g#,a,a#,p,16c#7",
+      "pacman4:d=32,o=5,b=112:c#,p,c#6,p,g#,p,f,p,c#6,g#,16p,16f.,p,d,p,d6,p,a,p,f#,p,d6,a,16p,16f#.,p,c#,p,c#6,p,g#,p,f,p,c#6,g#,16p,16f.,p,e,f,f#,p,f#,g,g#,p,g#,a,a#,p,16c#6"
+    ]
+  },
+  {
+    "name": "Perfume - Glitter",
+    "tracks": [
+      "glitter1:d=16,o=5,b=140:g#4,c#,8d#,c#,b4,f#,8c#,d#,b4,c#,8g#4,f#,d#,c#,b4,8d#,g#4,c#,d#,8b4,f#,c#,b4,8g#",
+      "glitter2:d=16,o=6,b=140:g#5,c#,8d#,c#,b5,f#,8c#,d#,b5,c#,8g#5,f#,d#,c#,b5,8d#,g#5,c#,d#,8b5,f#,c#,b5,8g#",
+      "glitter3:d=16,o=5,b=140:g#4,c#,8d#,c#,b4,f#,8c#,d#,b4,c#,8g#4,f#,d#,c#,b4,8d#,g#4,c#,d#,8b4,f#,c#,b4,8g#",
+      "glitter4:d=16,o=6,b=140:g#5,c#,8d#,c#,b5,f#,8c#,d#,b5,c#,8g#5,f#,d#,c#,b5,8d#,g#5,c#,d#,8b5,f#,c#,b5,8g#"
+    ]
+  },
+  {
     "name": "Revolutionary Etude - Chopin",
     "tracks": [
       "rev_etude_0:o=5,b=160,d=16:8p,g#6,g6,f6,d6,d#6,d6,b,g,g#,g,f,d,d#,d,b4,g4,g#4,g4,f4,d4,d#4,d4,c4,g3,c4,g3,c4,g3,c4,g3,1d6,2p.,8g#.,g,1f6",
@@ -265,6 +301,15 @@
       "PkmnOpening2:d=8,o=7,b=198:16a3,16p,16a3,16p,4d4,16a3,16p,16a3,16p,4d#4,16a3,16p,16a3,16p,4f4,16a3,16p,16a3,16p,4g4,1f#4",
       "PkmnOpening3:d=8,o=7,b=198:16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a#4,16d4,16p,16d4,16p,4a#4,1a4",
       "PkmnOpening4:d=8,o=7,b=198:16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a#4,16d4,16p,16d4,16p,4c5,16d4,16p,16d4,16p,4c#5,1d5"
+    ]
+  },
+  {
+    "name": "Porter Robinson and Madeon - Shelter",
+    "tracks": [
+      "shelter1:d=16,o=5,b=120:8c.,p,a,8g,4c,8p.,8e,8c.,p,a,8g,4d,p,8e,8g,8g.,p,a,8g,4c",
+      "shelter2:d=2,o=4,b=120:1f,4e.,8g,g,4e.,16a,4a",
+      "shelter3:d=2,o=4,b=120:1c5,4c5.,8b,b,4b.,16c5,4c5",
+      "shelter4:d=16,o=4,b=120:8c.,p,a,8g,4c,8p.,8e,8c.,p,a,8g,4d,p,8e,8g,8g.,p,a,8g,4c"
     ]
   },
   {
