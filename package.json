@@ -1,6 +1,6 @@
 {
   "name": "esc-configurator",
-  "version": "0.29.0",
+  "version": "0.30.0-dev",
   "private": false,
   "license": "AGPL-3.0",
   "dependencies": {
@@ -26,6 +26,7 @@
     "react-toastify": "^8.1.0",
     "react-tooltip": "^4.2.21",
     "scheduler": "^0.20.2",
+    "semver": "^7.3.8",
     "sleep": "^6.3.0",
     "ua-parser-js": "^1.0.2",
     "web-serial-polyfill": "stylesuxx/web-serial-polyfill#temporary-fix",

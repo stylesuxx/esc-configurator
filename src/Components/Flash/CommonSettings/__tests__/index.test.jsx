@@ -48,6 +48,7 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
       />
     );
 
@@ -61,6 +62,7 @@ describe('CommonSettings', () => {
       MAIN_REVISION: 1,
       NAME: 'FW name',
       SUB_REVISION: 100,
+      _PPM_MIN_THROTTLE: 1200,
     };
 
     const escs = [
@@ -147,6 +149,7 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
       />
     );
 
@@ -166,6 +169,7 @@ describe('CommonSettings', () => {
       SUB_REVISION: 100,
       STARTUP_BEEP: 0,
       MOTOR_DIRECTION: 1,
+      _PPM_MIN_THROTTLE: 1200,
     };
 
     const esc = {
@@ -287,6 +291,7 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
       />
     );
 
@@ -307,6 +312,7 @@ describe('CommonSettings', () => {
       MAIN_REVISION: 1,
       NAME: 'FW name',
       SUB_REVISION: 100,
+      _PPM_MIN_THROTTLE: 1200,
     };
 
     const escs = [
@@ -393,6 +399,7 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
       />
     );
 
@@ -414,6 +421,7 @@ describe('CommonSettings', () => {
       MAIN_REVISION: 1,
       NAME: 'FW name',
       SUB_REVISION: 100,
+      _PPM_MIN_THROTTLE: 1200,
     };
 
     const escs = [
@@ -500,6 +508,7 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
       />
     );
 
@@ -512,6 +521,8 @@ describe('CommonSettings', () => {
       MAIN_REVISION: 0,
       NAME: 'FW name',
       SUB_REVISION: 100,
+      _PPM_MIN_THROTTLE: 1200,
+      _PPM_CENTER_THROTTLE: 1010,
     };
 
     const esc = {
@@ -609,6 +620,7 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
       />
     );
 
@@ -631,6 +643,8 @@ describe('CommonSettings', () => {
       SUB_REVISION: 100,
       STARTUP_BEEP: 1,
       MOTOR_DIRECTION: 1,
+      _PPM_MIN_THROTTLE: 1200,
+      _PPM_CENTER_THROTTLE: 1010,
     };
 
     const esc = {
@@ -756,6 +770,160 @@ describe('CommonSettings', () => {
         index={0}
         onFlash={onFlash}
         onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
+      />
+    );
+
+    expect(screen.getByText(/escMotorDirectionOverride/i)).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole(/checkbox/i));
+    expect(onSettingsUpdate).toHaveBeenCalled();
+
+    fireEvent.change(screen.getByRole(/combobox/i), {
+      taget: {
+        value: 3,
+        name: 'MOTOR_DIRECTION',
+      },
+    });
+  });
+
+  it('should handle sanitizing a value', () => {
+    const availableSettings = {
+      LAYOUT_REVISION: 201,
+      MAIN_REVISION: 0,
+      NAME: 'FW name',
+      SUB_REVISION: 100,
+      STARTUP_BEEP: 1,
+      MOTOR_DIRECTION: 1,
+      _PPM_MIN_THROTTLE: 1200,
+      _PPM_CENTER_THROTTLE: 1010,
+    };
+
+    const esc = {
+      meta: { available: true },
+      settings: {
+        MODE: 0,
+        MOTOR_DIRECTION: 0,
+        STARTUP_BEEP: 1,
+      },
+      make: 'make 1234',
+      settingsDescriptions: {
+        overrides: {
+          '0.100': [
+            {
+              name: 'MOTOR_DIRECTION',
+              type: 'enum',
+              label: 'escMotorDirectionOverride',
+              options: [
+                {
+                  value: '1',
+                  label: 'Normal',
+                },
+                {
+                  value: '2',
+                  label: 'Reversed',
+                },
+                {
+                  value: '3',
+                  label: 'Bidirectional',
+                },
+                {
+                  value: '4',
+                  label: 'Bidirectional Reversed',
+                },
+              ],
+            },
+          ],
+        },
+        base: [
+          {
+            name: 'MOTOR_DIRECTION',
+            type: 'enum',
+            label: 'escMotorDirection',
+            options: [
+              {
+                value: '1',
+                label: 'Normal',
+              },
+              {
+                value: '2',
+                label: 'Reversed',
+              },
+              {
+                value: '3',
+                label: 'Bidirectional',
+              },
+              {
+                value: '4',
+                label: 'Bidirectional Reversed',
+              },
+            ],
+          },
+          {
+            name: '_PPM_MIN_THROTTLE',
+            type: 'number',
+            min: 1000,
+            max: 1500,
+            step: 4,
+            label: 'escPPMMinThrottle',
+            offset: 1000,
+            factor: 4,
+            suffix: ' μs',
+          },
+          {
+            name: 'STARTUP_BEEP',
+            type: 'bool',
+            label: 'escStartupBeep',
+          },
+          {
+            name: 'IVALID',
+            type: 'IVALID',
+            label: 'invalid',
+          },
+          {
+            name: '_PPM_CENTER_THROTTLE',
+            type: 'number',
+            min: 1000,
+            max: 2020,
+            step: 4,
+            label: 'escPPMCenterThrottle',
+            offset: 1000,
+            factor: 4,
+            suffix: ' μs',
+            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
+            sanitize: (value, availableSettings) => 1010,
+          },
+        ],
+      },
+      individualSettings: {
+        MAIN_REVISION: 0,
+        SUB_REVISION: 201,
+        NAME: 'Bluejay (Beta)',
+      },
+    };
+
+    const escs = [];
+
+    for(let i = 0; i < 4; i += 1) {
+      const current = JSON.parse(JSON.stringify(esc));
+      if(i === 3) {
+        current.settings.MOTOR_DIRECTION = 1;
+      }
+      escs.push(current);
+    }
+
+    const onFlash = jest.fn();
+    const onSettingsUpdate = jest.fn();
+
+    render(
+      <CustomSettings
+        availableSettings={availableSettings}
+        directInput={false}
+        escs={escs}
+        index={0}
+        onFlash={onFlash}
+        onSettingsUpdate={onSettingsUpdate}
+        unsupported={false}
       />
     );
 
@@ -778,6 +946,7 @@ describe('CommonSettings', () => {
       MAIN_REVISION: 1,
       NAME: 'JESC',
       SUB_REVISION: 100,
+      _PPM_MIN_THROTTLE: 1200,
     };
 
     const escs = [

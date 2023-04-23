@@ -208,6 +208,25 @@ class Source {
   getLayout() {
     return this.eeprom.LAYOUT;
   }
+
+  /**
+   * Get if the layout selection shall be disabled
+   *
+   * @returns {boolean}
+   */
+  getDisabledLayoutSelection() {
+    return false;
+  }
+
+  /**
+   * Check if the provided layout is valid
+   *
+   * @param {string} name
+   * @returns {boolean}
+   */
+  isValidLayout(name) {
+    return name in this.getEscLayouts();
+  }
 }
 
 export default Source;

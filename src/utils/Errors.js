@@ -98,12 +98,20 @@ class MessageNotOkError extends Error {
   }
 }
 
+class LayoutMismatchError extends Error {
+  constructor(expected, received) {
+    super(`Expected layout: '${expected}', got: '${received}'`);
+    this.name = 'LayoutMismatchError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   ConversionError,
   EscInitError,
   EscLockedError,
   InvalidHexFileError,
+  LayoutMismatchError,
   MethodNotImplementedError,
   MissingParametersError,
   SettingsVerificationError,

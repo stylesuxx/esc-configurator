@@ -401,6 +401,19 @@ COMMON['207'] = {
       label: 'escPwmThresholdHigh',
       visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 192),
     },
+    {
+      name: 'FORCE_EDT_ARM',
+      type: 'bool',
+      label: 'escForceEdtArm',
+    },
+    {
+      name: 'RCPULSE_FILTER',
+      type: 'number',
+      min: 0,
+      max: 255,
+      step: 1,
+      label: 'escRcpulseFilter',
+    },
   ],
 };
 
@@ -531,6 +544,8 @@ DEFAULTS['207'] = { // v0.20
   PWM_FREQUENCY: 24,
   PWM_THRESHOLD_LOW: 100,
   PWM_THRESHOLD_HIGH: 150,
+  FORCE_EDT_ARM: 0,
+  RCPULSE_FILTER: 0,
 };
 
 const settings = {

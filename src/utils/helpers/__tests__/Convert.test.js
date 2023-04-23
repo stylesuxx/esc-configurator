@@ -12,7 +12,7 @@ test('settingsUint8Array', () => {
 
   const settingsObject = Convert.arrayToSettingsObject(settingsArray, layout);
   const keys = Object.keys(settingsObject);
-  expect(keys.length).toEqual(48);
+  expect(keys.length).toEqual(50);
 
   layout.MAIN_REVISION.size = 0;
   expect(() => Convert.arrayToSettingsObject(settingsArray, layout)).toThrow();

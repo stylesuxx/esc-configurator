@@ -207,6 +207,20 @@
       "FF8Laguna2:d=16,o=4,b=140:2c5,4c5.,b,a,2b,4b.,a,g,2a,4a.,f,a,2g,4g.,f,e,4f,4d.",
       "FF8Laguna3:d=16,o=5,b=140:2c6,4c6.,b,a,2b,4b.,a,g,2a,4a.,f,a,2g,4g.,f,e,4f,4d.",
       "FF8Laguna4:d=16,o=4,b=140:a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,2c,8c"
+  },
+  {
+    "name": "Fireflies - Owl City",
+    "tracks": [
+      "Fireflies1:d=8,o=5,b=180:a#3,a#4,d6,a#3,a#4,a#5,p,d#,d#4,a#,f,d#,f,a#,p,d#,g#3,c,a#,c,d#,d#4,g#3,p,a#,c,a#,c4,a#,d#,f,a#3,a#4,d6,d,f4,a#,p,d#,d#4,a#4,f,d#,g#,g,d#,a#4,g#3,c,d#4,g#3,a#4,p,d#4,c,g#3,c,a#4,c4,d#,f",
+      "Fireflies2:d=8,o=4,b=180:4p,a#3,f.,16p,4f,d#,4f,4d#,4a#3,4p,4p,a#3,c.,16p,4c,a#3,4c,4d#,4f.,4p,4g,4f,d#,a#3.,16p,16a#3.,32p,4a#3,f,4d#,4c,1p,2p",
+      "Fireflies3:d=8,o=4,b=180:4p,a#3,f.,16p,4f,d#,4f,4d#,4a#3,4p,4p,a#3,c.,16p,4c,a#3,4c,4d#,4f.,4p,4g,4f,d#,a#3.,16p,16a#3.,32p,4a#3,f,4d#,4c,1p,2p",
+      "Fireflies4:d=8,o=4,b=180:4p,a#3,f.,16p,4f,d#,4f,4d#,4a#3,4p,4p,a#3,c.,16p,4c,a#3,4c,4d#,4f.,4p,4g,4f,d#,a#3.,16p,16a#3.,32p,4a#3,f,4d#,4c,1p,2p"
+    ]
+  },
+  {
+    "name": "Hit Em Up - 2Pac",
+    "tracks": [
+      "2pac_hit_em_up:d=4,o=5,b=200:a,8p,a,8g,a,p,a,c6,a,d6,8p,d6,8c6,d6,2p,8p,8d6,8d#6,e6,8p,e6,8d6,e6,p,c6,8b,8g,e,a.,a,8g,a"
     ]
   },
   {

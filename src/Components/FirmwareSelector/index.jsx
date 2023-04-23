@@ -35,7 +35,7 @@ function FirmwareSelector({
   const {
     escs,
     versions,
-    pwm,
+    getPwm,
   } = configs;
 
   const [preselected, setPreselected] = useState(false);
@@ -57,6 +57,8 @@ function FirmwareSelector({
     url: null,
     pwm: null,
   });
+
+  const [layoutSelectionDisabled, setLayoutSelectionDisabled] = useState(false);
 
   const file = useRef(null);
 
@@ -88,6 +90,17 @@ function FirmwareSelector({
     preselect();
   }
 
+  useEffect(() => {
+    // If layou selection is disabled, automatically set the 1st layout to be
+    // selected.
+    if(layoutSelectionDisabled) {
+      if(options.escs.length > 0) {
+        setEscLayout(options.escs[0].name);
+        setPreselected(true);
+      }
+    }
+  }, [options, layoutSelectionDisabled]);
+
   // Update firmware options when firmware has changed
   useEffect(() => {
     async function updateOptions() {
@@ -112,13 +125,6 @@ function FirmwareSelector({
           name: version.name,
         }));
 
-        const frequencies = pwm[selection.firmware];
-        const frequencyOptions = frequencies.map((item) => ({
-          key: item,
-          value: item,
-          name: item,
-        }));
-
         const firmwareOptions = validFirmware.map((key) => ({
           key,
           value: key,
@@ -134,20 +140,28 @@ function FirmwareSelector({
           });
         }
 
+        const source = sources.find((s) => s.getName() === selection.firmware);
+        const layoutSelectionDisabled = source.getDisabledLayoutSelection(esc);
+
         const currentOptions = {
           firmwares: firmwareOptions,
           versions: versionOptions,
-          frequencies: frequencyOptions,
-          escs: escOptions,
+          frequencies: [],
+          escs: layoutSelectionDisabled ? [{
+            key: 0,
+            value: 0,
+            name: esc.settings.NAME,
+          }] : escOptions,
           modes: modeOptions,
         };
 
         setOptions(currentOptions);
+        setLayoutSelectionDisabled(layoutSelectionDisabled);
       }
     }
 
     updateOptions();
-  }, [selection.firmware, escs, pwm, showUnstable, validFirmware, versions]);
+  }, [selection.firmware, escs, showUnstable, validFirmware, versions, esc]);
 
   const clickFile = useCallback(() => {
     file.current.click();
@@ -183,12 +197,27 @@ function FirmwareSelector({
     const selected = e.target.options.selectedIndex;
     const selectedOption = e.target.options[selected];
 
+    const firmwareName = selection.firmware;
+    const firmwareVersion = options.versions[selected - 1].key;
+
+    const frequencies = getPwm[firmwareName](firmwareVersion);
+    const frequencyOptions = frequencies.map((item) => ({
+      key: item,
+      value: item,
+      name: item,
+    }));
+
+    setOptions({
+      ...options,
+      frequencies: frequencyOptions,
+    });
+
     setSelection({
       ...selection,
       url: e.target.value,
       version: selectedOption && options.versions[selected - 1].key,
     });
-  }, [options, selection]);
+  }, [getPwm, options, selection]);
 
   const handleForceChange = useCallback((e) => {
     setForce(e.target.checked);
@@ -214,6 +243,7 @@ function FirmwareSelector({
       settings: esc.settings,
       url: selection.url,
       version: selection.version,
+      esc: esc,
     });
 
     onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
@@ -300,6 +330,7 @@ function FirmwareSelector({
             {selection.firmware &&
               <>
                 <LabeledSelect
+                  disabled={layoutSelectionDisabled}
                   firstLabel={t('selectEsc')}
                   label="ESC"
                   onChange={handleEscChange}
@@ -391,14 +422,17 @@ FirmwareSelector.defaultProps = {
 FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
+    getPwm: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
-    pwm: PropTypes.shape().isRequired,
   }).isRequired,
   esc: PropTypes.shape({
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,
     meta: PropTypes.shape({ signature: PropTypes.number }),
-    settings: PropTypes.shape({ LAYOUT: PropTypes.string }),
+    settings: PropTypes.shape({
+      LAYOUT: PropTypes.string,
+      NAME: PropTypes.string,
+    }),
   }),
   onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
