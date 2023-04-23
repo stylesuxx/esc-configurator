@@ -57,7 +57,6 @@ describe('Invalid Source', () => {
     const invalidGithubSource = new GithubSource('invalid', 'invalid', 'invalid', 'invalid');
 
     const versions = await invalidGithubSource.getRemoteVersionsList();
-    console.log(versions);
 
     expect(versions).toStrictEqual([]);
   });
@@ -277,5 +276,16 @@ describe('BLHeli_S Source', () => {
   it('should return layout', async() => {
     const layout = await blheliSSource.getLayout();
     expect(layout && typeof layout === "object").toBeTruthy();
+  });
+
+  it('should return disabled layout selection', async() => {
+    const disabled = await blheliSSource.getDisabledLayoutSelection();
+    expect(disabled).toBeFalsy();
+  });
+
+  it('should be possible to set cache skip', async() => {
+    expect(blheliSSource.skipCache).toBeFalsy();
+    blheliSSource.setSkipCache(true);
+    expect(blheliSSource.skipCache).toBeTruthy();
   });
 });

@@ -4,6 +4,7 @@ import {
   BufferLengthMismatchError,
   EscInitError,
   InvalidHexFileError,
+  LayoutMismatchError,
   MessageNotOkError,
   SettingsVerificationError,
   TooManyParametersError,
@@ -330,6 +331,52 @@ class FourWay {
   }
 
   /**
+   * Flash preflight for making sure that the provided hex works with the current esc hardware
+   *
+   * @param {object} esc
+   * @param {object} hex
+   * @param {boolean} force
+   *
+   * @throws {Error} if the firmware file does not match the MCU type or filename
+   */
+  async flashPreflight(esc, hex, force) {
+    const info = await this.getInfo(esc.index);
+    const meta = info.meta;
+
+    // if current firmware version is 1.93 or higher, we will only flash firmware matching MCU type and throw a error if fileName is different
+    if (info.isArm && meta.am32.fileName && !force) {
+      const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
+      const eepromOffset = mcu.getEepromOffset();
+      const offset = 0x8000000;
+      const fileNamePlaceOffset = 30;
+
+      const fileFlash = Flash.parseHex(hex);
+      const findFileNameBlock = fileFlash.data.find((d) =>
+        (eepromOffset - fileNamePlaceOffset) > (d.address - offset) &&
+        (eepromOffset - fileNamePlaceOffset) < (d.address - offset + d.bytes)
+      );
+
+      if (!findFileNameBlock) {
+        this.addLogMessage('flashingEscMissmatchFileNameMissing', { index: esc.index + 1 });
+        throw new InvalidHexFileError('File name not found in hex file.');
+      }
+
+      const hexFileName = new TextDecoder().decode(new Uint8Array(findFileNameBlock.data).slice(0, findFileNameBlock.data.indexOf(0x00)));
+      if (!hexFileName.endsWith(meta.am32.mcuType)) {
+        this.addLogMessage('flashingEscMissmatchMcuType', { index: esc.index + 1 });
+        throw new InvalidHexFileError('Invalid MCU type in hex file.');
+      }
+
+      const currentFileName = hexFileName.slice(0, hexFileName.lastIndexOf('_'));
+      const expectedFileName = meta.am32.fileName.slice(0, meta.am32.fileName.lastIndexOf('_'));
+      if ( currentFileName !== expectedFileName) {
+        this.addLogMessage('flashingEscMissmatchFileName', { index: esc.index + 1 });
+        throw new LayoutMismatchError(expectedFileName, currentFileName);
+      }
+    }
+  }
+
+  /**
    * Get information of a certain ESC
    *
    * @param {number} target
@@ -340,8 +387,6 @@ class FourWay {
     const info = Flash.getInfo(flash);
 
     try {
-      console.log(info);
-
       let mcu = null;
       try {
         mcu = new MCU(info.meta.interfaceMode, info.meta.signature);
@@ -353,8 +398,6 @@ class FourWay {
         console.log('Unknown interface', e);
         throw new UnknownPlatformError('Neither SiLabs nor Arm');
       }
-
-      console.log(mcu);
 
       let source = null;
       if (mcu.class === Silabs) {
@@ -385,6 +428,19 @@ class FourWay {
 
         const eepromOffset = mcu.getEepromOffset();
 
+        //Attempt reading filename
+        try {
+          const fileNameRead = await this.read(eepromOffset - 32, 16);
+          const fileName = new TextDecoder().decode(fileNameRead.params.slice(0, fileNameRead.params.indexOf(0x00)));
+
+          if (/[A-Z0-9_]+/.test(fileName)) {
+            info.meta.am32.fileName = fileName;
+            info.meta.am32.mcuType = fileName.slice(fileName.lastIndexOf('_') + 1);
+          }
+        } catch(e) {
+          // Failed reading filename - could be old version of AM32
+        }
+
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
         info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
@@ -397,7 +453,10 @@ class FourWay {
         if(!Object.values(am32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
           source = null;
 
-          info.settings.NAME = 'BLHeli_32';
+          info.settings.NAME = 'Unknown';
+
+          // TODO: Find out if there is a way to reliably identify BLHeli_32
+          // info.settings.NAME = 'BLHeli_32';
         }
       }
 
@@ -616,7 +675,7 @@ class FourWay {
 
           info.settings.LAYOUT = info.settings.NAME;
 
-          info.displayName = am32Source.buildDisplayName(info, info.settings.NAME);
+          info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = am32Source.getName();
         }
       }
@@ -937,28 +996,30 @@ class FourWay {
       if(pageSize === 512) {
         // Erase 0x0D and only write **FLASH*FAILED** as ESC NAME.
         // This will be overwritten in case of sussessfull flash.
+        console.debug("### Step 1: Erasing EEPROM and writing safeguards");
         await this.erasePage(0x0D);
         await this.writeEEpromSafeguard(escSettingArrayTmp, eepromOffset);
 
         // write `LJMP bootloader` to avoid bricking
+        console.debug("### Step 2: Writing bootloader failsafe (brick protection)");
         await this.writeBootoaderFailsafe(pageSize, bootloaderAddress);
 
         // Skip first two pages with bootloader failsafe
         // 0x02 - 0x0D: erase, write, verify
+        console.debug("### Step 3: Erase, write and verify Pages 0x02-0x0D");
         await this.erasePages(0x02, 0x0D);
         await this.writePages(0x02, 0x0D, pageSize, flash);
         await this.verifyPages(0x02, 0x0D, pageSize, flash);
 
-        // write & verify first page - has been erased when writing bootloader failsafe
-        await this.writePage(0x00, pageSize, flash);
-        await this.verifyPage(0x00, pageSize, flash);
-
-        // Second page: erase, write, verify
-        await this.erasePage(0x01);
-        await this.writePage(0x01, pageSize, flash);
-        await this.verifyPage(0x01, pageSize, flash);
+        // Override first two pages that had bootloader failsafe
+        // 0x00 - 0x02: erase, write, verify
+        console.debug("### Step 4: Erase, write and verify Pages 0x00-0x02");
+        await this.erasePages(0x00, 0x02);
+        await this.writePages(0x00, 0x02, pageSize, flash);
+        await this.verifyPages(0x00, 0x02, pageSize, flash);
 
         // 14th page: erase, write, verify (EEprom)
+        console.debug("### Step 5: Write EEPROM section");
         await this.erasePage(0x0D);
         await this.writePage(0x0D, pageSize, flash);
         await this.verifyPage(0x0D, pageSize, flash);
@@ -971,25 +1032,32 @@ class FourWay {
          */
         const multiplier = 4;
 
+        // Erase 0x06 and only write **FLASH*FAILED** as ESC NAME.
+        // This will be overwritten in case of sussessfull flash.
+        console.debug("### Step 1: Erasing EEPROM and writing safeguards");
+        await this.erasePage(0x06 * multiplier);
+        await this.writeEEpromSafeguard(escSettingArrayTmp, eepromOffset);
+
         // write `LJMP bootloader` to avoid bricking
+        console.debug("### Step 2: Writing bootloader failsafe (brick protection)");
         await this.writeBootoaderFailsafe(pageSize, bootloaderAddress, multiplier);
 
         // Skipp first two pages with bootloader failsafe
         // 0x02 - 0x06: erase, write, verify
+        console.debug("### Step 3: Erase, write and verify Pages 0x02-0x0D");
         await this.erasePages(0x02 * multiplier, 0x06 * multiplier);
         await this.writePages(0x02, 0x06, pageSize, flash);
         await this.verifyPages(0x02, 0x06, pageSize, flash);
 
-        // write & verify first page - has been erased when writing bootloader failsafe
-        await this.writePage(0x00, pageSize, flash);
-        await this.verifyPage(0x00, pageSize, flash);
-
-        // Second page: erase, write, verify
-        await this.erasePage(0x01 * multiplier);
-        await this.writePage(0x01, pageSize, flash);
-        await this.verifyPage(0x01, pageSize, flash);
+        // Override first two pages that had bootloader failsafe
+        // 0x00 - 0x02: erase, write, verify
+        console.debug("### Step 4: Erase, write and verify Pages 0x00-0x02");
+        await this.erasePages(0x00, 0x02 * multiplier);
+        await this.writePages(0x00, 0x02, pageSize, flash);
+        await this.verifyPages(0x00, 0x02, pageSize, flash);
 
         // 6th page: erase, write, verify (EEprom)
+        console.debug("### Step 5: Write EEPROM section");
         await this.erasePage(0x06 * multiplier);
         await this.writePage(0x06, pageSize, flash);
         await this.verifyPage(0x06, pageSize, flash);

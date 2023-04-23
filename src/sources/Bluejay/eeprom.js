@@ -174,6 +174,14 @@ const LAYOUT = {
     offset: 0x2B,
     size: 1,
   },
+  FORCE_EDT_ARM: {
+    offset: 0x2C,
+    size: 1,
+  },
+  ENABLE_RCPULSE_FILTER: {
+    offset: 0x2D,
+    size: 1,
+  },
 
   LAYOUT: {
     offset: 0x40,

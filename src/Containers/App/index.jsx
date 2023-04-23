@@ -12,6 +12,7 @@ import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
 import settings from '../../settings.json';
+import packages from '../../../package.json';
 import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
@@ -25,10 +26,8 @@ import {
 } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
 
-const {
-  availableLanguages,
-  version,
-} = settings;
+const { availableLanguages } = settings;
+const { version } = packages;
 
 class App extends Component {
   constructor() {
@@ -73,6 +72,7 @@ class App extends Component {
         versions: {},
         escs: {},
         pwm: {},
+        getPwm: {},
       },
       actions: {
         isReading: false,
@@ -85,10 +85,10 @@ class App extends Component {
       language: loadLanguage(),
       melodies: {
         escs: [
-          "LeaveHerAlone:d=8,o=5,b=100:4g#6,4c#6,c6,c#6,d#6,4c#.6,p,b,b,d#6,f#6,4e.6,p,b,f#6,g#6,f#6,4e.6,p,g#6,f#6,e6,c#6,c6,4g#6,4c#6,c6,c#6,d#6,16e6,16d#6,4c#6,p,16b,16b,b,d#6,f#6,4a6,4g#6,4f#6,e6,p,e6,4g#6,4g#6,f#6,e6,4c#6",
-          "Melody:o=3,b=900,d=4:32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.,32c2#.,32d5#.",
-          "YouKnowIt:d=4,o=5,b=125:32p,2a#,2f,p,8a#,8c6,8d6,8d#6,2f6,2p,f6,f6,8f#6,8g#6,2a#6,2p,a#6,8a#6,8p,8g#6,8f#6,g#6,8f#6,2f6,2p,2f6,d#6,8d#6,8f6,2f#6,2p,f6,d#6,c#6,8c#6,8d#6,2f6,2p,d#6,c#6,c6,8c6,8d6,2e6,2p,2g6,1f6",
-          "GuessIt:d=4,o=5,b=125:32p,16g#,16g#,16g#,16g#,8g#,8a#,8g#,f,16c#,16d#,16c#,8d#,8d#,8c#,2f,8g#,8g#,8g#,8a#,8g#,f,c#6,8c#6,8c6,8g#,8a#,16c6,16a#,g#",
+          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
+          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
+          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
+          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
         ],
         show: false,
         dummy: true,
@@ -225,13 +225,13 @@ class App extends Component {
       try {
         configs.versions[name] = await source.getVersions();
         configs.escs[name] = source.getEscLayouts();
-        configs.pwm[name] = source.getPwm();
+        configs.getPwm[name] = (version) => source.getPwm(version);
       } catch(e) {
         this.addLogMessage('fetchingFilesFailed', { name: name });
 
         configs.versions[name] = [];
         configs.escs[name] = [];
-        configs.pwm[name] = [];
+        configs.getPwm[name] = null;
       }
     }
 
@@ -265,6 +265,9 @@ class App extends Component {
     for(let i = 0; i < escs.targets.length; i += 1) {
       const target = escs.targets[i];
       const esc = escs.individual.find((esc) => esc.index === target);
+
+      // this will throw a exception when preflight fails
+      await this.serial.flashPreflight(esc, text, force);
 
       const updateProgress = async(percent) => {
         if(esc.ref && esc.ref.current) {
@@ -433,6 +436,12 @@ class App extends Component {
     this.handleReadEscs();
   };
 
+  handleReadEsc = async(target) => {
+    const settings = await this.serial.getFourWayInterfaceInfo(target);
+
+    return settings;
+  };
+
   handleReadEscs = async() => {
     const { escs } = this.state;
     const newEscs = { ...escs };
@@ -479,7 +488,7 @@ class App extends Component {
 
     for (let i = 0; i < connected; i += 1) {
       try {
-        const settings = await this.serial.getFourWayInterfaceInfo(i);
+        const settings = await this.handleReadEsc(i);
         settings.index = i;
         settings.ref = React.createRef();
         individual.push(settings);
@@ -565,9 +574,15 @@ class App extends Component {
       };
 
       try {
-        const newSettingsArray = await this.serial.writeSettings(target, esc, mergedSettings);
-        individual[i].settingsArray = newSettingsArray;
-        individual[i].settings = mergedSettings;
+        await this.serial.writeSettings(target, esc, mergedSettings);
+
+        const newInfo = await this.handleReadEsc(target);
+        individual[i] = {
+          ...individual[i],
+          settingsArray: newInfo.settingsArray,
+          settings: newInfo.settings,
+          displayName: newInfo.displayName,
+        };
       } catch(e) {
         this.addLogMessage('writeSettingsFailed', { index: i + 1 });
         console.debug(e);
@@ -654,7 +669,12 @@ class App extends Component {
       console.debug('Flashing local file');
 
       const text = (e.target.result);
-      this.flash(text, force, migrate);
+      try {
+        await this.flash(text, force, migrate);
+      } catch(e) {
+        console.error(e);
+        this.setActions({ isFlashing: false });
+      }
     };
     reader.readAsText(e.target.files[0]);
   };

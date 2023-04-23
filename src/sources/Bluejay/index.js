@@ -5,6 +5,7 @@ import escsBlheliS from '../BlheliS/escs.json';
 import escsBluejay from './escs.json';
 import blacklist from './blacklist.json';
 import Silabs from '../../utils/Hardware/Silabs';
+import semver from 'semver';
 
 const escs = {
   layouts: {
@@ -16,11 +17,6 @@ const escs = {
 const GITHUB_REPO = 'bird-sanctuary/bluejay';
 
 class BluejaySource extends GithubSource {
-  constructor(name, eeprom, settingsDescriptions, escs, pwm) {
-    super(name, eeprom, settingsDescriptions, escs);
-    this.pwm = pwm;
-  }
-
   buildDisplayName(flash, make) {
     const settings = flash.settings;
     let revision = 'Unsupported/Unrecognized';
@@ -77,15 +73,23 @@ class BluejaySource extends GithubSource {
   canMigrateTo(name) {
     return this.isValidName(name);
   }
+
+  getPwm(version) {
+    // Before v0.20.0 PWM was a build time option and should be selectable
+    // in the firmware selector.
+    if(semver.lt(version, '0.20.0')) {
+      return [24, 48, 96];
+    }
+
+    return [];
+  }
 }
 
-const pwmOptions = [24, 48, 96];
 const source = new BluejaySource(
   'Bluejay',
   eeprom,
   settingsDescriptions,
-  escs,
-  pwmOptions
+  escs
 );
 
 export default BluejaySource;

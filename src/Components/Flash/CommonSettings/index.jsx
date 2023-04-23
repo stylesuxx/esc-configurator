@@ -95,6 +95,10 @@ function CommonSettings({
         <ReactMarkdown>
           {t('common:versionUnsupportedLine2')}
         </ReactMarkdown>
+
+        <ReactMarkdown>
+          {t('common:versionUnsupportedLine3')}
+        </ReactMarkdown>
       </>
     );
 
@@ -275,7 +279,7 @@ CommonSettings.propTypes = {
   disabled: PropTypes.bool,
   escs: PropTypes.arrayOf(PropTypes.shape({
     meta: PropTypes.shape({ available: PropTypes.bool.isRequired }).isRequired,
-    settings: PropTypes.shape({ MODE: PropTypes.number.isRequired }).isRequired,
+    settings: PropTypes.shape({ MODE: PropTypes.number }).isRequired,
   })).isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
   unsupported: PropTypes.bool.isRequired,
