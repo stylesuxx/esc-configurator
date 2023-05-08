@@ -268,7 +268,7 @@ describe('MelodyEditor', () => {
     fireEvent.change(screen.getByRole('combobox'), {
       target: {
         name: "",
-        value: "Simpsons Theme",
+        value: "Simpsons - Theme",
       },
     });
     expect(screen.queryAllByText(/simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6/i).length).toEqual(1);
@@ -296,7 +296,7 @@ describe('MelodyEditor', () => {
     fireEvent.change(screen.getByRole('combobox'), {
       target: {
         name: "",
-        value: "Simpsons Theme",
+        value: "Simpsons - Theme",
       },
     });
 
