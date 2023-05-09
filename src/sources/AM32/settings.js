@@ -3,16 +3,19 @@ const SETTINGS_LAYOUT_0 = [
     name: 'SINUSOIDAL_STARTUP',
     type: 'bool',
     label: 'escSinusoidalStartup',
+    group: '200_am32sine',
   },
   {
     name: 'COMPLEMENTARY_PWM',
     type: 'bool',
     label: 'escComplementaryPwm',
+    group: '500_am32pwm',
   },
   {
     name: 'VARIABLE_PWM_FREQUENCY',
     type: 'bool',
     label: 'escVariablePwmFrequency',
+    group: '500_am32pwm',
   },
   {
     name: 'STUCK_ROTOR_PROTECTION',
@@ -42,6 +45,7 @@ const SETTINGS_LAYOUT_0 = [
     label: 'escMotorKv',
     displayFactor: 40,
     displayOffset: 20,
+    group: '100_am32motor',
   },
   {
     name: 'MOTOR_POLES',
@@ -50,6 +54,7 @@ const SETTINGS_LAYOUT_0 = [
     max: 36,
     step: 1,
     label: 'escMotorPoles',
+    group: '100_am32motor',
   },
   {
     name: 'STARTUP_POWER',
@@ -72,6 +77,7 @@ const SETTINGS_LAYOUT_0 = [
     name: 'BRAKE_ON_STOP',
     type: 'bool',
     label: 'escBrakeOnStop',
+    group: '400_am32brake',
   },
 ];
 
@@ -99,6 +105,7 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 2,
     displayOffset: 750,
+    group: '300_am32servo',
   },
   {
     name: 'SERVO_HIGH_THRESHOLD',
@@ -109,6 +116,7 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 2,
     displayOffset: 1750,
+    group: '300_am32servo',
   },
   {
     name: 'SERVO_NEUTRAL',
@@ -119,6 +127,7 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 1,
     displayOffset: 1374,
+    group: '300_am32servo',
   },
   {
     name: 'SERVO_DEAD_BAND',
@@ -127,6 +136,7 @@ const SETTINGS_LAYOUT_1 = [
     min: 0,
     max: 100,
     step: 1,
+    group: '300_am32servo',
   },
   {
     name: 'LOW_VOLTAGE_CUTOFF',
@@ -142,6 +152,7 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 1,
     displayOffset: 250,
+    visibleIf: (settings) => settings.LOW_VOLTAGE_CUTOFF === 1,
   },
   {
     name: 'RC_CAR_REVERSING',
@@ -165,6 +176,7 @@ const SETTINGS_LAYOUT_2 = [
     max: 25,
     step: 1,
     visibleIf: (settings) => settings.SINUSOIDAL_STARTUP === 1,
+    group: '200_am32sine',
   },
   {
     name: 'BRAKE_STRENGTH',
@@ -173,6 +185,8 @@ const SETTINGS_LAYOUT_2 = [
     min: 1,
     max: 10,
     step: 1,
+    visibleIf: (settings) => settings.BRAKE_ON_STOP === 1,
+    group: '400_am32brake',
   },
   {
     name: 'ESC_PROTOCOL',
@@ -208,6 +222,7 @@ const SETTINGS_LAYOUT_2 = [
     min: 0,
     max: 10,
     step: 1,
+    group: '400_am32brake',
   },
   {
     name: 'TEMPERATURE_LIMIT',
@@ -236,6 +251,7 @@ const SETTINGS_LAYOUT_2 = [
     max: 10,
     step: 1,
     visibleIf: (settings) => settings.SINUSOIDAL_STARTUP === 1,
+    group: '200_am32sine',
   },
 ];
 

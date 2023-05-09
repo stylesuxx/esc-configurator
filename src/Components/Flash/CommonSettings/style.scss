@@ -3,3 +3,15 @@
   color: red;
   font-weight: bold;
 }
+
+fieldset:not(:first-child) {
+  margin-top: 20px;
+
+  legend {
+    width: 100%;
+    border-top: 1px solid var(--color-tertiary);
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
