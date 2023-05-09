@@ -40,5 +40,9 @@
   "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used.",
   "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
   "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!",
-  "RCPULSE_FILTER": "Valores por encima de 0 activarán el filtro de pulsos RC, cuanto mayor sea el número más agresivo será el filtro. Úsalo sólo para compensar los ajustes realmente malos."
+  "RCPULSE_FILTER": "Valores por encima de 0 activarán el filtro de pulsos RC, cuanto mayor sea el número más agresivo será el filtro. Úsalo sólo para compensar los ajustes realmente malos.",
+  "RUNNING_BRAKE_LEVEL": "The tamount of braking used when the motor is running.",
+  "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
+  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
+  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC."
 }
