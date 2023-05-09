@@ -40,5 +40,9 @@
   "PWM_THRESHOLD_HIGH": "Nad tímto plynem, bude signál PWM 24kHz.",
   "FORCE_EDT_ARM": "Odjištění pouze po úspěšném startu EDT. Firmware řídící jednotky musí tuto funkci podporovat.",
   "ESC_PROTOCOL": "Vyberte protokol ESC, který chcete použít. Je to v zájmu bezpečnosti, s předvoleným esc protokolem je zabráněno rozpoznání falešného plynu!",
-  "RCPULSE_FILTER": "Hodnoty nad 0 umožní filtr impulzů RC, čím větší je filtr, tím agresivnější. Použití pouze pro kompenzaci opravdu špatných nastavení."
+  "RCPULSE_FILTER": "Hodnoty nad 0 umožní filtr impulzů RC, čím větší je filtr, tím agresivnější. Použití pouze pro kompenzaci opravdu špatných nastavení.",
+  "RUNNING_BRAKE_LEVEL": "The tamount of braking used when the motor is running.",
+  "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
+  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
+  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC."
 }
