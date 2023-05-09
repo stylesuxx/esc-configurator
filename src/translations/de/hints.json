@@ -40,5 +40,9 @@
   "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet.",
   "FORCE_EDT_ARM": "Nur nach erfolgreichem EDT Handshake armen. Die Flugcontroller Firmware muss diese Funktion unterstützen.",
   "ESC_PROTOCOL": "Wähle das ESC-Protokoll, das du verwenden möchtest. Dies dient der Sicherheit! Durch ein vorausgewähltes ESC-Protokoll, können falsche Signale für die Gasstellung verhindert werden!",
-  "RCPULSE_FILTER": "Werte über 0 aktivieren den RC Pulsfilter, je höher die Zahl, desto aggressiver der Filter. Verwende diesen nur, um schlecht getuntes Flugverhalten auszugleichen."
+  "RCPULSE_FILTER": "Werte über 0 aktivieren den RC Pulsfilter, je höher die Zahl, desto aggressiver der Filter. Verwende diesen nur, um schlecht getuntes Flugverhalten auszugleichen.",
+  "RUNNING_BRAKE_LEVEL": "The tamount of braking used when the motor is running.",
+  "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
+  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
+  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC."
 }
