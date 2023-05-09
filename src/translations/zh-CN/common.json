@@ -109,6 +109,10 @@
   "escHallSensors": "霍尔传感器",
   "escSineModeRange": "正弦模式范围",
   "escBrakeStrength": "刹车强度",
+  "am32RunningBrakeLevel": "Running Brake Level",
+  "am32TemperatureLimit": "Temperature Limit",
+  "am32CurrentLimit": "Current Limit",
+  "am32SineModePower": "Sine Mode Power",
   "bluejayTextLine1": "Bluejay 是一个基于 BLHeli_S 固件能够使用双向DShot的新固件 - 如果你想要在你的飞机上运行 RPM 滤波器，那么这是一个很好的选择。该项目还旨在清理和简化最初的 BLHeli_S 源代码。",
   "bluejayTextLine2": "启动音乐编辑器也是它的一个新功能。",
   "bluejaySupportedHardwareLine1": "请花一点时间来帮助我们将您的成功刷到 Bluejay 固件的硬件 [添加到 Wiki 上](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware)。",
@@ -181,5 +185,6 @@
   "mistaggedTagged": "被标记",
   "mistaggedDetected": "检测到",
   "update": "有更新可用！要更新应用程序，请刷新或重新启动。",
-  "resettingDevice": "正在重置设备..."
+  "resettingDevice": "正在重置设备...",
+  "disabled": "Disabled"
 }
