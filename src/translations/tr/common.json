@@ -109,6 +109,10 @@
   "escHallSensors": "Hall Sensörleri",
   "escSineModeRange": "Sine Mod Aralığı",
   "escBrakeStrength": "Frenleme Gücü",
+  "am32RunningBrakeLevel": "Running Brake Level",
+  "am32TemperatureLimit": "Temperature Limit",
+  "am32CurrentLimit": "Current Limit",
+  "am32SineModePower": "Sine Mode Power",
   "bluejayTextLine1": "Bluejay, BLHeli_S tabanlı çift-yönlü DShot yetenekli donanım yazılımıdır - yani teçhizatınızda RPM Filtreleme kullanırsanız doğru bir seçim yapmış olursunuz. Bu projenin diğer amacı da orjinal BLHeli_S kaynak kodunu temizleme ve basitleştirmektir.",
   "bluejayTextLine2": "Açılış sesi editörüde ayrıca bunun bir parçasıdır.",
   "bluejaySupportedHardwareLine1": "Please take the time to help us document hardware on which you have successfully flashed and tested Bluejay by [adding it to the Wiki](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware).",
@@ -181,5 +185,6 @@
   "mistaggedTagged": "İşaretleme",
   "mistaggedDetected": "Bulunan",
   "update": "Güncelleme mevcut! Uygulamayı güncellemek için yenileyin veya yeniden başlatın.",
-  "resettingDevice": "Resetting device..."
+  "resettingDevice": "Resetting device...",
+  "disabled": "Disabled"
 }
