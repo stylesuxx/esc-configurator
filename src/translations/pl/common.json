@@ -109,6 +109,10 @@
   "escHallSensors": "Czujniki Halla",
   "escSineModeRange": "Zakres trybu sinusoidalnego",
   "escBrakeStrength": "Siła hamowania",
+  "am32RunningBrakeLevel": "Running Brake Level",
+  "am32TemperatureLimit": "Temperature Limit",
+  "am32CurrentLimit": "Current Limit",
+  "am32SineModePower": "Sine Mode Power",
   "bluejayTextLine1": "Bluejay to oprogramowanie układowe oparte na BLHeli_S zdolne do dwukierunkowego DShot - więc jest to świetny wybór, jeśli chcesz uruchomić filtrowanie RPM na swoim urządzeniu. Ten projekt ma również na celu oczyszczenie i uproszczenie oryginalnego kodu źródłowego BLHeli_S.",
   "bluejayTextLine2": "Edytor dźwięku startowego jest również częścią transakcji.",
   "bluejaySupportedHardwareLine1": "Poświęć czas na pomoc w udokumentowaniu sprzętu, na którym pomyślnie wgrałeś i przetestowałeś Bluejay [dodając go do Wiki](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware).",
@@ -181,5 +185,6 @@
   "mistaggedTagged": "Oznaczono",
   "mistaggedDetected": "Wykryto",
   "update": "Aktualizacja dostępna! Aby zaktualizować aplikację, odśwież ją lub uruchom ponownie.",
-  "resettingDevice": "Resetuję urządzenie..."
+  "resettingDevice": "Resetuję urządzenie...",
+  "disabled": "Disabled"
 }
