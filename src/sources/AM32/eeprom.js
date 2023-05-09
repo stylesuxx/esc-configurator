@@ -134,6 +134,22 @@ const LAYOUT = {
     offset: 0x29,
     size: 1,
   },
+  RUNNING_BRAKE_LEVEL: {
+    offset: 0x2A,
+    size: 1,
+  },
+  TEMPERATURE_LIMIT: {
+    offset: 0x2B,
+    size: 1,
+  },
+  CURRENT_LIMIT: {
+    offset: 0x2C,
+    size: 1,
+  },
+  SINE_MODE_POWER: {
+    offset: 0x2D,
+    size: 1,
+  },
   ESC_PROTOCOL: {
     offset: 0x2E,
     size: 1,

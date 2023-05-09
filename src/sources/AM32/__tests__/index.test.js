@@ -6,6 +6,8 @@ describe('AM32', () => {
     const keys = Object.keys(SETTINGS_DESCRIPTIONS.COMMON);
     const settings = { VARIABLE_PWM_FREQUENCY: 0 };
 
+    let truthy = 0;
+    let falsy = 0;
     const visibleIf = [];
     for(let i = 0; i < keys.length; i += 1) {
       const revision = keys[i];
@@ -17,11 +19,18 @@ describe('AM32', () => {
           visibleIf.push(current.visibleIf);
         }
       }
-
       for(let i = 0; i < visibleIf.length; i += 1) {
-        expect(visibleIf[i](settings)).toBeTruthy();
+        const result = visibleIf[i](settings);
+        if (result) {
+          truthy += 1;
+        } else {
+          falsy += 1;
+        }
       }
     }
+
+    expect(truthy).toEqual(6);
+    expect(falsy).toEqual(2);
   });
 
   it('should return display name', () => {

@@ -169,6 +169,8 @@ function CommonSettings({
       availableSettings[setting.name] = value;
     }
 
+    let disableValue = description.disableValue || null;
+
     switch (setting.type) {
       case 'bool': {
         return (
@@ -226,6 +228,7 @@ function CommonSettings({
 
         return (
           <Slider
+            disableValue={disableValue}
             disabled={disabled}
             factor={setting.displayFactor}
             hint={hint}
