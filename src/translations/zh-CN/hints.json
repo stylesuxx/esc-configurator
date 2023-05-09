@@ -40,5 +40,9 @@
   "PWM_THRESHOLD_HIGH": "高于此油门将使用 24kHz PWM 信号。",
   "FORCE_EDT_ARM": "只有在 EDT 握手成功之后才能解锁。飞控固件必须支持此功能。",
   "ESC_PROTOCOL": "选择您想要使用的 ESC 协议。这是为了安全，预先设置一个 ESC 协议可以拒绝错误的油门信号！",
-  "RCPULSE_FILTER": "当该值大于 0 时将会启用 RC 脉冲滤波器，值越高滤波越激进。仅适用于补偿很烂的参数。"
+  "RCPULSE_FILTER": "当该值大于 0 时将会启用 RC 脉冲滤波器，值越高滤波越激进。仅适用于补偿很烂的参数。",
+  "RUNNING_BRAKE_LEVEL": "The tamount of braking used when the motor is running.",
+  "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
+  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
+  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC."
 }
