@@ -109,6 +109,10 @@
   "escHallSensors": "Hall Sensors",
   "escSineModeRange": "Sine Mode Range",
   "escBrakeStrength": "Braking Strength",
+  "am32RunningBrakeLevel": "Running Brake Level",
+  "am32TemperatureLimit": "Temperature Limit",
+  "am32CurrentLimit": "Current Limit",
+  "am32SineModePower": "Sine Mode Power",
   "bluejayTextLine1": "Bluejay is BLHeli_S based firmware capable of bi-directional DShot - so a great choice if you want to run RPM filtering on your rig. This project also aims to clean up and simplify the original BLHeli_S source code.",
   "bluejayTextLine2": "A startup sound editor is also part of the deal.",
   "bluejaySupportedHardwareLine1": "Please take the time to help us document hardware on which you have successfully flashed and tested Bluejay by [adding it to the Wiki](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware).",
@@ -181,5 +185,6 @@
   "mistaggedTagged": "Tagged",
   "mistaggedDetected": "Detected",
   "update": "Update available! To update the app, refresh or restart it.",
-  "resettingDevice": "Resetting device..."
+  "resettingDevice": "Resetting device...",
+  "disabled": "Disabled"
 }
