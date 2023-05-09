@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, {
   useCallback,
@@ -14,6 +15,7 @@ import './style.scss';
 function Slider({
   name,
   value,
+  disableValue,
   step,
   min,
   max,
@@ -27,6 +29,8 @@ function Slider({
   hint,
   disabled,
 }) {
+  const { t } = useTranslation('common');
+
   const [currentValue, setCurrentValue] = useState(value);
   useEffect(() => {
     setCurrentValue(value);
@@ -60,7 +64,15 @@ function Slider({
     }, 100);
   }, [onChange, offset, factor, name]);
 
-  const format = useCallback((value) => `${value}${suffix}`, [suffix]);
+  const format = useCallback((value) => {
+    let label = `${value}${suffix}`;
+
+    if (value === disableValue) {
+      label = t("disabled");
+    }
+
+    return label;
+  }, [suffix, disableValue, t]);
 
   return (
     <div className="number">
@@ -92,6 +104,7 @@ function Slider({
 }
 
 Slider.defaultProps = {
+  disableValue: null,
   disabled: false,
   factor: 1,
   hint: null,
@@ -106,6 +119,7 @@ Slider.defaultProps = {
 };
 
 Slider.propTypes = {
+  disableValue: PropTypes.number,
   disabled: PropTypes.bool,
   factor: PropTypes.number,
   hint: PropTypes.string,

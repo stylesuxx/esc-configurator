@@ -164,6 +164,7 @@ const SETTINGS_LAYOUT_2 = [
     min: 5,
     max: 25,
     step: 1,
+    visibleIf: (settings) => settings.SINUSOIDAL_STARTUP === 1,
   },
   {
     name: 'BRAKE_STRENGTH',
@@ -199,6 +200,42 @@ const SETTINGS_LAYOUT_2 = [
         label: 'EDT ARM',
       },
     ],
+  },
+  {
+    name: 'RUNNING_BRAKE_LEVEL',
+    type: 'number',
+    label: 'am32RunningBrakeLevel',
+    min: 0,
+    max: 10,
+    step: 1,
+  },
+  {
+    name: 'TEMPERATURE_LIMIT',
+    type: 'number',
+    label: 'am32TemperatureLimit',
+    min: 70,
+    max: 141,
+    step: 1,
+    disableValue: 141,
+  },
+  {
+    name: 'CURRENT_LIMIT',
+    type: 'number',
+    label: 'am32CurrentLimit',
+    min: 0,
+    max: 202,
+    step: 2,
+    displayFactor: 2,
+    disableValue: 202,
+  },
+  {
+    name: 'SINE_MODE_POWER',
+    type: 'number',
+    label: 'am32SineModePower',
+    min: 1,
+    max: 10,
+    step: 1,
+    visibleIf: (settings) => settings.SINUSOIDAL_STARTUP === 1,
   },
 ];
 
@@ -284,6 +321,10 @@ const DEFAULT_SETTINGS_2 = {
   USE_HALL_SENSORS: 0,
   SINE_MODE_RANGE: 8,
   BRAKE_STRENGTH: 10,
+  RUNNING_BRAKE_LEVEL: 10,
+  TEMPERATURE_LIMIT: 141,
+  CURRENT_LIMIT: 101,
+  SINE_MODE_POWER: 6,
   ESC_PROTOCOL: 0,
 };
 
