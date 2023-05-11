@@ -112,7 +112,7 @@
   "am32RunningBrakeLevel": "Laufende Bremskraft",
   "am32TemperatureLimit": "Temperatur Grenzwert",
   "am32CurrentLimit": "Strom Grenzwert",
-  "am32SineModePower": "Sinus Modus Grenzwert",
+  "am32SineModePower": "Sinus Modus Leistung",
   "bluejayTextLine1": "Bluejay ist eine auf BLHeli_S basierende Firmware die bi-direktionales DShot unterstützt - eine gute Wahl falls du RPM Filter verwenden möchtest. Dieses Projekt beschäftigt sich damit BLHeli_S zu vereinfachen und zu verbessern.",
   "bluejayTextLine2": "Als Bonus bekommst du noch einen Startmelodie Editor dazu.",
   "bluejaySupportedHardwareLine1": "Bitte nimm dir die Zeit und [trage Hardware auf der du Bluejay getestet hast im Wiki ein](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware).",
