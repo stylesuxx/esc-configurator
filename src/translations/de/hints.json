@@ -43,6 +43,6 @@
   "RCPULSE_FILTER": "Werte über 0 aktivieren den RC Pulsfilter, je höher die Zahl, desto aggressiver der Filter. Verwende diesen nur, um schlecht getuntes Flugverhalten auszugleichen.",
   "RUNNING_BRAKE_LEVEL": "Die Bremskraft während der Motor läuft.",
   "TEMPERATURE_LIMIT": "Verringert die Ausgangsleistung erheblich wenn das Limit überschritten wird.",
-  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
+  "CURRENT_LIMIT": "Hält die maximal möglichen RPM innerhalb des Stromlimits.",
   "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC."
 }
