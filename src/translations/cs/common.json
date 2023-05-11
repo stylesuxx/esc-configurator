@@ -109,10 +109,10 @@
   "escHallSensors": "Hallovy senzory",
   "escSineModeRange": "Rozsah sinusového režimu",
   "escBrakeStrength": "Brzdná síla",
-  "am32RunningBrakeLevel": "Running Brake Level",
-  "am32TemperatureLimit": "Temperature Limit",
-  "am32CurrentLimit": "Current Limit",
-  "am32SineModePower": "Sine Mode Power",
+  "am32RunningBrakeLevel": "Úrovně brzdění",
+  "am32TemperatureLimit": "Teplotní limit",
+  "am32CurrentLimit": "Proudový Limit",
+  "am32SineModePower": "Sinusové napájení",
   "bluejayTextLine1": "Bluejay je firmware založený na BLHeli_S schopný obousměrného DShotu - takže skvělá volba, pokud chcete spustit filtrování RPM na vašem zařízení. Tento projekt má také za cíl vyčistit a zjednodušit původní zdrojový kód BLHeli_S.",
   "bluejayTextLine2": "Součástí je také zvukový editor spouštěcího zvuku.",
   "bluejaySupportedHardwareLine1": "Věnuj nám prosím čas, aby jsi nám pomohl dokumentovat hardware, na kterém jsi úspěšně nainstaloval a otestoval Bluejay [přidat na wiki](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware).",
@@ -186,5 +186,5 @@
   "mistaggedDetected": "Zjištěno",
   "update": "Je dostupná aktualizace! Chcete-li aplikaci aktualizovat, obnovte ji nebo restartujte.",
   "resettingDevice": "Resetování zařízení...",
-  "disabled": "Disabled"
+  "disabled": "Vypnuto"
 }
