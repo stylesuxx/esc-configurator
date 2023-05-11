@@ -41,8 +41,8 @@
   "FORCE_EDT_ARM": "Nur nach erfolgreichem EDT Handshake armen. Die Flugcontroller Firmware muss diese Funktion unterstützen.",
   "ESC_PROTOCOL": "Wähle das ESC-Protokoll, das du verwenden möchtest. Dies dient der Sicherheit! Durch ein vorausgewähltes ESC-Protokoll, können falsche Signale für die Gasstellung verhindert werden!",
   "RCPULSE_FILTER": "Werte über 0 aktivieren den RC Pulsfilter, je höher die Zahl, desto aggressiver der Filter. Verwende diesen nur, um schlecht getuntes Flugverhalten auszugleichen.",
-  "RUNNING_BRAKE_LEVEL": "Die Bremskraft während der Motor läuft.",
+  "RUNNING_BRAKE_LEVEL": "Die Stärke der Bremskraft während der Motor läuft.",
   "TEMPERATURE_LIMIT": "Verringert die Ausgangsleistung erheblich wenn das Limit überschritten wird.",
   "CURRENT_LIMIT": "Hält die maximal möglichen RPM innerhalb des Stromlimits.",
-  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC."
+  "SINE_MODE_POWER": "Festgelegte Stufe für die Auslastung, welche im Sinusmodus verwendet wird. ACHTUNG: Bei Werten höher als 6 können Motoren und/oder ESC beschädigt werden."
 }
