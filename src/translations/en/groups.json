@@ -1,8 +1,9 @@
 {
-  "000_general": "",
-  "100_am32motor": "Motor Specs",
-  "200_am32sine": "Sinusoidal Settings",
-  "300_am32servo": "Servo Settings",
-  "400_am32brake": "Brake Settings",
-  "500_am32pwm": "PWM Settings"
+  "general": "",
+  "am32motor": "Motor Specs",
+  "am32sine": "Sinusoidal Settings",
+  "am32servo": "Servo Settings",
+  "am32brake": "Brake Settings",
+  "am32pwm": "PWM Settings",
+  "am32safety": "Safety"
 }

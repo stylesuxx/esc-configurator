@@ -227,6 +227,15 @@ class Source {
   isValidLayout(name) {
     return name in this.getEscLayouts();
   }
+
+  /**
+   * Reurns group order for common settings
+   *
+   * @returns {Array<string>}
+   */
+  getGroupOrder() {
+    return ['general'];
+  }
 }
 
 export default Source;

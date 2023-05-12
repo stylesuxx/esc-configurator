@@ -25,7 +25,6 @@ function Flash({
   unsupported,
 }) {
   const { t } = useTranslation('common');
-
   return (
     <div className="flash">
       <div className="flash__wrapper">

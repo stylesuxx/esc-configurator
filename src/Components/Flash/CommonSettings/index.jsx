@@ -38,6 +38,7 @@ function CommonSettings({
   const reference = getMasterSettings(escs);
   const allSettings = getAllSettings(escs);
   const allMulti = isMulti(escs);
+  const groupOrder = master.source.getGroupOrder();
 
   const { settingsDescriptions } = master;
   const mainRevision = availableSettings.MAIN_REVISION;
@@ -139,7 +140,7 @@ function CommonSettings({
   }
 
   const base = settingsDescriptions.base;
-  const groups = { '000_general': [] };
+  const groups = { 'general': [] };
 
   for(let i = 0; i < base.length; i += 1) {
     const item = base[i];
@@ -151,11 +152,21 @@ function CommonSettings({
 
       groups[item.group].push(item);
     } else {
-      groups['000_general'].push(item);
+      groups['general'].push(item);
     }
   }
 
-  const groupedSettingElements = Object.keys(groups).map((group) => {
+  // Order available groups by source order. Append unknown groups at the end
+  const groupKeys = Object.keys(groups);
+  const orderedGroupKeys = groupOrder.filter((group) => groupKeys.includes(group));
+  for(let i = 0; i < groupKeys.length; i += 1) {
+    const key = groupKeys[i];
+    if(!orderedGroupKeys.includes(key)) {
+      orderedGroupKeys.push(key);
+    }
+  }
+
+  const groupedSettingElements = orderedGroupKeys.map((group) => {
     const groupItems = groups[group];
 
     const settingElements = groupItems.map((description) => {
