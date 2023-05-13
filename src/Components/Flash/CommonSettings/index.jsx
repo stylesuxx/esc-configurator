@@ -166,6 +166,18 @@ function CommonSettings({
     }
   }
 
+  // Order items in groups based on their order value
+  for( let i = 0; i < orderedGroupKeys.length; i += 1) {
+    const group = orderedGroupKeys[i];
+    const items = groups[group];
+
+    let orderedItems = items.filter((item) => Object.prototype.hasOwnProperty.call(item, "order"));
+    const unorderedItems = items.filter((item) => !Object.prototype.hasOwnProperty.call(item, "order"));
+    orderedItems.sort((a, b) => a.order - b.order );
+
+    groups[group] = [...orderedItems, ...unorderedItems];
+  }
+
   const groupedSettingElements = orderedGroupKeys.map((group) => {
     const groupItems = groups[group];
 

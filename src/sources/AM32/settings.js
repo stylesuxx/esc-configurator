@@ -37,6 +37,7 @@ const SETTINGS_LAYOUT_0 = [
     step: 7.5,
     label: 'escTimingAdvance',
     displayFactor: 7.5,
+    order: 100,
   },
   {
     name: 'MOTOR_KV',
@@ -65,6 +66,7 @@ const SETTINGS_LAYOUT_0 = [
     max: 150,
     step: 1,
     label: 'escStartupPower',
+    order: 200,
   },
   {
     name: 'PWM_FREQUENCY',
@@ -156,6 +158,7 @@ const SETTINGS_LAYOUT_1 = [
     displayFactor: 1,
     displayOffset: 250,
     visibleIf: (settings) => settings.LOW_VOLTAGE_CUTOFF === 1,
+    group: 'am32safety',
   },
   {
     name: 'RC_CAR_REVERSING',
@@ -217,6 +220,7 @@ const SETTINGS_LAYOUT_2 = [
         label: 'EDT ARM',
       },
     ],
+    order: 0,
   },
   {
     name: 'RUNNING_BRAKE_LEVEL',
