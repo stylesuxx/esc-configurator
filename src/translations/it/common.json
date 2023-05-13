@@ -109,7 +109,7 @@
   "escHallSensors": "Sensori Hall",
   "escSineModeRange": "Intervallo Modalità Sine",
   "escBrakeStrength": "Potenza Frenante",
-  "am32RunningBrakeLevel": "Running Brake Level",
+  "am32RunningBrakeLevel": "Livello Freno Attuale",
   "am32TemperatureLimit": "Limite Temperatura",
   "am32CurrentLimit": "Limite Corrente",
   "am32SineModePower": "Modalità Alimentazione Sine",
