@@ -41,8 +41,8 @@
   "FORCE_EDT_ARM": "Uzbrajanie tylko po udanym uzgodnieniu EDT. Firmware kontrolera lotu musi wspierać tę funkcję.",
   "ESC_PROTOCOL": "Wybierz protokół ESC, którego chcesz użyć. To jest dla bezpieczeństwa, z wybranym protokołem ESC, unikniemy błędnej detekcji sygnału przepustnicy!",
   "RCPULSE_FILTER": "Wartości powyżej 0 włączają filtr impulsowy RC, im wyższa liczba tym bardziej agresywny filtr. Używaj tylko do kompensacji naprawdę złych melodii.",
-  "RUNNING_BRAKE_LEVEL": "The tamount of braking used when the motor is running.",
-  "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
-  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
-  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC."
+  "RUNNING_BRAKE_LEVEL": "Wielkość hamowania używana podczas pracy silnika.",
+  "TEMPERATURE_LIMIT": "Znacznie obniża moc maksymalną po osiągnięciu progu.",
+  "CURRENT_LIMIT": "Utrzymuje maksymalne możliwe obroty przy dopuszczalnym prądzie.",
+  "SINE_MODE_POWER": "Stały poziom cyklu pracy, który ma być stosowany w przypadku korzystania z trybu sinusoidalnego. UWAGA: Wartości powyżej 6 mogą uszkodzić silnik i/lub ESC."
 }
