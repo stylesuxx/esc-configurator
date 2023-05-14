@@ -111,7 +111,7 @@
   "escBrakeStrength": "Frenleme Gücü",
   "am32RunningBrakeLevel": "Running Brake Level",
   "am32TemperatureLimit": "Temperature Limit",
-  "am32CurrentLimit": "Current Limit",
+  "am32CurrentLimit": "Current Limit [A]",
   "am32SineModePower": "Sine Mode Power",
   "bluejayTextLine1": "Bluejay, BLHeli_S tabanlı çift-yönlü DShot yetenekli donanım yazılımıdır - yani teçhizatınızda RPM Filtreleme kullanırsanız doğru bir seçim yapmış olursunuz. Bu projenin diğer amacı da orjinal BLHeli_S kaynak kodunu temizleme ve basitleştirmektir.",
   "bluejayTextLine2": "Açılış sesi editörüde ayrıca bunun bir parçasıdır.",
