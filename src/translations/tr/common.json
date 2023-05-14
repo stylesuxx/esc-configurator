@@ -81,7 +81,7 @@
   "migrateFlashHint": "(Bu farklı donanım yazılımları arasında ayaraların taşınmasına sebep olacaktır, örnek olarak BLHeli_S den Bluejay e gibi)",
   "migrationNote": "Farklı donanımlar arası taşınmayan ayarlara dikkat ediniz, motor yönü ve taşımak istediğniz diğer ayarlarınızı not ediniz. Ayarlar aynı donanım yazılımının farklı versiyonları arasında da taşınabilir.",
   "escDirectionReversed": "Yön Ters Çevrildi",
-  "escBidirectionalMode": "Çift Yön Modu",
+  "escBidirectionalMode": "Forward/Reverse (3D mode)",
   "escSelectProtocol": "ESC Protokolünü seçin",
   "escSinusoidalStartup": "Sinüzoidal Başlangıç",
   "escComplementaryPwm": "Tamamlayıcı PWM",
