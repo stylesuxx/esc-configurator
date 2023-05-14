@@ -2,7 +2,9 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
+
+import { useDispatch } from 'react-redux';
 
 import AppSettings from '../AppSettings';
 import CookieConsent from '../CookieConsent';
@@ -14,11 +16,12 @@ import PortPicker from '../PortPicker';
 import Statusbar from '../Statusbar';
 
 import changelogEntries from '../../changelog.json';
+import { show as showAppSettings } from '../AppSettings/settingsSlice';
+
 import './style.scss';
 
 function App({
   actions,
-  appSettings,
   configs,
   escs,
   language,
@@ -32,7 +35,13 @@ function App({
   serial,
 }) {
   const { t } = useTranslation('common');
+  const dispatch = useDispatch();
+
   const isIdle = !Object.values(actions).some((element) => element);
+
+  const onAppSettingsShow = useCallback((e) => {
+    dispatch(showAppSettings());
+  }, [dispatch]);
 
   return (
     <div>
@@ -63,7 +72,7 @@ function App({
 
               <div className="button button--dark">
                 <button
-                  onClick={appSettings.actions.handleOpen}
+                  onClick={onAppSettingsShow}
                   type="button"
                 >
                   {t('settings')}
@@ -78,7 +87,6 @@ function App({
 
         <MainContent
           actions={actions}
-          appSettings={appSettings.settings}
           changelogEntries={changelogEntries}
           configs={configs}
           connected={escs.connected}
@@ -111,12 +119,7 @@ function App({
         <Statusbar getUtilization={serial.port ? serial.port.getUtilization : undefined} />
       </div>
 
-      {appSettings.show &&
-        <AppSettings
-          onClose={appSettings.actions.handleClose}
-          onUpdate={appSettings.actions.handleUpdate}
-          settings={appSettings.settings}
-        />}
+      <AppSettings />
 
       {melodies.show &&
         <MelodyEditor
@@ -153,15 +156,6 @@ App.propTypes = {
     isFlashing: PropTypes.bool.isRequired,
     isReading: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
-  }).isRequired,
-  appSettings: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleClose: PropTypes.func.isRequired,
-      handleOpen: PropTypes.func.isRequired,
-      handleUpdate: PropTypes.func.isRequired,
-    }).isRequired,
-    settings: PropTypes.shape({}).isRequired,
-    show: PropTypes.bool.isRequired,
   }).isRequired,
   configs: PropTypes.shape({}).isRequired,
   escs: PropTypes.shape({

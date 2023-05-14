@@ -1,30 +1,44 @@
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import Checkbox from '../Input/Checkbox';
 import Overlay from '../Overlay';
+import {
+  hide,
+  selectSettings,
+  selectShow,
+  update,
+} from './settingsSlice';
 
 import './style.scss';
 
-function AppSettings({
-  settings,
-  onClose,
-  onUpdate,
-}) {
+function AppSettings() {
   const { t } = useTranslation('settings');
+  const dispatch = useDispatch();
+  const settings = useSelector(selectSettings);
+  const show = useSelector(selectShow);
 
   const handleCheckboxChange = useCallback((e) => {
     const name = e.target.name;
     const value = e.target.checked;
 
-    onUpdate(name, value);
-  }, [onUpdate]);
+    dispatch(update({
+      name,
+      value,
+    }));
+  }, [dispatch]);
+
+  const onClose = useCallback((e) => {
+    dispatch(hide());
+  }, [dispatch]);
 
   const settingKeys = Object.keys(settings);
   const settingElements = settingKeys.map((key) => {
     const setting = settings[key];
-
     switch(setting.type) {
       case 'boolean': {
         return (
@@ -45,6 +59,10 @@ function AppSettings({
     }
   });
 
+  if(!show) {
+    return null;
+  }
+
   return (
     <div className="settings">
       <Overlay
@@ -58,11 +76,5 @@ function AppSettings({
     </div>
   );
 }
-
-AppSettings.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  settings: PropTypes.shape().isRequired,
-};
 
 export default AppSettings;

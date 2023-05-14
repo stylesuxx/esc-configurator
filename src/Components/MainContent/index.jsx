@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useSelector } from 'react-redux';
 
 import Home from '../Home';
 import Flash from '../Flash';
@@ -9,6 +10,8 @@ import Buttonbar from '../Buttonbar';
 import FirmwareSelector from '../FirmwareSelector';
 import Changelog from '../../Components/Changelog';
 import MotorControl from '../../Components/MotorControl';
+
+import { selectSettings } from '../AppSettings/settingsSlice';
 
 import './style.scss';
 
@@ -55,7 +58,6 @@ function WarningWrapper() {
 }
 
 function MainContent({
-  appSettings,
   open,
   escs,
   settings,
@@ -87,6 +89,7 @@ function MainContent({
   port,
 }) {
   const { t } = useTranslation('common');
+  const appSettings = useSelector(selectSettings);
   const {
     isSelecting,
     isFlashing,
@@ -281,12 +284,6 @@ function MainContent({
 }
 
 MainContent.defaultProps = {
-  appSettings: {
-    directInput: { value: false },
-    disableCommon: { value: false },
-    enableAdvanced: { value: false },
-    unstableVersions: { value: false },
-  },
   changelogEntries: [],
   connected: 0,
   escs: [],
@@ -306,12 +303,6 @@ MainContent.propTypes = {
     isSelecting: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
-  appSettings: PropTypes.shape({
-    directInput: PropTypes.shape(),
-    disableCommon: PropTypes.shape(),
-    enableAdvanced: PropTypes.shape(),
-    unstableVersions: PropTypes.shape(),
-  }),
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,

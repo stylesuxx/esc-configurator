@@ -179,7 +179,6 @@ describe('FourWay', () => {
     });
 
     fourWay = new FourWay(serial);
-    fourWay.setExtendedDebug(true);
     await expect(fourWay.testAlive()).resolves.toMatchObject(serial());
   });
 });

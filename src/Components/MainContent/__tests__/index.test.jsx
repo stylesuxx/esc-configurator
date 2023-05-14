@@ -4,6 +4,11 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import settingsReducer from '../../AppSettings/settingsSlice';
+
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
 let onWriteSetup;
@@ -22,7 +27,25 @@ let onAllMotorSpeed;
 let onOpenMelodyEditor;
 let MainContent;
 
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({ reducer: { settings: settingsReducer } });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
+
 describe('MainContent', () => {
+  const storeRef = setupTestStore();
+
   beforeAll(async () => {
     /**
      * require component instead of import so that we can properly
@@ -80,7 +103,8 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/homeWelcome/i)).toBeInTheDocument();
@@ -160,7 +184,8 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
@@ -206,7 +231,8 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -256,7 +282,8 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
@@ -305,7 +332,8 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
@@ -351,7 +379,8 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
@@ -485,7 +514,8 @@ describe('MainContent', () => {
         onWriteSetup={onWriteSetup}
         open
         settings={settings}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
@@ -617,7 +647,8 @@ describe('MainContent', () => {
         onWriteSetup={onWriteSetup}
         open
         settings={settings}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
@@ -743,7 +774,8 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -787,7 +819,8 @@ describe('MainContent', () => {
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
         open
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
@@ -925,7 +958,8 @@ describe('MainContent', () => {
         onWriteSetup={onWriteSetup}
         open
         settings={settings}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/mistaggedLine1/i)).toBeInTheDocument();

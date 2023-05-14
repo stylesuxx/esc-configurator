@@ -45,7 +45,6 @@ describe('Serial', () => {
     serial = new Serial();
 
     await expect(() => serial.open()).rejects.toThrow();
-    serial.setExtendedDebug(true);
     await serial.close();
   });
 
@@ -147,36 +146,6 @@ describe('Serial', () => {
     await expect(() => serial.spinAllMotors()).rejects.toThrow();
     await expect(() => serial.spinMotor()).rejects.toThrow();
     await expect(() => serial.stopAllMotors()).rejects.toThrow();
-  });
-
-  it('should toggle extended debugging', async() => {
-    const read = () => ({ value: { byteLength: 50 } });
-    const write = jest.fn();
-
-    const port = {
-      open: jest.fn(),
-      close: jest.fn(),
-      writable: {
-        getWriter:  () => ({
-          releaseLock: releaseWriteLock,
-          write,
-        }),
-      },
-      readable: {
-        getReader:  () => ({
-          releaseLock: releaseReadLock,
-          read,
-          cancel,
-        }),
-      },
-    };
-
-    serial = new Serial(port);
-    await serial.open();
-    expect(port.open).toHaveBeenCalled();
-
-    serial.setExtendedDebug(true);
-    serial.setExtendedDebug(false);
   });
 
   it('should execute 4Way interface commands', async() => {

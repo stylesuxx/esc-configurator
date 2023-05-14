@@ -27,6 +27,7 @@ import {
 
 import {
   delay,
+  getAppSetting,
   retry,
   compare,
   isValidFlash,
@@ -84,17 +85,6 @@ class FourWay {
     this.packetErrorsCallback = null;
 
     this.parseMessage = this.parseMessage.bind(this);
-
-    this.extendedDebug = false;
-  }
-
-  /**
-   * Setter to control extended debugging
-   *
-   * @param {boolean} extendedDebug Enable or disable extended debug
-   */
-  setExtendedDebug(extendedDebug) {
-    this.extendedDebug = extendedDebug;
   }
 
   /**
@@ -278,7 +268,7 @@ class FourWay {
       const message = this.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
-      if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+      if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
         const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
         console.debug(`TX: ${FourWayHelper.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
@@ -296,7 +286,7 @@ class FourWay {
         try {
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
-            if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+            if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
               const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
               console.debug(`RX: ${FourWayHelper.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
             }

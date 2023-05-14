@@ -9,7 +9,10 @@ import BinToHex from 'bin-to-hex';
 import { fetchHexCached } from '../../utils/Fetch';
 import { TimeoutError } from '../../utils/helpers/QueueProcessor';
 import { getMasterSettings } from '../../utils/helpers/Settings';
-import { delay } from '../../utils/helpers/General';
+import {
+  delay,
+  getAppSetting,
+} from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
 import settings from '../../settings.json';
 import melodies from '../../melodies.json';
@@ -21,7 +24,6 @@ import {
   loadLog,
   loadMelodies,
   loadSerialApi,
-  loadSettings,
 } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
 
@@ -40,10 +42,6 @@ class App extends Component {
 
     this.state = {
       msp: { features: {} },
-      appSettings: {
-        show: false,
-        settings: loadSettings(),
-      },
       escs: {
         connected: 0,
         master: {},
@@ -93,10 +91,10 @@ class App extends Component {
 
     // Redefine the console and tee logs
     window.console.debug = (text, ...args) => {
-      const { appSettings } = this.state;
       const msg = [text, args.join(' ')].join(' ');
       this.updateLog(msg);
-      if(appSettings.settings.printLogs.value) {
+
+      if(getAppSetting('printLogs')) {
         console.log(text, ...args);
       }
     };
@@ -187,17 +185,14 @@ class App extends Component {
   };
 
   addLogMessage = async(message, params = {}) => {
-    const {
-      serial,
-      appSettings,
-    } = this.state;
+    const { serial } = this.state;
     const translation = i18next.t(`log:${message}`, params);
 
     params.lng = 'en';
     const translationEn = i18next.t(`log:${message}`, params);
     this.updateLog(translationEn);
 
-    if(appSettings.settings.printLogs.value) {
+    if(getAppSetting('printLogs')) {
       console.log(translationEn);
     }
 
@@ -207,14 +202,12 @@ class App extends Component {
   };
 
   fetchConfigs = async() => {
-    const {
-      appSettings,
-      configs,
-    } = this.state;
+    const { configs } = this.state;
     for(let i = 0; i < sources.length; i += 1) {
       const source = sources[i];
       const name = source.getName();
-      source.setSkipCache(appSettings.settings.skipCache.value);
+
+      source.setSkipCache(getAppSetting('skipCache'));
 
       try {
         configs.versions[name] = await source.getVersions();
@@ -533,10 +526,7 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     this.setActions({ isWriting: true });
-    const {
-      appSettings,
-      escs,
-    } = this.state;
+    const { escs } = this.state;
 
     const individual = [ ...escs.individual ];
     for(let i = 0; i < individual.length; i += 1) {
@@ -547,7 +537,7 @@ class App extends Component {
       const individualEscSettings = esc.individualSettings;
 
       let commonOverrides = {};
-      if(appSettings.settings.disableCommon.value) {
+      if(getAppSetting('disableCommon')) {
         commonOverrides = commonEscSettings;
       }
 
@@ -749,17 +739,12 @@ class App extends Component {
 
   handleConnect = async(e) => {
     e.preventDefault();
-    const {
-      serial,
-      appSettings,
-    } = this.state;
-    const { settings } = appSettings;
+    const { serial } = this.state;
 
     this.setActions({ isConnecting: true });
 
     try {
       await this.serial.open(serial.baudRate);
-      this.serial.setExtendedDebug(settings.extendedDebug.value);
       this.serial.setLogCallback(this.addLogMessage);
       this.addLogMessage('portOpened');
 
@@ -937,44 +922,6 @@ class App extends Component {
     this.setState({ language });
   };
 
-  handleAppSettingsClose = () => {
-    const { appSettings } = this.state;
-    this.setState({
-      appSettings: {
-        ...appSettings,
-        show: false,
-      },
-    });
-  };
-
-  handleAppSettingsOpen = () => {
-    const { appSettings } = this.state;
-    this.setState({
-      appSettings: {
-        ...appSettings,
-        show: true,
-      },
-    });
-  };
-
-  handleAppSettingsUpdate = (name, value) => {
-    const { appSettings } = this.state;
-    const settings = { ...appSettings.settings };
-
-    if(name === 'extendedDebug' && this.serial) {
-      this.serial.setExtendedDebug(value);
-    }
-
-    settings[name].value = value;
-    localStorage.setItem('settings', JSON.stringify(settings));
-    this.setState({
-      appSettings: {
-        ...appSettings,
-        settings,
-      },
-    });
-  };
-
   handleMelodySave = (name, tracks) => {
     const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
     const match = storedMelodies.findIndex((melody) => melody.name === name);
@@ -1060,7 +1007,6 @@ class App extends Component {
       melodies,
       msp,
       serial,
-      appSettings,
     } = this.state;
 
     if (!serial.checked) {
@@ -1070,15 +1016,6 @@ class App extends Component {
     return (
       <MainApp
         actions={actions}
-        appSettings={{
-          actions: {
-            handleClose: this.handleAppSettingsClose,
-            handleOpen: this.handleAppSettingsOpen,
-            handleUpdate: this.handleAppSettingsUpdate,
-          },
-          settings: appSettings.settings,
-          show: appSettings.show,
-        }}
         configs={configs}
         escs={{
           actions: {

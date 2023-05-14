@@ -1,4 +1,5 @@
 import sources from '../../sources';
+import { store } from '../../store';
 
 /**
  * Deeply compare two ByteArrays to each other
@@ -125,6 +126,8 @@ const isValidLayout = (layout) => sources.some((source) => source.isValidLayout(
  */
 const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcus()));
 
+const getAppSetting = (name) => store.getState().settings.settings[name].value;
+
 export {
   retry,
   delay,
@@ -133,4 +136,5 @@ export {
   isValidFlash,
   isValidLayout,
   getSupportedSources,
+  getAppSetting,
 };

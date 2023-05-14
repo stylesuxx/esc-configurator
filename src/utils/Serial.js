@@ -44,17 +44,6 @@ class Serial {
   }
 
   /**
-   * Setter to control extended debugging
-   *
-   * @param {boolean} extendedDebug Enable or disable extended debug
-   */
-  setExtendedDebug(extendedDebug) {
-    if(this.fourWay) {
-      this.fourWay.setExtendedDebug(extendedDebug);
-    }
-  }
-
-  /**
    * Setter for log callback - sets log callback on both, MSP and Four Way
    * interface
    *
