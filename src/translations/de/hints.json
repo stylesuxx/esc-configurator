@@ -44,5 +44,6 @@
   "RUNNING_BRAKE_LEVEL": "Die Stärke der Bremskraft während der Motor läuft.",
   "TEMPERATURE_LIMIT": "Verringert die Ausgangsleistung erheblich wenn das Limit überschritten wird.",
   "CURRENT_LIMIT": "Hält die maximal möglichen RPM innerhalb des Stromlimits.",
-  "SINE_MODE_POWER": "Festgelegte Stufe für die Auslastung, welche im Sinusmodus verwendet wird. ACHTUNG: Bei Werten höher als 6 können Motoren und/oder ESC beschädigt werden."
+  "SINE_MODE_POWER": "Festgelegte Stufe für die Auslastung, welche im Sinusmodus verwendet wird. ACHTUNG: Bei Werten höher als 6 können Motoren und/oder ESC beschädigt werden.",
+  "BIDIRECTIONAL_MODE": "Neutrale Position befindet sich in der Mitte des Schub sticks. Dreht sich in eine Richtung oberhalb der Mitte und in die andere Richtung, wenn unter der Mitte."
 }
