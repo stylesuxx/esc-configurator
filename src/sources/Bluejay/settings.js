@@ -429,10 +429,10 @@ const INDIVIDUAL_SETTINGS_200 = [{
     label: 'Reversed',
   }, {
     value: '3',
-    label: 'Bidirectional',
+    label: 'Forward/Reverse (3D mode)',
   }, {
     value: '4',
-    label: 'Bidirectional Reversed',
+    label: 'Forward/Reverse (3D mode) Reversed',
   }],
 }, {
   name: 'LED_CONTROL',
