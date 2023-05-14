@@ -3,26 +3,31 @@ const SETTINGS_LAYOUT_0 = [
     name: 'SINUSOIDAL_STARTUP',
     type: 'bool',
     label: 'escSinusoidalStartup',
+    group: 'am32sine',
   },
   {
     name: 'COMPLEMENTARY_PWM',
     type: 'bool',
     label: 'escComplementaryPwm',
+    group: 'am32pwm',
   },
   {
     name: 'VARIABLE_PWM_FREQUENCY',
     type: 'bool',
     label: 'escVariablePwmFrequency',
+    group: 'am32pwm',
   },
   {
     name: 'STUCK_ROTOR_PROTECTION',
     type: 'bool',
     label: 'escStuckRotorProtection',
+    group: 'am32safety',
   },
   {
     name: 'STALL_PROTECTION',
     type: 'bool',
     label: 'escStallProtection',
+    group: 'am32safety',
   },
   {
     name: 'TIMING_ADVANCE',
@@ -32,6 +37,7 @@ const SETTINGS_LAYOUT_0 = [
     step: 7.5,
     label: 'escTimingAdvance',
     displayFactor: 7.5,
+    order: 100,
   },
   {
     name: 'MOTOR_KV',
@@ -42,6 +48,7 @@ const SETTINGS_LAYOUT_0 = [
     label: 'escMotorKv',
     displayFactor: 40,
     displayOffset: 20,
+    group: 'am32motor',
   },
   {
     name: 'MOTOR_POLES',
@@ -50,6 +57,7 @@ const SETTINGS_LAYOUT_0 = [
     max: 36,
     step: 1,
     label: 'escMotorPoles',
+    group: 'am32motor',
   },
   {
     name: 'STARTUP_POWER',
@@ -58,6 +66,7 @@ const SETTINGS_LAYOUT_0 = [
     max: 150,
     step: 1,
     label: 'escStartupPower',
+    order: 200,
   },
   {
     name: 'PWM_FREQUENCY',
@@ -72,6 +81,7 @@ const SETTINGS_LAYOUT_0 = [
     name: 'BRAKE_ON_STOP',
     type: 'bool',
     label: 'escBrakeOnStop',
+    group: 'am32brake',
   },
 ];
 
@@ -99,6 +109,7 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 2,
     displayOffset: 750,
+    group: 'am32servo',
   },
   {
     name: 'SERVO_HIGH_THRESHOLD',
@@ -109,6 +120,7 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 2,
     displayOffset: 1750,
+    group: 'am32servo',
   },
   {
     name: 'SERVO_NEUTRAL',
@@ -119,6 +131,7 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 1,
     displayOffset: 1374,
+    group: 'am32servo',
   },
   {
     name: 'SERVO_DEAD_BAND',
@@ -127,11 +140,13 @@ const SETTINGS_LAYOUT_1 = [
     min: 0,
     max: 100,
     step: 1,
+    group: 'am32servo',
   },
   {
     name: 'LOW_VOLTAGE_CUTOFF',
     type: 'bool',
     label: 'escLowVoltageCutoff',
+    group: 'am32safety',
   },
   {
     name: 'LOW_VOLTAGE_THRESHOLD',
@@ -142,6 +157,8 @@ const SETTINGS_LAYOUT_1 = [
     step: 1,
     displayFactor: 1,
     displayOffset: 250,
+    visibleIf: (settings) => settings.LOW_VOLTAGE_CUTOFF === 1,
+    group: 'am32safety',
   },
   {
     name: 'RC_CAR_REVERSING',
@@ -165,6 +182,7 @@ const SETTINGS_LAYOUT_2 = [
     max: 25,
     step: 1,
     visibleIf: (settings) => settings.SINUSOIDAL_STARTUP === 1,
+    group: 'am32sine',
   },
   {
     name: 'BRAKE_STRENGTH',
@@ -173,6 +191,8 @@ const SETTINGS_LAYOUT_2 = [
     min: 1,
     max: 10,
     step: 1,
+    visibleIf: (settings) => settings.BRAKE_ON_STOP === 1,
+    group: 'am32brake',
   },
   {
     name: 'ESC_PROTOCOL',
@@ -200,6 +220,7 @@ const SETTINGS_LAYOUT_2 = [
         label: 'EDT ARM',
       },
     ],
+    order: 0,
   },
   {
     name: 'RUNNING_BRAKE_LEVEL',
@@ -208,6 +229,7 @@ const SETTINGS_LAYOUT_2 = [
     min: 0,
     max: 10,
     step: 1,
+    group: 'am32brake',
   },
   {
     name: 'TEMPERATURE_LIMIT',
@@ -217,6 +239,7 @@ const SETTINGS_LAYOUT_2 = [
     max: 141,
     step: 1,
     disableValue: 141,
+    group: 'am32safety',
   },
   {
     name: 'CURRENT_LIMIT',
@@ -227,6 +250,7 @@ const SETTINGS_LAYOUT_2 = [
     step: 2,
     displayFactor: 2,
     disableValue: 202,
+    group: 'am32safety',
   },
   {
     name: 'SINE_MODE_POWER',
@@ -236,6 +260,7 @@ const SETTINGS_LAYOUT_2 = [
     max: 10,
     step: 1,
     visibleIf: (settings) => settings.SINUSOIDAL_STARTUP === 1,
+    group: 'am32sine',
   },
 ];
 

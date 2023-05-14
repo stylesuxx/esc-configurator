@@ -101,6 +101,7 @@ describe('Flash', () => {
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
+        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -200,6 +201,7 @@ describe('Flash', () => {
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
+        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -301,6 +303,7 @@ describe('Flash', () => {
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
+        source: { getGroupOrder: () => [] },
       },
     ];
 

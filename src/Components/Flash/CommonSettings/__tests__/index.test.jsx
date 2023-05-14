@@ -34,6 +34,7 @@ describe('CommonSettings', () => {
       {
         meta: { available: true },
         settings: { MODE: 1 },
+        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -135,6 +136,7 @@ describe('CommonSettings', () => {
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
+        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -271,6 +273,7 @@ describe('CommonSettings', () => {
         SUB_REVISION: 201,
         NAME: 'Bluejay (Beta)',
       },
+      source: { getGroupOrder: () => [] },
     };
 
     const escs = [];
@@ -385,6 +388,7 @@ describe('CommonSettings', () => {
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
+        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -494,6 +498,7 @@ describe('CommonSettings', () => {
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
+        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -603,6 +608,8 @@ describe('CommonSettings', () => {
 
     for(let i = 0; i < 4; i += 1) {
       const current = JSON.parse(JSON.stringify(esc));
+      current.source = { getGroupOrder: () => [] };
+
       if(i === 3) {
         current.settings.MOTOR_DIRECTION = 1;
       }
@@ -753,6 +760,8 @@ describe('CommonSettings', () => {
 
     for(let i = 0; i < 4; i += 1) {
       const current = JSON.parse(JSON.stringify(esc));
+      current.source = { getGroupOrder: () => [] };
+
       if(i === 3) {
         current.settings.MOTOR_DIRECTION = 1;
       }
@@ -903,9 +912,10 @@ describe('CommonSettings', () => {
     };
 
     const escs = [];
-
     for(let i = 0; i < 4; i += 1) {
       const current = JSON.parse(JSON.stringify(esc));
+      current.source = { getGroupOrder: () => [] };
+
       if(i === 3) {
         current.settings.MOTOR_DIRECTION = 1;
       }
@@ -953,6 +963,7 @@ describe('CommonSettings', () => {
       {
         meta: { available: true },
         settings: { MODE: 1 },
+        source: { getGroupOrder: () => [] },
       },
     ];
 

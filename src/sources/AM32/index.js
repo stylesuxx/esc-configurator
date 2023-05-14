@@ -98,6 +98,21 @@ class AM32Source extends GithubSource {
   getValidNames() {
     return Object.keys(escs.layouts);
   }
+
+  /**
+   * Reurns group order for common settings
+   *
+   * @returns {Array<string>}
+   */
+  getGroupOrder() {
+    return [
+      'general',
+      'am32motor',
+      'am32pwm',
+      'am32brake',
+      'am32sine',
+    ];
+  }
 }
 
 const source = new AM32Source(

@@ -32,12 +32,13 @@ function CommonSettings({
   const {
     t,
     i18n,
-  } = useTranslation(['common', 'hints']);
+  } = useTranslation(['common', 'groups', 'hints']);
 
   const master = getMaster(escs);
   const reference = getMasterSettings(escs);
   const allSettings = getAllSettings(escs);
   const allMulti = isMulti(escs);
+  const groupOrder = master.source.getGroupOrder();
 
   const { settingsDescriptions } = master;
   const mainRevision = availableSettings.MAIN_REVISION;
@@ -138,76 +139,139 @@ function CommonSettings({
     overrides = overrides[revision];
   }
 
-  const settingElements = settingsDescriptions.base.map((description) => {
-    if (description.visibleIf && !description.visibleIf(availableSettings)) {
-      return null;
-    }
+  const base = settingsDescriptions.base;
+  const groups = { 'general': [] };
 
-    // Check all settings against each other
-    let inSync = true;
-    for(let i = 0; i < allSettings.length; i += 1) {
-      const current = allSettings[i];
-      if(reference[description.name] !== current[description.name]) {
-        inSync = false;
-        break;
-      }
-    }
+  for(let i = 0; i < base.length; i += 1) {
+    const item = base[i];
 
-    let setting = description;
-    if (overrides) {
-      const settingOverride = overrides.find((override) => override.name === description.name);
-      if(settingOverride) {
-        setting = settingOverride;
-      }
-    }
-    const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
-
-    // Sanitize a value if it is depended on another value
-    let value = availableSettings[setting.name];
-    if (description.sanitize) {
-      value = description.sanitize(value, availableSettings);
-      availableSettings[setting.name] = value;
-    }
-
-    let disableValue = description.disableValue || null;
-
-    switch (setting.type) {
-      case 'bool': {
-        return (
-          <Checkbox
-            disabled={disabled}
-            hint={hint}
-            inSync={inSync}
-            key={setting.name}
-            label={t(setting.label)}
-            name={setting.name}
-            onChange={handleCheckboxChange}
-            value={value}
-          />
-        );
+    if (item.group) {
+      if(!groups[item.group]) {
+        groups[item.group] = [];
       }
 
-      case 'enum': {
-        const { options } = setting;
-        return (
-          <Select
-            disabled={disabled}
-            hint={hint}
-            inSync={inSync}
-            key={setting.name}
-            label={t(setting.label)}
-            name={setting.name}
-            onChange={handleSelectChange}
-            options={options}
-            value={value}
-          />
-        );
+      groups[item.group].push(item);
+    } else {
+      groups['general'].push(item);
+    }
+  }
+
+  // Order available groups by source order. Append unknown groups at the end
+  const groupKeys = Object.keys(groups);
+  const orderedGroupKeys = groupOrder.filter((group) => groupKeys.includes(group));
+  for(let i = 0; i < groupKeys.length; i += 1) {
+    const key = groupKeys[i];
+    if(!orderedGroupKeys.includes(key)) {
+      orderedGroupKeys.push(key);
+    }
+  }
+
+  // Order items in groups based on their order value
+  for( let i = 0; i < orderedGroupKeys.length; i += 1) {
+    const group = orderedGroupKeys[i];
+    const items = groups[group];
+
+    let orderedItems = items.filter((item) => Object.prototype.hasOwnProperty.call(item, "order"));
+    const unorderedItems = items.filter((item) => !Object.prototype.hasOwnProperty.call(item, "order"));
+    orderedItems.sort((a, b) => a.order - b.order );
+
+    groups[group] = [...orderedItems, ...unorderedItems];
+  }
+
+  const groupedSettingElements = orderedGroupKeys.map((group) => {
+    const groupItems = groups[group];
+
+    const settingElements = groupItems.map((description) => {
+      if (description.visibleIf && !description.visibleIf(availableSettings)) {
+        return null;
       }
 
-      case 'number': {
-        if(directInput) {
+      // Check all settings against each other
+      let inSync = true;
+      for(let i = 0; i < allSettings.length; i += 1) {
+        const current = allSettings[i];
+        if(reference[description.name] !== current[description.name]) {
+          inSync = false;
+          break;
+        }
+      }
+
+      let setting = description;
+      if (overrides) {
+        const settingOverride = overrides.find((override) => override.name === description.name);
+        if(settingOverride) {
+          setting = settingOverride;
+        }
+      }
+      const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
+
+      // Sanitize a value if it is depended on another value
+      let value = availableSettings[setting.name];
+      if (description.sanitize) {
+        value = description.sanitize(value, availableSettings);
+        availableSettings[setting.name] = value;
+      }
+
+      let disableValue = description.disableValue || null;
+
+      switch (setting.type) {
+        case 'bool': {
           return (
-            <Number
+            <Checkbox
+              disabled={disabled}
+              hint={hint}
+              inSync={inSync}
+              key={setting.name}
+              label={t(setting.label)}
+              name={setting.name}
+              onChange={handleCheckboxChange}
+              value={value}
+            />
+          );
+        }
+
+        case 'enum': {
+          const { options } = setting;
+          return (
+            <Select
+              disabled={disabled}
+              hint={hint}
+              inSync={inSync}
+              key={setting.name}
+              label={t(setting.label)}
+              name={setting.name}
+              onChange={handleSelectChange}
+              options={options}
+              value={value}
+            />
+          );
+        }
+
+        case 'number': {
+          if(directInput) {
+            return (
+              <Number
+                disabled={disabled}
+                factor={setting.displayFactor}
+                hint={hint}
+                inSync={inSync}
+                key={setting.name}
+                label={t(setting.label)}
+                max={setting.max}
+                min={setting.min}
+                name={setting.name}
+                offset={setting.displayOffset}
+                onChange={handleNumberChange}
+                round={false}
+                step={setting.step}
+                value={value}
+              />
+            );
+          }
+
+          return (
+            <Slider
+              disableValue={disableValue}
               disabled={disabled}
               factor={setting.displayFactor}
               hint={hint}
@@ -226,29 +290,19 @@ function CommonSettings({
           );
         }
 
-        return (
-          <Slider
-            disableValue={disableValue}
-            disabled={disabled}
-            factor={setting.displayFactor}
-            hint={hint}
-            inSync={inSync}
-            key={setting.name}
-            label={t(setting.label)}
-            max={setting.max}
-            min={setting.min}
-            name={setting.name}
-            offset={setting.displayOffset}
-            onChange={handleNumberChange}
-            round={false}
-            step={setting.step}
-            value={value}
-          />
-        );
+        default: return null;
       }
+    });
 
-      default: return null;
-    }
+    return (
+      <fieldset key={group}>
+        <legend>
+          {t(`groups:${group}`)}
+        </legend>
+
+        { settingElements }
+      </fieldset>
+    );
   });
 
   return (
@@ -260,7 +314,7 @@ function CommonSettings({
       </div>
 
       <div className="spacer-box">
-        {settingElements}
+        {groupedSettingElements}
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ const resources = {};
 languages.forEach((language) => {
   resources[language] = {
     common: require(`./translations/${language}/common.json`),
+    groups: require(`./translations/${language}/groups.json`),
     hints: require(`./translations/${language}/hints.json`),
     log: require(`./translations/${language}/log.json`),
     settings: require(`./translations/${language}/settings.json`),
