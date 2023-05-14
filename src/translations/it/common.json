@@ -111,7 +111,7 @@
   "escBrakeStrength": "Potenza Frenante",
   "am32RunningBrakeLevel": "Livello Freno Attuale",
   "am32TemperatureLimit": "Limite Temperatura",
-  "am32CurrentLimit": "Limite Corrente",
+  "am32CurrentLimit": "Current Limit [A]",
   "am32SineModePower": "Modalità Alimentazione Sine",
   "bluejayTextLine1": "Bluejay è un firmware basato su BLHeli_S in grado di DShot bidirezionale - quindi una grande scelta se si desidera eseguire il filtraggio RPM sul vostro equipaggiamento. Questo progetto mira anche a ripulire e semplificare il codice sorgente originale BLHeli_S.",
   "bluejayTextLine2": "Un editor audio per l'avvio fa parte del processo.",
