@@ -398,11 +398,11 @@ const INDIVIDUAL_SETTINGS = [
       },
       {
         value: "3",
-        label: "Bidirectional",
+        label: "Forward/Reverse (3D mode)",
       },
       {
         value: "4",
-        label: "Bidirectional Reversed",
+        label: "Forward/Reverse (3D mode) Reversed",
       },
     ],
   },
