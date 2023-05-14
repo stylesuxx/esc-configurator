@@ -1,5 +1,4 @@
 import { serial as serialPolyfill } from 'web-serial-polyfill';
-import i18next from 'i18next';
 
 import settings from '../settings.json';
 
@@ -39,10 +38,6 @@ function loadLanguage() {
         }
       }
     }
-  }
-
-  if(storedLanguage) {
-    i18next.changeLanguage(storedLanguage);
   }
 
   return(storedLanguage || defaultLanguage);

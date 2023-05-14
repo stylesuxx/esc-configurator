@@ -24,7 +24,6 @@ function App({
   actions,
   configs,
   escs,
-  language,
   melodies,
   msp,
   onAllMotorSpeed,
@@ -64,11 +63,7 @@ function App({
             />
 
             <div className="main__settings">
-              <LanguageSelection
-                current={language.current}
-                languages={language.available}
-                onChange={language.actions.handleChange}
-              />
+              <LanguageSelection />
 
               <div className="button button--dark">
                 <button
@@ -177,11 +172,6 @@ App.propTypes = {
     individual: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     master: PropTypes.shape({}).isRequired,
     targets: PropTypes.arrayOf(PropTypes.number).isRequired,
-  }).isRequired,
-  language: PropTypes.shape({
-    actions: PropTypes.shape({ handleChange: PropTypes.func.isRequired }).isRequired,
-    available: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    current: PropTypes.string.isRequired,
   }).isRequired,
   melodies: PropTypes.shape({
     actions: PropTypes.shape({

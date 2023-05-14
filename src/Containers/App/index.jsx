@@ -14,20 +14,16 @@ import {
   getAppSetting,
 } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
-import settings from '../../settings.json';
 import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
 import {
   clearLog,
-  loadLanguage,
   loadLog,
   loadMelodies,
   loadSerialApi,
 } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
-
-const { availableLanguages } = settings;
 
 class App extends Component {
   constructor() {
@@ -74,7 +70,6 @@ class App extends Component {
         isConnecting: false,
         isDisconnecting: false,
       },
-      language: loadLanguage(),
       melodies: {
         escs: [
           "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
@@ -914,14 +909,6 @@ class App extends Component {
     }
   };
 
-  handleLanguageSelection = (e) => {
-    const language = e.target.value;
-
-    localStorage.setItem('language', language);
-    i18next.changeLanguage(language);
-    this.setState({ language });
-  };
-
   handleMelodySave = (name, tracks) => {
     const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
     const match = storedMelodies.findIndex((melody) => melody.name === name);
@@ -1003,7 +990,6 @@ class App extends Component {
       escs,
       actions,
       configs,
-      language,
       melodies,
       msp,
       serial,
@@ -1033,11 +1019,6 @@ class App extends Component {
             handleFirmwareDump: this.handleFirmwareDump,
           },
           ...escs,
-        }}
-        language={{
-          actions: { handleChange: this.handleLanguageSelection },
-          current: language,
-          available: availableLanguages,
         }}
         melodies={{
           actions: {
