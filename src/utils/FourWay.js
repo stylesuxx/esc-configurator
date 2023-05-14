@@ -383,7 +383,7 @@ class FourWay {
    * @returns {object}
    */
   async getInfo(target) {
-    const flash = await this.initFlash(target, 0);
+    const flash = await this.initFlash(target, 5);
     const info = Flash.getInfo(flash);
 
     try {
