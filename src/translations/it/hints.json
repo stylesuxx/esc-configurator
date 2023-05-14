@@ -45,5 +45,5 @@
   "TEMPERATURE_LIMIT": "Diminuisce la potenza massima quando si raggiunge il limite.",
   "CURRENT_LIMIT": "Mantiene il massimo RPM possibile alla corrente consentita.",
   "SINE_MODE_POWER": "Livello fissato da usare in modalità sine. ATTENZIONE: I valori superiori a 6 potrebbero danneggiare il motore e/o l'ESC.",
-  "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position."
+  "BIDIRECTIONAL_MODE": "La posizione neutrale è nel centro dell'acceleratore. Ruota in una direzione al di sopra del centro e nell'altra direzione al di sotto della posizione centrale."
 }
