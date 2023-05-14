@@ -1,9 +1,9 @@
 {
   "general": "",
-  "am32motor": "Motor Specs",
-  "am32sine": "Sinusoidal Settings",
-  "am32servo": "Servo Settings",
-  "am32brake": "Brake Settings",
-  "am32pwm": "PWM Settings",
-  "am32safety": "Safety"
+  "am32motor": "Specifikace motoru",
+  "am32sine": "Nastavení Sinusoidy",
+  "am32servo": "Nastavení serva",
+  "am32brake": "Nastavení brzd",
+  "am32pwm": "Nastavení PWM",
+  "am32safety": "Bezpečnost"
 }
