@@ -3,6 +3,9 @@ import {
   render, screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
+
+import { store } from '../../../store';
 
 let App;
 
@@ -22,7 +25,12 @@ describe('App', () => {
   });
 
   test('should render container', () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
     expect(screen.getByRole('button', { name: /settings/i })).toBeInTheDocument();
     expect(screen.getByAltText(/Discord/i)).toBeInTheDocument();
 

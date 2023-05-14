@@ -45,6 +45,9 @@ import {
 } from './FourWayConstants';
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
+import { store } from '../store';
+import { incrementByAmount as incrementPacketErrorsByAmount } from '../Components/Statusbar/statusSlice';
+
 const blheliEeprom = blheliSSource.getEeprom();
 const blheliSettingsDescriptions = blheliSSource.getSettingsDescriptions();
 const bluejayEeprom = bluejaySource.getEeprom();
@@ -104,15 +107,6 @@ class FourWay {
   }
 
   /**
-   * Setter for packet error callback
-   *
-   * @param {function} packetErrorsCallback
-   */
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-  }
-
-  /**
    * Invoke log callback if available
    *
    * @param {string} message
@@ -130,9 +124,7 @@ class FourWay {
    * @param {number} count Packet error count
    */
   increasePacketErrors(count) {
-    if(this.packetErrorsCallback) {
-      this.packetErrorsCallback(count);
-    }
+    store.dispatch(incrementPacketErrorsByAmount(count));
   }
 
   /**

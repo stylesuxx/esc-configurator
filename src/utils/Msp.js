@@ -2,6 +2,9 @@ import compareVersions from 'compare-versions';
 
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
+import { store } from '../store';
+import { incrementByAmount as incrementPacketErrorsByAmount } from '../Components/Statusbar/statusSlice';
+
 /**
  * Relevant MSP commands, this is not a full mapping, rather just a selectiotn
  * for the functionality we actually need.
@@ -79,7 +82,6 @@ class Msp {
     this.read = this.read.bind(this);
 
     this.logCallback = null;
-    this.packetErrorsCallback = null;
 
     const speedBufferOut = new ArrayBuffer(16);
     this.speedBufView = new Uint8Array(speedBufferOut);
@@ -95,15 +97,6 @@ class Msp {
    */
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
-  }
-
-  /**
-   * Setter for packet error callback
-   *
-   * @param {function} packetErrorsCallback
-   */
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
   }
 
   /**
@@ -124,9 +117,7 @@ class Msp {
    * @param {number} count Packet error count
    */
   increasePacketErrors(count) {
-    if(this.packetErrorsCallback) {
-      this.packetErrorsCallback(count);
-    }
+    store.dispatch(incrementPacketErrorsByAmount(count));
   }
 
   /**

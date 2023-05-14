@@ -2,6 +2,9 @@
 
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
+import { store } from './store';
 import settings from './settings.json';
 import App from './Containers/App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -31,7 +34,9 @@ ReactDOM.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
       <Suspense fallback="loading">
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </Suspense>
     </I18nextProvider>
   </React.StrictMode>,

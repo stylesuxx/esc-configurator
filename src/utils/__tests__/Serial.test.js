@@ -6,7 +6,6 @@ let releaseReadLock;
 let releaseWriteLock;
 let read;
 let logCallback;
-let packetErrorCallback;
 let serial;
 let Serial;
 
@@ -25,7 +24,6 @@ describe('Serial', () => {
     releaseWriteLock = jest.fn();
     read = jest.fn();
     logCallback = jest.fn();
-    packetErrorCallback = jest.fn();
 
     port = {
       open: jest.fn(),
@@ -56,7 +54,6 @@ describe('Serial', () => {
     expect(port.open).toHaveBeenCalled();
 
     serial.setLogCallback(logCallback);
-    serial.setPacketErrorsCallback(packetErrorCallback);
 
     const utilization = serial.getUtilization();
     expect(utilization.up).toEqual(0);

@@ -30,7 +30,6 @@ function App({
   onSaveLog,
   onSingleMotorSpeed,
   serial,
-  stats,
 }) {
   const { t } = useTranslation('common');
   const isIdle = !Object.values(actions).some((element) => element);
@@ -109,11 +108,7 @@ function App({
           settings={escs.master}
         />
 
-        <Statusbar
-          getUtilization={serial.port ? serial.port.getUtilization : undefined}
-          packetErrors={stats.packetErrors}
-          version={stats.version}
-        />
+        <Statusbar getUtilization={serial.port ? serial.port.getUtilization : undefined} />
       </div>
 
       {appSettings.show &&
@@ -233,10 +228,6 @@ App.propTypes = {
     }),
     portNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   }),
-  stats: PropTypes.shape({
-    packetErrors: PropTypes.number.isRequired,
-    version: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default App;

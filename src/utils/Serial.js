@@ -34,7 +34,6 @@ class Serial {
     this.getUtilization = this.getUtilization.bind(this);
 
     this.logCallback = null;
-    this.packetErrorsCallback = null;
 
     this.qp = new QueueProcessor();
 
@@ -66,19 +65,6 @@ class Serial {
 
     this.fourWay.setLogCallback(logCallback);
     this.msp.setLogCallback(logCallback);
-  }
-
-  /**
-   * Setter for packet error callback - sets log callback on both, MSP and Four
-   * Way interface
-   *
-   * @param {function} packetErrorsCallback
-   */
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-
-    this.fourWay.setPacketErrorsCallback(packetErrorsCallback);
-    this.msp.setPacketErrorsCallback(packetErrorsCallback);
   }
 
   /**

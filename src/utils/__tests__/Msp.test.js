@@ -18,15 +18,6 @@ describe('Msp', () => {
     expect(logCallback).toHaveBeenCalled();
   });
 
-  it('should be possible to set packet error', async() => {
-    const errorCallback = jest.fn();
-
-    msp.setPacketErrorsCallback(errorCallback);
-    msp.increasePacketErrors();
-
-    expect(errorCallback).toHaveBeenCalled();
-  });
-
   it('should return API version', async() => {
     await expect(msp.getApiVersion()).resolves.toEqual(undefined);
     expect(serial).toHaveBeenCalled();

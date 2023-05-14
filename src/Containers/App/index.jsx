@@ -12,7 +12,6 @@ import { getMasterSettings } from '../../utils/helpers/Settings';
 import { delay } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
 import settings from '../../settings.json';
-import packages from '../../../package.json';
 import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
@@ -27,7 +26,6 @@ import {
 import { MessageNotOkError } from '../../utils/Errors';
 
 const { availableLanguages } = settings;
-const { version } = packages;
 
 class App extends Component {
   constructor() {
@@ -63,10 +61,6 @@ class App extends Component {
         log: [],
         open: false,
         portNames: [],
-      },
-      stats: {
-        packetErrors: 0,
-        version,
       },
       configs: {
         versions: {},
@@ -351,16 +345,6 @@ class App extends Component {
     });
 
     this.setEscs({ individual: [] });
-  };
-
-  handlePacketErrors = (count) => {
-    const { stats } = this.state;
-    this.setState({
-      stats: {
-        ...stats,
-        packetErrors: stats.packetErrors + count,
-      },
-    });
   };
 
   handleSaveLog = () => {
@@ -777,7 +761,6 @@ class App extends Component {
       await this.serial.open(serial.baudRate);
       this.serial.setExtendedDebug(settings.extendedDebug.value);
       this.serial.setLogCallback(this.addLogMessage);
-      this.serial.setPacketErrorsCallback(this.handlePacketErrors);
       this.addLogMessage('portOpened');
 
       /* Send a reset of the 4 way interface, just in case it was not cleanly
@@ -1077,7 +1060,6 @@ class App extends Component {
       melodies,
       msp,
       serial,
-      stats,
       appSettings,
     } = this.state;
 
@@ -1147,7 +1129,6 @@ class App extends Component {
           port: this.serial,
           ...serial,
         }}
-        stats={stats}
       />
     );
   }
