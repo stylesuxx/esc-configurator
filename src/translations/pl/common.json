@@ -111,7 +111,7 @@
   "escBrakeStrength": "Siła hamowania",
   "am32RunningBrakeLevel": "Poziom hamulca roboczego",
   "am32TemperatureLimit": "Ograniczenie temperatury",
-  "am32CurrentLimit": "Ograniczenie prądu",
+  "am32CurrentLimit": "Current Limit [A]",
   "am32SineModePower": "Moc trybu sinusoidalnego",
   "bluejayTextLine1": "Bluejay to oprogramowanie układowe oparte na BLHeli_S zdolne do dwukierunkowego DShot - więc jest to świetny wybór, jeśli chcesz uruchomić filtrowanie RPM na swoim urządzeniu. Ten projekt ma również na celu oczyszczenie i uproszczenie oryginalnego kodu źródłowego BLHeli_S.",
   "bluejayTextLine2": "Edytor dźwięku startowego jest również częścią transakcji.",
