@@ -111,7 +111,7 @@
   "escBrakeStrength": "刹車强度",
   "am32RunningBrakeLevel": "Running Brake Level",
   "am32TemperatureLimit": "Temperature Limit",
-  "am32CurrentLimit": "Current Limit",
+  "am32CurrentLimit": "Current Limit [A]",
   "am32SineModePower": "Sine Mode Power",
   "bluejayTextLine1": "Bluejay 是一個基於 BLHeli_S 固件能夠使用雙向Dshot的新固件 - 如果您想要在您的飛機上運行 RPM 濾波器，那麽這是一個很好的選擇。該項目還旨在清理和簡化最初的 BLHeli_S 源代碼。",
   "bluejayTextLine2": "啓動音樂編輯器也是它的一個新功能。",
