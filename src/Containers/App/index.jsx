@@ -282,7 +282,8 @@ class App extends Component {
       if(result) {
         result.index = target;
         result.ref = React.createRef();
-        individual[target] = result;
+        const individualIndex = escs.individual.findIndex((esc) => esc.index === target);
+        individual[individualIndex] = result;
 
         await this.setEscs({ individual });
       } else {
