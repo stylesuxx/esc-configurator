@@ -44,5 +44,6 @@
   "RUNNING_BRAKE_LEVEL": "Množství použitého brzdění, když motor běží.",
   "TEMPERATURE_LIMIT": "Při dosažení prahové hodnoty výrazně sníží maximální výkon.",
   "CURRENT_LIMIT": "Udrží maximální možné otáčky při povoleném proudu.",
-  "SINE_MODE_POWER": "Pevná úroveň pracovního cyklu, použita při sinusovém režimu. POZOR: Hodnoty nad 6 mohou poškodit motor a/nebo ESC."
+  "SINE_MODE_POWER": "Pevná úroveň pracovního cyklu, použita při sinusovém režimu. POZOR: Hodnoty nad 6 mohou poškodit motor a/nebo ESC.",
+  "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position."
 }
