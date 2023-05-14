@@ -111,7 +111,7 @@
   "escBrakeStrength": "Brzdná síla",
   "am32RunningBrakeLevel": "Úrovně brzdění",
   "am32TemperatureLimit": "Teplotní limit",
-  "am32CurrentLimit": "Proudový Limit",
+  "am32CurrentLimit": "Current Limit [A]",
   "am32SineModePower": "Sinusové napájení",
   "bluejayTextLine1": "Bluejay je firmware založený na BLHeli_S schopný obousměrného DShotu - takže skvělá volba, pokud chcete spustit filtrování RPM na vašem zařízení. Tento projekt má také za cíl vyčistit a zjednodušit původní zdrojový kód BLHeli_S.",
   "bluejayTextLine2": "Součástí je také zvukový editor spouštěcího zvuku.",
