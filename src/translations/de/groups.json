@@ -1,9 +1,9 @@
 {
   "general": "",
-  "am32motor": "Motor Specs",
-  "am32sine": "Sinusoidal Settings",
-  "am32servo": "Servo Settings",
-  "am32brake": "Brake Settings",
-  "am32pwm": "PWM Settings",
-  "am32safety": "Safety"
+  "am32motor": "Motor Spezifikationen",
+  "am32sine": "Sinusförmige Einstellungen",
+  "am32servo": "Servo Einstellungen",
+  "am32brake": "Bremskraft Einstellungen",
+  "am32pwm": "PWM Einstellungen",
+  "am32safety": "Sicherheit"
 }
