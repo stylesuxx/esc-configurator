@@ -81,7 +81,7 @@
   "migrateFlashHint": "(Questo tenterà di trasferire le impostazioni tra firmware diversi come ad esempio da BLHeli_S a Bluejay)",
   "migrationNote": "Tieni presente che le impostazioni non sono trasferite tra firmware diversi, assicurati di prendere nota delle direzioni del motore e di altre impostazioni che potresti voler inserire dopo. Le impostazioni verranno trasferite tra diverse versioni dello stesso firmware.",
   "escDirectionReversed": "Direzione Invertita",
-  "escBidirectionalMode": "Modo Bidirezionale",
+  "escBidirectionalMode": "Forward/Reverse (3D mode)",
   "escSelectProtocol": "Selezione Protocollo ESC",
   "escSinusoidalStartup": "Avvio Sinusoidale",
   "escComplementaryPwm": "PWM Complementare",
