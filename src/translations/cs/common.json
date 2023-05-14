@@ -81,7 +81,7 @@
   "migrateFlashHint": "(Toto se pokusí migrovat nastavení mezi různými firmwary, jako například z BLHeli_S do Bluejay)",
   "migrationNote": "Uvědomte si, že nastavení nejsou migrována mezi různými firmwary, nezapomeňte si poznamenat směry motoru a další nastavení, která byste mohli chtít přesunout. Nastavení budou migrována mezi různými verzemi stejného firmwaru.",
   "escDirectionReversed": "Opačný směr",
-  "escBidirectionalMode": "Obousměrný režim",
+  "escBidirectionalMode": "Forward/Reverse (3D mode)",
   "escSelectProtocol": "Vyberte ESC protokol",
   "escSinusoidalStartup": "Sinusové spuštění",
   "escComplementaryPwm": "Doplňkové PWM",
