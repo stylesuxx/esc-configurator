@@ -81,7 +81,7 @@
   "migrateFlashHint": "(这将尝试在不同固件之间迁移设置，例如从 BLHeli_S 迁移到 Bluejay)",
   "migrationNote": "设置不能在不同的固件之间进行迁移， 请务必注意您的电机转向和其他您可能想要改动的设置。 设置可以在同一固件的不同版本之间迁移。",
   "escDirectionReversed": "反转方向",
-  "escBidirectionalMode": "双向模式",
+  "escBidirectionalMode": "Forward/Reverse (3D mode)",
   "escSelectProtocol": "选择 ESC 协议",
   "escSinusoidalStartup": "正弦式启动",
   "escComplementaryPwm": "互补 PWM",
