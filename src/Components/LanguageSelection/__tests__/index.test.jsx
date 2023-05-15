@@ -31,41 +31,8 @@ function setupTestStore() {
   return refObj;
 }
 
-/*
-function setupInvalidTestStore() {
-  const refObj = {};
-
-  beforeEach(() => {
-    const store = configureStore({
-      reducer: { settings: settingsReducer },
-      preloadedState: {
-        settings: {
-          show: true,
-          settings: {
-            invalid: {
-              type: 'invalid',
-              value: 'invalid',
-            },
-          },
-        },
-      },
-    }
-    );
-    refObj.store = store;
-    refObj.wrapper = ({ children }) => (
-      <Provider store={store}>
-        {children}
-      </Provider>
-    );
-  });
-
-  return refObj;
-}
-*/
-
 describe('LanguageSelection', () => {
   const storeRef = setupTestStore();
-  //const invalidStoreRef = setupInvalidTestStore();
 
   it('should displays language options', () => {
     render(

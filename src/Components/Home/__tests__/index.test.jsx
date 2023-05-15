@@ -4,11 +4,34 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
 import Home from '../';
+
+import melodiesReducer from '../../MelodyEditor/melodiesSlice';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({ reducer: { melodies: melodiesReducer } });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
+
 describe('Home', () => {
+  const storeRef = setupTestStore();
+
   it('should render home screen', async () => {
     const onChangePort = jest.fn();
     const onConnect = jest.fn();
@@ -24,7 +47,8 @@ describe('Home', () => {
         onDisconnect={onDisconnect}
         onSetBaudRate={onSetBaudRate}
         onSetPort={onSetPort}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText('homeWelcome')).toBeInTheDocument();

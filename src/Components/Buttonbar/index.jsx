@@ -1,14 +1,23 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import GenericButton from './GenericButton';
+
+import {
+  prod,
+  show,
+  selectSupported,
+} from '../MelodyEditor/melodiesSlice';
 
 import './style.scss';
 
 function Buttonbar({
   onClearLog,
-  onOpenMelodyEditor,
   onReadSetup,
   onWriteSetup,
   onSeletFirmwareForAll,
@@ -18,9 +27,15 @@ function Buttonbar({
   canWrite,
   canFlash,
   canResetDefaults,
-  showMelodyEditor,
 }) {
   const { t } = useTranslation('common');
+  const dispatch = useDispatch();
+  const showMelodyEditor = useSelector(selectSupported);
+
+  const handleOpenMelodyEditor = useCallback(() => {
+    dispatch(prod());
+    dispatch(show());
+  }, [dispatch]);
 
   return (
     <div className="button-bar">
@@ -28,7 +43,7 @@ function Buttonbar({
         {showMelodyEditor &&
           <GenericButton
             disabled={!canRead}
-            onClick={onOpenMelodyEditor}
+            onClick={handleOpenMelodyEditor}
             text={t('escButtonOpenMelodyEditor')}
           />}
       </div>
@@ -81,7 +96,7 @@ function Buttonbar({
         {showMelodyEditor &&
           <GenericButton
             disabled={!canRead}
-            onClick={onOpenMelodyEditor}
+            onClick={handleOpenMelodyEditor}
             text={t('escButtonOpenMelodyEditor')}
           />}
       </div>
@@ -95,13 +110,11 @@ Buttonbar.propTypes = {
   canResetDefaults: PropTypes.bool.isRequired,
   canWrite: PropTypes.bool.isRequired,
   onClearLog: PropTypes.func.isRequired,
-  onOpenMelodyEditor: PropTypes.func.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,
   onSaveLog: PropTypes.func.isRequired,
   onSeletFirmwareForAll: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
-  showMelodyEditor: PropTypes.bool.isRequired,
 };
 
 export default Buttonbar;

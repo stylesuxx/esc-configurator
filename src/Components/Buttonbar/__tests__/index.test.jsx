@@ -4,18 +4,47 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import melodiesReducer, { updateAll } from '../../MelodyEditor/melodiesSlice';
+
 import Buttonbar from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({ reducer: { melodies: melodiesReducer } });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
+
 describe('Buttonbar', () => {
+  const storeRef = setupTestStore();
+
   it('should display buttons', () => {
+    storeRef.store.dispatch(updateAll([
+      'test',
+      'test',
+      'test',
+      'test',
+    ]));
+
     const onWriteSetup = jest.fn();
     const onReadSetup = jest.fn();
     const onResetDefaults = jest.fn();
     const onSaveLog = jest.fn();
     const onSeletFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
 
     render(
       <Buttonbar
@@ -24,14 +53,13 @@ describe('Buttonbar', () => {
         canReadDefaults={false}
         canResetDefaults={false}
         canWrite={false}
-        onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
         onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSeletFirmwareForAll}
         onWriteSetup={onWriteSetup}
-        showMelodyEditor
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.queryAllByText(/resetDefaults/i).length).toEqual(2);
@@ -48,7 +76,6 @@ describe('Buttonbar', () => {
     const onResetDefaults = jest.fn();
     const onSaveLog = jest.fn();
     const onSeletFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
 
     render(
       <Buttonbar
@@ -57,14 +84,13 @@ describe('Buttonbar', () => {
         canReadDefaults={false}
         canResetDefaults={false}
         canWrite={false}
-        onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
         onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSeletFirmwareForAll}
         onWriteSetup={onWriteSetup}
-        showMelodyEditor
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     userEvent.click(screen.getByText(/escButtonSaveLog/i));
@@ -77,7 +103,6 @@ describe('Buttonbar', () => {
     const onResetDefaults = jest.fn();
     const onSaveLog = jest.fn();
     const onSelectFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
 
     render(
       <Buttonbar
@@ -86,14 +111,13 @@ describe('Buttonbar', () => {
         canReadDefaults={false}
         canResetDefaults={false}
         canWrite={false}
-        onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
         onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
-        showMelodyEditor
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     userEvent.click(screen.queryAllByText(/resetDefaults/i)[1]);
@@ -115,7 +139,6 @@ describe('Buttonbar', () => {
     const onResetDefaults = jest.fn();
     const onSaveLog = jest.fn();
     const onSelectFirmwareForAll = jest.fn();
-    const onOpenMelodyEditor = jest.fn();
 
     render(
       <Buttonbar
@@ -124,14 +147,13 @@ describe('Buttonbar', () => {
         canReadDefaults
         canResetDefaults
         canWrite
-        onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
         onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
-        showMelodyEditor
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     userEvent.click(screen.queryAllByText(/resetDefaults/i)[1]);

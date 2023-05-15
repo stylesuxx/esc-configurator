@@ -7,6 +7,7 @@ import {
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
+import melodiesReducer from '../../MelodyEditor/melodiesSlice';
 import settingsReducer from '../../AppSettings/settingsSlice';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
@@ -31,7 +32,12 @@ function setupTestStore() {
   const refObj = {};
 
   beforeEach(() => {
-    const store = configureStore({ reducer: { settings: settingsReducer } });
+    const store = configureStore({
+      reducer: {
+        melodies: melodiesReducer,
+        settings: settingsReducer,
+      },
+    });
     refObj.store = store;
     refObj.wrapper = ({ children }) => (
       <Provider store={store}>

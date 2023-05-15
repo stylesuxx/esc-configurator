@@ -12,6 +12,7 @@ import Changelog from '../../Components/Changelog';
 import MotorControl from '../../Components/MotorControl';
 
 import { selectSettings } from '../AppSettings/settingsSlice';
+import { selectSupported } from '../MelodyEditor/melodiesSlice';
 
 import './style.scss';
 
@@ -90,6 +91,8 @@ function MainContent({
 }) {
   const { t } = useTranslation('common');
   const appSettings = useSelector(selectSettings);
+  const showMelodyEditor = useSelector(selectSupported);
+
   const {
     isSelecting,
     isFlashing,
@@ -106,7 +109,6 @@ function MainContent({
   const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting && !unsupported;
   const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading && !disableFlashing;
   const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
-  const showMelodyEditor = escs.length > 0 && escs[0].individualSettings.STARTUP_MELODY ? true : false;
 
   const FlashWrapper = useCallback(() => {
     if(fourWay) {

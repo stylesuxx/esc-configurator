@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
-import { useDispatch } from 'react-redux';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import AppSettings from '../AppSettings';
 import CookieConsent from '../CookieConsent';
@@ -16,7 +19,9 @@ import PortPicker from '../PortPicker';
 import Statusbar from '../Statusbar';
 
 import changelogEntries from '../../changelog.json';
+
 import { show as showAppSettings } from '../AppSettings/settingsSlice';
+import { selectShow as selectShowMelodyEditor } from '../MelodyEditor/melodiesSlice';
 
 import './style.scss';
 
@@ -35,6 +40,8 @@ function App({
 }) {
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
+
+  const showMelodyEditor = useSelector(selectShowMelodyEditor);
 
   const isIdle = !Object.values(actions).some((element) => element);
 
@@ -97,7 +104,6 @@ function App({
           onFlashUrl={escs.actions.handleFlashUrl}
           onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
           onLocalSubmit={escs.actions.handleLocalSubmit}
-          onOpenMelodyEditor={melodies.actions.handleOpen}
           onReadEscs={escs.actions.handleReadEscs}
           onResetDefaultls={escs.actions.handleResetDefaultls}
           onSaveLog={onSaveLog}
@@ -116,15 +122,8 @@ function App({
 
       <AppSettings />
 
-      {melodies.show &&
+      {showMelodyEditor &&
         <MelodyEditor
-          customMelodies={melodies.customMelodies}
-          defaultMelodies={melodies.defaultMelodies}
-          dummy={melodies.dummy}
-          melodies={melodies.escs}
-          onClose={melodies.actions.handleClose}
-          onDelete={melodies.actions.handleDelete}
-          onSave={melodies.actions.handleSave}
           onWrite={melodies.actions.handleWrite}
           writing={actions.isWriting}
         />}
@@ -173,20 +172,7 @@ App.propTypes = {
     master: PropTypes.shape({}).isRequired,
     targets: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
-  melodies: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleSave: PropTypes.func.isRequired,
-      handleOpen: PropTypes.func.isRequired,
-      handleWrite: PropTypes.func.isRequired,
-      handleClose: PropTypes.func.isRequired,
-      handleDelete: PropTypes.func.isRequired,
-    }),
-    customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    defaultMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    dummy: PropTypes.bool.isRequired,
-    escs: PropTypes.arrayOf(PropTypes.string).isRequired,
-    show: PropTypes.bool.isRequired,
-  }).isRequired,
+  melodies: PropTypes.shape({ actions: PropTypes.shape({ handleWrite: PropTypes.func.isRequired }) }).isRequired,
   msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onClearLog: PropTypes.func.isRequired,

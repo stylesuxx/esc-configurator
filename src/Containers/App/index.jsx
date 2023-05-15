@@ -14,16 +14,17 @@ import {
   getAppSetting,
 } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
-import melodies from '../../melodies.json';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
 import {
   clearLog,
   loadLog,
-  loadMelodies,
   loadSerialApi,
 } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
+
+import { store } from '../../store';
+import { updateAll as updatatAllMelodies } from '../../Components/MelodyEditor/melodiesSlice';
 
 class App extends Component {
   constructor() {
@@ -69,18 +70,6 @@ class App extends Component {
         isFlashing: false,
         isConnecting: false,
         isDisconnecting: false,
-      },
-      melodies: {
-        escs: [
-          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
-          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
-          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
-          "bluejay:b=570,o=4,d=32:4b,p,4e5,p,4b,p,4f#5,2p,4e5,2b5,8b5",
-        ],
-        show: false,
-        dummy: true,
-        defaultMelodies: melodies,
-        customMelodies: loadMelodies(),
       },
     };
 
@@ -158,16 +147,6 @@ class App extends Component {
     this.setState({
       actions: {
         ...actions,
-        ...settings,
-      },
-    });
-  };
-
-  setMelodies = (settings) => {
-    const { melodies } = this.state;
-    this.setState({
-      melodies: {
-        ...melodies,
         ...settings,
       },
     });
@@ -509,11 +488,22 @@ class App extends Component {
 
     this.setSerial({ fourWay });
 
+    // Set flashed melodies if available
+    const master = getMasterSettings(individual);
+    if(master && master.STARTUP_MELODY) {
+      const melodies = individual.map((esc) => {
+        const melody = esc.individualSettings.STARTUP_MELODY;
+        return Rtttl.fromBluejayStartupMelody(melody);
+      });
+
+      store.dispatch(updatatAllMelodies(melodies));
+    }
+
     this.setEscs({
       ...newEscs,
       connected,
       individual,
-      master: getMasterSettings(individual),
+      master,
     });
   };
 
@@ -909,36 +899,6 @@ class App extends Component {
     }
   };
 
-  handleMelodySave = (name, tracks) => {
-    const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
-    const match = storedMelodies.findIndex((melody) => melody.name === name);
-
-    // Override melody if a custom melody with this name is available.
-    if(match >= 0) {
-      storedMelodies[match].tracks = tracks;
-    } else {
-      storedMelodies.push(
-        {
-          name,
-          tracks,
-        }
-      );
-    }
-
-    localStorage.setItem('melodies', JSON.stringify(storedMelodies));
-    this.setMelodies({ customMelodies: loadMelodies() });
-  };
-
-  handleMelodyDelete = (name) => {
-    const storedMelodies = JSON.parse(localStorage.getItem('melodies')) || [];
-    const match = storedMelodies.findIndex((melody) => melody.name === name);
-    if(match >= 0) {
-      storedMelodies.splice(match, 1);
-      localStorage.setItem('melodies', JSON.stringify(storedMelodies));
-      this.setMelodies({ customMelodies: loadMelodies() });
-    }
-  };
-
   handleMelodyWrite = (melodies) => {
     const { escs } = this.state;
     const individual = [ ...escs.individual ];
@@ -959,38 +919,11 @@ class App extends Component {
     });
   };
 
-  handleMelodyEditorOpen = () => {
-    const { escs } = this.state;
-    if(escs.individual.length > 0) {
-      const melodies = escs.individual.map((esc) => {
-        const melody = esc.individualSettings.STARTUP_MELODY;
-        return Rtttl.fromBluejayStartupMelody(melody);
-      });
-
-      this.setMelodies({
-        dummy: false,
-        escs: melodies,
-        show: true,
-      });
-    } else {
-      // No ESCs connected - editor triggered from home, do not allow saving
-      this.setMelodies({
-        dummy: true,
-        show: true,
-      });
-    }
-  };
-
-  handleMelodyEditorClose = () => {
-    this.setMelodies({ show: false });
-  };
-
   render() {
     const {
       escs,
       actions,
       configs,
-      melodies,
       msp,
       serial,
     } = this.state;
@@ -1020,16 +953,7 @@ class App extends Component {
           },
           ...escs,
         }}
-        melodies={{
-          actions: {
-            handleSave: this.handleMelodySave,
-            handleWrite: this.handleMelodyWrite,
-            handleOpen: this.handleMelodyEditorOpen,
-            handleClose: this.handleMelodyEditorClose,
-            handleDelete: this.handleMelodyDelete,
-          },
-          ...melodies,
-        }}
+        melodies={{ actions: { handleWrite: this.handleMelodyWrite } }}
         msp={msp}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onClearLog={this.handleClearLog}
