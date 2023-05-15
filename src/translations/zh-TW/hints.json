@@ -41,9 +41,9 @@
   "FORCE_EDT_ARM": "只有在 EDT 握手成功之後才能解鎖。飛控固件必須支持此功能。",
   "ESC_PROTOCOL": "選擇您想要使用的 ESC 協議。這是為了安全，預先設置一個 ESC 協議可以拒絕錯誤的油門信號！",
   "RCPULSE_FILTER": "當該值大於 0 時將會啟用 RC 脈衝濾波器，值越高濾波越激進。僅適用於補償很爛的參數。",
-  "RUNNING_BRAKE_LEVEL": "The tamount of braking used when the motor is running.",
-  "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
-  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
-  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC.",
+  "RUNNING_BRAKE_LEVEL": "電機運行時使用的製動量",
+  "TEMPERATURE_LIMIT": "達到閾值時會大幅降低最大功率。",
+  "CURRENT_LIMIT": "將在允許的電流上盡可能使 RPM 達到最大。",
+  "SINE_MODE_POWER": "使用正弦模式時將使用固定的佔空比等級。警告： 該值超過6可能會損毀電機和/或 ESC。",
   "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position."
 }
