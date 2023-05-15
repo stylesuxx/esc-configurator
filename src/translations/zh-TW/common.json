@@ -81,7 +81,7 @@
   "migrateFlashHint": "(這將嘗試在不同固件之間遷移設定，例如從 BLHeli_S 遷移到 Bluejay)",
   "migrationNote": "設定不能再不同的固件進行遷移，請務必注意您的電機轉向和其他您可能想要改動的設定。設定可以在同意固件的不同版本之間遷移。",
   "escDirectionReversed": "反轉方向",
-  "escBidirectionalMode": "Forward/Reverse (3D mode)",
+  "escBidirectionalMode": "正向/反向 (3D 模式)",
   "escSelectProtocol": "選擇 ESC 協議",
   "escSinusoidalStartup": "正弦式啓動",
   "escComplementaryPwm": "互補 PWM",
@@ -109,10 +109,10 @@
   "escHallSensors": "霍爾傳感器",
   "escSineModeRange": "正弦模式範圍",
   "escBrakeStrength": "刹車强度",
-  "am32RunningBrakeLevel": "Running Brake Level",
-  "am32TemperatureLimit": "Temperature Limit",
-  "am32CurrentLimit": "Current Limit [A]",
-  "am32SineModePower": "Sine Mode Power",
+  "am32RunningBrakeLevel": "剎車等級",
+  "am32TemperatureLimit": "溫度限制",
+  "am32CurrentLimit": "电流限制 [A]",
+  "am32SineModePower": "正弦模式功率",
   "bluejayTextLine1": "Bluejay 是一個基於 BLHeli_S 固件能夠使用雙向Dshot的新固件 - 如果您想要在您的飛機上運行 RPM 濾波器，那麽這是一個很好的選擇。該項目還旨在清理和簡化最初的 BLHeli_S 源代碼。",
   "bluejayTextLine2": "啓動音樂編輯器也是它的一個新功能。",
   "bluejaySupportedHardwareLine1": "請花一點時間來幫助我們將您的成功刷到 Bluejay 固件的硬體 [添加到 Wiki 上](https://github.com/bird-sanctuary/bluejay/wiki/Tested-Hardware)。",
@@ -186,5 +186,5 @@
   "mistaggedDetected": "檢測到",
   "update": "有更新可用！要更新應用程式，請刷新或重新啓動。",
   "resettingDevice": "正在重置設備...",
-  "disabled": "Disabled"
+  "disabled": "已禁用"
 }
