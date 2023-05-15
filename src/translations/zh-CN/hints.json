@@ -45,5 +45,5 @@
   "TEMPERATURE_LIMIT": "达到阈值时会大幅降低最大功率。",
   "CURRENT_LIMIT": "将在允许的电流上尽可能使 RPM 达到最大。",
   "SINE_MODE_POWER": "使用正弦模式时将使用固定的占空比等级。警告： 该值超过6可能会损毁电机和/或 ESC。",
-  "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position."
+  "BIDIRECTIONAL_MODE": "中性点是油门中点。在中点上和中点下的旋转方向相反。"
 }
