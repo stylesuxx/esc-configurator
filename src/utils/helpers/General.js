@@ -129,6 +129,16 @@ const getSupportedSources = (signature) => sources.filter((source) => findMCU(si
 const getAppSetting = (name) => store.getState().settings.settings[name].value;
 const getMspFeature = (name) => store.getState().msp.features[name];
 
+const getPwm = (name, version) => {
+  const source = sources.filter((source) => source.name === name);
+
+  if(source.length > 0) {
+    return source[0].getPwm(version);
+  }
+
+  return [];
+};
+
 export {
   retry,
   delay,
@@ -139,4 +149,5 @@ export {
   getSupportedSources,
   getAppSetting,
   getMspFeature,
+  getPwm,
 };

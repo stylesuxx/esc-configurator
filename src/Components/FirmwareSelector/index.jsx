@@ -10,6 +10,7 @@ import React, {
 import {
   isValidLayout,
   getSupportedSources,
+  getPwm,
 } from '../../utils/helpers/General';
 
 import { blheliAtmelSource as blheliSource } from '../../sources';
@@ -35,7 +36,6 @@ function FirmwareSelector({
   const {
     escs,
     versions,
-    getPwm,
   } = configs;
 
   const [preselected, setPreselected] = useState(false);
@@ -200,7 +200,7 @@ function FirmwareSelector({
     const firmwareName = selection.firmware;
     const firmwareVersion = options.versions[selected - 1].key;
 
-    const frequencies = getPwm[firmwareName](firmwareVersion);
+    const frequencies = getPwm(firmwareName, firmwareVersion);
     const frequencyOptions = frequencies.map((item) => ({
       key: item,
       value: item,
@@ -217,7 +217,7 @@ function FirmwareSelector({
       url: e.target.value,
       version: selectedOption && options.versions[selected - 1].key,
     });
-  }, [getPwm, options, selection]);
+  }, [options, selection]);
 
   const handleForceChange = useCallback((e) => {
     setForce(e.target.checked);
@@ -422,7 +422,6 @@ FirmwareSelector.defaultProps = {
 FirmwareSelector.propTypes = {
   configs: PropTypes.shape({
     escs: PropTypes.shape().isRequired,
-    getPwm: PropTypes.shape().isRequired,
     versions: PropTypes.shape().isRequired,
   }).isRequired,
   esc: PropTypes.shape({

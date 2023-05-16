@@ -76,7 +76,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -85,7 +84,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -200,7 +198,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -209,7 +206,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -248,7 +244,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -257,7 +252,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -324,7 +318,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -333,7 +326,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -394,7 +386,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -403,7 +394,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
