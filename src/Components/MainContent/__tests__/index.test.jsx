@@ -10,6 +10,10 @@ import { Provider } from 'react-redux';
 import configsReducer from '../../../Containers/App/configsSlice';
 import melodiesReducer from '../../MelodyEditor/melodiesSlice';
 import settingsReducer from '../../AppSettings/settingsSlice';
+import stateReducer, {
+  setSelecting,
+  setWriting,
+} from '../../../Containers/App/stateSlice';
 import logReducer from '../../Log/logSlice';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
@@ -39,6 +43,7 @@ function setupTestStore() {
         log: logReducer,
         melodies: melodiesReducer,
         settings: settingsReducer,
+        state: stateReducer,
       },
     });
     refObj.store = store;
@@ -80,23 +85,8 @@ describe('MainContent', () => {
   });
 
   it('should display main content', () => {
-    const actions = {
-      isReading: false,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
-
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -158,23 +148,8 @@ describe('MainContent', () => {
     const onAllMotorSpeed = jest.fn();
     const onOpenMelodyEditor = jest.fn();
 
-    const actions = {
-      isReading: false,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
-
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -204,23 +179,10 @@ describe('MainContent', () => {
   });
 
   it('should display when selecting', () => {
-    const actions = {
-      isReading: false,
-      isWriting: false,
-      isSelecting: true,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
+    storeRef.store.dispatch(setSelecting(true));
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -526,18 +488,7 @@ describe('MainContent', () => {
   });
 
   it('should display when writing with ESC', () => {
-    const actions = {
-      isReading: false,
-      isWriting: true,
-      isSelecting: false,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
+    storeRef.store.dispatch(setWriting(true));
 
     const escs = [
       {
@@ -628,8 +579,6 @@ describe('MainContent', () => {
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         escs={escs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
@@ -658,18 +607,7 @@ describe('MainContent', () => {
   });
 
   it('should display when selecting with ESC', () => {
-    const actions = {
-      isReading: false,
-      isWriting: false,
-      isSelecting: true,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
+    storeRef.store.dispatch(setSelecting(true));
 
     const escs = [
       {
@@ -754,8 +692,6 @@ describe('MainContent', () => {
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         escs={escs}
         flashTargets={[0]}
         onAllMotorSpeed={onAllMotorSpeed}
@@ -784,23 +720,8 @@ describe('MainContent', () => {
   });
 
   it('should display with fourWay active', () => {
-    const actions = {
-      isReading: false,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
-
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         fourWay
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
@@ -829,24 +750,13 @@ describe('MainContent', () => {
   });
 
   it('should display warning when wrong dead-time detected', () => {
-    const actions = {
-      isReading: false,
-      isWriting: false,
-      isSelecting: true,
-      isFlashing: false,
-    };
+    storeRef.store.dispatch(setSelecting(true));
 
     const settings = {
       LAYOUT_REVISION: 0,
       MAIN_REVISION: 1,
       SUB_REVISION: 2,
       NAME: 'NAME',
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
     };
 
     const escs = [
@@ -935,8 +845,6 @@ describe('MainContent', () => {
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         escs={escs}
         flashTargets={[0]}
         onAllMotorSpeed={onAllMotorSpeed}

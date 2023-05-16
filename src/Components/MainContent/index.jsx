@@ -13,6 +13,12 @@ import MotorControl from '../../Components/MotorControl';
 
 import { selectSettings } from '../AppSettings/settingsSlice';
 import { selectSupported } from '../MelodyEditor/melodiesSlice';
+import {
+  selectIsFlashing,
+  selectIsReading,
+  selectIsWriting,
+  selectIsSelecting,
+} from '../../Containers/App/stateSlice';
 
 import { getMspFeature } from '../../utils/helpers/General';
 
@@ -79,7 +85,6 @@ function MainContent({
   flashTargets,
   onLocalSubmit,
   changelogEntries,
-  actions,
   onAllMotorSpeed,
   onSingleMotorSpeed,
   connected,
@@ -90,12 +95,10 @@ function MainContent({
   const appSettings = useSelector(selectSettings);
   const showMelodyEditor = useSelector(selectSupported);
 
-  const {
-    isSelecting,
-    isFlashing,
-    isReading,
-    isWriting,
-  } = actions;
+  const isSelecting = useSelector(selectIsSelecting);
+  const isFlashing = useSelector(selectIsFlashing);
+  const isReading = useSelector(selectIsReading);
+  const isWriting = useSelector(selectIsWriting);
 
   const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
   const unsupported = unsupportedNames.includes(settings.NAME);
@@ -148,7 +151,7 @@ function MainContent({
   ]);
 
   const MotorControlWrapper = useCallback(() => {
-    if(!fourWay && !actions.isReading) {
+    if(!fourWay && !isReading) {
       return (
         <MotorControl
           getBatteryState={port.getBatteryState}
@@ -163,7 +166,7 @@ function MainContent({
     return null;
   }, [
     fourWay,
-    actions.isReading,
+    isReading,
     port.getBatteryState,
     connected,
     onAllMotorSpeed,
@@ -288,12 +291,6 @@ MainContent.defaultProps = {
 };
 
 MainContent.propTypes = {
-  actions: PropTypes.shape({
-    isFlashing: PropTypes.bool.isRequired,
-    isReading: PropTypes.bool.isRequired,
-    isSelecting: PropTypes.bool.isRequired,
-    isWriting: PropTypes.bool.isRequired,
-  }).isRequired,
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
   connected: PropTypes.number,
   escs: PropTypes.arrayOf(PropTypes.shape()),

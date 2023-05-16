@@ -20,13 +20,13 @@ import Statusbar from '../Statusbar';
 
 import changelogEntries from '../../changelog.json';
 
+import { selectState } from '../../Containers/App/stateSlice';
 import { show as showAppSettings } from '../AppSettings/settingsSlice';
 import { selectShow as selectShowMelodyEditor } from '../MelodyEditor/melodiesSlice';
 
 import './style.scss';
 
 function App({
-  actions,
   escs,
   melodies,
   onAllMotorSpeed,
@@ -38,6 +38,7 @@ function App({
   const dispatch = useDispatch();
 
   const showMelodyEditor = useSelector(selectShowMelodyEditor);
+  const actions = useSelector(selectState);
 
   const isIdle = !Object.values(actions).some((element) => element);
 
@@ -84,7 +85,6 @@ function App({
         </header>
 
         <MainContent
-          actions={actions}
           changelogEntries={changelogEntries}
           connected={escs.connected}
           escs={escs.individual}
@@ -115,10 +115,7 @@ function App({
       <AppSettings />
 
       {showMelodyEditor &&
-        <MelodyEditor
-          onWrite={melodies.actions.handleWrite}
-          writing={actions.isWriting}
-        />}
+        <MelodyEditor onWrite={melodies.handleWrite} />}
 
       <CookieConsent onCookieAccept={onCookieAccept} />
 
@@ -137,12 +134,6 @@ App.defaultProps = {
 };
 
 App.propTypes = {
-  actions: PropTypes.shape({
-    isConnecting: PropTypes.bool.isRequired,
-    isFlashing: PropTypes.bool.isRequired,
-    isReading: PropTypes.bool.isRequired,
-    isWriting: PropTypes.bool.isRequired,
-  }).isRequired,
   escs: PropTypes.shape({
     actions: PropTypes.shape({
       handleMasterUpdate: PropTypes.func.isRequired,
@@ -163,7 +154,7 @@ App.propTypes = {
     master: PropTypes.shape({}).isRequired,
     targets: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
-  melodies: PropTypes.shape({ actions: PropTypes.shape({ handleWrite: PropTypes.func.isRequired }) }).isRequired,
+  melodies: PropTypes.shape({ handleWrite: PropTypes.func.isRequired }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,

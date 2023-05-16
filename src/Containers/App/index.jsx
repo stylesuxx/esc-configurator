@@ -19,16 +19,25 @@ import { MessageNotOkError } from '../../utils/Errors';
 
 import { store } from '../../store';
 
+import { set as setMspFeatures } from '../../Containers/App/mspSlice';
+import { set as setConfigs } from './configsSlice';
 import {
   reset as resetMelodyEditor,
   updateAll as updatatAllMelodies,
 } from '../../Components/MelodyEditor/melodiesSlice';
-import { set as setMspFeatures } from '../../Containers/App/mspSlice';
 import {
   add as addLog,
   addMessage as addMessageLog,
 } from '../../Components/Log/logSlice';
-import { set as setConfigs } from './configsSlice';
+import {
+  reset as resetState,
+  setConnecting,
+  setDisconnecting,
+  setFlashing,
+  setReading,
+  setSelecting,
+  setWriting,
+} from './stateSlice';
 
 class App extends Component {
   constructor() {
@@ -58,14 +67,6 @@ class App extends Component {
         log: [],
         open: false,
         portNames: [],
-      },
-      actions: {
-        isReading: false,
-        isWriting: false,
-        isSelecting: false,
-        isFlashing: false,
-        isConnecting: false,
-        isDisconnecting: false,
       },
     };
 
@@ -139,16 +140,6 @@ class App extends Component {
     }, cb);
   };
 
-  setActions = (settings) => {
-    const { actions } = this.state;
-    this.setState({
-      actions: {
-        ...actions,
-        ...settings,
-      },
-    });
-  };
-
   fetchConfigs = async() => {
     const configs = {
       versions: {},
@@ -216,7 +207,7 @@ class App extends Component {
     }
 
     this.setEscs({ master: getMasterSettings(individual) });
-    this.setActions({ isFlashing: false });
+    store.dispatch(setFlashing(false));
   };
 
   serialConnectHandler = async() => {
@@ -312,7 +303,7 @@ class App extends Component {
   handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
 
-    this.setActions({ isWriting: true });
+    store.dispatch(setWriting(true));
     const { escs } = this.state;
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
@@ -331,7 +322,7 @@ class App extends Component {
         console.debug(e);
       }
     }
-    this.setActions({ isWriting: false });
+    store.dispatch(setWriting(false));
 
     this.handleReadEscs();
   };
@@ -350,14 +341,14 @@ class App extends Component {
     let fourWay = true;
     let connected = 0;
 
-    this.setActions({ isReading: true });
+    store.dispatch(setReading(true));
 
     // Prevent reading if radio is detected to be on and not connected yet
     if(!escs.connected) {
       const status = await this.serial.getStatus();
       if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
         this.addLogMessage('radioOn');
-        this.setActions({ isReading: false });
+        store.dispatch(setReading(false));
 
         return;
       }
@@ -432,7 +423,7 @@ class App extends Component {
     }
 
     this.lastConnected = connected;
-    this.setActions({ isReading: false });
+    store.dispatch(setReading(false));
 
     this.setSerial({ fourWay });
 
@@ -458,7 +449,7 @@ class App extends Component {
   handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
-    this.setActions({ isWriting: true });
+    store.dispatch(setWriting(true));
     const { escs } = this.state;
 
     const individual = [ ...escs.individual ];
@@ -496,7 +487,7 @@ class App extends Component {
         console.debug(e);
       }
     }
-    this.setActions({ isWriting: false });
+    store.dispatch(setWriting(false));
 
     this.setEscs({ individual });
   };
@@ -511,7 +502,7 @@ class App extends Component {
       }
     };
 
-    this.setActions({ isFlashing: true });
+    store.dispatch(setFlashing(true));
 
     this.addLogMessage('dumpingEsc', { index: target + 1 });
     const dataBin = await this.serial.readFirmware(target, esc, updateProgress);
@@ -519,8 +510,7 @@ class App extends Component {
     const dataHex = binToHex.convert(dataBin);
     updateProgress(0);
 
-    this.setActions({ isFlashing: false });
-
+    store.dispatch(setFlashing(false));
 
     const element = document.createElement("a");
     const file = new Blob([dataHex], { type: 'text/plain' });
@@ -532,7 +522,8 @@ class App extends Component {
 
   handleSingleFlash = (index) => {
     this.setEscs({ targets: [index] });
-    this.setActions({ isSelecting: true });
+
+    store.dispatch(setSelecting(true));
   };
 
   handleSelectFirmwareForAll = () => {
@@ -544,21 +535,20 @@ class App extends Component {
       targets.push(esc.index);
     }
 
-    this.setActions({ isSelecting: true });
+    store.dispatch(setSelecting(true));
     this.setEscs({ targets });
   };
 
   handleCancelFirmwareSelection = () => {
-    this.setActions({ isSelecting: false });
+    store.dispatch(setSelecting(false));
     this.setEscs({ targets: [] });
   };
 
   handleLocalSubmit = (e, force, migrate) => {
     e.preventDefault();
-    this.setActions({
-      isFlashing: true,
-      isSelecting: false,
-    });
+
+    store.dispatch(setFlashing(true));
+    store.dispatch(setSelecting(false));
 
     const { escs } = this.state;
 
@@ -581,7 +571,7 @@ class App extends Component {
         await this.flash(text, force, migrate);
       } catch(e) {
         console.error(e);
-        this.setActions({ isFlashing: false });
+        store.dispatch(setFlashing(false));
       }
     };
     reader.readAsText(e.target.files[0]);
@@ -593,10 +583,8 @@ class App extends Component {
    * downloaded and put into local storage for later use.
    */
   handleFlashUrl = async(url, layout, name, version, pwm, force, migrate) => {
-    this.setActions({
-      isFlashing: true,
-      isSelecting: false,
-    });
+    store.dispatch(setFlashing(true));
+    store.dispatch(setSelecting(false));
 
     const { escs } = this.state;
     console.debug(`Chosen firmware: ${url}`);
@@ -629,7 +617,7 @@ class App extends Component {
       await this.flash(text, force, migrate);
     } else {
       this.addLogMessage('getFileFailed');
-      this.setActions({ isFlashing: false });
+      store.dispatch(setFlashing(false));
     }
   };
 
@@ -674,7 +662,7 @@ class App extends Component {
     e.preventDefault();
     const { serial } = this.state;
 
-    this.setActions({ isConnecting: true });
+    store.dispatch(setConnecting(true));
 
     try {
       await this.serial.open(serial.baudRate);
@@ -786,14 +774,14 @@ class App extends Component {
       this.addLogMessage('portUsed');
     }
 
-    this.setActions({ isConnecting: false });
+    store.dispatch(setConnecting(false));
   };
 
   handleDisconnect = async(e) => {
     e.preventDefault();
     TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
 
-    this.setActions({ isDisconnecting: true });
+    store.dispatch(setDisconnecting(true));
 
     const { escs } = this.state;
     if(this.serial) {
@@ -818,14 +806,7 @@ class App extends Component {
 
     this.setEscs({ individual: [] });
 
-    this.setActions({
-      isReading: false,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
-      isConnecting: false,
-      isDisconnecting: false,
-    });
+    store.dispatch(resetState());
 
     store.dispatch(resetMelodyEditor());
     this.addLogMessage('closedPort');
@@ -871,7 +852,6 @@ class App extends Component {
   render() {
     const {
       escs,
-      actions,
       serial,
     } = this.state;
 
@@ -881,7 +861,6 @@ class App extends Component {
 
     return (
       <MainApp
-        actions={actions}
         escs={{
           actions: {
             handleMasterUpdate: this.handleSettingsUpdate,
@@ -899,7 +878,7 @@ class App extends Component {
           },
           ...escs,
         }}
-        melodies={{ actions: { handleWrite: this.handleMelodyWrite } }}
+        melodies={{ handleWrite: this.handleMelodyWrite }}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onCookieAccept={this.handleCookieAccept}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}

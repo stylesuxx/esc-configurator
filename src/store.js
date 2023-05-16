@@ -6,6 +6,7 @@ import logReducer from './Components/Log/logSlice';
 import melodiesReducer from './Components/MelodyEditor/melodiesSlice';
 import mspReducer from './Containers/App/mspSlice';
 import settingsReducer from './Components/AppSettings/settingsSlice';
+import stateReducer from './Containers/App/stateSlice';
 import statusReducer from './Components/Statusbar/statusSlice';
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
     melodies: melodiesReducer,
     msp: mspReducer,
     settings: settingsReducer,
+    state: stateReducer,
     status: statusReducer,
   },
 });

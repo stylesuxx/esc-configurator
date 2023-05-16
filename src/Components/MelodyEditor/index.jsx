@@ -27,6 +27,7 @@ import {
   selectDefault,
   selectDummy,
 } from './melodiesSlice';
+import { selectIsWriting } from '../../Containers/App/stateSlice';
 
 function SaveMelody({ onSave }) {
   const { t } = useTranslation();
@@ -234,13 +235,11 @@ IndexedMelodyElement.propTypes = {
   onUpdate: PropTypes.func.isRequired,
 };
 
-function MelodyEditor({
-  onWrite,
-  writing,
-}) {
+function MelodyEditor({ onWrite }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
+  const writing = useSelector(selectIsWriting);
   const defaultMelodies = useSelector(selectDefault);
   const customMelodies = useSelector(selectCustom);
   const dummy = useSelector(selectDummy);
@@ -468,9 +467,6 @@ function MelodyEditor({
   );
 }
 
-MelodyEditor.propTypes = {
-  onWrite: PropTypes.func.isRequired,
-  writing: PropTypes.bool.isRequired,
-};
+MelodyEditor.propTypes = { onWrite: PropTypes.func.isRequired };
 
 export default MelodyEditor;

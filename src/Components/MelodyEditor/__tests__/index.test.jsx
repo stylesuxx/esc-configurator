@@ -23,6 +23,7 @@ import melodiesReducer, {
   update,
   updateAll,
 } from '../melodiesSlice';
+import stateReducer, { setWriting } from '../../../Containers/App/stateSlice';
 
 import MelodyEditor from '../';
 
@@ -40,7 +41,12 @@ function setupTestStore() {
   const refObj = {};
 
   beforeEach(() => {
-    const store = configureStore({ reducer: { melodies: melodiesReducer } });
+    const store = configureStore({
+      reducer: {
+        state: stateReducer,
+        melodies: melodiesReducer,
+      },
+    });
     refObj.store = store;
     refObj.wrapper = ({ children }) => (
       <Provider store={store}>
@@ -57,7 +63,10 @@ function setupCustomTestStore() {
 
   beforeEach(() => {
     const store = configureStore({
-      reducer: { melodies: melodiesReducer },
+      reducer: {
+        state: stateReducer,
+        melodies: melodiesReducer,
+      },
       preloadedState: {
         melodies: {
           show: true,
@@ -89,7 +98,10 @@ function setupSyncedTestStore() {
 
   beforeEach(() => {
     const store = configureStore({
-      reducer: { melodies: melodiesReducer },
+      reducer: {
+        state: stateReducer,
+        melodies: melodiesReducer,
+      },
       preloadedState: {
         melodies: {
           show: true,
@@ -179,10 +191,7 @@ describe('MelodyEditor', () => {
 
   it('should display and be closable', () => {
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: storeRef.wrapper }
     );
 
@@ -203,10 +212,7 @@ describe('MelodyEditor', () => {
     storeRef.store.dispatch(prod());
 
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: storeRef.wrapper }
     );
 
@@ -223,10 +229,7 @@ describe('MelodyEditor', () => {
 
   it('should be possible to click accept', () => {
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: customStoreRef.wrapper }
     );
 
@@ -250,6 +253,8 @@ describe('MelodyEditor', () => {
   });
 
   it('should display while writing', () => {
+    customStoreRef.store.dispatch(setWriting(true));
+
     render(
       <MelodyEditor
         onWrite={onWrite}
@@ -280,10 +285,7 @@ describe('MelodyEditor', () => {
 
   it('should display single editor when sycned', () => {
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: syncedStoreRef.wrapper }
     );
 
@@ -315,10 +317,7 @@ describe('MelodyEditor', () => {
 
   it('should update when preset is selected', () => {
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: storeRef.wrapper }
     );
 
@@ -333,10 +332,7 @@ describe('MelodyEditor', () => {
 
   it('should update when custom melody is selected', () => {
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: customStoreRef.wrapper }
     );
 
@@ -351,10 +347,7 @@ describe('MelodyEditor', () => {
 
   it('should save and update a melody', () => {
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: storeRef.wrapper }
     );
 
@@ -402,10 +395,7 @@ describe('MelodyEditor', () => {
     expect(melodies.custom.length).toEqual(1);
 
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: storeRef.wrapper }
     );
 
@@ -432,10 +422,7 @@ describe('MelodyEditor', () => {
     window.AudioContext = Mocked;
 
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: storeRef.wrapper }
     );
 
@@ -455,10 +442,7 @@ describe('MelodyEditor', () => {
     window.AudioContext = Mocked;
 
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: customStoreRef.wrapper }
     );
 
@@ -478,10 +462,7 @@ describe('MelodyEditor', () => {
     window.AudioContext = Mocked;
 
     render(
-      <MelodyEditor
-        onWrite={onWrite}
-        writing={false}
-      />,
+      <MelodyEditor onWrite={onWrite} />,
       { wrapper: customStoreRef.wrapper }
     );
 
