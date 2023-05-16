@@ -18,6 +18,7 @@ import { loadSerialApi } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
 
 import { store } from '../../store';
+
 import {
   reset as resetMelodyEditor,
   updateAll as updatatAllMelodies,
@@ -27,6 +28,7 @@ import {
   add as addLog,
   addMessage as addMessageLog,
 } from '../../Components/Log/logSlice';
+import { set as setConfigs } from './configsSlice';
 
 class App extends Component {
   constructor() {
@@ -56,12 +58,6 @@ class App extends Component {
         log: [],
         open: false,
         portNames: [],
-      },
-      configs: {
-        versions: {},
-        escs: {},
-        pwm: {},
-        getPwm: {},
       },
       actions: {
         isReading: false,
@@ -100,7 +96,8 @@ class App extends Component {
          * Fetch configs in the background - some of them are fetched via
          * github API and might take some time to be fetched.
          */
-        this.fetchConfigs().then((configs) => this.setState({ configs }));
+        const configs = await this.fetchConfigs();
+        store.dispatch(setConfigs(configs));
 
         this.serialApi.removeEventListener('connect', this.serialConnectHandler);
         this.serialApi.removeEventListener('disconnect', this.serialDisconnectHandler);
@@ -153,7 +150,11 @@ class App extends Component {
   };
 
   fetchConfigs = async() => {
-    const { configs } = this.state;
+    const configs = {
+      versions: {},
+      escs: {},
+    };
+
     for(let i = 0; i < sources.length; i += 1) {
       const source = sources[i];
       const name = source.getName();
@@ -163,13 +164,11 @@ class App extends Component {
       try {
         configs.versions[name] = await source.getVersions();
         configs.escs[name] = source.getEscLayouts();
-        configs.getPwm[name] = (version) => source.getPwm(version);
       } catch(e) {
         this.addLogMessage('fetchingFilesFailed', { name: name });
 
         configs.versions[name] = [];
         configs.escs[name] = [];
-        configs.getPwm[name] = null;
       }
     }
 
@@ -873,7 +872,6 @@ class App extends Component {
     const {
       escs,
       actions,
-      configs,
       serial,
     } = this.state;
 
@@ -884,7 +882,6 @@ class App extends Component {
     return (
       <MainApp
         actions={actions}
-        configs={configs}
         escs={{
           actions: {
             handleMasterUpdate: this.handleSettingsUpdate,

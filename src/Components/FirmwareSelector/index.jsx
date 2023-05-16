@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   isValidLayout,
@@ -18,12 +19,16 @@ import sources from '../../sources';
 
 import LabeledSelect from '../Input/LabeledSelect';
 
+import {
+  selectEscs,
+  selectVersions,
+} from '../../Containers/App/configsSlice';
+
 import './style.scss';
 
 const blheliModes = blheliSource.getEeprom().MODES;
 
 function FirmwareSelector({
-  configs,
   esc,
   onCancel,
   onLocalSubmit,
@@ -33,10 +38,8 @@ function FirmwareSelector({
   warning,
 }) {
   const { t } = useTranslation('common');
-  const {
-    escs,
-    versions,
-  } = configs;
+  const escs = useSelector(selectEscs);
+  const versions = useSelector(selectVersions);
 
   const [preselected, setPreselected] = useState(false);
   const [escLayout, setEscLayout] = useState(null);
@@ -420,10 +423,6 @@ FirmwareSelector.defaultProps = {
   warning: null,
 };
 FirmwareSelector.propTypes = {
-  configs: PropTypes.shape({
-    escs: PropTypes.shape().isRequired,
-    versions: PropTypes.shape().isRequired,
-  }).isRequired,
   esc: PropTypes.shape({
     displayName: PropTypes.string,
     firmwareName: PropTypes.string,

@@ -7,6 +7,7 @@ import {
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
+import configsReducer from '../../../Containers/App/configsSlice';
 import melodiesReducer from '../../MelodyEditor/melodiesSlice';
 import settingsReducer from '../../AppSettings/settingsSlice';
 import logReducer from '../../Log/logSlice';
@@ -34,6 +35,7 @@ function setupTestStore() {
   beforeEach(() => {
     const store = configureStore({
       reducer: {
+        configs: configsReducer,
         log: logReducer,
         melodies: melodiesReducer,
         settings: settingsReducer,

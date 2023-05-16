@@ -76,7 +76,6 @@ function MainContent({
   onWriteSetup,
   onFirmwareDump,
   onFlashUrl,
-  configs,
   flashTargets,
   onLocalSubmit,
   changelogEntries,
@@ -234,7 +233,6 @@ function MainContent({
         <div className="tab toolbar_fixed_bottom">
           <div className="content_wrapper">
             <FirmwareSelector
-              configs={configs}
               esc={esc}
               onCancel={onCancelFirmwareSelection}
               onLocalSubmit={onLocalSubmit}
@@ -297,11 +295,6 @@ MainContent.propTypes = {
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
   changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
-  configs: PropTypes.shape({
-    escs: PropTypes.shape().isRequired,
-    getPwm: PropTypes.shape().isRequired,
-    versions: PropTypes.shape().isRequired,
-  }).isRequired,
   connected: PropTypes.number,
   escs: PropTypes.arrayOf(PropTypes.shape()),
   flashTargets: PropTypes.arrayOf(PropTypes.number),

@@ -27,7 +27,6 @@ import './style.scss';
 
 function App({
   actions,
-  configs,
   escs,
   melodies,
   onAllMotorSpeed,
@@ -87,7 +86,6 @@ function App({
         <MainContent
           actions={actions}
           changelogEntries={changelogEntries}
-          configs={configs}
           connected={escs.connected}
           escs={escs.individual}
           flashTargets={escs.targets}
@@ -145,7 +143,6 @@ App.propTypes = {
     isReading: PropTypes.bool.isRequired,
     isWriting: PropTypes.bool.isRequired,
   }).isRequired,
-  configs: PropTypes.shape({}).isRequired,
   escs: PropTypes.shape({
     actions: PropTypes.shape({
       handleMasterUpdate: PropTypes.func.isRequired,

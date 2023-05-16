@@ -4,11 +4,32 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import configsReducer, { set } from '../../../Containers/App/configsSlice';
+
 import sources from '../../../sources';
 
 let FirmwareSelector;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
+
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({ reducer: { configs: configsReducer } });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
 
 const mockJsonResponse = (content) =>
   new window.Response(content, {
@@ -20,6 +41,8 @@ const mockJsonResponse = (content) =>
   });
 
 describe('FirmwareSelector', () => {
+  const storeRef = setupTestStore();
+
   beforeAll(async () => {
     /**
      * require component instead of import so that we can properly
@@ -29,24 +52,18 @@ describe('FirmwareSelector', () => {
   });
 
   it('should display firmware selection', () => {
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
-
     const onSubmit = jest.fn();
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
 
     render(
       <FirmwareSelector
-        configs={configs}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
         showUnstable={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -86,6 +103,8 @@ describe('FirmwareSelector', () => {
       configs.escs[name] = source.getEscLayouts();
     }
 
+    storeRef.store.dispatch(set(configs));
+
     const onSubmit = jest.fn();
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
@@ -97,12 +116,12 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -220,12 +239,12 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText('selectTarget (Display Name)')).toBeInTheDocument();
@@ -254,6 +273,8 @@ describe('FirmwareSelector', () => {
       configs.escs[name] = source.getEscLayouts();
     }
 
+    storeRef.store.dispatch(set(configs));
+
     const onSubmit = jest.fn();
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
@@ -271,12 +292,12 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -328,6 +349,8 @@ describe('FirmwareSelector', () => {
       configs.escs[name] = source.getEscLayouts();
     }
 
+    storeRef.store.dispatch(set(configs));
+
     const onSubmit = jest.fn();
     const onLocalSubmit = jest.fn();
     const onCancel = jest.fn();
@@ -339,12 +362,12 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -407,12 +430,12 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
