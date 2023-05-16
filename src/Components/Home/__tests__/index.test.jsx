@@ -36,7 +36,6 @@ describe('Home', () => {
     const onChangePort = jest.fn();
     const onConnect = jest.fn();
     const onDisconnect = jest.fn();
-    const onSetBaudRate = jest.fn();
     const onSetPort = jest.fn();
     const prompt = jest.fn();
 
@@ -45,7 +44,6 @@ describe('Home', () => {
         onChangePort={onChangePort}
         onConnect={onConnect}
         onDisconnect={onDisconnect}
-        onSetBaudRate={onSetBaudRate}
         onSetPort={onSetPort}
       />,
       { wrapper: storeRef.wrapper }

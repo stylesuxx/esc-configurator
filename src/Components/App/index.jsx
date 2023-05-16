@@ -54,16 +54,11 @@ function App({
             <div className="main__logo" />
 
             <PortPicker
-              hasPort={serial.connected}
-              hasSerial={serial.hasSerial}
               isIdle={isIdle}
               onChangePort={serial.actions.handleChangePort}
               onConnect={serial.actions.handleConnect}
               onDisconnect={serial.actions.handleDisconnect}
-              onSetBaudRate={serial.actions.handleSetBaudRate}
               onSetPort={serial.actions.handleSetPort}
-              open={serial.open}
-              ports={serial.portNames}
             />
 
             <div className="main__settings">
@@ -81,7 +76,7 @@ function App({
             </div>
           </div>
 
-          <Log messages={serial.log} />
+          <Log />
         </header>
 
         <MainContent
@@ -89,7 +84,6 @@ function App({
           connected={escs.connected}
           escs={escs.individual}
           flashTargets={escs.targets}
-          fourWay={serial.fourWay}
           onAllMotorSpeed={onAllMotorSpeed}
           onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
           onCommonSettingsUpdate={escs.actions.handleCommonSettingsUpdate}
@@ -104,7 +98,6 @@ function App({
           onSingleFlash={escs.actions.handleSingleFlash}
           onSingleMotorSpeed={onSingleMotorSpeed}
           onWriteSetup={escs.actions.handleWriteSetup}
-          open={serial.open}
           port={serial.port}
           settings={escs.master}
         />
@@ -163,19 +156,12 @@ App.propTypes = {
       handleChangePort: PropTypes.func.isRequired,
       handleConnect: PropTypes.func.isRequired,
       handleDisconnect: PropTypes.func.isRequired,
-      handleSetBaudRate: PropTypes.func.isRequired,
       handleSetPort: PropTypes.func.isRequired,
     }).isRequired,
-    connected: PropTypes.bool.isRequired,
-    fourWay: PropTypes.bool.isRequired,
-    hasSerial: PropTypes.bool.isRequired,
-    log: PropTypes.arrayOf(PropTypes.any).isRequired,
-    open: PropTypes.bool.isRequired,
     port: PropTypes.shape({
       getBatteryState:PropTypes.func,
       getUtilization:PropTypes.func,
     }),
-    portNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   }),
 };
 

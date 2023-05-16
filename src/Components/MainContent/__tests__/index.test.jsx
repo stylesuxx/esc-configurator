@@ -10,6 +10,10 @@ import { Provider } from 'react-redux';
 import configsReducer from '../../../Containers/App/configsSlice';
 import melodiesReducer from '../../MelodyEditor/melodiesSlice';
 import settingsReducer from '../../AppSettings/settingsSlice';
+import serialReducer, {
+  setFourWay,
+  setOpen,
+} from '../../../Containers/App/serialSlice';
 import stateReducer, {
   setSelecting,
   setWriting,
@@ -43,6 +47,7 @@ function setupTestStore() {
         log: logReducer,
         melodies: melodiesReducer,
         settings: settingsReducer,
+        serial: serialReducer,
         state: stateReducer,
       },
     });
@@ -134,6 +139,8 @@ describe('MainContent', () => {
   });
 
   it('should display with open port', () => {
+    storeRef.store.dispatch(setOpen(true));
+
     const onWriteSetup = jest.fn();
     const onSettingsUpdate = jest.fn();
     const onSingleMotorSpeed = jest.fn();
@@ -163,7 +170,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
       />,
       { wrapper: storeRef.wrapper }
     );
@@ -180,6 +186,7 @@ describe('MainContent', () => {
 
   it('should display when selecting', () => {
     storeRef.store.dispatch(setSelecting(true));
+    storeRef.store.dispatch(setOpen(true));
 
     render(
       <MainContent
@@ -196,7 +203,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
       />,
       { wrapper: storeRef.wrapper }
     );
@@ -216,23 +222,10 @@ describe('MainContent', () => {
   });
 
   it('should display when flashing', () => {
-    const actions = {
-      isReading: false,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: true,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
+    storeRef.store.dispatch(setOpen(true));
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -246,7 +239,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
       />,
       { wrapper: storeRef.wrapper }
     );
@@ -262,26 +254,10 @@ describe('MainContent', () => {
   });
 
   it('should display when writing', () => {
-    const actions = {
-      isReading: false,
-      isWriting: true,
-      isSelecting: false,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
-
-    const mspFeatures = { '3D': true };
+    storeRef.store.dispatch(setOpen(true));
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
-        mspFeatures={mspFeatures}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -295,7 +271,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
       />,
       { wrapper: storeRef.wrapper }
     );
@@ -311,23 +286,10 @@ describe('MainContent', () => {
   });
 
   it('should display when reading', () => {
-    const actions = {
-      isReading: true,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
+    storeRef.store.dispatch(setOpen(true));
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -341,7 +303,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
       />,
       { wrapper: storeRef.wrapper }
     );
@@ -354,24 +315,13 @@ describe('MainContent', () => {
   });
 
   it('should display when reading with ESC', () => {
-    const actions = {
-      isReading: true,
-      isWriting: false,
-      isSelecting: false,
-      isFlashing: false,
-    };
+    storeRef.store.dispatch(setOpen(true));
 
     const settings = {
       LAYOUT_REVISION: 0,
       MAIN_REVISION: 1,
       SUB_REVISION: 2,
       NAME: 'NAME',
-    };
-
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
     };
 
     const escs = [
@@ -458,8 +408,6 @@ describe('MainContent', () => {
 
     render(
       <MainContent
-        actions={actions}
-        configs={configs}
         escs={escs}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
@@ -474,7 +422,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
         settings={settings}
       />,
       { wrapper: storeRef.wrapper }
@@ -489,6 +436,7 @@ describe('MainContent', () => {
 
   it('should display when writing with ESC', () => {
     storeRef.store.dispatch(setWriting(true));
+    storeRef.store.dispatch(setOpen(true));
 
     const escs = [
       {
@@ -593,7 +541,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
         settings={settings}
       />,
       { wrapper: storeRef.wrapper }
@@ -608,6 +555,7 @@ describe('MainContent', () => {
 
   it('should display when selecting with ESC', () => {
     storeRef.store.dispatch(setSelecting(true));
+    storeRef.store.dispatch(setOpen(true));
 
     const escs = [
       {
@@ -707,7 +655,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
       />,
       { wrapper: storeRef.wrapper }
     );
@@ -720,9 +667,11 @@ describe('MainContent', () => {
   });
 
   it('should display with fourWay active', () => {
+    storeRef.store.dispatch(setOpen(true));
+    storeRef.store.dispatch(setFourWay(true));
+
     render(
       <MainContent
-        fourWay
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -736,7 +685,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
       />,
       { wrapper: storeRef.wrapper }
     );
@@ -751,6 +699,7 @@ describe('MainContent', () => {
 
   it('should display warning when wrong dead-time detected', () => {
     storeRef.store.dispatch(setSelecting(true));
+    storeRef.store.dispatch(setOpen(true));
 
     const settings = {
       LAYOUT_REVISION: 0,
@@ -860,7 +809,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        open
         settings={settings}
       />,
       { wrapper: storeRef.wrapper }

@@ -23,6 +23,10 @@ import {
 import { getMspFeature } from '../../utils/helpers/General';
 
 import './style.scss';
+import {
+  selectFourWay,
+  selectOpen,
+} from '../../Containers/App/serialSlice';
 
 function WarningWrapper() {
   const { t } = useTranslation('common');
@@ -67,7 +71,6 @@ function WarningWrapper() {
 }
 
 function MainContent({
-  open,
   escs,
   settings,
   progress,
@@ -88,7 +91,6 @@ function MainContent({
   onAllMotorSpeed,
   onSingleMotorSpeed,
   connected,
-  fourWay,
   port,
 }) {
   const { t } = useTranslation('common');
@@ -99,6 +101,9 @@ function MainContent({
   const isFlashing = useSelector(selectIsFlashing);
   const isReading = useSelector(selectIsReading);
   const isWriting = useSelector(selectIsWriting);
+
+  const fourWay = useSelector(selectFourWay);
+  const open = useSelector(selectOpen);
 
   const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
   const unsupported = unsupportedNames.includes(settings.NAME);
@@ -283,8 +288,6 @@ MainContent.defaultProps = {
   connected: 0,
   escs: [],
   flashTargets: [],
-  fourWay: false,
-  open: false,
   port: { getBatteryState: null },
   progress: [],
   settings: {},
@@ -295,7 +298,6 @@ MainContent.propTypes = {
   connected: PropTypes.number,
   escs: PropTypes.arrayOf(PropTypes.shape()),
   flashTargets: PropTypes.arrayOf(PropTypes.number),
-  fourWay: PropTypes.bool,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,
@@ -310,7 +312,6 @@ MainContent.propTypes = {
   onSingleFlash: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
-  open: PropTypes.bool,
   port: PropTypes.shape({ getBatteryState:PropTypes.func }),
   progress: PropTypes.arrayOf(PropTypes.number),
   settings: PropTypes.shape(),

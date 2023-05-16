@@ -5,6 +5,15 @@ import React, { useCallback } from 'react';
 import CompatibilityWarning from './CompatibilityWarning';
 
 import './style.scss';
+import { useSelector } from 'react-redux';
+import {
+  selectConnected,
+  selectHasSerial,
+  selectOpen,
+  selectPortNames,
+  setBaudRate,
+} from '../../Containers/App/serialSlice';
+import { useDispatch } from 'react-redux';
 
 function BaudRates({
   handleChange,
@@ -103,22 +112,24 @@ Ports.propTypes = {
 };
 
 function PortPicker({
-  hasPort,
-  hasSerial,
   isIdle,
-  open,
   onSetPort,
-  onSetBaudRate,
   onConnect,
   onDisconnect,
-  ports,
   onChangePort,
 }) {
   const { t } = useTranslation('common');
 
+  const dispatch = useDispatch();
+
+  const hasPort = useSelector(selectConnected);
+  const hasSerial = useSelector(selectHasSerial);
+  const open = useSelector(selectOpen);
+  const ports = useSelector(selectPortNames);
+
   const handleBaudRateChange = useCallback((e) => {
-    onSetBaudRate(e.target.value);
-  }, [onSetBaudRate]);
+    dispatch(setBaudRate(e.target.value));
+  }, [dispatch]);
 
   const handlePortChange = useCallback((e) => {
     onChangePort(e.target.value);
@@ -186,24 +197,13 @@ function PortPicker({
     </div>
   );
 }
-PortPicker.defaultProps = {
-  hasPort: false,
-  hasSerial: false,
-  isIdle: false,
-  open: false,
-  ports: [],
-};
+PortPicker.defaultProps = { isIdle: false };
 PortPicker.propTypes = {
-  hasPort: PropTypes.bool,
-  hasSerial: PropTypes.bool,
   isIdle: PropTypes.bool,
   onChangePort: PropTypes.func.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnect: PropTypes.func.isRequired,
-  onSetBaudRate: PropTypes.func.isRequired,
   onSetPort: PropTypes.func.isRequired,
-  open: PropTypes.bool,
-  ports: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default React.memo(PortPicker);

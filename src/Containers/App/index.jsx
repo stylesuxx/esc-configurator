@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import UAParser from 'ua-parser-js';
 import TagManager from 'react-gtm-module';
 import React, { Component } from 'react';
@@ -38,8 +39,19 @@ import {
   setSelecting,
   setWriting,
 } from './stateSlice';
+import {
+  setChecked,
+  setConnected,
+  setFourWay,
+  setHasSerial,
+  setOpen,
+  setPortNames,
+} from './serialSlice';
+import { connect } from 'react-redux';
 
 class App extends Component {
+  static propTypes = { serial: PropTypes.shape({ checked: PropTypes.bool.isRequired }).isRequired };
+
   constructor() {
     super();
 
@@ -55,18 +67,6 @@ class App extends Component {
         master: {},
         targets: [],
         individual: [],
-      },
-      serial: {
-        availablePorts: [],
-        baudRate: 115200,
-        checked: false,
-        chosenPort: null,
-        connected: false,
-        fourWay: false,
-        hasSerial: false,
-        log: [],
-        open: false,
-        portNames: [],
       },
     };
 
@@ -107,7 +107,7 @@ class App extends Component {
         this.serialApi.addEventListener('disconnect', this.serialDisconnectHandler);
         this.serialConnectHandler();
       } else {
-        this.setSerial({ checked: true });
+        store.dispatch(setChecked(true));
       }
     });
   }
@@ -119,16 +119,6 @@ class App extends Component {
   onMount(cb){
     cb();
   }
-
-  setSerial = (settings) => {
-    const { serial } = this.state;
-    this.setState({
-      serial: {
-        ...serial,
-        ...settings,
-      },
-    });
-  };
 
   setEscs = (settings, cb = null) => {
     const { escs } = this.state;
@@ -231,14 +221,11 @@ class App extends Component {
       return name;
     });
 
-    this.setSerial({
-      availablePorts: ports,
-      checked: true,
-      connected: connected,
-      fourWay: false,
-      hasSerial: true,
-      portNames: portNames,
-    });
+    store.dispatch(setChecked(true));
+    store.dispatch(setConnected(connected));
+    store.dispatch(setFourWay(false));
+    store.dispatch(setHasSerial(true));
+    store.dispatch(setPortNames(portNames));
   };
 
   serialDisconnectHandler = async() => {
@@ -256,14 +243,10 @@ class App extends Component {
 
     this.serial.disconnect();
 
-    this.setSerial({
-      availablePorts,
-      chosenPort: null,
-      connected: availablePorts.length > 0 ? true : false,
-      fourWay: false,
-      open: false,
-      portNames,
-    });
+    store.dispatch(setConnecting(availablePorts.length > 0 ? true : false));
+    store.dispatch(setFourWay(false));
+    store.dispatch(setOpen(false));
+    store.dispatch(setPortNames(portNames));
 
     this.setEscs({ individual: [] });
   };
@@ -424,8 +407,7 @@ class App extends Component {
 
     this.lastConnected = connected;
     store.dispatch(setReading(false));
-
-    this.setSerial({ fourWay });
+    store.dispatch(setFourWay(fourWay));
 
     // Set flashed melodies if available
     const master = getMasterSettings(individual);
@@ -635,35 +617,27 @@ class App extends Component {
         return name;
       });
 
-      this.setSerial({
-        availablePorts: [port],
-        connected: true,
-        portNames,
-      });
+      store.dispatch(setConnected(true));
+      store.dispatch(setPortNames(portNames));
     } catch (e) {
       // No port selected, do nothing
       console.debug(e);
     }
   };
 
-  handleChangePort = (index) => {
-    const { serial } = this.state;
-    this.serial = new Serial(serial.availablePorts[index]);
+  handleChangePort = async(index) => {
+    const availablePorts = await this.serialApi.getPorts();
+    this.serial = new Serial(availablePorts[index]);
 
     this.addLogMessage('portChanged');
-    this.setSerial({ chosenPort: serial.availablePorts[index] });
-  };
-
-  handleSetBaudRate = (rate) => {
-    this.setSerial({ baudRate: rate });
   };
 
   handleConnect = async(e) => {
     e.preventDefault();
-    const { serial } = this.state;
+
+    const serial = store.getState().serial;
 
     store.dispatch(setConnecting(true));
-
     try {
       await this.serial.open(serial.baudRate);
       this.serial.setLogCallback(this.addLogMessage);
@@ -767,7 +741,8 @@ class App extends Component {
         },
       });
 
-      this.setSerial({ open: true });
+
+      store.dispatch(setOpen(true));
       this.setEscs({ connected: motorData.length });
     } catch(e) {
       this.serial.close();
@@ -799,10 +774,8 @@ class App extends Component {
 
     this.lastConnected = 0;
 
-    this.setSerial({
-      fourWay: false,
-      open: false,
-    });
+    store.dispatch(setFourWay(false));
+    store.dispatch(setOpen(false));
 
     this.setEscs({ individual: [] });
 
@@ -850,11 +823,10 @@ class App extends Component {
   };
 
   render() {
-    const {
-      escs,
-      serial,
-    } = this.state;
+    const { serial } = this.props;
+    const { escs } = this.state;
 
+    console.log(serial);
     if (!serial.checked) {
       return null;
     }
@@ -891,11 +863,16 @@ class App extends Component {
             handleSetPort: this.handleSetPort,
           },
           port: this.serial,
-          ...serial,
         }}
       />
     );
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  const serial = state.serial;
+
+  return { serial };
+}
+
+export default connect(mapStateToProps)(App);
