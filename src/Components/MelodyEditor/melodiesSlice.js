@@ -84,6 +84,7 @@ export const melodiesSlice = createSlice({
         state.custom = loadMelodies();
       }
     },
+    reset: () => initialState,
   },
 });
 
@@ -92,6 +93,7 @@ export const {
   dummy,
   hide,
   prod,
+  reset,
   save,
   show,
   update,

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  render, screen,
+  render,
+  screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -8,6 +9,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
 import melodiesReducer, { updateAll } from '../../MelodyEditor/melodiesSlice';
+import logReducer, { add } from '../../Log/logSlice';
 
 import Buttonbar from '../';
 
@@ -17,7 +19,12 @@ function setupTestStore() {
   const refObj = {};
 
   beforeEach(() => {
-    const store = configureStore({ reducer: { melodies: melodiesReducer } });
+    const store = configureStore({
+      reducer: {
+        log: logReducer,
+        melodies: melodiesReducer,
+      },
+    });
     refObj.store = store;
     refObj.wrapper = ({ children }) => (
       <Provider store={store}>
@@ -43,7 +50,6 @@ describe('Buttonbar', () => {
     const onWriteSetup = jest.fn();
     const onReadSetup = jest.fn();
     const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
     const onSeletFirmwareForAll = jest.fn();
 
     render(
@@ -55,7 +61,6 @@ describe('Buttonbar', () => {
         canWrite={false}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSeletFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
@@ -71,10 +76,10 @@ describe('Buttonbar', () => {
   });
 
   it('should always trigger log save', () => {
+    global.URL.createObjectURL = jest.fn();
     const onWriteSetup = jest.fn();
     const onReadSetup = jest.fn();
     const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
     const onSeletFirmwareForAll = jest.fn();
 
     render(
@@ -86,7 +91,6 @@ describe('Buttonbar', () => {
         canWrite={false}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSeletFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
@@ -94,14 +98,13 @@ describe('Buttonbar', () => {
     );
 
     userEvent.click(screen.getByText(/escButtonSaveLog/i));
-    expect(onSaveLog).toHaveBeenCalled();
+    expect(global.URL.createObjectURL).toHaveBeenCalled();
   });
 
   it('should not trigger handlers when disabled', () => {
     const onWriteSetup = jest.fn();
     const onReadSetup = jest.fn();
     const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
     const onSelectFirmwareForAll = jest.fn();
 
     render(
@@ -113,7 +116,6 @@ describe('Buttonbar', () => {
         canWrite={false}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
@@ -137,7 +139,6 @@ describe('Buttonbar', () => {
     const onWriteSetup = jest.fn();
     const onReadSetup = jest.fn();
     const onResetDefaults = jest.fn();
-    const onSaveLog = jest.fn();
     const onSelectFirmwareForAll = jest.fn();
 
     render(
@@ -149,7 +150,6 @@ describe('Buttonbar', () => {
         canWrite
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
@@ -167,5 +167,77 @@ describe('Buttonbar', () => {
 
     userEvent.click(screen.getByText(/escButtonFlashAll/i));
     expect(onSelectFirmwareForAll).toHaveBeenCalled();
+  });
+
+  it('should open melody editor', () => {
+    storeRef.store.dispatch(updateAll([
+      'test',
+      'test',
+      'test',
+      'test',
+    ]));
+
+    const onWriteSetup = jest.fn();
+    const onReadSetup = jest.fn();
+    const onResetDefaults = jest.fn();
+    const onSeletFirmwareForAll = jest.fn();
+
+    render(
+      <Buttonbar
+        canFlash
+        canRead
+        canReadDefaults
+        canResetDefaults
+        canWrite
+        onReadSetup={onReadSetup}
+        onResetDefaults={onResetDefaults}
+        onSeletFirmwareForAll={onSeletFirmwareForAll}
+        onWriteSetup={onWriteSetup}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    const openButtons = screen.getAllByText(/escButtonOpenMelodyEditor/i);
+    expect(openButtons.length).toEqual(2);
+
+    userEvent.click(openButtons[1]);
+
+    const melodies = storeRef.store.getState().melodies;
+    expect(melodies.show).toBeTruthy();
+  });
+
+  it('should clear log', () => {
+    const onWriteSetup = jest.fn();
+    const onReadSetup = jest.fn();
+    const onResetDefaults = jest.fn();
+    const onSeletFirmwareForAll = jest.fn();
+
+    storeRef.store.dispatch(add('line1'));
+
+    let log = storeRef.store.getState().log;
+    expect(log.log.length).toEqual(1);
+
+    render(
+      <Buttonbar
+        canFlash
+        canRead
+        canReadDefaults
+        canResetDefaults
+        canWrite
+        onReadSetup={onReadSetup}
+        onResetDefaults={onResetDefaults}
+        onSeletFirmwareForAll={onSeletFirmwareForAll}
+        onWriteSetup={onWriteSetup}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByText(/escButtonClearLog/i)).toBeInTheDocument();
+
+    userEvent.click(screen.getByText(/escButtonClearLog/i));
+
+    log = storeRef.store.getState().log;
+    expect(log.log.length).toEqual(0);
+
   });
 });

@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 
 import { store } from '../../../store';
 
+import { set as setMspFeatures } from '../mspSlice';
+
 let App;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
@@ -48,5 +50,14 @@ describe('App', () => {
     // Open Melody editor
     userEvent.click(screen.getByRole('button', { name: /openMelodyEditor/i }));
     expect(screen.getByText(/melodyEditorHeader/i)).toBeInTheDocument();
+  });
+});
+
+describe('mspSplice', () => {
+  it('should set msp features', () => {
+    store.dispatch(setMspFeatures({ feature: 'value' }));
+
+    const msp = store.getState().msp;
+    expect(msp.features.feature).toEqual('value');
   });
 });

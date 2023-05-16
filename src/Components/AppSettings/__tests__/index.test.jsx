@@ -7,8 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
-import { show } from '../settingsSlice';
-import settingsReducer from '../settingsSlice';
+import settingsReducer, { show } from '../settingsSlice';
 
 import AppSettings from '../';
 

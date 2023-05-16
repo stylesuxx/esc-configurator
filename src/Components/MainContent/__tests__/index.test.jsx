@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 
 import melodiesReducer from '../../MelodyEditor/melodiesSlice';
 import settingsReducer from '../../AppSettings/settingsSlice';
+import logReducer from '../../Log/logSlice';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
@@ -17,7 +18,6 @@ let onSettingsUpdate;
 let onSingleMotorSpeed;
 let onSingleFlash;
 let onSelectFirmwareForAll;
-let onSaveLog;
 let onResetDefaultls;
 let onReadEscs;
 let onLocalSubmit;
@@ -34,6 +34,7 @@ function setupTestStore() {
   beforeEach(() => {
     const store = configureStore({
       reducer: {
+        log: logReducer,
         melodies: melodiesReducer,
         settings: settingsReducer,
       },
@@ -66,7 +67,6 @@ describe('MainContent', () => {
     onSingleMotorSpeed = jest.fn();
     onSingleFlash = jest.fn();
     onSelectFirmwareForAll = jest.fn();
-    onSaveLog = jest.fn();
     onResetDefaultls = jest.fn();
     onReadEscs = jest.fn();
     onLocalSubmit = jest.fn();
@@ -103,7 +103,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -148,7 +147,6 @@ describe('MainContent', () => {
     const onSingleMotorSpeed = jest.fn();
     const onSingleFlash = jest.fn();
     const onSelectFirmwareForAll = jest.fn();
-    const onSaveLog = jest.fn();
     const onResetDefaultls = jest.fn();
     const onReadEscs = jest.fn();
     const onLocalSubmit = jest.fn();
@@ -183,7 +181,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -230,7 +227,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -281,7 +277,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -331,7 +326,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -378,7 +372,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -512,7 +505,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -645,7 +637,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -773,7 +764,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -818,7 +808,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}
@@ -956,7 +945,6 @@ describe('MainContent', () => {
         onOpenMelodyEditor={onOpenMelodyEditor}
         onReadEscs={onReadEscs}
         onResetDefaultls={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSelectFirmwareForAll={onSelectFirmwareForAll}
         onSettingsUpdate={onSettingsUpdate}
         onSingleFlash={onSingleFlash}

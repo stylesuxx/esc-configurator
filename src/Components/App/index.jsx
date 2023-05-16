@@ -30,11 +30,8 @@ function App({
   configs,
   escs,
   melodies,
-  msp,
   onAllMotorSpeed,
-  onClearLog,
   onCookieAccept,
-  onSaveLog,
   onSingleMotorSpeed,
   serial,
 }) {
@@ -95,10 +92,8 @@ function App({
           escs={escs.individual}
           flashTargets={escs.targets}
           fourWay={serial.fourWay}
-          mspFeatures={msp.features}
           onAllMotorSpeed={onAllMotorSpeed}
           onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
-          onClearLog={onClearLog}
           onCommonSettingsUpdate={escs.actions.handleCommonSettingsUpdate}
           onFirmwareDump={escs.actions.handleFirmwareDump}
           onFlashUrl={escs.actions.handleFlashUrl}
@@ -106,7 +101,6 @@ function App({
           onLocalSubmit={escs.actions.handleLocalSubmit}
           onReadEscs={escs.actions.handleReadEscs}
           onResetDefaultls={escs.actions.handleResetDefaultls}
-          onSaveLog={onSaveLog}
           onSelectFirmwareForAll={escs.actions.handleSelectFirmwareForAll}
           onSettingsUpdate={escs.actions.handleMasterUpdate}
           onSingleFlash={escs.actions.handleSingleFlash}
@@ -173,11 +167,8 @@ App.propTypes = {
     targets: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
   melodies: PropTypes.shape({ actions: PropTypes.shape({ handleWrite: PropTypes.func.isRequired }) }).isRequired,
-  msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
-  onClearLog: PropTypes.func.isRequired,
   onCookieAccept: PropTypes.func.isRequired,
-  onSaveLog: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   serial: PropTypes.shape({
     actions: PropTypes.shape({

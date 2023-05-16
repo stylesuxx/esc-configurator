@@ -18,6 +18,7 @@ import melodiesReducer, {
   del,
   dummy,
   prod,
+  reset,
   save,
   update,
   updateAll,
@@ -499,5 +500,26 @@ describe('MelodyEditor', () => {
     expect(oscStart).toHaveBeenCalled();
     expect(oscStop).toHaveBeenCalled();
     // expect(oscClose).toHaveBeenCalled();
+  });
+});
+
+describe('melodiesSlice', () => {
+  const storeRef = setupTestStore();
+
+  it('should reset the state', () => {
+    storeRef.store.dispatch(updateAll([
+      'foobar',
+      'foobar',
+      'foobar',
+      'foobar',
+    ]));
+
+    let melodies = storeRef.store.getState().melodies;
+    expect(melodies.supported).toBeTruthy();
+
+    storeRef.store.dispatch(reset());
+
+    melodies = storeRef.store.getState().melodies;
+    expect(melodies.supported).toBeFalsy();
   });
 });

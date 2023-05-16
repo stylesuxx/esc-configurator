@@ -2,8 +2,6 @@ import UAParser from 'ua-parser-js';
 import TagManager from 'react-gtm-module';
 import React, { Component } from 'react';
 import Rtttl from 'bluejay-rtttl-parse';
-import dateFormat from 'dateformat';
-import i18next from 'i18next';
 import BinToHex from 'bin-to-hex';
 
 import { fetchHexCached } from '../../utils/Fetch';
@@ -16,21 +14,24 @@ import {
 import MainApp from '../../Components/App';
 import Serial from '../../utils/Serial';
 import sources from '../../sources';
-import {
-  clearLog,
-  loadLog,
-  loadSerialApi,
-} from '../../utils/LocalStorage';
+import { loadSerialApi } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
 
 import { store } from '../../store';
-import { updateAll as updatatAllMelodies } from '../../Components/MelodyEditor/melodiesSlice';
+import {
+  reset as resetMelodyEditor,
+  updateAll as updatatAllMelodies,
+} from '../../Components/MelodyEditor/melodiesSlice';
+import { set as setMspFeatures } from '../../Containers/App/mspSlice';
+import {
+  add as addLog,
+  addMessage as addMessageLog,
+} from '../../Components/Log/logSlice';
 
 class App extends Component {
   constructor() {
     super();
 
-    this.log = loadLog();
     this.serialApi = loadSerialApi();
 
     this.gtmActive = false;
@@ -38,7 +39,6 @@ class App extends Component {
     this.lastConnected = 0;
 
     this.state = {
-      msp: { features: {} },
       escs: {
         connected: 0,
         master: {},
@@ -76,7 +76,7 @@ class App extends Component {
     // Redefine the console and tee logs
     window.console.debug = (text, ...args) => {
       const msg = [text, args.join(' ')].join(' ');
-      this.updateLog(msg);
+      store.dispatch(addLog(msg));
 
       if(getAppSetting('printLogs')) {
         console.log(text, ...args);
@@ -152,29 +152,6 @@ class App extends Component {
     });
   };
 
-  updateLog = (message) => {
-    const now = dateFormat(new Date(), 'yyyy/mm/dd HH:MM:ss');
-    this.log.push(`${now}: ${message}`);
-    localStorage.setItem('log', JSON.stringify(this.log));
-  };
-
-  addLogMessage = async(message, params = {}) => {
-    const { serial } = this.state;
-    const translation = i18next.t(`log:${message}`, params);
-
-    params.lng = 'en';
-    const translationEn = i18next.t(`log:${message}`, params);
-    this.updateLog(translationEn);
-
-    if(getAppSetting('printLogs')) {
-      console.log(translationEn);
-    }
-
-    const log = [ ...serial.log ];
-    log.push(this.formatLogMessage(translation));
-    this.setSerial({ log });
-  };
-
   fetchConfigs = async() => {
     const { configs } = this.state;
     for(let i = 0; i < sources.length; i += 1) {
@@ -199,24 +176,11 @@ class App extends Component {
     return configs;
   };
 
-  formatLogMessage = (html) => {
-    const now = new Date();
-    const formattedDate = dateFormat(now, 'yyyy-mm-dd @ ');
-    const formattedTime = dateFormat(now, 'HH:MM:ss -- ');
-
-    return (
-      <div>
-        <span className="date">
-          {formattedDate}
-        </span>
-
-        <span className="time">
-          {formattedTime}
-        </span>
-
-        {html}
-      </div>
-    );
+  addLogMessage = async(message, params = {}) => {
+    store.dispatch(addMessageLog({
+      message,
+      params,
+    }));
   };
 
   flash = async(text, force, migrate) => {
@@ -312,21 +276,6 @@ class App extends Component {
     });
 
     this.setEscs({ individual: [] });
-  };
-
-  handleSaveLog = () => {
-    const element = document.createElement("a");
-    const file = new Blob([this.log.join("\n")], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = "esc-configurator-log.txt";
-    document.body.appendChild(element);
-    element.click();
-
-    this.handleClearLog();
-  };
-
-  handleClearLog = () => {
-    this.log = clearLog();
   };
 
   handleSettingsUpdate = (master) => {
@@ -817,6 +766,7 @@ class App extends Component {
       motorData = motorData.filter((motor) => motor > 0);
 
       const features = await this.serial.getFeatures();
+      store.dispatch(setMspFeatures(features));
 
       TagManager.dataLayer({
         dataLayer: {
@@ -830,7 +780,6 @@ class App extends Component {
         },
       });
 
-      this.setState({ msp: { features } });
       this.setSerial({ open: true });
       this.setEscs({ connected: motorData.length });
     } catch(e) {
@@ -879,6 +828,7 @@ class App extends Component {
       isDisconnecting: false,
     });
 
+    store.dispatch(resetMelodyEditor());
     this.addLogMessage('closedPort');
   };
 
@@ -924,7 +874,6 @@ class App extends Component {
       escs,
       actions,
       configs,
-      msp,
       serial,
     } = this.state;
 
@@ -954,11 +903,8 @@ class App extends Component {
           ...escs,
         }}
         melodies={{ actions: { handleWrite: this.handleMelodyWrite } }}
-        msp={msp}
         onAllMotorSpeed={this.handleAllMotorSpeed}
-        onClearLog={this.handleClearLog}
         onCookieAccept={this.handleCookieAccept}
-        onSaveLog={this.handleSaveLog}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
         serial={{
           actions: {

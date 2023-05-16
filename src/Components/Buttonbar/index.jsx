@@ -14,15 +14,18 @@ import {
   selectSupported,
 } from '../MelodyEditor/melodiesSlice';
 
+import {
+  clear as clearLog,
+  selectLog,
+} from '../Log/logSlice';
+
 import './style.scss';
 
 function Buttonbar({
-  onClearLog,
   onReadSetup,
   onWriteSetup,
   onSeletFirmwareForAll,
   onResetDefaults,
-  onSaveLog,
   canRead,
   canWrite,
   canFlash,
@@ -31,10 +34,26 @@ function Buttonbar({
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
   const showMelodyEditor = useSelector(selectSupported);
+  const log = useSelector(selectLog);
 
   const handleOpenMelodyEditor = useCallback(() => {
     dispatch(prod());
     dispatch(show());
+  }, [dispatch]);
+
+  const handleSaveLog = useCallback(() => {
+    const element = document.createElement("a");
+    const file = new Blob([log.join("\n")], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = "esc-configurator-log.txt";
+    document.body.appendChild(element);
+    element.click();
+
+    dispatch(clearLog());
+  }, [dispatch, log]);
+
+  const handleClearLog = useCallback(() => {
+    dispatch(clearLog());
   }, [dispatch]);
 
   return (
@@ -50,12 +69,12 @@ function Buttonbar({
 
       <div className="buttons-left">
         <GenericButton
-          onClick={onSaveLog}
+          onClick={handleSaveLog}
           text={t('escButtonSaveLog')}
         />
 
         <GenericButton
-          onClick={onClearLog}
+          onClick={handleClearLog}
           text={t('escButtonClearLog')}
         />
 
@@ -109,10 +128,8 @@ Buttonbar.propTypes = {
   canRead: PropTypes.bool.isRequired,
   canResetDefaults: PropTypes.bool.isRequired,
   canWrite: PropTypes.bool.isRequired,
-  onClearLog: PropTypes.func.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,
-  onSaveLog: PropTypes.func.isRequired,
   onSeletFirmwareForAll: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
 };

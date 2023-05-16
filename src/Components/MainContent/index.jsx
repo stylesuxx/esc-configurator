@@ -14,6 +14,8 @@ import MotorControl from '../../Components/MotorControl';
 import { selectSettings } from '../AppSettings/settingsSlice';
 import { selectSupported } from '../MelodyEditor/melodiesSlice';
 
+import { getMspFeature } from '../../utils/helpers/General';
+
 import './style.scss';
 
 function WarningWrapper() {
@@ -63,12 +65,9 @@ function MainContent({
   escs,
   settings,
   progress,
-  mspFeatures,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
-  onClearLog,
   onCommonSettingsUpdate,
-  onOpenMelodyEditor,
   onSelectFirmwareForAll,
   onSettingsUpdate,
   onReadEscs,
@@ -77,7 +76,6 @@ function MainContent({
   onWriteSetup,
   onFirmwareDump,
   onFlashUrl,
-  onSaveLog,
   configs,
   flashTargets,
   onLocalSubmit,
@@ -158,7 +156,7 @@ function MainContent({
           motorCount={connected}
           onAllUpdate={onAllMotorSpeed}
           onSingleUpdate={onSingleMotorSpeed}
-          startValue={mspFeatures['3D'] ? 1500 : 1000}
+          startValue={getMspFeature('3D') ? 1500 : 1000}
         />
       );
     }
@@ -171,15 +169,12 @@ function MainContent({
     connected,
     onAllMotorSpeed,
     onSingleMotorSpeed,
-    mspFeatures,
   ]);
 
   if (!open) {
     return (
       <>
-        <Home
-          onOpenMelodyEditor={onOpenMelodyEditor}
-        />
+        <Home />
 
         <Changelog entries={changelogEntries} />
       </>
@@ -272,11 +267,8 @@ function MainContent({
         canRead={canRead}
         canResetDefaults={canWrite}
         canWrite={canWrite}
-        onClearLog={onClearLog}
-        onOpenMelodyEditor={onOpenMelodyEditor}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
-        onSaveLog={onSaveLog}
         onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
         showMelodyEditor={showMelodyEditor}
@@ -291,7 +283,6 @@ MainContent.defaultProps = {
   escs: [],
   flashTargets: [],
   fourWay: false,
-  mspFeatures: { '3D': false },
   open: false,
   port: { getBatteryState: null },
   progress: [],
@@ -315,19 +306,15 @@ MainContent.propTypes = {
   escs: PropTypes.arrayOf(PropTypes.shape()),
   flashTargets: PropTypes.arrayOf(PropTypes.number),
   fourWay: PropTypes.bool,
-  mspFeatures: PropTypes.shape({ '3D': PropTypes.bool }),
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
-  onClearLog: PropTypes.func.isRequired,
   onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
-  onOpenMelodyEditor: PropTypes.func.isRequired,
   onReadEscs: PropTypes.func.isRequired,
   onResetDefaultls: PropTypes.func.isRequired,
-  onSaveLog: PropTypes.func.isRequired,
   onSelectFirmwareForAll: PropTypes.func.isRequired,
   onSettingsUpdate: PropTypes.func.isRequired,
   onSingleFlash: PropTypes.func.isRequired,
