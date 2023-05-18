@@ -28,9 +28,8 @@ import './style.scss';
 
 function App({
   escs,
-  melodies,
   onAllMotorSpeed,
-  onCookieAccept,
+  onMelodyWrite,
   onSingleMotorSpeed,
   serial,
 }) {
@@ -108,9 +107,9 @@ function App({
       <AppSettings />
 
       {showMelodyEditor &&
-        <MelodyEditor onWrite={melodies.handleWrite} />}
+        <MelodyEditor onWrite={onMelodyWrite} />}
 
-      <CookieConsent onCookieAccept={onCookieAccept} />
+      <CookieConsent />
 
       <ToastContainer />
     </div>
@@ -147,9 +146,8 @@ App.propTypes = {
     master: PropTypes.shape({}).isRequired,
     targets: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
-  melodies: PropTypes.shape({ handleWrite: PropTypes.func.isRequired }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
-  onCookieAccept: PropTypes.func.isRequired,
+  onMelodyWrite: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   serial: PropTypes.shape({
     actions: PropTypes.shape({

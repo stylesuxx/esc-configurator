@@ -57,7 +57,6 @@ class App extends Component {
 
     this.serialApi = loadSerialApi();
 
-    this.gtmActive = false;
     this.serial = undefined;
     this.lastConnected = 0;
 
@@ -119,6 +118,34 @@ class App extends Component {
   onMount(cb){
     cb();
   }
+
+  serialConnectHandler = async() => {
+    this.serial = undefined;
+    let connected = false;
+
+    const ports = await this.serialApi.getPorts();
+    if(ports.length > 0) {
+      TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
+      this.addLogMessage('pluggedIn');
+      connected = true;
+
+      // Set the first  serial port as the active one
+      this.serial = new Serial(ports[0]);
+    }
+
+    const portNames = ports.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
+    store.dispatch(setChecked(true));
+    store.dispatch(setHasSerial(true));
+    store.dispatch(setConnected(connected));
+    store.dispatch(setPortNames(portNames));
+    store.dispatch(setFourWay(false));
+  };
 
   setEscs = (settings, cb = null) => {
     const { escs } = this.state;
@@ -200,34 +227,6 @@ class App extends Component {
     store.dispatch(setFlashing(false));
   };
 
-  serialConnectHandler = async() => {
-    let connected = false;
-    this.serial = undefined;
-
-    const ports = await this.serialApi.getPorts();
-    if(ports.length > 0) {
-      TagManager.dataLayer({ dataLayer: { event: "Plugged in" } });
-      this.addLogMessage('pluggedIn');
-      connected = true;
-
-      // Set the first  serial port as the active one
-      this.serial = new Serial(ports[0]);
-    }
-
-    const portNames = ports.map((item) => {
-      const info = item.getInfo();
-      const name = `${info.usbVendorId}:${info.usbProductId}`;
-
-      return name;
-    });
-
-    store.dispatch(setChecked(true));
-    store.dispatch(setConnected(connected));
-    store.dispatch(setFourWay(false));
-    store.dispatch(setHasSerial(true));
-    store.dispatch(setPortNames(portNames));
-  };
-
   serialDisconnectHandler = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
     this.addLogMessage('unplugged');
@@ -244,9 +243,9 @@ class App extends Component {
     this.serial.disconnect();
 
     store.dispatch(setConnecting(availablePorts.length > 0 ? true : false));
+    store.dispatch(setPortNames(portNames));
     store.dispatch(setFourWay(false));
     store.dispatch(setOpen(false));
-    store.dispatch(setPortNames(portNames));
 
     this.setEscs({ individual: [] });
   };
@@ -635,9 +634,9 @@ class App extends Component {
   handleConnect = async(e) => {
     e.preventDefault();
 
-    const serial = store.getState().serial;
-
     store.dispatch(setConnecting(true));
+
+    const serial = store.getState().serial;
     try {
       await this.serial.open(serial.baudRate);
       this.serial.setLogCallback(this.addLogMessage);
@@ -777,11 +776,12 @@ class App extends Component {
     store.dispatch(setFourWay(false));
     store.dispatch(setOpen(false));
 
-    this.setEscs({ individual: [] });
-
     store.dispatch(resetState());
 
     store.dispatch(resetMelodyEditor());
+
+    this.setEscs({ individual: [] });
+
     this.addLogMessage('closedPort');
   };
 
@@ -791,15 +791,6 @@ class App extends Component {
 
   handleSingleMotorSpeed = async(index, speed) => {
     await this.serial.spinMotor(index, speed);
-  };
-
-  handleCookieAccept = () => {
-    if(!this.gtmActive) {
-      const tagManagerArgs = { gtmId: process.env.REACT_APP_GTM_ID };
-      TagManager.initialize(tagManagerArgs);
-
-      this.gtmActive = true;
-    }
   };
 
   handleMelodyWrite = (melodies) => {
@@ -850,9 +841,8 @@ class App extends Component {
           },
           ...escs,
         }}
-        melodies={{ handleWrite: this.handleMelodyWrite }}
         onAllMotorSpeed={this.handleAllMotorSpeed}
-        onCookieAccept={this.handleCookieAccept}
+        onMelodyWrite={this.handleMelodyWrite}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
         serial={{
           actions: {
