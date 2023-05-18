@@ -101,6 +101,7 @@ function Settings({
         );
       }
 
+      /* istanbul ignore next */
       default: return null;
     }
   });

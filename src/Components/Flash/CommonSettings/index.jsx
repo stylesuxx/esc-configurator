@@ -62,6 +62,7 @@ function CommonSettings({
       checked,
     } = e.target;
     newSettings[name] = checked ? 1 : 0;
+    console.log(name, newSettings[name]);
     setSettings(newSettings);
   }, [availableSettings]);
 
@@ -197,6 +198,8 @@ function CommonSettings({
           setting = settingOverride;
         }
       }
+
+      /* istanbul ignore next */
       const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
 
       // Sanitize a value if it is depended on another value
@@ -284,6 +287,7 @@ function CommonSettings({
           );
         }
 
+        /* istanbul ignore next */
         default: return null;
       }
     });

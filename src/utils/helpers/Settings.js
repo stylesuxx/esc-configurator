@@ -23,21 +23,22 @@ const getMasterSettings = (escs) => {
  */
 const getIndividualSettingsDescriptions = (esc) => {
   if(esc && esc.firmwareName && esc.layoutRevision) {
-    const keep = ['MAIN_REVISION', 'SUB_REVISION', 'LAYOUT', 'LAYOUT_REVISION', 'NAME'];
-
     const source = getSource(esc.firmwareName);
-    const descriptions = source ? source.getIndividualSettings(esc.layoutRevision) : {};
+    if(source) {
+      const keep = ['MAIN_REVISION', 'SUB_REVISION', 'LAYOUT', 'LAYOUT_REVISION', 'NAME'];
+      const descriptions = source ? source.getIndividualSettings(esc.layoutRevision) : {};
 
-    const individualGroups = Object.keys(descriptions);
-    for(let i = 0; i < individualGroups.length; i += 1) {
-      const keepSettings = descriptions[individualGroups[i]];
-      for(let j = 0; j < keepSettings.length; j += 1) {
-        const current = keepSettings[j].name;
-        keep.push(current);
+      const individualGroups = Object.keys(descriptions);
+      for(let i = 0; i < individualGroups.length; i += 1) {
+        const keepSettings = descriptions[individualGroups[i]];
+        for(let j = 0; j < keepSettings.length; j += 1) {
+          const current = keepSettings[j].name;
+          keep.push(current);
+        }
       }
-    }
 
-    return keep;
+      return keep;
+    }
   }
 
   return [];

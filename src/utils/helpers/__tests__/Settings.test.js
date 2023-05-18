@@ -40,6 +40,16 @@ test('get individual setting descriptions with empty object', () => {
   expect(settings).toEqual([]);
 });
 
+test('get individual setting descriptions with unsupported firmware', () => {
+  const settings = getIndividualSettingsDescriptions({
+    firmwareName: 'unsupported',
+    layoutRevision: 1234,
+  });
+
+  expect(settings).toEqual([]);
+});
+
+
 test('get individual settings', () => {
   const settings = getIndividualSettings(escs[0]);
   const keys = Object.keys(settings);

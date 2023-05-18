@@ -94,13 +94,13 @@ function FirmwareSelector({
   }
 
   useEffect(() => {
-    // If layou selection is disabled, automatically set the 1st layout to be
-    // selected.
+    /**
+     * If layout selection is disabled, automatically set the 1st layout to be
+     * selected.
+     */
     if(layoutSelectionDisabled) {
-      if(options.escs.length > 0) {
-        setEscLayout(options.escs[0].name);
-        setPreselected(true);
-      }
+      setEscLayout(options.escs[0].name);
+      setPreselected(true);
     }
   }, [options, layoutSelectionDisabled]);
 

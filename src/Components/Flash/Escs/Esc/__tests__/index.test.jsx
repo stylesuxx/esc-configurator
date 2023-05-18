@@ -275,13 +275,14 @@ describe('Esc', () => {
       />
     );
 
-    act(() => {
-      ref.current.setProgress(50);
-    });
-
     const progressbar = screen.getByRole(/progressbar/i);
     expect(progressbar).toBeInTheDocument();
+
+    act(() => ref.current.setProgress(50));
     expect(progressbar.value).toEqual(50);
+
+    act(() => ref.current.setProgress(100));
+    expect(progressbar.value).toEqual(100);
   });
 
   it('should show common settings and handle change', () => {
@@ -318,6 +319,33 @@ describe('Esc', () => {
         name: 'MOTOR_DIRECTION',
       },
     });
+  });
+
+  it('should show common settings and handle checkbox change', () => {
+    const esc = {
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
+      settings: { DITHERING: 1 },
+      individualSettings: { DITHERING: 1 },
+    };
+
+    render(
+      <Esc
+        canFlash
+        directInput={false}
+        disableCommon
+        enableAdvanced={false}
+        esc={esc}
+        index={0}
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
+        onFlash={onFlash}
+        onSettingsUpdate={onSettingsUpdate}
+      />
+    );
+
+    expect(screen.getByText(/hints:DITHERING/i)).toBeInTheDocument();
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'DITHERING' }));
   });
 
   it('should trigger firmware dump', () => {

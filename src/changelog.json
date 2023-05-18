@@ -6,6 +6,8 @@
       "Bugfix: Check 3D mode when stopping motors on disconnect",
       "Chore: Improved logging",
       "Chore: Read version from package.json",
+      "Chore: Improved test coverage",
+      "Chore: Refactored state to redux slices",
       "Enhancement: More melodies",
       "AM32: New layout support",
       "AM32: Improved firmware detection",
