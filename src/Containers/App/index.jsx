@@ -14,14 +14,13 @@ import {
 } from '../../utils/helpers/General';
 import MainApp from '../../Components/App';
 import Serial from '../../utils/Serial';
-import sources from '../../sources';
 import { loadSerialApi } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
 
 import { store } from '../../store';
 
 import { set as setMspFeatures } from '../../Containers/App/mspSlice';
-import { set as setConfigs } from './configsSlice';
+import { fetch as fetchConfigs } from './configsSlice';
 import {
   reset as resetMelodyEditor,
   updateAll as updatatAllMelodies,
@@ -96,14 +95,14 @@ class App extends Component {
          * Fetch configs in the background - some of them are fetched via
          * github API and might take some time to be fetched.
          */
-        const configs = await this.fetchConfigs();
-        store.dispatch(setConfigs(configs));
+        store.dispatch(fetchConfigs());
 
         this.serialApi.removeEventListener('connect', this.serialConnectHandler);
         this.serialApi.removeEventListener('disconnect', this.serialDisconnectHandler);
 
         this.serialApi.addEventListener('connect', this.serialConnectHandler);
         this.serialApi.addEventListener('disconnect', this.serialDisconnectHandler);
+
         this.serialConnectHandler();
       } else {
         store.dispatch(setChecked(true));
@@ -155,32 +154,6 @@ class App extends Component {
         ...settings,
       },
     }, cb);
-  };
-
-  fetchConfigs = async() => {
-    const configs = {
-      versions: {},
-      escs: {},
-    };
-
-    for(let i = 0; i < sources.length; i += 1) {
-      const source = sources[i];
-      const name = source.getName();
-
-      source.setSkipCache(getAppSetting('skipCache'));
-
-      try {
-        configs.versions[name] = await source.getVersions();
-        configs.escs[name] = source.getEscLayouts();
-      } catch(e) {
-        this.addLogMessage('fetchingFilesFailed', { name: name });
-
-        configs.versions[name] = [];
-        configs.escs[name] = [];
-      }
-    }
-
-    return configs;
   };
 
   addLogMessage = async(message, params = {}) => {

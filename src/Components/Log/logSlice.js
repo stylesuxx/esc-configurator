@@ -32,8 +32,8 @@ const lineFormatTimestamped = (html) => {
 
 export const addMessage = createAsyncThunk(
   'log/addMessage',
-  async(payload, thunkAPI) => {
-    const settings = thunkAPI.getState().settings.settings;
+  async(payload, thunkApi) => {
+    const settings = thunkApi.getState().settings.settings;
 
     payload.log = settings.printLogs.value;
     return payload;

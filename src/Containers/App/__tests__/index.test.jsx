@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 
 import { store } from '../../../store';
 
+import { fetch as fetchConfigs } from '../configsSlice';
 import { set as setMspFeatures } from '../mspSlice';
 import {
   setDisconnecting,
@@ -17,6 +18,7 @@ import {
   setConnecting,
   reset as resetState,
 } from '../stateSlice';
+import { nothing } from 'immer';
 
 let App;
 
@@ -62,7 +64,17 @@ describe('App', () => {
   });
 });
 
-describe('mspSplice', () => {
+describe('configSlice', () => {
+  it('should fetch configs', async() => {
+    await store.dispatch(fetchConfigs());
+
+    const configs = store.getState().configs;
+    expect(configs.escs["BLHeli_S"]).not.toBeNull();
+    expect(configs.escs["Bluejay"]).not.toBeNull();
+  });
+});
+
+describe('mspSlice', () => {
   it('should set msp features', () => {
     store.dispatch(setMspFeatures({ feature: 'value' }));
 
