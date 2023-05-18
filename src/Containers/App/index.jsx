@@ -790,7 +790,7 @@ class App extends Component {
     const { serial } = this.props;
     const { escs } = this.state;
 
-    console.log(serial);
+    console.log(escs);
     if (!serial.checked) {
       return null;
     }

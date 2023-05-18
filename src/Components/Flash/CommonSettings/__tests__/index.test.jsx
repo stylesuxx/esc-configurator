@@ -34,7 +34,6 @@ describe('CommonSettings', () => {
       {
         meta: { available: true },
         settings: { MODE: 1 },
-        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -68,69 +67,11 @@ describe('CommonSettings', () => {
 
     const escs = [
       {
+        firmwareName: 'Bluejay',
+        layoutRevision: 207,
         meta: { available: true },
         settings: { MODE: 0 },
         make: 'make 1234',
-        settingsDescriptions: {
-          base: [
-            {
-              name: 'MOTOR_DIRECTION',
-              type: 'enum',
-              label: 'escMotorDirection',
-              options: [
-                {
-                  value: '1',
-                  label: 'Normal',
-                },
-                {
-                  value: '2',
-                  label: 'Reversed',
-                },
-                {
-                  value: '3',
-                  label: 'Bidirectional',
-                },
-                {
-                  value: '4',
-                  label: 'Bidirectional Reversed',
-                },
-              ],
-            },
-            {
-              name: '_PPM_MIN_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 1500,
-              step: 4,
-              label: 'escPPMMinThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-            },
-            {
-              name: 'STARTUP_BEEP',
-              type: 'bool',
-              label: 'escStartupBeep',
-            },
-            {
-              name: 'IVALID',
-              type: 'IVALID',
-              label: 'invalid',
-            },
-            {
-              name: '_PPM_CENTER_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 2020,
-              step: 4,
-              label: 'escPPMCenterThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-              visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-            },
-          ],
-        },
         individualSettings: {
           MAIN_REVISION: 0,
           SUB_REVISION: 201,
@@ -157,9 +98,8 @@ describe('CommonSettings', () => {
 
     expect(screen.getByText(/commonParameters/i)).toBeInTheDocument();
 
-    expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
-    expect(screen.getByText(/escPPMMinThrottle/i)).toBeInTheDocument();
-    expect(screen.getByText(/escStartupBeep/i)).toBeInTheDocument();
+    expect(screen.getByText(/escMinStartupPower/i)).toBeInTheDocument();
+
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
   });
 
@@ -175,105 +115,19 @@ describe('CommonSettings', () => {
     };
 
     const esc = {
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
       meta: { available: true },
       settings: {
         MODE: 0,
         STARTUP_BEEP: 0,
       },
       make: 'make 1234',
-      settingsDescriptions: {
-        overrides: {
-          '0.201': [
-            {
-              name: 'MOTOR_DIRECTION',
-              type: 'enum',
-              label: 'escMotorDirection',
-              options: [
-                {
-                  value: '1',
-                  label: 'Normal',
-                },
-                {
-                  value: '2',
-                  label: 'Reversed',
-                },
-                {
-                  value: '3',
-                  label: 'Bidirectional',
-                },
-                {
-                  value: '4',
-                  label: 'Bidirectional Reversed',
-                },
-              ],
-            },
-          ],
-        },
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
-      },
       individualSettings: {
         MAIN_REVISION: 0,
         SUB_REVISION: 201,
         NAME: 'Bluejay (Beta)',
       },
-      source: { getGroupOrder: () => [] },
     };
 
     const escs = [];
@@ -298,13 +152,13 @@ describe('CommonSettings', () => {
       />
     );
 
-    userEvent.click(screen.getByRole(/checkbox/i));
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'DITHERING' }));
     expect(onSettingsUpdate).toHaveBeenCalled();
 
-    fireEvent.change(screen.getByRole(/combobox/i), {
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'TEMPERATURE_PROTECTION' }), {
       taget: {
         value: 3,
-        name: 'MOTOR_DIRECTION',
+        name: 'TEMPERATURE_PROTECTION',
       },
     });
   });
@@ -320,75 +174,16 @@ describe('CommonSettings', () => {
 
     const escs = [
       {
+        firmwareName: 'Bluejay',
+        layoutRevision: 207,
         meta: { available: true },
         settings: { MODE: 0 },
         make: 'make 1234',
-        settingsDescriptions: {
-          base: [
-            {
-              name: 'MOTOR_DIRECTION',
-              type: 'enum',
-              label: 'escMotorDirection',
-              options: [
-                {
-                  value: '1',
-                  label: 'Normal',
-                },
-                {
-                  value: '2',
-                  label: 'Reversed',
-                },
-                {
-                  value: '3',
-                  label: 'Bidirectional',
-                },
-                {
-                  value: '4',
-                  label: 'Bidirectional Reversed',
-                },
-              ],
-            },
-            {
-              name: '_PPM_MIN_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 1500,
-              step: 4,
-              label: 'escPPMMinThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-            },
-            {
-              name: 'STARTUP_BEEP',
-              type: 'bool',
-              label: 'escStartupBeep',
-            },
-            {
-              name: 'IVALID',
-              type: 'IVALID',
-              label: 'invalid',
-            },
-            {
-              name: '_PPM_CENTER_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 2020,
-              step: 4,
-              label: 'escPPMCenterThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-              visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-            },
-          ],
-        },
         individualSettings: {
           MAIN_REVISION: 0,
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
-        source: { getGroupOrder: () => [] },
       },
     ];
 
@@ -407,117 +202,15 @@ describe('CommonSettings', () => {
       />
     );
 
-    userEvent.click(screen.getByRole(/checkbox/i));
-    expect(onSettingsUpdate).toHaveBeenCalled();
+    expect(screen.queryByText(/unsupportedFirmware/i)).not.toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole(/spinbutton/i), {
+    fireEvent.change(screen.getByTestId('STARTUP_POWER_MIN'), {
       target: {
         value: 1250,
-        name: '_PPM_MIN_THROTTLE',
+        name: 'STARTUP_POWER_MIN',
       },
     });
-    fireEvent.blur(screen.getByRole(/spinbutton/i));
-  });
-
-  it('should show an error when not all ESCs are Multi', () => {
-    const availableSettings = {
-      LAYOUT_REVISION: 203,
-      MAIN_REVISION: 1,
-      NAME: 'FW name',
-      SUB_REVISION: 100,
-      _PPM_MIN_THROTTLE: 1200,
-    };
-
-    const escs = [
-      {
-        meta: { available: true },
-        settings: { MODE: 1 },
-        make: 'make 1234',
-        settingsDescriptions: {
-          base: [
-            {
-              name: 'MOTOR_DIRECTION',
-              type: 'enum',
-              label: 'escMotorDirection',
-              options: [
-                {
-                  value: '1',
-                  label: 'Normal',
-                },
-                {
-                  value: '2',
-                  label: 'Reversed',
-                },
-                {
-                  value: '3',
-                  label: 'Bidirectional',
-                },
-                {
-                  value: '4',
-                  label: 'Bidirectional Reversed',
-                },
-              ],
-            },
-            {
-              name: '_PPM_MIN_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 1500,
-              step: 4,
-              label: 'escPPMMinThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-            },
-            {
-              name: 'STARTUP_BEEP',
-              type: 'bool',
-              label: 'escStartupBeep',
-            },
-            {
-              name: 'IVALID',
-              type: 'IVALID',
-              label: 'invalid',
-            },
-            {
-              name: '_PPM_CENTER_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 2020,
-              step: 4,
-              label: 'escPPMCenterThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-              visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-            },
-          ],
-        },
-        individualSettings: {
-          MAIN_REVISION: 0,
-          SUB_REVISION: 201,
-          NAME: 'Bluejay (Beta)',
-        },
-        source: { getGroupOrder: () => [] },
-      },
-    ];
-
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
-    render(
-      <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
-        index={0}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-        unsupported={false}
-      />
-    );
-
-    expect(screen.getByText(/multiOnly/i)).toBeInTheDocument();
+    fireEvent.blur(screen.getByTestId('STARTUP_POWER_MIN'));
   });
 
   it('should handle out of sync settings', () => {
@@ -531,72 +224,14 @@ describe('CommonSettings', () => {
     };
 
     const esc = {
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
       meta: { available: true },
       settings: {
         MODE: 0,
         MOTOR_DIRECTION: 0,
       },
       make: 'make 1234',
-      settingsDescriptions: {
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
-      },
       individualSettings: {
         MAIN_REVISION: 0,
         SUB_REVISION: 201,
@@ -608,7 +243,6 @@ describe('CommonSettings', () => {
 
     for(let i = 0; i < 4; i += 1) {
       const current = JSON.parse(JSON.stringify(esc));
-      current.source = { getGroupOrder: () => [] };
 
       if(i === 3) {
         current.settings.MOTOR_DIRECTION = 1;
@@ -631,339 +265,25 @@ describe('CommonSettings', () => {
       />
     );
 
-    userEvent.click(screen.getByRole(/checkbox/i));
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'DITHERING' }));
     expect(onSettingsUpdate).toHaveBeenCalled();
 
-    fireEvent.change(screen.getByRole(/combobox/i), {
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'TEMPERATURE_PROTECTION' }), {
       taget: {
         value: 3,
-        name: 'MOTOR_DIRECTION',
-      },
-    });
-  });
-
-  it('should handle setting overrides', () => {
-    const availableSettings = {
-      LAYOUT_REVISION: 201,
-      MAIN_REVISION: 0,
-      NAME: 'FW name',
-      SUB_REVISION: 100,
-      STARTUP_BEEP: 1,
-      MOTOR_DIRECTION: 1,
-      _PPM_MIN_THROTTLE: 1200,
-      _PPM_CENTER_THROTTLE: 1010,
-    };
-
-    const esc = {
-      meta: { available: true },
-      settings: {
-        MODE: 0,
-        MOTOR_DIRECTION: 0,
-        STARTUP_BEEP: 1,
-      },
-      make: 'make 1234',
-      settingsDescriptions: {
-        overrides: {
-          '0.100': [
-            {
-              name: 'MOTOR_DIRECTION',
-              type: 'enum',
-              label: 'escMotorDirectionOverride',
-              options: [
-                {
-                  value: '1',
-                  label: 'Normal',
-                },
-                {
-                  value: '2',
-                  label: 'Reversed',
-                },
-                {
-                  value: '3',
-                  label: 'Bidirectional',
-                },
-                {
-                  value: '4',
-                  label: 'Bidirectional Reversed',
-                },
-              ],
-            },
-          ],
-        },
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
-      },
-      individualSettings: {
-        MAIN_REVISION: 0,
-        SUB_REVISION: 201,
-        NAME: 'Bluejay (Beta)',
-      },
-    };
-
-    const escs = [];
-
-    for(let i = 0; i < 4; i += 1) {
-      const current = JSON.parse(JSON.stringify(esc));
-      current.source = { getGroupOrder: () => [] };
-
-      if(i === 3) {
-        current.settings.MOTOR_DIRECTION = 1;
-      }
-      escs.push(current);
-    }
-
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
-    render(
-      <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
-        index={0}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-        unsupported={false}
-      />
-    );
-
-    expect(screen.getByText(/escMotorDirectionOverride/i)).toBeInTheDocument();
-
-    userEvent.click(screen.getByRole(/checkbox/i));
-    expect(onSettingsUpdate).toHaveBeenCalled();
-
-    fireEvent.change(screen.getByRole(/combobox/i), {
-      taget: {
-        value: 3,
-        name: 'MOTOR_DIRECTION',
-      },
-    });
-  });
-
-  it('should handle sanitizing a value', () => {
-    const availableSettings = {
-      LAYOUT_REVISION: 201,
-      MAIN_REVISION: 0,
-      NAME: 'FW name',
-      SUB_REVISION: 100,
-      STARTUP_BEEP: 1,
-      MOTOR_DIRECTION: 1,
-      _PPM_MIN_THROTTLE: 1200,
-      _PPM_CENTER_THROTTLE: 1010,
-    };
-
-    const esc = {
-      meta: { available: true },
-      settings: {
-        MODE: 0,
-        MOTOR_DIRECTION: 0,
-        STARTUP_BEEP: 1,
-      },
-      make: 'make 1234',
-      settingsDescriptions: {
-        overrides: {
-          '0.100': [
-            {
-              name: 'MOTOR_DIRECTION',
-              type: 'enum',
-              label: 'escMotorDirectionOverride',
-              options: [
-                {
-                  value: '1',
-                  label: 'Normal',
-                },
-                {
-                  value: '2',
-                  label: 'Reversed',
-                },
-                {
-                  value: '3',
-                  label: 'Bidirectional',
-                },
-                {
-                  value: '4',
-                  label: 'Bidirectional Reversed',
-                },
-              ],
-            },
-          ],
-        },
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-            sanitize: (value, availableSettings) => 1010,
-          },
-        ],
-      },
-      individualSettings: {
-        MAIN_REVISION: 0,
-        SUB_REVISION: 201,
-        NAME: 'Bluejay (Beta)',
-      },
-    };
-
-    const escs = [];
-    for(let i = 0; i < 4; i += 1) {
-      const current = JSON.parse(JSON.stringify(esc));
-      current.source = { getGroupOrder: () => [] };
-
-      if(i === 3) {
-        current.settings.MOTOR_DIRECTION = 1;
-      }
-      escs.push(current);
-    }
-
-    const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
-
-    render(
-      <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
-        index={0}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-        unsupported={false}
-      />
-    );
-
-    expect(screen.getByText(/escMotorDirectionOverride/i)).toBeInTheDocument();
-
-    userEvent.click(screen.getByRole(/checkbox/i));
-    expect(onSettingsUpdate).toHaveBeenCalled();
-
-    fireEvent.change(screen.getByRole(/combobox/i), {
-      taget: {
-        value: 3,
-        name: 'MOTOR_DIRECTION',
+        name: 'TEMPERATURE_PROTECTION',
       },
     });
   });
 
   it('should display warning when firmware is unsopported', () => {
-    const availableSettings = {
-      LAYOUT_REVISION: 203,
-      MAIN_REVISION: 1,
-      NAME: 'JESC',
-      SUB_REVISION: 100,
-      _PPM_MIN_THROTTLE: 1200,
-    };
+    const availableSettings = {};
 
     const escs = [
       {
+        firmwareName: 'JESC',
         meta: { available: true },
         settings: { MODE: 1 },
-        source: { getGroupOrder: () => [] },
       },
     ];
 

@@ -166,7 +166,8 @@ describe('Esc', () => {
 
   it('should show custom settings and handle change', () => {
     const esc = {
-      bootloaderRevision: 'bl 23',
+      firmwareName: 'BLHeli_S',
+      layoutRevision: 33,
       individualSettings: {
         MAIN_REVISION: 1,
         SUB_REVISION: 200,
@@ -174,66 +175,6 @@ describe('Esc', () => {
         MOTOR_DIRECTION: 1,
         _PPM_MIN_THROTTLE: 125,
         STARTUP_BEEP: 0,
-      },
-      individualSettingsDescriptions: {
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
       },
     };
 
@@ -252,10 +193,7 @@ describe('Esc', () => {
 
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
     expect(screen.getByText(/escPPMMinThrottle/i)).toBeInTheDocument();
-    expect(screen.getByText(/escStartupBeep/i)).toBeInTheDocument();
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
-
-    userEvent.click(screen.getByRole(/checkbox/i));
 
     // Change select
     fireEvent.change(screen.getByRole(/combobox/i), {
@@ -268,7 +206,8 @@ describe('Esc', () => {
 
   it('should show custom settings and handle direct input', () => {
     const esc = {
-      bootloaderRevision: 'bl 23',
+      firmwareName: 'BLHeli_S',
+      layoutRevision: 33,
       individualSettings: {
         MAIN_REVISION: 1,
         SUB_REVISION: 200,
@@ -276,66 +215,6 @@ describe('Esc', () => {
         MOTOR_DIRECTION: 1,
         _PPM_MIN_THROTTLE: 125,
         STARTUP_BEEP: 1,
-      },
-      individualSettingsDescriptions: {
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
       },
     };
 
@@ -354,18 +233,15 @@ describe('Esc', () => {
 
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
     expect(screen.getByText(/escPPMMinThrottle/i)).toBeInTheDocument();
-    expect(screen.getByText(/escStartupBeep/i)).toBeInTheDocument();
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByRole(/checkbox/i));
-
-    fireEvent.change(screen.getByRole(/spinbutton/i), {
+    fireEvent.change(screen.getByTestId('PPM_MIN_THROTTLE'), {
       target: {
         value: 1250,
-        name: '_PPM_MIN_THROTTLE',
+        name: 'PPM_MIN_THROTTLE',
       },
     });
-    fireEvent.blur(screen.getByRole(/spinbutton/i));
+    fireEvent.blur(screen.getByTestId('PPM_MIN_THROTTLE'));
   });
 
   it('should update the progress bar', () => {
@@ -378,66 +254,6 @@ describe('Esc', () => {
         MOTOR_DIRECTION: 1,
         _PPM_MIN_THROTTLE: 125,
         STARTUP_BEEP: 1,
-      },
-      individualSettingsDescriptions: {
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
       },
     };
 
@@ -470,43 +286,10 @@ describe('Esc', () => {
 
   it('should show common settings and handle change', () => {
     const esc = {
-      bootloaderRevision: 'bl 23',
-      settings: {
-        COMMON_MOTOR_DIRECTION: 1,
-        COMMON_STARTUP_BEEP: 0,
-      },
-      settingsDescriptions: {
-        base: [
-          {
-            name: 'COMMON_MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: 'COMMON_STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-        ],
-      },
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
+      settings: {},
+      individualSettings: { MOTOR_DIRECTION: 1 },
     };
 
     render(
@@ -524,16 +307,15 @@ describe('Esc', () => {
       />
     );
 
-    expect(screen.getByText(/hints:COMMON_MOTOR_DIRECTION/i)).toBeInTheDocument();
+    expect(screen.getByText(/hints:MOTOR_DIRECTION/i)).toBeInTheDocument();
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole(/checkbox/i));
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'DITHERING' }));
 
-    // Change select
-    fireEvent.change(screen.getByRole(/combobox/i), {
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'MOTOR_DIRECTION' }), {
       taget: {
         value: 3,
-        name: 'COMMON_MOTOR_DIRECTION',
+        name: 'MOTOR_DIRECTION',
       },
     });
   });

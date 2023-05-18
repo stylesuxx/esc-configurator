@@ -11,8 +11,9 @@ import {
   getMasterSettings,
   getMaster,
   getAllSettings,
-  isMulti,
 } from '../../../utils/helpers/Settings';
+
+import { getSource } from '../../../utils/helpers/General';
 
 import Checkbox from '../../Input/Checkbox';
 import Select from '../../Input/Select';
@@ -35,12 +36,13 @@ function CommonSettings({
   } = useTranslation(['common', 'groups', 'hints']);
 
   const master = getMaster(escs);
+  const source = getSource(master.firmwareName);
+  const groupOrder = source ? source.getGroupOrder() : [];
+  const settingsDescriptions = source ? source.getCommonSettings(master.layoutRevision) : null;
+
   const reference = getMasterSettings(escs);
   const allSettings = getAllSettings(escs);
-  const allMulti = isMulti(escs);
-  const groupOrder = master.source.getGroupOrder();
 
-  const { settingsDescriptions } = master;
   const mainRevision = availableSettings.MAIN_REVISION;
   const subRevision = availableSettings.SUB_REVISION;
   const revision = `${mainRevision}.${subRevision}`;
@@ -89,7 +91,7 @@ function CommonSettings({
           {t('common:versionUnsupportedLine1', {
             version: version,
             name: availableSettings.NAME,
-            layout: availableSettings.LAYOUT_REVISION,
+            layout: master.layoutRevision,
           })}
         </p>
 
@@ -123,14 +125,6 @@ function CommonSettings({
           {unsupportedText}
         </div>
       </div>
-    );
-  }
-
-  if (!allMulti) {
-    return (
-      <h3>
-        {t('multiOnly')}
-      </h3>
     );
   }
 
@@ -327,7 +321,6 @@ CommonSettings.defaultProps = {
 
 CommonSettings.propTypes = {
   availableSettings: PropTypes.shape({
-    LAYOUT_REVISION: PropTypes.number.isRequired,
     MAIN_REVISION: PropTypes.number.isRequired,
     NAME: PropTypes.string.isRequired,
     SUB_REVISION: PropTypes.number.isRequired,

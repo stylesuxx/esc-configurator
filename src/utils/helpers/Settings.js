@@ -1,6 +1,4 @@
-import { blheliAtmelSource as blheliSource } from '../../sources';
-
-const blheliEeprom = blheliSource.getEeprom();
+import { getSource } from './General';
 
 /**
  * Get master settings from a set of settings
@@ -24,10 +22,13 @@ const getMasterSettings = (escs) => {
  * @returns {Array<string>}
  */
 const getIndividualSettingsDescriptions = (esc) => {
-  if(esc && esc.individualSettingsDescriptions) {
-    const descriptions = esc.individualSettingsDescriptions;
-    const individualGroups = Object.keys(descriptions);
+  if(esc && esc.firmwareName && esc.layoutRevision) {
     const keep = ['MAIN_REVISION', 'SUB_REVISION', 'LAYOUT', 'LAYOUT_REVISION', 'NAME'];
+
+    const source = getSource(esc.firmwareName);
+    const descriptions = source ? source.getIndividualSettings(esc.layoutRevision) : {};
+
+    const individualGroups = Object.keys(descriptions);
     for(let i = 0; i < individualGroups.length; i += 1) {
       const keepSettings = descriptions[individualGroups[i]];
       for(let j = 0; j < keepSettings.length; j += 1) {
@@ -50,11 +51,14 @@ const getIndividualSettingsDescriptions = (esc) => {
  */
 const getIndividualSettings = (esc) => {
   const individualSettings = {};
-  const individualKeep = getIndividualSettingsDescriptions(esc);
 
-  for(let j = 0; j < individualKeep.length; j += 1) {
-    const setting = individualKeep[j];
-    individualSettings[setting] = esc.settings[setting];
+  if(esc && esc.settings) {
+    const individualKeep = getIndividualSettingsDescriptions(esc);
+
+    for(let j = 0; j < individualKeep.length; j += 1) {
+      const setting = individualKeep[j];
+      individualSettings[setting] = esc.settings[setting];
+    }
   }
 
   return individualSettings;
@@ -75,14 +79,6 @@ const getMaster = (escs) => escs.find((esc) => esc.meta.available);
  * @returns {Array<object>}
  */
 const getAllSettings = (escs) => escs.map((esc) => esc.settings);
-
-/**
- * Check if all ESCs are in multi mode
- *
- * @param {Array<object>} escs
- * @returns {boolean}
- */
-const isMulti = (escs) => escs.every((esc) => !esc.settings.MODE || esc.settings.MODE === blheliEeprom.MODES.MULTI);
 
 /**
  * Check if a specific setting can be migrated from one firmware to another
@@ -138,6 +134,5 @@ export {
   getIndividualSettingsDescriptions,
   getMaster,
   getMasterSettings,
-  isMulti,
   canMigrate,
 };

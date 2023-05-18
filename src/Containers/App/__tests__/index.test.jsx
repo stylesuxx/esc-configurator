@@ -18,7 +18,6 @@ import {
   setConnecting,
   reset as resetState,
 } from '../stateSlice';
-import { nothing } from 'immer';
 
 let App;
 

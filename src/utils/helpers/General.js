@@ -139,6 +139,15 @@ const getPwm = (name, version) => {
   return [];
 };
 
+const getSource = (name) => {
+  const options = sources.filter((source) => source.getName() === name);
+  if(options.length > 0) {
+    return options[0];
+  }
+
+  return null;
+};
+
 export {
   retry,
   delay,
@@ -150,4 +159,5 @@ export {
   getAppSetting,
   getMspFeature,
   getPwm,
+  getSource,
 };

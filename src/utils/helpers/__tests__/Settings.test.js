@@ -8,6 +8,7 @@ import {
 import escs from './escs.json';
 import { source as bluejaySource } from '../../../sources/Bluejay';
 import { source as am32Source } from '../../../sources/AM32';
+import { getSource } from '../General';
 
 const AM32_SETTINGS_DESCRIPTIONS = am32Source.getSettingsDescriptions();
 const BLUEJAY_SETTINGS_DESCRIPTIONS = bluejaySource.getSettingsDescriptions();
@@ -30,7 +31,7 @@ test('get individual setting descriptions', () => {
   const settings = getIndividualSettingsDescriptions(escs[0]);
 
   expect(settings).not.toEqual([]);
-  expect(settings.length).toEqual(6);
+  expect(settings.length).toEqual(8);
 });
 
 test('get individual setting descriptions with empty object', () => {
@@ -44,7 +45,7 @@ test('get individual settings', () => {
   const keys = Object.keys(settings);
 
   expect(settings).not.toEqual({});
-  expect(keys.length).toEqual(6);
+  expect(keys.length).toEqual(8);
 });
 
 test('get individual settings with empty object', () => {
@@ -66,8 +67,11 @@ test('can migrate wrong modes', () => {
 });
 
 test('can migrate invalid setting', () => {
-  const individualSettingsDescriptions = escs[1].individualSettingsDescriptions;
-  const settingsDescriptions = escs[1].settingsDescriptions;
+  const esc = escs[1];
+  const source = getSource(esc.firmwareName);
+  const settingsDescriptions = source.getCommonSettings(esc.layoutRevision);
+  const individualSettingsDescriptions = source.getIndividualSettings(esc.layoutRevision);
+
   const result = canMigrate('INVALID', escs[0], escs[1], settingsDescriptions, individualSettingsDescriptions);
 
   expect(result).not.toBeTruthy();

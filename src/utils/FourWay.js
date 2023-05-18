@@ -31,6 +31,7 @@ import {
   retry,
   compare,
   isValidFlash,
+  getSource,
 } from './helpers/General';
 
 import FourWayHelper from './helpers/FourWay';
@@ -485,13 +486,12 @@ class FourWay {
       }
 
       const layoutRevision = info.settings.LAYOUT_REVISION.toString();
+      info.layoutRevision = layoutRevision;
       if(source) {
-        info.settingsDescriptions = source.getCommonSettings(layoutRevision);
-        info.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
         info.defaultSettings = source.getDefaultSettings(layoutRevision);
       }
 
-      if(!info.settingsDescriptions) {
+      if(!info.defaultSettings) {
         this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
       }
 
@@ -511,8 +511,6 @@ class FourWay {
           source = null;
 
           info.layout = {};
-          info.settingsDescriptions = { base: [] };
-          info.individualSettingsDescriptions = { base: [] };
         } else {
           make = layout.name;
         }
@@ -662,7 +660,6 @@ class FourWay {
         }
       }
 
-      info.source = source;
       info.make = make;
     } catch (e) {
       console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
@@ -1106,11 +1103,12 @@ class FourWay {
 
       let newEsc = await this.getInfo(target);
 
+      const source = getSource(esc.firmwareName);
       const sameFirmware = (
         esc.individualSettings &&
         newEsc.individualSettings &&
-        esc.source &&
-        esc.source.canMigrateTo(newEsc.individualSettings.NAME)
+        source &&
+        source.canMigrateTo(newEsc.individualSettings.NAME)
       );
 
       /**

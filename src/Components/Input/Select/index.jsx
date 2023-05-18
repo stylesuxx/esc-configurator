@@ -27,6 +27,7 @@ function Select({
 
     return (
       <select
+        aria-label={name}
         disabled={disabled}
         name={name}
         onChange={onChange}

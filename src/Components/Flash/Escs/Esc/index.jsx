@@ -10,6 +10,7 @@ import React, {
 import SettingsHandler from './SettingsHandler';
 
 import './style.scss';
+import { getSource } from '../../../../utils/helpers/General';
 
 const Esc = forwardRef(({
   canFlash,
@@ -25,11 +26,13 @@ const Esc = forwardRef(({
 }, ref) => {
   const { t } = useTranslation('common');
 
-  const commonSettings = esc.settings;
-  const commonSettingsDescriptions = esc.settingsDescriptions;
+  const source = getSource(esc.firmwareName);
+  const commonSettingsDescriptions = source ? source.getCommonSettings(esc.layoutRevision) : null;
+  const descriptions = source ? source.getIndividualSettings(esc.layoutRevision) : null;
 
+  const commonSettings = esc.settings;
   const settings = esc.individualSettings;
-  const descriptions = esc.individualSettingsDescriptions;
+
   const name = esc.displayName ? esc.displayName : 'Unsupported/Unrecognized';
   const title = `ESC ${(index + 1)}: ${name}`;
 

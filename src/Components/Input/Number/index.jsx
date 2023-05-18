@@ -55,6 +55,7 @@ function Number({
       <label>
         <div className="input-wrapper">
           <input
+            data-testid={name}
             disabled={disabled}
             max={max}
             min={min}
