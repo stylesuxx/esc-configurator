@@ -10,6 +10,8 @@ import { Provider } from 'react-redux';
 import configsReducer, { set } from '../../../Containers/App/configsSlice';
 
 import sources from '../../../sources';
+import settingsReducer from '../../AppSettings/settingsSlice';
+import escsReducer from '../../../Containers/App/escsSlice';
 
 let FirmwareSelector;
 
@@ -19,7 +21,13 @@ function setupTestStore() {
   const refObj = {};
 
   beforeEach(() => {
-    const store = configureStore({ reducer: { configs: configsReducer } });
+    const store = configureStore({
+      reducer: {
+        configs: configsReducer,
+        escs: escsReducer,
+        settings: settingsReducer,
+      },
+    });
     refObj.store = store;
     refObj.wrapper = ({ children }) => (
       <Provider store={store}>
@@ -40,6 +48,9 @@ const mockJsonResponse = (content) =>
     },
   });
 
+let onSubmit;
+let onLocalSubmit;
+
 describe('FirmwareSelector', () => {
   const storeRef = setupTestStore();
 
@@ -51,14 +62,14 @@ describe('FirmwareSelector', () => {
     FirmwareSelector = require('../').default;
   });
 
-  it('should display firmware selection', () => {
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
+  beforeEach(() => {
+    onSubmit = jest.fn();
+    onLocalSubmit = jest.fn();
+  });
 
+  it('should display firmware selection', () => {
     render(
       <FirmwareSelector
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
         showUnstable={false}
@@ -105,10 +116,6 @@ describe('FirmwareSelector', () => {
 
     storeRef.store.dispatch(set(configs));
 
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
-
     const escMock = {
       settings: { LAYOUT: "#S_H_90#" },
       meta: { signature: 0xE8B2 },
@@ -117,7 +124,6 @@ describe('FirmwareSelector', () => {
     render(
       <FirmwareSelector
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
       />,
@@ -201,7 +207,8 @@ describe('FirmwareSelector', () => {
     expect(onLocalSubmit).toHaveBeenCalled();
 
     userEvent.click(screen.getByText('buttonCancel'));
-    expect(onCancel).toHaveBeenCalled();
+    const { targets } = storeRef.store.getState().escs;
+    expect(targets.length).toBe(0);
   });
 
   it('should display title', async() => {
@@ -227,10 +234,6 @@ describe('FirmwareSelector', () => {
       configs.escs[name] = source.getEscLayouts();
     }
 
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
-
     const escMock = {
       displayName: 'Display Name',
       settings: { LAYOUT: "#S_H_90#" },
@@ -240,7 +243,6 @@ describe('FirmwareSelector', () => {
     render(
       <FirmwareSelector
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
       />,
@@ -275,10 +277,6 @@ describe('FirmwareSelector', () => {
 
     storeRef.store.dispatch(set(configs));
 
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
-
     const escMock = {
       settings: { LAYOUT: "T-MOTOR 55A" },
       meta: {
@@ -293,7 +291,6 @@ describe('FirmwareSelector', () => {
     render(
       <FirmwareSelector
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
       />,
@@ -351,10 +348,6 @@ describe('FirmwareSelector', () => {
 
     storeRef.store.dispatch(set(configs));
 
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
-
     const escMock = {
       settings: { LAYOUT: "T-MOTOR 55A" },
       meta: { signature: 0x1F06 },
@@ -363,7 +356,6 @@ describe('FirmwareSelector', () => {
     render(
       <FirmwareSelector
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
       />,

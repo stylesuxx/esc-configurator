@@ -26,7 +26,7 @@ const getIndividualSettingsDescriptions = (esc) => {
     const source = getSource(esc.firmwareName);
     if(source) {
       const keep = ['MAIN_REVISION', 'SUB_REVISION', 'LAYOUT', 'LAYOUT_REVISION', 'NAME'];
-      const descriptions = source ? source.getIndividualSettings(esc.layoutRevision) : {};
+      const descriptions = source.getIndividualSettings(esc.layoutRevision);
 
       const individualGroups = Object.keys(descriptions);
       for(let i = 0; i < individualGroups.length; i += 1) {

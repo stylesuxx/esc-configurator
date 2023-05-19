@@ -42,5 +42,17 @@ export const {
 
 export const selectShow = (state) => state.settings.show;
 export const selectSettings = (state) => state.settings.settings;
+export const selectSettingsObject = (state) => {
+  const settingsObject = {};
+
+  const settingsKeys = Object.keys(state.settings.settings);
+  for(let i = 0; i < settingsKeys.length; i += 1) {
+    const key = settingsKeys[i];
+    const value = state.settings.settings[key].value;
+    settingsObject[key] = value;
+  }
+
+  return settingsObject;
+};
 
 export default settingsSlice.reducer;

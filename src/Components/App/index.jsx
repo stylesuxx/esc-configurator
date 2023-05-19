@@ -18,8 +18,6 @@ import MelodyEditor from '../../Components/MelodyEditor';
 import PortPicker from '../PortPicker';
 import Statusbar from '../Statusbar';
 
-import changelogEntries from '../../changelog.json';
-
 import { selectState } from '../../Containers/App/stateSlice';
 import { show as showAppSettings } from '../AppSettings/settingsSlice';
 import { selectShow as selectShowMelodyEditor } from '../MelodyEditor/melodiesSlice';
@@ -79,26 +77,16 @@ function App({
         </header>
 
         <MainContent
-          changelogEntries={changelogEntries}
-          connected={escs.connected}
-          escs={escs.individual}
-          flashTargets={escs.targets}
           onAllMotorSpeed={onAllMotorSpeed}
-          onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
-          onCommonSettingsUpdate={escs.actions.handleCommonSettingsUpdate}
           onFirmwareDump={escs.actions.handleFirmwareDump}
           onFlashUrl={escs.actions.handleFlashUrl}
-          onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
           onLocalSubmit={escs.actions.handleLocalSubmit}
           onReadEscs={escs.actions.handleReadEscs}
           onResetDefaultls={escs.actions.handleResetDefaultls}
-          onSelectFirmwareForAll={escs.actions.handleSelectFirmwareForAll}
-          onSettingsUpdate={escs.actions.handleMasterUpdate}
-          onSingleFlash={escs.actions.handleSingleFlash}
           onSingleMotorSpeed={onSingleMotorSpeed}
           onWriteSetup={escs.actions.handleWriteSetup}
           port={serial.port}
-          settings={escs.master}
+          progressReferences={escs.progressReferences}
         />
 
         <Statusbar getUtilization={serial.port ? serial.port.getUtilization : undefined} />
@@ -128,23 +116,15 @@ App.defaultProps = {
 App.propTypes = {
   escs: PropTypes.shape({
     actions: PropTypes.shape({
-      handleMasterUpdate: PropTypes.func.isRequired,
-      handleCommonSettingsUpdate: PropTypes.func.isRequired,
       handleFirmwareDump: PropTypes.func.isRequired,
-      handleIndividualSettingsUpdate: PropTypes.func.isRequired,
       handleResetDefaultls: PropTypes.func.isRequired,
       handleReadEscs: PropTypes.func.isRequired,
       handleWriteSetup: PropTypes.func.isRequired,
-      handleSingleFlash: PropTypes.func.isRequired,
       handleSelectFirmwareForAll: PropTypes.func.isRequired,
-      handleCancelFirmwareSelection: PropTypes.func.isRequired,
       handleLocalSubmit: PropTypes.func.isRequired,
       handleFlashUrl: PropTypes.func.isRequired,
     }),
-    connected: PropTypes.number.isRequired,
-    individual: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    master: PropTypes.shape({}).isRequired,
-    targets: PropTypes.arrayOf(PropTypes.number).isRequired,
+    progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   }).isRequired,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onMelodyWrite: PropTypes.func.isRequired,

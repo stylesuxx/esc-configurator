@@ -4,6 +4,15 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import escsReducer, {
+  setIndividual, setMaster,
+} from '../../../../Containers/App/escsSlice';
+import settingsReducer, { update } from '../../../AppSettings/settingsSlice';
+import stateReducer from '../../../../Containers/App/stateSlice';
+
 import CustomSettings from '../';
 
 jest.mock('react-i18next', () => ({
@@ -21,7 +30,31 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({
+      reducer: {
+        escs: escsReducer,
+        settings: settingsReducer,
+        state: stateReducer,
+      },
+    });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
+
 describe('CommonSettings', () => {
+  const storeRef = setupTestStore();
+
   it('should display when settings are unsopported', () => {
     const availableSettings = {
       LAYOUT_REVISION: 203,
@@ -29,6 +62,7 @@ describe('CommonSettings', () => {
       NAME: 'FW name',
       SUB_REVISION: 100,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const escs = [
       {
@@ -36,20 +70,17 @@ describe('CommonSettings', () => {
         settings: { MODE: 1 },
       },
     ];
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/common:versionUnsupportedLine1/i)).toBeInTheDocument();
@@ -64,6 +95,7 @@ describe('CommonSettings', () => {
       SUB_REVISION: 100,
       _PPM_MIN_THROTTLE: 1200,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const escs = [
       {
@@ -77,12 +109,11 @@ describe('CommonSettings', () => {
           SUB_REVISION: 201,
           NAME: 'Bluejay (Beta)',
         },
-        source: { getGroupOrder: () => [] },
       },
     ];
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
@@ -91,9 +122,9 @@ describe('CommonSettings', () => {
         escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/commonParameters/i)).toBeInTheDocument();
@@ -114,6 +145,7 @@ describe('CommonSettings', () => {
       _PPM_MIN_THROTTLE: 1200,
       DITHERING: 0,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const esc = {
       firmwareName: 'Bluejay',
@@ -128,14 +160,13 @@ describe('CommonSettings', () => {
     };
 
     const escs = [];
-
     for(let i = 0; i < 4; i += 1) {
       const current = { ...esc };
       escs.push(current);
     }
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
@@ -144,9 +175,9 @@ describe('CommonSettings', () => {
         escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     const checkbox = screen.getByRole(/checkbox/i, { name: 'DITHERING' });
@@ -166,6 +197,7 @@ describe('CommonSettings', () => {
       _PPM_MIN_THROTTLE: 1200,
       DITHERING: 1,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const esc = {
       firmwareName: 'Bluejay',
@@ -185,20 +217,17 @@ describe('CommonSettings', () => {
       const current = { ...esc };
       escs.push(current);
     }
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.queryByText(/unsupportedFirmware/i)).not.toBeInTheDocument();
@@ -222,6 +251,7 @@ describe('CommonSettings', () => {
       _PPM_MIN_THROTTLE: 1200,
       DITHERING: 1,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const esc = {
       firmwareName: 'Bluejay',
@@ -236,25 +266,21 @@ describe('CommonSettings', () => {
     };
 
     const escs = [];
-
     for(let i = 0; i < 4; i += 1) {
       const current = { ...esc };
       escs.push(current);
     }
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     const checkbox = screen.getByRole(/checkbox/i, { name: 'DITHERING' });
@@ -264,6 +290,11 @@ describe('CommonSettings', () => {
   });
 
   it('should allow updating with direct input', () => {
+    storeRef.store.dispatch(update({
+      name: 'directInput',
+      value: true,
+    }));
+
     const availableSettings = {
       LAYOUT_REVISION: 203,
       MAIN_REVISION: 1,
@@ -271,6 +302,7 @@ describe('CommonSettings', () => {
       SUB_REVISION: 100,
       _PPM_MIN_THROTTLE: 1200,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const escs = [
       {
@@ -286,20 +318,17 @@ describe('CommonSettings', () => {
         },
       },
     ];
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.queryByText(/unsupportedFirmware/i)).not.toBeInTheDocument();
@@ -320,6 +349,7 @@ describe('CommonSettings', () => {
       NAME: 'FW name',
       SUB_REVISION: 100,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const esc = {
       firmwareName: 'Bluejay',
@@ -329,7 +359,6 @@ describe('CommonSettings', () => {
     };
 
     const escs = [];
-
     for(let i = 0; i < 4; i += 1) {
       const current = JSON.parse(JSON.stringify(esc));
 
@@ -338,9 +367,9 @@ describe('CommonSettings', () => {
       }
       escs.push(current);
     }
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     /* eslint-disable */
     const { container } = render(
@@ -350,9 +379,9 @@ describe('CommonSettings', () => {
         escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(container.querySelector('.not-in-sync')).toBeInTheDocument();
@@ -360,6 +389,7 @@ describe('CommonSettings', () => {
 
   it('should display warning when firmware is unsopported', () => {
     const availableSettings = {};
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const escs = [
       {
@@ -368,20 +398,17 @@ describe('CommonSettings', () => {
         settings: { MODE: 1 },
       },
     ];
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/unsupportedFirmware/i)).toBeInTheDocument();
@@ -393,7 +420,9 @@ describe('CommonSettings', () => {
       MAIN_REVISION: 14,
       NAME: 'FW name',
       SUB_REVISION: 5,
+      PROGRAMMING_BY_TX: 0,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const esc = {
       firmwareName: 'BLHeli',
@@ -402,39 +431,38 @@ describe('CommonSettings', () => {
       settings: {
         MODE: 0,
         STARTUP_BEEP: 0,
+        PROGRAMMING_BY_TX: 0,
       },
       make: 'make 1234',
       individualSettings: {
         MAIN_REVISION: 0,
         SUB_REVISION: 201,
         NAME: 'Bluejay (Beta)',
+        PROGRAMMING_BY_TX: 0,
       },
     };
 
     const escs = [];
-
     for(let i = 0; i < 4; i += 1) {
       const current = { ...esc };
       escs.push(current);
     }
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     userEvent.click(screen.getByRole(/checkbox/i, { name: 'PROGRAMMING_BY_TX' }));
-    expect(onSettingsUpdate).toHaveBeenCalled();
+    const { master } = storeRef.store.getState().escs;
+    expect(master.PROGRAMMING_BY_TX).toEqual(1);
   });
 
   it('should group settings', () => {
@@ -443,6 +471,7 @@ describe('CommonSettings', () => {
       NAME: 'FW name',
       SUB_REVISION: 5,
     };
+    storeRef.store.dispatch(setMaster(availableSettings));
 
     const escs = [
       {
@@ -452,20 +481,17 @@ describe('CommonSettings', () => {
         settings: { MODE: 1 },
       },
     ];
+    storeRef.store.dispatch(setIndividual(escs));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput={false}
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/commonParameters/i)).toBeInTheDocument();
@@ -473,16 +499,12 @@ describe('CommonSettings', () => {
   });
 
   it('should handle sanitizations', () => {
-    const availableSettings = {
-      MAIN_REVISION: 14,
-      NAME: 'FW name',
-      SUB_REVISION: 5,
-      PWM_FREQUENCY: 192,
-      PWM_THRESHOLD_LOW: 128,
-      PWM_THRESHOLD_HIGH: 128,
-    };
+    storeRef.store.dispatch(update({
+      name: 'directInput',
+      value: true,
+    }));
 
-    const escs = [
+    storeRef.store.dispatch(setIndividual([
       {
         firmwareName: 'Bluejay',
         layoutRevision: 207,
@@ -493,21 +515,28 @@ describe('CommonSettings', () => {
           PWM_THRESHOLD_HIGH: 128,
         },
       },
-    ];
+    ]));
+
+    storeRef.store.dispatch(setMaster(
+      {
+        MAIN_REVISION: 14,
+        NAME: 'FW name',
+        SUB_REVISION: 5,
+        PWM_FREQUENCY: 192,
+        PWM_THRESHOLD_LOW: 128,
+        PWM_THRESHOLD_HIGH: 128,
+      }
+    ));
 
     const onFlash = jest.fn();
-    const onSettingsUpdate = jest.fn();
 
     render(
       <CustomSettings
-        availableSettings={availableSettings}
-        directInput={true}
-        escs={escs}
         index={0}
         onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         unsupported={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(Math.round(screen.getByTestId('PWM_THRESHOLD_LOW').value)).toEqual(50);

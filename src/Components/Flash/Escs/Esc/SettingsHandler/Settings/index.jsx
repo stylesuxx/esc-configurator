@@ -2,6 +2,9 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { useSelector } from 'react-redux';
+import { selectSettingsObject } from '../../../../../AppSettings/settingsSlice';
+
 import Checkbox from '../../../../../Input/Checkbox';
 import Select from '../../../../../Input/Select';
 import Slider from '../../../../../Input/Slider';
@@ -9,7 +12,6 @@ import Number from '../../../../../Input/Number';
 
 function Settings({
   descriptions,
-  directInput,
   disabled,
   handleCheckboxChange,
   handleNumberChange,
@@ -21,12 +23,15 @@ function Settings({
     i18n,
   } = useTranslation(['common', 'hints']);
 
+  const { directInput } = useSelector(selectSettingsObject);
+
   const settingElements = descriptions.map((setting) => {
     if (setting.visibleIf && !setting.visibleIf(settings)) {
       return null;
     }
 
     const value = settings[setting.name];
+    /* istanbul ignore next */
     const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
 
     switch (setting.type) {
@@ -108,13 +113,11 @@ function Settings({
 
   return settingElements;
 }
-Settings.defaultProps = {
-  directInput: false,
-  disabled: false,
-};
+
+Settings.defaultProps = { disabled: false };
+
 Settings.propTypes = {
   descriptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  directInput: PropTypes.bool,
   disableld: PropTypes.bool,
   handleCheckboxChange: PropTypes.func.isRequired,
   handleNumberChange: PropTypes.func.isRequired,

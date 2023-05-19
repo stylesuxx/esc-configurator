@@ -21,24 +21,34 @@ import Slider from '../../Input/Slider';
 import Number from '../../Input/Number';
 
 import './style.scss';
+import { useSelector } from 'react-redux';
+import {
+  selectIndividual,
+  selectMaster,
+  setMaster,
+} from '../../../Containers/App/escsSlice';
+import { selectSettingsObject } from '../../AppSettings/settingsSlice';
+import { selectCanFlash } from '../../../Containers/App/stateSlice';
+import { useDispatch } from 'react-redux';
 
-function CommonSettings({
-  availableSettings,
-  directInput,
-  disabled,
-  escs,
-  onSettingsUpdate,
-  unsupported,
-}) {
+function CommonSettings({ unsupported }) {
   const {
     t,
     i18n,
   } = useTranslation(['common', 'groups', 'hints']);
 
+  const dispatch = useDispatch();
+
+  const availableSettings = useSelector(selectMaster);
+  const escs = useSelector(selectIndividual);
+  const disabled = !useSelector(selectCanFlash);
+
   const master = getMaster(escs);
   const source = getSource(master.firmwareName);
   const groupOrder = source ? source.getGroupOrder() : [];
   const settingsDescriptions = source ? source.getCommonSettings(master.layoutRevision) : null;
+
+  const { directInput } = useSelector(selectSettingsObject);
 
   const reference = getMasterSettings(escs);
   const allSettings = getAllSettings(escs);
@@ -48,6 +58,10 @@ function CommonSettings({
   const revision = `${mainRevision}.${subRevision}`;
 
   const [settings, setSettings] = useState(null);
+
+  const onSettingsUpdate = useCallback((master) => {
+    dispatch(setMaster(master));
+  }, [dispatch]);
 
   useEffect(() => {
     if(settings) {
@@ -62,7 +76,6 @@ function CommonSettings({
       checked,
     } = e.target;
     newSettings[name] = checked ? 1 : 0;
-    console.log(name, newSettings[name]);
     setSettings(newSettings);
   }, [availableSettings]);
 
@@ -174,10 +187,11 @@ function CommonSettings({
   }
 
   const groupedSettingElements = orderedGroupKeys.map((group) => {
+    const settings = { ...availableSettings };
     const groupItems = groups[group];
 
     const settingElements = groupItems.map((description) => {
-      if (description.visibleIf && !description.visibleIf(availableSettings)) {
+      if (description.visibleIf && !description.visibleIf(settings)) {
         return null;
       }
 
@@ -203,10 +217,10 @@ function CommonSettings({
       const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
 
       // Sanitize a value if it is depended on another value
-      let value = availableSettings[setting.name];
+      let value = settings[setting.name];
       if (description.sanitize) {
-        value = description.sanitize(value, availableSettings);
-        availableSettings[setting.name] = value;
+        value = description.sanitize(value, settings);
+        settings[setting.name] = value;
       }
 
       let disableValue = description.disableValue || null;
@@ -318,25 +332,6 @@ function CommonSettings({
   );
 }
 
-CommonSettings.defaultProps = {
-  directInput: false,
-  disabled: false,
-};
-
-CommonSettings.propTypes = {
-  availableSettings: PropTypes.shape({
-    MAIN_REVISION: PropTypes.number.isRequired,
-    NAME: PropTypes.string.isRequired,
-    SUB_REVISION: PropTypes.number.isRequired,
-  }).isRequired,
-  directInput: PropTypes.bool,
-  disabled: PropTypes.bool,
-  escs: PropTypes.arrayOf(PropTypes.shape({
-    meta: PropTypes.shape({ available: PropTypes.bool.isRequired }).isRequired,
-    settings: PropTypes.shape({ MODE: PropTypes.number }).isRequired,
-  })).isRequired,
-  onSettingsUpdate: PropTypes.func.isRequired,
-  unsupported: PropTypes.bool.isRequired,
-};
+CommonSettings.propTypes = { unsupported: PropTypes.bool.isRequired };
 
 export default React.memo(CommonSettings);

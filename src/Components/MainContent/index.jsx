@@ -11,22 +11,23 @@ import FirmwareSelector from '../FirmwareSelector';
 import Changelog from '../../Components/Changelog';
 import MotorControl from '../../Components/MotorControl';
 
-import { selectSettings } from '../AppSettings/settingsSlice';
 import { selectSupported } from '../MelodyEditor/melodiesSlice';
 import {
-  selectIsFlashing,
   selectIsReading,
-  selectIsWriting,
   selectIsSelecting,
+  selectIsSupported,
 } from '../../Containers/App/stateSlice';
-
-import { getMspFeature } from '../../utils/helpers/General';
 
 import './style.scss';
 import {
   selectFourWay,
   selectOpen,
 } from '../../Containers/App/serialSlice';
+import {
+  selectIndividual,
+  selectTargets,
+} from '../../Containers/App/escsSlice';
+import { selectFeatures } from '../../Containers/App/mspSlice';
 
 function WarningWrapper() {
   const { t } = useTranslation('common');
@@ -71,68 +72,45 @@ function WarningWrapper() {
 }
 
 function MainContent({
-  escs,
-  settings,
   progress,
   onIndividualSettingsUpdate,
   onCancelFirmwareSelection,
-  onCommonSettingsUpdate,
   onSelectFirmwareForAll,
-  onSettingsUpdate,
   onReadEscs,
   onResetDefaultls,
-  onSingleFlash,
   onWriteSetup,
   onFirmwareDump,
   onFlashUrl,
-  flashTargets,
   onLocalSubmit,
-  changelogEntries,
   onAllMotorSpeed,
   onSingleMotorSpeed,
-  connected,
   port,
+  progressReferences,
 }) {
   const { t } = useTranslation('common');
-  const appSettings = useSelector(selectSettings);
   const showMelodyEditor = useSelector(selectSupported);
 
   const isSelecting = useSelector(selectIsSelecting);
-  const isFlashing = useSelector(selectIsFlashing);
   const isReading = useSelector(selectIsReading);
-  const isWriting = useSelector(selectIsWriting);
 
   const fourWay = useSelector(selectFourWay);
   const open = useSelector(selectOpen);
 
-  const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
-  const unsupported = unsupportedNames.includes(settings.NAME);
+  const flashTargets = useSelector(selectTargets);
+  const escs = useSelector(selectIndividual);
 
-  const disableFlashingNames = ['BLHeli_32'];
-  const disableFlashing = disableFlashingNames.includes(settings.NAME);
+  const unsupported = !useSelector(selectIsSupported);
 
-  const canWrite = (escs.length > 0) && !isSelecting && settings && !isFlashing && !isReading && !isWriting && !unsupported;
-  const canFlash = (escs.length > 0) && !isSelecting && !isWriting && !isFlashing && !isReading && !disableFlashing;
-  const canRead = !isReading && !isWriting && !isSelecting && !isFlashing;
+  const mspFeatures = useSelector(selectFeatures);
 
   const FlashWrapper = useCallback(() => {
     if(fourWay) {
 
       return (
         <Flash
-          availableSettings={settings}
-          canFlash={canFlash}
-          directInput={appSettings.directInput.value}
-          disableCommon={appSettings.disableCommon.value}
-          enableAdvanced={appSettings.enableAdvanced.value}
-          escCount={connected}
-          escs={escs}
           flashProgress={progress}
-          onCommonSettingsUpdate={onCommonSettingsUpdate}
           onFirmwareDump={onFirmwareDump}
-          onFlash={onSingleFlash}
-          onIndividualSettingsUpdate={onIndividualSettingsUpdate}
-          onSettingsUpdate={onSettingsUpdate}
+          progressReferences={progressReferences}
           unsupported={unsupported}
         />
       );
@@ -141,17 +119,9 @@ function MainContent({
     return null;
   }, [
     fourWay,
-    settings,
-    canFlash,
-    appSettings,
-    connected,
-    escs,
     progress,
-    onCommonSettingsUpdate,
     onFirmwareDump,
-    onSingleFlash,
-    onIndividualSettingsUpdate,
-    onSettingsUpdate,
+    progressReferences,
     unsupported,
   ]);
 
@@ -160,10 +130,9 @@ function MainContent({
       return (
         <MotorControl
           getBatteryState={port.getBatteryState}
-          motorCount={connected}
           onAllUpdate={onAllMotorSpeed}
           onSingleUpdate={onSingleMotorSpeed}
-          startValue={getMspFeature('3D') ? 1500 : 1000}
+          startValue={mspFeatures['3D'] ? 1500 : 1000}
         />
       );
     }
@@ -172,8 +141,8 @@ function MainContent({
   }, [
     fourWay,
     isReading,
+    mspFeatures,
     port.getBatteryState,
-    connected,
     onAllMotorSpeed,
     onSingleMotorSpeed,
   ]);
@@ -183,7 +152,7 @@ function MainContent({
       <>
         <Home />
 
-        <Changelog entries={changelogEntries} />
+        <Changelog />
       </>
     );
   }
@@ -204,25 +173,27 @@ function MainContent({
           </ReactMarkdown>
 
           <table>
-            <tr>
-              <td>
-                {t('mistaggedTagged')}
-              </td>
+            <tbody>
+              <tr>
+                <td>
+                  {t('mistaggedTagged')}
+                </td>
 
-              <td>
-                {esc.make}
-              </td>
-            </tr>
+                <td>
+                  {esc.make}
+                </td>
+              </tr>
 
-            <tr>
-              <td>
-                {t('mistaggedDetected')}
-              </td>
+              <tr>
+                <td>
+                  {t('mistaggedDetected')}
+                </td>
 
-              <td>
-                {esc.actualMake}
-              </td>
-            </tr>
+                <td>
+                  {esc.actualMake}
+                </td>
+              </tr>
+            </tbody>
           </table>
 
           <ReactMarkdown>
@@ -242,10 +213,8 @@ function MainContent({
           <div className="content_wrapper">
             <FirmwareSelector
               esc={esc}
-              onCancel={onCancelFirmwareSelection}
               onLocalSubmit={onLocalSubmit}
               onSubmit={onFlashUrl}
-              showUnstable={appSettings.unstableVersions.value}
               warning={warning}
             />
           </div>
@@ -269,10 +238,6 @@ function MainContent({
       </div>
 
       <Buttonbar
-        canFlash={canFlash}
-        canRead={canRead}
-        canResetDefaults={canWrite}
-        canWrite={canWrite}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
         onSeletFirmwareForAll={onSelectFirmwareForAll}
@@ -284,23 +249,13 @@ function MainContent({
 }
 
 MainContent.defaultProps = {
-  changelogEntries: [],
-  connected: 0,
-  escs: [],
-  flashTargets: [],
   port: { getBatteryState: null },
   progress: [],
-  settings: {},
 };
 
 MainContent.propTypes = {
-  changelogEntries: PropTypes.arrayOf(PropTypes.shape()),
-  connected: PropTypes.number,
-  escs: PropTypes.arrayOf(PropTypes.shape()),
-  flashTargets: PropTypes.arrayOf(PropTypes.number),
   onAllMotorSpeed: PropTypes.func.isRequired,
   onCancelFirmwareSelection: PropTypes.func.isRequired,
-  onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
   onIndividualSettingsUpdate: PropTypes.func.isRequired,
@@ -308,13 +263,11 @@ MainContent.propTypes = {
   onReadEscs: PropTypes.func.isRequired,
   onResetDefaultls: PropTypes.func.isRequired,
   onSelectFirmwareForAll: PropTypes.func.isRequired,
-  onSettingsUpdate: PropTypes.func.isRequired,
-  onSingleFlash: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
   port: PropTypes.shape({ getBatteryState:PropTypes.func }),
   progress: PropTypes.arrayOf(PropTypes.number),
-  settings: PropTypes.shape(),
+  progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default MainContent;

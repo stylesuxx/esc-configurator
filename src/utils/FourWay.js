@@ -391,8 +391,10 @@ class FourWay {
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
-        info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
-        info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+
+        let settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settingsArray = Array.from(settingsArray);
+        info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
 
         // Check if Bluejay
         if(bluejaySource.isValidName(info.settings.NAME)) {
@@ -400,8 +402,10 @@ class FourWay {
 
           info.layout = source.getLayout();
           info.layoutSize = bluejaySource.getLayoutSize();
-          info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
-          info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+
+          settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+          info.settingsArray = Array.from(settingsArray);
+          info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
         }
       }
 
@@ -693,7 +697,8 @@ class FourWay {
         throw new BufferLengthMismatchError(newSettingsArray.length, esc.settingsArray.length);
       }
 
-      if(compare(newSettingsArray, esc.settingsArray)) {
+      const oldSettingsArray = new Uint8Array(esc.settingsArray);
+      if(compare(newSettingsArray, oldSettingsArray)) {
         this.addLogMessage('escSettingsNoChange', { index: target + 1 });
       } else {
         const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);

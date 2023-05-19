@@ -47,6 +47,12 @@ import {
   setPortNames,
 } from './serialSlice';
 import { connect } from 'react-redux';
+import {
+  setIndividual,
+  setMaster,
+  setConnected as setConnectedEscs,
+  setIndividualAtIndex,
+} from './escsSlice';
 
 class App extends Component {
   static propTypes = { serial: PropTypes.shape({ checked: PropTypes.bool.isRequired }).isRequired };
@@ -55,18 +61,10 @@ class App extends Component {
     super();
 
     this.serialApi = loadSerialApi();
+    this.progressReferences = [];
 
     this.serial = undefined;
     this.lastConnected = 0;
-
-    this.state = {
-      escs: {
-        connected: 0,
-        master: {},
-        targets: [],
-        individual: [],
-      },
-    };
 
     // Redefine the console and tee logs
     window.console.debug = (text, ...args) => {
@@ -146,16 +144,6 @@ class App extends Component {
     store.dispatch(setFourWay(false));
   };
 
-  setEscs = (settings, cb = null) => {
-    const { escs } = this.state;
-    this.setState({
-      escs: {
-        ...escs,
-        ...settings,
-      },
-    }, cb);
-  };
-
   addLogMessage = async(message, params = {}) => {
     store.dispatch(addMessageLog({
       message,
@@ -164,19 +152,22 @@ class App extends Component {
   };
 
   flash = async(text, force, migrate) => {
-    const { escs } = this.state;
-    const individual = [ ...escs.individual ];
+    const {
+      individual,
+      targets,
+    } = store.getState().escs;
 
-    for(let i = 0; i < escs.targets.length; i += 1) {
-      const target = escs.targets[i];
-      const esc = escs.individual.find((esc) => esc.index === target);
+    for(let i = 0; i < targets.length; i += 1) {
+      const target = targets[i];
+      const esc = individual.find((esc) => esc.index === target);
 
       // this will throw a exception when preflight fails
       await this.serial.flashPreflight(esc, text, force);
 
       const updateProgress = async(percent) => {
-        if(esc.ref && esc.ref.current) {
-          esc.ref.current.setProgress((percent));
+        const ref = this.progressReferences[target];
+        if(ref && ref.current) {
+          ref.current.setProgress((percent));
         }
       };
 
@@ -186,17 +177,20 @@ class App extends Component {
 
       if(result) {
         result.index = target;
-        result.ref = React.createRef();
-        const individualIndex = escs.individual.findIndex((esc) => esc.index === target);
-        individual[individualIndex] = result;
+        const individualIndex = individual.findIndex((esc) => esc.index === target);
 
-        await this.setEscs({ individual });
+        store.dispatch(setIndividualAtIndex({
+          index: individualIndex,
+          settings: result,
+        }));
       } else {
         this.addLogMessage('flashingEscFailed', { index: target + 1 });
       }
     }
 
-    this.setEscs({ master: getMasterSettings(individual) });
+    const masterSettings = getMasterSettings(individual);
+    store.dispatch(setMaster(masterSettings));
+
     store.dispatch(setFlashing(false));
   };
 
@@ -219,47 +213,14 @@ class App extends Component {
     store.dispatch(setPortNames(portNames));
     store.dispatch(setFourWay(false));
     store.dispatch(setOpen(false));
-
-    this.setEscs({ individual: [] });
-  };
-
-  handleSettingsUpdate = (master) => {
-    this.setEscs({ master });
-  };
-
-  handleIndividualSettingsUpdate = (index, individualSettings) => {
-    const  { escs } = this.state;
-    const individual = [ ...escs.individual ];
-    for(let i = 0; i < individual.length; i += 1) {
-      if(individual[i].index === index) {
-        individual[i].individualSettings = individualSettings;
-
-        break;
-      }
-    }
-
-    this.setEscs({ individual });
-  };
-
-  handleCommonSettingsUpdate = (index, commonSettings) => {
-    const  { escs } = this.state;
-    const individual = [ ...escs.individual ];
-    for(let i = 0; i < individual.length; i += 1) {
-      if(individual[i].index === index) {
-        individual[i].settings = commonSettings;
-
-        break;
-      }
-    }
-
-    this.setEscs({ individual });
+    store.dispatch(setIndividual([]));
   };
 
   handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
 
     store.dispatch(setWriting(true));
-    const { escs } = this.state;
+    const { escs } = store.getState();
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
@@ -289,8 +250,7 @@ class App extends Component {
   };
 
   handleReadEscs = async() => {
-    const { escs } = this.state;
-    const newEscs = { ...escs };
+    const { escs } = store.getState();
     const individual = [];
 
     let fourWay = true;
@@ -332,11 +292,12 @@ class App extends Component {
 
     this.addLogMessage('readEscs', { connected });
 
+    this.progressReferences = [];
     for (let i = 0; i < connected; i += 1) {
       try {
         const settings = await this.handleReadEsc(i);
         settings.index = i;
-        settings.ref = React.createRef();
+        this.progressReferences.push(React.createRef());
         individual.push(settings);
 
         this.addLogMessage('readEsc', {
@@ -392,19 +353,16 @@ class App extends Component {
       store.dispatch(updatatAllMelodies(melodies));
     }
 
-    this.setEscs({
-      ...newEscs,
-      connected,
-      individual,
-      master,
-    });
+    store.dispatch(setConnectedEscs(connected));
+    store.dispatch(setIndividual(individual));
+    store.dispatch(setMaster(master));
   };
 
   handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     store.dispatch(setWriting(true));
-    const { escs } = this.state;
+    const { escs } = store.getState();
 
     const individual = [ ...escs.individual ];
     for(let i = 0; i < individual.length; i += 1) {
@@ -442,12 +400,11 @@ class App extends Component {
       }
     }
     store.dispatch(setWriting(false));
-
-    this.setEscs({ individual });
+    store.dispatch(setIndividual(individual));
   };
 
   handleFirmwareDump = async (target) => {
-    const { escs } = this.state;
+    const { escs } = store.getState();
     const esc = escs.individual.find((esc) => esc.index === target);
 
     const updateProgress = async(percent) => {
@@ -474,44 +431,21 @@ class App extends Component {
     element.click();
   };
 
-  handleSingleFlash = (index) => {
-    this.setEscs({ targets: [index] });
-
-    store.dispatch(setSelecting(true));
-  };
-
-  handleSelectFirmwareForAll = () => {
-    const { escs } = this.state;
-
-    const targets = [];
-    for (let i = 0; i < escs.individual.length; i += 1) {
-      const esc = escs.individual[i];
-      targets.push(esc.index);
-    }
-
-    store.dispatch(setSelecting(true));
-    this.setEscs({ targets });
-  };
-
-  handleCancelFirmwareSelection = () => {
-    store.dispatch(setSelecting(false));
-    this.setEscs({ targets: [] });
-  };
-
   handleLocalSubmit = (e, force, migrate) => {
     e.preventDefault();
 
     store.dispatch(setFlashing(true));
     store.dispatch(setSelecting(false));
 
-    const { escs } = this.state;
+    const { escs } = this.getState();
+    const { targets } = escs;
 
     TagManager.dataLayer({
       dataLayer: {
         event: 'LocalFlash',
         firmware: {
           force,
-          count: escs.targets.length,
+          count: targets.length,
         },
       },
     });
@@ -540,7 +474,8 @@ class App extends Component {
     store.dispatch(setFlashing(true));
     store.dispatch(setSelecting(false));
 
-    const { escs } = this.state;
+    const { escs } = store.getState();
+    const { targets } = escs;
     console.debug(`Chosen firmware: ${url}`);
 
     let type = 'remote';
@@ -563,7 +498,7 @@ class App extends Component {
             pwm,
             url,
             force,
-            count: escs.targets.length,
+            count: targets.length,
           },
         },
       });
@@ -713,9 +648,8 @@ class App extends Component {
         },
       });
 
-
       store.dispatch(setOpen(true));
-      this.setEscs({ connected: motorData.length });
+      store.dispatch(setConnectedEscs(motorData.length));
     } catch(e) {
       this.serial.close();
       this.addLogMessage('portUsed');
@@ -730,9 +664,10 @@ class App extends Component {
 
     store.dispatch(setDisconnecting(true));
 
-    const { escs } = this.state;
+    const { escs } = store.getState();
+    const { individual } = escs;
     if(this.serial) {
-      for(let i = 0; i < escs.individual.length; i += 1) {
+      for(let i = 0; i < individual.length; i += 1) {
         try {
           await this.serial.resetFourWayInterface(i);
         } catch(e) {
@@ -748,12 +683,9 @@ class App extends Component {
 
     store.dispatch(setFourWay(false));
     store.dispatch(setOpen(false));
-
     store.dispatch(resetState());
-
     store.dispatch(resetMelodyEditor());
-
-    this.setEscs({ individual: [] });
+    store.dispatch(setIndividual([]));
 
     this.addLogMessage('closedPort');
   };
@@ -767,7 +699,7 @@ class App extends Component {
   };
 
   handleMelodyWrite = (melodies) => {
-    const { escs } = this.state;
+    const { escs } = store.getState();
     const individual = [ ...escs.individual ];
     const converted = melodies.map((melody) => Rtttl.toBluejayStartupMelody(melody));
 
@@ -781,16 +713,13 @@ class App extends Component {
     }
 
     // Update individual settings, then write them.
-    this.setEscs({ individual }, () => {
-      this.handleWriteSettings();
-    });
+    store.dispatch(setIndividual(individual));
+    this.handleWriteSettings();
   };
 
   render() {
     const { serial } = this.props;
-    const { escs } = this.state;
 
-    console.log(escs);
     if (!serial.checked) {
       return null;
     }
@@ -799,20 +728,15 @@ class App extends Component {
       <MainApp
         escs={{
           actions: {
-            handleMasterUpdate: this.handleSettingsUpdate,
-            handleCommonSettingsUpdate: this.handleCommonSettingsUpdate,
-            handleIndividualSettingsUpdate: this.handleIndividualSettingsUpdate,
             handleResetDefaultls: this.handleResetDefaultls,
             handleReadEscs: this.handleReadEscs,
             handleWriteSetup: this.handleWriteSettings,
-            handleSingleFlash: this.handleSingleFlash,
             handleSelectFirmwareForAll: this.handleSelectFirmwareForAll,
-            handleCancelFirmwareSelection: this.handleCancelFirmwareSelection,
             handleLocalSubmit: this.handleLocalSubmit,
             handleFlashUrl: this.handleFlashUrl,
             handleFirmwareDump: this.handleFirmwareDump,
           },
-          ...escs,
+          progressReferences: this.progressReferences,
         }}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onMelodyWrite={this.handleMelodyWrite}

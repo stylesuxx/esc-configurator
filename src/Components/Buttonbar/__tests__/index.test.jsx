@@ -8,8 +8,10 @@ import userEvent from '@testing-library/user-event';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
+import escsReducer, { setIndividual } from '../../../Containers/App/escsSlice';
 import melodiesReducer, { updateAll } from '../../MelodyEditor/melodiesSlice';
 import logReducer, { add } from '../../Log/logSlice';
+import stateReducer, { setWriting } from '../../../Containers/App/stateSlice';
 
 import Buttonbar from '../';
 
@@ -21,8 +23,10 @@ function setupTestStore() {
   beforeEach(() => {
     const store = configureStore({
       reducer: {
+        escs: escsReducer,
         log: logReducer,
         melodies: melodiesReducer,
+        state: stateReducer,
       },
     });
     refObj.store = store;
@@ -36,8 +40,18 @@ function setupTestStore() {
   return refObj;
 }
 
+let onWriteSetup;
+let onReadSetup;
+let onResetDefaults;
+
 describe('Buttonbar', () => {
   const storeRef = setupTestStore();
+
+  beforeEach(() => {
+    onWriteSetup = jest.fn();
+    onReadSetup = jest.fn();
+    onResetDefaults = jest.fn();
+  });
 
   it('should display buttons', () => {
     storeRef.store.dispatch(updateAll([
@@ -47,21 +61,10 @@ describe('Buttonbar', () => {
       'test',
     ]));
 
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSeletFirmwareForAll = jest.fn();
-
     render(
       <Buttonbar
-        canFlash={false}
-        canRead={false}
-        canReadDefaults={false}
-        canResetDefaults={false}
-        canWrite={false}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSeletFirmwareForAll={onSeletFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
       { wrapper: storeRef.wrapper }
@@ -77,21 +80,11 @@ describe('Buttonbar', () => {
 
   it('should always trigger log save', () => {
     global.URL.createObjectURL = jest.fn();
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSeletFirmwareForAll = jest.fn();
 
     render(
       <Buttonbar
-        canFlash={false}
-        canRead={false}
-        canReadDefaults={false}
-        canResetDefaults={false}
-        canWrite={false}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSeletFirmwareForAll={onSeletFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
       { wrapper: storeRef.wrapper }
@@ -102,21 +95,12 @@ describe('Buttonbar', () => {
   });
 
   it('should not trigger handlers when disabled', () => {
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSelectFirmwareForAll = jest.fn();
+    storeRef.store.dispatch(setWriting(true));
 
     render(
       <Buttonbar
-        canFlash={false}
-        canRead={false}
-        canReadDefaults={false}
-        canResetDefaults={false}
-        canWrite={false}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
       { wrapper: storeRef.wrapper }
@@ -131,26 +115,21 @@ describe('Buttonbar', () => {
     userEvent.click(screen.getByText(/escButtonWrite/i));
     expect(onWriteSetup).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText(/escButtonFlashAll/i));
-    expect(onSelectFirmwareForAll).not.toHaveBeenCalled();
+    const flashButton = screen.getByText(/escButtonFlashAll/i);
+    userEvent.click(flashButton);
+    expect(flashButton.getAttribute("disabled")).toBe("");
+
+    const { targets } = storeRef.store.getState().escs;
+    expect(targets.length).toBe(0);
   });
 
   it('should trigger handlers when enabled', () => {
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSelectFirmwareForAll = jest.fn();
+    storeRef.store.dispatch(setIndividual([{}]));
 
     render(
       <Buttonbar
-        canFlash
-        canRead
-        canReadDefaults
-        canResetDefaults
-        canWrite
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
-        onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
       { wrapper: storeRef.wrapper }
@@ -166,7 +145,9 @@ describe('Buttonbar', () => {
     expect(onWriteSetup).toHaveBeenCalled();
 
     userEvent.click(screen.getByText(/escButtonFlashAll/i));
-    expect(onSelectFirmwareForAll).toHaveBeenCalled();
+
+    const { targets } = storeRef.store.getState().escs;
+    expect(targets.length).toBe(1);
   });
 
   it('should open melody editor', () => {
@@ -184,11 +165,6 @@ describe('Buttonbar', () => {
 
     render(
       <Buttonbar
-        canFlash
-        canRead
-        canReadDefaults
-        canResetDefaults
-        canWrite
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
         onSeletFirmwareForAll={onSeletFirmwareForAll}
@@ -219,11 +195,6 @@ describe('Buttonbar', () => {
 
     render(
       <Buttonbar
-        canFlash
-        canRead
-        canReadDefaults
-        canResetDefaults
-        canWrite
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
         onSeletFirmwareForAll={onSeletFirmwareForAll}
@@ -238,6 +209,5 @@ describe('Buttonbar', () => {
 
     log = storeRef.store.getState().log;
     expect(log.log.length).toEqual(0);
-
   });
 });

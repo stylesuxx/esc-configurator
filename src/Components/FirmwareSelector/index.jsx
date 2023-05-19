@@ -25,19 +25,26 @@ import {
 } from '../../Containers/App/configsSlice';
 
 import './style.scss';
+import { selectSettingsObject } from '../AppSettings/settingsSlice';
+import { useDispatch } from 'react-redux';
+import { setSelecting } from '../../Containers/App/stateSlice';
+import { setTargets } from '../../Containers/App/escsSlice';
 
 const blheliModes = blheliSource.getEeprom().MODES;
 
 function FirmwareSelector({
   esc,
-  onCancel,
   onLocalSubmit,
   onSubmit,
   selectedMode,
-  showUnstable,
   warning,
 }) {
   const { t } = useTranslation('common');
+
+  const dispatch = useDispatch();
+
+  const unstableVersions = useSelector(selectSettingsObject);
+
   const escs = useSelector(selectEscs);
   const versions = useSelector(selectVersions);
 
@@ -119,7 +126,7 @@ function FirmwareSelector({
         }));
 
         const versionsSelected = Object.values(
-          versions[selection.firmware].filter((v) => showUnstable || !v.prerelease)
+          versions[selection.firmware].filter((v) => unstableVersions || !v.prerelease)
         );
 
         const versionOptions = versionsSelected.map((version) => ({
@@ -164,18 +171,16 @@ function FirmwareSelector({
     }
 
     updateOptions();
-  }, [selection.firmware, escs, showUnstable, validFirmware, versions, esc]);
+  }, [selection.firmware, escs, unstableVersions, validFirmware, versions, esc]);
 
   const clickFile = useCallback(() => {
     file.current.click();
   }, [file]);
 
-  /*
-  // TODO: Not yet implemented - this might only be needed for ATMEL
-  function updateMode(e) {
-    setMode(e.target.value);
-  }
-  */
+  const handleCancel = useCallback(() => {
+    dispatch(setSelecting(false));
+    dispatch(setTargets([]));
+  }, [dispatch]);
 
   const handleFirmwareChange = useCallback((e) => {
     const firmware = e.target.value;
@@ -400,7 +405,7 @@ function FirmwareSelector({
 
             <div className="default-btn">
               <button
-                onClick={onCancel}
+                onClick={handleCancel}
                 type="button"
               >
                 {t('buttonCancel')}
@@ -432,11 +437,9 @@ FirmwareSelector.propTypes = {
       NAME: PropTypes.string,
     }),
   }),
-  onCancel: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   selectedMode: PropTypes.string,
-  showUnstable: PropTypes.bool.isRequired,
   warning: PropTypes.node,
 };
 

@@ -19,6 +19,13 @@ import stateReducer, {
   setWriting,
 } from '../../../Containers/App/stateSlice';
 import logReducer from '../../Log/logSlice';
+import escsReducer, {
+  setMaster,
+  setIndividual,
+  setConnected,
+  setTargets,
+} from '../../../Containers/App/escsSlice';
+import mspReducer, { set } from '../../../Containers/App/mspSlice';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
@@ -44,8 +51,10 @@ function setupTestStore() {
     const store = configureStore({
       reducer: {
         configs: configsReducer,
+        escs: escsReducer,
         log: logReducer,
         melodies: melodiesReducer,
+        msp: mspReducer,
         settings: settingsReducer,
         serial: serialReducer,
         state: stateReducer,
@@ -697,7 +706,41 @@ describe('MainContent', () => {
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
+  it('should display with 3D mode active', () => {
+    storeRef.store.dispatch(setOpen(true));
+    storeRef.store.dispatch(setFourWay(true));
+    storeRef.store.dispatch(set({ "3D": true }));
+
+    render(
+      <MainContent
+        onAllMotorSpeed={onAllMotorSpeed}
+        onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onFlashUrl={onFlashUrl}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+        onLocalSubmit={onLocalSubmit}
+        onOpenMelodyEditor={onOpenMelodyEditor}
+        onReadEscs={onReadEscs}
+        onResetDefaultls={onResetDefaultls}
+        onSelectFirmwareForAll={onSelectFirmwareForAll}
+        onSettingsUpdate={onSettingsUpdate}
+        onSingleFlash={onSingleFlash}
+        onSingleMotorSpeed={onSingleMotorSpeed}
+        onWriteSetup={onWriteSetup}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
+    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
+    expect(screen.queryByText('motorControl')).not.toBeInTheDocument();
+    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
+    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+    expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
+  });
+
   it('should display warning when wrong dead-time detected', () => {
+    storeRef.store.dispatch(setConnected(4));
+    storeRef.store.dispatch(setTargets([0]));
     storeRef.store.dispatch(setSelecting(true));
     storeRef.store.dispatch(setOpen(true));
 
@@ -707,6 +750,7 @@ describe('MainContent', () => {
       SUB_REVISION: 2,
       NAME: 'NAME',
     };
+    storeRef.store.dispatch(setMaster(settings));
 
     const escs = [
       {
@@ -729,73 +773,12 @@ describe('MainContent', () => {
           _PPM_MIN_THROTTLE: 125,
           STARTUP_BEEP: 1,
         },
-        individualSettingsDescriptions: {
-          base: [
-            {
-              name: 'MOTOR_DIRECTION',
-              type: 'enum',
-              label: 'escMotorDirection',
-              options: [
-                {
-                  value: '1',
-                  label: 'Normal',
-                },
-                {
-                  value: '2',
-                  label: 'Reversed',
-                },
-                {
-                  value: '3',
-                  label: 'Bidirectional',
-                },
-                {
-                  value: '4',
-                  label: 'Bidirectional Reversed',
-                },
-              ],
-            },
-            {
-              name: '_PPM_MIN_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 1500,
-              step: 4,
-              label: 'escPPMMinThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-            },
-            {
-              name: 'STARTUP_BEEP',
-              type: 'bool',
-              label: 'escStartupBeep',
-            },
-            {
-              name: 'IVALID',
-              type: 'IVALID',
-              label: 'invalid',
-            },
-            {
-              name: '_PPM_CENTER_THROTTLE',
-              type: 'number',
-              min: 1000,
-              max: 2020,
-              step: 4,
-              label: 'escPPMCenterThrottle',
-              offset: 1000,
-              factor: 4,
-              suffix: ' μs',
-              visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-            },
-          ],
-        },
       },
     ];
+    storeRef.store.dispatch(setIndividual(escs));
 
     render(
       <MainContent
-        escs={escs}
-        flashTargets={[0]}
         onAllMotorSpeed={onAllMotorSpeed}
         onCancelFirmwareSelection={onCancelFirmwareSelection}
         onFlashUrl={onFlashUrl}
@@ -809,7 +792,6 @@ describe('MainContent', () => {
         onSingleFlash={onSingleFlash}
         onSingleMotorSpeed={onSingleMotorSpeed}
         onWriteSetup={onWriteSetup}
-        settings={settings}
       />,
       { wrapper: storeRef.wrapper }
     );
