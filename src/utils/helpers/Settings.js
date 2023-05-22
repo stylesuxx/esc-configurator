@@ -74,14 +74,6 @@ const getIndividualSettings = (esc) => {
 const getMaster = (escs) => escs.find((esc) => esc.meta.available);
 
 /**
- * Get the settings for all given ESCs
- *
- * @param {Array<object>} escs
- * @returns {Array<object>}
- */
-const getAllSettings = (escs) => escs.map((esc) => esc.settings);
-
-/**
  * Check if a specific setting can be migrated from one firmware to another
  *
  * @param {string} settingName
@@ -130,7 +122,6 @@ function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualS
 }
 
 export {
-  getAllSettings,
   getIndividualSettings,
   getIndividualSettingsDescriptions,
   getMaster,

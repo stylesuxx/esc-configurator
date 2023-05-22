@@ -127,7 +127,6 @@ const isValidLayout = (layout) => sources.some((source) => source.isValidLayout(
 const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcus()));
 
 const getAppSetting = (name) => store.getState().settings.settings[name].value;
-const getMspFeature = (name) => store.getState().msp.features[name];
 
 const getPwm = (name, version) => {
   const source = sources.filter((source) => source.name === name);
@@ -157,7 +156,6 @@ export {
   isValidLayout,
   getSupportedSources,
   getAppSetting,
-  getMspFeature,
   getPwm,
   getSource,
 };

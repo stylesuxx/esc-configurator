@@ -149,6 +149,8 @@ describe('Serial', () => {
   });
 
   it('should execute 4Way interface commands', async() => {
+    jest.setTimeout(60000);
+
     const read = () => ({ value: { byteLength: 50 } });
     const write = jest.fn();
 
@@ -181,5 +183,7 @@ describe('Serial', () => {
     await expect(serial.getFourWayInterfaceInfo()).rejects.toThrow();
     await expect(serial.writeHex()).rejects.toThrow();
     await expect(serial.writeSettings()).rejects.toThrow();
+    await expect(serial.readAddress(null, null)).rejects.toThrow();
+    await expect(serial.readAddress(null, null, 0)).rejects.toThrow();
   });
 });

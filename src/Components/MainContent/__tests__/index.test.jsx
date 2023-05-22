@@ -15,6 +15,7 @@ import serialReducer, {
   setOpen,
 } from '../../../Containers/App/serialSlice';
 import stateReducer, {
+  setReading,
   setSelecting,
   setWriting,
 } from '../../../Containers/App/stateSlice';
@@ -26,6 +27,7 @@ import escsReducer, {
   setTargets,
 } from '../../../Containers/App/escsSlice';
 import mspReducer, { set } from '../../../Containers/App/mspSlice';
+
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
@@ -260,6 +262,40 @@ describe('MainContent', () => {
     expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
     expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
+  });
+
+  it('should not display motor controls when writing', () => {
+    storeRef.store.dispatch(setOpen(true));
+    storeRef.store.dispatch(setReading(true));
+
+    render(
+      <MainContent
+        onAllMotorSpeed={onAllMotorSpeed}
+        onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onFlashUrl={onFlashUrl}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+        onLocalSubmit={onLocalSubmit}
+        onOpenMelodyEditor={onOpenMelodyEditor}
+        onReadEscs={onReadEscs}
+        onResetDefaultls={onResetDefaultls}
+        onSelectFirmwareForAll={onSelectFirmwareForAll}
+        onSettingsUpdate={onSettingsUpdate}
+        onSingleFlash={onSingleFlash}
+        onSingleMotorSpeed={onSingleMotorSpeed}
+        onWriteSetup={onWriteSetup}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
+    expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
+    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
+    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+    expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
+
+    expect(screen.queryByText(/enableMotorControl/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('motorControl')).not.toBeInTheDocument();
+    expect(screen.queryByText(/masterSpeed/i)).not.toBeInTheDocument();
   });
 
   it('should display when writing', () => {
@@ -708,7 +744,6 @@ describe('MainContent', () => {
 
   it('should display with 3D mode active', () => {
     storeRef.store.dispatch(setOpen(true));
-    storeRef.store.dispatch(setFourWay(true));
     storeRef.store.dispatch(set({ "3D": true }));
 
     render(
@@ -732,7 +767,7 @@ describe('MainContent', () => {
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
     expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
-    expect(screen.queryByText('motorControl')).not.toBeInTheDocument();
+    expect(screen.getByText('motorControl')).toBeInTheDocument();
     expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
     expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();

@@ -7,11 +7,7 @@ import React, {
 } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import {
-  getMasterSettings,
-  getMaster,
-  getAllSettings,
-} from '../../../utils/helpers/Settings';
+import { getMaster } from '../../../utils/helpers/Settings';
 
 import { getSource } from '../../../utils/helpers/General';
 
@@ -26,6 +22,7 @@ import {
   selectIndividual,
   selectMaster,
   setMaster,
+  updateIndividual,
 } from '../../../Containers/App/escsSlice';
 import { selectSettingsObject } from '../../AppSettings/settingsSlice';
 import { selectCanFlash } from '../../../Containers/App/stateSlice';
@@ -39,6 +36,8 @@ function CommonSettings({ unsupported }) {
 
   const dispatch = useDispatch();
 
+  const { directInput } = useSelector(selectSettingsObject);
+
   const availableSettings = useSelector(selectMaster);
   const escs = useSelector(selectIndividual);
   const disabled = !useSelector(selectCanFlash);
@@ -48,10 +47,6 @@ function CommonSettings({ unsupported }) {
   const groupOrder = source ? source.getGroupOrder() : [];
   const settingsDescriptions = source ? source.getCommonSettings(master.layoutRevision) : null;
 
-  const { directInput } = useSelector(selectSettingsObject);
-
-  const reference = getMasterSettings(escs);
-  const allSettings = getAllSettings(escs);
 
   const mainRevision = availableSettings.MAIN_REVISION;
   const subRevision = availableSettings.SUB_REVISION;
@@ -61,6 +56,7 @@ function CommonSettings({ unsupported }) {
 
   const onSettingsUpdate = useCallback((master) => {
     dispatch(setMaster(master));
+    dispatch(updateIndividual());
   }, [dispatch]);
 
   useEffect(() => {
@@ -197,8 +193,9 @@ function CommonSettings({ unsupported }) {
 
       // Check all settings against each other
       let inSync = true;
-      for(let i = 0; i < allSettings.length; i += 1) {
-        const current = allSettings[i];
+      const reference = master.settings;
+      for(let i = 0; i < escs.length; i += 1) {
+        const current = escs[i].settings;
         if(reference[description.name] !== current[description.name]) {
           inSync = false;
           break;

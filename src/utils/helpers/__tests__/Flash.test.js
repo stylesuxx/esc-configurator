@@ -27,6 +27,19 @@ describe('Flash', () => {
     expect(result).toBeNull();
   });
 
+  it('should throw with invalid record type', () => {
+    expect(() => Flash.parseHex(':01000002FFFF')).toThrow();
+    expect(() => Flash.parseHex(':01000003FFFF')).toThrow();
+
+    expect(() => Flash.parseHex(':0100000200FF')).not.toThrow();
+    expect(() => Flash.parseHex(':0100000300FF')).not.toThrow();
+  });
+
+  it('should handle linear address record type', () => {
+    const result = Flash.parseHex(':01000005FF6D\n:00000001FF');
+    expect(result).not.toBeNull();
+  });
+
   it('should fill an Image to a given size', () => {
     const hexContent = fs.readFileSync(`${__dirname}/valid.hex`);
     const hexString = hexContent.toString();

@@ -144,6 +144,208 @@ class App extends Component {
     store.dispatch(setFourWay(false));
   };
 
+  serialDisconnectHandler = async() => {
+    TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
+    this.addLogMessage('unplugged');
+    this.lastConnected = 0;
+
+    const availablePorts = await this.serialApi.getPorts();
+    const portNames = availablePorts.map((item) => {
+      const info = item.getInfo();
+      const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+      return name;
+    });
+
+    this.serial.disconnect();
+
+    store.dispatch(setConnecting(availablePorts.length > 0 ? true : false));
+    store.dispatch(setPortNames(portNames));
+    store.dispatch(setFourWay(false));
+    store.dispatch(setOpen(false));
+    store.dispatch(setIndividual([]));
+  };
+
+  handleSetPort = async() => {
+    try {
+      const port = await this.serialApi.requestPort();
+      this.serial = new Serial(port);
+
+      this.addLogMessage('portSelected');
+
+      const portNames = [port].map((item) => {
+        const info = item.getInfo();
+        const name = `${info.usbVendorId}:${info.usbProductId}`;
+
+        return name;
+      });
+
+      store.dispatch(setConnected(true));
+      store.dispatch(setPortNames(portNames));
+    } catch (e) {
+      // No port selected, do nothing
+      console.debug(e);
+    }
+  };
+
+  handleChangePort = async(index) => {
+    const availablePorts = await this.serialApi.getPorts();
+    this.serial = new Serial(availablePorts[index]);
+
+    this.addLogMessage('portChanged');
+  };
+
+  handleConnect = async(e) => {
+    e.preventDefault();
+
+    store.dispatch(setConnecting(true));
+
+    const serial = store.getState().serial;
+    try {
+      await this.serial.open(serial.baudRate);
+      this.serial.setLogCallback(this.addLogMessage);
+      this.addLogMessage('portOpened');
+
+      /* Send a reset of the 4 way interface, just in case it was not cleanly
+       * disconnected before.
+       *
+       * Unfortunately this convenience feature can not be used, since on EMU
+       * it might lead to the ESCs being wiped.
+       */
+      // await this.serial.exitFourWayInterface();
+    } catch (e) {
+      console.debug(e);
+
+      try {
+        this.serial.close();
+      } catch(e) {
+        console.debug(e);
+      }
+
+      this.addLogMessage('portUsed');
+
+      return;
+    }
+
+    try {
+      let apiVersion = null;
+
+      try {
+        apiVersion = await this.serial.getApiVersion();
+      } catch(e) {
+        if (e instanceof TimeoutError) {
+          let hasResets = false;
+          let i = 0;
+
+          try {
+            while ((await this.serial.getFourWayInterfaceInfo(i))) {
+              await this.serial.resetFourWayInterface(i);
+              i += 1;
+            }
+          } catch (ex) {
+            if (!(ex instanceof MessageNotOkError)) {
+              this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
+              throw ex;
+            }
+          } finally {
+            hasResets = i > 0;
+          }
+
+          if (hasResets) {
+            await this.serial.exitFourWayInterface();
+          }
+
+          apiVersion = await this.serial.getApiVersion();
+        } else {
+          throw e;
+        }
+      }
+
+      this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
+
+      const fcVariant = await this.serial.getFcVariant();
+      const fcVersion = await this.serial.getFcVersion();
+      this.addLogMessage('mspFcInfo', {
+        id: fcVariant.flightControllerIdentifier,
+        version: fcVersion.flightControllerVersion,
+      });
+
+      const buildInfo = await this.serial.getBuildInfo();
+      this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
+
+      const boardInfo = await this.serial.getBoardInfo();
+      this.addLogMessage('mspBoardInfo', {
+        identifier: boardInfo.boardIdentifier,
+        version: boardInfo.boardVersion,
+      });
+
+      const uid = (await this.serial.getUid()).uid;
+      let uidHex = 0;
+      for (let i = 0; i < uid.length; i += 1) {
+        uidHex += uid[i].toString(16);
+      }
+      this.addLogMessage('mspUid', { id: uidHex });
+
+      let motorData = await this.serial.getMotorData();
+      motorData = motorData.filter((motor) => motor > 0);
+
+      const features = await this.serial.getFeatures();
+      store.dispatch(setMspFeatures(features));
+
+      TagManager.dataLayer({
+        dataLayer: {
+          event: "FlightController",
+          flightController: {
+            mspVersion: apiVersion.apiVersion,
+            firmwareName: fcVariant.flightControllerIdentifier,
+            firmwareVersion: fcVersion.flightControllerVersion,
+            firmwareBuild: buildInfo.buildInfo,
+          },
+        },
+      });
+
+      store.dispatch(setOpen(true));
+      store.dispatch(setConnectedEscs(motorData.length));
+    } catch(e) {
+      this.serial.close();
+      this.addLogMessage('portUsed');
+    }
+
+    store.dispatch(setConnecting(false));
+  };
+
+  handleDisconnect = async(e) => {
+    e.preventDefault();
+    TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
+
+    store.dispatch(setDisconnecting(true));
+
+    const { escs } = store.getState();
+    const { individual } = escs;
+    if(this.serial) {
+      for(let i = 0; i < individual.length; i += 1) {
+        try {
+          await this.serial.resetFourWayInterface(i);
+        } catch(e) {
+          this.addLogMessage('resetEscFailed', { index: i + 1 });
+        }
+      }
+      await this.serial.exitFourWayInterface();
+
+      this.serial.close();
+    }
+
+    this.lastConnected = 0;
+
+    store.dispatch(setFourWay(false));
+    store.dispatch(setOpen(false));
+    store.dispatch(resetState());
+    store.dispatch(resetMelodyEditor());
+    store.dispatch(setIndividual([]));
+
+    this.addLogMessage('closedPort');
+  };
+
   addLogMessage = async(message, params = {}) => {
     store.dispatch(addMessageLog({
       message,
@@ -192,28 +394,6 @@ class App extends Component {
     store.dispatch(setMaster(masterSettings));
 
     store.dispatch(setFlashing(false));
-  };
-
-  serialDisconnectHandler = async() => {
-    TagManager.dataLayer({ dataLayer: { event: "Unplugged" } });
-    this.addLogMessage('unplugged');
-    this.lastConnected = 0;
-
-    const availablePorts = await this.serialApi.getPorts();
-    const portNames = availablePorts.map((item) => {
-      const info = item.getInfo();
-      const name = `${info.usbVendorId}:${info.usbProductId}`;
-
-      return name;
-    });
-
-    this.serial.disconnect();
-
-    store.dispatch(setConnecting(availablePorts.length > 0 ? true : false));
-    store.dispatch(setPortNames(portNames));
-    store.dispatch(setFourWay(false));
-    store.dispatch(setOpen(false));
-    store.dispatch(setIndividual([]));
   };
 
   handleResetDefaultls = async() => {
@@ -508,186 +688,6 @@ class App extends Component {
       this.addLogMessage('getFileFailed');
       store.dispatch(setFlashing(false));
     }
-  };
-
-  handleSetPort = async() => {
-    try {
-      const port = await this.serialApi.requestPort();
-      this.serial = new Serial(port);
-
-      this.addLogMessage('portSelected');
-
-      const portNames = [port].map((item) => {
-        const info = item.getInfo();
-        const name = `${info.usbVendorId}:${info.usbProductId}`;
-
-        return name;
-      });
-
-      store.dispatch(setConnected(true));
-      store.dispatch(setPortNames(portNames));
-    } catch (e) {
-      // No port selected, do nothing
-      console.debug(e);
-    }
-  };
-
-  handleChangePort = async(index) => {
-    const availablePorts = await this.serialApi.getPorts();
-    this.serial = new Serial(availablePorts[index]);
-
-    this.addLogMessage('portChanged');
-  };
-
-  handleConnect = async(e) => {
-    e.preventDefault();
-
-    store.dispatch(setConnecting(true));
-
-    const serial = store.getState().serial;
-    try {
-      await this.serial.open(serial.baudRate);
-      this.serial.setLogCallback(this.addLogMessage);
-      this.addLogMessage('portOpened');
-
-      /* Send a reset of the 4 way interface, just in case it was not cleanly
-       * disconnected before.
-       *
-       * Unfortunately this convenience feature can not be used, since on EMU
-       * it might lead to the ESCs being wiped.
-       */
-      // await this.serial.exitFourWayInterface();
-    } catch (e) {
-      console.debug(e);
-
-      try {
-        this.serial.close();
-      } catch(e) {
-        console.debug(e);
-      }
-
-      this.addLogMessage('portUsed');
-
-      return;
-    }
-
-    try {
-      let apiVersion = null;
-
-      try {
-        apiVersion = await this.serial.getApiVersion();
-      } catch(e) {
-        if (e instanceof TimeoutError) {
-          let hasResets = false;
-          let i = 0;
-
-          try {
-            while ((await this.serial.getFourWayInterfaceInfo(i))) {
-              await this.serial.resetFourWayInterface(i);
-              i += 1;
-            }
-          } catch (ex) {
-            if (!(ex instanceof MessageNotOkError)) {
-              this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
-              throw ex;
-            }
-          } finally {
-            hasResets = i > 0;
-          }
-
-          if (hasResets) {
-            await this.serial.exitFourWayInterface();
-          }
-
-          apiVersion = await this.serial.getApiVersion();
-        } else {
-          throw e;
-        }
-      }
-
-      this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
-
-      const fcVariant = await this.serial.getFcVariant();
-      const fcVersion = await this.serial.getFcVersion();
-      this.addLogMessage('mspFcInfo', {
-        id: fcVariant.flightControllerIdentifier,
-        version: fcVersion.flightControllerVersion,
-      });
-
-      const buildInfo = await this.serial.getBuildInfo();
-      this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
-
-      const boardInfo = await this.serial.getBoardInfo();
-      this.addLogMessage('mspBoardInfo', {
-        identifier: boardInfo.boardIdentifier,
-        version: boardInfo.boardVersion,
-      });
-
-      const uid = (await this.serial.getUid()).uid;
-      let uidHex = 0;
-      for (let i = 0; i < uid.length; i += 1) {
-        uidHex += uid[i].toString(16);
-      }
-      this.addLogMessage('mspUid', { id: uidHex });
-
-      let motorData = await this.serial.getMotorData();
-      motorData = motorData.filter((motor) => motor > 0);
-
-      const features = await this.serial.getFeatures();
-      store.dispatch(setMspFeatures(features));
-
-      TagManager.dataLayer({
-        dataLayer: {
-          event: "FlightController",
-          flightController: {
-            mspVersion: apiVersion.apiVersion,
-            firmwareName: fcVariant.flightControllerIdentifier,
-            firmwareVersion: fcVersion.flightControllerVersion,
-            firmwareBuild: buildInfo.buildInfo,
-          },
-        },
-      });
-
-      store.dispatch(setOpen(true));
-      store.dispatch(setConnectedEscs(motorData.length));
-    } catch(e) {
-      this.serial.close();
-      this.addLogMessage('portUsed');
-    }
-
-    store.dispatch(setConnecting(false));
-  };
-
-  handleDisconnect = async(e) => {
-    e.preventDefault();
-    TagManager.dataLayer({ dataLayer: { event: "Disconnect" } });
-
-    store.dispatch(setDisconnecting(true));
-
-    const { escs } = store.getState();
-    const { individual } = escs;
-    if(this.serial) {
-      for(let i = 0; i < individual.length; i += 1) {
-        try {
-          await this.serial.resetFourWayInterface(i);
-        } catch(e) {
-          this.addLogMessage('resetEscFailed', { index: i + 1 });
-        }
-      }
-      await this.serial.exitFourWayInterface();
-
-      this.serial.close();
-    }
-
-    this.lastConnected = 0;
-
-    store.dispatch(setFourWay(false));
-    store.dispatch(setOpen(false));
-    store.dispatch(resetState());
-    store.dispatch(resetMelodyEditor());
-    store.dispatch(setIndividual([]));
-
-    this.addLogMessage('closedPort');
   };
 
   handleAllMotorSpeed = async(speed) => {

@@ -73,9 +73,6 @@ function WarningWrapper() {
 
 function MainContent({
   progress,
-  onIndividualSettingsUpdate,
-  onCancelFirmwareSelection,
-  onSelectFirmwareForAll,
   onReadEscs,
   onResetDefaultls,
   onWriteSetup,
@@ -240,7 +237,6 @@ function MainContent({
       <Buttonbar
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
-        onSeletFirmwareForAll={onSelectFirmwareForAll}
         onWriteSetup={onWriteSetup}
         showMelodyEditor={showMelodyEditor}
       />
@@ -255,14 +251,11 @@ MainContent.defaultProps = {
 
 MainContent.propTypes = {
   onAllMotorSpeed: PropTypes.func.isRequired,
-  onCancelFirmwareSelection: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
-  onIndividualSettingsUpdate: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onReadEscs: PropTypes.func.isRequired,
   onResetDefaultls: PropTypes.func.isRequired,
-  onSelectFirmwareForAll: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
   port: PropTypes.shape({ getBatteryState:PropTypes.func }),

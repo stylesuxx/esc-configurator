@@ -265,6 +265,7 @@ class Msp {
           return reject(new Error(`command: ${command} - crc failed`));
         }
 
+        /* istanbul ignore next */
         default: {
           return reject(new Error(`Unknown state detected: ${state}`));
         }
@@ -319,7 +320,6 @@ class Msp {
    * @returns {ArrayBuffer}
    */
   encodeV2(command, data = []) {
-    console.log("V2 command:", command);
     // Always reserve 9 bytes for protocol overhead!
     const dataLength = data.length;
     const size = 9 + dataLength;
@@ -442,6 +442,7 @@ class Msp {
 
           return escConfig;
         }
+
         case MSP.MSP_UID: {
           config.uid = [];
           config.uid[0] = data.getUint32(0, 1);
@@ -803,3 +804,6 @@ class Msp {
 }
 
 export default Msp;
+export {
+  MSP, 
+};

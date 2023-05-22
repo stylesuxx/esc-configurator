@@ -120,7 +120,6 @@ App.propTypes = {
       handleResetDefaultls: PropTypes.func.isRequired,
       handleReadEscs: PropTypes.func.isRequired,
       handleWriteSetup: PropTypes.func.isRequired,
-      handleSelectFirmwareForAll: PropTypes.func.isRequired,
       handleLocalSubmit: PropTypes.func.isRequired,
       handleFlashUrl: PropTypes.func.isRequired,
     }),

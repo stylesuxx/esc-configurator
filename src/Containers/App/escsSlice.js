@@ -17,6 +17,19 @@ export const escsSlice = createSlice({
     setMaster: (state, action) => {
       state.master = action.payload;
     },
+    updateIndividual: (state) => {
+      const newIndividual = [];
+      for(let i = 0; i < state.individual.length; i += 1) {
+        const newSettings = {
+          ...state.individual[i],
+          settings: { ...state.master },
+        };
+
+        newIndividual.push(newSettings);
+      }
+
+      state.individual = newIndividual;
+    },
     setTargets: (state, action) => {
       state.targets = action.payload;
     },
@@ -43,6 +56,7 @@ export const {
   setTargets,
   setIndividual,
   setIndividualAtIndex,
+  updateIndividual,
 } = escsSlice.actions;
 
 export const selectConnected = (state) => state.escs.connected;
