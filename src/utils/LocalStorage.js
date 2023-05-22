@@ -19,7 +19,7 @@ const MAX_LOG_LENGTH = 10000;
 function loadLanguage() {
   let storedLanguage = localStorage.getItem('language');
   if(!storedLanguage) {
-    const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
+    const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language;
     if(browserLanguage) {
       for(let [, value] of Object.entries(availableLanguages)) {
         if(value.value === browserLanguage) {
