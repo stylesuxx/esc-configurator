@@ -170,6 +170,8 @@ async function fetchHexCached(url, maxAge = ONE_YEAR) {
 }
 
 export {
+  fetchAndCacheHexResponse,
   fetchJsonCached,
   fetchHexCached,
+  fetchResponse,
 };
