@@ -45,5 +45,5 @@
   "TEMPERATURE_LIMIT": "Znacznie obniża moc maksymalną po osiągnięciu progu.",
   "CURRENT_LIMIT": "Utrzymuje maksymalne możliwe obroty przy dopuszczalnym prądzie.",
   "SINE_MODE_POWER": "Stały poziom cyklu pracy, który ma być stosowany w przypadku korzystania z trybu sinusoidalnego. UWAGA: Wartości powyżej 6 mogą uszkodzić silnik i/lub ESC.",
-  "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position."
+  "BIDIRECTIONAL_MODE": "Pozycja neutralna znajduje się na środku przepustnicy. Obraca się w jednym kierunku, gdy znajduje się powyżej środka i w drugim kierunku, gdy znajduje się poniżej środka."
 }
