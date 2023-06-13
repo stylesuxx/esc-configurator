@@ -1,6 +1,7 @@
 #motor-control-wrapper {
   max-width: 600px;
   width: 100%;
+
   // margin-bottom: 65px;
 
   .gui-box {
@@ -18,7 +19,7 @@
 
       &>* {
         flex: 1;
-        padding: 0px;
+        padding: 0;
         margin-bottom: 7px;
       }
 
@@ -46,6 +47,7 @@
     .rc-slider-tooltip-arrow {
       display: none;
     }
+
     .rc-slider-tooltip-inner {
       background-color: transparent;
       color: black;
@@ -62,7 +64,7 @@
     margin-top: -7px;
     width: 19px;
     height: 19px;
-    border: 0px;
+    border: 0;
     background: var(--color-primary);
   }
 
@@ -70,7 +72,7 @@
     background: transparent;
 
     .rc-slider-handle {
-      background: #cccccc;
+      background: #ccc;
     }
   }
 
@@ -107,7 +109,7 @@
       }
     }
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (width <= 600px) {
       flex-direction: column-reverse;
       align-items: flex-start;
 

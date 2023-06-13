@@ -15,14 +15,14 @@
     flex-grow: 1;
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (width <= 768px) {
     .flash__wrapper {
       flex-direction: column;
     }
 
     .flash__common,
     .flash__individual {
-      margin: 0px;
+      margin: 0;
     }
   }
 }

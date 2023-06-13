@@ -34,13 +34,13 @@
 
   &:last-child {
     border-bottom: none;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .disabled {
     width: 43px;
-    padding: 0px 5px;
+    padding: 0 5px;
     background-color: #ececec;
   }
 

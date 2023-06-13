@@ -1,12 +1,11 @@
 .changelog {
   width: 250px;
-  height: 100%;
   position: fixed;
   right: -245px;
   top: 137px;
   height: calc(100% - 137px - 21px);
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (width <= 600px) {
     top: 170px;
     height: calc(100% - 170px - 21px);
   }
@@ -20,7 +19,7 @@
   }
 
   &.expanded {
-    right: 0px;
+    right: 0;
     background: white;
 
     .changelog__wrapper {

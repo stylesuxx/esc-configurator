@@ -1,10 +1,10 @@
 .status-bar {
   position: fixed;
-  bottom: 0px;
+  bottom: 0;
   width: calc(100% - 20px);
   height: 20px;
   line-height: 20px;
-  padding: 0 10px 0 10px;
+  padding: 0 10px;
   border-top: 1px solid #7d7d79;
   background-color: #bfbeb5;
 
@@ -23,7 +23,7 @@
     border: 0;
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (width <= 600px) {
     & {
       display: flex;
       justify-content: center;
