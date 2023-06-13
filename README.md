@@ -1,5 +1,6 @@
 <img align="right" src="./public/logo512.png" alt="ESC Configurator" width="250">
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d9516dc285b741a5aa69ea5152323047)](https://app.codacy.com/gh/stylesuxx/esc-configurator?utm_source=github.com&utm_medium=referral&utm_content=stylesuxx/esc-configurator&utm_campaign=Badge_Grade)
 [![Build Status](https://app.travis-ci.com/stylesuxx/esc-configurator.svg?branch=master)](https://app.travis-ci.com/github/stylesuxx/esc-configurator) [![codecov](https://codecov.io/gh/stylesuxx/esc-configurator/branch/develop/graph/badge.svg?token=WLZXIOEDP7)](https://codecov.io/gh/stylesuxx/esc-configurator)
  [![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom) [![Netlify Status](https://api.netlify.com/api/v1/badges/d297f59c-7496-49fb-9803-1cf2876aaad4/deploy-status)](https://app.netlify.com/sites/sad-goodall-6b6045/deploys) [![Discord](https://img.shields.io/discord/822952715944460368.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/QvSS5dk23C)
 
