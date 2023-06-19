@@ -193,7 +193,7 @@ describe('Bluejay', () => {
 
     let conditionalFunction = null;
 
-    const revision = 207;
+    const revision = 208;
     const commonSettings = source.getCommonSettings(revision);
     const base = commonSettings.base;
     for(let j = 0; j < base.length; j += 1) {
@@ -217,7 +217,7 @@ describe('Bluejay', () => {
 
     let conditionalFunction = null;
 
-    const revision = 207;
+    const revision = 208;
     const commonSettings = source.getCommonSettings(revision);
     const base = commonSettings.base;
     for(let j = 0; j < base.length; j += 1) {
@@ -242,7 +242,7 @@ describe('Bluejay', () => {
 
     let sanitizeFunction = null;
 
-    const revision = 207;
+    const revision = 208;
     const commonSettings = source.getCommonSettings(revision);
     const base = commonSettings.base;
     for(let j = 0; j < base.length; j += 1) {
@@ -269,7 +269,7 @@ describe('Bluejay', () => {
 
     let sanitizeFunction = null;
 
-    const revision = 207;
+    const revision = 208;
     const commonSettings = source.getCommonSettings(revision);
     const base = commonSettings.base;
     for(let j = 0; j < base.length; j += 1) {

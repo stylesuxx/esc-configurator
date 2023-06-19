@@ -507,7 +507,7 @@ describe('CommonSettings', () => {
     storeRef.store.dispatch(setIndividual([
       {
         firmwareName: 'Bluejay',
-        layoutRevision: 207,
+        layoutRevision: 208,
         meta: { available: true },
         settings: {
           PWM_FREQUENCY: 192,

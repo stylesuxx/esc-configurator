@@ -359,6 +359,17 @@ COMMON['207'] = {
   base: [
     ...COMMON['206'].base,
     {
+      name: 'FORCE_EDT_ARM',
+      type: 'bool',
+      label: 'escForceEdtArm',
+    },
+  ],
+};
+
+COMMON['208'] = {
+  base: [
+    ...COMMON['207'].base,
+    {
       name: 'PWM_FREQUENCY',
       type: 'enum',
       label: 'escPwmFrequencyBluejay',
@@ -416,6 +427,7 @@ COMMON['207'] = {
     },
   ],
 };
+
 
 const INDIVIDUAL_SETTINGS_200 = [{
   name: 'MOTOR_DIRECTION',
@@ -541,10 +553,15 @@ DEFAULTS['206'] = { // v0.19
 
 DEFAULTS['207'] = { // v0.20
   ...DEFAULTS['206'],
+  TEMPERATURE_PROTECTION: 0,
+  FORCE_EDT_ARM: 0,
+};
+
+DEFAULTS['208'] = { // TBD
+  ...DEFAULTS['207'],
   PWM_FREQUENCY: 24,
   PWM_THRESHOLD_LOW: 100,
   PWM_THRESHOLD_HIGH: 150,
-  FORCE_EDT_ARM: 0,
   RCPULSE_FILTER: 0,
 };
 
