@@ -1,15 +1,16 @@
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, {
   useState,
   useCallback,
 } from 'react';
 
+import entries from '../../changelog.json';
+
 import Content from './Content';
 
 import './style.scss';
 
-function Changelog({ entries }) {
+function Changelog() {
   const { t } = useTranslation('common');
 
   const [state, setState] = useState({
@@ -47,7 +48,5 @@ function Changelog({ entries }) {
     </div>
   );
 }
-
-Changelog.propTypes = { entries: PropTypes.arrayOf(PropTypes.shape()).isRequired };
 
 export default Changelog;

@@ -1,17 +1,18 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 import { useInterval } from '../../utils/helpers/React';
+import packages from '../../../package.json';
+import { selectPacketErrors } from './statusSlice';
 
 import './style.scss';
 
-function Statusbar({
-  getUtilization,
-  packetErrors,
-  version,
-}) {
+function Statusbar({ getUtilization }) {
   const { t } = useTranslation('common');
+  const { version } = packages;
+  const packetErrors = useSelector(selectPacketErrors);
 
   const [utilization, setUtilization] = useState({
     up: 0,
@@ -42,10 +43,6 @@ function Statusbar({
   );
 }
 Statusbar.defaultProps = { getUtilization: null };
-Statusbar.propTypes = {
-  getUtilization: PropTypes.func,
-  packetErrors: PropTypes.number.isRequired,
-  version: PropTypes.string.isRequired,
-};
+Statusbar.propTypes = { getUtilization: PropTypes.func };
 
 export default Statusbar;

@@ -27,9 +27,11 @@ import {
 
 import {
   delay,
+  getAppSetting,
   retry,
   compare,
   isValidFlash,
+  getSource,
 } from './helpers/General';
 
 import FourWayHelper from './helpers/FourWay';
@@ -44,6 +46,9 @@ import {
   MODES,
 } from './FourWayConstants';
 import { NotEnoughDataError } from './helpers/QueueProcessor';
+
+import { store } from '../store';
+import { incrementByAmount as incrementPacketErrorsByAmount } from '../Components/Statusbar/statusSlice';
 
 const blheliEeprom = blheliSSource.getEeprom();
 const blheliSettingsDescriptions = blheliSSource.getSettingsDescriptions();
@@ -81,17 +86,6 @@ class FourWay {
     this.packetErrorsCallback = null;
 
     this.parseMessage = this.parseMessage.bind(this);
-
-    this.extendedDebug = false;
-  }
-
-  /**
-   * Setter to control extended debugging
-   *
-   * @param {boolean} extendedDebug Enable or disable extended debug
-   */
-  setExtendedDebug(extendedDebug) {
-    this.extendedDebug = extendedDebug;
   }
 
   /**
@@ -101,15 +95,6 @@ class FourWay {
    */
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
-  }
-
-  /**
-   * Setter for packet error callback
-   *
-   * @param {function} packetErrorsCallback
-   */
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
   }
 
   /**
@@ -130,9 +115,7 @@ class FourWay {
    * @param {number} count Packet error count
    */
   increasePacketErrors(count) {
-    if(this.packetErrorsCallback) {
-      this.packetErrorsCallback(count);
-    }
+    store.dispatch(incrementPacketErrorsByAmount(count));
   }
 
   /**
@@ -286,7 +269,7 @@ class FourWay {
       const message = this.createMessage(command, params, address);
 
       // Debug print all messages except the keep alive messages
-      if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+      if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
         const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
         console.debug(`TX: ${FourWayHelper.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
@@ -304,7 +287,7 @@ class FourWay {
         try {
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
-            if (this.extendedDebug && command !== COMMANDS.cmd_InterfaceTestAlive) {
+            if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
               const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
               console.debug(`RX: ${FourWayHelper.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
             }
@@ -408,8 +391,10 @@ class FourWay {
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
-        info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
-        info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+
+        let settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settingsArray = Array.from(settingsArray);
+        info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
 
         // Check if Bluejay
         if(bluejaySource.isValidName(info.settings.NAME)) {
@@ -417,8 +402,10 @@ class FourWay {
 
           info.layout = source.getLayout();
           info.layoutSize = bluejaySource.getLayoutSize();
-          info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
-          info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+
+          settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+          info.settingsArray = Array.from(settingsArray);
+          info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
         }
       }
 
@@ -503,13 +490,12 @@ class FourWay {
       }
 
       const layoutRevision = info.settings.LAYOUT_REVISION.toString();
+      info.layoutRevision = layoutRevision;
       if(source) {
-        info.settingsDescriptions = source.getCommonSettings(layoutRevision);
-        info.individualSettingsDescriptions = source.getIndividualSettings(layoutRevision);
         info.defaultSettings = source.getDefaultSettings(layoutRevision);
       }
 
-      if(!info.settingsDescriptions) {
+      if(!info.defaultSettings) {
         this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
       }
 
@@ -529,8 +515,6 @@ class FourWay {
           source = null;
 
           info.layout = {};
-          info.settingsDescriptions = { base: [] };
-          info.individualSettingsDescriptions = { base: [] };
         } else {
           make = layout.name;
         }
@@ -680,7 +664,6 @@ class FourWay {
         }
       }
 
-      info.source = source;
       info.make = make;
     } catch (e) {
       console.debug(`ESC ${target + 1} read settings failed ${e.message}`, e);
@@ -714,7 +697,8 @@ class FourWay {
         throw new BufferLengthMismatchError(newSettingsArray.length, esc.settingsArray.length);
       }
 
-      if(compare(newSettingsArray, esc.settingsArray)) {
+      const oldSettingsArray = new Uint8Array(esc.settingsArray);
+      if(compare(newSettingsArray, oldSettingsArray)) {
         this.addLogMessage('escSettingsNoChange', { index: target + 1 });
       } else {
         const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
@@ -1124,11 +1108,12 @@ class FourWay {
 
       let newEsc = await this.getInfo(target);
 
+      const source = getSource(esc.firmwareName);
       const sameFirmware = (
         esc.individualSettings &&
         newEsc.individualSettings &&
-        esc.source &&
-        esc.source.canMigrateTo(newEsc.individualSettings.NAME)
+        source &&
+        source.canMigrateTo(newEsc.individualSettings.NAME)
       );
 
       /**

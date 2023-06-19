@@ -6,30 +6,48 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsHandler from './SettingsHandler';
 
 import './style.scss';
+import { getSource } from '../../../../utils/helpers/General';
+import { useSelector } from 'react-redux';
+
+import { selectSettingsObject } from '../../../AppSettings/settingsSlice';
+import {
+  selectCanFlash,
+  setSelecting,
+} from '../../../../Containers/App/stateSlice';
+import {
+  setIndividualAtIndex,
+  setTargets,
+} from '../../../../Containers/App/escsSlice';
 
 const Esc = forwardRef(({
-  canFlash,
-  directInput,
-  disableCommon,
-  enableAdvanced,
   esc,
   index,
-  onCommonSettingsUpdate,
   onFirmwareDump,
-  onFlash,
-  onSettingsUpdate,
 }, ref) => {
   const { t } = useTranslation('common');
 
-  const commonSettings = esc.settings;
-  const commonSettingsDescriptions = esc.settingsDescriptions;
+  const dispatch = useDispatch();
 
+  const canFlash = useSelector(selectCanFlash);
+
+  const {
+    directInput,
+    disableCommon,
+    enableAdvanced,
+  } = useSelector(selectSettingsObject);
+
+  const source = getSource(esc.firmwareName);
+  const commonSettingsDescriptions = source ? source.getCommonSettings(esc.layoutRevision) : null;
+  const descriptions = source ? source.getIndividualSettings(esc.layoutRevision) : null;
+
+  const commonSettings = esc.settings;
   const settings = esc.individualSettings;
-  const descriptions = esc.individualSettingsDescriptions;
+
   const name = esc.displayName ? esc.displayName : 'Unsupported/Unrecognized';
   const title = `ESC ${(index + 1)}: ${name}`;
 
@@ -41,13 +59,34 @@ const Esc = forwardRef(({
     },
   }));
 
-  const updateSettings = useCallback(() => {
-    onSettingsUpdate(index, settings);
-  }, [onSettingsUpdate, index, settings]);
+  const onFlash = useCallback(() => {
+    dispatch(setTargets([index]));
+    dispatch(setSelecting(true));
+  }, [dispatch, index]);
+
+  const updateSettings = useCallback((individualSettings) => {
+    const settings = {
+      ...esc,
+      individualSettings,
+    };
+
+    dispatch(setIndividualAtIndex({
+      index,
+      settings,
+    }));
+  }, [dispatch, esc, index]);
 
   const updateCommonSettings = useCallback((settings) => {
-    onCommonSettingsUpdate(index, settings);
-  }, [onCommonSettingsUpdate, index]);
+    const newSettings = {
+      ...esc,
+      settings,
+    };
+
+    dispatch(setIndividualAtIndex({
+      index,
+      settings: newSettings,
+    }));
+  }, [dispatch, esc, index]);
 
   const handleFirmwareFlash = useCallback(() => {
     onFlash(index);
@@ -121,19 +160,13 @@ const Esc = forwardRef(({
     </div>
   );
 });
+
 Esc.displayName = 'Esc';
-Esc.defaultProps = { canFlash: true };
+
 Esc.propTypes = {
-  canFlash: PropTypes.bool,
-  directInput: PropTypes.bool.isRequired,
-  disableCommon: PropTypes.bool.isRequired,
-  enableAdvanced: PropTypes.bool.isRequired,
   esc: PropTypes.shape().isRequired,
   index: PropTypes.number.isRequired,
-  onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
-  onFlash: PropTypes.func.isRequired,
-  onSettingsUpdate: PropTypes.func.isRequired,
 };
 
 export default Esc;

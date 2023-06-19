@@ -17,7 +17,7 @@
     height: 0;
     overflow: hidden;
 
-    @media only screen and (min-width: 1660px) {
+    @media only screen and (width >= 1660px) {
       &.active {
         animation: slide 1s ease 0.5s forwards;
       }
@@ -32,7 +32,7 @@
   .install {
     max-width: 400px;
     padding: 10px;
-    background: rgba(211, 211, 211, 0.25);
+    background: rgb(211 211 211 / 25%);
 
     .description {
       text-align: center;
@@ -40,6 +40,7 @@
 
     .default-btn {
       margin: auto;
+
       button {
         max-width: 200px;
       }
@@ -89,7 +90,7 @@
     padding: 20px;
     display: flex;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (width <= 600px) {
       padding-left: 30px;
       padding-right: 30px;
     }
@@ -102,7 +103,7 @@
     padding-bottom: 45px;
     padding-top: 20px;
 
-    @media only screen and (max-width: 991px) {
+    @media only screen and (width <= 991px) {
       & {
         flex-direction: column;
       }
@@ -112,7 +113,7 @@
       margin-top: 20px;
 
       &:first-child {
-        margin-top: 0px;
+        margin-top: 0;
       }
 
       h3 {
@@ -129,7 +130,7 @@
         }
 
         p:last-of-type {
-          padding-bottom: 0px;
+          padding-bottom: 0;
         }
 
         img {
@@ -152,8 +153,8 @@
     .column {
       .wrap {
         padding: 15px;
-        padding-bottom: 0px;
-        padding-top: 0px;
+        padding-bottom: 0;
+        padding-top: 0;
       }
     }
 
@@ -177,7 +178,7 @@
     width: 800px;
     color: white;
     font-size: 14px;
-    font-family: 'open_sanslight', Arial;
+    font-family: 'open_sanslight', Arial, sans-serif;
 
     a {
       color: white;
@@ -191,7 +192,7 @@
 
     span {
       font-size: 22px;
-      font-family: 'open_sanslight', Arial;
+      font-family: 'open_sanslight', Arial, sans-serif;
     }
   }
 
@@ -199,13 +200,13 @@
     margin-top: 15px;
     margin-bottom: 15px;
     font-weight: normal;
-    font-family: 'open_sansregular', Arial;
+    font-family: 'open_sansregular', Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
   }
 
   .text1 .wrap {
-      margin-left: 0px;
+      margin-left: 0;
   }
 
   .text3 ul,

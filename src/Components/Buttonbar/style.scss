@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@import '../../variables';
 
 .button-bar {
   z-index: 1;
@@ -6,7 +6,7 @@
   bottom: 21px;
   width: 100%;
   background-color: #EFEFEF;
-  box-shadow: rgba(0, 0, 0, 0.10) 0 -3px 8px;
+  box-shadow: rgb(0 0 0 / 10%) 0 -3px 8px;
   padding: 10px 0;
   overflow: hidden;
   border-top: 1px solid #F9F9F9;
@@ -14,14 +14,13 @@
   flex-direction: row;
   justify-content: space-between;
 
-  @media only screen and (max-width: 600px) {
-    padding-bottom: 0px;
+  @media only screen and (width <= 600px) {
+    padding-bottom: 0;
     padding-top: 8px;
   }
 
   & > div {
     display: flex;
-
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
@@ -35,7 +34,7 @@
       justify-content: flex-start;
       margin-left: 20px;
 
-      @media only screen and (max-width: 600px) {
+      @media only screen and (width <= 600px) {
         margin-left: 10px;
       }
     }
@@ -45,7 +44,7 @@
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (width <= 600px) {
     flex-direction: column-reverse;
 
     & > div {
@@ -62,6 +61,7 @@
           flex: 1;
           margin-left: 2px;
           margin-right: 2px;
+
           button {
             width: 100%;
           }
@@ -77,12 +77,12 @@
       }
 
       &:first-child {
-        margin-bottom: 0px;
+        margin-bottom: 0;
       }
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (width <= 600px) {
     .generic-button button {
       margin-right: 10px;
     }

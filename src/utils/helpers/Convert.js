@@ -24,6 +24,7 @@ class Convert {
       } else if (size > 2) {
         if(prop === 'STARTUP_MELODY') {
           object[prop] = settingsUint8Array.subarray(offset, offset + size);
+          object[prop] = Array.from(object[prop]);
         } else {
           object[prop] = String.fromCharCode.apply(undefined, settingsUint8Array.subarray(offset, offset + size)).trim();
         }

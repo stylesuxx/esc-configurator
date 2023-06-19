@@ -7,12 +7,9 @@ import React, {
 } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import {
-  getMasterSettings,
-  getMaster,
-  getAllSettings,
-  isMulti,
-} from '../../../utils/helpers/Settings';
+import { getMaster } from '../../../utils/helpers/Settings';
+
+import { getSource } from '../../../utils/helpers/General';
 
 import Checkbox from '../../Input/Checkbox';
 import Select from '../../Input/Select';
@@ -20,32 +17,47 @@ import Slider from '../../Input/Slider';
 import Number from '../../Input/Number';
 
 import './style.scss';
+import { useSelector } from 'react-redux';
+import {
+  selectIndividual,
+  selectMaster,
+  setMaster,
+  updateIndividual,
+} from '../../../Containers/App/escsSlice';
+import { selectSettingsObject } from '../../AppSettings/settingsSlice';
+import { selectCanFlash } from '../../../Containers/App/stateSlice';
+import { useDispatch } from 'react-redux';
 
-function CommonSettings({
-  availableSettings,
-  directInput,
-  disabled,
-  escs,
-  onSettingsUpdate,
-  unsupported,
-}) {
+function CommonSettings({ unsupported }) {
   const {
     t,
     i18n,
   } = useTranslation(['common', 'groups', 'hints']);
 
-  const master = getMaster(escs);
-  const reference = getMasterSettings(escs);
-  const allSettings = getAllSettings(escs);
-  const allMulti = isMulti(escs);
-  const groupOrder = master.source.getGroupOrder();
+  const dispatch = useDispatch();
 
-  const { settingsDescriptions } = master;
+  const { directInput } = useSelector(selectSettingsObject);
+
+  const availableSettings = useSelector(selectMaster);
+  const escs = useSelector(selectIndividual);
+  const disabled = !useSelector(selectCanFlash);
+
+  const master = getMaster(escs);
+  const source = getSource(master.firmwareName);
+  const groupOrder = source ? source.getGroupOrder() : [];
+  const settingsDescriptions = source ? source.getCommonSettings(master.layoutRevision) : null;
+
+
   const mainRevision = availableSettings.MAIN_REVISION;
   const subRevision = availableSettings.SUB_REVISION;
   const revision = `${mainRevision}.${subRevision}`;
 
   const [settings, setSettings] = useState(null);
+
+  const onSettingsUpdate = useCallback((master) => {
+    dispatch(setMaster(master));
+    dispatch(updateIndividual());
+  }, [dispatch]);
 
   useEffect(() => {
     if(settings) {
@@ -89,7 +101,7 @@ function CommonSettings({
           {t('common:versionUnsupportedLine1', {
             version: version,
             name: availableSettings.NAME,
-            layout: availableSettings.LAYOUT_REVISION,
+            layout: master.layoutRevision,
           })}
         </p>
 
@@ -123,14 +135,6 @@ function CommonSettings({
           {unsupportedText}
         </div>
       </div>
-    );
-  }
-
-  if (!allMulti) {
-    return (
-      <h3>
-        {t('multiOnly')}
-      </h3>
     );
   }
 
@@ -179,17 +183,19 @@ function CommonSettings({
   }
 
   const groupedSettingElements = orderedGroupKeys.map((group) => {
+    const settings = { ...availableSettings };
     const groupItems = groups[group];
 
     const settingElements = groupItems.map((description) => {
-      if (description.visibleIf && !description.visibleIf(availableSettings)) {
+      if (description.visibleIf && !description.visibleIf(settings)) {
         return null;
       }
 
       // Check all settings against each other
       let inSync = true;
-      for(let i = 0; i < allSettings.length; i += 1) {
-        const current = allSettings[i];
+      const reference = master.settings;
+      for(let i = 0; i < escs.length; i += 1) {
+        const current = escs[i].settings;
         if(reference[description.name] !== current[description.name]) {
           inSync = false;
           break;
@@ -203,13 +209,15 @@ function CommonSettings({
           setting = settingOverride;
         }
       }
+
+      /* istanbul ignore next */
       const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
 
       // Sanitize a value if it is depended on another value
-      let value = availableSettings[setting.name];
+      let value = settings[setting.name];
       if (description.sanitize) {
-        value = description.sanitize(value, availableSettings);
-        availableSettings[setting.name] = value;
+        value = description.sanitize(value, settings);
+        settings[setting.name] = value;
       }
 
       let disableValue = description.disableValue || null;
@@ -290,6 +298,7 @@ function CommonSettings({
           );
         }
 
+        /* istanbul ignore next */
         default: return null;
       }
     });
@@ -320,26 +329,6 @@ function CommonSettings({
   );
 }
 
-CommonSettings.defaultProps = {
-  directInput: false,
-  disabled: false,
-};
-
-CommonSettings.propTypes = {
-  availableSettings: PropTypes.shape({
-    LAYOUT_REVISION: PropTypes.number.isRequired,
-    MAIN_REVISION: PropTypes.number.isRequired,
-    NAME: PropTypes.string.isRequired,
-    SUB_REVISION: PropTypes.number.isRequired,
-  }).isRequired,
-  directInput: PropTypes.bool,
-  disabled: PropTypes.bool,
-  escs: PropTypes.arrayOf(PropTypes.shape({
-    meta: PropTypes.shape({ available: PropTypes.bool.isRequired }).isRequired,
-    settings: PropTypes.shape({ MODE: PropTypes.number }).isRequired,
-  })).isRequired,
-  onSettingsUpdate: PropTypes.func.isRequired,
-  unsupported: PropTypes.bool.isRequired,
-};
+CommonSettings.propTypes = { unsupported: PropTypes.bool.isRequired };
 
 export default React.memo(CommonSettings);

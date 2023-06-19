@@ -12,6 +12,8 @@ import Checkbox from '../Input/Checkbox';
 import { useInterval } from '../../utils/helpers/React';
 
 import './style.scss';
+import { useSelector } from 'react-redux';
+import { selectConnected } from '../../Containers/App/escsSlice';
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
@@ -136,12 +138,13 @@ IndividualMotorSlider.propTypes = {
 
 function MotorControl({
   getBatteryState,
-  motorCount,
   onAllUpdate,
   onSingleUpdate,
   startValue,
 }) {
   const { t } = useTranslation('common');
+
+  const motorCount = useSelector(selectConnected);
 
   const minValue = 1000;
   const maxValue = 2000;
@@ -254,13 +257,9 @@ function MotorControl({
     </div>
   );
 }
-MotorControl.defaultProps = {
-  motorCount: 0,
-  startValue: 1000,
-};
+MotorControl.defaultProps = { startValue: 1000 };
 MotorControl.propTypes = {
   getBatteryState: PropTypes.func.isRequired,
-  motorCount: PropTypes.number,
   onAllUpdate: PropTypes.func.isRequired,
   onSingleUpdate: PropTypes.func.isRequired,
   startValue: PropTypes.number,

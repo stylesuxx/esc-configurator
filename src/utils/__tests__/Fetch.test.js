@@ -1,7 +1,9 @@
 import fs from 'fs';
 import {
+  fetchAndCacheHexResponse,
   fetchHexCached,
   fetchJsonCached,
+  fetchResponse,
 } from '../Fetch';
 
 const hexFileUrl = 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.16/S_H_50_24_v0.16.hex';
@@ -21,7 +23,17 @@ const json404Url = 'https://raw.githubusercontent.com/stylesuxx/esc-configurator
 
 const mockResponse = (type, content, status = 200) =>
   new window.Response(content, {
-    status: 200,
+    status: status,
+    headers: {
+      'Content-Type': type,
+      'Time-Cached': Date.now().toString(),
+    },
+  });
+
+const mockFailedResponse = (type, content, status = 200) =>
+  new window.Response(content, {
+    ok: false,
+    status: status,
     headers: {
       'Content-Type': type,
       'Time-Cached': Date.now().toString(),
@@ -47,6 +59,34 @@ describe('Fetch', () => {
     };
   });
 
+  it('should handle failed response (initial and proxy)', async() => {
+    global.fetch = jest.fn(() => (new Promise((resolve) => resolve(mockFailedResponse('application/json', '', 404)))));
+
+    await expect(() => fetchResponse('some/url')).rejects.toThrow();
+  });
+
+  it('should handle failed fetch (initial)', async() => {
+    let callCount = 0;
+    global.fetch = jest.fn(() => {
+      if(callCount === 0) {
+        callCount += 1;
+
+        return new Promise((resolve) => resolve(mockFailedResponse('application/json', '', 404)));
+      }
+
+      return new Promise((resolve) => resolve(mockJsonResponse('application/json', '', 404)));
+    });
+
+    const result = await fetchResponse('some/url');
+    expect(result.ok).toBeTruthy();
+  });
+
+  it('should handle failed fetch and cache', async() => {
+    global.fetch = jest.fn(() => (new Promise((resolve) => resolve(mockFailedResponse('application/json', '', 404)))));
+
+    await expect(() => fetchAndCacheHexResponse('some/url')).rejects.toThrow();
+  });
+
   it('should fetch hex file from cache', async() => {
     global.caches = {
       open: jest.fn().mockImplementationOnce(() =>
@@ -69,20 +109,6 @@ describe('Fetch', () => {
     const text = await fetchHexCached(hexFileUrl);
 
     expect(text).toEqual(hexContent);
-  });
-
-  it('should fetch JSON file from Cache', async() => {
-    global.caches = {
-      open: jest.fn().mockImplementationOnce(() =>
-        new Promise((resolve) => {
-          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse('{}'))) });
-        })
-      ),
-    };
-
-    const json = await fetchJsonCached(jsonApiUrl);
-
-    expect(json).toStrictEqual({});
   });
 
   it('should fetch JSON file via API', async() => {
@@ -113,11 +139,43 @@ describe('Fetch', () => {
     await expect(() => fetchJsonCached(jsonInvalidUrl)).rejects.toThrow();
   });
 
-  // This could only really be tested from within the browser
-  /*
-  it('should fetch JSON file via CORS Proxy', async() => {
-    const json = await fetchJsonCached(jsonRawUrl);
-    expect(json).toHaveProperty('name', 'version', 'license');
+  it('should return cached and fetch new JSON', async() => {
+    global.fetch = jest.fn(() =>
+      new Promise((resolve) => resolve(mockJsonResponse("{}")))
+    );
+    global.caches = {
+      open: jest.fn().mockImplementationOnce(() =>
+        new Promise((resolve) => {
+          resolve({
+            match: () => new Promise((resolve) => resolve(mockJsonResponse("{}"))),
+            put: (url, response) =>  new Promise((resolve) => resolve(null)),
+          });
+        })
+      ),
+    };
+
+    const json = await fetchJsonCached(jsonApiUrl, false, -1);
+
+    expect(json).toStrictEqual({});
   });
-  */
+
+  it('should return cached and fetch new HEX', async() => {
+    global.fetch = jest.fn(() =>
+      new Promise((resolve) => resolve(mockHexResponse(hexContent)))
+    );
+    global.caches = {
+      open: jest.fn().mockImplementationOnce(() =>
+        new Promise((resolve) => {
+          resolve({
+            match: () => new Promise((resolve) => resolve(mockHexResponse(hexContent))),
+            put: (url, response) =>  new Promise((resolve) => resolve(null)),
+          });
+        })
+      ),
+    };
+
+    const hex = await fetchHexCached(jsonApiUrl, -1);
+
+    expect(hex).toStrictEqual(hexContent);
+  });
 });

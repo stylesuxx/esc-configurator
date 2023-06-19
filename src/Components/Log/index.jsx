@@ -1,20 +1,36 @@
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
 } from 'react';
 
+import { useSelector } from 'react-redux';
+
+import { selectLogTimestamped } from './logSlice';
+
 import './style.scss';
 
-function Log({ messages }) {
+function Log() {
   const { t } = useTranslation('common');
+  const messages = useSelector(selectLogTimestamped);
   const [ expanded, setExpanded] = useState(false);
 
   const messageElements = messages.slice(0).reverse()
     .map((message, index) => (
       <div key={index}>
-        {message}
+        <span className="date">
+          {message.date}
+
+          &nbsp;@&nbsp;
+        </span>
+
+        <span className="time">
+          {message.time}
+
+          &nbsp;--&nbsp;
+        </span>
+
+        {message.html}
       </div>
     ));
 
@@ -45,7 +61,5 @@ function Log({ messages }) {
     </div>
   );
 }
-
-Log.propTypes = { messages: PropTypes.arrayOf(PropTypes.any).isRequired };
 
 export default React.memo(Log);

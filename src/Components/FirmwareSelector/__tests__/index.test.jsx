@@ -4,11 +4,40 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import configsReducer, { set } from '../../../Containers/App/configsSlice';
+
 import sources from '../../../sources';
+import settingsReducer from '../../AppSettings/settingsSlice';
+import escsReducer from '../../../Containers/App/escsSlice';
 
 let FirmwareSelector;
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
+
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({
+      reducer: {
+        configs: configsReducer,
+        escs: escsReducer,
+        settings: settingsReducer,
+      },
+    });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
 
 const mockJsonResponse = (content) =>
   new window.Response(content, {
@@ -19,7 +48,12 @@ const mockJsonResponse = (content) =>
     },
   });
 
+let onSubmit;
+let onLocalSubmit;
+
 describe('FirmwareSelector', () => {
+  const storeRef = setupTestStore();
+
   beforeAll(async () => {
     /**
      * require component instead of import so that we can properly
@@ -28,25 +62,19 @@ describe('FirmwareSelector', () => {
     FirmwareSelector = require('../').default;
   });
 
+  beforeEach(() => {
+    onSubmit = jest.fn();
+    onLocalSubmit = jest.fn();
+  });
+
   it('should display firmware selection', () => {
-    const configs = {
-      versions: {},
-      escs: {},
-      pwm: {},
-    };
-
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
-
     render(
       <FirmwareSelector
-        configs={configs}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
         showUnstable={false}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -76,7 +104,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -85,12 +112,9 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
+    storeRef.store.dispatch(set(configs));
 
     const escMock = {
       settings: { LAYOUT: "#S_H_90#" },
@@ -99,12 +123,11 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -184,7 +207,8 @@ describe('FirmwareSelector', () => {
     expect(onLocalSubmit).toHaveBeenCalled();
 
     userEvent.click(screen.getByText('buttonCancel'));
-    expect(onCancel).toHaveBeenCalled();
+    const { targets } = storeRef.store.getState().escs;
+    expect(targets.length).toBe(0);
   });
 
   it('should display title', async() => {
@@ -200,7 +224,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -209,12 +232,7 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
-
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
 
     const escMock = {
       displayName: 'Display Name',
@@ -224,12 +242,11 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText('selectTarget (Display Name)')).toBeInTheDocument();
@@ -248,7 +265,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -257,12 +273,9 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
+    storeRef.store.dispatch(set(configs));
 
     const escMock = {
       settings: { LAYOUT: "T-MOTOR 55A" },
@@ -277,12 +290,11 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -324,7 +336,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -333,12 +344,9 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
-    const onSubmit = jest.fn();
-    const onLocalSubmit = jest.fn();
-    const onCancel = jest.fn();
+    storeRef.store.dispatch(set(configs));
 
     const escMock = {
       settings: { LAYOUT: "T-MOTOR 55A" },
@@ -347,12 +355,11 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
-        onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
@@ -394,7 +401,6 @@ describe('FirmwareSelector', () => {
     const configs = {
       versions: {},
       escs: {},
-      getPwm: {},
     };
 
     for(let i = 0; i < sources.length; i += 1) {
@@ -403,7 +409,6 @@ describe('FirmwareSelector', () => {
 
       configs.versions[name] = await source.getVersions();
       configs.escs[name] = source.getEscLayouts();
-      configs.getPwm[name] = (version) => source.getPwm(version);
     }
 
     const onSubmit = jest.fn();
@@ -417,12 +422,12 @@ describe('FirmwareSelector', () => {
 
     render(
       <FirmwareSelector
-        configs={configs}
         esc={escMock}
         onCancel={onCancel}
         onLocalSubmit={onLocalSubmit}
         onSubmit={onSubmit}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
