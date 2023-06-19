@@ -526,8 +526,12 @@ class App extends Component {
     const master = getMasterSettings(individual);
     if(master && master.STARTUP_MELODY) {
       const melodies = individual.map((esc) => {
-        const melody = esc.individualSettings.STARTUP_MELODY;
-        return Rtttl.fromBluejayStartupMelody(melody);
+        if(esc.individualSettings.STARTUP_MELODY) {
+          const melody = esc.individualSettings.STARTUP_MELODY;
+          return Rtttl.fromBluejayStartupMelody(melody);
+        }
+
+        return "";
       });
 
       store.dispatch(updatatAllMelodies(melodies));
@@ -617,7 +621,7 @@ class App extends Component {
     store.dispatch(setFlashing(true));
     store.dispatch(setSelecting(false));
 
-    const { escs } = this.getState();
+    const { escs } = store.getState();
     const { targets } = escs;
 
     TagManager.dataLayer({
