@@ -166,20 +166,8 @@ const LAYOUT = {
     offset: 0x29,
     size: 1,
   },
-  PWM_THRESHOLD_LOW: {
-    offset: 0x2A,
-    size: 1,
-  },
-  PWM_THRESHOLD_HIGH: {
-    offset: 0x2B,
-    size: 1,
-  },
   FORCE_EDT_ARM: {
-    offset: 0x2C,
-    size: 1,
-  },
-  ENABLE_RCPULSE_FILTER: {
-    offset: 0x2D,
+    offset: 0x2A,
     size: 1,
   },
 
