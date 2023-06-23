@@ -42,5 +42,6 @@
   "bootloaderMismatch": "Incompatibilité du chargeur de démarrage ! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Le micrologiciel est marqué comme {{tagged}} mais semble être {{actual}}",
   "browser": "{{name}} ({{version}}) sur {{os}}",
-  "dumpingEsc": "Dumping ESC {{index}}"
+  "dumpingEsc": "Dumping ESC {{index}}",
+  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
 }
