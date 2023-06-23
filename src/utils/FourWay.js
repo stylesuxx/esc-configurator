@@ -430,8 +430,10 @@ class FourWay {
 
         info.layout = source.getLayout();
         info.layoutSize = source.getLayoutSize();
-        info.settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
-        info.settings = Convert.arrayToSettingsObject(info.settingsArray, info.layout);
+
+        const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settingsArray = Array.from(settingsArray);
+        info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
 
         /**
          * If not AM32, then very likely BLHeli_32, even if not - we can't
@@ -1066,7 +1068,11 @@ class FourWay {
       await this.write(eepromOffset, eepromInfo);
 
       await this.writePages(0x04, 0x40, pageSize, flash);
-      await this.verifyPages(0x04, 0x40, pageSize, flash);
+      try {
+        await this.verifyPages(0x04, 0x40, pageSize, flash);
+      } catch(error) {
+        this.addLogMessage('flashingVerificationFailed');
+      }
 
       originalSettings[0] = 0x01;
       originalSettings.fill(0x00, 3, 5);
