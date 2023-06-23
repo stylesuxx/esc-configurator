@@ -1,9 +1,12 @@
-import { useTranslation } from 'react-i18next';
-import React, { useCallback } from 'react';
+import React, {
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   useDispatch,
   useSelector,
 } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import Checkbox from '../Input/Checkbox';
 import Overlay from '../Overlay';
@@ -19,6 +22,7 @@ import './style.scss';
 function AppSettings() {
   const { t } = useTranslation('settings');
   const dispatch = useDispatch();
+
   const settings = useSelector(selectSettings);
   const show = useSelector(selectShow);
 
@@ -36,31 +40,34 @@ function AppSettings() {
     dispatch(hide());
   }, [dispatch]);
 
-  const settingKeys = Object.keys(settings);
-  const settingElements = settingKeys.map((key) => {
-    const setting = settings[key];
-    switch(setting.type) {
-      case 'boolean': {
-        return (
-          <Checkbox
-            hint={t(`${key}Hint`)}
-            key={key}
-            label={t(key)}
-            name={key}
-            onChange={handleCheckboxChange}
-            value={setting.value ? 1 : 0}
-          />
-        );
-      }
+  const memoizedSettings = useMemo(() => {
+    const settingKeys = Object.keys(settings);
+    return settingKeys.map((key) => {
+      const setting = settings[key];
+      switch(setting.type) {
+        case 'boolean': {
+          return (
+            <Checkbox
+              hint={t(`${key}Hint`)}
+              key={key}
+              label={t(key)}
+              name={key}
+              onChange={handleCheckboxChange}
+              value={setting.value ? 1 : 0}
+            />
+          );
+        }
 
-      default: {
-        return null;
+        default: {
+          console.debug(`Setting type "${setting.type}" is not supported`);
+          return false;
+        }
       }
-    }
-  });
+    });
+  }, [handleCheckboxChange, settings, t]);
 
   if(!show) {
-    return null;
+    return false;
   }
 
   return (
@@ -70,7 +77,7 @@ function AppSettings() {
         onClose={onClose}
       >
         <div>
-          {settingElements}
+          {memoizedSettings}
         </div>
       </Overlay>
     </div>
