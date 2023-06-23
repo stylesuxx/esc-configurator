@@ -42,5 +42,6 @@
   "bootloaderMismatch": "Niezgodność Bootloadera! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Firmware jest otagowany jako {{tagged}}, ale aktualny wydaje się być {{actual}}",
   "browser": "{{name}} ({{version}}) na {{os}}",
-  "dumpingEsc": "Dumping ESC {{index}}"
+  "dumpingEsc": "Dumping ESC {{index}}",
+  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
 }
