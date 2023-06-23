@@ -8,6 +8,7 @@
       "Chore: Read version from package.json",
       "Chore: Improved test coverage",
       "Chore: Refactored state to redux slices",
+      "Enhancement: Do not crash on flash verification fail",
       "Enhancement: More melodies",
       "AM32: New layout support",
       "AM32: Improved firmware detection",

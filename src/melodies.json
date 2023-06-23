@@ -247,6 +247,15 @@
     ]
   },
   {
+    "name":"Kenshi Yonezu - Lemon",
+    "tracks":[
+      "Melody:b=86,o=5,d=16:b,c#6,d#6,p,b,g#,8p,c#6,p,a#,p,f#,d#,8p,a#,p,g#,p,f#,b4,8p,f#,p,d#,4p,p,c#5,d#5,e5,8p,p,b5,p,a#5,b5,f#5,8p,p,e5,p,d#5,e5,f5,8p,p,b5,p,a#5,g#5,g5",
+      "Melody:b=86,o=5,d=16:8p,g#4,4p,8p,p,f#4,4p,8p,p,e4,4p,8p,p,d#4,4p,8p,p,e4,4p,8p,p,d#4,4p,8p,p,d4,4p,8p,p,d#4",
+      "Melody:b=86,o=5,d=16:8p,d#4,4p,8p,p,c#4,4p,8p,p,g#3,4p,8p,p,b3,4p,8p,p,g#3,4p,8p,p,f#3,4p,8p,p,f3,4p,8p,p,g3",
+      "Melody:b=86,o=5,d=16:8p,g#3,4p,8p,p,f#3,4p,8p,p,e3,4p,8p,p,d#3,4p,8p,p,e3,4p,8p,p,d#3,4p,8p,p,d#3,4p,8p,p,d#3"
+    ]
+  },
+  {
     "name": "Kino - A Pack of Cigarettes",
     "tracks": [
         "Kino1:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
@@ -259,6 +268,15 @@
     "name": "Kirby - Gourmet Race",
     "tracks": [
       "Melody:b=176,o=5,d=16:g5,d#5,c5,g#4,g4,g#4,c5,d#5,f5,d5,a#4,a4,f4,a4,a#4,d5,d#5,c5,g#4,g4,d#4,f4,g4,c5,f5,d5,a#4,g4,f4,g4,a#4,d5,d#5,c5,g#4,g4,d#5,c5,g#4,g4,d5,a#4,a4,f4,d5,a#4,a4,f4,c5,a4,f4,d4,c5,a4,f4,d4,g5,p,8p,g5"
+    ]
+  },
+  {
+    "name":"Kurousa-P - Senbonzakura",
+    "tracks":[
+      "Melody:d=16,o=5,b=156:b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,f#5,e5,f#5,e5,a5,p,g#5,32a5,32g#5,32f#5,32p,p,e5,p,1p,1p",
+      "Melody:d=16,o=5,b=156:1p,1p,b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,e6,p,a6,p,g#6,a6,g#6,f#6,e6,p,c#6",
+      "Melody:d=16,o=5,b=156:b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,f#5,e5,f#5,e5,a5,p,g#5,32a5,32g#5,32f#5,32p,p,e5,p,1p,1p",
+      "Melody:d=16,o=5,b=156:1p,1p,b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,f#5,e5,f#5,e5,b5,p,c#6,p,e6,p,a6,p,g#6,a6,g#6,f#6,e6,p,c#6"
     ]
   },
   {
@@ -664,6 +682,15 @@
     "name": "X-Files - Theme",
     "tracks": [
       "XFiles:b=125,o=5,d=4:e,b,a,b,d6,2b."
+    ]
+  },
+  {
+    "name":"Yukopi - 強風オールバック",
+    "tracks":[
+      "Melody:o=5,b=135,d=8:d5,16p,32g4,32p,g4,16p,32f4,32p,f4,16g4,32g4,32p,g4,p,g4,a#4,p,d5,c5,1p,1p,1p,1p,1p,1p",
+      "Melody:o=5,b=135,d=8:1p,1p,g4,16p,32g4,32p,g4,f4,g4,p,g4,f4,g4,a#4,a4,f4,d4,1p,1p,1p,1p",
+      "Melody:o=5,b=135,d=8:1p,1p,1p,2p,4p,g4,p,d5,p,g4,16f4,32f4,32p,f4,16g4,32g4,32p,g4,p,g4,16a#4,32a#4,32p,a#4,c5,d5,1p,1p",
+      "Melody:o=5,b=135,d=8:1p,1p,1p,1p,1p,1p, g4,16g4,16f4,g4,16g4,16f4,g4,a#4,c5,d5,c5,a#4,g4,f4,g4"
     ]
   },
   {
