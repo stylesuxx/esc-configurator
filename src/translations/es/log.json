@@ -42,5 +42,6 @@
   "bootloaderMismatch": "¡El cargador de arranque no coincide! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "El firmware está etiquetado como {{tagged}} pero en realidad parece ser {{actual}}",
   "browser": "{{name}} ({{version}}) en {{os}}",
-  "dumpingEsc": "Volcando ESC {{index}}"
+  "dumpingEsc": "Volcando ESC {{index}}",
+  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
 }
