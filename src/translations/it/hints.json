@@ -35,7 +35,7 @@
   "SINE_MODE_RANGE": "La quantità di acceleratore in percentuale utilizzata per l'avvio sinusoidale.",
   "BRAKE_STRENGTH": "Il livello di tenuta del freno applicato quando il freno è attivato su stop.",
   "BRAKING_STRENGTH": "Livello massimo di frenata applicata (ciclo di servizio PWM complementare).",
-  "POWER_RATING": "Se si utilizza EDT su impostazioni 1S, le letture della temperatura saranno disattivate se questa non è impostata su 1S. Tutte le configurazioni con 2S o più non hanno bisogno di cambiare questa impostazione.",
+  "POWER_RATING": "Depending on the power rating of your board this needs to be set to 1S if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to 2S+.",
   "PWM_THRESHOLD_LOW": "Sotto questo punto dell'acceleratore, verrà ' usato un segnale PWM a 96kHz. Tra basso e alto, si userà un segnale PWM a 48kHz.",
   "PWM_THRESHOLD_HIGH": "Sopra questo punto dell' acceleratore, verrà utilizzato un segnale PWM a 24kHz.",
   "FORCE_EDT_ARM": "L' arm avviene solo dopo un riconoscimento EDT con successo. Il firmware del controllore di volo deve supportare questa funzione.",
