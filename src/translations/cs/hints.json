@@ -35,7 +35,7 @@
   "SINE_MODE_RANGE": "Množství plynu v procentech použité pro sinusoidální startování.",
   "BRAKE_STRENGTH": "Úroveň přidržovací brzdy, která se použije při zapnutí brzdění.",
   "BRAKING_STRENGTH": "Maximální brzdná síla (doplňkový brzdný cyklus PWM).",
-  "POWER_RATING": "Depending on the power rating of your board this needs to be set to 1S if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to 2S+.",
+  "POWER_RATING": "V závislosti na hodnocení výkonu vaší desky je třeba nastavit na 1S, pokud je deska hodnocena pouze pro 1S. na všech deskách s jmenovitým výkonem alespoň 2S (včetně 1 – 2S) nebo v případě, že se k napájení ESC používá měnič DC/DC, Toto je třeba nastavit na 2S+.",
   "PWM_THRESHOLD_LOW": "Pod tímto plynem, bude signál PWM 96kHz. Mezi nízkým a vysokým, bude použit signál PWM 48kHz.",
   "PWM_THRESHOLD_HIGH": "Nad tímto plynem, bude signál PWM 24kHz.",
   "FORCE_EDT_ARM": "Odjištění pouze po úspěšném startu EDT. Firmware řídící jednotky musí tuto funkci podporovat.",
