@@ -35,7 +35,7 @@
   "SINE_MODE_RANGE": "Ilość przepustnicy w procentach użyta do sinusoidalnego rozruchu.",
   "BRAKE_STRENGTH": "Poziom wstrzymania hamulca zaciągniętego, gdy hamulec przy zatrzymaniu jest aktywny.",
   "BRAKING_STRENGTH": "Maksymalna siła hamowania (dodatkowy cykl pracy PWM).",
-  "POWER_RATING": "Jeśli używasz EDT w konfiguracjach 1S, odczyty temperatury będą wyłączone, jeśli nie jest to ustawione na 1S. Wszystkie konfiguracje z 2S i więcej nie muszą modyfikować tego ustawienia.",
+  "POWER_RATING": "Depending on the power rating of your board this needs to be set to 1S if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to 2S+.",
   "PWM_THRESHOLD_LOW": "Poniżej tej wartości przepustnicy, użyty zostanie sygnał PWM 96kHz. Pomiędzy niskim a wysokim poziomem zostanie użyty sygnał PWM 48kHz.",
   "PWM_THRESHOLD_HIGH": "Powyżej tej wartości przepustnicy stosowany będzie sygnał PWM 24kHz.",
   "FORCE_EDT_ARM": "Uzbrajanie tylko po udanym uzgodnieniu EDT. Firmware kontrolera lotu musi wspierać tę funkcję.",
