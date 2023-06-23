@@ -43,5 +43,5 @@
   "timingMismatch": "Il firmware è etichettato come {{tagged}} ma sembra essere {{actual}}",
   "browser": "{{name}} ({{version}}) su {{os}}",
   "dumpingEsc": "Dumping ESC {{index}}",
-  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
+  "flashingVerificationFailed": "Verifica fallita - i dati potrebbero non essere stati scritti correttamente"
 }
