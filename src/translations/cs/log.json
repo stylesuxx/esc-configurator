@@ -43,5 +43,5 @@
   "timingMismatch": "Firmware je označen jako {{tagged}}, ale ve skutečnosti se zdá, že je {{actual}}",
   "browser": "{{name}} ({{version}}) na {{os}}",
   "dumpingEsc": "Nahrávání ESC {{index}}",
-  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
+  "flashingVerificationFailed": "Ověření se nezdařilo - data možná nebyla správně zapsána"
 }
