@@ -35,7 +35,7 @@
   "SINE_MODE_RANGE": "Schub in Prozent für sinusförmigen Startup.",
   "BRAKE_STRENGTH": "Die Menge an Bremskraft die angewendet wird wenn \"Beim Stoppen der Motoren bremsen\" aktiviert ist.",
   "BRAKING_STRENGTH": "Maximale Bremsstärke (komplementärer PWM-Arbeitszyklus).",
-  "POWER_RATING": "Depending on the power rating of your board this needs to be set to 1S if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to 2S+.",
+  "POWER_RATING": "Abhängig von der zulässigen Akkuspannung des ESC muss diese Einstellung auf 1S, falls das Board maximal für 1S Akkus ausgelegt ist, gestellt werden. Für alle anderen Boards welche mindestens 2S Akkus unterstützen oder einen DC/DC Konverter verbaut haben, um die ESC MCUs mit Strom zu versorgen (dies ist auch bei 1-2S Boards möglich), ist die Einstellung 2S+ anzuwenden.",
   "PWM_THRESHOLD_LOW": "Unterhalb dieser Gasstellung wird mit 96kHz moduliert. Zwischen unteren und oberen Schwellenwert mit 48kHz.",
   "PWM_THRESHOLD_HIGH": "Bei höherer Gasstellung wird eine PWM Frequenz von 24kHz verwendet.",
   "FORCE_EDT_ARM": "Nur nach erfolgreichem EDT Handshake armen. Die Flugcontroller Firmware muss diese Funktion unterstützen.",
