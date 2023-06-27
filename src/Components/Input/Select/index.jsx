@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 import Info from '../Info';
 
@@ -70,7 +70,6 @@ Select.defaultProps = {
   inSync: true,
   value: -1,
 };
-
 Select.propTypes = {
   disabled: PropTypes.bool,
   hint: PropTypes.string,

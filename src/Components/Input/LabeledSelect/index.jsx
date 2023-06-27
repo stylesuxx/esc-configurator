@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 function LabeledSelect({
   disabled,
@@ -60,7 +60,6 @@ LabeledSelect.defaultProps = {
   label: null,
   selected: null,
 };
-
 LabeledSelect.propTypes = {
   disabled: PropTypes.bool,
   firstLabel: PropTypes.string.isRequired,

@@ -1,11 +1,13 @@
+import React, { useCallback } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
 
 import CompatibilityWarning from './CompatibilityWarning';
 
-import './style.scss';
-import { useSelector } from 'react-redux';
 import {
   selectConnected,
   selectHasSerial,
@@ -13,7 +15,8 @@ import {
   selectPortNames,
   setBaudRate,
 } from '../../Containers/App/serialSlice';
-import { useDispatch } from 'react-redux';
+
+import './style.scss';
 
 function BaudRates({
   handleChange,
@@ -45,6 +48,7 @@ function BaudRates({
     </select>
   );
 }
+
 BaudRates.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -71,6 +75,7 @@ function PermissionOverlay({
 
   return null;
 }
+
 PermissionOverlay.propTypes = {
   handleSetPort: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
@@ -105,6 +110,7 @@ function Ports({
     </select>
   );
 }
+
 Ports.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -197,6 +203,7 @@ function PortPicker({
     </div>
   );
 }
+
 PortPicker.defaultProps = { isIdle: false };
 PortPicker.propTypes = {
   isIdle: PropTypes.bool,

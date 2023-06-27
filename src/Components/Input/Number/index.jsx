@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
 } from 'react';
+import PropTypes from 'prop-types';
 
 import Info from '../Info';
 
@@ -90,7 +90,6 @@ Number.defaultProps = {
   step: 1,
   value: 0,
 };
-
 Number.propTypes = {
   disabled: PropTypes.bool,
   factor: PropTypes.number,

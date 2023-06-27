@@ -1,34 +1,34 @@
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
   useEffect,
   useRef,
 } from 'react';
-import { useSelector } from 'react-redux';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import {
   isValidLayout,
   getSupportedSources,
   getPwm,
 } from '../../utils/helpers/General';
-
 import { blheliAtmelSource as blheliSource } from '../../sources';
 import sources from '../../sources';
-
 import LabeledSelect from '../Input/LabeledSelect';
 
 import {
   selectEscs,
   selectVersions,
 } from '../../Containers/App/configsSlice';
-
-import './style.scss';
 import { selectSettingsObject } from '../AppSettings/settingsSlice';
-import { useDispatch } from 'react-redux';
 import { setSelecting } from '../../Containers/App/stateSlice';
 import { setTargets } from '../../Containers/App/escsSlice';
+
+import './style.scss';
 
 const blheliModes = blheliSource.getEeprom().MODES;
 
@@ -417,6 +417,7 @@ function FirmwareSelector({
     </div>
   );
 }
+
 FirmwareSelector.defaultProps = {
   esc: {
     displayName: 'UNKNOWN',

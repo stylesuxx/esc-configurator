@@ -1,18 +1,18 @@
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   forwardRef,
   useImperativeHandle,
   useState,
 } from 'react';
-import { useDispatch } from 'react-redux';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import SettingsHandler from './SettingsHandler';
-
-import './style.scss';
 import { getSource } from '../../../../utils/helpers/General';
-import { useSelector } from 'react-redux';
 
 import { selectSettingsObject } from '../../../AppSettings/settingsSlice';
 import {
@@ -23,6 +23,8 @@ import {
   setIndividualAtIndex,
   setTargets,
 } from '../../../../Containers/App/escsSlice';
+
+import './style.scss';
 
 const Esc = forwardRef(({
   esc,

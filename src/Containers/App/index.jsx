@@ -1,9 +1,11 @@
-import PropTypes from 'prop-types';
-import UAParser from 'ua-parser-js';
-import TagManager from 'react-gtm-module';
 import React, { Component } from 'react';
-import Rtttl from 'bluejay-rtttl-parse';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import BinToHex from 'bin-to-hex';
+import Rtttl from 'bluejay-rtttl-parse';
+import TagManager from 'react-gtm-module';
+import UAParser from 'ua-parser-js';
 
 import { fetchHexCached } from '../../utils/Fetch';
 import { TimeoutError } from '../../utils/helpers/QueueProcessor';
@@ -46,7 +48,6 @@ import {
   setOpen,
   setPortNames,
 } from './serialSlice';
-import { connect } from 'react-redux';
 import {
   setIndividual,
   setMaster,

@@ -1,10 +1,11 @@
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 import { useInterval } from '../../utils/helpers/React';
 import packages from '../../../package.json';
+
 import { selectPacketErrors } from './statusSlice';
 
 import './style.scss';
@@ -42,6 +43,7 @@ function Statusbar({ getUtilization }) {
     </div>
   );
 }
+
 Statusbar.defaultProps = { getUtilization: null };
 Statusbar.propTypes = { getUtilization: PropTypes.func };
 

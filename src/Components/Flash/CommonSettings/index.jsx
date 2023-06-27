@@ -1,23 +1,20 @@
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useEffect,
   useState,
 } from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
 import { getMaster } from '../../../utils/helpers/Settings';
-
 import { getSource } from '../../../utils/helpers/General';
-
 import Checkbox from '../../Input/Checkbox';
 import Select from '../../Input/Select';
 import Slider from '../../Input/Slider';
 import Number from '../../Input/Number';
 
-import './style.scss';
-import { useSelector } from 'react-redux';
 import {
   selectIndividual,
   selectMaster,
@@ -27,6 +24,8 @@ import {
 import { selectSettingsObject } from '../../AppSettings/settingsSlice';
 import { selectCanFlash } from '../../../Containers/App/stateSlice';
 import { useDispatch } from 'react-redux';
+
+import './style.scss';
 
 function CommonSettings({ unsupported }) {
   const {

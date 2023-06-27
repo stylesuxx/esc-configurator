@@ -1,7 +1,9 @@
-import { CookieBanner } from '@palmabit/react-cookie-law';
-import { useTranslation } from 'react-i18next';
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+
+import { CookieBanner } from '@palmabit/react-cookie-law';
+
 import { accept } from './cookieSlice';
 
 function CookieConsent() {

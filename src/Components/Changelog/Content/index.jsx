@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Content({ entries }) {
   const entryElements = entries.map((entry) => {
@@ -24,6 +24,7 @@ function Content({ entries }) {
 
   return(entryElements);
 }
+
 Content.propTypes = {
   entries: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string.isRequired,

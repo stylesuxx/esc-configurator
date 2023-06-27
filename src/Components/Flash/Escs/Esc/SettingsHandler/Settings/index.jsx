@@ -1,14 +1,14 @@
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { selectSettingsObject } from '../../../../../AppSettings/settingsSlice';
+import { useTranslation } from 'react-i18next';
 
 import Checkbox from '../../../../../Input/Checkbox';
 import Select from '../../../../../Input/Select';
 import Slider from '../../../../../Input/Slider';
 import Number from '../../../../../Input/Number';
+
+import { selectSettingsObject } from '../../../../../AppSettings/settingsSlice';
 
 function Settings({
   descriptions,
@@ -115,7 +115,6 @@ function Settings({
 }
 
 Settings.defaultProps = { disabled: false };
-
 Settings.propTypes = {
   descriptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   disableld: PropTypes.bool,

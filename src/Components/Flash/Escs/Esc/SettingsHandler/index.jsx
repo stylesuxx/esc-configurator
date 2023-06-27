@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
+
 import Settings from './Settings';
 
 function SettingsHandler({
@@ -53,4 +54,5 @@ SettingsHandler.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   settings: PropTypes.shape({}).isRequired,
 };
+
 export default SettingsHandler;

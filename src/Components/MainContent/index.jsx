@@ -1,8 +1,9 @@
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
+
 import React, { useCallback } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
+import PropTypes from 'prop-types';
 
 import Home from '../Home';
 import Flash from '../Flash';
@@ -17,8 +18,6 @@ import {
   selectIsSelecting,
   selectIsSupported,
 } from '../../Containers/App/stateSlice';
-
-import './style.scss';
 import {
   selectFourWay,
   selectOpen,
@@ -28,6 +27,8 @@ import {
   selectTargets,
 } from '../../Containers/App/escsSlice';
 import { selectFeatures } from '../../Containers/App/mspSlice';
+
+import './style.scss';
 
 function WarningWrapper() {
   const { t } = useTranslation('common');
@@ -248,7 +249,6 @@ MainContent.defaultProps = {
   port: { getBatteryState: null },
   progress: [],
 };
-
 MainContent.propTypes = {
   onAllMotorSpeed: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,

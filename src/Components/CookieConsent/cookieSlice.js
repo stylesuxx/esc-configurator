@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import TagManager from 'react-gtm-module';
 
 const initialState = { accepted: false };

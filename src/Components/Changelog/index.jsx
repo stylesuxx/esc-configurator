@@ -1,11 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import React, {
   useState,
   useCallback,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import entries from '../../changelog.json';
-
 import Content from './Content';
 
 import './style.scss';

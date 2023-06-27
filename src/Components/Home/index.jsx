@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next';
 import React, {
   useCallback,
   useRef,
   useState,
 } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 
 import {
   dummy as melodyEditorDummy,

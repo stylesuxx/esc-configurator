@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
   useEffect,
 } from 'react';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import InputRange from 'react-input-range';
 
 import Info from '../Info';
@@ -117,7 +117,6 @@ Slider.defaultProps = {
   suffix: '',
   value: 0,
 };
-
 Slider.propTypes = {
   disableValue: PropTypes.number,
   disabled: PropTypes.bool,

@@ -1,17 +1,15 @@
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
   useEffect,
   useRef,
 } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   useDispatch,
   useSelector,
 } from 'react-redux';
-
-import './style.scss';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 import Checkbox from '../Input/Checkbox';
 import LabeledSelect from '../Input/LabeledSelect';
@@ -28,6 +26,8 @@ import {
   selectDummy,
 } from './melodiesSlice';
 import { selectIsWriting } from '../../Containers/App/stateSlice';
+
+import './style.scss';
 
 function SaveMelody({ onSave }) {
   const { t } = useTranslation();

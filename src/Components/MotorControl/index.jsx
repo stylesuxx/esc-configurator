@@ -1,19 +1,22 @@
-import Slider, { createSliderWithTooltip } from 'rc-slider';
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
+
 import React, {
   useCallback,
   useState,
   useMemo,
 } from 'react';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
+
+import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import Checkbox from '../Input/Checkbox';
 import { useInterval } from '../../utils/helpers/React';
 
-import './style.scss';
-import { useSelector } from 'react-redux';
 import { selectConnected } from '../../Containers/App/escsSlice';
+
+import './style.scss';
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
@@ -127,6 +130,7 @@ function IndividualMotorSlider({
     </div>
   );
 }
+
 IndividualMotorSlider.propTypes = {
   disabled: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
@@ -257,6 +261,7 @@ function MotorControl({
     </div>
   );
 }
+
 MotorControl.defaultProps = { startValue: 1000 };
 MotorControl.propTypes = {
   getBatteryState: PropTypes.func.isRequired,

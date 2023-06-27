@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectIndividual } from '../../../Containers/App/escsSlice';
+import PropTypes from 'prop-types';
 
 import Esc from './Esc';
+
+import { selectIndividual } from '../../../Containers/App/escsSlice';
 
 function Escs({
   onFirmwareDump,
