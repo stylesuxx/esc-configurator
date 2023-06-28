@@ -726,32 +726,27 @@ class App extends Component {
     const { serial } = this.props;
 
     if (!serial.checked) {
-      return null;
+      return false;
     }
 
     return (
       <MainApp
-        escs={{
-          actions: {
-            handleResetDefaultls: this.handleResetDefaultls,
-            handleReadEscs: this.handleReadEscs,
-            handleWriteSetup: this.handleWriteSettings,
-            handleSelectFirmwareForAll: this.handleSelectFirmwareForAll,
-            handleLocalSubmit: this.handleLocalSubmit,
-            handleFlashUrl: this.handleFlashUrl,
-            handleFirmwareDump: this.handleFirmwareDump,
-          },
-          progressReferences: this.progressReferences,
-        }}
         getBatteryState={this.serial ? this.serial.getBatteryState : null}
         getUtilization={this.serial ? this.serial.getUtilization : null}
         onAllMotorSpeed={this.handleAllMotorSpeed}
+        onEscDump={this.handleFirmwareDump}
+        onEscsFlashFile={this.handleLocalSubmit}
+        onEscsFlashUrl={this.handleFlashUrl}
+        onEscsRead={this.handleReadEscs}
+        onEscsWriteDefaults={this.handleResetDefaultls}
+        onEscsWriteSettings={this.handleWriteSettings}
         onMelodyWrite={this.handleMelodyWrite}
         onSerialConnect={this.handleConnect}
         onSerialDisconnect={this.handleDisconnect}
         onSerialPortChange={this.handleChangePort}
         onSerialSetPort={this.handleSetPort}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
+        progressReferences={this.progressReferences}
       />
     );
   }

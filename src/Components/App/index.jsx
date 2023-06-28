@@ -25,16 +25,22 @@ import { selectShow as selectShowMelodyEditor } from '../MelodyEditor/melodiesSl
 import './style.scss';
 
 function App({
-  escs,
   getBatteryState,
   getUtilization,
   onAllMotorSpeed,
+  onEscDump,
+  onEscsFlashFile,
+  onEscsFlashUrl,
+  onEscsRead,
+  onEscsWriteDefaults,
+  onEscsWriteSettings,
   onMelodyWrite,
   onSerialConnect,
   onSerialDisconnect,
   onSerialPortChange,
   onSerialSetPort,
   onSingleMotorSpeed,
+  progressReferences,
 }) {
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
@@ -84,14 +90,14 @@ function App({
         <MainContent
           getBatteryState={getBatteryState}
           onAllMotorSpeed={onAllMotorSpeed}
-          onFirmwareDump={escs.actions.handleFirmwareDump}
-          onFlashUrl={escs.actions.handleFlashUrl}
-          onLocalSubmit={escs.actions.handleLocalSubmit}
-          onReadEscs={escs.actions.handleReadEscs}
-          onResetDefaultls={escs.actions.handleResetDefaultls}
+          onFirmwareDump={onEscDump}
+          onFlashUrl={onEscsFlashUrl}
+          onLocalSubmit={onEscsFlashFile}
+          onReadEscs={onEscsRead}
+          onResetDefaultls={onEscsWriteDefaults}
           onSingleMotorSpeed={onSingleMotorSpeed}
-          onWriteSetup={escs.actions.handleWriteSetup}
-          progressReferences={escs.progressReferences}
+          onWriteSetup={onEscsWriteSettings}
+          progressReferences={progressReferences}
         />
 
         <Statusbar getUtilization={getUtilization} />
@@ -115,26 +121,22 @@ App.defaultProps = {
 };
 
 App.propTypes = {
-  escs: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleFirmwareDump: PropTypes.func.isRequired,
-      handleResetDefaultls: PropTypes.func.isRequired,
-      handleReadEscs: PropTypes.func.isRequired,
-      handleWriteSetup: PropTypes.func.isRequired,
-      handleLocalSubmit: PropTypes.func.isRequired,
-      handleFlashUrl: PropTypes.func.isRequired,
-    }),
-    progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  }).isRequired,
   getBatteryState: PropTypes.func,
   getUtilization: PropTypes.func,
   onAllMotorSpeed: PropTypes.func.isRequired,
+  onEscDump: PropTypes.func.isRequired,
+  onEscsFlashFile: PropTypes.func.isRequired,
+  onEscsFlashUrl: PropTypes.func.isRequired,
+  onEscsRead: PropTypes.func.isRequired,
+  onEscsWriteDefaults: PropTypes.func.isRequired,
+  onEscsWriteSettings: PropTypes.func.isRequired,
   onMelodyWrite: PropTypes.func.isRequired,
   onSerialConnect: PropTypes.func.isRequired,
   onSerialDisconnect: PropTypes.func.isRequired,
   onSerialPortChange: PropTypes.func.isRequired,
   onSerialSetPort: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
+  progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default App;
