@@ -73,6 +73,7 @@ function WarningWrapper() {
 }
 
 function MainContent({
+  getBatteryState,
   progress,
   onReadEscs,
   onResetDefaultls,
@@ -82,7 +83,6 @@ function MainContent({
   onLocalSubmit,
   onAllMotorSpeed,
   onSingleMotorSpeed,
-  port,
   progressReferences,
 }) {
   const { t } = useTranslation('common');
@@ -127,7 +127,7 @@ function MainContent({
     if(!fourWay && !isReading) {
       return (
         <MotorControl
-          getBatteryState={port.getBatteryState}
+          getBatteryState={getBatteryState}
           onAllUpdate={onAllMotorSpeed}
           onSingleUpdate={onSingleMotorSpeed}
           startValue={mspFeatures['3D'] ? 1500 : 1000}
@@ -138,9 +138,9 @@ function MainContent({
     return null;
   }, [
     fourWay,
+    getBatteryState,
     isReading,
     mspFeatures,
-    port.getBatteryState,
     onAllMotorSpeed,
     onSingleMotorSpeed,
   ]);
@@ -246,10 +246,11 @@ function MainContent({
 }
 
 MainContent.defaultProps = {
-  port: { getBatteryState: null },
+  getBatteryState: undefined,
   progress: [],
 };
 MainContent.propTypes = {
+  getBatteryState: PropTypes.func,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
@@ -258,7 +259,6 @@ MainContent.propTypes = {
   onResetDefaultls: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
-  port: PropTypes.shape({ getBatteryState:PropTypes.func }),
   progress: PropTypes.arrayOf(PropTypes.number),
   progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };

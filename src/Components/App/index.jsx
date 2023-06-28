@@ -26,6 +26,8 @@ import './style.scss';
 
 function App({
   escs,
+  getBatteryState,
+  getUtilization,
   onAllMotorSpeed,
   onMelodyWrite,
   onSingleMotorSpeed,
@@ -77,6 +79,7 @@ function App({
         </header>
 
         <MainContent
+          getBatteryState={getBatteryState}
           onAllMotorSpeed={onAllMotorSpeed}
           onFirmwareDump={escs.actions.handleFirmwareDump}
           onFlashUrl={escs.actions.handleFlashUrl}
@@ -85,11 +88,10 @@ function App({
           onResetDefaultls={escs.actions.handleResetDefaultls}
           onSingleMotorSpeed={onSingleMotorSpeed}
           onWriteSetup={escs.actions.handleWriteSetup}
-          port={serial.port}
           progressReferences={escs.progressReferences}
         />
 
-        <Statusbar getUtilization={serial.port ? serial.port.getUtilization : undefined} />
+        <Statusbar getUtilization={getUtilization} />
       </div>
 
       <AppSettings />
@@ -105,12 +107,8 @@ function App({
 }
 
 App.defaultProps = {
-  serial: {
-    port: {
-      getBatteryState: null,
-      getUtilization: null,
-    },
-  },
+  getBatteryState: null,
+  getUtilization: null,
 };
 
 App.propTypes = {
@@ -125,6 +123,8 @@ App.propTypes = {
     }),
     progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   }).isRequired,
+  getBatteryState: PropTypes.func,
+  getUtilization: PropTypes.func,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onMelodyWrite: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
@@ -135,11 +135,7 @@ App.propTypes = {
       handleDisconnect: PropTypes.func.isRequired,
       handleSetPort: PropTypes.func.isRequired,
     }).isRequired,
-    port: PropTypes.shape({
-      getBatteryState:PropTypes.func,
-      getUtilization:PropTypes.func,
-    }),
-  }),
+  }).isRequired,
 };
 
 export default App;

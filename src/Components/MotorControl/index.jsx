@@ -59,7 +59,9 @@ function BatteryState({ getBatteryState }) {
 
   return null;
 }
-BatteryState.propTypes = { getBatteryState: PropTypes.func.isRequired };
+
+BatteryState.defaultProps = { getBatteryState: null };
+BatteryState.propTypes = { getBatteryState: PropTypes.func };
 
 function MotorSlider({
   disabled,
@@ -91,6 +93,7 @@ function MotorSlider({
     />
   );
 }
+
 MotorSlider.propTypes = {
   disabled: PropTypes.bool.isRequired,
   max: PropTypes.number.isRequired,
@@ -262,9 +265,12 @@ function MotorControl({
   );
 }
 
-MotorControl.defaultProps = { startValue: 1000 };
+MotorControl.defaultProps = {
+  getBatteryState: null,
+  startValue: 1000,
+};
 MotorControl.propTypes = {
-  getBatteryState: PropTypes.func.isRequired,
+  getBatteryState: PropTypes.func,
   onAllUpdate: PropTypes.func.isRequired,
   onSingleUpdate: PropTypes.func.isRequired,
   startValue: PropTypes.number,

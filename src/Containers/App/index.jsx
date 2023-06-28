@@ -743,6 +743,8 @@ class App extends Component {
           },
           progressReferences: this.progressReferences,
         }}
+        getBatteryState={this.serial ? this.serial.getBatteryState : null}
+        getUtilization={this.serial ? this.serial.getUtilization : null}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onMelodyWrite={this.handleMelodyWrite}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
@@ -754,7 +756,6 @@ class App extends Component {
             handleSetBaudRate: this.handleSetBaudRate,
             handleSetPort: this.handleSetPort,
           },
-          port: this.serial,
         }}
       />
     );
