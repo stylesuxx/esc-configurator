@@ -747,16 +747,11 @@ class App extends Component {
         getUtilization={this.serial ? this.serial.getUtilization : null}
         onAllMotorSpeed={this.handleAllMotorSpeed}
         onMelodyWrite={this.handleMelodyWrite}
+        onSerialConnect={this.handleConnect}
+        onSerialDisconnect={this.handleDisconnect}
+        onSerialPortChange={this.handleChangePort}
+        onSerialSetPort={this.handleSetPort}
         onSingleMotorSpeed={this.handleSingleMotorSpeed}
-        serial={{
-          actions: {
-            handleChangePort: this.handleChangePort,
-            handleConnect: this.handleConnect,
-            handleDisconnect: this.handleDisconnect,
-            handleSetBaudRate: this.handleSetBaudRate,
-            handleSetPort: this.handleSetPort,
-          },
-        }}
       />
     );
   }

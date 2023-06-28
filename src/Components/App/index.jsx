@@ -30,8 +30,11 @@ function App({
   getUtilization,
   onAllMotorSpeed,
   onMelodyWrite,
+  onSerialConnect,
+  onSerialDisconnect,
+  onSerialPortChange,
+  onSerialSetPort,
   onSingleMotorSpeed,
-  serial,
 }) {
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
@@ -54,10 +57,10 @@ function App({
 
             <PortPicker
               isIdle={isIdle}
-              onChangePort={serial.actions.handleChangePort}
-              onConnect={serial.actions.handleConnect}
-              onDisconnect={serial.actions.handleDisconnect}
-              onSetPort={serial.actions.handleSetPort}
+              onChangePort={onSerialPortChange}
+              onConnect={onSerialConnect}
+              onDisconnect={onSerialDisconnect}
+              onSetPort={onSerialSetPort}
             />
 
             <div className="main__settings">
@@ -127,15 +130,11 @@ App.propTypes = {
   getUtilization: PropTypes.func,
   onAllMotorSpeed: PropTypes.func.isRequired,
   onMelodyWrite: PropTypes.func.isRequired,
+  onSerialConnect: PropTypes.func.isRequired,
+  onSerialDisconnect: PropTypes.func.isRequired,
+  onSerialPortChange: PropTypes.func.isRequired,
+  onSerialSetPort: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
-  serial: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleChangePort: PropTypes.func.isRequired,
-      handleConnect: PropTypes.func.isRequired,
-      handleDisconnect: PropTypes.func.isRequired,
-      handleSetPort: PropTypes.func.isRequired,
-    }).isRequired,
-  }).isRequired,
 };
 
 export default App;
