@@ -355,7 +355,7 @@ class App extends Component {
   };
 
   flash = async(text, force, migrate) => {
-    const {
+    let {
       individual,
       targets,
     } = store.getState().escs;
@@ -391,6 +391,7 @@ class App extends Component {
       }
     }
 
+    individual = store.getState().escs.individual;
     const masterSettings = getMasterSettings(individual);
     store.dispatch(setMaster(masterSettings));
 

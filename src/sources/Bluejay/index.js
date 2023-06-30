@@ -75,10 +75,26 @@ class BluejaySource extends GithubSource {
   }
 
   getPwm(version) {
-    // Before v0.20.0 PWM was a build time option and should be selectable
+    // Before v0.21.0 PWM was a build time option and should be selectable
     // in the firmware selector.
-    if(semver.lt(version, '0.20.0')) {
+    if(semver.lt(version, '0.21.0')) {
       return [24, 48, 96];
+    }
+
+    return [];
+  }
+
+  getSkipSettings(oldLayout, newLayout) {
+    // Migration between same layouts is always fine
+    if(newLayout !== oldLayout) {
+      // When flashing from older version to this version, don't migrate those
+      // settings - we use new defaults.
+      if(oldLayout < newLayout && newLayout === 207) {
+        return [
+          'DITHERING',
+          'TEMPERATURE_PROTECTION',
+        ];
+      }
     }
 
     return [];

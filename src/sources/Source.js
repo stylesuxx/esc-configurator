@@ -229,12 +229,21 @@ class Source {
   }
 
   /**
-   * Reurns group order for common settings
+   * Returns group order for common settings
    *
    * @returns {Array<string>}
    */
   getGroupOrder() {
     return ['general'];
+  }
+
+  /**
+   * Returns a list of settings to ignore during migration
+   *
+   * @returns {Array<string>}
+   */
+  getSkipSettings(oldLayout, newLayout) {
+    return [];
   }
 }
 

@@ -831,8 +831,10 @@ class FourWay {
    */
   async writeHex(target, esc, hex, force, migrate, cbProgress) {
     const {
-      interfaceMode, signature,
+      interfaceMode,
+      signature,
     } = esc.meta;
+    const source = getSource(esc.firmwareName);
 
     this.progressCallback = cbProgress;
 
@@ -878,20 +880,24 @@ class FourWay {
        * Try migrating settings if possible - this ensures that the motor
        * direction is saved between flashes.
        */
-      const saveMigratins = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
+      const saveMigrations = ['MOTOR_DIRECTION', 'BEEP_STRENGTH', 'BEACON', 'TEMPERATURE_PROTECTION'];
+      const skipMigrations = source.getSkipSettings(parseInt(oldEsc.layoutRevision, 10), parseInt(newEsc.layoutRevision, 10));
       if(settingsDescriptions && individualSettingsDescriptions) {
         if(newSettings.MODE === oldSettings.MODE) {
           for (var prop in newSettings) {
             if (Object.prototype.hasOwnProperty.call(newSettings, prop) &&
                 Object.prototype.hasOwnProperty.call(oldSettings, prop)
             ) {
-              if(canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions)) {
+              if(
+                canMigrate(prop, oldSettings, newSettings, settingsDescriptions, individualSettingsDescriptions) &&
+                !skipMigrations.includes(prop)
+              ) {
                 // With a proper migration path
                 newSettings[prop] = oldSettings[prop];
 
                 console.debug(`Migrated setting ${prop}`);
               } else {
-                if (saveMigratins.includes(prop)) {
+                if (saveMigrations.includes(prop) && !skipMigrations.includes(prop)) {
                   // Settings that are save to migrate because they are the
                   // same on all firmwares.
                   newSettings[prop] = oldSettings[prop];

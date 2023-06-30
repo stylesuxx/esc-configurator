@@ -174,13 +174,13 @@ describe('Bluejay', () => {
     expect(name).toEqual('MAKE - Bluejay, 1.100, Dynamic PWM');
   });
 
-  it('should return a list of PWM for versions < v0.20.0', () => {
+  it('should return a list of PWM for versions < v0.21.0', () => {
     const frequencies = source.getPwm('v0.10.0');
     expect(frequencies.length).toEqual(3);
   });
 
-  it('should return an empty list for versions >= v0.20.0', () => {
-    const frequencies = source.getPwm('v0.20.0');
+  it('should return an empty list for versions >= v0.21.0', () => {
+    const frequencies = source.getPwm('v0.21.0');
     expect(frequencies.length).toEqual(0);
   });
 
