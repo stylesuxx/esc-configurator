@@ -206,6 +206,7 @@ class App extends Component {
       await this.serial.open(serial.baudRate);
       this.serial.setLogCallback(this.addLogMessage);
       this.addLogMessage('portOpened');
+      this.progressReferences = [];
 
       /* Send a reset of the 4 way interface, just in case it was not cleanly
        * disconnected before.
@@ -474,12 +475,17 @@ class App extends Component {
 
     this.addLogMessage('readEscs', { connected });
 
-    this.progressReferences = [];
+    // Create progress references once
+    if(this.progressReferences.length < 1) {
+      for (let i = 0; i < connected; i += 1) {
+        this.progressReferences[i] = React.createRef();
+      }
+    }
+
     for (let i = 0; i < connected; i += 1) {
       try {
         const settings = await this.handleReadEsc(i);
         settings.index = i;
-        this.progressReferences.push(React.createRef());
         individual.push(settings);
 
         this.addLogMessage('readEsc', {
