@@ -24,9 +24,10 @@ languages.forEach((language) => {
   };
 });
 
+const { language } = store.getState();
 i18next.init({
   interpolation: { escapeValue: false },
-  lng: settings.defaultLanguage,
+  lng: language.current,
   resources,
 });
 
