@@ -5,5 +5,9 @@
   "am32servo": "Servo Einstellungen",
   "am32brake": "Bremskraft Einstellungen",
   "am32pwm": "PWM Einstellungen",
-  "am32safety": "Sicherheit"
+  "am32safety": "Safety Settings",
+  "bluejaySafety": "Safety Settings",
+  "bluejayBrake": "Brake Settings",
+  "bluejayBeacon": "Beacon Settings",
+  "bluejayExperimental": "Experimental Settings"
 }
