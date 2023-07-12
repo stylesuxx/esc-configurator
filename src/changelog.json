@@ -10,6 +10,7 @@
       "Chore: Refactored state to redux slices",
       "Enhancement: Do not crash on flash verification fail",
       "Enhancement: More melodies",
+      "Enchansement: Group settings in sections",
       "AM32: New layout support",
       "AM32: Improved firmware detection",
       "AM32: Increased reset timeout after flashing",
