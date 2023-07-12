@@ -713,7 +713,7 @@ class App extends Component {
   handleMelodyWrite = (melodies) => {
     const { escs } = store.getState();
     let individual = [ ...escs.individual ];
-    const converted = melodies.map((melody) => Rtttl.toBluejayStartupMelody(melody));
+    const converted = melodies.map((melody) => Array.from(Rtttl.toBluejayStartupMelody(melody).data));
 
     // Set wait time after melody to synchronize playback on all ESCs
     const melodyDurations = melodies.map((melody) => Rtttl.parse(melody).melody.reduce((a, b) => a + b.duration, 0));
@@ -722,7 +722,7 @@ class App extends Component {
     for(let i = 0; i < converted.length; i += 1) {
       const newIndividualSettings = {
         ...individual[i].individualSettings,
-        STARTUP_MELODY: Array.from(converted[i].data),
+        STARTUP_MELODY: converted[i],
         STARTUP_MELODY_WAIT_MS: maxMelodyDuration - melodyDurations[i],
       };
 
@@ -734,6 +734,7 @@ class App extends Component {
 
     // Update individual settings, then write them.
     store.dispatch(setIndividual(individual));
+    store.dispatch(updatatAllMelodies(melodies));
     this.handleWriteSettings();
   };
 
