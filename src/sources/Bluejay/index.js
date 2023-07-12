@@ -99,6 +99,21 @@ class BluejaySource extends GithubSource {
 
     return [];
   }
+
+  /**
+   * Reurns group order for common settings
+   *
+   * @returns {Array<string>}
+   */
+  getGroupOrder() {
+    return [
+      'general',
+      'bluejayBeacon',
+      'bluejaySafety',
+      'bluejayBrake',
+      'bluejayExperimental',
+    ];
+  }
 }
 
 const source = new BluejaySource(
