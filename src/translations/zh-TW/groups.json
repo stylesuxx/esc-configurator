@@ -5,5 +5,9 @@
   "am32servo": "舵機設置",
   "am32brake": "剎車設置",
   "am32pwm": "PWM 設置",
-  "am32safety": "安全性"
+  "am32safety": "Safety Settings",
+  "bluejaySafety": "Safety Settings",
+  "bluejayBrake": "Brake Settings",
+  "bluejayBeacon": "Beacon Settings",
+  "bluejayExperimental": "Experimental Settings"
 }
