@@ -5,5 +5,9 @@
   "am32servo": "Impostazioni Servo",
   "am32brake": "Impostazioni Freno",
   "am32pwm": "Impostazioni PWM",
-  "am32safety": "Sicurezza"
+  "am32safety": "Safety Settings",
+  "bluejaySafety": "Safety Settings",
+  "bluejayBrake": "Brake Settings",
+  "bluejayBeacon": "Beacon Settings",
+  "bluejayExperimental": "Experimental Settings"
 }
