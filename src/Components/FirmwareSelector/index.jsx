@@ -43,7 +43,7 @@ function FirmwareSelector({
 
   const dispatch = useDispatch();
 
-  const unstableVersions = useSelector(selectSettingsObject);
+  const settings = useSelector(selectSettingsObject);
 
   const escs = useSelector(selectEscs);
   const versions = useSelector(selectVersions);
@@ -126,7 +126,7 @@ function FirmwareSelector({
         }));
 
         const versionsSelected = Object.values(
-          versions[selection.firmware].filter((v) => unstableVersions || !v.prerelease)
+          versions[selection.firmware].filter((v) => settings.unstableVersions || !v.prerelease)
         );
 
         const versionOptions = versionsSelected.map((version) => ({
@@ -171,7 +171,7 @@ function FirmwareSelector({
     }
 
     updateOptions();
-  }, [selection.firmware, escs, unstableVersions, validFirmware, versions, esc]);
+  }, [selection.firmware, escs, settings, validFirmware, versions, esc]);
 
   const clickFile = useCallback(() => {
     file.current.click();
