@@ -11,6 +11,8 @@ import BluejaySource, { source as bluejaySource } from './Bluejay';
  */
 const sources = [
   am32Source,
+  blheliAtmelSource,
+  blheliSilabsSource,
   blheliSSource,
   bluejaySource,
 ];

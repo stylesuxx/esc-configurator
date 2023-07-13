@@ -1,15 +1,20 @@
-import Slider, { createSliderWithTooltip } from 'rc-slider';
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
+
 import React, {
   useCallback,
   useState,
   useMemo,
 } from 'react';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
+
+import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import Checkbox from '../Input/Checkbox';
 import { useInterval } from '../../utils/helpers/React';
+
+import { selectConnected } from '../../Containers/App/escsSlice';
 
 import './style.scss';
 
@@ -54,7 +59,9 @@ function BatteryState({ getBatteryState }) {
 
   return null;
 }
-BatteryState.propTypes = { getBatteryState: PropTypes.func.isRequired };
+
+BatteryState.defaultProps = { getBatteryState: null };
+BatteryState.propTypes = { getBatteryState: PropTypes.func };
 
 function MotorSlider({
   disabled,
@@ -86,6 +93,7 @@ function MotorSlider({
     />
   );
 }
+
 MotorSlider.propTypes = {
   disabled: PropTypes.bool.isRequired,
   max: PropTypes.number.isRequired,
@@ -125,6 +133,7 @@ function IndividualMotorSlider({
     </div>
   );
 }
+
 IndividualMotorSlider.propTypes = {
   disabled: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
@@ -136,12 +145,13 @@ IndividualMotorSlider.propTypes = {
 
 function MotorControl({
   getBatteryState,
-  motorCount,
   onAllUpdate,
   onSingleUpdate,
   startValue,
 }) {
   const { t } = useTranslation('common');
+
+  const motorCount = useSelector(selectConnected);
 
   const minValue = 1000;
   const maxValue = 2000;
@@ -254,13 +264,13 @@ function MotorControl({
     </div>
   );
 }
+
 MotorControl.defaultProps = {
-  motorCount: 0,
+  getBatteryState: null,
   startValue: 1000,
 };
 MotorControl.propTypes = {
-  getBatteryState: PropTypes.func.isRequired,
-  motorCount: PropTypes.number,
+  getBatteryState: PropTypes.func,
   onAllUpdate: PropTypes.func.isRequired,
   onSingleUpdate: PropTypes.func.isRequired,
   startValue: PropTypes.number,

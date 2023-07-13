@@ -1,11 +1,28 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import i18next from 'i18next';
 
-function LanguageSelection({
-  languages,
-  current,
-  onChange,
-}) {
+import {
+  selectAvailable,
+  selectCurrent,
+  update,
+} from './languageSlice';
+
+function LanguageSelection() {
+  const dispatch = useDispatch();
+  const current = useSelector(selectCurrent);
+  const languages = useSelector(selectAvailable);
+
+  const handleUpdate = useCallback((e) => {
+    const language = e.target.value;
+    i18next.changeLanguage(language);
+
+    dispatch(update(language));
+  }, [dispatch]);
+
   const languageElements = languages.map((item) => (
     <option
       key={item.value}
@@ -20,18 +37,12 @@ function LanguageSelection({
       <select
         className="dropdown__select"
         defaultValue={current}
-        onChange={onChange}
+        onChange={handleUpdate}
       >
         {languageElements}
       </select>
     </div>
   );
 }
-
-LanguageSelection.propTypes = {
-  current: PropTypes.string.isRequired,
-  languages: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  onChange: PropTypes.func.isRequired,
-};
 
 export default LanguageSelection;

@@ -1,11 +1,16 @@
-import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useRef,
   useState,
 } from 'react';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
+
+import {
+  dummy as melodyEditorDummy,
+  show as showMelodyEditor,
+} from '../MelodyEditor/melodiesSlice';
 
 import bluejay from './images/bluejay_logo.png';
 import './style.scss';
@@ -95,8 +100,14 @@ function HomeColumnLeft() {
   );
 }
 
-function HomeColumnCenter({ onOpenMelodyEditor }) {
+function HomeColumnCenter() {
   const { t } = useTranslation('common');
+  const dispatch = useDispatch();
+
+  const handleOpenMelodyEditor = useCallback(() => {
+    dispatch(melodyEditorDummy());
+    dispatch(showMelodyEditor());
+  }, [dispatch]);
 
   return(
     <div className="column third_center text2">
@@ -184,7 +195,7 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
 
               <div className="default-btn melody-editor-button">
                 <button
-                  onClick={onOpenMelodyEditor}
+                  onClick={handleOpenMelodyEditor}
                   type="button"
                 >
                   {t('openMelodyEditor')}
@@ -225,7 +236,6 @@ function HomeColumnCenter({ onOpenMelodyEditor }) {
     </div>
   );
 }
-HomeColumnCenter.propTypes = { onOpenMelodyEditor: PropTypes.func.isRequired };
 
 function HomeColumnRight() {
   const { t } = useTranslation('common');
@@ -311,7 +321,7 @@ function HomeColumnRight() {
   );
 }
 
-function Home({ onOpenMelodyEditor }) {
+function Home() {
   const { t } = useTranslation('common');
 
   return (
@@ -359,9 +369,7 @@ function Home({ onOpenMelodyEditor }) {
           <div className="content_mid">
             <HomeColumnLeft />
 
-            <HomeColumnCenter
-              onOpenMelodyEditor={onOpenMelodyEditor}
-            />
+            <HomeColumnCenter />
 
             <HomeColumnRight />
           </div>
@@ -370,6 +378,4 @@ function Home({ onOpenMelodyEditor }) {
     </div>
   );
 }
-Home.propTypes = { onOpenMelodyEditor: PropTypes.func.isRequired };
-
 export default Home;

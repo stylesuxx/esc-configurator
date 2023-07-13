@@ -2,6 +2,9 @@
 
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
+import { store } from './store';
 import settings from './settings.json';
 import App from './Containers/App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -14,15 +17,17 @@ const resources = {};
 languages.forEach((language) => {
   resources[language] = {
     common: require(`./translations/${language}/common.json`),
+    groups: require(`./translations/${language}/groups.json`),
     hints: require(`./translations/${language}/hints.json`),
     log: require(`./translations/${language}/log.json`),
     settings: require(`./translations/${language}/settings.json`),
   };
 });
 
+const { language } = store.getState();
 i18next.init({
   interpolation: { escapeValue: false },
-  lng: settings.defaultLanguage,
+  lng: language.current,
   resources,
 });
 
@@ -30,7 +35,9 @@ ReactDOM.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
       <Suspense fallback="loading">
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </Suspense>
     </I18nextProvider>
   </React.StrictMode>,

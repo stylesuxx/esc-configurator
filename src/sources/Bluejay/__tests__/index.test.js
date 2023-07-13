@@ -40,6 +40,27 @@ describe('Bluejay', () => {
     expect(ledFunction(settings)).not.toBeTruthy();
   });
 
+  it('should handle conditional visibility for LED settings', () => {
+    const key = 202;
+    const settings = {
+      MOTOR_DIRECTION: 3,
+      LAYOUT: [0, 'E'],
+    };
+
+    let ledFunction = null;
+    const base = SETTINGS_DESCRIPTIONS.INDIVIDUAL[key].base;
+    for(let j = 0; j < base.length; j += 1) {
+      const current = base[j];
+      if(current.visibleIf) {
+        if(current.name === 'LED_CONTROL') {
+          ledFunction = current.visibleIf;
+        }
+      }
+    }
+
+    expect(ledFunction(settings)).toBeTruthy();
+  });
+
   it('should return display name', () => {
     const flash = {
       settings: {
@@ -137,5 +158,129 @@ describe('Bluejay', () => {
 
     valid = await source.canMigrateTo("Bluejay (RC-199)");
     expect(valid).toBeTruthy();
+  });
+
+  it('should return display name with dynamic PWM', () => {
+    const flash = {
+      settings: {
+        MAIN_REVISION: 1,
+        SUB_REVISION: 100,
+        PWM_FREQUENCY: 192,
+        NAME: 'Bluejay',
+      },
+    };
+
+    const name = source.buildDisplayName(flash, 'MAKE');
+    expect(name).toEqual('MAKE - Bluejay, 1.100, Dynamic PWM');
+  });
+
+  it('should return a list of PWM for versions < v0.21.0', () => {
+    const frequencies = source.getPwm('v0.10.0');
+    expect(frequencies.length).toEqual(3);
+  });
+
+  it('should return an empty list for versions >= v0.21.0', () => {
+    const frequencies = source.getPwm('v0.21.0');
+    expect(frequencies.length).toEqual(0);
+  });
+
+  it('should enable low PWM threshold setting', () => {
+    const settings = {
+      GOVERNOR_MODE: 3,
+      MOTOR_DIRECTION: 3,
+      PWM_FREQUENCY: 192,
+    };
+
+    let conditionalFunction = null;
+
+    const revision = 208;
+    const commonSettings = source.getCommonSettings(revision);
+    const base = commonSettings.base;
+    for(let j = 0; j < base.length; j += 1) {
+      const current = base[j];
+      if(current.visibleIf) {
+        if(current.name === 'PWM_THRESHOLD_LOW') {
+          conditionalFunction = current.visibleIf;
+        }
+      }
+    }
+
+    expect(conditionalFunction(settings)).toBeTruthy();
+  });
+
+  it('should enable high PWM threshold setting', () => {
+    const settings = {
+      GOVERNOR_MODE: 3,
+      MOTOR_DIRECTION: 3,
+      PWM_FREQUENCY: 192,
+    };
+
+    let conditionalFunction = null;
+
+    const revision = 208;
+    const commonSettings = source.getCommonSettings(revision);
+    const base = commonSettings.base;
+    for(let j = 0; j < base.length; j += 1) {
+      const current = base[j];
+      if(current.visibleIf) {
+        if(current.name === 'PWM_THRESHOLD_HIGH') {
+          conditionalFunction = current.visibleIf;
+        }
+      }
+    }
+
+    expect(conditionalFunction(settings)).toBeTruthy();
+  });
+
+  it('should sanitize low PWM threshold setting if too high', () => {
+    const settings = {
+      GOVERNOR_MODE: 3,
+      MOTOR_DIRECTION: 3,
+      PWM_FREQUENCY: 192,
+      PWM_THRESHOLD_HIGH: 128,
+    };
+
+    let sanitizeFunction = null;
+
+    const revision = 208;
+    const commonSettings = source.getCommonSettings(revision);
+    const base = commonSettings.base;
+    for(let j = 0; j < base.length; j += 1) {
+      const current = base[j];
+      if(current.visibleIf) {
+        if(current.name === 'PWM_THRESHOLD_LOW') {
+          sanitizeFunction = current.sanitize;
+        }
+      }
+    }
+
+    expect(sanitizeFunction(255, settings)).toEqual(128);
+  });
+
+  it('should not sanitize low PWM threshold setting if lower', () => {
+    const settings = {
+      GOVERNOR_MODE: 3,
+      MOTOR_DIRECTION: 3,
+      PWM_FREQUENCY: 192,
+      PWM_THRESHOLD_HIGH: 128,
+    };
+
+    const lowValue = 96;
+
+    let sanitizeFunction = null;
+
+    const revision = 208;
+    const commonSettings = source.getCommonSettings(revision);
+    const base = commonSettings.base;
+    for(let j = 0; j < base.length; j += 1) {
+      const current = base[j];
+      if(current.visibleIf) {
+        if(current.name === 'PWM_THRESHOLD_LOW') {
+          sanitizeFunction = current.sanitize;
+        }
+      }
+    }
+
+    expect(sanitizeFunction(lowValue, settings)).toEqual(lowValue);
   });
 });

@@ -1,10 +1,10 @@
-/* Log setup*/
+/* Log setup */
 #log {
-  margin-bottom: 0px;
-  border: 0px solid silver;
+  margin-bottom: 0;
+  border: 0 solid silver;
   background-color: #242424;
   color: #ccc;
-  color: rgba(255, 255, 255, 0.60);
+  color: rgb(255 255 255 / 60%);
   line-height: 21px;
   height: 27px;
   overflow-y: hidden;
@@ -15,13 +15,13 @@
     top: 113px;
     height: 27px;
     width: 27px;
-    background-image: url(images/icons/scroll.svg);
+    background-image: url("images/icons/scroll.svg");
     background-repeat: no-repeat;
     background-size: 100%;
     opacity: 0.0;
     transition: all ease 0.3s;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (width <= 600px) {
       top: 150px;
       right: -40px;
     }
@@ -29,7 +29,7 @@
 
   &.expanded {
     overflow-y: auto;
-    box-shadow: inset 0 0 15px #000000;
+    box-shadow: inset 0 0 15px #000;
     height: 111px;
 
     #scrollicon {
@@ -39,20 +39,20 @@
       width: 110px;
       opacity: 0.15;
       background-size: 80%;
-      box-shadow: inset 0 0 5px #000000;
+      box-shadow: inset 0 0 5px #000;
       transition: all ease 0.3s;
     }
   }
 
   .wrapper {
-    padding: 5px; /* was 5*/
+    padding: 5px; /* was 5 */
     padding-left: 10px;
     padding-bottom: 4px;
-    -webkit-user-select: text;
+    user-select: text;
     position: relative;
-    bottom: 0px;
+    bottom: 0;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (width <= 600px) {
       .date {
         display: none;
       }

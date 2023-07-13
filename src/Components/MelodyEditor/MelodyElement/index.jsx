@@ -1,7 +1,3 @@
-import { HighlightWithinTextarea } from 'react-highlight-within-textarea';
-import { useTranslation } from 'react-i18next';
-import Rtttl from 'bluejay-rtttl-parse';
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
@@ -10,6 +6,12 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
+import { useTranslation } from 'react-i18next';
+import { HighlightWithinTextarea } from 'react-highlight-within-textarea';
+import PropTypes from 'prop-types';
+
+import Rtttl from 'bluejay-rtttl-parse';
+
 import './style.scss';
 
 const MelodyElement = forwardRef(({

@@ -1,26 +1,82 @@
-import { useTranslation } from 'react-i18next';
+import React, { useCallback } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import GenericButton from './GenericButton';
+
+import {
+  prod,
+  show,
+  selectSupported,
+} from '../MelodyEditor/melodiesSlice';
+import {
+  clear as clearLog,
+  selectLog,
+} from '../Log/logSlice';
+import {
+  selectCanFlash,
+  selectCanRead,
+  selectCanWrite,
+  setSelecting,
+} from '../../Containers/App/stateSlice';
+import {
+  selectIndividual,
+  setTargets,
+} from '../../Containers/App/escsSlice';
 
 import './style.scss';
 
 function Buttonbar({
-  onClearLog,
-  onOpenMelodyEditor,
   onReadSetup,
   onWriteSetup,
-  onSeletFirmwareForAll,
   onResetDefaults,
-  onSaveLog,
-  canRead,
-  canWrite,
-  canFlash,
-  canResetDefaults,
-  showMelodyEditor,
 }) {
   const { t } = useTranslation('common');
+  const dispatch = useDispatch();
+
+  const showMelodyEditor = useSelector(selectSupported);
+  const log = useSelector(selectLog);
+
+  const canFlash = useSelector(selectCanFlash);
+  const canRead = useSelector(selectCanRead);
+  const canWrite = useSelector(selectCanWrite);
+
+  const escs = useSelector(selectIndividual);
+
+  const onSeletFirmwareForAll = useCallback(() => {
+    const targets = [];
+    for (let i = 0; i < escs.length; i += 1) {
+      const esc = escs[i];
+      targets.push(esc.index);
+    }
+
+    dispatch(setSelecting(true));
+    dispatch(setTargets(targets));
+  }, [dispatch, escs]);
+
+  const handleOpenMelodyEditor = useCallback(() => {
+    dispatch(prod());
+    dispatch(show());
+  }, [dispatch]);
+
+  const handleSaveLog = useCallback(() => {
+    const element = document.createElement("a");
+    const file = new Blob([log.join("\n")], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = "esc-configurator-log.txt";
+    document.body.appendChild(element);
+    element.click();
+
+    dispatch(clearLog());
+  }, [dispatch, log]);
+
+  const handleClearLog = useCallback(() => {
+    dispatch(clearLog());
+  }, [dispatch]);
 
   return (
     <div className="button-bar">
@@ -28,25 +84,25 @@ function Buttonbar({
         {showMelodyEditor &&
           <GenericButton
             disabled={!canRead}
-            onClick={onOpenMelodyEditor}
+            onClick={handleOpenMelodyEditor}
             text={t('escButtonOpenMelodyEditor')}
           />}
       </div>
 
       <div className="buttons-left">
         <GenericButton
-          onClick={onSaveLog}
+          onClick={handleSaveLog}
           text={t('escButtonSaveLog')}
         />
 
         <GenericButton
-          onClick={onClearLog}
+          onClick={handleClearLog}
           text={t('escButtonClearLog')}
         />
 
         <div className="mobile-show">
           <GenericButton
-            disabled={!canResetDefaults}
+            disabled={!canWrite}
             onClick={onResetDefaults}
             text={t('resetDefaults')}
           />
@@ -73,7 +129,7 @@ function Buttonbar({
         />
 
         <GenericButton
-          disabled={!canResetDefaults}
+          disabled={!canWrite}
           onClick={onResetDefaults}
           text={t('resetDefaults')}
         />
@@ -81,7 +137,7 @@ function Buttonbar({
         {showMelodyEditor &&
           <GenericButton
             disabled={!canRead}
-            onClick={onOpenMelodyEditor}
+            onClick={handleOpenMelodyEditor}
             text={t('escButtonOpenMelodyEditor')}
           />}
       </div>
@@ -90,18 +146,9 @@ function Buttonbar({
 }
 
 Buttonbar.propTypes = {
-  canFlash: PropTypes.bool.isRequired,
-  canRead: PropTypes.bool.isRequired,
-  canResetDefaults: PropTypes.bool.isRequired,
-  canWrite: PropTypes.bool.isRequired,
-  onClearLog: PropTypes.func.isRequired,
-  onOpenMelodyEditor: PropTypes.func.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,
-  onSaveLog: PropTypes.func.isRequired,
-  onSeletFirmwareForAll: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
-  showMelodyEditor: PropTypes.bool.isRequired,
 };
 
 export default Buttonbar;

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './style.scss';
 
@@ -20,6 +20,7 @@ function GenericButton({
     </div>
   );
 }
+
 GenericButton.defaultProps = { disabled: false };
 GenericButton.propTypes = {
   disabled: PropTypes.bool,

@@ -7,6 +7,13 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import settingsReducer, { update } from '../../../../AppSettings/settingsSlice';
+import escsReducer, { setIndividual } from '../../../../../Containers/App/escsSlice';
+import stateReducer from '../../../../../Containers/App/stateSlice';
+
 import Esc from '../';
 
 jest.mock('react-i18next', () => ({
@@ -24,17 +31,35 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-let onCommonSettingsUpdate;
-let onFlash;
 let onFirmwareDump;
-let onSettingsUpdate;
+
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({
+      reducer: {
+        escs: escsReducer,
+        settings: settingsReducer,
+        state: stateReducer,
+      },
+    });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
 
 describe('Esc', () => {
+  const storeRef = setupTestStore();
+
   beforeEach(() => {
-    onCommonSettingsUpdate = jest.fn();
-    onFlash = jest.fn();
     onFirmwareDump = jest.fn();
-    onSettingsUpdate = jest.fn();
   });
 
   it('should display ESC details', () => {
@@ -42,14 +67,11 @@ describe('Esc', () => {
 
     render(
       <Esc
-        directInput={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/Unsupported\/Unrecognized/i)).toBeInTheDocument();
@@ -70,15 +92,12 @@ describe('Esc', () => {
 
     render(
       <Esc
-        directInput={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         progress={50}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/displayName 1234/i)).toBeInTheDocument();
@@ -97,14 +116,11 @@ describe('Esc', () => {
 
     render(
       <Esc
-        directInput={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/displayName 1234/i)).toBeInTheDocument();
@@ -122,19 +138,16 @@ describe('Esc', () => {
 
     render(
       <Esc
-        canFlash={false}
-        directInput={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
-    userEvent.click(screen.getByText(/escButtonFlash/i));
-    expect(onFlash).not.toHaveBeenCalled();
+    const flashButton = screen.getByText(/escButtonFlash/i);
+    userEvent.click(flashButton);
+    expect(flashButton.getAttribute("disabled")).toBe("");
   });
 
   it('should trigger flash when enabled', () => {
@@ -146,27 +159,27 @@ describe('Esc', () => {
         NAME: 'FW Name',
       },
     };
+    storeRef.store.dispatch(setIndividual([esc]));
 
     render(
       <Esc
-        canFlash
-        directInput={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     userEvent.click(screen.getByText(/escButtonFlash/i));
-    expect(onFlash).toHaveBeenCalled();
+
+    const { targets } = storeRef.store.getState().escs;
+    expect(targets.length).toEqual(1);
   });
 
   it('should show custom settings and handle change', () => {
     const esc = {
-      bootloaderRevision: 'bl 23',
+      firmwareName: 'BLHeli_S',
+      layoutRevision: 33,
       individualSettings: {
         MAIN_REVISION: 1,
         SUB_REVISION: 200,
@@ -175,87 +188,20 @@ describe('Esc', () => {
         _PPM_MIN_THROTTLE: 125,
         STARTUP_BEEP: 0,
       },
-      individualSettingsDescriptions: {
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
-      },
     };
 
     render(
       <Esc
-        canFlash
-        directInput={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
     expect(screen.getByText(/escPPMMinThrottle/i)).toBeInTheDocument();
-    expect(screen.getByText(/escStartupBeep/i)).toBeInTheDocument();
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
-
-    userEvent.click(screen.getByRole(/checkbox/i));
 
     // Change select
     fireEvent.change(screen.getByRole(/combobox/i), {
@@ -267,8 +213,20 @@ describe('Esc', () => {
   });
 
   it('should show custom settings and handle direct input', () => {
+    storeRef.store.dispatch(update({
+      name: 'disableCommon',
+      value: true,
+    }));
+
+    storeRef.store.dispatch(update({
+      name: 'directInput',
+      value: true,
+    }));
+
     const esc = {
-      bootloaderRevision: 'bl 23',
+      firmwareName: 'BLHeli_S',
+      layoutRevision: 33,
+      settings: { PROGRAMMING_BY_TX: 1 },
       individualSettings: {
         MAIN_REVISION: 1,
         SUB_REVISION: 200,
@@ -276,99 +234,37 @@ describe('Esc', () => {
         MOTOR_DIRECTION: 1,
         _PPM_MIN_THROTTLE: 125,
         STARTUP_BEEP: 1,
-      },
-      individualSettingsDescriptions: {
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
       },
     };
 
     render(
       <Esc
-        canFlash
-        directInput
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
     expect(screen.getByText(/escPPMMinThrottle/i)).toBeInTheDocument();
-    expect(screen.getByText(/escStartupBeep/i)).toBeInTheDocument();
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByRole(/checkbox/i));
-
-    fireEvent.change(screen.getByRole(/spinbutton/i), {
+    fireEvent.change(screen.getByTestId('PPM_MIN_THROTTLE'), {
       target: {
         value: 1250,
-        name: '_PPM_MIN_THROTTLE',
+        name: 'PPM_MIN_THROTTLE',
       },
     });
-    fireEvent.blur(screen.getByRole(/spinbutton/i));
+    fireEvent.blur(screen.getByTestId('PPM_MIN_THROTTLE'));
   });
 
   it('should update the progress bar', () => {
+    storeRef.store.dispatch(update({
+      name: 'directInput',
+      value: true,
+    }));
+
     const esc = {
       bootloaderRevision: 'bl 23',
       individualSettings: {
@@ -378,66 +274,6 @@ describe('Esc', () => {
         MOTOR_DIRECTION: 1,
         _PPM_MIN_THROTTLE: 125,
         STARTUP_BEEP: 1,
-      },
-      individualSettingsDescriptions: {
-        base: [
-          {
-            name: 'MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: '_PPM_MIN_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 1500,
-            step: 4,
-            label: 'escPPMMinThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-          },
-          {
-            name: 'STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-          {
-            name: 'IVALID',
-            type: 'IVALID',
-            label: 'invalid',
-          },
-          {
-            name: '_PPM_CENTER_THROTTLE',
-            type: 'number',
-            min: 1000,
-            max: 2020,
-            step: 4,
-            label: 'escPPMCenterThrottle',
-            offset: 1000,
-            factor: 4,
-            suffix: ' μs',
-            visibleIf: (settings) => [3, 4].includes(settings.MOTOR_DIRECTION),
-          },
-        ],
       },
     };
 
@@ -445,100 +281,131 @@ describe('Esc', () => {
 
     render(
       <Esc
-        canFlash
-        directInput
-        disableCommon={false}
-        enableAdvanced={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
         ref={ref}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
-
-    act(() => {
-      ref.current.setProgress(50);
-    });
 
     const progressbar = screen.getByRole(/progressbar/i);
     expect(progressbar).toBeInTheDocument();
+
+    act(() => ref.current.setProgress(50));
     expect(progressbar.value).toEqual(50);
+
+    act(() => ref.current.setProgress(100));
+    expect(progressbar.value).toEqual(100);
   });
 
   it('should show common settings and handle change', () => {
+    storeRef.store.dispatch(update({
+      name: 'disableCommon',
+      value: true,
+    }));
+
     const esc = {
-      bootloaderRevision: 'bl 23',
-      settings: {
-        COMMON_MOTOR_DIRECTION: 1,
-        COMMON_STARTUP_BEEP: 0,
-      },
-      settingsDescriptions: {
-        base: [
-          {
-            name: 'COMMON_MOTOR_DIRECTION',
-            type: 'enum',
-            label: 'escMotorDirection',
-            options: [
-              {
-                value: '1',
-                label: 'Normal',
-              },
-              {
-                value: '2',
-                label: 'Reversed',
-              },
-              {
-                value: '3',
-                label: 'Bidirectional',
-              },
-              {
-                value: '4',
-                label: 'Bidirectional Reversed',
-              },
-            ],
-          },
-          {
-            name: 'COMMON_STARTUP_BEEP',
-            type: 'bool',
-            label: 'escStartupBeep',
-          },
-        ],
-      },
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
+      settings: {},
+      individualSettings: { MOTOR_DIRECTION: 1 },
     };
 
     render(
       <Esc
-        canFlash
-        directInput={false}
-        disableCommon
-        enableAdvanced={false}
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
-    expect(screen.getByText(/hints:COMMON_MOTOR_DIRECTION/i)).toBeInTheDocument();
+    expect(screen.getByText(/hints:MOTOR_DIRECTION/i)).toBeInTheDocument();
     expect(screen.getByText(/escMotorDirection/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole(/checkbox/i));
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'DITHERING' }));
 
-    // Change select
-    fireEvent.change(screen.getByRole(/combobox/i), {
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'MOTOR_DIRECTION' }), {
       taget: {
         value: 3,
-        name: 'COMMON_MOTOR_DIRECTION',
+        name: 'MOTOR_DIRECTION',
       },
     });
   });
 
+  it('should show common settings and handle checkbox check', () => {
+    storeRef.store.dispatch(update({
+      name: 'disableCommon',
+      value: true,
+    }));
+
+    const esc = {
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
+      settings: { DITHERING: 0 },
+      individualSettings: { DITHERING: 0 },
+    };
+    storeRef.store.dispatch(setIndividual([esc]));
+
+    render(
+      <Esc
+        esc={esc}
+        index={0}
+        onFirmwareDump={onFirmwareDump}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByText(/hints:DITHERING/i)).toBeInTheDocument();
+    expect(screen.getByRole(/checkbox/i, { name: 'DITHERING' })).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'DITHERING' }));
+
+    const { individual } = storeRef.store.getState().escs;
+    expect(individual[0].settings.DITHERING).toEqual(1);
+    expect(individual[0].individualSettings.DITHERING).toEqual(0);
+  });
+
+  it('should handle checkbox uncheck', () => {
+    storeRef.store.dispatch(update({
+      name: 'disableCommon',
+      value: true,
+    }));
+
+    const esc = {
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
+      settings: { DITHERING: 1 },
+      individualSettings: { DITHERING: 1 },
+    };
+    storeRef.store.dispatch(setIndividual([esc]));
+
+    render(
+      <Esc
+        esc={esc}
+        index={0}
+        onFirmwareDump={onFirmwareDump}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByText(/hints:DITHERING/i)).toBeInTheDocument();
+    expect(screen.getByRole(/checkbox/i, { name: 'DITHERING' })).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'DITHERING' }));
+
+    const { individual } = storeRef.store.getState().escs;
+    expect(individual[0].settings.DITHERING).toEqual(0);
+    expect(individual[0].individualSettings.DITHERING).toEqual(1);
+  });
+
   it('should trigger firmware dump', () => {
+    storeRef.store.dispatch(update({
+      name: 'enableAdvanced',
+      value: true,
+    }));
+
     const esc = {
       bootloaderRevision: 'bl 23',
       individualSettings: {
@@ -547,20 +414,15 @@ describe('Esc', () => {
         NAME: 'FW Name',
       },
     };
+    storeRef.store.dispatch(setIndividual([esc]));
 
     render(
       <Esc
-        canFlash
-        directInput={false}
-        disableCommon={false}
-        enableAdvanced
         esc={esc}
         index={0}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     userEvent.click(screen.getByText(/escButtonFirmwareDump/i));

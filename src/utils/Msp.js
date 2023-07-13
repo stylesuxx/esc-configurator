@@ -2,6 +2,9 @@ import compareVersions from 'compare-versions';
 
 import { NotEnoughDataError } from './helpers/QueueProcessor';
 
+import { store } from '../store';
+import { incrementByAmount as incrementPacketErrorsByAmount } from '../Components/Statusbar/statusSlice';
+
 /**
  * Relevant MSP commands, this is not a full mapping, rather just a selectiotn
  * for the functionality we actually need.
@@ -79,7 +82,6 @@ class Msp {
     this.read = this.read.bind(this);
 
     this.logCallback = null;
-    this.packetErrorsCallback = null;
 
     const speedBufferOut = new ArrayBuffer(16);
     this.speedBufView = new Uint8Array(speedBufferOut);
@@ -95,15 +97,6 @@ class Msp {
    */
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
-  }
-
-  /**
-   * Setter for packet error callback
-   *
-   * @param {function} packetErrorsCallback
-   */
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
   }
 
   /**
@@ -124,9 +117,7 @@ class Msp {
    * @param {number} count Packet error count
    */
   increasePacketErrors(count) {
-    if(this.packetErrorsCallback) {
-      this.packetErrorsCallback(count);
-    }
+    store.dispatch(incrementPacketErrorsByAmount(count));
   }
 
   /**
@@ -274,6 +265,7 @@ class Msp {
           return reject(new Error(`command: ${command} - crc failed`));
         }
 
+        /* istanbul ignore next */
         default: {
           return reject(new Error(`Unknown state detected: ${state}`));
         }
@@ -328,7 +320,6 @@ class Msp {
    * @returns {ArrayBuffer}
    */
   encodeV2(command, data = []) {
-    console.log("V2 command:", command);
     // Always reserve 9 bytes for protocol overhead!
     const dataLength = data.length;
     const size = 9 + dataLength;
@@ -451,6 +442,7 @@ class Msp {
 
           return escConfig;
         }
+
         case MSP.MSP_UID: {
           config.uid = [];
           config.uid[0] = data.getUint32(0, 1);
@@ -625,9 +617,10 @@ class Msp {
    *
    * @returns {Promise}
    */
-  stopAllMotors() {
+  async stopAllMotors() {
     if(this.motorsSpinning) {
-      return this.spinAllMotors(0);
+      const features = await this.getFeatures();
+      return this.spinAllMotors(features['3D'] ? 1500 : 0);
     }
   }
 
@@ -811,3 +804,6 @@ class Msp {
 }
 
 export default Msp;
+export {
+  MSP, 
+};

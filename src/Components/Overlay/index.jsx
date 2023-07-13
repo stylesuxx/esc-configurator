@@ -1,6 +1,6 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import './style.scss';
 
@@ -36,6 +36,7 @@ function Overlay({
     </div>
   );
 }
+
 Overlay.defaultProps = { children: null };
 Overlay.propTypes = {
   children: PropTypes.element,

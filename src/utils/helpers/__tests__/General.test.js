@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import Flash from '../Flash';
 
-let retry, delay, compare, isValidFlash, isValidLayout;
+let retry, delay, compare, isValidFlash, isValidLayout, getPwm;
 
 describe('General', () => {
   beforeAll(async() => {
@@ -16,6 +16,7 @@ describe('General', () => {
     compare = general.compare;
     isValidFlash = general.isValidFlash;
     isValidLayout = general.isValidLayout;
+    getPwm = general.getPwm;
   });
 
   it('compare same buffers', () => {
@@ -109,5 +110,17 @@ describe('General', () => {
   it('check valid layout', async() => {
     const valid = isValidLayout('#A_L_00#');
     expect(valid).toBeTruthy();
+  });
+
+  it('should return PWM options by firmware and version', () => {
+    const pwm = getPwm('Bluejay', '0.18.0');
+
+    expect(pwm.length).toEqual(3);
+  });
+
+  it('should return empty PWM options with invalid firmware', () => {
+    const pwm = getPwm('Invalid', '0.18.0');
+
+    expect(pwm.length).toEqual(0);
   });
 });

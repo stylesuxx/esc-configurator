@@ -111,14 +111,14 @@ class Flash {
         // extended segment address record
         case 0x02: {
           if (parseInt(content, 16) !== 0) { // ignore if segment is 0
-            console.debug('extended segment address record found - NOT IMPLEMENTED!');
+            throw new Error('extended segment address record found - NOT IMPLEMENTED!');
           }
         } break;
 
         // start segment address record
         case 0x03: {
           if (parseInt(content, 16) !== 0) { // ignore if segment is 0
-            console.debug('start segment address record found - NOT IMPLEMENTED!');
+            throw new Error('start segment address record found - NOT IMPLEMENTED!');
           }
         } break;
 
@@ -158,6 +158,10 @@ class Flash {
         input: flash.params[2],
         interfaceMode: flash.params[3],
         available: true,
+        am32: {
+          fileName: null,
+          mcuType: null,
+        },
       },
       displayName: 'UNKNOWN',
       firmwareName: 'UNKNOWN',

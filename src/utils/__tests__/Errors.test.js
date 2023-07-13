@@ -3,6 +3,7 @@ import {
   EscInitError,
   EscLockedError,
   InvalidHexFileError,
+  LayoutMismatchError,
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
@@ -42,5 +43,9 @@ describe('Errors', () => {
     error = new EscLockedError(0xDEAD);
     expect(error instanceof Error).toBeTruthy();
     expect(error.message).toEqual('ESC is locked (57005)');
+
+    error = new LayoutMismatchError('expected', 'received');
+    expect(error instanceof Error).toBeTruthy();
+    expect(error.message).toEqual('Expected layout: \'expected\', got: \'received\'');
   });
 });

@@ -4,99 +4,114 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import settingsReducer, { show } from '../settingsSlice';
+
 import AppSettings from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
 
-describe('AppSettings', () => {
-  it('should displays overlay', () => {
-    const settings = {
-      testSetting: {
-        type: "boolean",
-        value: true,
-      },
-      testSettingFalse: {
-        type: "boolean",
-        value: false,
-      },
-    };
+function setupTestStore() {
+  const refObj = {};
 
-    const onClose = jest.fn();
-    const onUpdate = jest.fn();
-
-    render(
-      <AppSettings
-        onClose={onClose}
-        onUpdate={onUpdate}
-        settings={settings}
-      />
+  beforeEach(() => {
+    const store = configureStore({ reducer: { settings: settingsReducer } });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
     );
+  });
+
+  return refObj;
+}
+
+function setupInvalidTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({
+      reducer: { settings: settingsReducer },
+      preloadedState: {
+        settings: {
+          show: true,
+          settings: {
+            invalid: {
+              type: 'invalid',
+              value: 'invalid',
+            },
+          },
+        },
+      },
+    }
+    );
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
+
+describe('AppSettings', () => {
+  const storeRef = setupTestStore();
+  const invalidStoreRef = setupInvalidTestStore();
+
+  it('should displays overlay', () => {
+    render(
+      <AppSettings />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    storeRef.store.dispatch(show());
 
     expect(screen.getByText(/settingsHeader/i)).toBeInTheDocument();
     expect(screen.getByText(/close/i)).toBeInTheDocument();
   });
 
   it('should handle clicks on checkbox', () => {
-    const settings = {
-      testSetting: {
-        type: "boolean",
-        value: true,
-      },
-    };
-
-    const onClose = jest.fn();
-    const onUpdate = jest.fn();
-
     render(
-      <AppSettings
-        onClose={onClose}
-        onUpdate={onUpdate}
-        settings={settings}
-      />
+      <AppSettings />,
+      { wrapper: storeRef.wrapper }
     );
+
+    storeRef.store.dispatch(show());
 
     expect(screen.getByText(/settingsHeader/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole(/checkbox/i));
-    expect(onUpdate).toHaveBeenCalled();
+    userEvent.click(screen.getByRole(/checkbox/i, { name: 'directInput' }));
+
+    const settings = storeRef.store.getState().settings.settings;
+    expect(settings.directInput.value).toBeTruthy();
   });
 
   it('should close the overlay', () => {
-    const settings = {};
-
-    const onClose = jest.fn();
-    const onUpdate = jest.fn();
-
     render(
-      <AppSettings
-        onClose={onClose}
-        onUpdate={onUpdate}
-        settings={settings}
-      />
+      <AppSettings />,
+      { wrapper: storeRef.wrapper }
     );
 
+    storeRef.store.dispatch(show());
+
     userEvent.click(screen.getByText(/close/i));
-    expect(onClose).toHaveBeenCalled();
+
+    expect(screen.queryByText(/settingsHeader/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/close/i)).not.toBeInTheDocument();
   });
 
   it('should handle invalid setting type', () => {
-    const settings = {
-      testSetting: {
-        type: "string",
-        value: "something",
-      },
-    };
-
-    const onClose = jest.fn();
-    const onUpdate = jest.fn();
-
     render(
-      <AppSettings
-        onClose={onClose}
-        onUpdate={onUpdate}
-        settings={settings}
-      />
+      <AppSettings />,
+      { wrapper: invalidStoreRef.wrapper }
     );
+
+    storeRef.store.dispatch(show());
 
     expect(screen.getByText(/settingsHeader/i)).toBeInTheDocument();
   });

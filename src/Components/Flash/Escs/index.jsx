@@ -1,34 +1,25 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Esc from './Esc';
 
+import { selectIndividual } from '../../../Containers/App/escsSlice';
+
 function Escs({
-  canFlash,
-  directInput,
-  disableCommon,
-  enableAdvanced,
-  escs,
-  onCommonSettingsUpdate,
   onFirmwareDump,
-  onFlash,
-  onSettingsUpdate,
+  progressReferences,
 }) {
+  const escs = useSelector(selectIndividual);
+
   function EscElements() {
     return escs.map((esc) => (
       <Esc
-        canFlash={canFlash}
-        directInput={directInput}
-        disableCommon={disableCommon}
-        enableAdvanced={enableAdvanced}
         esc={esc}
         index={esc.index}
         key={esc.index}
-        onCommonSettingsUpdate={onCommonSettingsUpdate}
         onFirmwareDump={onFirmwareDump}
-        onFlash={onFlash}
-        onSettingsUpdate={onSettingsUpdate}
-        ref={esc.ref}
+        ref={progressReferences[esc.index]}
       />
     ));
   }
@@ -38,23 +29,9 @@ function Escs({
   );
 }
 
-Escs.defaultProps = {
-  directInput: false,
-  disableCommon: false,
-  enableAdvanced: false,
-  escs: [],
-};
-
 Escs.propTypes = {
-  canFlash: PropTypes.bool.isRequired,
-  directInput: PropTypes.bool,
-  disableCommon: PropTypes.bool,
-  enableAdvanced: PropTypes.bool,
-  escs: PropTypes.arrayOf(PropTypes.shape()),
-  onCommonSettingsUpdate: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
-  onFlash: PropTypes.func.isRequired,
-  onSettingsUpdate: PropTypes.func.isRequired,
+  progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default Escs;

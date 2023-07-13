@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 import Info from '../Info';
 
@@ -27,6 +27,7 @@ function Select({
 
     return (
       <select
+        aria-label={name}
         disabled={disabled}
         name={name}
         onChange={onChange}
@@ -36,7 +37,9 @@ function Select({
           className="hidden"
           disabled
           value="-1"
-        />
+        >
+          ???
+        </option>
 
         {optionElements}
       </select>
@@ -67,7 +70,6 @@ Select.defaultProps = {
   inSync: true,
   value: -1,
 };
-
 Select.propTypes = {
   disabled: PropTypes.bool,
   hint: PropTypes.string,

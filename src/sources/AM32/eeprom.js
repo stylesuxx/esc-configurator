@@ -3,7 +3,7 @@ const BOOT_LOADER_PINS = {
   PB4: 0x14,
 };
 
-const RESET_DELAY_MS = 2500;
+const RESET_DELAY_MS = 5000;
 const LAYOUT_SIZE = 0xB0;
 
 const BOOT_LOADER_VERSION_OFFSET = 0x00C0;
@@ -132,6 +132,26 @@ const LAYOUT = {
   },
   BRAKE_STRENGTH: {
     offset: 0x29,
+    size: 1,
+  },
+  RUNNING_BRAKE_LEVEL: {
+    offset: 0x2A,
+    size: 1,
+  },
+  TEMPERATURE_LIMIT: {
+    offset: 0x2B,
+    size: 1,
+  },
+  CURRENT_LIMIT: {
+    offset: 0x2C,
+    size: 1,
+  },
+  SINE_MODE_POWER: {
+    offset: 0x2D,
+    size: 1,
+  },
+  ESC_PROTOCOL: {
+    offset: 0x2E,
     size: 1,
   },
   STARTUP_MELODY: {
