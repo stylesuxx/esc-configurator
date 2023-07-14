@@ -1,17 +1,33 @@
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
   useEffect,
   useRef,
 } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import './style.scss';
+import PropTypes from 'prop-types';
 
 import Checkbox from '../Input/Checkbox';
 import LabeledSelect from '../Input/LabeledSelect';
 import MelodyElement from './MelodyElement';
 import Overlay from '../Overlay';
+
+import {
+  del,
+  hide,
+  save,
+  selectCurrent,
+  selectCustom,
+  selectDefault,
+  selectDummy,
+} from './melodiesSlice';
+import { selectIsWriting } from '../../Containers/App/stateSlice';
+
+import './style.scss';
 
 function SaveMelody({ onSave }) {
   const { t } = useTranslation();
@@ -90,9 +106,7 @@ function PresetSelect({
       match = customMelodies.find((item) => item.name === value);
     }
 
-    if(match) {
-      selected = match.tracks;
-    }
+    selected = match.tracks;
 
     setSelectedPreset(e.target.value);
     onUpdateMelodies(selected);
@@ -221,18 +235,16 @@ IndexedMelodyElement.propTypes = {
   onUpdate: PropTypes.func.isRequired,
 };
 
-function MelodyEditor({
-  dummy,
-  melodies,
-  onClose,
-  onDelete,
-  onSave,
-  onWrite,
-  customMelodies,
-  defaultMelodies,
-  writing,
-}) {
+function MelodyEditor({ onWrite }) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  const writing = useSelector(selectIsWriting);
+  const defaultMelodies = useSelector(selectDefault);
+  const customMelodies = useSelector(selectCustom);
+  const dummy = useSelector(selectDummy);
+  const melodies = useSelector(selectCurrent);
+  const melodiesRef = [...melodies];
 
   const defaultAccepted = melodies.map(() => null);
   const melodyElementReferences = useRef({});
@@ -242,7 +254,7 @@ function MelodyEditor({
   const [currentMelodies, setCurrentMelodies] = useState(melodies);
   const [acceptedMelodies, setAcceptedMelodies] = useState(defaultAccepted);
   const [isAnyPlaying, setIsAnyPlaying] = useState(false);
-  const latestMelodies = useRef(melodies);
+  const latestMelodies = useRef(melodiesRef);
   const selectedMelody = useRef(-1);
   const totalPlaying = useRef(0);
   const audioContext = useRef(0);
@@ -265,9 +277,9 @@ function MelodyEditor({
 
   const handleClose = useCallback(() => {
     if(!isAnyPlaying) {
-      onClose();
+      dispatch(hide());
     }
-  }, [isAnyPlaying, onClose]);
+  }, [isAnyPlaying, dispatch]);
 
   const handleAcceptAll = useCallback((accept) => {
     const acceptedMelodiesNew = acceptedMelodies.map(() => accept);
@@ -327,9 +339,17 @@ function MelodyEditor({
 
   const handleMelodiesSave = useCallback((name) => {
     selectedMelody.current = name;
-    const unique = [...new Set(latestMelodies.current)];
-    onSave(name, unique);
-  }, [selectedMelody, latestMelodies, onSave]);
+    const tracks = [...new Set(latestMelodies.current)];
+
+    dispatch(save({
+      name,
+      tracks,
+    }));
+  }, [dispatch, selectedMelody, latestMelodies]);
+
+  const handleDelete = useCallback((name) => {
+    dispatch(del(name));
+  }, [dispatch]);
 
   const handleMelodiesSelected = useCallback((selected) => {
     const newMelodies = [];
@@ -396,7 +416,7 @@ function MelodyEditor({
             customMelodies={customMelodies}
             defaultMelodies={defaultMelodies}
             escs={melodies.length}
-            onDelete={onDelete}
+            onDelete={handleDelete}
             onUpdateMelodies={handleMelodiesSelected}
             selected={selectedMelody.current}
           />
@@ -447,16 +467,6 @@ function MelodyEditor({
   );
 }
 
-MelodyEditor.propTypes = {
-  customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  defaultMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  dummy: PropTypes.bool.isRequired,
-  melodies: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onClose: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  onWrite: PropTypes.func.isRequired,
-  writing: PropTypes.bool.isRequired,
-};
+MelodyEditor.propTypes = { onWrite: PropTypes.func.isRequired };
 
 export default MelodyEditor;

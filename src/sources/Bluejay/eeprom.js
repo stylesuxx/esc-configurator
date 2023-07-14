@@ -166,12 +166,8 @@ const LAYOUT = {
     offset: 0x29,
     size: 1,
   },
-  PWM_THRESHOLD_LOW: {
+  FORCE_EDT_ARM: {
     offset: 0x2A,
-    size: 1,
-  },
-  PWM_THRESHOLD_HIGH: {
-    offset: 0x2B,
     size: 1,
   },
 

@@ -1,4 +1,5 @@
 import sources from '../../sources';
+import { store } from '../../store';
 
 /**
  * Deeply compare two ByteArrays to each other
@@ -112,10 +113,10 @@ const findMCU = (signature, MCUList) => MCUList.find((mcu) => parseInt(mcu.signa
  * Check if the given layout matches any of the available layouts from any of
  * the sources
  *
- * @param {object} layout
+ * @param {string} layout
  * @returns {boolean}
  */
-const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts());
+const isValidLayout = (layout) => sources.some((source) => source.isValidLayout(layout));
 
 /**
  * Return a list of matching sources for a given signature
@@ -125,6 +126,27 @@ const isValidLayout = (layout) => sources.some((s) => layout in s.getEscLayouts(
  */
 const getSupportedSources = (signature) => sources.filter((source) => findMCU(signature, source.getMcus()));
 
+const getAppSetting = (name) => store.getState().settings.settings[name].value;
+
+const getPwm = (name, version) => {
+  const source = sources.filter((source) => source.name === name);
+
+  if(source.length > 0) {
+    return source[0].getPwm(version);
+  }
+
+  return [];
+};
+
+const getSource = (name) => {
+  const options = sources.filter((source) => source.getName() === name);
+  if(options.length > 0) {
+    return options[0];
+  }
+
+  return null;
+};
+
 export {
   retry,
   delay,
@@ -133,4 +155,7 @@ export {
   isValidFlash,
   isValidLayout,
   getSupportedSources,
+  getAppSetting,
+  getPwm,
+  getSource,
 };

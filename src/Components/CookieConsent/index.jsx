@@ -1,15 +1,23 @@
-import { CookieBanner } from '@palmabit/react-cookie-law';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
-import React from 'react';
 
-function CookieConsent({ onCookieAccept }) {
+import { CookieBanner } from '@palmabit/react-cookie-law';
+
+import { accept } from './cookieSlice';
+
+function CookieConsent() {
   const { t } = useTranslation('common');
+  const dispatch = useDispatch();
+
+  const handleCookieAccept = useCallback(() => {
+    dispatch(accept());
+  }, [dispatch]);
 
   return (
     <CookieBanner
       message={t('cookieText')}
-      onAccept={onCookieAccept}
+      onAccept={handleCookieAccept}
       privacyPolicyLinkText=""
       styles={{
         dialog: {
@@ -47,6 +55,5 @@ function CookieConsent({ onCookieAccept }) {
     />
   );
 }
-CookieConsent.propTypes = { onCookieAccept: PropTypes.func.isRequired };
 
 export default React.memo(CookieConsent);

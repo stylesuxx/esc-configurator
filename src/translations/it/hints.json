@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "A quale temperatura l'ESC deve spegnersi.",
   "BEEP_STRENGTH": "Il volume dei beep all'avvio. Impostandolo troppo alto potrebbe danneggiare i motori.",
   "BEACON_STRENGTH": "Il volume del beacon. Impostandolo troppo alto potrebbe danneggiare i motori.",
-  "STARTUP_POWER_MIN": "La quantità minima di potenza applicata all'avviamento dei motori. Aumentare se i motori non sono in grado di avviarsi con un minimo di acceleratore.",
+  "STARTUP_POWER_MIN": "La quantità minima di potenza applicata all'avvio dei motori. Aumentare se i motori non sono in grado di girare dopo l'armamento.",
   "DITHERING": "Aumenta l'effettiva risoluzione dei pwm con passi di 2000. Si raccomanda d'inserirlo con una frequenza pwm oltre i 24Hz.",
   "STARTUP_POWER_MAX": "Limita la potenza all'avvio dei motori o cambiando direzione.",
   "RPM_POWER_SLOPE": "Limita la quantità di potenza che può essere aumentata in base alla velocità di rotazione del motore. Valori più bassi eviteranno picchi di potenza ma possono anche diminuire l'accelerazione e la velocità massima raggiungibile.",
@@ -35,7 +35,15 @@
   "SINE_MODE_RANGE": "La quantità di acceleratore in percentuale utilizzata per l'avvio sinusoidale.",
   "BRAKE_STRENGTH": "Il livello di tenuta del freno applicato quando il freno è attivato su stop.",
   "BRAKING_STRENGTH": "Livello massimo di frenata applicata (ciclo di servizio PWM complementare).",
-  "POWER_RATING": "Se si utilizza EDT su impostazioni 1S, le letture della temperatura saranno disattivate se questa non è impostata su 1S. Tutte le configurazioni con 2S o più non hanno bisogno di cambiare questa impostazione.",
-  "PWM_THRESHOLD_LOW": "Below this throttle, a 96kHz PWM signal will be used. Between low and high, a 48kHz PWM signal will beused.",
-  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used."
+  "POWER_RATING": "In base alla potenza della tua scheda, imposta su 1S se la scheda è listata solo per 1S. Su tutte le schede listate almeno con 2S (compreso 1-2S) o se viene usato un convertitore DC/DC per alimentare gli ESCs MCU, deve essere impostato su 2S+.",
+  "PWM_THRESHOLD_LOW": "Sotto questo punto dell'acceleratore, verrà ' usato un segnale PWM a 96kHz. Tra basso e alto, si userà un segnale PWM a 48kHz.",
+  "PWM_THRESHOLD_HIGH": "Sopra questo punto dell' acceleratore, verrà utilizzato un segnale PWM a 24kHz.",
+  "FORCE_EDT_ARM": "L' arm avviene solo dopo un riconoscimento EDT con successo. Il firmware del controllore di volo deve supportare questa funzione.",
+  "ESC_PROTOCOL": "Seleziona il protocollo ESC che vuoi usare. Per sicurezza, con un protocollo esc preselezionato, si prevengono falsi segnali dell'acceleratore!",
+  "RCPULSE_FILTER": "I valori sopra 0 attiveranno il filtro impulso RC, maggiore è il numero più aggressivo il filtro. Usare solo per compensare una messa a punto errata.",
+  "RUNNING_BRAKE_LEVEL": "La quantità di freno usata quando il motore è in funzione.",
+  "TEMPERATURE_LIMIT": "Diminuisce la potenza massima quando si raggiunge il limite.",
+  "CURRENT_LIMIT": "Mantiene il massimo RPM possibile alla corrente consentita.",
+  "SINE_MODE_POWER": "Livello fissato da usare in modalità sine. ATTENZIONE: I valori superiori a 6 potrebbero danneggiare il motore e/o l'ESC.",
+  "BIDIRECTIONAL_MODE": "La posizione neutrale è nel centro dell'acceleratore. Ruota in una direzione al di sopra del centro e nell'altra direzione al di sotto della posizione centrale."
 }

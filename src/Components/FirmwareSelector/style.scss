@@ -12,10 +12,10 @@
   .checkbox {
     float: none;
     width: auto;
-    margin-left: 0px;
+    margin-left: 0;
     margin-bottom: 20px;
     margin-top: 0;
-    padding-bottom: 0px;
+    padding-bottom: 0;
 
     span:last-child {
       margin-left: 5px;
@@ -26,7 +26,7 @@
     width: 50%;
     margin: auto;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (width <= 768px) {
       width: 100%;
     }
   }
@@ -40,7 +40,7 @@
   }
 
   .default-btn:last-child {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   .alert {
@@ -48,6 +48,7 @@
       margin-top: 5px;
       margin-bottom: 5px;
       font-weight: bold;
+
       td {
         padding-right: 5px;
       }

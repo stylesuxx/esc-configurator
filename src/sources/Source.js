@@ -208,6 +208,43 @@ class Source {
   getLayout() {
     return this.eeprom.LAYOUT;
   }
+
+  /**
+   * Get if the layout selection shall be disabled
+   *
+   * @returns {boolean}
+   */
+  getDisabledLayoutSelection() {
+    return false;
+  }
+
+  /**
+   * Check if the provided layout is valid
+   *
+   * @param {string} name
+   * @returns {boolean}
+   */
+  isValidLayout(name) {
+    return name in this.getEscLayouts();
+  }
+
+  /**
+   * Returns group order for common settings
+   *
+   * @returns {Array<string>}
+   */
+  getGroupOrder() {
+    return ['general'];
+  }
+
+  /**
+   * Returns a list of settings to ignore during migration
+   *
+   * @returns {Array<string>}
+   */
+  getSkipSettings(oldLayout, newLayout) {
+    return [];
+  }
 }
 
 export default Source;

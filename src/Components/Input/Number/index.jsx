@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
 import React, {
   useCallback,
   useState,
 } from 'react';
+import PropTypes from 'prop-types';
 
 import Info from '../Info';
 
@@ -55,6 +55,7 @@ function Number({
       <label>
         <div className="input-wrapper">
           <input
+            data-testid={name}
             disabled={disabled}
             max={max}
             min={min}
@@ -89,7 +90,6 @@ Number.defaultProps = {
   step: 1,
   value: 0,
 };
-
 Number.propTypes = {
   disabled: PropTypes.bool,
   factor: PropTypes.number,

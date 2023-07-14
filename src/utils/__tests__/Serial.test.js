@@ -6,7 +6,6 @@ let releaseReadLock;
 let releaseWriteLock;
 let read;
 let logCallback;
-let packetErrorCallback;
 let serial;
 let Serial;
 
@@ -25,7 +24,6 @@ describe('Serial', () => {
     releaseWriteLock = jest.fn();
     read = jest.fn();
     logCallback = jest.fn();
-    packetErrorCallback = jest.fn();
 
     port = {
       open: jest.fn(),
@@ -47,7 +45,6 @@ describe('Serial', () => {
     serial = new Serial();
 
     await expect(() => serial.open()).rejects.toThrow();
-    serial.setExtendedDebug(true);
     await serial.close();
   });
 
@@ -56,7 +53,6 @@ describe('Serial', () => {
     expect(port.open).toHaveBeenCalled();
 
     serial.setLogCallback(logCallback);
-    serial.setPacketErrorsCallback(packetErrorCallback);
 
     const utilization = serial.getUtilization();
     expect(utilization.up).toEqual(0);
@@ -152,37 +148,9 @@ describe('Serial', () => {
     await expect(() => serial.stopAllMotors()).rejects.toThrow();
   });
 
-  it('should toggle extended debugging', async() => {
-    const read = () => ({ value: { byteLength: 50 } });
-    const write = jest.fn();
-
-    const port = {
-      open: jest.fn(),
-      close: jest.fn(),
-      writable: {
-        getWriter:  () => ({
-          releaseLock: releaseWriteLock,
-          write,
-        }),
-      },
-      readable: {
-        getReader:  () => ({
-          releaseLock: releaseReadLock,
-          read,
-          cancel,
-        }),
-      },
-    };
-
-    serial = new Serial(port);
-    await serial.open();
-    expect(port.open).toHaveBeenCalled();
-
-    serial.setExtendedDebug(true);
-    serial.setExtendedDebug(false);
-  });
-
   it('should execute 4Way interface commands', async() => {
+    jest.setTimeout(60000);
+
     const read = () => ({ value: { byteLength: 50 } });
     const write = jest.fn();
 
@@ -215,5 +183,7 @@ describe('Serial', () => {
     await expect(serial.getFourWayInterfaceInfo()).rejects.toThrow();
     await expect(serial.writeHex()).rejects.toThrow();
     await expect(serial.writeSettings()).rejects.toThrow();
+    await expect(serial.readAddress(null, null)).rejects.toThrow();
+    await expect(serial.readAddress(null, null, 0)).rejects.toThrow();
   });
 });

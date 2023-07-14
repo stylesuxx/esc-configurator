@@ -6,6 +6,11 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+
+import escsReducer, { setConnected } from '../../../Containers/App/escsSlice';
+
 import MotorControl from '../';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key }) }));
@@ -14,7 +19,25 @@ let onAllUpdate;
 let onSingleUpdate;
 let getBatteryState;
 
+function setupTestStore() {
+  const refObj = {};
+
+  beforeEach(() => {
+    const store = configureStore({ reducer: { escs: escsReducer } });
+    refObj.store = store;
+    refObj.wrapper = ({ children }) => (
+      <Provider store={store}>
+        {children}
+      </Provider>
+    );
+  });
+
+  return refObj;
+}
+
 describe('MotorControl', () => {
+  const storeRef = setupTestStore();
+
   beforeEach(() => {
     onAllUpdate = jest.fn();
     onSingleUpdate = jest.fn();
@@ -27,7 +50,8 @@ describe('MotorControl', () => {
         getBatteryState={getBatteryState}
         onAllUpdate={onAllUpdate}
         onSingleUpdate={onSingleUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText('motorControl')).toBeInTheDocument();
@@ -36,13 +60,15 @@ describe('MotorControl', () => {
   });
 
   it('should render with motorcount', () => {
+    storeRef.store.dispatch(setConnected(4));
+
     render(
       <MotorControl
         getBatteryState={getBatteryState}
-        motorCount={4}
         onAllUpdate={onAllUpdate}
         onSingleUpdate={onSingleUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText('motorControl')).toBeInTheDocument();
@@ -54,6 +80,8 @@ describe('MotorControl', () => {
   });
 
   it('should show battery state', async () => {
+    storeRef.store.dispatch(setConnected(4));
+
     const getBatteryState = jest.fn(() => (
       {
         cellCount: 1,
@@ -64,10 +92,10 @@ describe('MotorControl', () => {
     render(
       <MotorControl
         getBatteryState={getBatteryState}
-        motorCount={4}
         onAllUpdate={onAllUpdate}
         onSingleUpdate={onSingleUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText('motorControl')).toBeInTheDocument();
@@ -86,6 +114,8 @@ describe('MotorControl', () => {
   });
 
   it('should highlight battery low', async () => {
+    storeRef.store.dispatch(setConnected(4));
+
     const getBatteryState = jest.fn(() => (
       {
         cellCount: 1,
@@ -96,10 +126,10 @@ describe('MotorControl', () => {
     render(
       <MotorControl
         getBatteryState={getBatteryState}
-        motorCount={4}
         onAllUpdate={onAllUpdate}
         onSingleUpdate={onSingleUpdate}
-      />
+      />,
+      { wrapper: storeRef.wrapper }
     );
 
     expect(screen.getByText('motorControl')).toBeInTheDocument();

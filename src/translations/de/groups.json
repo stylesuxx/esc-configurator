@@ -1,0 +1,13 @@
+{
+  "general": "",
+  "am32motor": "Motor Spezifikationen",
+  "am32sine": "Sinusförmige Einstellungen",
+  "am32servo": "Servo Einstellungen",
+  "am32brake": "Bremskraft Einstellungen",
+  "am32pwm": "PWM Einstellungen",
+  "am32safety": "Sicherheitseinstellungen",
+  "bluejaySafety": "Sicherheitseinstellungen",
+  "bluejayBrake": "Bremskraft Einstellungen",
+  "bluejayBeacon": "Beacon Einstellungen",
+  "bluejayExperimental": "Experimentelle Einstellungen"
+}

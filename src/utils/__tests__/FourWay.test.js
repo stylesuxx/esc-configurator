@@ -111,14 +111,6 @@ describe('FourWay', () => {
     expect(logCallback).toHaveBeenCalled();
   });
 
-  it('should be possible to set packet error', async() => {
-    const packetErrorsCallback = jest.fn();
-    fourWay.setPacketErrorsCallback(packetErrorsCallback);
-
-    fourWay.increasePacketErrors(1);
-    expect(packetErrorsCallback).toHaveBeenCalled();
-  });
-
   it('should parse message without params', () => {
     const buffer = fourWay.createMessage(0x30, []);
     expect(buffer.byteLength).toEqual(8);
@@ -187,7 +179,6 @@ describe('FourWay', () => {
     });
 
     fourWay = new FourWay(serial);
-    fourWay.setExtendedDebug(true);
     await expect(fourWay.testAlive()).resolves.toMatchObject(serial());
   });
 });

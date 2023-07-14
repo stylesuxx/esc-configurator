@@ -1,6 +1,6 @@
 <img align="right" src="./public/logo512.png" alt="ESC Configurator" width="250">
 
-[![Build Status](https://app.travis-ci.com/stylesuxx/esc-configurator.svg?branch=master)](https://app.travis-ci.com/github/stylesuxx/esc-configurator) [![codecov](https://codecov.io/gh/stylesuxx/esc-configurator/branch/develop/graph/badge.svg?token=WLZXIOEDP7)](https://codecov.io/gh/stylesuxx/esc-configurator)
+[![Build Status](https://app.travis-ci.com/stylesuxx/esc-configurator.svg?branch=master)](https://app.travis-ci.com/github/stylesuxx/esc-configurator) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/eb8de2b80f8342b8ab2e7f3cf7f716ac)](https://app.codacy.com/gh/stylesuxx/esc-configurator/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![codecov](https://codecov.io/gh/stylesuxx/esc-configurator/branch/develop/graph/badge.svg?token=WLZXIOEDP7)](https://codecov.io/gh/stylesuxx/esc-configurator)
  [![Crowdin](https://badges.crowdin.net/esc-configuratorcom/localized.svg)](https://crowdin.com/project/esc-configuratorcom) [![Netlify Status](https://api.netlify.com/api/v1/badges/d297f59c-7496-49fb-9803-1cf2876aaad4/deploy-status)](https://app.netlify.com/sites/sad-goodall-6b6045/deploys) [![Discord](https://img.shields.io/discord/822952715944460368.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/QvSS5dk23C)
 
 # ESC Configurator - PWA (Progressive Web App)
@@ -21,12 +21,12 @@ Currently the SiLab EMF8 MCU's are supported with the following firmware:
 
 ### SiLab EFM8:
 
-* [BLHeli_S](https://github.com/bitdump/BLHeli)
-* [Bluejay](https://github.com/bird-sanctuary/bluejay)
+*   [BLHeli_S](https://github.com/bitdump/BLHeli)
+*   [Bluejay](https://github.com/bird-sanctuary/bluejay)
 
 ### ARM:
 
-* [AM32](https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware)
+*   [AM32](https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware)
 
 ### Adding new firmware
 If you are a firmware developer please feel free to drop an issue so I can add your firmware. Look at how BLHeli and Bluejay are implemented.
@@ -78,26 +78,45 @@ This configurator is based on [BLHeli Configurator](https://github.com/blheli-co
 ### Authors & Contributors
 To continue the legacy of everyone who was mentioned as author or contributor in one of the previously mentioned projects:
 
-* Dominic Clifton aka. hydra - maintainer of the [Cleanflight firmware](https://github.com/cleanflight/cleanflight) and [configurator](https://github.com/cleanflight/cleanflight-configurator).
-* ctn - primary author and maintainer of [Baseflight Configurator](https://github.com/multiwii/baseflight-configurator) from which [Cleanflight Configurator](https://github.com/cleanflight/cleanflight-configurator) project was forked.
-* Andrey Mironov aka. DieHertz - primary author of [BLHeli Configurator](https://github.com/blheli-configurator/blheli-configurator)
-* Michael Keller aka. mikeller - maintainer of [BLHeli Configurator](https://github.com/blheli-configurator/blheli-configurator)
-* Stefan van der Ende
-* Nathan
-* Steffen Windoffer
-* Steven R. Lilly
-* Tuomas Kuosmanen
-* Robyn Bachofer
-* ByeJon
+*   Dominic Clifton aka. hydra - maintainer of the [Cleanflight firmware](https://github.com/cleanflight/cleanflight) and [configurator](https://github.com/cleanflight/cleanflight-configurator).
+*   ctn - primary author and maintainer of [Baseflight Configurator](https://github.com/multiwii/baseflight-configurator) from which [Cleanflight Configurator](https://github.com/cleanflight/cleanflight-configurator) project was forked.
+*   Andrey Mironov aka. DieHertz - primary author of [BLHeli Configurator](https://github.com/blheli-configurator/blheli-configurator)
+*   Michael Keller aka. mikeller - maintainer of [BLHeli Configurator](https://github.com/blheli-configurator/blheli-configurator)
+*   Stefan van der Ende
+*   Nathan
+*   Steffen Windoffer
+*   Steven R. Lilly
+*   Tuomas Kuosmanen
+*   Robyn Bachofer
+*   ByeJon
 
 #### Authors & Contributors for esc-configurator
-* Mathias Rasmussen aka. mathiasvr - primary motivator and contributor for [esc-configurator](https://github.com/stylesuxx/esc-configurator)
-* Chris Landa aka. stylesuxx - primary author and maintainer of [esc-configurator](https://github.com/stylesuxx/esc-configurator)
-* Georg Oberleitner aka. Noctaro - German translation & Logo
-* Hugo Chiang aka. DusKing1 - Chinese translation
-* Asier Ruiz aka. Asizon - Spanish translation
-* djtms - Polish translation
-* Mat Cron - Italian translation
-* psicho100pro - Czech translation
+*   Mathias Rasmussen aka. mathiasvr - primary motivator and contributor for [esc-configurator](https://github.com/stylesuxx/esc-configurator)
+*   Chris Landa aka. stylesuxx - primary author and maintainer of [esc-configurator](https://github.com/stylesuxx/esc-configurator)
+*   Georg Oberleitner aka. Noctaro - Logo
+
+##### Translations
+Thank you to everyone who contributed their time and added [translations via crowdin](https://crowdin.com/project/esc-configuratorcom):
+
+*   Hugo Chiang aka. DusKing1 - Chinese translation
+*   Asier Ruiz aka. Asizon - Spanish translation
+*   djtms - Polish translation
+*   Mat Cron - Italian translation
+*   psicho100pro - Czech translation
+*   Noctaro - German translation
+
+##### Startup Melodies
+A big shout out goes to all the talented people submitting startup melodies:
+
+*   Airwolf359
+*   arwebSE
+*   cypher1591
+*   GKLove
+*   kilozebra
+*   Lordnibbler
+*   Noctaro
+*   Ryano12
+*   Shadow0624
+*   Thorondor
 
 If you feel that your name should be mentioned in the authors section, please do not hesitate to submit a pull request.

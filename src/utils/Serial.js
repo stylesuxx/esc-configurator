@@ -34,7 +34,6 @@ class Serial {
     this.getUtilization = this.getUtilization.bind(this);
 
     this.logCallback = null;
-    this.packetErrorsCallback = null;
 
     this.qp = new QueueProcessor();
 
@@ -42,17 +41,6 @@ class Serial {
     this.sentTotal = 0;
     this.received = 0;
     this.receivedTotal = 0;
-  }
-
-  /**
-   * Setter to control extended debugging
-   *
-   * @param {boolean} extendedDebug Enable or disable extended debug
-   */
-  setExtendedDebug(extendedDebug) {
-    if(this.fourWay) {
-      this.fourWay.setExtendedDebug(extendedDebug);
-    }
   }
 
   /**
@@ -66,19 +54,6 @@ class Serial {
 
     this.fourWay.setLogCallback(logCallback);
     this.msp.setLogCallback(logCallback);
-  }
-
-  /**
-   * Setter for packet error callback - sets log callback on both, MSP and Four
-   * Way interface
-   *
-   * @param {function} packetErrorsCallback
-   */
-  setPacketErrorsCallback(packetErrorsCallback) {
-    this.packetErrorsCallback = packetErrorsCallback;
-
-    this.fourWay.setPacketErrorsCallback(packetErrorsCallback);
-    this.msp.setPacketErrorsCallback(packetErrorsCallback);
   }
 
   /**
@@ -248,10 +223,12 @@ class Serial {
    * the functions.
    */
   exitFourWayInterface = () => this.fourWay.exit();
+  flashPreflight = (esc, hex, force, i) => this.fourWay.flashPreflight(esc, hex, force, i);
   getFourWayInterfaceInfo = (esc) => this.fourWay.getInfo(esc);
   resetFourWayInterface = (esc) => this.fourWay.reset(esc);
   startFourWayInterface = () => this.fourWay.start();
   writeHex = (index, esc, hex, force, migrate, cbProgress) => this.fourWay.writeHex(index, esc, hex, force, migrate, cbProgress);
+  readAddress = (address, bytes, retries = 3) => this.fourWay.read(address, bytes, retries);
   readFirmware = (index, esc, cbProgress) => this.fourWay.readFirmware(index, esc, cbProgress);
   writeSettings = (index, esc, settings) => this.fourWay.writeSettings(index, esc, settings);
 }

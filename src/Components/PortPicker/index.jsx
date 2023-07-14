@@ -1,8 +1,20 @@
+import React, { useCallback } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
 
 import CompatibilityWarning from './CompatibilityWarning';
+
+import {
+  selectConnected,
+  selectHasSerial,
+  selectOpen,
+  selectPortNames,
+  setBaudRate,
+} from '../../Containers/App/serialSlice';
 
 import './style.scss';
 
@@ -36,6 +48,7 @@ function BaudRates({
     </select>
   );
 }
+
 BaudRates.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -62,6 +75,7 @@ function PermissionOverlay({
 
   return null;
 }
+
 PermissionOverlay.propTypes = {
   handleSetPort: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
@@ -96,6 +110,7 @@ function Ports({
     </select>
   );
 }
+
 Ports.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -103,22 +118,24 @@ Ports.propTypes = {
 };
 
 function PortPicker({
-  hasPort,
-  hasSerial,
   isIdle,
-  open,
   onSetPort,
-  onSetBaudRate,
   onConnect,
   onDisconnect,
-  ports,
   onChangePort,
 }) {
   const { t } = useTranslation('common');
 
+  const dispatch = useDispatch();
+
+  const hasPort = useSelector(selectConnected);
+  const hasSerial = useSelector(selectHasSerial);
+  const open = useSelector(selectOpen);
+  const ports = useSelector(selectPortNames);
+
   const handleBaudRateChange = useCallback((e) => {
-    onSetBaudRate(e.target.value);
-  }, [onSetBaudRate]);
+    dispatch(setBaudRate(e.target.value));
+  }, [dispatch]);
 
   const handlePortChange = useCallback((e) => {
     onChangePort(e.target.value);
@@ -186,24 +203,14 @@ function PortPicker({
     </div>
   );
 }
-PortPicker.defaultProps = {
-  hasPort: false,
-  hasSerial: false,
-  isIdle: false,
-  open: false,
-  ports: [],
-};
+
+PortPicker.defaultProps = { isIdle: false };
 PortPicker.propTypes = {
-  hasPort: PropTypes.bool,
-  hasSerial: PropTypes.bool,
   isIdle: PropTypes.bool,
   onChangePort: PropTypes.func.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnect: PropTypes.func.isRequired,
-  onSetBaudRate: PropTypes.func.isRequired,
   onSetPort: PropTypes.func.isRequired,
-  open: PropTypes.bool,
-  ports: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default React.memo(PortPicker);

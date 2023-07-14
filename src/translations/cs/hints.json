@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "Při jaké teplotě se ESC vypne.",
   "BEEP_STRENGTH": "Hlasitost spouštěcích pípnutí. Příliš vysoké nastavení může poškodit motory.",
   "BEACON_STRENGTH": "Hlasitost majáku. Příliš vysoké nastavení může poškodit motory.",
-  "STARTUP_POWER_MIN": "Nejmenší množství energie použité při spouštění motorů. Zvyšuje, pokud motory nejsou schopny spustit s nízkým vstupem plynu.",
+  "STARTUP_POWER_MIN": "Nejmenší množství energie použité při spouštění motorů. Zvýšit, pokud motory nejsou schopny se roztočit s nízkým vstupem plynu.",
   "DITHERING": "Zvyšuje efektivní rozlišení pwm na 2000 kroků. Doporučuje se ponechat toto s frekvencí pwm nad 24kHz.",
   "STARTUP_POWER_MAX": "Omezuje výkon při spouštění motorů nebo při zpětném chodu.",
   "RPM_POWER_SLOPE": "Omezuje, jak moc lze zvýšit výkon podle toho, jak rychle se motor otáčí. Nižší hodnoty zabrání výkonovým špičkám, ale mohou také snížit zrychlení a maximální dosažitelnou rychlost.",
@@ -35,7 +35,15 @@
   "SINE_MODE_RANGE": "Množství plynu v procentech použité pro sinusoidální startování.",
   "BRAKE_STRENGTH": "Úroveň přidržovací brzdy, která se použije při zapnutí brzdění.",
   "BRAKING_STRENGTH": "Maximální brzdná síla (doplňkový brzdný cyklus PWM).",
-  "POWER_RATING": "Pokud používáte EDT při nastaveních 1S, budou hodnoty teploty vypnuty, pokud nebudou nastaveny na 1S. Všechna nastavení s 2S a více není třeba měnit toto nastavení.",
-  "PWM_THRESHOLD_LOW": "Below this throttle, a 96kHz PWM signal will be used. Between low and high, a 48kHz PWM signal will beused.",
-  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used."
+  "POWER_RATING": "V závislosti na hodnocení výkonu vaší desky je třeba nastavit na 1S, pokud je deska hodnocena pouze pro 1S. na všech deskách s jmenovitým výkonem alespoň 2S (včetně 1 – 2S) nebo v případě, že se k napájení ESC používá měnič DC/DC, Toto je třeba nastavit na 2S+.",
+  "PWM_THRESHOLD_LOW": "Pod tímto plynem, bude signál PWM 96kHz. Mezi nízkým a vysokým, bude použit signál PWM 48kHz.",
+  "PWM_THRESHOLD_HIGH": "Nad tímto plynem, bude signál PWM 24kHz.",
+  "FORCE_EDT_ARM": "Odjištění pouze po úspěšném startu EDT. Firmware řídící jednotky musí tuto funkci podporovat.",
+  "ESC_PROTOCOL": "Vyberte protokol ESC, který chcete použít. Je to v zájmu bezpečnosti, s předvoleným esc protokolem je zabráněno rozpoznání falešného plynu!",
+  "RCPULSE_FILTER": "Hodnoty nad 0 umožní filtr impulzů RC, čím větší je filtr, tím agresivnější. Použití pouze pro kompenzaci opravdu špatných nastavení.",
+  "RUNNING_BRAKE_LEVEL": "Množství použitého brzdění, když motor běží.",
+  "TEMPERATURE_LIMIT": "Při dosažení prahové hodnoty výrazně sníží maximální výkon.",
+  "CURRENT_LIMIT": "Udrží maximální možné otáčky při povoleném proudu.",
+  "SINE_MODE_POWER": "Pevná úroveň pracovního cyklu, použita při sinusovém režimu. POZOR: Hodnoty nad 6 mohou poškodit motor a/nebo ESC.",
+  "BIDIRECTIONAL_MODE": "Neutrální poloha je uprostřed plynu. Pohybuje se jedním směrem nad středem a druhým směrem, pod středem."
 }

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Info from '../Info';
 
@@ -19,6 +19,7 @@ function Checkbox({
       <label>
         <div className="input-wrapper">
           <input
+            aria-label={name}
             checked={value === 1}
             disabled={disabled}
             name={name}

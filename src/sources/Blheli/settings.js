@@ -1,3 +1,8 @@
+/* istanbul ignore file */
+/**
+ * BLHeli is not actively being used in the configurator, only here for testing
+ * and as reference. Thus no need for it to be covered by tests.
+ */
 
 // layout 21, 14.5, 14.6, 14.7
 const MULTI_SETTINGS_LAYOUT_21 = [

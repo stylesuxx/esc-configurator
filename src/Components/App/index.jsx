@@ -2,7 +2,12 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
+
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import AppSettings from '../AppSettings';
 import CookieConsent from '../CookieConsent';
@@ -13,27 +18,41 @@ import MelodyEditor from '../../Components/MelodyEditor';
 import PortPicker from '../PortPicker';
 import Statusbar from '../Statusbar';
 
-import changelogEntries from '../../changelog.json';
+import { selectState } from '../../Containers/App/stateSlice';
+import { show as showAppSettings } from '../AppSettings/settingsSlice';
+import { selectShow as selectShowMelodyEditor } from '../MelodyEditor/melodiesSlice';
+
 import './style.scss';
 
 function App({
-  actions,
-  appSettings,
-  configs,
-  escs,
-  language,
-  melodies,
-  msp,
+  getBatteryState,
+  getUtilization,
   onAllMotorSpeed,
-  onClearLog,
-  onCookieAccept,
-  onSaveLog,
+  onEscDump,
+  onEscsFlashFile,
+  onEscsFlashUrl,
+  onEscsRead,
+  onEscsWriteDefaults,
+  onEscsWriteSettings,
+  onMelodyWrite,
+  onSerialConnect,
+  onSerialDisconnect,
+  onSerialPortChange,
+  onSerialSetPort,
   onSingleMotorSpeed,
-  serial,
-  stats,
+  progressReferences,
 }) {
   const { t } = useTranslation('common');
+  const dispatch = useDispatch();
+
+  const showMelodyEditor = useSelector(selectShowMelodyEditor);
+  const actions = useSelector(selectState);
+
   const isIdle = !Object.values(actions).some((element) => element);
+
+  const onAppSettingsShow = useCallback((e) => {
+    dispatch(showAppSettings());
+  }, [dispatch]);
 
   return (
     <div>
@@ -43,28 +62,19 @@ function App({
             <div className="main__logo" />
 
             <PortPicker
-              hasPort={serial.connected}
-              hasSerial={serial.hasSerial}
               isIdle={isIdle}
-              onChangePort={serial.actions.handleChangePort}
-              onConnect={serial.actions.handleConnect}
-              onDisconnect={serial.actions.handleDisconnect}
-              onSetBaudRate={serial.actions.handleSetBaudRate}
-              onSetPort={serial.actions.handleSetPort}
-              open={serial.open}
-              ports={serial.portNames}
+              onChangePort={onSerialPortChange}
+              onConnect={onSerialConnect}
+              onDisconnect={onSerialDisconnect}
+              onSetPort={onSerialSetPort}
             />
 
             <div className="main__settings">
-              <LanguageSelection
-                current={language.current}
-                languages={language.available}
-                onChange={language.actions.handleChange}
-              />
+              <LanguageSelection />
 
               <div className="button button--dark">
                 <button
-                  onClick={appSettings.actions.handleOpen}
+                  onClick={onAppSettingsShow}
                   type="button"
                 >
                   {t('settings')}
@@ -74,69 +84,31 @@ function App({
             </div>
           </div>
 
-          <Log messages={serial.log} />
+          <Log />
         </header>
 
         <MainContent
-          actions={actions}
-          appSettings={appSettings.settings}
-          changelogEntries={changelogEntries}
-          configs={configs}
-          connected={escs.connected}
-          escs={escs.individual}
-          flashTargets={escs.targets}
-          fourWay={serial.fourWay}
-          mspFeatures={msp.features}
+          getBatteryState={getBatteryState}
           onAllMotorSpeed={onAllMotorSpeed}
-          onCancelFirmwareSelection={escs.actions.handleCancelFirmwareSelection}
-          onClearLog={onClearLog}
-          onCommonSettingsUpdate={escs.actions.handleCommonSettingsUpdate}
-          onFirmwareDump={escs.actions.handleFirmwareDump}
-          onFlashUrl={escs.actions.handleFlashUrl}
-          onIndividualSettingsUpdate={escs.actions.handleIndividualSettingsUpdate}
-          onLocalSubmit={escs.actions.handleLocalSubmit}
-          onOpenMelodyEditor={melodies.actions.handleOpen}
-          onReadEscs={escs.actions.handleReadEscs}
-          onResetDefaultls={escs.actions.handleResetDefaultls}
-          onSaveLog={onSaveLog}
-          onSelectFirmwareForAll={escs.actions.handleSelectFirmwareForAll}
-          onSettingsUpdate={escs.actions.handleMasterUpdate}
-          onSingleFlash={escs.actions.handleSingleFlash}
+          onFirmwareDump={onEscDump}
+          onFlashUrl={onEscsFlashUrl}
+          onLocalSubmit={onEscsFlashFile}
+          onReadEscs={onEscsRead}
+          onResetDefaultls={onEscsWriteDefaults}
           onSingleMotorSpeed={onSingleMotorSpeed}
-          onWriteSetup={escs.actions.handleWriteSetup}
-          open={serial.open}
-          port={serial.port}
-          settings={escs.master}
+          onWriteSetup={onEscsWriteSettings}
+          progressReferences={progressReferences}
         />
 
-        <Statusbar
-          getUtilization={serial.port ? serial.port.getUtilization : undefined}
-          packetErrors={stats.packetErrors}
-          version={stats.version}
-        />
+        <Statusbar getUtilization={getUtilization} />
       </div>
 
-      {appSettings.show &&
-        <AppSettings
-          onClose={appSettings.actions.handleClose}
-          onUpdate={appSettings.actions.handleUpdate}
-          settings={appSettings.settings}
-        />}
+      <AppSettings />
 
-      {melodies.show &&
-        <MelodyEditor
-          customMelodies={melodies.customMelodies}
-          defaultMelodies={melodies.defaultMelodies}
-          dummy={melodies.dummy}
-          melodies={melodies.escs}
-          onClose={melodies.actions.handleClose}
-          onDelete={melodies.actions.handleDelete}
-          onSave={melodies.actions.handleSave}
-          onWrite={melodies.actions.handleWrite}
-          writing={actions.isWriting}
-        />}
+      {showMelodyEditor &&
+        <MelodyEditor onWrite={onMelodyWrite} />}
 
-      <CookieConsent onCookieAccept={onCookieAccept} />
+      <CookieConsent />
 
       <ToastContainer />
     </div>
@@ -144,99 +116,27 @@ function App({
 }
 
 App.defaultProps = {
-  serial: {
-    port: {
-      getBatteryState: null,
-      getUtilization: null,
-    },
-  },
+  getBatteryState: null,
+  getUtilization: null,
 };
 
 App.propTypes = {
-  actions: PropTypes.shape({
-    isConnecting: PropTypes.bool.isRequired,
-    isFlashing: PropTypes.bool.isRequired,
-    isReading: PropTypes.bool.isRequired,
-    isWriting: PropTypes.bool.isRequired,
-  }).isRequired,
-  appSettings: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleClose: PropTypes.func.isRequired,
-      handleOpen: PropTypes.func.isRequired,
-      handleUpdate: PropTypes.func.isRequired,
-    }).isRequired,
-    settings: PropTypes.shape({}).isRequired,
-    show: PropTypes.bool.isRequired,
-  }).isRequired,
-  configs: PropTypes.shape({}).isRequired,
-  escs: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleMasterUpdate: PropTypes.func.isRequired,
-      handleCommonSettingsUpdate: PropTypes.func.isRequired,
-      handleFirmwareDump: PropTypes.func.isRequired,
-      handleIndividualSettingsUpdate: PropTypes.func.isRequired,
-      handleResetDefaultls: PropTypes.func.isRequired,
-      handleReadEscs: PropTypes.func.isRequired,
-      handleWriteSetup: PropTypes.func.isRequired,
-      handleSingleFlash: PropTypes.func.isRequired,
-      handleSelectFirmwareForAll: PropTypes.func.isRequired,
-      handleCancelFirmwareSelection: PropTypes.func.isRequired,
-      handleLocalSubmit: PropTypes.func.isRequired,
-      handleFlashUrl: PropTypes.func.isRequired,
-    }),
-    connected: PropTypes.number.isRequired,
-    individual: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    master: PropTypes.shape({}).isRequired,
-    targets: PropTypes.arrayOf(PropTypes.number).isRequired,
-  }).isRequired,
-  language: PropTypes.shape({
-    actions: PropTypes.shape({ handleChange: PropTypes.func.isRequired }).isRequired,
-    available: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    current: PropTypes.string.isRequired,
-  }).isRequired,
-  melodies: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleSave: PropTypes.func.isRequired,
-      handleOpen: PropTypes.func.isRequired,
-      handleWrite: PropTypes.func.isRequired,
-      handleClose: PropTypes.func.isRequired,
-      handleDelete: PropTypes.func.isRequired,
-    }),
-    customMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    defaultMelodies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    dummy: PropTypes.bool.isRequired,
-    escs: PropTypes.arrayOf(PropTypes.string).isRequired,
-    show: PropTypes.bool.isRequired,
-  }).isRequired,
-  msp: PropTypes.shape({ features: PropTypes.shape({}).isRequired }).isRequired,
+  getBatteryState: PropTypes.func,
+  getUtilization: PropTypes.func,
   onAllMotorSpeed: PropTypes.func.isRequired,
-  onClearLog: PropTypes.func.isRequired,
-  onCookieAccept: PropTypes.func.isRequired,
-  onSaveLog: PropTypes.func.isRequired,
+  onEscDump: PropTypes.func.isRequired,
+  onEscsFlashFile: PropTypes.func.isRequired,
+  onEscsFlashUrl: PropTypes.func.isRequired,
+  onEscsRead: PropTypes.func.isRequired,
+  onEscsWriteDefaults: PropTypes.func.isRequired,
+  onEscsWriteSettings: PropTypes.func.isRequired,
+  onMelodyWrite: PropTypes.func.isRequired,
+  onSerialConnect: PropTypes.func.isRequired,
+  onSerialDisconnect: PropTypes.func.isRequired,
+  onSerialPortChange: PropTypes.func.isRequired,
+  onSerialSetPort: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
-  serial: PropTypes.shape({
-    actions: PropTypes.shape({
-      handleChangePort: PropTypes.func.isRequired,
-      handleConnect: PropTypes.func.isRequired,
-      handleDisconnect: PropTypes.func.isRequired,
-      handleSetBaudRate: PropTypes.func.isRequired,
-      handleSetPort: PropTypes.func.isRequired,
-    }).isRequired,
-    connected: PropTypes.bool.isRequired,
-    fourWay: PropTypes.bool.isRequired,
-    hasSerial: PropTypes.bool.isRequired,
-    log: PropTypes.arrayOf(PropTypes.any).isRequired,
-    open: PropTypes.bool.isRequired,
-    port: PropTypes.shape({
-      getBatteryState:PropTypes.func,
-      getUtilization:PropTypes.func,
-    }),
-    portNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }),
-  stats: PropTypes.shape({
-    packetErrors: PropTypes.number.isRequired,
-    version: PropTypes.string.isRequired,
-  }).isRequired,
+  progressReferences: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default App;

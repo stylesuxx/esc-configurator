@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
 import './style.scss';
@@ -17,7 +17,6 @@ function CountWarning() {
       </ReactMarkdown>
     );
   });
-
 
   return (
     <div className="gui-box grey missing-esc">
