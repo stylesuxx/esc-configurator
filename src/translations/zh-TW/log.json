@@ -43,5 +43,5 @@
   "timingMismatch": "固件被標記為 {{tagged}}，但實際值似乎為 {{actual}}",
   "browser": "{{name}} ({{version}}) 在 {{os}}",
   "dumpingEsc": "正在轉儲 ESC {{index}}",
-  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
+  "flashingVerificationFailed": "驗證失敗 - 數據可能未正確寫入"
 }
