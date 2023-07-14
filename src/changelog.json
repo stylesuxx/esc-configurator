@@ -1,5 +1,9 @@
 [
   {
+    "title": "Unreleased",
+    "items": []
+  },
+  {
     "title": "0.30.0",
     "items": [
       "Bugfix: Read back settings after writing",
