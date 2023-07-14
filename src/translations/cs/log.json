@@ -18,11 +18,14 @@
   "readEscsFailed": "Nepodařilo se načíst ESC",
   "readEsc": "Čtěte ESC {{index}}: {{name}}",
   "flashingEsc": "Nahrávání ESC {{index}}",
+  "flashingEscMissmatchFileNameMissing": "Nepodařilo se nahrát ESC {{index}} - Název souboru nebyl nalezen v hex souboru, prosím zkontrolujte svou hex verzi!",
+  "flashingEscMissmatchMcuType": "Nepodařilo se nahrát ESC {{index}} - Neodpovídá typu MCU, prosím zkontrolujte hex soubor!",
+  "flashingEscMissmatchFileName": "Nepodařilo se nahrát ESC {{index}} - Jiný ESC firmware soubor než je v současné ESC paměti!",
   "flashingEscFailed": "Chyba při nahrávání ESC {{index}} - zkontrolujte typ souboru",
   "fetchingFilesFailed": "Nepodařilo se načíst soubory pro {{name}}",
   "readEscFailed": "Selhalo čtení ESC {{index}}",
   "resetEscFailed": "Resetování ESC {{index}} selhalo",
-  "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
+  "resetEscFailedPowerCycle": "Resetování ESC {{index}} selhalo - odpojte a připojte napájení a zkuste to znovu",
   "writeSettingsFailed": "Nepodařilo se zapsat nastavení do ESC {{index}}",
   "restoreSettingsFailed": "Obnovení výchozích nastavení na ESC {{index}} se nezdařilo",
   "getFileFailed": "Nelze získat soubor pro nahrávání.",
@@ -39,5 +42,6 @@
   "bootloaderMismatch": "Neodpovídající zavaděč! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Firmware je označen jako {{tagged}}, ale ve skutečnosti se zdá, že je {{actual}}",
   "browser": "{{name}} ({{version}}) na {{os}}",
-  "dumpingEsc": "Nahrávání ESC {{index}}"
+  "dumpingEsc": "Nahrávání ESC {{index}}",
+  "flashingVerificationFailed": "Ověření se nezdařilo - data možná nebyla správně zapsána"
 }

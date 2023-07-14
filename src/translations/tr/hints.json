@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "Hangi sıcaklık derecesinde ESC kapanacak.",
   "BEEP_STRENGTH": "Başlangıç beep ses seviyesi. Bunu çok yükseğe ayarlamak motorlara zarar verebilir.",
   "BEACON_STRENGTH": "Beacon ses seviyesi. Bunu çok yükseğe ayarlamak motorlara zarar verebilir.",
-  "STARTUP_POWER_MIN": "Motorlar başlatılırken uygulanacak en az güç. Düşük gaz miktarıyla motorlar dönmüyorsa bu ayarı attırın.",
+  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
   "DITHERING": "Efektif Pwm sinyalini 2000 basamağa çıkartır. Bu ayarı 24kHz üstünde bırakmanız tavsiye edilir.",
   "STARTUP_POWER_MAX": "Motorlar başlarken ya da yön değiştirirken gücü sınırlandırır.",
   "RPM_POWER_SLOPE": "Motor dönerken uygulanabilecek gücü sınırlandırır. Düşük değerler ani güç sıçramalarını engeller ancak aynı zamanda maximum hızı ve yavaşlamayı azaltır.",
@@ -35,7 +35,15 @@
   "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",
   "BRAKE_STRENGTH": "The level of hold brake applied when brake on stop is enabled.",
   "BRAKING_STRENGTH": "Maximum amount of braking applied (complementary PWM duty cycle).",
-  "POWER_RATING": "If using EDT on 1S setups, the temperature readings will be off if this is not set to 1S. All setups with 2S and more do not need to change this setting.",
+  "POWER_RATING": "Depending on the power rating of your board this needs to be set to 1S if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to 2S+.",
   "PWM_THRESHOLD_LOW": "Below this throttle, a 96kHz PWM signal will be used. Between low and high, a 48kHz PWM signal will beused.",
-  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used."
+  "PWM_THRESHOLD_HIGH": "Above this throttle, a 24kHz PWM signal will be used.",
+  "FORCE_EDT_ARM": "Only arm after successfull EDT handshake. Flight controller firmware has to support this feature.",
+  "ESC_PROTOCOL": "Select the ESC protocol you want to use. This is for safety, with a preselected esc protocol, false throttle signale detections are prevented!",
+  "RCPULSE_FILTER": "Values above 0 will enable the RC pulse filter, the higher the number the more aggressive the filter. Only use to compensate for really bad tunes.",
+  "RUNNING_BRAKE_LEVEL": "The amount of braking used when the motor is running.",
+  "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
+  "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
+  "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC.",
+  "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position."
 }

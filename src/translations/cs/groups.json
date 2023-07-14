@@ -1,1 +1,13 @@
-{}
+{
+  "general": "",
+  "am32motor": "Specifikace motoru",
+  "am32sine": "Nastavení Sinusoidy",
+  "am32servo": "Nastavení serva",
+  "am32brake": "Nastavení brzd",
+  "am32pwm": "Nastavení PWM",
+  "am32safety": "Safety Settings",
+  "bluejaySafety": "Safety Settings",
+  "bluejayBrake": "Nastavení brzd",
+  "bluejayBeacon": "Beacon Settings",
+  "bluejayExperimental": "Experimental Settings"
+}

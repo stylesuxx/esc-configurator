@@ -18,6 +18,9 @@
   "readEscsFailed": "ESCs Lesen fehlgeschlagen",
   "readEsc": "ESC {{index}}: {{name}}",
   "flashingEsc": "ESC {{index}} wird geflasht",
+  "flashingEscMissmatchFileNameMissing": "Fehler beim Flashen von ESC {{index}} - Dateiname in der Hex-Datei nicht gefunden, bitte überprüfe deine Hex-Dateiversion!",
+  "flashingEscMissmatchMcuType": "Fehler beim Flashen von ESC {{index}} - Kein passender MCU-Typ gefunden, bitte überprüfe deine Hex-Datei!",
+  "flashingEscMissmatchFileName": "Fehler beim Flashen von ESC {{index}} - Es bestehen Unterschiede in der ESC-Firmwaredatei zum aktuellen ESC Flashspeicher!",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
   "fetchingFilesFailed": "Fehler beim Abrufen der Dateien für {{name}}",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
@@ -39,5 +42,6 @@
   "bootloaderMismatch": "Bootloader Versionen stimmen nicht überein! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Firmware ist als {{tagged}} markiert, es scheint aber wahrscheinlicher dass es sich um {{actual}} handelt",
   "browser": "{{name}} ({{version}}) auf {{os}}",
-  "dumpingEsc": "ESC {{index}} wird ausgelesen"
+  "dumpingEsc": "ESC {{index}} wird ausgelesen",
+  "flashingVerificationFailed": "Verifizierung fehlgeschlagen - Daten wurden möglicherweise nicht korrekt geschrieben."
 }

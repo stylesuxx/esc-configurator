@@ -18,6 +18,9 @@
   "readEscsFailed": "ESC 讀取失敗",
   "readEsc": "讀取 ESC {{index}}: {{name}}",
   "flashingEsc": "正在燒錄 ESC {{index}}",
+  "flashingEscMissmatchFileNameMissing": "燒錄 ESC {{index}} 失敗 - 未在 hex 文件中檢測到文件名，請檢查您的 hex 文件版本！",
+  "flashingEscMissmatchMcuType": "燒錄 ESC {{index}} 失敗 - MCU 類型不匹配，請檢查您的 hex 文件！",
+  "flashingEscMissmatchFileName": "燒錄 ESC {{index}} 失敗 - 與當前 ESC 閃存中的固件文件不同！",
   "flashingEscFailed": "燒錄 ESC {{index}} 失敗 - 請檢查文件類型",
   "fetchingFilesFailed": "獲取 {{name}} 資料失敗",
   "readEscFailed": "讀取 ESC {{index}} 失敗",
@@ -39,5 +42,6 @@
   "bootloaderMismatch": "引導程式不匹配！閃存: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "固件被標記為 {{tagged}}，但實際值似乎為 {{actual}}",
   "browser": "{{name}} ({{version}}) 在 {{os}}",
-  "dumpingEsc": "正在轉儲 ESC {{index}}"
+  "dumpingEsc": "正在轉儲 ESC {{index}}",
+  "flashingVerificationFailed": "驗證失敗 - 數據可能未正確寫入"
 }

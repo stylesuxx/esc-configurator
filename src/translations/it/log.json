@@ -18,11 +18,14 @@
   "readEscsFailed": "Lettura ESC fallita",
   "readEsc": "Lettura ESC {{index}}: {{name}}",
   "flashingEsc": "Flashando ESC {{index}}",
+  "flashingEscMissmatchFileNameMissing": "Flash dell' ESC {{index}} fallito - Il nome del file non è stato trovato nel file hex, per favore controlla la versione del file hex!",
+  "flashingEscMissmatchMcuType": "Flash dell' ESC {{index}} fallito - Nessun tipo di MCU uguale trovata, per favore controlla il file hex!",
+  "flashingEscMissmatchFileName": "Flash dell' ESC {{index}} fallito - File del firmware ESC differente, rispetto a quello della flash nell'ESC!",
   "flashingEscFailed": "Flash dell' ESC {{index}} fallito - controlla il tipo di file",
   "fetchingFilesFailed": "Recupero file per {{name}} fallito",
   "readEscFailed": "Lettura ESC {{index}} fallita",
   "resetEscFailed": "Ripristino ESC {{index}} fallito",
-  "resetEscFailedPowerCycle": "Reset dell' ESC {{index}} fallito - riprova disconnettendo e riconnettendo l'alimentazione",
+  "resetEscFailedPowerCycle": "Reset dell' ESC {{index}} fallito - riprova a disconnettere e riconnettere l'alimentazione",
   "writeSettingsFailed": "Impossibile scrivere le impostazioni su ESC {{index}}",
   "restoreSettingsFailed": "Impossibile ripristinare le impostazioni predefinite su ESC {{index}}",
   "getFileFailed": "Impossibile ottenere il file da flashare.",
@@ -39,5 +42,6 @@
   "bootloaderMismatch": "Bootloader non corrisponde! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Il firmware è etichettato come {{tagged}} ma sembra essere {{actual}}",
   "browser": "{{name}} ({{version}}) su {{os}}",
-  "dumpingEsc": "Dumping ESC {{index}}"
+  "dumpingEsc": "Dumping ESC {{index}}",
+  "flashingVerificationFailed": "Verifica fallita - i dati potrebbero non essere stati scritti correttamente"
 }

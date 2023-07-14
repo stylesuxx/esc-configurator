@@ -13,6 +13,6 @@
   "enableAdvancedHint": "Dodaje zaawansowane ustawienia, takie jak zgranie oprogramowanie.",
   "unstableVersions": "Pokaż wstępne wydania oprogramowania",
   "unstableVersionsHint": "Pokaż niestabilne wersje oprogramowania i wstępne wydania",
-  "skipCache": "Skip cache",
-  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
+  "skipCache": "Pomiń bufor",
+  "skipCacheHint": "Włącz to ustawienie, jeśli nie widzisz najnowszej wersji w wyborze oprogramowania sprzętowego."
 }

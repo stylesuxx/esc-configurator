@@ -1,1 +1,13 @@
-{}
+{
+  "general": "",
+  "am32motor": "电机规格",
+  "am32sine": "正弦设置",
+  "am32servo": "舵机设置",
+  "am32brake": "刹车设置",
+  "am32pwm": "PWM 设置",
+  "am32safety": "安全设置",
+  "bluejaySafety": "安全设置",
+  "bluejayBrake": "刹车设置",
+  "bluejayBeacon": "信标设置",
+  "bluejayExperimental": "试验性设置"
+}
