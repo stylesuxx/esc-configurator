@@ -520,7 +520,16 @@ const INDIVIDUAL_SETTINGS_203 = [
   },
 ];
 
+const INDIVIDUAL_SETTINGS_208 = [
+  ...INDIVIDUAL_SETTINGS_203,
+  {
+    name: 'STARTUP_MELODY_WAIT_MS',
+    type: 'melody',
+  },
+];
+
 const INDIVIDUAL = {
+  '208': { base: INDIVIDUAL_SETTINGS_208 },
   '207': { base: INDIVIDUAL_SETTINGS_203 },
   '206': { base: INDIVIDUAL_SETTINGS_203 },
   '205': { base: INDIVIDUAL_SETTINGS_203 },
@@ -592,12 +601,9 @@ DEFAULTS['207'] = { // v0.20
   DITHERING: 0,
 };
 
-DEFAULTS['208'] = { // TBD
+DEFAULTS['208'] = { // v0.21
   ...DEFAULTS['207'],
-  PWM_FREQUENCY: 24,
-  PWM_THRESHOLD_LOW: 100,
-  PWM_THRESHOLD_HIGH: 150,
-  RCPULSE_FILTER: 0,
+  STARTUP_MELODY_WAIT_MS: 0,
 };
 
 const settings = {
