@@ -405,60 +405,12 @@ COMMON['208'] = {
   base: [
     ...COMMON['207'].base,
     {
-      name: 'PWM_FREQUENCY',
-      type: 'enum',
-      label: 'escPwmFrequencyBluejay',
-      options: [{
-        value: 24,
-        label: '24kHz',
-      }, {
-        value: 48,
-        label: '48kHz',
-      }, {
-        value: 96,
-        label: '96kHz',
-      }, {
-        value: 192,
-        label: 'Dynamic',
-      }],
-    }, {
-      name: 'PWM_THRESHOLD_LOW',
-      type: 'number',
-      min: 0,
-      max: 100,
-      step: 1,
-      displayFactor: 100 / 255,
-      label: 'escPwmThresholdLow',
-      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 192),
-      sanitize: (value, settings) => {
-        if(value > settings.PWM_THRESHOLD_HIGH) {
-          return settings.PWM_THRESHOLD_HIGH;
-        }
-
-        return value;
-      },
-    }, {
-      name: 'PWM_THRESHOLD_HIGH',
-      type: 'number',
-      min: 0,
-      max: 100,
-      step: 1,
-      displayFactor: 100 / 255,
-      label: 'escPwmThresholdHigh',
-      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 192),
-    },
-    {
-      name: 'FORCE_EDT_ARM',
-      type: 'bool',
-      label: 'escForceEdtArm',
-    },
-    {
-      name: 'RCPULSE_FILTER',
+      name: 'THRESHOLD_48to24',
       type: 'number',
       min: 0,
       max: 255,
       step: 1,
-      label: 'escRcpulseFilter',
+      label: '48to24Threshold',
     },
   ],
 };
@@ -524,7 +476,7 @@ const INDIVIDUAL_SETTINGS_208 = [
   ...INDIVIDUAL_SETTINGS_203,
   {
     name: 'STARTUP_MELODY_WAIT_MS',
-    type: 'melody',
+    type: 'dummy',
   },
 ];
 
@@ -604,6 +556,7 @@ DEFAULTS['207'] = { // v0.20
 DEFAULTS['208'] = { // v0.21
   ...DEFAULTS['207'],
   STARTUP_MELODY_WAIT_MS: 0,
+  THRESHOLD_48to24: 170,
 };
 
 const settings = {

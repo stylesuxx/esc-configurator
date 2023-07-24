@@ -42,7 +42,7 @@ const LAYOUT = {
     size: 1,
   },
   PWM_FREQUENCY: {
-    offset: 0x0A,
+    offset: 0x2B,
     size: 1,
   },
   MOTOR_DIRECTION: {
@@ -168,6 +168,10 @@ const LAYOUT = {
   },
   FORCE_EDT_ARM: {
     offset: 0x2A,
+    size: 1,
+  },
+  THRESHOLD_48to24: {
+    offset: 0x2B,
     size: 1,
   },
 
