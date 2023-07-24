@@ -17,7 +17,7 @@ describe('Bluejay', () => {
       }
     }
 
-    expect(visibleIf.length).toEqual(0);
+    expect(visibleIf.length).toEqual(1);
   });
 
   it('should handle conditional visibility with custom settings', () => {
@@ -184,12 +184,11 @@ describe('Bluejay', () => {
     expect(frequencies.length).toEqual(0);
   });
 
-  /*
-  it('should enable low PWM threshold setting', () => {
+  it('should enable low threshold setting', () => {
     const settings = {
       GOVERNOR_MODE: 3,
       MOTOR_DIRECTION: 3,
-      PWM_FREQUENCY: 192,
+      PWM_FREQUENCY: 0,
     };
 
     let conditionalFunction = null;
@@ -200,7 +199,7 @@ describe('Bluejay', () => {
     for(let j = 0; j < base.length; j += 1) {
       const current = base[j];
       if(current.visibleIf) {
-        if(current.name === 'PWM_THRESHOLD_LOW') {
+        if(current.name === 'THRESHOLD_48to24') {
           conditionalFunction = current.visibleIf;
         }
       }
@@ -209,11 +208,12 @@ describe('Bluejay', () => {
     expect(conditionalFunction(settings)).toBeTruthy();
   });
 
+  /*
   it('should enable high PWM threshold setting', () => {
     const settings = {
       GOVERNOR_MODE: 3,
       MOTOR_DIRECTION: 3,
-      PWM_FREQUENCY: 192,
+      PWM_FREQUENCY: 0,
     };
 
     let conditionalFunction = null;

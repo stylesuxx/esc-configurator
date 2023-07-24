@@ -405,12 +405,28 @@ COMMON['208'] = {
   base: [
     ...COMMON['207'].base,
     {
+      name: 'PWM_FREQUENCY',
+      type: 'enum',
+      label: 'escPwmFrequencyBluejay',
+      options: [{
+        value: 24,
+        label: '24kHz',
+      }, {
+        value: 48,
+        label: '48kHz',
+      }, {
+        value: 0,
+        label: 'Dynamic',
+      }],
+    },
+    {
       name: 'THRESHOLD_48to24',
       type: 'number',
       min: 0,
       max: 255,
       step: 1,
       label: '48to24Threshold',
+      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 0),
     },
   ],
 };
@@ -555,6 +571,7 @@ DEFAULTS['207'] = { // v0.20
 
 DEFAULTS['208'] = { // v0.21
   ...DEFAULTS['207'],
+  PWM_FREQUENCY: 24,
   STARTUP_MELODY_WAIT_MS: 0,
   THRESHOLD_48to24: 170,
 };

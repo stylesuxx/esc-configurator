@@ -42,7 +42,7 @@ const LAYOUT = {
     size: 1,
   },
   PWM_FREQUENCY: {
-    offset: 0x2B,
+    offset: 0x0A,
     size: 1,
   },
   MOTOR_DIRECTION: {
