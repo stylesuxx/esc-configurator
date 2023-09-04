@@ -113,6 +113,15 @@ function HomeColumnCenter() {
     <div className="column third_center text2">
       <div className="wrap">
 
+        <div className="alert">
+          <strong>
+            Attention Bluejay users!
+          </strong>
+
+          <br />
+          If you are still on 0.20.0, please downgrade to 0.19.2 - there have been issues with stall detection and motor protection which might result in broken ESCs and/or motors.
+        </div>
+
         <h2>
           {t('homeExperimental')}
         </h2>
