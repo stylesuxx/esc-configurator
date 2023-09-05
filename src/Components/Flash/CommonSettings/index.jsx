@@ -46,7 +46,6 @@ function CommonSettings({ unsupported }) {
   const groupOrder = source ? source.getGroupOrder() : [];
   const settingsDescriptions = source ? source.getCommonSettings(master.layoutRevision) : null;
 
-
   const mainRevision = availableSettings.MAIN_REVISION;
   const subRevision = availableSettings.SUB_REVISION;
   const revision = `${mainRevision}.${subRevision}`;
@@ -182,10 +181,23 @@ function CommonSettings({ unsupported }) {
   }
 
   const groupedSettingElements = orderedGroupKeys.map((group) => {
-    const settings = { ...availableSettings };
+    let settings = { ...availableSettings };
     const groupItems = groups[group];
 
+    groupItems.forEach((description) => {
+      if (description.sanitize) {
+        const sanitizedSettings = description.sanitize(settings);
+        settings = {
+          ...settings,
+          ...sanitizedSettings,
+        };
+      }
+    });
+
     const settingElements = groupItems.map((description) => {
+      let setting = description;
+      const value = settings[setting.name];
+
       if (description.visibleIf && !description.visibleIf(settings)) {
         return null;
       }
@@ -201,7 +213,6 @@ function CommonSettings({ unsupported }) {
         }
       }
 
-      let setting = description;
       if (overrides) {
         const settingOverride = overrides.find((override) => override.name === description.name);
         if(settingOverride) {
@@ -211,13 +222,6 @@ function CommonSettings({ unsupported }) {
 
       /* istanbul ignore next */
       const hint = i18n.exists(`hints:${setting.name}`) ? t(`hints:${setting.name}`) : null;
-
-      // Sanitize a value if it is depended on another value
-      let value = settings[setting.name];
-      if (description.sanitize) {
-        value = description.sanitize(value, settings);
-        settings[setting.name] = value;
-      }
 
       let disableValue = description.disableValue || null;
 

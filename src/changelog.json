@@ -1,5 +1,11 @@
 [
   {
+    "title": "0.30.1",
+    "items": [
+      "Chore: Add warning to downgrade Bluejay"
+    ]
+  },
+  {
     "title": "0.30.0",
     "items": [
       "Bugfix: Read back settings after writing",

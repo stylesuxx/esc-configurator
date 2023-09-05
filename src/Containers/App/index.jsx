@@ -723,7 +723,7 @@ class App extends Component {
       const newIndividualSettings = {
         ...individual[i].individualSettings,
         STARTUP_MELODY: converted[i],
-        STARTUP_MELODY_WAIT_MS: maxMelodyDuration - melodyDurations[i],
+        STARTUP_MELODY_WAIT_MS: Math.ceil(maxMelodyDuration - melodyDurations[i]),
       };
 
       individual[i] = {
