@@ -1,5 +1,11 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Bluejay: Extract bugfix version from Name setting"
+    ]
+  },
+  {
     "title": "0.30.1",
     "items": [
       "Chore: Add warning to downgrade Bluejay"

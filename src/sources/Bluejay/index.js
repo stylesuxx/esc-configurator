@@ -19,9 +19,32 @@ const GITHUB_REPO = 'bird-sanctuary/bluejay';
 class BluejaySource extends GithubSource {
   buildDisplayName(flash, make) {
     const settings = flash.settings;
-    let revision = 'Unsupported/Unrecognized';
+    let name = `${settings.NAME.trim()}`;
+    let versionSuffix = '';
+
+    let version = 'Unsupported/Unrecognized';
     if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+      // Add bugfix version if available starting with v0.20
+      if(settings.MAIN_REVISION > 0 || settings.SUB_REVISION >= 20) {
+        versionSuffix = '.0';
+
+        const regex = /^([a-zA-Z]*)( (\((.*)\)))?$/gmi;
+        const matches = [...name.matchAll(regex)];
+        if(matches.length > 0) {
+          const found = matches[0];
+          if(found.length > 1) {
+            name = found[1];
+            if(found[4] !== undefined) {
+              versionSuffix = found[4];
+              if(![' ', '.'].includes(versionSuffix[0])) {
+                versionSuffix = `.0 ${versionSuffix}`;
+              }
+            }
+          }
+        }
+      }
+
+      version = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}${versionSuffix}`;
     }
 
     let pwm = '';
@@ -32,9 +55,8 @@ class BluejaySource extends GithubSource {
         pwm = ', Dynamic PWM';
       }
     }
-    const name = `${settings.NAME.trim()}`;
 
-    return `${make} - ${name}, ${revision}${pwm}`;
+    return `${make} - ${name}, ${version}${pwm}`;
   }
 
   getFirmwareUrl({
