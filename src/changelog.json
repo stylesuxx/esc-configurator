@@ -1,5 +1,9 @@
 [
   {
+    "title": "Unreleased",
+    "items": []
+  },
+  {
     "title": "0.30.2",
     "items": [
       "Bluejay: Extract bugfix version from Name setting (>=v0.20.0)"
