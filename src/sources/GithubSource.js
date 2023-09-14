@@ -28,6 +28,7 @@ class GithubSource extends Source {
       name: release.name || release.tag_name.replace(/^v/, ''),
       key: release.tag_name,
       url: `https://github.com/${repo}/releases/download/${release.tag_name}/`,
+      releaseUrl: `https://github.com/${repo}/releases/tag/${release.tag_name}/`,
       prerelease: release.prerelease,
       published_at: release.published_at,
     }));

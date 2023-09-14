@@ -13,14 +13,14 @@
 
   .note {
     background-color: #fff3cd;
-    border: 1px solid #ffeeba;
+    border-color: #ffeeba;
     color: #856404;
-    margin-top: 5px;
-    margin-bottom: 25px;
-    border-radius: 3px;
-    font-size: 11px;
-    font-family: 'open_sansregular', Arial, sans-serif;
-    padding: 5px 7px;
+
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
 
     @media screen and (width <= 768px) {
       margin-bottom: 18px;
@@ -101,6 +101,36 @@
         line-height: 19px;
         color: #4F4F4F;
         font-size: 11px;
+      }
+    }
+
+    .alert {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      position: relative;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 10px;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+
+      p {
+        margin-bottom: 10px;
+        font-weight: normal;
+
+        ul {
+          font-weight: normal;
+          li {
+            list-style-type: disc;
+            margin-left: 20px;
+          }
+        }
+      }
+
+      span,
+      a {
+        color: #721c24;
+        font-size: inherit;
       }
     }
 

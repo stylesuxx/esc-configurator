@@ -110,9 +110,8 @@ function HomeColumnCenter() {
   }, [dispatch]);
 
   return(
-    <div className="column third_center text2">
+    <div className="column third_center text2 tab">
       <div className="wrap">
-
         <div className="alert">
           <strong>
             Attention Bluejay users!
