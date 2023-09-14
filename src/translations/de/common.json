@@ -186,5 +186,11 @@
   "mistaggedDetected": "erkannt",
   "update": "Ein Update ist verfügbar! Um die aktualisierte Version zu verwenden, Webseite neu laden oder die App neu starten.",
   "resettingDevice": "Gerät wird zurückgesetzt...",
-  "disabled": "Deaktiviert"
+  "disabled": "Deaktiviert",
+  "selectionAttention": "Attention!",
+  "selectionHint": "When flashing new (or different) ESC firmware it is best practice to adhere to the following checklist:",
+  "selectionLi1": "Read the relese notes to understand what changed and what you might need to adjust",
+  "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
+  "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
+  "selectionLinkText": "Show release notes on Github"
 }
