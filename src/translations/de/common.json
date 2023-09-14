@@ -189,8 +189,8 @@
   "disabled": "Deaktiviert",
   "selectionAttention": "Achtung!",
   "selectionHint": "Beim Flashen von neuer (oder anderer) ESC-Firmware sollte man sich am besten an folgende Checkliste halten:",
-  "selectionLi1": "Read the relese notes to understand what changed and what you might need to adjust",
-  "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
+  "selectionLi1": "Bitte lese die release notes um zu verstehen was sich geändert hat und welche Einstellungen für dein Setup nötig sein könnten",
+  "selectionLi2": "Stelle sicher, dass die Motoren beim Armen zuverlässig hochdrehen und sich dann idealerweise auch in die richtige Richtung drehen",
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
   "selectionLinkText": "Show release notes on Github"
 }
