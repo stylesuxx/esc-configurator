@@ -187,10 +187,10 @@
   "update": "Aggiornamento disponibile! Per aggiornare l'app, ricaricare o riavviarla.",
   "resettingDevice": "Ripristino dispositivo...",
   "disabled": "Disabilitato",
-  "selectionAttention": "Attention!",
-  "selectionHint": "When flashing new (or different) ESC firmware it is best practice to adhere to the following checklist:",
-  "selectionLi1": "Read the relese notes to understand what changed and what you might need to adjust",
-  "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
-  "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
-  "selectionLinkText": "Show release notes on Github"
+  "selectionAttention": "Attenzione!",
+  "selectionHint": "Quando si flasha il firmware su un ESC nuovo (o diverso) è consigliato seguire la seguente lista di controllo:",
+  "selectionLi1": "Leggi le note di rilascio per capire cosa è cambiato e cosa potresti regolare",
+  "selectionLi2": "Assicurati che quando si arma i tuoi motori ruotino bene e nella giusta direzione",
+  "selectionLi3": "Controlla le temperature del motore dopo un breve volo di prova e regola i parametri se troppo caldi",
+  "selectionLinkText": "Mostra le note di rilascio su Github"
 }
