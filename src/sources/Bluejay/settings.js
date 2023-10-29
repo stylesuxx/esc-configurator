@@ -401,9 +401,12 @@ COMMON['207'] = {
   ],
 };
 
-COMMON['208'] = {
+// Dithering deprecated
+COMMON['208'] = { base: COMMON['207'].base.filter((item) => item.name !== 'DITHERING') };
+
+COMMON['209'] = {
   base: [
-    ...COMMON['207'].base,
+    ...COMMON['208'].base,
     {
       name: 'PWM_FREQUENCY',
       type: 'enum',
@@ -411,10 +414,16 @@ COMMON['208'] = {
       options: [{
         value: 24,
         label: '24kHz',
-      }, {
+      },
+      {
         value: 48,
         label: '48kHz',
-      }, {
+      },
+      {
+        value: 96,
+        label: '96kHz',
+      },
+      {
         value: 0,
         label: 'Dynamic',
       }],
@@ -425,7 +434,25 @@ COMMON['208'] = {
       min: 0,
       max: 255,
       step: 1,
+      displayFactor: 100 / 255,
       label: '48to24Threshold',
+      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 0),
+      sanitize: (value, settings) => {
+        if(value > settings.THRESHOLD_96to48) {
+          return settings.THRESHOLD_96to48;
+        }
+
+        return value;
+      },
+    },
+    {
+      name: 'THRESHOLD_96to48',
+      type: 'number',
+      min: 0,
+      max: 255,
+      step: 1,
+      displayFactor: 100 / 255,
+      label: '96to48Threshold',
       visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 0),
     },
   ],
@@ -497,7 +524,8 @@ const INDIVIDUAL_SETTINGS_208 = [
 ];
 
 const INDIVIDUAL = {
-  '208': { base: INDIVIDUAL_SETTINGS_208 },
+  '209': { base: INDIVIDUAL_SETTINGS_208 },
+  '208': { base: INDIVIDUAL_SETTINGS_203 },
   '207': { base: INDIVIDUAL_SETTINGS_203 },
   '206': { base: INDIVIDUAL_SETTINGS_203 },
   '205': { base: INDIVIDUAL_SETTINGS_203 },
@@ -571,6 +599,11 @@ DEFAULTS['207'] = { // v0.20
 
 DEFAULTS['208'] = { // v0.21
   ...DEFAULTS['207'],
+};
+delete DEFAULTS['208'].DITHERING;
+
+DEFAULTS['209'] = { // v0.22
+  ...DEFAULTS['208'],
   PWM_FREQUENCY: 24,
   STARTUP_MELODY_WAIT_MS: 0,
   THRESHOLD_48to24: 170,
