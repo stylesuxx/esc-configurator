@@ -117,6 +117,15 @@ class BluejaySource extends GithubSource {
           'TEMPERATURE_PROTECTION',
         ];
       }
+
+      if(oldLayout < newLayout && newLayout === 208) {
+        return [
+          'DITHERING',
+          'TEMPERATURE_PROTECTION',
+          'STARTUP_POWER_MIN',
+          'STARTUP_POWER_MAX',
+        ];
+      }
     }
 
     return [];
