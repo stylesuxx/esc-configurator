@@ -187,10 +187,10 @@
   "update": "Je dostupná aktualizace! Chcete-li aplikaci aktualizovat, obnovte ji nebo restartujte.",
   "resettingDevice": "Resetování zařízení...",
   "disabled": "Vypnuto",
-  "selectionAttention": "Attention!",
-  "selectionHint": "When flashing new (or different) ESC firmware it is best practice to adhere to the following checklist:",
-  "selectionLi1": "Read the relese notes to understand what changed and what you might need to adjust",
-  "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
-  "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
-  "selectionLinkText": "Show release notes on Github"
+  "selectionAttention": "Pozor!",
+  "selectionHint": "Při flashování nového (nebo jiného) firmwaru ESC je nejlepší praxí dodržovat následující kontrolní seznam:",
+  "selectionLi1": "Přečtěte si poznámky k verzi, abyste pochopili, co se změnilo a co možná budete muset upravit",
+  "selectionLi2": "Ujistěte se, že se motory otáčí po odjištění a ve správném směru",
+  "selectionLi3": "Zkontrolujte teplotu motoru po krátkém zkušebním letu a upravte nastavení, pokud jsou příliš horké",
+  "selectionLinkText": "Zobrazit poznámky k vydání na Githubu"
 }
