@@ -28,11 +28,11 @@
   "SERVO_HIGH_THRESHOLD": "Будь-який сигнал вище цієї точки вважається максимальною тягою.",
   "SERVO_NEUTRAL": "У дво-спрямованих режимах це є позицією нульової тяги в мікросекундах.",
   "SERVO_DEAD_BAND": "Застосовується по обидва боки від Servo Neutral, все що в цьому діапазоні, - вважається нульовою тягою.",
-  "LOW_VOLTAGE_CUTOFF": "Якщо це увімкнути, то воно буде вирубати живлення мотору в разі падіння напруги до порогу низької напруги.",
+  "LOW_VOLTAGE_CUTOFF": "Якщо це увімкнути, то воно буде обмежувати живлення мотору в разі падіння напруги нижче порогу низької напруги.",
   "LOW_VOLTAGE_THRESHOLD": "Рівень напруги для кожного елементу батареї для обмеження живлення. Одиниця виміру - Вольт*100. Наприклад, щоб відключити живлення при 3.3V, введіть значення 330.",
-  "RC_CAR_REVERSING": "For ground vehicles only. Overrides user settings and places ESC into bi-directional mode with double tap to reverse type control.",
-  "USE_HALL_SENSORS": "For speed controllers with a hall sensor input to be used with sensored motors.",
-  "SINE_MODE_RANGE": "The amount of throttle in percent used for sinusoidal startup.",
+  "RC_CAR_REVERSING": "Тільки для наземного транспорту. Переписує налаштування користувача і встановлює регулятор обертів у дво-направлений режим, подвійне натискання міняє напрямок на протилежний.",
+  "USE_HALL_SENSORS": "Використання сенсорів Холлу для регуляторів швидкості, вхідні данні сенсору Холлу використовуються сенсорами моторів.",
+  "SINE_MODE_RANGE": "Використання тяги, у відсотках, для синусоідального запуску.",
   "BRAKE_STRENGTH": "The level of hold brake applied when brake on stop is enabled.",
   "BRAKING_STRENGTH": "Maximum amount of braking applied (complementary PWM duty cycle).",
   "POWER_RATING": "Depending on the power rating of your board this needs to be set to 1S if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to 2S+.",
@@ -45,5 +45,5 @@
   "TEMPERATURE_LIMIT": "Will significantly decrease maximum power when threshold is reached.",
   "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
   "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC.",
-  "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position."
+  "BIDIRECTIONAL_MODE": "Нейтральна позиція - це точка центру тяги. Обертання відбуваються в одному напрямку у позиції над центром, і в іншому напрямку - на позиції під центром."
 }
