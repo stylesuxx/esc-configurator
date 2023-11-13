@@ -1,6 +1,6 @@
 {
-  "settingsHeader": "Settings",
-  "closeText": "Close",
+  "settingsHeader": "Налаштування",
+  "closeText": "Закрити",
   "directInput": "Numeric Input",
   "directInputHint": "Use numeric input for numbers instead of sliders.",
   "printLogs": "Print logs",
