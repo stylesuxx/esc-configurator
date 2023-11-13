@@ -9,10 +9,10 @@
   "extendedDebugHint": "Will additionally print addresses that are being read/written to and the sent/received payload.",
   "disableCommon": "Disable common settings",
   "disableCommonHint": "Each ESC will have its own set of settings instead of having a common section that is valid for all ESCs.",
-  "enableAdvanced": "Enable advanced settings",
+  "enableAdvanced": "Увімкнути розширені налаштування",
   "enableAdvancedHint": "Adds advanced settings like dumping firmware.",
-  "unstableVersions": "Show firmware pre-releases",
-  "unstableVersionsHint": "Show unstable firmware versions and pre-releases",
-  "skipCache": "Skip cache",
-  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
+  "unstableVersions": "Показати пре-релізи прошивок",
+  "unstableVersionsHint": "Показувати нестабільні версії прошивки та пре-релізи",
+  "skipCache": "Не використовувати кеш",
+  "skipCacheHint": "Увімкніть це налаштування, якщо ви не бачите останню версію в виборі прошивки."
 }
