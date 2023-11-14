@@ -1,3 +1,0 @@
-LATEST=$(curl --silent "https://api.github.com/repos/stylesuxx/esc-configurator/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-
-
