@@ -6,6 +6,10 @@ ENV NODE_MAJOR=16
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
+# Default version to check out is master. Use --build-arg to customize this
+ARG VERSION
+ENV VERSION=${VERSION:-master}
+
 # Install node, npm and a few utilities used for debugging
 RUN apt-get update \
     && apt-get install -y ca-certificates gnupg sudo curl wget build-essential git vim \
@@ -16,13 +20,11 @@ RUN apt-get update \
     && sudo apt-get install -y npm \
     && npm install -g yarn
 
-# Build the app.
+# Build the app
 RUN git clone https://github.com/stylesuxx/esc-configurator.git \
     && cd esc-configurator \
+    && git checkout $VERSION \
     && yarn \
-    # npm-update-check is skipped as it breaks the build.
-    #&& yarn add npm-check-updates \
-    #&& yarn npm-check-updates -u \
     && yarn global add serve \
     && yarn build
 
