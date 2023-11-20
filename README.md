@@ -72,10 +72,6 @@ The build is then available from the build directory and can be served by simply
     yarn test:watch
     yarn test:coverage
 
-### Docker setup
-
-A Dockerfile is supplied that will build esc-configurator into a container image. A companion script called 'run.sh' is also supplied, which will trigger a build, start a container with the image and open the app in a google chrome.
-
 ## History & Credits
 This configurator is based on [BLHeli Configurator](https://github.com/blheli-configurator/blheli-configurator) which was based on [Cleanflight Configurator](https://github.com/cleanflight/cleanflight-configurator) which itself was based on [Baseflight Configurator](https://github.com/multiwii/baseflight-configurator). I would like to thank everyone who contributed to one of those projects, without you this project would not be possible.
 
