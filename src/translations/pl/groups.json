@@ -5,9 +5,9 @@
   "am32servo": "Ustawienia serwera",
   "am32brake": "Ustawienia hamowania",
   "am32pwm": "Ustawienia PWM",
-  "am32safety": "Safety Settings",
-  "bluejaySafety": "Safety Settings",
-  "bluejayBrake": "Brake Settings",
-  "bluejayBeacon": "Beacon Settings",
-  "bluejayExperimental": "Experimental Settings"
+  "am32safety": "Ustawienia Zabezpieczeń",
+  "bluejaySafety": "Ustawienia Zabezpieczeń",
+  "bluejayBrake": "Ustawienia hamowania",
+  "bluejayBeacon": "Ustawienia Sygnalizatora",
+  "bluejayExperimental": "Ustawienia Eksperymentalne"
 }

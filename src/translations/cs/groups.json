@@ -5,9 +5,9 @@
   "am32servo": "Nastavení serva",
   "am32brake": "Nastavení brzd",
   "am32pwm": "Nastavení PWM",
-  "am32safety": "Safety Settings",
-  "bluejaySafety": "Safety Settings",
+  "am32safety": "Nastavení bezpečnosti",
+  "bluejaySafety": "Nastavení bezpečnosti",
   "bluejayBrake": "Nastavení brzd",
-  "bluejayBeacon": "Beacon Settings",
-  "bluejayExperimental": "Experimental Settings"
+  "bluejayBeacon": "Nastavení majáku",
+  "bluejayExperimental": "Experimentální nastavení"
 }
