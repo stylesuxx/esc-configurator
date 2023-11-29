@@ -1,7 +1,14 @@
 [
   {
     "title": "Unreleased",
-    "items": []
+    "items": [
+      "AM32: Fix running brake range",
+      "Bluejay: Adjust min/max startup power defaults",
+      "Enhancement: Show checklist when chosing new firmware version",
+      "Enhancement: Link to release notes of new versions if available",
+      "Enhancement: More melodies",
+      "Translation: Add Ukrainian translation"
+    ]
   },
   {
     "title": "0.30.2",
