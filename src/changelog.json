@@ -1,6 +1,6 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.31.0",
     "items": [
       "Bugfix: Fix running brake range on AM32",
       "Bugfix: Update correct ESC when only a single ESC is attached (when multiple would be expected)",
@@ -9,7 +9,7 @@
       "Enhancement: Show checklist when chosing new firmware version",
       "Enhancement: Link to release notes of new versions if available",
       "Enhancement: More melodies",
-      "Translation: Add Ukrainian and French translation"
+      "Translation: Add Ukrainian and French translations"
     ]
   },
   {
