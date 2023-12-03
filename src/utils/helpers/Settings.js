@@ -54,11 +54,15 @@ const getIndividualSettings = (esc) => {
   const individualSettings = {};
 
   if(esc && esc.settings) {
-    const individualKeep = getIndividualSettingsDescriptions(esc);
+    try {
+      const individualKeep = getIndividualSettingsDescriptions(esc);
 
-    for(let j = 0; j < individualKeep.length; j += 1) {
-      const setting = individualKeep[j];
-      individualSettings[setting] = esc.settings[setting];
+      for(let j = 0; j < individualKeep.length; j += 1) {
+        const setting = individualKeep[j];
+        individualSettings[setting] = esc.settings[setting];
+      }
+    } catch (e) {
+      return individualSettings;
     }
   }
 

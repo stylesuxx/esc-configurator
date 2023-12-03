@@ -76,7 +76,7 @@ class BluejaySource extends GithubSource {
   }
 
   async getVersions() {
-    return this.getRemoteVersionsList(GITHUB_REPO, blacklist, 5);
+    return this.getRemoteVersionsList(GITHUB_REPO, blacklist, 8);
   }
 
   isValidName(name) {
@@ -115,6 +115,15 @@ class BluejaySource extends GithubSource {
         return [
           'DITHERING',
           'TEMPERATURE_PROTECTION',
+        ];
+      }
+
+      if(oldLayout < newLayout && newLayout === 208) {
+        return [
+          'DITHERING',
+          'TEMPERATURE_PROTECTION',
+          'STARTUP_POWER_MIN',
+          'STARTUP_POWER_MAX',
         ];
       }
     }

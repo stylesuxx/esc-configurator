@@ -1,6 +1,6 @@
 {
   "name": "esc-configurator",
-  "version": "0.30.2",
+  "version": "0.31.0",
   "private": false,
   "license": "AGPL-3.0",
   "dependencies": {
@@ -93,6 +93,7 @@
     "eslint-config-react-app": "^7.0.0",
     "eslint-plugin-jest": "^25.7.0",
     "eslint-plugin-react": "^7.28.0",
+    "node-gyp": "^10.0.0",
     "postcss": "^8.4.5",
     "pre-commit": "^1.2.2",
     "pre-push": "^0.1.1",
@@ -126,5 +127,8 @@
     "plugins": [
       "remark-preset-lint-recommended"
     ]
+  },
+  "engines": {
+    "node": ">=16.16.0 <19.0.0"
   }
 }

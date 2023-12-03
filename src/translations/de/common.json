@@ -186,5 +186,11 @@
   "mistaggedDetected": "erkannt",
   "update": "Ein Update ist verfügbar! Um die aktualisierte Version zu verwenden, Webseite neu laden oder die App neu starten.",
   "resettingDevice": "Gerät wird zurückgesetzt...",
-  "disabled": "Deaktiviert"
+  "disabled": "Deaktiviert",
+  "selectionAttention": "Achtung!",
+  "selectionHint": "Beim Flashen von neuer (oder anderer) ESC-Firmware sollte man sich am besten an folgende Checkliste halten:",
+  "selectionLi1": "Bitte lese die release notes um zu verstehen was sich geändert hat und welche Einstellungen für dein Setup nötig sein könnten",
+  "selectionLi2": "Stelle sicher, dass die Motoren beim Armen zuverlässig hochdrehen und sich dann idealerweise auch in die richtige Richtung drehen",
+  "selectionLi3": "Überprüfe nach einem kurzen Testflug die Motortemperaturen und passe deinen Tune an, falls die Motoren zu heiß werden.",
+  "selectionLinkText": "Release-Notizen auf Github anzeigen"
 }

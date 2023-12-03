@@ -7,7 +7,7 @@ jobs:
     name: Coverage
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Node
         run: yarn install --immutable --immutable-cache --check-cache
 
@@ -15,7 +15,7 @@ jobs:
         run: yarn test:coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           directory: ./coverage
           version: v0.1.15

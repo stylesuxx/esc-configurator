@@ -66,6 +66,7 @@ function FirmwareSelector({
     version: null,
     url: null,
     pwm: null,
+    releaseUrl: null,
   });
 
   const [layoutSelectionDisabled, setLayoutSelectionDisabled] = useState(false);
@@ -133,6 +134,7 @@ function FirmwareSelector({
           key: version.key,
           value: version.url,
           name: version.name,
+          releaseUrl: version.releaseUrl ? version.releaseUrl : null,
         }));
 
         const firmwareOptions = validFirmware.map((key) => ({
@@ -205,6 +207,8 @@ function FirmwareSelector({
     const selected = e.target.options.selectedIndex;
     const selectedOption = e.target.options[selected];
 
+    const releaseUrl = options.versions[selected - 1].releaseUrl;
+
     const firmwareName = selection.firmware;
     const firmwareVersion = options.versions[selected - 1].key;
 
@@ -223,6 +227,7 @@ function FirmwareSelector({
     setSelection({
       ...selection,
       url: e.target.value,
+      releaseUrl,
       version: selectedOption && options.versions[selected - 1].key,
     });
   }, [options, selection]);
@@ -374,6 +379,42 @@ function FirmwareSelector({
                     selected={selection.pwm}
                   />}
               </>}
+
+            <div className="alert">
+              <p>
+                <strong>
+                  {t('selectionAttention')}
+                </strong>
+              </p>
+
+              <p>
+                {t('selectionHint')}
+              </p>
+
+              <p>
+                <ul>
+                  <li>
+                    {t('selectionLi1')}
+                  </li>
+
+                  <li>
+                    {t('selectionLi2')}
+                  </li>
+
+                  <li>
+                    {t('selectionLi3')}
+                  </li>
+                </ul>
+              </p>
+
+              {selection.releaseUrl &&
+                <a
+                  href={selection.releaseUrl}
+                  target="_blank"
+                >
+                  {t('selectionLinkText')}
+                </a>}
+            </div>
 
             <div className="default-btn">
               <button

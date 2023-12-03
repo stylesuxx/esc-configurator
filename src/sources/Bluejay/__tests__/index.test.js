@@ -17,7 +17,7 @@ describe('Bluejay', () => {
       }
     }
 
-    expect(visibleIf.length).toEqual(1);
+    expect(visibleIf.length).toEqual(2);
   });
 
   it('should handle conditional visibility with custom settings', () => {
@@ -262,7 +262,7 @@ describe('Bluejay', () => {
 
     let conditionalFunction = null;
 
-    const revision = 208;
+    const revision = 209;
     const commonSettings = source.getCommonSettings(revision);
     const base = commonSettings.base;
     for(let j = 0; j < base.length; j += 1) {

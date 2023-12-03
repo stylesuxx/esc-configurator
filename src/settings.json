@@ -14,6 +14,10 @@
       "value": "en"
     },
     {
+      "label": "Français",
+      "value": "fr"
+    },
+    {
       "label": "Español",
       "value": "es"
     },
@@ -24,6 +28,10 @@
     {
       "label": "Polski",
       "value": "pl"
+    },
+    {
+      "label": "Українська",
+      "value": "uk"
     },
     {
       "label": "简体中文",

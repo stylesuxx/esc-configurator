@@ -226,7 +226,7 @@ const SETTINGS_LAYOUT_2 = [
     name: 'RUNNING_BRAKE_LEVEL',
     type: 'number',
     label: 'am32RunningBrakeLevel',
-    min: 0,
+    min: 1,
     max: 10,
     step: 1,
     group: 'am32brake',

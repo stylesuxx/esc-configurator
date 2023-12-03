@@ -386,10 +386,10 @@ describe('FirmwareSelector', () => {
     expect(onSubmit).toHaveBeenCalled();
   });
 
-  //TODO: Once v0.20.0 is released, add this test
+  //TODO: Once v0.22.0 is released, add this test
   /*
-  it('should not show PMW selection for Bluejay v0.20.0 and up', async() => {
-    const json = `[{ "tag_name": "v0.20.0", "assets": [{}] }]`;
+  it('should not show PMW selection for Bluejay v0.22.0 and up', async() => {
+    const json = `[{ "tag_name": "v0.22.0", "assets": [{}] }]`;
     global.caches = {
       open: jest.fn().mockImplementation(() =>
         new Promise((resolve) => {
@@ -445,7 +445,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.20.0/',
+        value: 'https://github.com/bird-sanctuary/bluejay/releases/download/v0.22.0/',
         name: 'Version',
       },
     });

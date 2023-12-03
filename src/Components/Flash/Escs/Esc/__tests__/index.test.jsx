@@ -341,6 +341,7 @@ describe('Esc', () => {
     }));
 
     const esc = {
+      index: 0,
       firmwareName: 'Bluejay',
       layoutRevision: 207,
       settings: { DITHERING: 0 },
@@ -374,6 +375,7 @@ describe('Esc', () => {
     }));
 
     const esc = {
+      index: 0,
       firmwareName: 'Bluejay',
       layoutRevision: 207,
       settings: { DITHERING: 1 },
