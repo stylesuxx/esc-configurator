@@ -2,7 +2,9 @@
   {
     "title": "Unreleased",
     "items": [
-      "AM32: Fix running brake range",
+      "Bugfix: Fix running brake range on AM32",
+      "Bugfix: Update correct ESC when only a single ESC is attached (when multiple would be expected)",
+      "Bugfix: Allow recovery via UI if ESC can still be read, but previous flash failed",
       "Bluejay: Adjust min/max startup power defaults",
       "Enhancement: Show checklist when chosing new firmware version",
       "Enhancement: Link to release notes of new versions if available",

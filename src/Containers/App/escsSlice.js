@@ -1,5 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+/**
+ * NOTE: The individual array holds individual ESC settings, the actual index
+ *       in the array does not represent the actual index of the ESC. If for
+ *       example only one ESC is attached, the individual length will have a
+ *       length of 1. The actual index of the ESC must be reat from that object.
+ *
+ *       Eg.: Only one ESC is attached to motor pin 2 an an FC where 4 ESCs
+ *            are expected. The individual array will have a length of 1, but
+ *            at index 0 it will have the settings for the ESC attached to motor
+ *            pin 2.
+ */
+
 const initialState = {
   connected: 0,
   master: {},
@@ -42,10 +54,16 @@ export const escsSlice = createSlice({
         settings,
       } = action.payload;
 
-      state.individual[index] = {
-        ...state.individual[index],
-        ...settings,
-      };
+      for(let i = 0; i < state.individual.length; i += 1) {
+        if(state.individual[i].index === index) {
+          state.individual[i] = {
+            ...state.individual[i],
+            ...settings,
+          };
+
+          break;
+        }
+      }
     },
   },
 });
