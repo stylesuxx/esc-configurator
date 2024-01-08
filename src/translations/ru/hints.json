@@ -1,7 +1,7 @@
 {
-  "STARTUP_BEEP": "Enable beep melody when the ESC is powered up.",
-  "BRAKE_ON_STOP": "Brake when motors are stopped.",
-  "BEACON_DELAY": "After how much time of inactivity the beacon should start to go off.",
+  "STARTUP_BEEP": "Включить проигрывание мелодии при включении регулятора оборотов (ESC).",
+  "BRAKE_ON_STOP": "Тормозить, когда моторы остановлены.",
+  "BEACON_DELAY": "Сколько времени бездействия должно пройти, чтобы включился сигнал тревоги.",
   "TEMPERATURE_PROTECTION": "At which temperature the ESC will shut down.",
   "BEEP_STRENGTH": "The volume of the startup beeps. Setting this too high might damage the motors.",
   "BEACON_STRENGTH": "The volume of the beacon. Setting this too high might damage the motors.",
