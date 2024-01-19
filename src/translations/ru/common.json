@@ -67,7 +67,7 @@
   "homeDisclaimerTextLine3": "Если у вас возникнут какие-либо проблемы, обязательно используйте кнопку **Сохранить журнал отладки** и отправьте новую проблему через [GitHub](https://github.com/stylesuxx/esc-configurator/issues/new).",
   "homeDisclaimerTextLine4": "Исходный код приложения можно скачать [здесь](https://github.com/stylesuxx/esc-configurator).",
   "homeDisclaimerTextLine5": "Последние версии [драйверов CP210x](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) можно скачать [здесь](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).",
-  "homeDisclaimerTextLine6": "Последние версии [драйверов USB VCP STM (https://www.st.com/en/development-tools/stsw-stm32102.html) можно скачать [здесь](https://www.st.com/en/development-tools/stsw-stm32102.html).",
+  "homeDisclaimerTextLine6": "Последние версии [драйверов USB VCP STM](https://www.st.com/en/development-tools/stsw-stm32102.html) можно скачать [здесь](https://www.st.com/en/development-tools/stsw-stm32102.html).",
   "homeWelcome": "Добро пожаловать в **ESC - Конфигуратор**, утилиту, предназначенную для упрощения обновления и настройки Ваших регуляторов оборотов (ESC).",
   "betaWarningLine1": "**Этот инструмент находится на стадии BETA-версии.**",
   "betaWarningLine2": "Возможно, некоторые вещи могут работать не так, как ожидалось. Если вы обнаружите какие-либо ошибки, пожалуйста, [сообщите нам о них](https://github.com/stylesuxx/esc-configurator/issues/new).",
