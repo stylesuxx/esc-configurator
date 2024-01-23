@@ -1,7 +1,7 @@
 const BOOT_LOADER_PINS = {
   PA2: 0x02,
   PB4: 0x14,
-  PA6: 0x06
+  PA6: 0x06,
 };
 
 const RESET_DELAY_MS = 5000;
