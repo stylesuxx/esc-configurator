@@ -7,7 +7,7 @@ import Arm from '../../utils/Hardware/Arm';
 import semver from 'semver';
 import { fetchJsonCached } from '../../utils/Fetch';
 
-const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
+const GITHUB_REPO = 'am32-firmware/AM32';
 
 class AM32Source extends GithubSource {
   minVersion = "1.94";
