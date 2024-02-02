@@ -151,7 +151,7 @@ function HomeColumnCenter() {
 
             <li>
               <a
-                href="https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware"
+                href="https://github.com/am32-firmware/AM32"
                 rel="noreferrer"
                 target="_blank"
               >
