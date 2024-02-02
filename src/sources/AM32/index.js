@@ -40,7 +40,7 @@ class AM32Source extends GithubSource {
     const settings = flash.settings;
     let revision = 'Unsupported/Unrecognized';
     if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION > 9 ? '' : '0'}${settings.SUB_REVISION}`;
     }
 
     if(make === 'NOT READY') {
