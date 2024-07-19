@@ -118,7 +118,7 @@ function HomeColumnCenter() {
           </strong>
 
           <br />
-          If you are still on 0.20.0, please downgrade to 0.19.2 - there have been issues with stall detection and motor protection which might result in broken ESCs and/or motors.
+          If you are still on 0.20.0, please upgrade to version 0.21.0 - there have been issues with stall detection and motor protection which might result in broken ESCs and/or motors.
         </div>
 
         <h2>
@@ -151,7 +151,7 @@ function HomeColumnCenter() {
 
             <li>
               <a
-                href="https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware"
+                href="https://github.com/am32-firmware/AM32"
                 rel="noreferrer"
                 target="_blank"
               >

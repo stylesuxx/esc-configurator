@@ -314,7 +314,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.94/',
+        value: 'https://github.com/am32-firmware/AM32/releases/download/v1.94/',
         name: 'Version',
       },
     });
@@ -377,7 +377,7 @@ describe('FirmwareSelector', () => {
 
     fireEvent.change(screen.getByRole(/combobox/i, { name: 'Version' }), {
       target: {
-        value: 'https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware/releases/download/v1.94/',
+        value: 'https://github.com/am32-firmware/AM32/releases/download/v1.94/',
         name: 'Version',
       },
     });

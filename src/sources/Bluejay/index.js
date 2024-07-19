@@ -97,9 +97,9 @@ class BluejaySource extends GithubSource {
   }
 
   getPwm(version) {
-    // Before v0.21.0 PWM was a build time option and should be selectable
+    // Before v0.22.0 PWM was a build time option and should be selectable
     // in the firmware selector.
-    if(semver.lt(version, '0.21.0')) {
+    if(semver.lt(version, '0.22.0')) {
       return [24, 48, 96];
     }
 

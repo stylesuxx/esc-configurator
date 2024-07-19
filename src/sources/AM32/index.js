@@ -7,7 +7,7 @@ import Arm from '../../utils/Hardware/Arm';
 import semver from 'semver';
 import { fetchJsonCached } from '../../utils/Fetch';
 
-const GITHUB_REPO = 'AlkaMotors/AM32-MultiRotor-ESC-firmware';
+const GITHUB_REPO = 'am32-firmware/AM32';
 
 class AM32Source extends GithubSource {
   minVersion = "1.94";
@@ -40,7 +40,7 @@ class AM32Source extends GithubSource {
     const settings = flash.settings;
     let revision = 'Unsupported/Unrecognized';
     if(settings.MAIN_REVISION !== undefined && settings.SUB_REVISION !== undefined) {
-      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION}`;
+      revision = `${settings.MAIN_REVISION}.${settings.SUB_REVISION > 9 ? '' : '0'}${settings.SUB_REVISION}`;
     }
 
     if(make === 'NOT READY') {

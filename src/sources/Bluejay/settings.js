@@ -429,30 +429,28 @@ COMMON['209'] = {
       }],
     },
     {
-      name: 'THRESHOLD_48to24',
-      type: 'number',
-      min: 0,
-      max: 255,
-      step: 1,
-      displayFactor: 100 / 255,
-      label: '48to24Threshold',
-      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 0),
-      sanitize: (value, settings) => {
-        if(value > settings.THRESHOLD_96to48) {
-          return settings.THRESHOLD_96to48;
-        }
-
-        return value;
-      },
-    },
-    {
       name: 'THRESHOLD_96to48',
       type: 'number',
       min: 0,
       max: 255,
       step: 1,
-      displayFactor: 100 / 255,
       label: '96to48Threshold',
+      visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 0),
+      sanitize: (settings) => {
+        if(settings.THRESHOLD_96to48 > settings.THRESHOLD_48to24) {
+          return { THRESHOLD_96to48: settings.THRESHOLD_48to24 };
+        }
+
+        return {};
+      },
+    },
+    {
+      name: 'THRESHOLD_48to24',
+      type: 'number',
+      min: 0,
+      max: 255,
+      step: 1,
+      label: '48to24Threshold',
       visibleIf: (settings) => ('PWM_FREQUENCY' in settings) && (parseInt(settings.PWM_FREQUENCY, 10) === 0),
     },
   ],
@@ -608,6 +606,7 @@ DEFAULTS['209'] = { // v0.22
   ...DEFAULTS['208'],
   PWM_FREQUENCY: 24,
   STARTUP_MELODY_WAIT_MS: 0,
+  THRESHOLD_96to48: 85,
   THRESHOLD_48to24: 170,
 };
 
