@@ -189,7 +189,7 @@
   "disabled": "Disabilitato",
   "selectionAttention": "Attenzione!",
   "selectionHint": "Quando si flasha il firmware su un ESC nuovo (o diverso) è consigliato seguire la seguente lista di controllo:",
-  "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
+  "selectionLi1": "Leggi le note di rilascio per capire cosa è cambiato e cosa avresti bisogno di regolare",
   "selectionLi2": "Assicurati che quando si arma i tuoi motori ruotino bene e nella giusta direzione",
   "selectionLi3": "Controlla le temperature del motore dopo un breve volo di prova e regola i parametri se troppo caldi",
   "selectionLinkText": "Mostra le note di rilascio su Github"
