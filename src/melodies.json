@@ -126,6 +126,15 @@
     ]
   },
   {
+    "name": "Deco*27 - Vampire",
+    "tracks": [
+      "bluejay:b=163,o=5,d=8:a5,g5,f5,g5,p,4f5,f6,p,a5,16a5,g5,16p,f5,p,f6,p,1p,1p,1p,1p,1p,1p",
+      "bluejay:b=163,o=5,d=8:1p,1p,1p,1p,4p,a5,d6,e6,4f6,a5,g5,p,f6,p,g6,16g6,32g6,32p,g6,f6,g6,4a6,1p,2p,p",
+      "bluejay:b=163,o=5,d=8:1p,1p,a5,g5,16g5,16f5,p,g5,p,f5,g5,32f5,32p,16f5,a5,16p,16g5,p,d6,16d6,32d6,32p,d6,c#6,d6,e6,1p,1p,1p,2p,4p",
+      "bluejay:b=163,o=5,d=8:1p,1p,1p,1p,1p,1p,4p,p,g6,16f6,32f6,32p,f6,p,4a6,g6,f6,g6,2f6"
+    ]
+  },
+  {
     "name": "Devil's Swing",
     "tracks": [
       "Melody:b=125,o=5,d=16:a#6,p,f#6,p,32f#6,32p,32f#6,32p,f#6,d#6,f#6,g6,p,g#6,8p,f#6,d#6,g#6,p,f#6,p,f#6,p,f#6,d#6,32f#6,32p,f#6,p,f#6,8p,f#6,d#6,f#6,p,f#6,p,32f#6,32p,32f#6,32p,f#6,d#6,f#6,g#6,p,a6,8p,a6,p,a6,p,a6,p,a6,p,g#6,p,a6,g#6,p,f#6"
@@ -205,6 +214,15 @@
       "FF8Laguna2:d=16,o=4,b=140:2c5,4c5.,b,a,2b,4b.,a,g,2a,4a.,f,a,2g,4g.,f,e,4f,4d.",
       "FF8Laguna3:d=16,o=5,b=140:2c6,4c6.,b,a,2b,4b.,a,g,2a,4a.,f,a,2g,4g.,f,e,4f,4d.",
       "FF8Laguna4:d=16,o=4,b=140:a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,a,p,d5,p,c5,p,g,a,p,a,d5,p,c5,8p.,2c,8c"
+    ]
+  },
+  {
+    "name": "Future - Mask off",
+    "tracks": [
+      "mask_off:d=4,o=5,b=200:2e,8g,8b,8g,1a,8b,8a,8g,4f#,4e,8d,8b4,1e",
+      "mask_off:d=4,o=5,b=200:1e2,8p,1a2,8p,1d2,32p,1e2",
+      "mask_off:d=4,o=5,b=200:1e3,8p,1a3,8p,1d3,32p,1e3",
+      "mask_off:d=4,o=5,b=200:2e6,8g6,8b6,8g6,1a6,8b6,8a6,8g6,4f#6,4e6,8d6,8b,1e6"
     ]
   },
   {
@@ -387,6 +405,13 @@
     ]
   },
   {
+    "name": "Ой у лузі червона калина (Ukrainian Patriotic Song - Polyphonic)",
+    "tracks": [
+      "kalyna:d=4,o=5,b=260: 4d6,4p, 4d6, 4p, 2f6, 4p, 4d6, 4e6, 4f6, 4e6, 4d6,4c#6, 4p, 4a5,4p, 2d6,4p, 4e6,4f6, 4p, 4e6, 4p, 4d6",
+      "kalyna:d=4,o=5,b=260: 4d4, 4f4,4d4, 4f4,4d4, 4f4,4d4, 4f4, 4e4, 4g4,4e4, 4g4, 4a4,4c#,4a4,4c#, 4d4, 4f4,4d4, 4f4, 4c4, 4e4,4c4, 4e4,4d4, 4f4,4d4, 4f4"
+    ]
+  },
+  {
     "name": "Owl City - Fireflies",
     "tracks": [
       "Fireflies1:d=8,o=5,b=180:a#3,a#4,d6,a#3,a#4,a#5,p,d#,d#4,a#,f,d#,f,a#,p,d#,g#3,c,a#,c,d#,d#4,g#3,p,a#,c,a#,c4,a#,d#,f,a#3,a#4,d6,d,f4,a#,p,d#,d#4,a#4,f,d#,g#,g,d#,a#4,g#3,c,d#4,g#3,a#4,p,d#4,c,g#3,c,a#4,c4,d#,f",
@@ -402,6 +427,12 @@
       "pacman2:d=16,o=4,b=112:c#,8p,g#,c#,8p,g#,d,8p,a,d,8p,a,c#,8p,g#,c#,8p,32g#.,64p,g#,p,a#,p,c5,p,c#5",
       "pacman3:d=32,o=6,b=112:c#,p,c#7,p,g#,p,f,p,c#7,g#,16p,16f.,p,d,p,d7,p,a,p,f#,p,d7,a,16p,16f#.,p,c#,p,c#7,p,g#,p,f,p,c#7,g#,16p,16f.,p,e,f,f#,p,f#,g,g#,p,g#,a,a#,p,16c#7",
       "pacman4:d=32,o=5,b=112:c#,p,c#6,p,g#,p,f,p,c#6,g#,16p,16f.,p,d,p,d6,p,a,p,f#,p,d6,a,16p,16f#.,p,c#,p,c#6,p,g#,p,f,p,c#6,g#,16p,16f.,p,e,f,f#,p,f#,g,g#,p,g#,a,a#,p,16c#6"
+    ]
+  },
+  {
+    "name": "Peppa Pig - Theme",
+    "tracks": [
+      "PeppaPig:b=300,o=5,d=4:g,p,e,c,d,p,g4,p,g4,b4,d,f,e,p,c,p"
     ]
   },
   {
@@ -501,6 +532,15 @@
     "name": "Salt-N-Pepa - Push it!",
     "tracks": [
       "PushIt:d=8,o=5,b=165:a,p,e,a,p,e,p,g,p,e,p,e,b,c6,b,g,a,p,e,a,p,e,p,g,p,e,p,e,b,c6,b,g,a,p,e6,d6,p,c6,p,b,p,g,p,g,b,c6,b,g,a"
+    ]
+  },
+  {
+    "name": "Sea of Thieves - Maiden Voyage",
+    "tracks": [
+      "Melody:b=125,o=5,d=4:d,8p,16d,16e,f#,8e,16e,16d,e,a,p,16g,16f#,8e,d,16f#,8p,16a,b,8a,8p,2e,e",
+      "Melody:b=125,o=4,d=4:p,d,8p,32d,32p,32a3,32p,8d,8p,p,16c#,16p,32a3,32p,32c#,32p,a3,2p,d,p,8e,8p,p,16a3,16p,32a3,32p,32a3,32p,8a3,8p",
+      "Melody:b=125,o=6,d=4:d,8p,16d,16e,f#,8e,16e,16d,e,a,p,16g,16f#,8e,d,16f#,8p,16a,b,8a,8p,2e,e",
+      "Melody:b=125,o=4,d=4:p,a3,8p,32a3,32p,32d,32p,a3,p,16a3,16p,32c#,32p,32a3,32p,c#,p,p,a3,p,8a3,8p,p,16c#,16p,32c#,32p,32c#,32p,8c#,8p"
     ]
   },
   {
@@ -631,6 +671,12 @@
     "tracks": [
       "ts_hof_m:b=85,o=5,d=1:16a#5,16a5,16a#5,16g5,16a#5,16d5,16a#5,16g5,16a#5,16d#5,16d#6,16g5,16a#5,16d#5,16d#6,16a#5,16d6,16a#5,16d#6,16a#5,16f6,16a#5,16c6,16a5,16f6,16f5,16f6,16a#5,16c6,16f5,16f6,16a5",
       "ts_hof_b:b=85,o=3,d=1:8g,8d4,8g4,4d#,8a#,4d#4,8a#,8f4,8a#4,4f,8c4,4f4"
+    ]
+  },
+  {
+    "name": "T-Motor Default",
+    "tracks": [
+      "tmotor:b=130,o=5,d=8:c,16f,16e,f,e,4c"
     ]
   },
   {
