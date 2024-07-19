@@ -1,7 +1,11 @@
 [
   {
-    "title": "Unreleased",
+    "title": "0.32.0",
     "items": [
+      "Bugfix: Add more space to display ESC information",
+      "Translation: Add Russian translations",
+      "Translation: Fixed typo",
+      "Enhancement: More melodies"
     ]
   },
   {
