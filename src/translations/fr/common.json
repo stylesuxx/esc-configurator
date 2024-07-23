@@ -189,7 +189,7 @@
   "disabled": "Désactivé",
   "selectionAttention": "Attention!",
   "selectionHint": "Lorsque vous flashez un nouveau firmware ESC (ou un autre), il est préférable d'adhérer à la liste de contrôle suivante :",
-  "selectionLi1": "Lisez les notes de relese pour comprendre ce qui a changé et ce que vous pourriez avoir besoin d'ajuster",
+  "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
   "selectionLi2": "Assurez-vous que vos moteurs tournent de manière fiable à l'armement et dans la bonne direction",
   "selectionLi3": "Contrôler la température du moteur après un court vol d'essai et régler les paramètres si elle est trop chaude",
   "selectionLinkText": "Afficher les notes de version sur Github"
