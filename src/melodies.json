@@ -226,6 +226,15 @@
     ]
   },
   {
+    "name": "Genshin Impact - Fontaine",
+    "tracks": [
+      "Melody:b=100,o=5,d=8:4d#6,d#6,4c#6,b,4a#,4a#,d#,f,f#,g#,a#,g#,f#,d#,4f#,f#,4f,f,p,4d#6,4c#6,b,4a#,4a#,d#,f,f#,g#,a#,g#,f#,f,d#",
+      "Melody:b=100,o=4,d=8:d#,16d#5,16p,d#5,c#,16c#5,16p,c#5,d#,16d#5,16p,d#5,d#,16d#5,16p,d#5,b,16b5,16p,b5,b,16b5,16p,b5,g#,16g#5,16p,g#5,a#,16a#5,16p,a#5,p,d#,16p,16d#,c#,16c#5,16p,c#5,d#,16d#5,16p,d#5,d#,16d#5,16p,d#5,b,16b5,16p,b5,c#,16c#5,16p,c#5,d#5",
+      "Melody:b=100,o=4,d=8:p,16a#,16p,a#,p,16g#,16p,g#,p,16a#,16p,a#,p,16a#,16p,a#,p,16f#,16p,f#,p,16f#,16p,f#,p,16d#,16p,d#,p,16f,16p,f,4p,p,4c#5,d5,4d#5,d#5,4a#5,a#5,4g#5,g#5,4c#5,c#5",
+      "Melody:b=100,o=4,d=8:4a#5,a#5,4g#5,f#5,2a#5,f#5,g#5,2f#5,4f#5,4g#5,g#5,4a#5,a#5,p,a#,16p,16a#,p,16g#,16p,g#,p,16a#,16p,a#,p,16a#,16p,a#,p,16f#,16p,f#,p,16g#,16p,g#,a#"
+    ]
+  },
+  {
     "name": "Guns n Roses - Sweet Child O Mine",
     "tracks": [
       "SweetChi:d=4,o=5,b=125:8c#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#,8c#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#"
@@ -469,6 +478,15 @@
       "PkmnOpening2:d=8,o=7,b=198:16a3,16p,16a3,16p,4d4,16a3,16p,16a3,16p,4d#4,16a3,16p,16a3,16p,4f4,16a3,16p,16a3,16p,4g4,1f#4",
       "PkmnOpening3:d=8,o=7,b=198:16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a#4,16d4,16p,16d4,16p,4a#4,1a4",
       "PkmnOpening4:d=8,o=7,b=198:16d4,16p,16d4,16p,4a4,16d4,16p,16d4,16p,4a#4,16d4,16p,16d4,16p,4c5,16d4,16p,16d4,16p,4c#5,1d5"
+    ]
+  },
+  {
+    "name": "Police Acadademy - Blue Oyster Bar",
+    "tracks": [
+      "for_sofin:b=125,o=5,d=4:8e5,8c6,8b5,8a5,8e5,1c5,p, 8p,8e5,8c6,8b5,8a5,8e5,g5,8p,8f5, 64p,2f5",
+      "for_sofin:b=125,o=5,d=4:2p,8p,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8d4,8e3,8d4,8e3,8d4,8e3,8d4,8e3,8d4",
+      "for_sofin:b=125,o=5,d=4:8e5,8c6,8b5,8a5,8e5,1c5,p, 8p,8e5,8c6,8b5,8a5,8e5,g5,8p,8f5, 64p,2f5",
+      "for_sofin:b=125,o=5,d=4:2p,8p,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8c4,8e3,8d4,8e3,8d4,8e3,8d4,8e3,8d4,8e3,8d4"
     ]
   },
   {
@@ -750,6 +768,12 @@
     "name": "Violent Femmes - Blister In the Sun (short)",
     "tracks": [
       "BlisterI:d=4,o=5,b=285:e.,8g#.,8e.,a.,8g#.,e.,g#.,8e.,a.,g#.,e.,8g#.,8e.,a.,8g#.,e."
+    ]
+  },
+  {
+    "name": "Was wollen wir trinken (sieben Tage lang)",
+    "tracks": [
+      "Was_Wollen_Wir_Trinken:o=6,d=4,b=126:16d,16p,8d,16c,16b5,c,a5.,16d,16p,8d,8c,8b5,16d,16p,8d,16c,16b5,4c,a5,8b5,8g5,4a5"
     ]
   },
   {
