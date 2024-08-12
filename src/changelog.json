@@ -1,5 +1,12 @@
 [
   {
+    "title": "0.32.1",
+    "items": [
+      "Bluejay: D & E layout for X MCU",
+      "Enhancement: More melodies"
+    ]
+  },
+  {
     "title": "0.32.0",
     "items": [
       "Bugfix: Add more space to display ESC information",
