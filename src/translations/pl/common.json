@@ -189,7 +189,7 @@
   "disabled": "Wyłączone",
   "selectionAttention": "Uwaga!",
   "selectionHint": "Podczas wgrywania nowego (lub różnego) oprogramowania ESC najlepszym rozwiązaniem jest trzymanie się następującej listy kontrolnej:",
-  "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
+  "selectionLi1": "Przeczytaj informacje o wersji, aby dowiedzieć się, co się zmieniło i co może wymagać dostosowania",
   "selectionLi2": "Upewnij się, że silniki obracają się prawidłowo na ramieniu i we właściwym kierunku",
   "selectionLi3": "Sprawdź temperaturę silnika po krótkim locie testowym i dostosuj tuning, jeśli jest zbyt gorący",
   "selectionLinkText": "Pokaż informacje o wydaniu na Github"
