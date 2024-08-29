@@ -35,7 +35,7 @@
   "SINE_MODE_RANGE": "La quantité de gaz en pourcentage utilisée pour le démarrage sinusoïdal.",
   "BRAKE_STRENGTH": "Le niveau de freinage appliqué lorsque le frein à l'arrêt est activé.",
   "BRAKING_STRENGTH": "Quantité maximale de freinage appliquée (cycle de service PWM complémentaire).",
-  "POWER_RATING": "Selon la puissance de votre carte, cela doit être réglé sur 1S si la carte est évaluée pour 1S seulement. Sur toutes les cartes notées au moins avec 2S (y compris 1-2S) ou quand un convertisseur DC/DC est utilisé pour alimenter les ESC MCU ceci doit être défini à 2S+.",
+  "POWER_RATING": "Depending on the power rating of your board this needs to be set to '1S Only' if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to '1-2S+'.",
   "PWM_THRESHOLD_LOW": "Sous cette limite, un signal PWM de 96kHz sera utilisé. Entre faible et élevé, un signal PWM de 48kHz sera utilisé.",
   "PWM_THRESHOLD_HIGH": "Au-dessus de cette limite, un signal PWM 24kHz sera utilisé.",
   "FORCE_EDT_ARM": "Armer seulement après un handshake EDT. Le firmware du contrôleur de vol doit supporter cette fonctionnalité.",
