@@ -377,10 +377,10 @@ COMMON['206'] = {
       label: 'escPowerRating',
       options: [{
         value: '1',
-        label: '1S',
+        label: '1S Only',
       }, {
         value: '2',
-        label: '2S+',
+        label: '1-2S+',
       }],
       group: 'bluejaySafety',
       order: 0,
