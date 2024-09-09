@@ -10,7 +10,17 @@ function CompatibilityWarning() {
       </b>
 
       {' '}
-      is not supported on your browser. Make sure you&apos;re running an up to date Chromium based browser like
+      is not supported on your browser, install 
+      
+      {' '}
+      <a
+        href="https://github.com/kuba2k2/firefox-webserial"
+        rel="noreferrer"
+        target="_blank"
+      >
+        firefox webserial
+      </a>
+      . Or switch to an up to date Chromium based browser like
 
       {' '}
 
