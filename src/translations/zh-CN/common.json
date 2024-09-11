@@ -189,7 +189,7 @@
   "disabled": "已禁用",
   "selectionAttention": "注意!",
   "selectionHint": "当烧录新的 (或不同的) ESC 固件时，最佳做法是遵循以下检查列表：",
-  "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
+  "selectionLi1": "阅读发布说明以了解哪些内容发生了变化，以及您可能需要调整哪些内容",
   "selectionLi2": "请确保你的电机转向正确，并能够可靠地在机臂上旋转",
   "selectionLi3": "短时间飞行测试后检查电机温度，如果它们太热，则需要调整参数",
   "selectionLinkText": "显示 GitHub 上的发布日志"
