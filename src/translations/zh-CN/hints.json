@@ -35,7 +35,7 @@
   "SINE_MODE_RANGE": "用于正弦式启动的油门量%",
   "BRAKE_STRENGTH": "当停止时刹车启用时的刹车等级",
   "BRAKING_STRENGTH": "应用的最大刹车量 (互补 PWM 的占空比)。",
-  "POWER_RATING": "Depending on the power rating of your board this needs to be set to '1S Only' if the board is rated for 1S only. On all boards rated at least with 2S (including 1-2S) or when a DC/DC converter is used to power the ESCs MCUs, this needs to be set to '1-2S+'.",
+  "POWER_RATING": "根据电调的额定电压，如果电调的额定电压为1S，则需要将其设置为“仅1S”。在所有额定电压至少为2S (包括1-2S) 或使用DC/DC 转换器为电调的MCU供电的电调上，需要设置为“1-2S +”",
   "PWM_THRESHOLD_LOW": "低于此油门将使用 96kHz PWM 信号。在低位与高位之间将使用 48kHz PWM 信号。",
   "PWM_THRESHOLD_HIGH": "高于此油门将使用 24kHz PWM 信号。",
   "FORCE_EDT_ARM": "只有在 EDT 握手成功之后才能解锁。飞控固件必须支持此功能。",
