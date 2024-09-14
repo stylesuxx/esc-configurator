@@ -189,7 +189,7 @@
   "disabled": "已禁用",
   "selectionAttention": "註意!",
   "selectionHint": "當燒錄新的 (或不同的) ESC 韌體時，最佳做法是遵循以下檢查清單：",
-  "selectionLi1": "閱讀發布日誌以了解你可能需要調整的變化",
+  "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
   "selectionLi2": "請確保你的馬達轉向正確，並能夠可靠地在機臂上旋轉",
   "selectionLi3": "短時間飛行測試後檢查馬達溫度，如果它們太熱，則需要調整參數",
   "selectionLinkText": "顯示 GitHub 上的發布日誌"
