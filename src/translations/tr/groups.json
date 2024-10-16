@@ -1,13 +1,13 @@
 {
   "general": "",
-  "am32motor": "Motor Specs",
-  "am32sine": "Sinusoidal Settings",
-  "am32servo": "Servo Settings",
-  "am32brake": "Brake Settings",
-  "am32pwm": "PWM Settings",
-  "am32safety": "Safety Settings",
-  "bluejaySafety": "Safety Settings",
-  "bluejayBrake": "Brake Settings",
-  "bluejayBeacon": "Beacon Settings",
-  "bluejayExperimental": "Experimental Settings"
+  "am32motor": "Motor Özellikleri",
+  "am32sine": "Sinüs Dalgası Ayarları",
+  "am32servo": "Servo Ayarları",
+  "am32brake": "Fren Ayarları",
+  "am32pwm": "PWM Ayarları",
+  "am32safety": "Güvenlik Ayarları",
+  "bluejaySafety": "Güvenlik Ayarları",
+  "bluejayBrake": "Fren Ayarları",
+  "bluejayBeacon": "Beacon Ayarları",
+  "bluejayExperimental": "Deneysel ayarlar"
 }
