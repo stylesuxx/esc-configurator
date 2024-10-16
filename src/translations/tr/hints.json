@@ -5,7 +5,7 @@
   "TEMPERATURE_PROTECTION": "Hangi sıcaklık derecesinde ESC kapanacak.",
   "BEEP_STRENGTH": "Başlangıç beep ses seviyesi. Bunu çok yükseğe ayarlamak motorlara zarar verebilir.",
   "BEACON_STRENGTH": "Beacon ses seviyesi. Bunu çok yükseğe ayarlamak motorlara zarar verebilir.",
-  "STARTUP_POWER_MIN": "The least amount of power applied when starting up the motors. Increase if motors are not able to spin after arming.",
+  "STARTUP_POWER_MIN": "Motorlar başlatılırken uygulanacak en az güç. Düşük gaz miktarıyla motorlar dönmüyorsa bu ayarı attırın.",
   "DITHERING": "Efektif Pwm sinyalini 2000 basamağa çıkartır. Bu ayarı 24kHz üstünde bırakmanız tavsiye edilir.",
   "STARTUP_POWER_MAX": "Motorlar başlarken ya da yön değiştirirken gücü sınırlandırır.",
   "RPM_POWER_SLOPE": "Motor dönerken uygulanabilecek gücü sınırlandırır. Düşük değerler ani güç sıçramalarını engeller ancak aynı zamanda maximum hızı ve yavaşlamayı azaltır.",
