@@ -15,7 +15,7 @@
   "SINUSOIDAL_STARTUP": "İlk %10 luk gaz miktarında motoru sinusodial açık loop komutasyon moduna alır.",
   "COMPLEMENTARY_PWM": "Enables active braking by using low side switches for current decay instead of MOSFET body diodes.",
   "VARIABLE_PWM_FREQUENCY": "Increases PWM frequency proportionally to motor rpm from 24-48khz to avoid throttle disturbances.",
-  "STUCK_ROTOR_PROTECTION": "Cuts power to the motor and stops trying to restart after 10 failed start attempts.",
+  "STUCK_ROTOR_PROTECTION": "Motora aktarılan gücü keser ve 10 kere başarısız olan başlatma girişiminden sonra denemeyi bırakır.",
   "STALL_PROTECTION": "Increases throttle automatically below a rpm threshold to try and avoid stalling the motor, not recommended for multirotors.",
   "TIMING_ADVANCE": "Motor commutation advance timing. Higher timing are less prone to desyncs and can provide more power at the cost of efficiency.",
   "MOTOR_KV": "The KV rating of the motor stated by the manufacturer. The value is used to set RPM limit for low rpm throttle protection.",
