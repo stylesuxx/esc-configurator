@@ -21,12 +21,6 @@
     ]
   },
   {
-    "name": "Among Us - Theme",
-    "tracks": [
-      "Amongus:b=95,o=5,d=4:c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,c6,8c6,16a#,16d6,c6,16c6,8g3,c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,2f#6,16f#6,16f6,16d#6,16f#6,16f6,16d#6"
-    ]
-  },
-  {
     "name": "AC/DC - Back in Black",
     "tracks": [
       "ACDCBack1:b=180,o=5,d=4:16b4,8p.,2p,16d,16p,16d,16p,16d,8p.,2p,16a4,16p,16a4,16p,16a4,8p.,2p.,8p,16g4,16p,16e4,16p,16d4,16p,16b3,16p,16a3,16b3,16a3,16p,16g3,16p",
@@ -42,6 +36,21 @@
       "tnt2:d=4,o=3,b=250:2g5,4g5,2p,4a#5,4p,2c6,4c6,2p,4c6,2p,2g5",
       "tnt3:d=4,o=3,b=250:2c5,4c5,2p,4d#5,4p,2f5,4f5,4p,4d#5,4f5,4d#5,4p,2c5",
       "tnt4:d=4,o=3,b=250:8c4,8p,8c4,8p,8c4,8p,8c4,8p,8c4,8p,8d#4,8p,8d#4,8p,8f4,8p,8f4,8p,8f4,8p,8f4,8p,8d#4,8p,8f4,8p,8d#4,8p,8d#4,8p,2c4"
+    ]
+  },
+  {
+    "name": "Among Us - Theme",
+    "tracks": [
+      "Amongus:b=95,o=5,d=4:c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,c6,8c6,16a#,16d6,c6,16c6,8g3,c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,2f#6,16f#6,16f6,16d#6,16f#6,16f6,16d#6"
+    ]
+  },
+  {
+    "name": "Angry Birds - Theme",
+    "tracks": [
+      "AngryBirdsTreble: d=4,o=5,b=250: 8e, 8f#, g, e, b, 8e, 8f#, g, 16b, 16b, 16b, 16p, b, p, 8b6, 8c7, 8b6, 8a6, 16g6, 16g6, 16g6, 16p, 8g6, 8f#6, 2e6",
+      "AngryBirdsTreble2: d=4,o=5,b=250: 8e, 8f#, g, e, b, 8e, 8f#, g, 16b, 16b, 16b, 16p, b, p, 8b, 8c6, 8b, 8a, 16g, 16g, 16g, 16p, 8g, 8f#, 2e",
+      "AngryBirdsBass: d=4,o=3,b=250: p, e, e, e, 8e, 32e, 32e, 32e, 32p, 1e, 2g, 2f#, 2e",
+      "AngryBirdsTreble: d=4,o=5,b=250: 8e, 8f#, g, e, b, 8e, 8f#, g, 16b, 16b, 16b, 16p, b, p, 8b6, 8c7, 8b6, 8a6, 16g6, 16g6, 16g6, 16p, 8g6, 8f#6, 2e6"
     ]
   },
   {
@@ -167,6 +176,12 @@
   {
     "name": "Doom - Theme",
     "tracks": [
+      "doom:b=420,o=4,d=32:8g4,8e4,8b3,8e4,8g4,8e4,8g4,8b4,8g4,8e4,8g4,8e4,8g4,8b4,8e5,8g5,8e3,8p,8e3,8p,4e,8e3,8p,8e3,8p,4d,8e3,8p,8e3,8p,4c,8e3,8p,8e3,8p,4a#3,8e3,8p,8e3,8p,4b3,4c,8e3,8p,8e3,8p,4e,8e3,8p,8e3,8p,4d,8e3,8p,8e3,8p,4c,8e3,8p,8e3,8p,1a#3"
+    ]
+  },
+  {
+    "name": "Doom - Theme (Polymorphic)",
+    "tracks": [
       "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1f#4",
       "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1c4",
       "e1m1:b=420,o=4,d=32:4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,2c4,4p,4c4,2p,4p,4c4,2p,4p,4c4,4p,4c4,1c4",
@@ -235,6 +250,15 @@
     ]
   },
   {
+    "name": "GTA4 - Pager",
+    "tracks": [
+      "motor1:b=224,o=4,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g",
+      "motor2:b=224,o=5,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g",
+      "motor3:b=224,o=5,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g",
+      "motor4:b=224,o=4,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g"
+    ]
+  },
+  {
     "name": "Guns n Roses - Sweet Child O Mine",
     "tracks": [
       "SweetChi:d=4,o=5,b=125:8c#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#,8c#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#"
@@ -292,6 +316,12 @@
     ]
   },
   {
+    "name": "Kim Possible - Pager",
+    "tracks": [
+        "pager:d=16,o=5,b=200:d6,8p,d6,8p,f6,32p,d6"
+    ]
+  },
+  {
     "name": "Kino - A Pack of Cigarettes",
     "tracks": [
         "Kino1:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
@@ -337,6 +367,15 @@
     "name": "Maxwell the cat - Theme",
     "tracks": [
       "maxwell:d=32, f=16:d5,p,d5,p,d5,p,e5,p,f5,p,p,p,f5,p,p,p,b5,p,b5,p,b5,p,a5,p,g5,p,p,p,g5,p,p,p,c5,c5,c5,c5,c5,c5,p,a4,a4,a4,a4,a4,a4,p,e5,e5,e5,e5,e5,e5,p,c5,c5,c5,c5,c5,c5."
+    ]
+  },
+  {
+    "name": "MacGyver - Theme",
+    "tracks": [
+      "MacGyverBass1:b=143,o=3,d=8:d4,d4,d4,d4,d4,d4,d4,d4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,e,e4,e,e4,2c4",
+      "MacGyverTreb1:b=143,o=3,d=8:d4,d4,d4,d4,d4,d4,d4,d4,2d4,a,c4,p,b,2b,d4,d4,p,4d4,a4,g4,p,4e4,4g4,2c4",
+      "MacGyverTreb2:b=143,o=3,d=8:f#4,f#4,f#4,f#4,f#4,f#4,f#4,f#4,2g4,a,c4,p,d4,2d4,d4,d4,p,4g4,a4,g4,a4,4g4,4b4,2e4",
+      "MacGyverTreb3:b=143,o=3,d=8:c5,c5,c5,c5,c5,c5,c5,c5,2b4,f#4,a4,p,g4,2g4,c5,c5,p,4b4,c5,b4,a4,4g4,4e5,2a4"
     ]
   },
   {
@@ -712,6 +751,12 @@
     ]
   },
   {
+    "name": "Uma Musume - Umapyoi Densetsu",
+    "tracks": [
+      "Melody:b=170,o=5,d=16:d,p,d,p,d,p,d,p,c,p,b4,p,g4,p,32p,g4,p,8d,8p,g4,p,8d,8p,g4,p,g4,p,f#4,p,g4,p,4a4,8p,32d,p,8d,4p,d4,p,8a4,p,a4,p,8d,p,32f#4,p,32g4,8p,8a4,a4,p,8g4,g4,p,8f#4,f#4,p,8g4,g4"
+    ]
+  },
+  {
     "name": "Una Mattina - Ludovico Einaudi",
     "tracks": [
       "le_unama_m:b=150,o=5,d=1:8h4,8c,8e,8g,8h,4a.,2e.,8e,8p,8h,8a,8h,8a,4h,4a,2e.,8e,8p,8h,8a,8h,8a,8h,4a.,2e.,8e,8p,16h,16p,16h,16p,16h,16p,8c6,16h,16p,8h,4a,2e,4e.",
@@ -797,6 +842,15 @@
     "name": "X-Files - Theme",
     "tracks": [
       "XFiles:b=125,o=5,d=4:e,b,a,b,d6,2b."
+    ]
+  },
+  {
+    "name": "X-Files - Theme (Polyphonic)",
+    "tracks": [
+      "Xfiles1:b=384,o=5,d=4:a4,c,e,f,c,e,f,c,e,f,c,e,a,2p,a,2p,a",
+      "Xfiles2:b=384,o=5,d=4:a4,c,e,f,c,e,f,1p,1p,1p",
+      "Xfiles3:b=384,o=5,d=4:a4,c,e,f,1p,1p,1p,2p,p",
+      "Xfiles4:b=384,o=4,d=4:a,e,a,e,a,e,a,e,a,e,a,e,a,e,a,e,a,e,a"
     ]
   },
   {
