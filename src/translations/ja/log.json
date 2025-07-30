@@ -42,6 +42,6 @@
   "bootloaderMismatch": "Bootloader mismatch! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Firmware is tagged as {{tagged}} but actualy seems to be {{actual}}",
   "browser": "{{name}} ({{version}}) on {{os}}",
-  "dumpingEsc": "Dumping ESC {{index}}",
-  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
+  "dumpingEsc": "ESC {{index}} をダンプ中",
+  "flashingVerificationFailed": "検証に失敗しました - データが正しく書き込まれていない可能性があります"
 }
