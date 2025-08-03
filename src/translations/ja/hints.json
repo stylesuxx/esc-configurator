@@ -1,7 +1,7 @@
 {
-  "STARTUP_BEEP": "Enable beep melody when the ESC is powered up.",
-  "BRAKE_ON_STOP": "Brake when motors are stopped.",
-  "BEACON_DELAY": "After how much time of inactivity the beacon should start to go off.",
+  "STARTUP_BEEP": "ESCが電源投入された際にビープ音のメロディを有効にします",
+  "BRAKE_ON_STOP": "モーターが停止した時にブレーキ",
+  "BEACON_DELAY": "どのくらいの時間非アクティブになるとビーコンが鳴り始めるかを指定します",
   "TEMPERATURE_PROTECTION": "At which temperature the ESC will shut down.",
   "BEEP_STRENGTH": "The volume of the startup beeps. Setting this too high might damage the motors.",
   "BEACON_STRENGTH": "The volume of the beacon. Setting this too high might damage the motors.",
