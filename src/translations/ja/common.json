@@ -188,9 +188,9 @@
   "resettingDevice": "デバイスをリセット中...",
   "disabled": "無効",
   "selectionAttention": " 注意！",
-  "selectionHint": "When flashing new (or different) ESC firmware it is best practice to adhere to the following checklist:",
-  "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
-  "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
-  "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
-  "selectionLinkText": "Show release notes on Github"
+  "selectionHint": "新しい（または異なる）ESCファームウェアをフラッシュする際は、以下のチェックリストに従うことが推奨されます：",
+  "selectionLi1": "リリースノートを確認し、変更内容と、必要に応じて調整が必要な点をご確認ください",
+  "selectionLi2": "モーターがアーム後に確実に回転し、正しい方向で回転していることを確認してください",
+  "selectionLi3": "短時間のテスト飛行後、モーターの温度を確認し、温度が高すぎる場合は調整してください",
+  "selectionLinkText": "GitHubでリリースノートを表示する"
 }
