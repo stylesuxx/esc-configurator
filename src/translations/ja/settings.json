@@ -8,11 +8,11 @@
   "extendedDebug": "拡張デバッグ",
   "extendedDebugHint": "読み書きされているアドレスと、送信/受信されたペイロードも追加で表示します。",
   "disableCommon": "共通設定を無効にする",
-  "disableCommonHint": "Each ESC will have its own set of settings instead of having a common section that is valid for all ESCs.",
-  "enableAdvanced": "Enable advanced settings",
-  "enableAdvancedHint": "Adds advanced settings like dumping firmware.",
-  "unstableVersions": "Show firmware pre-releases",
-  "unstableVersionsHint": "Show unstable firmware versions and pre-releases",
-  "skipCache": "Skip cache",
-  "skipCacheHint": "Enable this setting if you do not see the latest version in the firmware selection."
+  "disableCommonHint": "各ESCには、すべてのESCに共通するセクションではなく、それぞれ独自の設定が用意されます",
+  "enableAdvanced": "詳細設定を有効にする",
+  "enableAdvancedHint": "ファームウェアのダンプを含む高度な設定を追加します",
+  "unstableVersions": "ファームウェアのプレリリース版を表示する",
+  "unstableVersionsHint": "不安定なファームウェアのバージョンとプレリリース版を表示する",
+  "skipCache": "キャッシュをスキップ",
+  "skipCacheHint": "ファームウェアの選択画面に最新のバージョンが表示されない場合は、この設定を有効にしてください"
 }
