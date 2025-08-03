@@ -21,7 +21,7 @@
   "flashingEscMissmatchFileNameMissing": "ESC {{index}} のフラッシュに失敗しました - hexファイル内にファイル名が見つかりません。hexファイルのバージョンを確認してください！",
   "flashingEscMissmatchMcuType": "ESC {{index}} のフラッシュに失敗しました - MCU タイプが一致しません。hexファイルを確認してください！",
   "flashingEscMissmatchFileName": "ESC {{index}} のフラッシュに失敗しました - 現在のESCに使用されているものとは異なるESCファームウェアファイルです！",
-  "flashingEscFailed": "ESCの書き込みに失敗しました {{index}} - ファイルの種類を確認して下さい",
+  "flashingEscFailed": "ESCのフラッシュに失敗しました {{index}} - ファイルの種類を確認して下さい",
   "fetchingFilesFailed": "{{name}}のファイルを取得できませんでした",
   "readEscFailed": "ESC {{index}} の読み込みに失敗しました",
   "resetEscFailed": "ESC {{index}}のリセットに失敗しました",
