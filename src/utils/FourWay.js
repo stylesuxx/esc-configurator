@@ -13,6 +13,7 @@ import {
 } from './Errors';
 
 import {
+  gil32Source,
   am32Source,
   blheliAtmelSource as blheliSource,
   blheliSSource,
@@ -39,6 +40,7 @@ import FourWayHelper from './helpers/FourWay';
 import MCU from './Hardware/MCU';
 import Silabs from './Hardware/Silabs';
 import Arm from './Hardware/Arm';
+// import Arm_Gil32 from './Hardware/Arm';
 
 import {
   ACK,
@@ -56,6 +58,9 @@ const bluejayEeprom = bluejaySource.getEeprom();
 const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
 const am32Eeprom = am32Source.getEeprom();
 const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
+
+const gil32Eeprom = gil32Source.getEeprom();
+const gil32SettingsDescriptions = gil32Source.getSettingsDescriptions();
 
 /**
  * @typedef Response
@@ -366,6 +371,7 @@ class FourWay {
    * @returns {object}
    */
   async getInfo(target) {
+    target = 0;
     const flash = await this.initFlash(target, 5);
     const info = Flash.getInfo(flash);
 
@@ -409,7 +415,45 @@ class FourWay {
         }
       }
 
-      if (mcu.class === Arm) {
+      console.debug(mcu.getName());
+      console.debug(mcu.mcu.signature);
+      if( mcu.mcu.signature === "0x4706" )// "4706")
+      {
+        source = gil32Source;
+        const eepromOffset = mcu.getEepromOffset(); // Settings memory location.
+        // const eepromOffset2 = mcu.mcu.eeprom_offset;
+        try{
+          const info_hex = await this.read(eepromOffset - 1024,220);
+          const info_text = new TextDecoder().decode(info_hex.params.slice(0, info_hex.params.indexOf(0x00)));
+          console.debug(info_text);
+          info.layout = source.getLayout();
+          // {
+          //         BOOT_BYTE: {
+          //           offset: 0x00,
+          //           size: 1,
+          //         },
+          //       };//
+          info.layoutSize = source.getLayoutSize();
+
+          const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+          info.settingsArray = Array.from(settingsArray);
+          info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
+
+          if(!Object.values(gil32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
+            //source = null;
+
+            info.settings.NAME = 'gil';
+
+            // TODO: Find out if there is a way to reliably identify BLHeli_32
+            // info.settings.NAME = 'BLHeli_32';
+          }
+        }
+        catch(e) {
+          console.debug(e.message);
+          //asdf asfd
+        }
+      }
+      else if ( mcu.class === Arm) {
         // Assume AM32 to be the default
         source = am32Source;
 
@@ -663,7 +707,30 @@ class FourWay {
 
           info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = am32Source.getName();
+        }else if (source instanceof sources.GIL32Source) {
+          info.bootloader = {};
+          if(info.meta.input) {
+            info.bootloader.input = info.meta.input;
+            info.bootloader.valid = false;
+          }
+
+          /* Bootloader input pins are limited. If something different is set,
+            * then the user probably has an old fw flashed.
+            */
+          for(let [key, value] of Object.entries(gil32Eeprom.BOOT_LOADER_PINS)) {
+            if(value === info.bootloader.input) {
+              info.bootloader.valid = true;
+              info.bootloader.pin = key;
+              info.bootloader.version = info.settings.BOOT_LOADER_REVISION;
+            }
+          }
+
+          info.settings.LAYOUT = info.settings.NAME;
+
+         // info.displayName = gil32Source.buildDisplayName(info, info.meta.gil32.fileName ? info.meta.gil32.fileName.slice(0, info.meta.gil32.fileName.lastIndexOf('_')) : info.settings.NAME);
+          info.firmwareName = gil32Source.getName();
         }
+
       }
 
       info.make = make;

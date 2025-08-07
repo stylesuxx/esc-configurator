@@ -193,4 +193,5 @@
   "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
   "selectionLinkText": "Show release notes on Github"
+
 }
