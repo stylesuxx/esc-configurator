@@ -35,7 +35,7 @@
   "SINE_MODE_RANGE": "La quantità di acceleratore in percentuale utilizzata per l'avvio sinusoidale.",
   "BRAKE_STRENGTH": "Il livello di tenuta del freno applicato quando il freno è attivato su stop.",
   "BRAKING_STRENGTH": "Livello massimo di frenata applicata (ciclo di servizio PWM complementare).",
-  "POWER_RATING": "In base alla potenza della tua scheda, imposta su 1S se la scheda è listata solo per 1S. Su tutte le schede listate almeno con 2S (compreso 1-2S) o se viene usato un convertitore DC/DC per alimentare gli ESCs MCU, deve essere impostato su 2S+.",
+  "POWER_RATING": "In base alla potenza della tua scheda, imposta su 1S se la scheda è listata solo per 1S. Su tutte le schede listate compatibili con 2S (compreso 1-2S) o se viene usato un convertitore DC/DC per alimentare gli ESCs MCU, deve essere impostato su '1-2S+'.",
   "PWM_THRESHOLD_LOW": "Sotto questo punto dell'acceleratore, verrà ' usato un segnale PWM a 96kHz. Tra basso e alto, si userà un segnale PWM a 48kHz.",
   "PWM_THRESHOLD_HIGH": "Sopra questo punto dell' acceleratore, verrà utilizzato un segnale PWM a 24kHz.",
   "FORCE_EDT_ARM": "L' arm avviene solo dopo un riconoscimento EDT con successo. Il firmware del controllore di volo deve supportare questa funzione.",

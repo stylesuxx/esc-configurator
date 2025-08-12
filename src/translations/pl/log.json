@@ -23,11 +23,11 @@
   "flashingEscMissmatchFileName": "Nieudane flashowanie ESC {{index}} - Inny plik firmware ESC, niż w aktualnym flashu ESC!",
   "flashingEscFailed": "Nie udało się wgrać ESC {{index}} - sprawdź typ pliku",
   "fetchingFilesFailed": "Nie udało się pobrać plików dla {{name}}",
-  "readEscFailed": "Nie udało się odczytywać ESC {{index}}",
+  "readEscFailed": "Odczytywanie ESC {{index}} nie powiodło się",
   "resetEscFailed": "Resetowanie ESC {{index}} nie powiodło się",
   "resetEscFailedPowerCycle": "Nie udało się zresetować ESC {{index}} — uruchom ponownie i spróbuj ponownie",
   "writeSettingsFailed": "Zapisywanie ustawień do ESC {{index}} nie powiodło się",
-  "restoreSettingsFailed": "Nie udało się przywrócić domyślnych ustawień na ESC {{index}}",
+  "restoreSettingsFailed": "Przywracanie ustawień domyślnych ESC {{index}} nie powiodło się",
   "getFileFailed": "Nie można otworzyć pliku do zapisu.",
   "layoutNotSupported": "Wersja układu {{revision}} nie jest jeszcze wspierana",
   "escSettingsNoChange": "Brak zmian - nie aktualizuje ESC {{index}}",
@@ -42,6 +42,6 @@
   "bootloaderMismatch": "Niezgodność Bootloadera! Flash: {{flash}} vs. EEPROM: {{eeprom}}",
   "timingMismatch": "Firmware jest otagowany jako {{tagged}}, ale aktualny wydaje się być {{actual}}",
   "browser": "{{name}} ({{version}}) na {{os}}",
-  "dumpingEsc": "Dumping ESC {{index}}",
+  "dumpingEsc": "Zrzut z ESC {{index}}",
   "flashingVerificationFailed": "Weryfikacja nie powiodła się - dane mogły nie zostać poprawnie zapisane"
 }
