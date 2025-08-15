@@ -1,5 +1,89 @@
 const SETTINGS_LAYOUT_0 = [
-    {
+    
+{
+    name: 'COMMUNICATION_PROTOCOL',
+    type: 'enum',
+    value: 1,
+    options: [
+      {
+        value: 1,
+        label: 'select one',
+      },
+      {
+        value: 2,
+        label: 'DSho300',
+      },
+      {
+        value: 3,
+        label: 'DShot600',
+      },
+    ],
+    order: 0,
+    label: 'gil32CommsProtocol',
+    displayFactor: 1,
+    displayOffset: 0,
+    group: 'COMMS',
+  },
+  
+  {
+    name: 'COMMUNICATION_DSHOT_BI',
+    value: true,
+    type: 'bool',
+    label: 'gil32DShotBi',
+    group: 'COMMS',
+  },
+
+  
+  {
+    name: 'MOTOR_COMMUTATION_DELAY',
+    value: 1,
+    type: 'enum',
+    options: [
+      {
+        value: 1,
+        label: '0.5us',
+      },
+      {
+        value: 2,
+        label: '1.0us',
+      },
+      {
+        value: 3,
+        label: '1.5us',
+      },
+      {
+        value: 4,
+        label: '2.0us',
+      },
+      {
+        value: 5,
+        label: '2.5us',
+      },
+            {
+        value: 6,
+        label: '3.0us',
+      },
+    ],
+    order: 0,
+    label: 'gil32CommutationDelay',
+    displayFactor: 1,
+    displayOffset: 0,
+    group: 'General',
+  },
+{
+    name: 'MOTOR_STARTUP_THROTTLE',
+    value: 300,
+    type: 'number',
+    min: 10,
+    max: 500,
+    step: 10,
+    value: 300,
+    label: 'gil32StartupThrottle',
+    displayFactor: 1,
+    displayOffset: 0,
+    group: 'General',
+  },
+  {
     name: 'TURTLEMODE_RAMPUP',
     type: 'enum',
     value: 50,
@@ -28,46 +112,48 @@ const SETTINGS_LAYOUT_0 = [
     displayOffset: 0,
     group: 'Turtlemode',
   },
-  {
-    name: 'MOTOR_THROTTLE_STARTUP',
-    type: 'number',
-    min: 10,
-    max: 500,
-    step: 10,
-    value: 300,
-    label: 'gil32StartupThrottle',
-    displayFactor: 1,
-    displayOffset: 0,
-    group: 'Startup',
-  },
+  
 
 ];
 
-const COMMON = { '65': { base: SETTINGS_LAYOUT_0 } };
+const COMMON = { '1': { base: SETTINGS_LAYOUT_0 } };
 
 const INDIVIDUAL_SETTINGS_0 = [
-  {
-    name: 'MOTOR_DIRECTION',
-    type: 'bool',
-    label: 'escDirectionReversed',
-  },
-  {
-    name: 'BIDIRECTIONAL_MODE',
-    type: 'bool',
-    label: 'escBidirectionalMode',
-  },
+
+  // {
+  //   name: 'COMMUNICATION_DSHOT_BI',
+  //   type: 'bool',
+  //   label: 'gil32DShotBi',
+
+  // },
+  // {
+  //   name: 'MOTOR_COMMUTATION_DELAY',
+  //   type: 'number',
+  //   label: 'gil32CommutationDelay',
+
+  // },
+
+  // {
+  //   name: 'MOTOR_DIRECTION',
+  //   type: 'bool',
+  //   label: 'escDirectionReversed',
+  // },
+
 ];
 
-const INDIVIDUAL = { '65': { base: INDIVIDUAL_SETTINGS_0 } };
+const INDIVIDUAL = { '1': { base: INDIVIDUAL_SETTINGS_0 } };
 
 const DEFAULT_SETTINGS_0 = {
-  MOTOR_DIRECTION: 0,
-  BIDIRECTIONAL_MODE: 0,
-  COMPLEMENTARY_PWM: 1,
+  COMMUNICATION_PROTOCOL: 2,
+  COMMUNICATION_DSHOT_BI: true,
+  MOTOR_COMMUTATION_DELAY: 4,
+  MOTOR_STARTUP_THROTTLE: 100,
+  TURTLEMODE_RAMPUP: 50,
+
  
 };
 
-const DEFAULTS = { '65': DEFAULT_SETTINGS_0 };
+const DEFAULTS = { '1': DEFAULT_SETTINGS_0 };
 
 const settings = {
   DEFAULTS,

@@ -5,52 +5,53 @@ const BOOT_LOADER_PINS = {
 };
 
 const RESET_DELAY_MS = 5000;
-const LAYOUT_SIZE = 0x16;
+const LAYOUT_SIZE = 24;
 
 const BOOT_LOADER_VERSION_OFFSET = 0x00C0;
 const BOOT_LOADER_VERSION_SIZE = 1;
 
 const LAYOUT = {
-  BOOT_BYTE: {
-    offset: 0x00,
+    NAME: {
+    offset: 0,
+    size: 12,
+  },
+  VERSION: {
+    offset: 12,
+    size: 1,
+  },
+  SUB_VERSION: {
+    offset: 13,
     size: 1,
   },
   LAYOUT_REVISION: {
-    offset: 0x01,
+    offset: 14,
     size: 1,
   },
-  BOOT_LOADER_REVISION: {
-    offset: 0x02,
+  COMMUNICATION_PROTOCOL: {
+    offset: 15,
     size: 1,
   },
-  MAIN_REVISION: {
-    offset: 65,
+  COMMUNICATION_DSHOT_BI: {
+    offset: 16,
     size: 1,
   },
-  SUB_REVISION: {
-    offset: 0x04,
+  MOTOR_COMMUTATION_DELAY: {
+    offset: 17,
     size: 1,
   },
-  NAME: {
-    offset: 0x05,
-    size: 12,
-  },
-  MOTOR_DIRECTION: {
-    offset: 0x11,
-    size: 1,
-  },
-  BIDIRECTIONAL_MODE: {
-    offset: 0x12,
-    size: 1,
-  },
-  MOTOR_THROTTLE_STARTUP: {
-    offset: 0x13,
+  MOTOR_STARTUP_THROTTLE: {
+    offset: 18,
     size: 2,
   },
+
   TURTLEMODE_RAMPUP: {
-    offset: 0x15,
+    offset: 20,
     size: 1,
   },
+  PADDING: {
+    offset: 21,
+    size: 3,
+  },  
 };
 
 const EEPROM = {

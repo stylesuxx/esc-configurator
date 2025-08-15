@@ -371,7 +371,6 @@ class FourWay {
    * @returns {object}
    */
   async getInfo(target) {
-    target = 0;
     const flash = await this.initFlash(target, 5);
     const info = Flash.getInfo(flash);
 
@@ -423,9 +422,7 @@ class FourWay {
         const eepromOffset = mcu.getEepromOffset(); // Settings memory location.
         // const eepromOffset2 = mcu.mcu.eeprom_offset;
         try{
-          const info_hex = await this.read(eepromOffset - 1024,220);
-          const info_text = new TextDecoder().decode(info_hex.params.slice(0, info_hex.params.indexOf(0x00)));
-          console.debug(info_text);
+         
           info.layout = source.getLayout();
           // {
           //         BOOT_BYTE: {
@@ -434,7 +431,7 @@ class FourWay {
           //         },
           //       };//
           info.layoutSize = source.getLayoutSize();
-
+          
           const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
           info.settingsArray = Array.from(settingsArray);
           info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
@@ -442,7 +439,7 @@ class FourWay {
           if(!Object.values(gil32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
             //source = null;
 
-            info.settings.NAME = 'gil';
+            // info.settings.NAME = 'gil';
 
             // TODO: Find out if there is a way to reliably identify BLHeli_32
             // info.settings.NAME = 'BLHeli_32';
@@ -727,7 +724,7 @@ class FourWay {
 
           info.settings.LAYOUT = info.settings.NAME;
 
-         // info.displayName = gil32Source.buildDisplayName(info, info.meta.gil32.fileName ? info.meta.gil32.fileName.slice(0, info.meta.gil32.fileName.lastIndexOf('_')) : info.settings.NAME);
+          info.displayName =  gil32Source.getName() + "_" + info.settings.VERSION + "." + info.settings.SUB_VERSION;//buildDisplayName(info, info.meta.gil32.fileName ? info.meta.gil32.fileName.slice(0, info.meta.gil32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = gil32Source.getName();
         }
 
@@ -937,7 +934,11 @@ class FourWay {
           settingsDescriptions = am32SettingsDescriptions.COMMON;
           individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
         } break;
-
+        case gil32Eeprom.LAYOUT: {
+          console.debug('GIL32 layout found');
+          settingsDescriptions = gil32SettingsDescriptions.COMMON;
+          individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
+        }
         default: {
           console.log('Unknown layout', newEsc.layout);
         }
@@ -1131,7 +1132,16 @@ class FourWay {
       this.totalBytes = (flash.byteLength - firmwareStart) * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
+      let message = null;
+      if( mcu.mcu.signature === "0x4706")
+      {
+         message = await this.read(eepromOffset, gil32Eeprom.LAYOUT_SIZE);
+        
+      }else{
+         message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
+    
+      }
+       
       const originalSettings = message.params;
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
@@ -1335,7 +1345,7 @@ class FourWay {
    * Write the EEprom safeguard
    *
    * This writes in the area that will be read when infos are being fetched.
-   * This info is then used to indicate that the flash failed. When in this
+   * This info is then used to indicate that the ed. When in this
    * state, flashing is still possible, although MCU layout ignore box has to
    * be checked.
    *
@@ -1418,7 +1428,7 @@ class FourWay {
     const step = 0x100;
 
     for (let address = beginAddress; address < endAddress && address < data.length; address += step) {
-      await this.write(
+        await this.write(
         address,
         data.subarray(address, Math.min(address + step, data.length)));
 

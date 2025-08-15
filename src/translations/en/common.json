@@ -194,5 +194,8 @@
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
   "selectionLinkText": "Show release notes on Github",
   "gil32StartupThrottle": "Startup Throttle",
-  "gil32TurtleModeRampup": "Turtlemode Rampup"
+  "gil32TurtleModeRampup": "Turtlemode Rampup",
+  "gil32CommutationDelay": "Commutation delay",
+  "gil32CommsProtocol": "ESC Protocol",
+  "gil32DShotBi": "Bi-directional DShot"
 }

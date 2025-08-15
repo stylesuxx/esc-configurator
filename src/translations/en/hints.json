@@ -46,6 +46,7 @@
   "CURRENT_LIMIT": "Will hold the maximum possible RPM at the allowed current.",
   "SINE_MODE_POWER": "Fixed duty cycle level to be used when using sine mode. CAUTION: Values above 6 might damage motor and/or ESC.",
   "BIDIRECTIONAL_MODE": "Neutral position is in the center of throttle. Spins in one direction when above center and in the other direction when below center position.",
-  "MOTOR_THROTTLE_STARTUP" : "Throttle setting to get motor spinning.",
-  "TURTLEMODE_RAMPUP": "Rampup stemp increment to prevent motor overheat when turtling."
+  "MOTOR_STARTUP_THROTTLE" : "Throttle setting to get motor spinning, 300 is about 15% throttle. [Max throttle: 2047]",
+  "TURTLEMODE_RAMPUP": "Rampup step increment to prevent motor overheat when turtling.",
+  "MOTOR_COMMUTATION_DELAY": "Additional delay in us added to time from previous commutation time."
 }

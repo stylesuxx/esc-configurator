@@ -7,7 +7,7 @@ import Arm from '../../utils/Hardware/Arm';
 import semver from 'semver';
 import { fetchJsonCached } from '../../utils/Fetch';
 
-const GITHUB_REPO = 'gil32-firmware/GIl32';
+const GITHUB_REPO = 'guser210/GIl32';
 
 class GIL32Source extends GithubSource {
   minVersion = "1.5";

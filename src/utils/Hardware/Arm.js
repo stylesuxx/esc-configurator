@@ -23,7 +23,7 @@ Arm.mcus = {
     "4706": {
     "name": "GIL32_ARM64K",
     "signature": "0x4706",
-    "page_size": 2048,
+    "page_size": 1024,
     "flash_size": 65536,
     "flash_offset": "0x08000000",
     "firmware_start": "0x1000",
