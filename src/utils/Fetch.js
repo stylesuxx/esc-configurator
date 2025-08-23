@@ -123,7 +123,7 @@ function shouldFetch(response, maxAge) {
  * @param {number} maxAge
  * @returns {object}
  */
-async function fetchJsonCached(url, skip = false, maxAge = ONE_DAY) {
+async function fetchJsonCached(url, skip = false, maxAge = ONE_DAY,header = null) {
   const cache = await window.caches.open('v1');
   let cachedResponse = await cache.match(url);
 

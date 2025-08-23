@@ -5,7 +5,7 @@ const BOOT_LOADER_PINS = {
 };
 
 const RESET_DELAY_MS = 5000;
-const LAYOUT_SIZE = 24;
+const LAYOUT_SIZE = 103;
 
 const BOOT_LOADER_VERSION_OFFSET = 0x00C0;
 const BOOT_LOADER_VERSION_SIZE = 1;
@@ -15,42 +15,51 @@ const LAYOUT = {
     offset: 0,
     size: 12,
   },
-  VERSION: {
+  DESCRIPTION: {
     offset: 12,
+    size: 64,
+  },
+  VERSION: {
+    offset: 76,
     size: 1,
   },
   SUB_VERSION: {
-    offset: 13,
+    offset: 77,
     size: 1,
   },
   LAYOUT_REVISION: {
-    offset: 14,
+    offset: 78,
     size: 1,
   },
-  COMMUNICATION_PROTOCOL: {
-    offset: 15,
-    size: 1,
-  },
-  COMMUNICATION_DSHOT_BI: {
-    offset: 16,
-    size: 1,
-  },
+ 
   MOTOR_COMMUTATION_DELAY: {
-    offset: 17,
+    offset: 79,
     size: 1,
   },
   MOTOR_STARTUP_THROTTLE: {
-    offset: 18,
+    offset: 80,
     size: 2,
   },
 
   TURTLEMODE_RAMPUP: {
-    offset: 20,
+    offset: 82,
+    size: 1,
+  },
+  RAMPUP: {
+    offset: 83,
+    size: 2,
+  },
+  MOTOR_DIRECTION: {
+    offset: 85,
+    size: 1,
+  },
+  CRASH_DETECTION: {
+    offset: 86,
     size: 1,
   },
   PADDING: {
-    offset: 21,
-    size: 3,
+    offset: 87,
+    size: 17,
   },  
 };
 
@@ -58,6 +67,7 @@ const EEPROM = {
   LAYOUT,
   LAYOUT_SIZE,
   NAMES: [''],
+  DESCRIPTION: [''],
   RESET_DELAY: RESET_DELAY_MS,
   BOOT_LOADER_OFFSET: BOOT_LOADER_VERSION_OFFSET,
   BOOT_LOADER_SIZE: BOOT_LOADER_VERSION_SIZE,
