@@ -418,38 +418,23 @@ class FourWay {
       console.debug(mcu.mcu.signature);
 
       
-      if( mcu.mcu.signature === gil32Source.get_id())// "4706")
+      if( mcu.mcu.signature === gil32Source.get_id())
       {
         source = gil32Source;
-        const eepromOffset = mcu.getEepromOffset(); // Settings memory location.
-        // const eepromOffset2 = mcu.mcu.eeprom_offset;
+        const eepromOffset = mcu.getEepromOffset();  
         try{
          
           info.layout = source.getLayout();
-          // {
-          //         BOOT_BYTE: {
-          //           offset: 0x00,
-          //           size: 1,
-          //         },
-          //       };//
+     
           info.layoutSize = source.getLayoutSize();
           
           const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
           info.settingsArray = Array.from(settingsArray);
           info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
 
-          if(!Object.values(gil32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
-            //source = null;
-
-            // info.settings.NAME = 'gil';
-
-            // TODO: Find out if there is a way to reliably identify BLHeli_32
-            // info.settings.NAME = 'BLHeli_32';
-          }
         }
         catch(e) {
           console.debug(e.message);
-          //asdf asfd
         }
       }
       else if ( mcu.class === Arm) {
