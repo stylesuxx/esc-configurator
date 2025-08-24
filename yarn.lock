@@ -11228,10 +11228,9 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-serial-polyfill@stylesuxx/web-serial-polyfill#temporary-fix:
-  version "1.0.5"
-  resolved "https://codeload.github.com/stylesuxx/web-serial-polyfill/tar.gz/0a59f0dfb8adbf405283bbab53136b0e0f2d2c73"
-  integrity sha512-x45DgMNvTyOWrhM4Q8L9H1SFYS/Y1mz8CWDGVT9jmiO0wu0CwEWxLACZHAnaljNKuc8aeOaeJfd9PJeLcVS8lA==
+"web-serial-polyfill@github:google/web-serial-polyfill":
+  version "1.0.15"
+  resolved "git+ssh://git@github.com/google/web-serial-polyfill.git#a209091a2776aee2e0d5370e07cea8e521d16565"
 
 web-vitals@^2.1.4:
   version "2.1.4"
