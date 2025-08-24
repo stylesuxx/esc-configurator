@@ -373,7 +373,7 @@ class FourWay {
   async getInfo(target) {
     const flash = await this.initFlash(target, 5);
     const info = Flash.getInfo(flash);
-
+   
     try {
       let mcu = null;
       try {
@@ -416,7 +416,9 @@ class FourWay {
 
       console.debug(mcu.getName());
       console.debug(mcu.mcu.signature);
-      if( mcu.mcu.signature === "0x4706" )// "4706")
+
+      
+      if( mcu.mcu.signature === gil32Source.get_id())// "4706")
       {
         source = gil32Source;
         const eepromOffset = mcu.getEepromOffset(); // Settings memory location.
@@ -1133,7 +1135,7 @@ class FourWay {
       this.bytesWritten = 0;
 
       let message = null;
-      if( mcu.mcu.signature === "0x4706")
+      if( mcu.mcu.signature === gil32Source.get_id())
       {
          message = await this.read(eepromOffset, gil32Eeprom.LAYOUT_SIZE);
         
