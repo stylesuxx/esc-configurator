@@ -1116,7 +1116,7 @@ class FourWay {
         await this.writePages(0x00, 0x02, pageSize, flash);
         await this.verifyPages(0x00, 0x02, pageSize, flash);
 
-        // 6th page: erase, write, verify (EEprom)
+        // 6th page: erase, write, verify (EEprom)0
         console.debug("### Step 5: Write EEPROM section");
         await this.erasePage(0x06 * multiplier);
         await this.writePage(0x06, pageSize, flash);

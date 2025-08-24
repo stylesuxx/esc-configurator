@@ -194,9 +194,11 @@
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
   "selectionLinkText": "Show release notes on Github",
   "gil32StartupThrottle": "Startup Throttle",
-  "gil32TurtleModeRampup": "Turtlemode rampup",
-  "gil32CommutationDelay": "Commutation delay",
+  "gil32TurtleModeRampup": "Turtlemode Dampup",
+  "gil32CommutationDelay": "Commutation Delay",
   "gil32Rampup": "Rampup",
-  "gil32MotorDirection": "Normal motor direction",
-  "gil32CrashDetection": "Crash detection"
+  "gil32MotorDirection": "Normal Motor Direction",
+  "gil32CrashDetection": "Crash Detection",
+  "gil32FirmwareDeadtime": "Firmware Deadtime"
+
 }

@@ -10,9 +10,10 @@ import { fetchJsonCached } from '../../utils/Fetch';
 const GITHUB_REPO = 'guser210/Gil32_Firmware';
 
 class GIL32Source extends GithubSource {
-  minVersion = "0.0";
+  minVersion = "1.3";
 
   async getRemoteVersionsList(repo, blacklist = null, amount = 100) {
+    this.skipCache = true;
     const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases?per_page=${amount}&page=1`, this.skipCache);
 
     const minVersion = semver.coerce(this.minVersion).version;

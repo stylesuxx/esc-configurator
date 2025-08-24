@@ -496,7 +496,6 @@ class App extends Component {
         this.addLogMessage('readEscFailed', { index: i + 1 });
         console.debug(e);
       }
-      break; // TODO: debug gil32
     }
 
     if(individual.length > 0) {

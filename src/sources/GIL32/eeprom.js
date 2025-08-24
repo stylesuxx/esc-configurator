@@ -53,13 +53,22 @@ const LAYOUT = {
     offset: 85,
     size: 1,
   },
-  CRASH_DETECTION: {
+  
+  MOTOR_DIRECTION2: {
     offset: 86,
     size: 1,
   },
-  PADDING: {
+  CRASH_DETECTION: {
     offset: 87,
-    size: 17,
+    size: 1,
+  },
+  FIRMWARE_DEADTIME: {
+    offset: 88,
+    size: 2,
+  },
+  PADDING: {
+    offset: 90,
+    size: 13,
   },  
 };
 

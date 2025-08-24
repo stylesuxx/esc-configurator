@@ -96,6 +96,15 @@ const SETTINGS_LAYOUT_0 = [
     
   },
 
+  {
+    name: "FIRMWARE_DEADTIME",
+    type: "number",
+    min: 300,
+    max: 800,
+    step:50,
+    label: 'gil32FirmwareDeadtime',
+    
+  },
 ];
 
 const COMMON = { '1': { base: SETTINGS_LAYOUT_0 } };
@@ -116,6 +125,7 @@ const DEFAULT_SETTINGS_0 = {
   RAMPUP: 2048,
   TURTLEMODE_RAMPUP: 50,
   CRASH_DETECTION: 0,
+  FIRMWARE_DEADTIME: 400,
 
  
 };
