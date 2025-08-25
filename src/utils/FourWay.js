@@ -415,29 +415,8 @@ class FourWay {
       }
 
       console.debug(mcu.getName());
-      console.debug(mcu.mcu.signature);
-
-      
-      if( mcu.mcu.signature === gil32Source.get_id())
-      {
-        source = gil32Source;
-        const eepromOffset = mcu.getEepromOffset();  
-        try{
-         
-          info.layout = source.getLayout();
-     
-          info.layoutSize = source.getLayoutSize();
-          
-          const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
-          info.settingsArray = Array.from(settingsArray);
-          info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
-
-        }
-        catch(e) {
-          console.debug(e.message);
-        }
-      }
-      else if ( mcu.class === Arm) {
+      console.debug(mcu.mcu.signature);   
+      if ( mcu.class === Arm) {
         // Assume AM32 to be the default
         source = am32Source;
 
@@ -474,6 +453,29 @@ class FourWay {
 
           // TODO: Find out if there is a way to reliably identify BLHeli_32
           // info.settings.NAME = 'BLHeli_32';
+        }
+
+        if( info.settings.NAME === 'Unknown')
+        {
+          source = gil32Source;
+          const eepromOffset = mcu.getEepromOffset();  
+          try{
+          
+            info.layout = source.getLayout();
+      
+            info.layoutSize = source.getLayoutSize();
+            
+            const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+            info.settingsArray = Array.from(settingsArray);
+            info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
+
+            if( !info.settings.NAME.startsWith("Gil32")){
+              info.settings.NAME = 'Unknown';
+            }
+          }
+          catch(e) {
+            console.debug(e.message);
+          }
         }
       }
 
@@ -1120,13 +1122,10 @@ class FourWay {
       this.bytesWritten = 0;
 
       let message = null;
-      if( mcu.mcu.signature === gil32Source.get_id())
-      {
+      if( esc.firmwareName === gil32Source.get_id()){
          message = await this.read(eepromOffset, gil32Eeprom.LAYOUT_SIZE);
-        
       }else{
          message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
-    
       }
        
       const originalSettings = message.params;
@@ -1332,7 +1331,7 @@ class FourWay {
    * Write the EEprom safeguard
    *
    * This writes in the area that will be read when infos are being fetched.
-   * This info is then used to indicate that the ed. When in this
+   * This info is then used to indicate that the flash failed. When in this
    * state, flashing is still possible, although MCU layout ignore box has to
    * be checked.
    *

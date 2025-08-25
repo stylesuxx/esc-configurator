@@ -18,10 +18,6 @@ class GithubSource extends Source {
    * @param {Array<string>} blacklist
    * @returns
    */
-  get_id(){
-     const gil32_id = "0x4706";
-    return  gil32_id;
-  }
   async getRemoteVersionsList(repo, blacklist = [], amount = 100) {
     const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases?per_page=${amount}&page=1`, this.skipCache);
     const releasesWithAssets = githubReleases.filter(

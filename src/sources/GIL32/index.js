@@ -11,7 +11,10 @@ const GITHUB_REPO = 'guser210/Gil32_Firmware';
 
 class GIL32Source extends GithubSource {
   minVersion = "1.3";
-
+  get_id(){
+    const gil32_id = "GIL32";
+    return  gil32_id;
+  }
   async getRemoteVersionsList(repo, blacklist = null, amount = 100) {
     this.skipCache = true;
     const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases?per_page=${amount}&page=1`, this.skipCache);
@@ -48,7 +51,6 @@ class GIL32Source extends GithubSource {
       revision = 'FLASH FIRMWARE';
     }
 
- 
     const mcuType = flash.meta?.gil32?.mcuType ? `, MCU: ${flash.meta.gil32.mcuType}` : '';
 
     const bootloader = flash.bootloader.valid ? `, Bootloader v${flash.bootloader.version} (${flash.bootloader.pin})${mcuType}` : ', Bootloader unknown';

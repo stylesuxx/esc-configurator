@@ -1,7 +1,6 @@
 const SETTINGS_LAYOUT_0 = [
-    
   {
-    name: 'MOTOR_COMMUTATION_DELAY',
+    name: 'GIL32_MOTOR_COMMUTATION_DELAY',
     value: 1,
     type: 'enum',
     options: [
@@ -38,10 +37,9 @@ const SETTINGS_LAYOUT_0 = [
     label: 'gil32CommutationDelay',
     displayFactor: 1,
     displayOffset: 0,
-     
-},
-{
-    name: 'MOTOR_STARTUP_THROTTLE',
+  },
+  {
+    name: 'GIL32_MOTOR_STARTUP_THROTTLE',
     value: 300,
     type: 'number',
     min: 100,
@@ -49,11 +47,10 @@ const SETTINGS_LAYOUT_0 = [
     step: 20,
     label: 'gil32StartupThrottle',
     displayFactor: 1,
-    displayOffset: 0,
-    
+    displayOffset: 0,   
   },
   {
-    name: 'RAMPUP',
+    name: 'GIL32_RAMPUP',
     value: 2048,
     type: 'number',
     min: 8,
@@ -62,10 +59,9 @@ const SETTINGS_LAYOUT_0 = [
     label: 'gil32Rampup',
     displayFactor: 1,
     displayOffset: 0,
-    
   },
   {
-    name: 'TURTLEMODE_RAMPUP',
+    name: 'GIL32_TURTLEMODE_RAMPUP',
     value: 50,
     type: 'number',
     min: 10,
@@ -75,16 +71,14 @@ const SETTINGS_LAYOUT_0 = [
     label: 'gil32TurtleModeRampup',
     displayFactor: 1,
     displayOffset: 0,
-   
   },
   {
-    name: 'MOTOR_DIRECTION',
+    name: 'GIL32_MOTOR_DIRECTION',
     type: 'bool',
     label: 'gil32MotorDirection',
-   
   },
-{
-    name: 'CRASH_DETECTION',
+  {
+    name: 'GIL32_CRASH_DETECTION',
     value: 0,
     type: 'number',
     min: 1,
@@ -93,41 +87,31 @@ const SETTINGS_LAYOUT_0 = [
     label: 'gil32CrashDetection',
     displayFactor: 1,
     displayOffset: 0,
-    
   },
-
   {
-    name: "FIRMWARE_DEADTIME",
+    name: "GIL32_FIRMWARE_DEADTIME",
     type: "number",
     min: 300,
     max: 800,
     step:50,
     label: 'gil32FirmwareDeadtime',
-    
   },
 ];
 
 const COMMON = { '1': { base: SETTINGS_LAYOUT_0 } };
 
 const INDIVIDUAL_SETTINGS_0 = [
-
-
-  
-
 ];
 
 const INDIVIDUAL = { '1': { base: INDIVIDUAL_SETTINGS_0 } };
 
 const DEFAULT_SETTINGS_0 = {
-
   MOTOR_COMMUTATION_DELAY: 64,
   MOTOR_STARTUP_THROTTLE: 300,
   RAMPUP: 2048,
   TURTLEMODE_RAMPUP: 50,
   CRASH_DETECTION: 0,
-  FIRMWARE_DEADTIME: 400,
-
- 
+  GIL32_FIRMWARE_DEADTIME: 400,
 };
 
 const DEFAULTS = { '1': DEFAULT_SETTINGS_0 };

@@ -32,37 +32,37 @@ const LAYOUT = {
     size: 1,
   },
  
-  MOTOR_COMMUTATION_DELAY: {
+  GIL32_MOTOR_COMMUTATION_DELAY: {
     offset: 79,
     size: 1,
   },
-  MOTOR_STARTUP_THROTTLE: {
+  GIL32_MOTOR_STARTUP_THROTTLE: {
     offset: 80,
     size: 2,
   },
 
-  TURTLEMODE_RAMPUP: {
+  GIL32_TURTLEMODE_RAMPUP: {
     offset: 82,
     size: 1,
   },
-  RAMPUP: {
+  GIL32_RAMPUP: {
     offset: 83,
     size: 2,
   },
-  MOTOR_DIRECTION: {
+  GIL32_MOTOR_DIRECTION: {
     offset: 85,
     size: 1,
   },
   
-  MOTOR_DIRECTION2: {
+  GIL32_MOTOR_DIRECTION2: {
     offset: 86,
     size: 1,
   },
-  CRASH_DETECTION: {
+  GIL32_CRASH_DETECTION: {
     offset: 87,
     size: 1,
   },
-  FIRMWARE_DEADTIME: {
+  GIL32_FIRMWARE_DEADTIME: {
     offset: 88,
     size: 2,
   },
