@@ -412,7 +412,7 @@ class FourWay {
         }
       }
 
-      if ( mcu.class === Arm) {
+      if (mcu.class === Arm) {
         // Assume AM32 to be the default
         source = am32Source;
 
@@ -689,7 +689,7 @@ class FourWay {
 
           info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = am32Source.getName();
-        }else if (source instanceof sources.GIL32Source) {
+        } else if (source instanceof sources.GIL32Source) {
           info.bootloader = {};
           if(info.meta.input) {
             info.bootloader.input = info.meta.input;
@@ -922,7 +922,8 @@ class FourWay {
         case gil32Eeprom.LAYOUT: {
           console.debug('GIL32 layout found');
           settingsDescriptions = gil32SettingsDescriptions.COMMON;
-          individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
+          individualSettingsDescriptions = gil32SettingsDescriptions.INDIVIDUAL;
+          break;
         }
         default: {
           console.log('Unknown layout', newEsc.layout);
@@ -1101,7 +1102,7 @@ class FourWay {
         await this.writePages(0x00, 0x02, pageSize, flash);
         await this.verifyPages(0x00, 0x02, pageSize, flash);
 
-        // 6th page: erase, write, verify (EEprom)0
+        // 6th page: erase, write, verify (EEprom)
         console.debug("### Step 5: Write EEPROM section");
         await this.erasePage(0x06 * multiplier);
         await this.writePage(0x06, pageSize, flash);
@@ -1120,7 +1121,7 @@ class FourWay {
       let message = null;
       if( esc.firmwareName === gil32Source.get_id()){
          message = await this.read(eepromOffset, gil32Eeprom.LAYOUT_SIZE);
-      }else{
+      } else{
          message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
       }
        
@@ -1410,9 +1411,9 @@ class FourWay {
     const step = 0x100;
 
     for (let address = beginAddress; address < endAddress && address < data.length; address += step) {
-        await this.write(
-        address,
-        data.subarray(address, Math.min(address + step, data.length)));
+      await this.write(
+      address,
+      data.subarray(address, Math.min(address + step, data.length)));
 
       this.bytesWritten += step;
       this.progressCallback((this.bytesWritten / this.totalBytes) * 100);

@@ -32,7 +32,7 @@
     "semver": "^7.3.8",
     "sleep": "^6.3.0",
     "ua-parser-js": "^1.0.2",
-    "web-serial-polyfill": "github:google/web-serial-polyfill",
+    "web-serial-polyfill": "stylesuxx/web-serial-polyfill#temporary-fix",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.4.2",
     "workbox-broadcast-update": "^6.4.2",
