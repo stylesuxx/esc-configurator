@@ -40,7 +40,6 @@ import FourWayHelper from './helpers/FourWay';
 import MCU from './Hardware/MCU';
 import Silabs from './Hardware/Silabs';
 import Arm from './Hardware/Arm';
-// import Arm_Gil32 from './Hardware/Arm';
 
 import {
   ACK,
@@ -61,7 +60,6 @@ const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
 const gil32Eeprom = gil32Source.getEeprom();
 const gil32SettingsDescriptions = gil32Source.getSettingsDescriptions();
-
 /**
  * @typedef Response
  * @property {number} ack
@@ -373,7 +371,7 @@ class FourWay {
   async getInfo(target) {
     const flash = await this.initFlash(target, 5);
     const info = Flash.getInfo(flash);
-   
+
     try {
       let mcu = null;
       try {
@@ -414,8 +412,6 @@ class FourWay {
         }
       }
 
-      console.debug(mcu.getName());
-      console.debug(mcu.mcu.signature);   
       if ( mcu.class === Arm) {
         // Assume AM32 to be the default
         source = am32Source;
@@ -474,7 +470,7 @@ class FourWay {
             }
           }
           catch(e) {
-            console.debug(e.message);
+            // TODO: log error... might not be important.
           }
         }
       }

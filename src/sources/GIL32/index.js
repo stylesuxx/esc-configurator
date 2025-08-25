@@ -18,9 +18,7 @@ class GIL32Source extends GithubSource {
   async getRemoteVersionsList(repo, blacklist = null, amount = 100) {
     this.skipCache = true;
     const githubReleases = await fetchJsonCached(`https://api.github.com/repos/${repo}/releases?per_page=${amount}&page=1`, this.skipCache);
-
     const minVersion = semver.coerce(this.minVersion).version;
-
     const releasesWithAssets = githubReleases.filter(
       (release) => semver.satisfies(semver.coerce(release.tag_name.slice(1)), `>=${minVersion}`)
     );
@@ -52,7 +50,6 @@ class GIL32Source extends GithubSource {
     }
 
     const mcuType = flash.meta?.gil32?.mcuType ? `, MCU: ${flash.meta.gil32.mcuType}` : '';
-
     const bootloader = flash.bootloader.valid ? `, Bootloader v${flash.bootloader.version} (${flash.bootloader.pin})${mcuType}` : ', Bootloader unknown';
 
     return `${make} - ${this.name}, ${revision}${bootloader}`;
@@ -65,7 +62,6 @@ class GIL32Source extends GithubSource {
     esc,
   }) {
 
-    
     let name = null;
     if(esc.meta.gil32) {
       name = esc.meta.gil32.fileName;
