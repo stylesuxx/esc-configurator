@@ -310,7 +310,9 @@ class App extends Component {
       store.dispatch(setConnectedEscs(motorData.length));
     } catch(e) {
       this.serial.close();
-      this.addLogMessage('portUsed');
+      this.addLogMessage('initializationFailed');
+
+      console.log(e);
     }
 
     store.dispatch(setConnecting(false));
