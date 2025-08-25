@@ -451,8 +451,7 @@ class FourWay {
           // info.settings.NAME = 'BLHeli_32';
         }
 
-        if( info.settings.NAME === 'Unknown')
-        {
+        if( info.settings.NAME === 'Unknown'){
           source = gil32Source;
           const eepromOffset = mcu.getEepromOffset();  
           try{
@@ -709,7 +708,7 @@ class FourWay {
 
           info.settings.LAYOUT = info.settings.NAME;
 
-          info.displayName =  gil32Source.getName() + "_" + info.settings.VERSION + "." + info.settings.SUB_VERSION;//buildDisplayName(info, info.meta.gil32.fileName ? info.meta.gil32.fileName.slice(0, info.meta.gil32.fileName.lastIndexOf('_')) : info.settings.NAME);
+          info.displayName =  gil32Source.getName() + "_" + info.settings.VERSION + "." + info.settings.SUB_VERSION;
           info.firmwareName = gil32Source.getName();
         }
 
