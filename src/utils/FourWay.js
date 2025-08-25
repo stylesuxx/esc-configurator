@@ -355,7 +355,7 @@ class FourWay {
 
       const currentFileName = hexFileName.slice(0, hexFileName.lastIndexOf('_'));
       const expectedFileName = meta.am32.fileName.slice(0, meta.am32.fileName.lastIndexOf('_'));
-      if ( currentFileName !== expectedFileName) {
+      if (currentFileName !== expectedFileName) {
         this.addLogMessage('flashingEscMissmatchFileName', { index: esc.index + 1 });
         throw new LayoutMismatchError(expectedFileName, currentFileName);
       }
@@ -451,10 +451,10 @@ class FourWay {
           // info.settings.NAME = 'BLHeli_32';
         }
 
-        if( info.settings.NAME === 'Unknown'){
+        if(info.settings.NAME === 'Unknown') {
           source = gil32Source;
           const eepromOffset = mcu.getEepromOffset();  
-          try{
+          try {
           
             info.layout = source.getLayout();
       
@@ -464,7 +464,7 @@ class FourWay {
             info.settingsArray = Array.from(settingsArray);
             info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
 
-            if( !info.settings.NAME.startsWith("Gil32")){
+            if (!info.settings.NAME.startsWith("Gil32")) {
               info.settings.NAME = 'Unknown';
             }
           }
@@ -1118,10 +1118,10 @@ class FourWay {
       this.bytesWritten = 0;
 
       let message = null;
-      if( esc.firmwareName === gil32Source.get_id()){
-         message = await this.read(eepromOffset, gil32Eeprom.LAYOUT_SIZE);
-      } else{
-         message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
+      if (esc.firmwareName === gil32Source.get_id()) {
+        message = await this.read(eepromOffset, gil32Eeprom.LAYOUT_SIZE);
+      } else {
+        message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
       }
        
       const originalSettings = message.params;
