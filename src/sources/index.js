@@ -1,10 +1,10 @@
-import GIL32Source, { source as gil32Source } from './GIL32';
 import AM32Source, { source as am32Source } from './AM32';
 import BLHeliSource from './Blheli';
 import BLHeliSilabsSource, { source as blheliSilabsSource } from './Blheli/Silabs';
 import BLHeliAtmelSource, { source as blheliAtmelSource } from './Blheli/Atmel';
 import BLHeliSSource, { source as blheliSSource } from './BlheliS';
 import BluejaySource, { source as bluejaySource } from './Bluejay';
+import GIL32Source, { source as gil32Source } from './GIL32';
 
 /**
  * This sources will be used when initally fetching firmware options during

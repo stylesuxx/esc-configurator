@@ -13,12 +13,12 @@ import {
 } from './Errors';
 
 import {
-  gil32Source,
   am32Source,
   blheliAtmelSource as blheliSource,
   blheliSSource,
   bluejaySource,
   classes as sources,
+  gil32Source,
 } from '../sources';
 
 import {

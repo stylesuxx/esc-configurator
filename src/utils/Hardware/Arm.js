@@ -21,4 +21,5 @@ Arm.mcus = {
     "eeprom_offset": "0xF800",
   },
 };
+
 export default Arm;
