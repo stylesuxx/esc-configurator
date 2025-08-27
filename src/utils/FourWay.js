@@ -918,11 +918,13 @@ class FourWay {
           settingsDescriptions = am32SettingsDescriptions.COMMON;
           individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
         } break;
+
         case gil32Eeprom.LAYOUT: {
           console.debug('GIL32 layout found');
           settingsDescriptions = gil32SettingsDescriptions.COMMON;
           individualSettingsDescriptions = gil32SettingsDescriptions.INDIVIDUAL;
         } break;
+
         default: {
           console.log('Unknown layout', newEsc.layout);
         }
