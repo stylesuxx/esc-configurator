@@ -922,8 +922,7 @@ class FourWay {
           console.debug('GIL32 layout found');
           settingsDescriptions = gil32SettingsDescriptions.COMMON;
           individualSettingsDescriptions = gil32SettingsDescriptions.INDIVIDUAL;
-          break;
-        }
+        } break;
         default: {
           console.log('Unknown layout', newEsc.layout);
         }

@@ -11,12 +11,12 @@ import BluejaySource, { source as bluejaySource } from './Bluejay';
  * application startup.
  */
 const sources = [
-  gil32Source,
   am32Source,
   blheliAtmelSource,
   blheliSilabsSource,
   blheliSSource,
   bluejaySource,
+  gil32Source,
 ];
 
 /**
@@ -24,23 +24,23 @@ const sources = [
  * types.
  */
 const classes = {
-  GIL32Source,
   AM32Source,
   BLHeliSource,
   BLHeliAtmelSource,
   BLHeliSilabsSource,
   BLHeliSSource,
   BluejaySource,
+  GIL32Source,
 };
 
 export {
-  gil32Source,
   am32Source,
   blheliAtmelSource,
   blheliSilabsSource,
   blheliSSource,
   bluejaySource,
   classes,
+  gil32Source,
 };
 
 export default sources;
