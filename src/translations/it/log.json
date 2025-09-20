@@ -12,7 +12,7 @@
   "radioOn": "La tua radio è stata rilevata come accesa! Lettura e Flash disabilitati. Spegni la tua radio e riprova.",
   "mspFcInfo": "Informazioni sul controllore di volo, identificatore: {{id}} versione: {{version}}",
   "portUsed": "Porta già in uso da un'altra applicazione - prova a riconnetterti",
-  "initializationFailed": "Port initialization failed - check browser console for further details",
+  "initializationFailed": "Inizializzazione porta fallita - controlla il browser per maggiori dettagli",
   "fourWayFailed": "Impossibile abilitare l'interfaccia a 4 vie - riconnettere il controllore di volo",
   "readEscs": "Tentativo lettura {{connected}} ESC",
   "readEscsSuccess": "Lettura ESC completata",
