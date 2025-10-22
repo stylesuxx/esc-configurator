@@ -6,7 +6,7 @@
   "serialPermission": "Wybierz Port szeregowy",
   "showLog": "Pokaż logi",
   "hideLog": "Ukryj logi",
-  "note": "Notka: ",
+  "note": "Uwaga: ",
   "warning": "Ostrzeżenie: ",
   "notePropsOff": "Przed wykonaniem czegokolwiek, upewnij się, że śmigła są **ZDJĘTE**.",
   "noteConnectPower": "Podłącz zasilanie do ESC.",
