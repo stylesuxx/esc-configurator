@@ -12,7 +12,7 @@
   "radioOn": "Wykryto, że Twoje radio jest włączone! Odczyt i flashowanie wyłączone. Wyłącz radio i spróbuj ponownie.",
   "mspFcInfo": "Informacje o kontrolerze lotu, identyfikator: {{id}} wersja: {{version}}",
   "portUsed": "Port jest już używany przez inną aplikację - spróbuj ponownie połączyć",
-  "initializationFailed": "Port initialization failed - check browser console for further details",
+  "initializationFailed": "Nie udało się zainicjować portu – sprawdź konsolę przeglądarki, aby uzyskać więcej informacji",
   "fourWayFailed": "Nie można włączyć 4 kierunkowego interfejsu - podłącz ponownie kontroler lotu",
   "readEscs": "Próba odczytania {{connected}} ESC",
   "readEscsSuccess": "Wykonano odczyt ESC",
