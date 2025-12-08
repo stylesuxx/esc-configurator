@@ -135,6 +135,15 @@
     ]
   },
   {
+    "name": "Daft Punk - Robot Rock",
+    "tracks": [
+      "daft_punk:b=120,o=4,d=4:4p,16e6,16c6,16a5,4f5,2p,16e6,16c6,16a5,8f5,16d5,4c5,4d5",
+      "daft_punk:b=120,o=4,d=4:2f3,4p,8f3,16p,8f3,16p,2f3",
+      "daft_punk:b=120,o=4,d=4:2d4,4p,8d4,16p,8d4,16p,2d4",
+      "daft_punk:b=120,o=4,d=4:4p,16e6,16c6,16a5,4f5,2p,16e6,16c6,16a5,8f5,16d5,4c5,4d5"
+    ]
+  },
+  {
     "name": "Deco*27 - Vampire",
     "tracks": [
       "bluejay:b=163,o=5,d=8:a5,g5,f5,g5,p,4f5,f6,p,a5,16a5,g5,16p,f5,p,f6,p,1p,1p,1p,1p,1p,1p",
@@ -186,6 +195,24 @@
       "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1c4",
       "e1m1:b=420,o=4,d=32:4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,2c4,4p,4c4,2p,4p,4c4,2p,4p,4c4,4p,4c4,1c4",
       "e1m1:b=420,o=4,d=32:8c5,8p,4c5,4c6,8c5,8p,4c5,4a#5,8c5,8p,4c5,4g#5,8c5,8p,4c5,4f#5,8c5,8p,4c5,4g5,4g#5,8c5,8p,4c5,4c6,8c5,8p,4c5,4a#5,8c5,8p,4c5,4g#5,8c5,8p,4c5,1f#4"
+    ]
+  },
+  {
+    "name": "Dorofeeva - Heartbeat",
+    "tracks": [
+      "dorofeeva:b=120,o=6,d=16:16p,16p,16f#,16p,16f#,16p, 16f#,16p,8g,8p,8e,8p,16e,16p,8h,8p,8a,8p,4e,4p,16c#7,16p,16c#7,16p,16c#7,16p,16d7,16p,16d7,16p,16c#7,16p,16c#7,16p,16h,16p,16h,16p,16a,16p,16e,8p,8d,4p",
+      "dorofeeva:b=120,o=6,d=16:2p,8e3,8h3,8e4,8h3,8e3,8h3,8e4,8h3,8a3,8e4,8a4,8e4,8a3,8e4,8a4,8e4,8h3,8f#4,8h4,8f#4,8h3,8f#4,8h4,8f#4,8g3,8d4,8g4,8d4,8g3,8d4,8g4,8d4",
+      "dorofeeva:b=120,o=6,d=16:16p,16p,16f#,16p,16f#,16p,16f#,16p,8g,8p,8e,8p,16e,16p,8h,8p,8a,8p,4e,4p,16c#7,16p,16c#7,16p,16c#7,16p,16d7,16p,16d7,16p,16c#7,16p,16c#7,16p,16h,16p,16h,16p,16a,16p,16e,8p,8d,4p",
+      "dorofeeva:b=120,o=6,d=16:2p, 1e4, 1a4, 1h4,1g4"
+    ]
+  },
+  {
+    "name": "Drevo - Smaragdove nebo",
+    "tracks": [
+      "nebo:b=130,o=4,d=4:e,8b,8p,8b,8a,8b,e,8b,8p,8b,8p,8a,b,d5,8c5,8p,8c5,8b,8c5,e,8c5,8p,8c5,8p,8b,c5,d5",
+      "nebo:b=130,o=4,d=4:4p,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3",
+      "nebo:b=130,o=4,d=4:4p,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3",
+      "nebo:b=130,o=4,d=4:e,8b,8p,8b,8a,8b,e,8b,8p, 8b,8p,8a,b,d5,8c5,8p,8c5,8b,8c5,e,8c5,8p,8c5,8p, 8b,c5,d5"
     ]
   },
   {
@@ -247,6 +274,12 @@
       "Melody:b=100,o=4,d=8:d#,16d#5,16p,d#5,c#,16c#5,16p,c#5,d#,16d#5,16p,d#5,d#,16d#5,16p,d#5,b,16b5,16p,b5,b,16b5,16p,b5,g#,16g#5,16p,g#5,a#,16a#5,16p,a#5,p,d#,16p,16d#,c#,16c#5,16p,c#5,d#,16d#5,16p,d#5,d#,16d#5,16p,d#5,b,16b5,16p,b5,c#,16c#5,16p,c#5,d#5",
       "Melody:b=100,o=4,d=8:p,16a#,16p,a#,p,16g#,16p,g#,p,16a#,16p,a#,p,16a#,16p,a#,p,16f#,16p,f#,p,16f#,16p,f#,p,16d#,16p,d#,p,16f,16p,f,4p,p,4c#5,d5,4d#5,d#5,4a#5,a#5,4g#5,g#5,4c#5,c#5",
       "Melody:b=100,o=4,d=8:4a#5,a#5,4g#5,f#5,2a#5,f#5,g#5,2f#5,4f#5,4g#5,g#5,4a#5,a#5,p,a#,16p,16a#,p,16g#,16p,g#,p,16a#,16p,a#,p,16a#,16p,a#,p,16f#,16p,f#,p,16g#,16p,g#,a#"
+    ]
+  },
+  {
+    "name": "Ghost in the Shell - Theme",
+    "tracks": [
+      "s:d=4,o=5,b=300:2p,16a4,1a#4,1c,2p,d,d#,1f,2p,32p,32f,2f#,1f,1p,1p,2p,2d,1d#,1d#,1p,d#,d,c,a#4,c,2p,1p,1p,2p,2a#4,1c,2p,d,d#,1f,2p,32p,32f,2f#,1f,1p,1p,2p,2d,1d#,1d#,1p,d#,d,2c,16p,1a#4,2p,8p,4c,4c,1c"
     ]
   },
   {
