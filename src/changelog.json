@@ -2,6 +2,7 @@
   {
     "title": "Unreleased",
     "items": [
+      "Enhancement: Debug log buttons always accessible in log bar",
       "Translation: Add Japanese translation",
       "Translation: Translation updates",
       "Enhancement: More melodies"

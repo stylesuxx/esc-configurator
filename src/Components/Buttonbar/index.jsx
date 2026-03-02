@@ -14,10 +14,6 @@ import {
   selectSupported,
 } from '../MelodyEditor/melodiesSlice';
 import {
-  clear as clearLog,
-  selectLog,
-} from '../Log/logSlice';
-import {
   selectCanFlash,
   selectCanRead,
   selectCanWrite,
@@ -39,7 +35,6 @@ function Buttonbar({
   const dispatch = useDispatch();
 
   const showMelodyEditor = useSelector(selectSupported);
-  const log = useSelector(selectLog);
 
   const canFlash = useSelector(selectCanFlash);
   const canRead = useSelector(selectCanRead);
@@ -63,21 +58,6 @@ function Buttonbar({
     dispatch(show());
   }, [dispatch]);
 
-  const handleSaveLog = useCallback(() => {
-    const element = document.createElement("a");
-    const file = new Blob([log.join("\n")], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = "esc-configurator-log.txt";
-    document.body.appendChild(element);
-    element.click();
-
-    dispatch(clearLog());
-  }, [dispatch, log]);
-
-  const handleClearLog = useCallback(() => {
-    dispatch(clearLog());
-  }, [dispatch]);
-
   return (
     <div className="button-bar">
       <div className="buttons-bottom mobile-show">
@@ -90,16 +70,6 @@ function Buttonbar({
       </div>
 
       <div className="buttons-left">
-        <GenericButton
-          onClick={handleSaveLog}
-          text={t('escButtonSaveLog')}
-        />
-
-        <GenericButton
-          onClick={handleClearLog}
-          text={t('escButtonClearLog')}
-        />
-
         <div className="mobile-show">
           <GenericButton
             disabled={!canWrite}
