@@ -6,7 +6,8 @@
       "Translation: Add Japanese translation",
       "Translation: Translation updates",
       "Enhancement: More melodies",
-      "Fix: Preserve settings not known to the configurator when writing"
+      "Fix: Preserve settings not known to the configurator when writing",
+      "Bugfix: Sort ESC layouts by name in the firmware selection"
     ]
   },
   {
