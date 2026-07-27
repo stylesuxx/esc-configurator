@@ -79,7 +79,24 @@ class QueueProcessor {
     this.cleanUp();
     this.currentCommand = this.commands.shift();
     const timeout = this.currentCommand.timeout;
-    await this.currentCommand.transmit();
+
+    try {
+      await this.currentCommand.transmit();
+    } catch(e) {
+      /**
+       * Transmitting failed - this is not something we can recover from, so we
+       * reject the command and carry on with the queue. Without this the
+       * promise returned by addCommand would never settle and the caller would
+       * wait forever.
+       */
+      const failedCommand = this.currentCommand;
+
+      this.cleanUp();
+      failedCommand.rejectCallback(e);
+      this.processCommands();
+
+      return;
+    }
 
     // At this point the command might already have resolved
     if(this.currentCommand) {

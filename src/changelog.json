@@ -6,7 +6,8 @@
       "Translation: Add Japanese translation",
       "Translation: Translation updates",
       "Enhancement: More melodies",
-      "Fix: Preserve settings not known to the configurator when writing"
+      "Fix: Preserve settings not known to the configurator when writing",
+      "Bugfix: Fail with an error instead of hanging when writing to the serial port throws"
     ]
   },
   {
