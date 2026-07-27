@@ -126,6 +126,13 @@ function FirmwareSelector({
           name: layout.name,
         }));
 
+        /**
+         * Sort by display name, so that layouts are grouped no matter in which
+         * order they are defined in the sources. Numeric collation keeps eg.
+         * X-H-5 in front of X-H-10.
+         */
+        escOptions.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
         const versionsSelected = Object.values(
           versions[selection.firmware].filter((v) => settings.unstableVersions || !v.prerelease)
         );
