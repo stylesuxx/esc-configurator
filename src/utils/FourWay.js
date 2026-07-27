@@ -517,6 +517,16 @@ class FourWay {
           source = null;
 
           info.layout = {};
+
+          /**
+           * Keep whatever the ESC reported. This way an unknown layout - eg.
+           * one we deliberately do not support - can still be told apart from
+           * an ESC we could not read at all, both in the log and in the UI.
+           */
+          if(layoutName) {
+            make = layoutName;
+            info.displayName = `${layoutName} - Unsupported/Unrecognized`;
+          }
         } else {
           make = layout.name;
         }
