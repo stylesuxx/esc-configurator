@@ -190,8 +190,7 @@ describe('MainContent', () => {
     expect(screen.getByText('motorControl')).toBeInTheDocument();
     expect(screen.getByText(/enableMotorControl/i)).toBeInTheDocument();
     expect(screen.getByText(/masterSpeed/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
@@ -259,8 +258,7 @@ describe('MainContent', () => {
     expect(screen.getByText('motorControl')).toBeInTheDocument();
     expect(screen.getByText(/enableMotorControl/i)).toBeInTheDocument();
     expect(screen.getByText(/masterSpeed/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
@@ -289,8 +287,7 @@ describe('MainContent', () => {
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
     expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
 
     expect(screen.queryByText(/enableMotorControl/i)).not.toBeInTheDocument();
@@ -325,8 +322,7 @@ describe('MainContent', () => {
     expect(screen.getByText('motorControl')).toBeInTheDocument();
     expect(screen.getByText(/enableMotorControl/i)).toBeInTheDocument();
     expect(screen.getByText(/masterSpeed/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
@@ -354,8 +350,7 @@ describe('MainContent', () => {
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
     expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
@@ -474,8 +469,7 @@ describe('MainContent', () => {
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
     expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
@@ -593,8 +587,7 @@ describe('MainContent', () => {
 
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
     expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
@@ -737,8 +730,7 @@ describe('MainContent', () => {
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
     expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.queryByText('motorControl')).not.toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 
@@ -768,8 +760,7 @@ describe('MainContent', () => {
     expect(screen.getByText(/notePropsOff/i)).toBeInTheDocument();
     expect(screen.getByText(/noteConnectPower/i)).toBeInTheDocument();
     expect(screen.getByText('motorControl')).toBeInTheDocument();
-    expect(screen.getByText("escButtonSaveLog")).toBeInTheDocument();
-    expect(screen.getByText("escButtonClearLog")).toBeInTheDocument();
+
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 

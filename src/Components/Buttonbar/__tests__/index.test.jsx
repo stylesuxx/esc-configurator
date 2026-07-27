@@ -10,7 +10,6 @@ import { Provider } from 'react-redux';
 
 import escsReducer, { setIndividual } from '../../../Containers/App/escsSlice';
 import melodiesReducer, { updateAll } from '../../MelodyEditor/melodiesSlice';
-import logReducer, { add } from '../../Log/logSlice';
 import stateReducer, { setWriting } from '../../../Containers/App/stateSlice';
 
 import Buttonbar from '../';
@@ -24,7 +23,6 @@ function setupTestStore() {
     const store = configureStore({
       reducer: {
         escs: escsReducer,
-        log: logReducer,
         melodies: melodiesReducer,
         state: stateReducer,
       },
@@ -74,24 +72,7 @@ describe('Buttonbar', () => {
     expect(screen.getByText(/escButtonRead/i)).toBeInTheDocument();
     expect(screen.getByText(/escButtonWrite/i)).toBeInTheDocument();
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
-    expect(screen.getByText(/escButtonSaveLog/i)).toBeInTheDocument();
     expect(screen.getAllByText(/escButtonOpenMelodyEditor/i).length).toEqual(2);
-  });
-
-  it('should always trigger log save', () => {
-    global.URL.createObjectURL = jest.fn();
-
-    render(
-      <Buttonbar
-        onReadSetup={onReadSetup}
-        onResetDefaults={onResetDefaults}
-        onWriteSetup={onWriteSetup}
-      />,
-      { wrapper: storeRef.wrapper }
-    );
-
-    userEvent.click(screen.getByText(/escButtonSaveLog/i));
-    expect(global.URL.createObjectURL).toHaveBeenCalled();
   });
 
   it('should not trigger handlers when disabled', () => {
@@ -182,32 +163,4 @@ describe('Buttonbar', () => {
     expect(melodies.show).toBeTruthy();
   });
 
-  it('should clear log', () => {
-    const onWriteSetup = jest.fn();
-    const onReadSetup = jest.fn();
-    const onResetDefaults = jest.fn();
-    const onSeletFirmwareForAll = jest.fn();
-
-    storeRef.store.dispatch(add('line1'));
-
-    let log = storeRef.store.getState().log;
-    expect(log.log.length).toEqual(1);
-
-    render(
-      <Buttonbar
-        onReadSetup={onReadSetup}
-        onResetDefaults={onResetDefaults}
-        onSeletFirmwareForAll={onSeletFirmwareForAll}
-        onWriteSetup={onWriteSetup}
-      />,
-      { wrapper: storeRef.wrapper }
-    );
-
-    expect(screen.getByText(/escButtonClearLog/i)).toBeInTheDocument();
-
-    userEvent.click(screen.getByText(/escButtonClearLog/i));
-
-    log = storeRef.store.getState().log;
-    expect(log.log.length).toEqual(0);
-  });
 });
