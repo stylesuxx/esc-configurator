@@ -12,6 +12,15 @@
     ]
   },
   {
+    "name": "7-40 (Klezmer)",
+    "tracks": [
+      "7-40:b=200,o=6,d=8:4d,8p,8a5,16p,8d,16p,8a5,16p,8d,16p,8a5,16p,8d,16p,4f,8p,8c,16p,8f,16p,8c,16p,8f,16p,8c,16p,8f,16p,4a,8p,8f,16p,8a,16p,4g,8p,8e,16p,8g,16p,4f,8p,32e,32p,8d,16p,8f,16p,2e",
+      "7-40:b=200,o=4,d=8:1a3,4a3,8p,16p,32p,1f3,4f3,8p,16p,2d,4p,16p,2g3,4p,2e3,4p,16p,2a3",
+      "7-40:b=200,o=5,d=8:4d,8p,8a4,16p,8d,16p,8a4,16p,8d,16p,8a4,16p,8d,16p,4f,8p,8c,16p,8f,16p,8c,16p,8f,16p,8c,16p,8f,16p,4a,8p,8f,16p,8a,16p,4g,8p,8e,16p,8g,16p,4f,8p,32e,32p,8d,16p,8f,16p,2e",
+      "7-40:b=200,o=4,d=8:1a3,4a3,8p,16p,32p,1f3,4f3,8p,16p,2d,4p,16p,2g3,4p,2e3,4p,16p,2a3"
+    ]
+  },
+  {
     "name": "Abba - Chiquitita",
     "tracks": [
       "ab_chiq_m1:b=104,o=5,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h4,c#,d,8f#,e6,e,e6,p,e6,e,e6,e,e6,e,e6,e,e6,e,g#6,g#,g#6,g#,g#6,g#,g#6,g#,a6,a,a6,a,a6,a,a6,a,g#6,g#,g#6,g#,a6,a,a6,a,h6,h,h6,h,8a6",
@@ -69,6 +78,12 @@
       "bm_1:b=180,o=4,d=32:8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,4g#,p,p,2g#",
       "bm_2:b=180,o=4,d=32:8d#6,p,8d#6,p,8d6,p,8d6,p,8c#6,p,8c#6,p,8d6,p,8d6,p,4g#6,p,p,2g#6",
       "bm_3:b=180,o=4,d=32:8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8d#6,p,8d#6,p,4d#6,p,p,2d#6"
+    ]
+  },
+  {
+    "name": "Battlefield 2 - Theme",
+    "tracks": [
+      "bf2:b=97,o=4,d=16:1f,32f,32p,p,g,p,d#,p,c,p,1f,4f,32f,32p,p,g#,g,4f,g,g#,4a#,g#,g,4g#,g,f,g,p,f,p,d#,p,4f,g,g#,4a#,g#,g,c5,a#,8c5,a#,g#,8a#,8c5,8f,1c#5,32c#5"
     ]
   },
   {
@@ -325,6 +340,15 @@
     ]
   },
   {
+    "name": "Hava Nagila",
+    "tracks": [
+      "hava_nagila:b=120,o=6,d=8:8e,8p,4e,8p,8g#,8f,8e,8g#,8p,4g#,8p,8h,8a,8g#,8a,8p,4a,8p,8c7,8h,8a,4g#,8f,8e,4g#",
+      "hava_nagila:b=120,o=5,d=8:8e,8p,4e,8p,8g#,8f,8e,8g#,8p,4g#,8p,8h,8a,8g#,8a,8p,4a,8p,8c6,8h,8a,4g#,8f,8e,4g#",
+      "hava_nagila:b=120,o=4,d=8:8e,8h,8e5,8h,8e,8h,8e5,8h,8e,8h,8e5,8h,8e,8h,8e5,8h,8a,8e5,8a5,8e5,8a,8e5,8a5,8e5,8e,8h,8e5,8h,8e,8h,4e5",
+      "hava_nagila:b=120,o=3,d=8:1e,1e,1a,1e"
+    ]
+  },
+  {
     "name": "Initial D - Rage Your Dream",
     "tracks": [
       "Melody:b=120,o=5,d=8:g,a#,c6,g4,c6,d#6,c6,g#4,d#,d#6,d6,a#4,a#5,g5,a#5,g4,g#5,a#5,c6,a#4,d#5,c6c,f5,c4,d#5,f5,g5,a#4,d6,16a#5,32a#5,32p,a#5,d5"
@@ -367,6 +391,15 @@
     "name": "Kirby - Gourmet Race",
     "tracks": [
       "Melody:b=176,o=5,d=16:g5,d#5,c5,g#4,g4,g#4,c5,d#5,f5,d5,a#4,a4,f4,a4,a#4,d5,d#5,c5,g#4,g4,d#4,f4,g4,c5,f5,d5,a#4,g4,f4,g4,a#4,d5,d#5,c5,g#4,g4,d#5,c5,g#4,g4,d5,a#4,a4,f4,d5,a#4,a4,f4,c5,a4,f4,d4,c5,a4,f4,d4,g5,p,8p,g5"
+    ]
+  },
+  {
+    "name": "Kirby - Gourmet Race (short)",
+    "tracks": [
+      "MLead:b=206,o=6,d=16:2c7,2g6,4d#6,4d6,4c,4p,4c6,4d6,4d#6,4c6,4a#5,4c6,4g5,4p,2c7,2g6,4d#6,4d6,4p,8c6,8d6,4d#6,4f6,4d6,4a#5,4c6,4g5,4c6",
+      "MAccord:b=206,o=6,d=16:4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4f5,4p,4f5,4p,4f5,4p,4f5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5",
+      "MAccord2:b=206,o=6,d=16:4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5",
+      "MAccord3:b=206,o=6,d=16:4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g#4,4p,4g#4,4p,4g#4,4p,4g#4,4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g4"
     ]
   },
   {
@@ -430,6 +463,15 @@
       "Melody:b=189,o=5,d=16:1p,1p,8p,32e,32p,32e,32p,32e,32p,p,32e,32p,32e,32p,32e,32p,p,c#,p,8p,g#5,p,8p,f#5,p,8p,e5,p,8p,f#5,1p,1p,1p,1p",
       "Melody:b=189,o=5,d=16:1p,1p,1p,1p,32f#5,32p,32f#5,32p,32f#5,32p,p,32f#5,32p,32f#5,32p,32f#5,32p,p,d#5,p,8p,g#5,p,8p,f#5,p,8p,e5,p,8p,d#5,1p,1p,1p",
       "Melody:b=189,o=5,d=16:1p,1p,1p,1p,1p,2p,4p,c#5,p,c#5,p,c#5,p,g#5,p,b5,p,a#5,p,4p,c#5,p,c#5,p,c#5,p,g#5,p,b5,p,a#5,p,8p,d#6,p,e6"
+    ]
+  },
+  {
+    "name": "Mega Man X - Stage Start",
+    "tracks": [
+      "mmx_m1:b=150,o=5,d=4:8p,16g,16p,16g,8f,2g,8p,16a,16p,16a,8g,2a,16a#,16a#,16p,16a#,p,16c#6,16c#6,16p,16c#6,p,16d6,16p,8c6,16a#,16c6,16c#6,32d6,32d#6,32d6,32d#6,2d6",
+      "mmx_m2:b=150,o=5,d=4:8p,16d,16p,16d,8c,2d,8p,16e,16p,16e,8d,2e,16f,16f,16p,16f,p,16g,16g,16p,16g,p,16a,16p,8g,16f,16g,16g,32a,32a#,32a,32a#,2a",
+      "mmx_m3:b=150,o=5,d=4:8p,16g,16p,16g,8f,2g,8p,16a,16p,16a,8g,2a,16a#,16a#,16p,16a#,p,16c#6,16c#6,16p,16c#6,p,16d6,16p,8c6,16a#,16c6,16c#6,32d6,32d#6,32d6,32d#6,2d6",
+      "mmx_b1:b=150,o=4,d=4:8p,8g,8p,8g,2f,8p,8f,8p,8f,4d#.,32p,32d#,32p,32d#,16p,16d#,p,32g,32p,32g,16p,16g,4p,1d"
     ]
   },
   {
@@ -532,6 +574,15 @@
       "pgunn2:d=4,o=5,b=260:1d#,2d#.,c,1p,1p,1d#,1d#,c6.,f#.,8f,8e,8d#,8d,8c#,c,p.",
       "pgunn3:d=4,o=4,b=260:8f.,16p,f,g,f,8g#,8a,f,a#,a,8f.,16p,f,g,f,8g#,8a,f,a#,a,8f.,16p,f,g,f,8g#,8a,f,a#,a,8f.,16p,f,g,f,8g#,8a,f,a#,a",
       "pgunn4:d=4,o=4,b=260:1d#,2d#.,c,1p,1p,1d#,1d#,c5.,f#.,8f,8e,8d#,8d,8c#,c,p."
+    ]
+  },
+  {
+    "name": "Pirates of the Caribbean - Theme (short)",
+    "tracks": [
+      "melody1:b=150,d=8,o=5:a4,c5,d5,p,d5,p,d5,e5,f5,p,f5,p,f5,g5,e5,p,e5,p,d5,c5,c5,d5",
+      "harmonic1:b=150,d=8,o=5:4p,4d4,4d4,4d4,4f4,4f4,4f4,4e4,4e4,4e4,c4,d4",
+      "harmonic2:b=150,d=8,o=5:4p,d6,p,d6,p,4p,f6,p,f6,p,4p,e6,p,e6,p,4p,c6,d6",
+      "melody2:b=150,d=8,o=5:a4,c5,d5,p,d5,p,d5,e5,f5,p,f5,p,f5,g5,e5,p,e5,p,d5,c5,c5,d5"
     ]
   },
   {
@@ -640,6 +691,15 @@
     ]
   },
   {
+    "name": "Simon & Garfunkel - The Sound of Silence",
+    "tracks": [
+      "silence:b=100,o=5,d=4:8p,16p,16a,16p,16a,16p,16c6,16p,16c6,16p,16e6,16p,16c6,16p,2d6,2p,4p,16g,16p,16g,16p,16h,16p,16h,16p,16d6,16p,16d6,16p,2c6",
+      "silence:b=100,o=3,d=4:2a,16p,16p,16p,16p,16p,16p,16p,8g,8d4,8g4,8d4,8h4,8d4,8g4,8d4,8p,8d4,8g4,8d4,8h4,8d4,8g4,8d4,8a,8e4,8a4,8e4,8c5,8e4,8a4,8e4",
+      "silence:b=100,o=4,d=4:2p,16p,16p,16p,16p,16p,16p,16p,1g,1g,1a",
+      "silence:b=100,o=5,d=4:8p,16p,16e,16p,16e,16p,16e,16p,16e,16p,16e,16p,16e,16p,2g,2p,4p,16d,16p,16d,16p,16d,16p,16d,16p,16d,16p,16d,16p,2a"
+    ]
+  },
+  {
     "name": "Simpsons - Theme",
     "tracks": [
       "simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6,g.6,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6"
@@ -658,7 +718,7 @@
       "silksong_phantom:b=112,o=5:16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,16g",
       "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3,8p,8g,4g,8p,4d,8d,8d#,8p,8d,8p,8c,8p,8a#3,8p",
       "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3,8p,8g,4g,8p,4d,8d,8d#,8p,8d,8p,8c,8p,8a#3,8p"
-     ]
+    ]
   },
   {
     "name": "Silksong - Phantom (short)",
@@ -667,7 +727,7 @@
       "silksong_phantom:b=112,o=5:16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,16g",
       "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3",
       "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3"
-     ]
+    ]
   },
   {
     "name": "Sergey Shnurov - Mobilnik",
@@ -709,6 +769,24 @@
       "imperial2:d=4,o=3,b=450:4g4,4p,4g4,4p,4g4,4p,4g4,4p,8g4,8p,8g4,8p,8g4,8g4,8g4,8g4,4d#4,4p,4d#4,4p,4g4,4p,4g4,4p,4d#4,4p,4d#4,4p,1g4,2p",
       "imperial3:d=4,o=3,b=450:2d5,2p,2d5,2p,2d5,2p,2a#4,4p,4f5,2d5,2p,2a#4,4p,4f5,1d5,2p",
       "imperial4:d=4,o=3,b=450:2g6,2p,2g6,2p,2g6,2p,2d#6,4p,4a#6,2g6,2p,2d#6,4p,4a#6,1g6,2p"
+    ]
+  },
+  {
+    "name": "Star Trek - Deep Space Nine",
+    "tracks": [
+      "ds9_m1:b=72,o=4,d=8:16g3,16c,16e,2d,f,16e,16f,g,4g.,c,c5,16b,16g,c,2d,4f.3,g3.,16c,2c",
+      "ds9_m2:b=72,o=5,d=8:16g4,16c,16e,2d,f,16e,16f,g,4g.,c,c6,16b,16g,c,2d,4f.4,g4.,16p,2c",
+      "ds9_b1:b=72,o=4,d=8:c.,1c,2e,e,4g,1g,2g",
+      "ds9_b2:b=72,o=3,d=1:g,g,g,2c6"
+    ]
+  },
+  {
+    "name": "Star Trek - Deep Space Nine (high)",
+    "tracks": [
+      "ds9_m1:b=72,o=5,d=8:16g4,16c,16e,2d,f,16e,16f,g,4g.,c,c6,16b,16g,c,2d,4f4.,g4.,16c,2c",
+      "ds9_m2:b=72,o=6,d=8:16g5,16c,16e,2d,f,16e,16f,g,4g.,c,c7,16b,16g,c,2d,4f5.,g5.,16c,2c5",
+      "ds9_b1:b=72,o=5,d=8:c.,1c,2e,e,4g,1g,2g",
+      "ds9_b2:b=72,o=4,d=1:g,g,g,2c7"
     ]
   },
   {
@@ -785,6 +863,24 @@
     "name": "T-Motor Default",
     "tracks": [
       "tmotor:b=130,o=5,d=8:c,16f,16e,f,e,4c"
+    ]
+  },
+  {
+    "name": "Terminator - Theme",
+    "tracks": [
+      "terminator1:b=86,o=4,d=8:16d.,16e.,2f.,f.,32f.,16e,e,c,1f3,4f3.,16f3.,16d.,16e.,16f,2f.,f,32f,16e,e,c,32c,2a,a,16a.,2g.",
+      "terminator2:b=86,o=4,d=8:32e3,32d,e,32e,2f.,f,4e,32e,32c.,1f3,2f3,32f3,32d,e,32e,2f.,f,32f,4e,32e,16c.,2a.,32a,2g,g,16g.",
+      "terminator3:b=86,o=6,d=8:p.,1f.,p.,4e.,1c,1p,4p",
+      "terminator4:b=86,o=4,d=8:4p.,4d.,4e.,2f.,4a#3.,4c.,2d,d,p,4d.,4e.,1f,f,2d."
+    ]
+  },
+  {
+    "name": "Tokyo Ghoul - Unravel",
+    "tracks": [
+      "MLead:b=150,o=6,d=16:8a#6,4c7,4a#6,8a6,4g6,4c7,4a#6,4a6,4g6,8g6,4f6,8p,8d#6,4d#6,8f6,1d6",
+      "MAccord:b=150,o=6,d=16:8p,4d#5,4a#5,2d#6,4f5,4c6,2f6,4d5,4a#5,4a5,4f5,4a#4,4f5,2d5",
+      "MLead:b=150,o=6,d=16:8a#6,4c7,4a#6,8a6,4g6,4c7,4a#6,4a6,4g6,8g6,4f6,8p,8d#6,4d#6,8f6,1d6",
+      "MAccord:b=150,o=6,d=16:8a#6,4c7,4a#6,8a6,4g6,4c7,4a#6,4a6,4g6,8g6,4f6,8p,8d#6,4d#6,8f6,1d6"
     ]
   },
   {
