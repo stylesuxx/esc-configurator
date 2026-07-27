@@ -50,6 +50,40 @@ test('command fails', async() => {
   await expect(qp.addCommand(transmit, command)).rejects.toThrow(Error);
 });
 
+test('transmit fails', async() => {
+  const qp = new QueueProcessor();
+  const command = (buffer, resolve) => {
+    resolve(true);
+  };
+
+  const transmit = () => {
+    throw new RangeError('invalid or out-of-range index');
+  };
+
+  await expect(qp.addCommand(transmit, command)).rejects.toThrow(RangeError);
+});
+
+test('transmit fails - queue keeps working', async() => {
+  const qp = new QueueProcessor();
+  const command = (buffer, resolve) => {
+    resolve(buffer);
+  };
+
+  const failingTransmit = async() => {
+    throw new RangeError('invalid or out-of-range index');
+  };
+
+  const transmit = () => {
+    qp.addData(new Uint8Array([1, 2, 3]));
+  };
+
+  const failed = qp.addCommand(failingTransmit, command);
+  const succeeded = qp.addCommand(transmit, command);
+
+  await expect(failed).rejects.toThrow(RangeError);
+  expect(await succeeded).toEqual(new Uint8Array([1, 2, 3]));
+});
+
 test('command resolves', async() => {
   const qp = new QueueProcessor();
   const command = (buffer, resolve) => {
