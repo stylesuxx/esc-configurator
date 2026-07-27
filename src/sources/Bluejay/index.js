@@ -16,6 +16,13 @@ const escs = {
 
 const GITHUB_REPO = 'bird-sanctuary/bluejay';
 
+/**
+ * Last version that still shipped firmware for the low memory (EFM8BB10)
+ * MCUs - the "L" dimension of a layout. Starting with v0.19.0 no L targets
+ * are being built anymore.
+ */
+const LAST_L_LAYOUT_VERSION = '0.18.1';
+
 class BluejaySource extends GithubSource {
   buildDisplayName(flash, make) {
     const settings = flash.settings;
@@ -104,6 +111,19 @@ class BluejaySource extends GithubSource {
     }
 
     return [];
+  }
+
+  filterVersions(versions, layout) {
+    const current = this.escs.layouts[layout];
+    if(!current || !current.name.includes('-L-')) {
+      return versions;
+    }
+
+    return versions.filter((version) => {
+      const coerced = semver.coerce(version.key);
+
+      return coerced && semver.lte(coerced, LAST_L_LAYOUT_VERSION);
+    });
   }
 
   getSkipSettings(oldLayout, newLayout) {

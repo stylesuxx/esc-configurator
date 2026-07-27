@@ -70,6 +70,7 @@ function FirmwareSelector({
   });
 
   const [layoutSelectionDisabled, setLayoutSelectionDisabled] = useState(false);
+  const [limitedLayout, setLimitedLayout] = useState(null);
 
   const file = useRef(null);
 
@@ -133,11 +134,23 @@ function FirmwareSelector({
          */
         escOptions.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
 
+        const source = sources.find((s) => s.getName() === selection.firmware);
+
         const versionsSelected = Object.values(
           versions[selection.firmware].filter((v) => settings.unstableVersions || !v.prerelease)
         );
 
-        const versionOptions = versionsSelected.map((version) => ({
+        /**
+         * Some layouts are no longer supported by current firmware, in that
+         * case only offer the versions that can still be flashed.
+         */
+        const currentLayout = layouts[esc.settings.LAYOUT];
+        const versionsSupported = source.filterVersions(versionsSelected, esc.settings.LAYOUT);
+        setLimitedLayout(
+          versionsSupported.length < versionsSelected.length ? currentLayout.name : null
+        );
+
+        const versionOptions = versionsSupported.map((version) => ({
           key: version.key,
           value: version.url,
           name: version.name,
@@ -159,7 +172,6 @@ function FirmwareSelector({
           });
         }
 
-        const source = sources.find((s) => s.getName() === selection.firmware);
         const layoutSelectionDisabled = source.getDisabledLayoutSelection(esc);
 
         const currentOptions = {
@@ -368,6 +380,13 @@ function FirmwareSelector({
                     selected={mode}
                   />}
                 */}
+
+                {limitedLayout &&
+                  <div className="alert">
+                    <p>
+                      {t('layoutDeprecated', { layout: limitedLayout })}
+                    </p>
+                  </div>}
 
                 <LabeledSelect
                   firstLabel={t('selectVersion')}
