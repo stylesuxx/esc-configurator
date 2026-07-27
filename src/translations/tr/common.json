@@ -163,6 +163,7 @@
   "selectMode": "Mod Seç",
   "selectVersion": "Versiyon Seç",
   "selectPwmFrequency": "PWN Frekansı Seç",
+  "layoutDeprecated": "Layout {{layout}} is no longer supported by current firmware releases - only the versions that still ship firmware for it are listed.",
   "selectTarget": "Hedef Seç",
   "battery": "Batarya:",
   "settings": "Ayarlar",
