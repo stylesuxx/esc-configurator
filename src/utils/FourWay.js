@@ -694,7 +694,7 @@ class FourWay {
     const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
-      const newSettingsArray = Convert.objectToSettingsArray(settings, esc.layout, esc.layoutSize);
+      const newSettingsArray = Convert.objectToSettingsArray(settings, esc.layout, esc.layoutSize, esc.settingsArray);
       if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new BufferLengthMismatchError(newSettingsArray.length, esc.settingsArray.length);
       }

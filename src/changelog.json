@@ -5,7 +5,8 @@
       "Enhancement: Debug log buttons always accessible in log bar",
       "Translation: Add Japanese translation",
       "Translation: Translation updates",
-      "Enhancement: More melodies"
+      "Enhancement: More melodies",
+      "Fix: Preserve settings not known to the configurator when writing"
     ]
   },
   {
