@@ -7,7 +7,9 @@
       "Translation: Translation updates",
       "Enhancement: More melodies",
       "Fix: Preserve settings not known to the configurator when writing",
-      "Bugfix: Sort ESC layouts by name in the firmware selection"
+      "Bugfix: Sort ESC layouts by name in the firmware selection",
+      "Chore: Remove the Y layouts - no firmware is being built for them",
+      "Enhancement: Show the reported layout of an ESC with an unknown layout"
     ]
   },
   {
