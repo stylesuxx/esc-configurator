@@ -12,6 +12,7 @@ import configsReducer, { set } from '../../../Containers/App/configsSlice';
 import sources from '../../../sources';
 import settingsReducer from '../../AppSettings/settingsSlice';
 import escsReducer from '../../../Containers/App/escsSlice';
+import { MIGRATION } from '../../../utils/helpers/Settings';
 
 let FirmwareSelector;
 
@@ -79,8 +80,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -89,6 +88,60 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
     expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
+  });
+
+  it('should allow changing how settings are migrated', async() => {
+    const json = `[{ "tag_name": "v0.10.0", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
+    const configs = {
+      versions: {},
+      escs: {},
+    };
+
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = source.getEscLayouts();
+    }
+
+    storeRef.store.dispatch(set(configs));
+
+    const escMock = {
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
+    render(
+      <FirmwareSelector
+        esc={escMock}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByRole(/combobox/i, { name: 'Migration' }).value).toEqual(MIGRATION.SAME);
+
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Migration' }), {
+      target: {
+        value: MIGRATION.DEFAULTS,
+        name: 'Migration',
+      },
+    });
+
+    /**
+     * The select is re-mounted on change, so it needs to be queried again.
+     */
+    expect(screen.getByRole(/combobox/i, { name: 'Migration' }).value).toEqual(MIGRATION.DEFAULTS);
   });
 
   it('should allow changing firmware options for BLHeli_S', async() => {
@@ -132,8 +185,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -371,8 +422,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -436,8 +485,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -504,8 +551,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();

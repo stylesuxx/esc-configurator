@@ -23,6 +23,7 @@ import {
 import {
   canMigrate,
   getIndividualSettings,
+  MIGRATION,
 } from './helpers/Settings';
 
 import {
@@ -835,11 +836,11 @@ class FourWay {
    * @param {object} esc
    * @param {object} hex
    * @param {boolean} force
-   * @param {boolean} migrate
+   * @param {string} migration
    * @param {function} cbProgress
    * @returns
    */
-  async writeHex(target, esc, hex, force, migrate, cbProgress) {
+  async writeHex(target, esc, hex, force, migration, cbProgress) {
     const {
       interfaceMode,
       signature,
@@ -1139,10 +1140,12 @@ class FourWay {
       );
 
       /**
-       * Only migrate settings if new and old Firmware are the same or if user
-       * forces override.
+       * Only migrate settings if new and old Firmware are the same or if the
+       * user asked for migration between different firmware. When the firmware
+       * defaults are requested, nothing is written and the ESC is left with
+       * the settings that came with the flashed hex.
        */
-      if(migrate || sameFirmware) {
+      if(migration !== MIGRATION.DEFAULTS && (migration === MIGRATION.ALL || sameFirmware)) {
         newEsc = migrateSettings(esc, newEsc);
       }
 
