@@ -14,7 +14,8 @@
       "Bugfix: Fail with an error instead of hanging when writing to the serial port throws",
       "Enhancement: Safety warnings can be hidden via the app settings",
       "Enhancement: Settings handling can now be chosen when flashing",
-      "Bugfix: Stop retrying commands once the device is unplugged"
+      "Bugfix: Stop retrying commands once the device is unplugged",
+      "Enhancement: Point out that LEDs are configurable when the ESC layout supports them"
     ]
   },
   {
