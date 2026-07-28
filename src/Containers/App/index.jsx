@@ -357,7 +357,7 @@ class App extends Component {
     }));
   };
 
-  flash = async(text, force, migrate) => {
+  flash = async(text, force, migration) => {
     let {
       individual,
       targets,
@@ -378,7 +378,7 @@ class App extends Component {
       };
 
       this.addLogMessage('flashingEsc', { index: target + 1 });
-      const result = await this.serial.writeHex(target, esc, text, force, migrate, updateProgress);
+      const result = await this.serial.writeHex(target, esc, text, force, migration, updateProgress);
       updateProgress(0);
 
       if(result) {
@@ -625,7 +625,7 @@ class App extends Component {
     element.click();
   };
 
-  handleLocalSubmit = (e, force, migrate) => {
+  handleLocalSubmit = (e, force, migration) => {
     e.preventDefault();
 
     store.dispatch(setFlashing(true));
@@ -650,7 +650,7 @@ class App extends Component {
 
       const text = (e.target.result);
       try {
-        await this.flash(text, force, migrate);
+        await this.flash(text, force, migration);
       } catch(e) {
         console.error(e);
         store.dispatch(setFlashing(false));
@@ -664,7 +664,7 @@ class App extends Component {
    * checked if the file already exists there, it is used, otherwise it is
    * downloaded and put into local storage for later use.
    */
-  handleFlashUrl = async(url, layout, name, version, pwm, force, migrate) => {
+  handleFlashUrl = async(url, layout, name, version, pwm, force, migration) => {
     store.dispatch(setFlashing(true));
     store.dispatch(setSelecting(false));
 
@@ -697,7 +697,7 @@ class App extends Component {
         },
       });
 
-      await this.flash(text, force, migrate);
+      await this.flash(text, force, migration);
     } else {
       this.addLogMessage('getFileFailed');
       store.dispatch(setFlashing(false));
