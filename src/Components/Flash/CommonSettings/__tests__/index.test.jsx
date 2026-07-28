@@ -134,6 +134,47 @@ describe('CommonSettings', () => {
     expect(screen.queryByText(/invalid/i)).not.toBeInTheDocument();
   });
 
+  it('should point out LED settings on layouts supporting them', () => {
+    const availableSettings = {
+      LAYOUT_REVISION: 203,
+      MAIN_REVISION: 1,
+      NAME: 'FW name',
+      SUB_REVISION: 100,
+    };
+    storeRef.store.dispatch(setMaster(availableSettings));
+
+    const makeEsc = (layout) => ({
+      firmwareName: 'Bluejay',
+      layoutRevision: 207,
+      meta: { available: true },
+      settings: { MODE: 0 },
+      individualSettings: {
+        MAIN_REVISION: 0,
+        SUB_REVISION: 201,
+        NAME: 'Bluejay',
+        LAYOUT: layout,
+      },
+    });
+
+    // A layout without LED support does not get the note
+    storeRef.store.dispatch(setIndividual([makeEsc('#S_H_120#')]));
+
+    const { rerender } = render(
+      <CustomSettings unsupported={false} />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.queryByText(/ledsIndividualNote/i)).not.toBeInTheDocument();
+
+    // ... a layout with LED support does
+    storeRef.store.dispatch(setIndividual([makeEsc('#E_H_120#')]));
+    rerender(
+      <CustomSettings unsupported={false} />
+    );
+
+    expect(screen.getByText(/ledsIndividualNote/i)).toBeInTheDocument();
+  });
+
   it('should allow to check checkbox', () => {
     const availableSettings = {
       LAYOUT_REVISION: 203,

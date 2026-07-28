@@ -137,6 +137,27 @@ function canMigrate(settingName, from, to, toSettingsDescriptions, toIndividualS
   return false;
 }
 
+/**
+ * Check if an ESC supports LED configuration
+ *
+ * Which layouts support LEDs is described by the firmware source itself, so
+ * instead of duplicating that list, the setting description is asked.
+ *
+ * @param {object} esc
+ * @returns {boolean}
+ */
+const supportsLeds = (esc) => {
+  const source = getSource(esc?.firmwareName);
+  const descriptions = source?.getIndividualSettings(esc.layoutRevision);
+
+  const led = descriptions?.base.find((description) => description.name === 'LED_CONTROL');
+  if(!led) {
+    return false;
+  }
+
+  return led.visibleIf ? led.visibleIf(esc.individualSettings || {}) : true;
+};
+
 export {
   getIndividualSettings,
   getIndividualSettingsDescriptions,
@@ -144,4 +165,5 @@ export {
   getMasterSettings,
   canMigrate,
   MIGRATION,
+  supportsLeds,
 };
