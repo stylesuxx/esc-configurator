@@ -10,7 +10,8 @@
       "Bugfix: Sort ESC layouts by name in the firmware selection",
       "Chore: Remove the Y layouts - no firmware is being built for them",
       "Enhancement: Show the reported layout of an ESC with an unknown layout",
-      "Enhancement: Only offer versions that still support the detected layout - L layouts are limited to v0.18.1"
+      "Enhancement: Only offer versions that still support the detected layout - L layouts are limited to v0.18.1",
+      "Enhancement: Safety warnings can be hidden via the app settings"
     ]
   },
   {
