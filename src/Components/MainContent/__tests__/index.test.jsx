@@ -253,8 +253,6 @@ describe('MainContent', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -733,8 +731,6 @@ describe('MainContent', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
   });
 
