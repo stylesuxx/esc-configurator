@@ -27,11 +27,21 @@ import {
   selectTargets,
 } from '../../Containers/App/escsSlice';
 import { selectFeatures } from '../../Containers/App/mspSlice';
+import { selectSettingsObject } from '../AppSettings/settingsSlice';
 
 import './style.scss';
 
 function WarningWrapper() {
   const { t } = useTranslation('common');
+  const { hideWarnings } = useSelector(selectSettingsObject);
+
+  /**
+   * Those warnings are shown on every single session, users that are well
+   * aware of the risks can hide them in the settings.
+   */
+  if(hideWarnings) {
+    return null;
+  }
 
   return (
     <>
