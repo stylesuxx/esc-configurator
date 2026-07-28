@@ -29,6 +29,7 @@
   "escDithering": "PWM Dithering",
   "escMotorDirection": "Motor Direction",
   "escLedControl": "LED Configuration",
+  "ledsIndividualNote": "This ESC supports LEDs. Since every ESC can have its own color, the LED configuration is part of the individual ESC settings.",
   "escPPMMinThrottle": "PPM Min Throttle",
   "escPPMMaxThrottle": "PPM Max Throttle",
   "statusbarPortUtilization": "Port utilization:",
