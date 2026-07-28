@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 
 import configsReducer from '../../../Containers/App/configsSlice';
 import melodiesReducer from '../../MelodyEditor/melodiesSlice';
-import settingsReducer from '../../AppSettings/settingsSlice';
+import settingsReducer, { update as updateSettings } from '../../AppSettings/settingsSlice';
 import serialReducer, {
   setFourWay,
   setOpen,
@@ -191,6 +191,40 @@ describe('MainContent', () => {
     expect(screen.getByText(/enableMotorControl/i)).toBeInTheDocument();
     expect(screen.getByText(/masterSpeed/i)).toBeInTheDocument();
 
+    expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
+  });
+
+  it('should hide the safety warnings when disabled in the settings', () => {
+    storeRef.store.dispatch(setOpen(true));
+    storeRef.store.dispatch(updateSettings({
+      name: 'hideWarnings',
+      value: true,
+    }));
+
+    render(
+      <MainContent
+        onAllMotorSpeed={onAllMotorSpeed}
+        onCancelFirmwareSelection={onCancelFirmwareSelection}
+        onFlashUrl={onFlashUrl}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+        onLocalSubmit={onLocalSubmit}
+        onOpenMelodyEditor={onOpenMelodyEditor}
+        onReadEscs={onReadEscs}
+        onResetDefaultls={onResetDefaultls}
+        onSelectFirmwareForAll={onSelectFirmwareForAll}
+        onSettingsUpdate={onSettingsUpdate}
+        onSingleFlash={onSingleFlash}
+        onSingleMotorSpeed={onSingleMotorSpeed}
+        onWriteSetup={onWriteSetup}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.queryByText(/notePropsOff/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/noteConnectPower/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/warningRadio/i)).not.toBeInTheDocument();
+
+    // The rest of the page is unaffected
     expect(screen.getByText(/escButtonFlashAll/i)).toBeInTheDocument();
   });
 

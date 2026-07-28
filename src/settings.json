@@ -79,6 +79,10 @@
     "skipCache": {
       "type": "boolean",
       "value": false
+    },
+    "hideWarnings": {
+      "type": "boolean",
+      "value": false
     }
   }
 }
