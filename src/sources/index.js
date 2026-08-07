@@ -4,6 +4,7 @@ import BLHeliSilabsSource, { source as blheliSilabsSource } from './Blheli/Silab
 import BLHeliAtmelSource, { source as blheliAtmelSource } from './Blheli/Atmel';
 import BLHeliSSource, { source as blheliSSource } from './BlheliS';
 import BluejaySource, { source as bluejaySource } from './Bluejay';
+import GIL32Source, { source as gil32Source } from './GIL32';
 
 /**
  * This sources will be used when initally fetching firmware options during
@@ -15,6 +16,7 @@ const sources = [
   blheliSilabsSource,
   blheliSSource,
   bluejaySource,
+  gil32Source,
 ];
 
 /**
@@ -28,6 +30,7 @@ const classes = {
   BLHeliSilabsSource,
   BLHeliSSource,
   BluejaySource,
+  GIL32Source,
 };
 
 export {
@@ -37,6 +40,7 @@ export {
   blheliSSource,
   bluejaySource,
   classes,
+  gil32Source,
 };
 
 export default sources;

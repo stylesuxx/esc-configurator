@@ -193,5 +193,12 @@
   "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
   "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
-  "selectionLinkText": "Show release notes on Github"
+  "selectionLinkText": "Show release notes on Github",
+  "gil32StartupThrottle": "Startup Throttle",
+  "gil32TurtleModeRampup": "Turtlemode Dampup",
+  "gil32CommutationDelay": "Commutation Delay",
+  "gil32Rampup": "Rampup",
+  "gil32MotorDirection": "Normal Motor Direction",
+  "gil32CrashDetection": "Crash Detection",
+  "gil32FirmwareDeadtime": "Firmware Deadtime"
 }

@@ -18,6 +18,7 @@ import {
   blheliSSource,
   bluejaySource,
   classes as sources,
+  gil32Source,
 } from '../sources';
 
 import {
@@ -57,6 +58,8 @@ const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
 const am32Eeprom = am32Source.getEeprom();
 const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
+const gil32Eeprom = gil32Source.getEeprom();
+const gil32SettingsDescriptions = gil32Source.getSettingsDescriptions();
 /**
  * @typedef Response
  * @property {number} ack
@@ -352,7 +355,7 @@ class FourWay {
 
       const currentFileName = hexFileName.slice(0, hexFileName.lastIndexOf('_'));
       const expectedFileName = meta.am32.fileName.slice(0, meta.am32.fileName.lastIndexOf('_'));
-      if ( currentFileName !== expectedFileName) {
+      if (currentFileName !== expectedFileName) {
         this.addLogMessage('flashingEscMissmatchFileName', { index: esc.index + 1 });
         throw new LayoutMismatchError(expectedFileName, currentFileName);
       }
@@ -446,6 +449,28 @@ class FourWay {
 
           // TODO: Find out if there is a way to reliably identify BLHeli_32
           // info.settings.NAME = 'BLHeli_32';
+        }
+
+        if(info.settings.NAME === 'Unknown') {
+          source = gil32Source;
+          const eepromOffset = mcu.getEepromOffset();  
+          try {
+          
+            info.layout = source.getLayout();
+      
+            info.layoutSize = source.getLayoutSize();
+            
+            const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+            info.settingsArray = Array.from(settingsArray);
+            info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
+
+            if (!info.settings.NAME.startsWith("Gil32")) {
+              info.settings.NAME = 'Unknown';
+            }
+          }
+          catch(e) {
+            // TODO: log error... might not be important.
+          }
         }
       }
 
@@ -673,7 +698,30 @@ class FourWay {
 
           info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = am32Source.getName();
+        } else if (source instanceof sources.GIL32Source) {
+          info.bootloader = {};
+          if(info.meta.input) {
+            info.bootloader.input = info.meta.input;
+            info.bootloader.valid = false;
+          }
+
+          /* Bootloader input pins are limited. If something different is set,
+            * then the user probably has an old fw flashed.
+            */
+          for(let [key, value] of Object.entries(gil32Eeprom.BOOT_LOADER_PINS)) {
+            if(value === info.bootloader.input) {
+              info.bootloader.valid = true;
+              info.bootloader.pin = key;
+              info.bootloader.version = info.settings.BOOT_LOADER_REVISION;
+            }
+          }
+
+          info.settings.LAYOUT = info.settings.NAME;
+
+          info.displayName =  gil32Source.getName() + "_" + info.settings.VERSION + "." + info.settings.SUB_VERSION;
+          info.firmwareName = gil32Source.getName();
         }
+
       }
 
       info.make = make;
@@ -881,6 +929,12 @@ class FourWay {
           individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
         } break;
 
+        case gil32Eeprom.LAYOUT: {
+          console.debug('GIL32 layout found');
+          settingsDescriptions = gil32SettingsDescriptions.COMMON;
+          individualSettingsDescriptions = gil32SettingsDescriptions.INDIVIDUAL;
+        } break;
+
         default: {
           console.log('Unknown layout', newEsc.layout);
         }
@@ -1074,7 +1128,13 @@ class FourWay {
       this.totalBytes = (flash.byteLength - firmwareStart) * 2;
       this.bytesWritten = 0;
 
-      const message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
+      let message = null;
+      if (esc.firmwareName === gil32Source.get_id()) {
+        message = await this.read(eepromOffset, gil32Eeprom.LAYOUT_SIZE);
+      } else {
+        message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
+      }
+       
       const originalSettings = message.params;
 
       const eepromInfo = new Uint8Array(17).fill(0x00);
@@ -1362,8 +1422,8 @@ class FourWay {
 
     for (let address = beginAddress; address < endAddress && address < data.length; address += step) {
       await this.write(
-        address,
-        data.subarray(address, Math.min(address + step, data.length)));
+      address,
+      data.subarray(address, Math.min(address + step, data.length)));
 
       this.bytesWritten += step;
       this.progressCallback((this.bytesWritten / this.totalBytes) * 100);
