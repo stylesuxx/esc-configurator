@@ -163,6 +163,7 @@
   "selectMode": "Modus auswählen",
   "selectVersion": "Version auswählen",
   "selectPwmFrequency": "PWM Frequenz auswählen",
+  "layoutDeprecated": "Layout {{layout}} is no longer supported by current firmware releases - only the versions that still ship firmware for it are listed.",
   "selectTarget": "Target wählen",
   "battery": "Akku:",
   "settings": "Einstellungen",

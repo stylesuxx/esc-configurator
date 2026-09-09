@@ -163,6 +163,7 @@
   "selectMode": "Vybrat režim",
   "selectVersion": "Vybrat verzi",
   "selectPwmFrequency": "Vybrat frekvenci PWM",
+  "layoutDeprecated": "Layout {{layout}} is no longer supported by current firmware releases - only the versions that still ship firmware for it are listed.",
   "selectTarget": "Vybrat cíl",
   "battery": "Baterie:",
   "settings": "Nastavení",
