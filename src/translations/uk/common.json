@@ -163,7 +163,7 @@
   "selectMode": "Виберіть режим",
   "selectVersion": "Виберіть версію",
   "selectPwmFrequency": "Виберіть частоту ШІМ",
-  "layoutDeprecated": "Layout {{layout}} is no longer supported by current firmware releases - only the versions that still ship firmware for it are listed.",
+  "layoutDeprecated": "Макет {{layout}} більше не підтримується поточними версіями прошивки — у списку наведено лише ті версії, для яких прошивка все ще поставляється.",
   "selectTarget": "Виберіть пристрій",
   "battery": "Батарея:",
   "settings": "Налаштування",
