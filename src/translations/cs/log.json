@@ -12,6 +12,7 @@
   "radioOn": "Bylo zjištěno, že vaše rádio je zapnuto! Čtení a nahrávání je vypnuto. Vypněte rádio a zkuste to znovu.",
   "mspFcInfo": "Informace o letovém ovladači, identifikátor: {{id}} verze: {{version}}",
   "portUsed": "Port je již používán jinou aplikací - zkuste se znovu připojit",
+  "initializationFailed": "Port initialization failed - check browser console for further details",
   "fourWayFailed": "Nelze povolit 4 směrové rozhraní - znovu připojit řídící jednotku",
   "readEscs": "Pokouším se číst {{connected}} ESC",
   "readEscsSuccess": "Dokončeno čtení ESC",

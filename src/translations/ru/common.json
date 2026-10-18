@@ -163,6 +163,7 @@
   "selectMode": "Выберите Режим",
   "selectVersion": "Выберите Версию",
   "selectPwmFrequency": "Выберите частоту ШИМ (PWM)",
+  "layoutDeprecated": "Layout {{layout}} is no longer supported by current firmware releases - only the versions that still ship firmware for it are listed.",
   "selectTarget": "Выберите Цель",
   "battery": "Батарея:",
   "settings": "Настройки",

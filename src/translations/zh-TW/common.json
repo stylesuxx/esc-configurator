@@ -163,6 +163,7 @@
   "selectMode": "選擇模式",
   "selectVersion": "選擇版本",
   "selectPwmFrequency": "選擇 PWM 頻率",
+  "layoutDeprecated": "Layout {{layout}} is no longer supported by current firmware releases - only the versions that still ship firmware for it are listed.",
   "selectTarget": "選擇目標",
   "battery": "電池:",
   "settings": "設定",
