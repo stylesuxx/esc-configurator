@@ -14,5 +14,7 @@
   "unstableVersions": "Pokaż wstępne wydania oprogramowania",
   "unstableVersionsHint": "Pokaż niestabilne wersje oprogramowania i wstępne wydania",
   "skipCache": "Pomiń bufor",
-  "skipCacheHint": "Włącz to ustawienie, jeśli nie widzisz najnowszej wersji w wyborze oprogramowania sprzętowego."
+  "skipCacheHint": "Włącz to ustawienie, jeśli nie widzisz najnowszej wersji w wyborze oprogramowania sprzętowego.",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }
