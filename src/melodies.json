@@ -445,6 +445,12 @@
     ]
   },
   {
+    "name": "Mario Kart - Countdown",
+    "tracks": [
+      "Countdown:d=4,o=5,b=150:a4,p,a4,p,a4,p,2a5"
+    ]
+  },
+  {
     "name": "Mega Man - I can't defeat Airman",
     "tracks": [
       "Airman:b=118,o=4,d=16:e,g,a,b,p,8p,e,b,p,a,8p,b,p,a,g,f#,e,d,p,e,p,f#,p,a,p,a,g,f#,g,p,e,g,a,b,p,8p,e,b,p,a,8p,b,p,a,g,f#,e,d,p,e,p,f#,p,a,p,a,g,a,b"
