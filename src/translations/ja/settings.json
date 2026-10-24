@@ -14,5 +14,7 @@
   "unstableVersions": "ファームウェアのプレリリース版を表示する",
   "unstableVersionsHint": "不安定なファームウェアのバージョンとプレリリース版を表示する",
   "skipCache": "キャッシュをスキップ",
-  "skipCacheHint": "ファームウェアの選択画面に最新のバージョンが表示されない場合は、この設定を有効にしてください"
+  "skipCacheHint": "ファームウェアの選択画面に最新のバージョンが表示されない場合は、この設定を有効にしてください",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }
