@@ -4,6 +4,7 @@ import {
   EscLockedError,
   InvalidHexFileError,
   LayoutMismatchError,
+  PortClosedError,
   SettingsVerificationError,
   TooManyParametersError,
   UnknownInterfaceError,
@@ -47,5 +48,9 @@ describe('Errors', () => {
     error = new LayoutMismatchError('expected', 'received');
     expect(error instanceof Error).toBeTruthy();
     expect(error.message).toEqual('Expected layout: \'expected\', got: \'received\'');
+
+    error = new PortClosedError('closed');
+    expect(error instanceof Error).toBeTruthy();
+    expect(error.message).toEqual('closed');
   });
 });

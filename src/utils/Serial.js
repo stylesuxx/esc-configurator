@@ -1,6 +1,7 @@
 import Msp from './Msp';
 import FourWay from './FourWay';
 import { QueueProcessor } from './helpers/QueueProcessor';
+import { PortClosedError } from './Errors';
 
 /**
  * Abstraction layer for all serial communication
@@ -74,13 +75,18 @@ class Serial {
   /**
    * Write a buffer
    *
+   * Throws a PortClosedError once the writer is gone, for example after the
+   * device was unplugged.
+   *
    * @param {ArrayBuffer} buffer
    */
   async writeBuffer(buffer) {
-    if(this.writer) {
-      this.sent += buffer.byteLength;
-      await this.writer.write(buffer);
+    if(!this.writer) {
+      throw new PortClosedError('Serial port is closed');
     }
+
+    this.sent += buffer.byteLength;
+    await this.writer.write(buffer);
   }
 
   /**
@@ -166,7 +172,12 @@ class Serial {
     this.writer = null;
 
     if(this.fourWay) {
-      await this.fourWay.exit();
+      try {
+        await this.fourWay.exit();
+      } catch(e) {
+        // The writer is gone, so the exit command can not be sent - exit still
+        // stops the keep alive interval.
+      }
     }
   }
 

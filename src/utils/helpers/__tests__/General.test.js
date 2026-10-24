@@ -86,6 +86,19 @@ describe('General', () => {
     expect(success).toBeTruthy();
   });
 
+  it('retry gives up immediately on a closed port', async() => {
+    const { PortClosedError } = require('../../Errors');
+    let count = 0;
+
+    function test(resolve, reject) {
+      count += 1;
+      reject(new PortClosedError('closed'));
+    }
+
+    await expect(retry(test, 5, 10)).rejects.toThrow(PortClosedError);
+    expect(count).toEqual(1);
+  });
+
   it('retry succeeds at third try', async() => {
     let count = 0;
 

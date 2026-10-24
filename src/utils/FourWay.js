@@ -280,12 +280,12 @@ class FourWay {
          * Immediately resolve the exit command since it will not produce any
          * processable output.
          */
-        if (command === COMMANDS.cmd_InterfaceExit) {
-          await this.serial(message, null);
-          return resolve();
-        }
-
         try {
+          if (command === COMMANDS.cmd_InterfaceExit) {
+            await this.serial(message, null);
+            return resolve();
+          }
+
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
             if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
