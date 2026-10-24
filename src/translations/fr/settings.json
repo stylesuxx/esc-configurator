@@ -14,5 +14,7 @@
   "unstableVersions": "Afficher les versions non officielles",
   "unstableVersionsHint": "Afficher les versions instables et les versions non officielles",
   "skipCache": "Ignorer la cache",
-  "skipCacheHint": "Activez ce paramètre si vous ne voyez pas la dernière version dans la sélection du firmware."
+  "skipCacheHint": "Activez ce paramètre si vous ne voyez pas la dernière version dans la sélection du firmware.",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }
