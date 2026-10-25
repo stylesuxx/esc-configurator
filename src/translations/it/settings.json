@@ -15,6 +15,6 @@
   "unstableVersionsHint": "Mostra versioni del firmware instabili e pre-release",
   "skipCache": "Ignora la cache",
   "skipCacheHint": "Abilita questa impostazione se non vedi l'ultima versione nella selezione del firmware.",
-  "hideWarnings": "Hide safety warnings",
-  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
+  "hideWarnings": "Nascondi avvisi di sicurezza",
+  "hideWarningsHint": "Nasconde gli avvisi di rimuovere le eliche, spegnere la radio e collegare l'alimentazione all' ESC. Abilitare solo se consapevoli dei rischi."
 }
