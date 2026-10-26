@@ -12,6 +12,7 @@
   "radioOn": "Your radio has been detected to be on! Reading and Flashing disabled. Turn off your radio and try again.",
   "mspFcInfo": "Kontrolcu tanımlayıcı: {{id}} version: {{version}}",
   "portUsed": "Port başka bi uygulama tarafından kullanılıyor. Tekrar bağlanmayı deneyin",
+  "initializationFailed": "Port initialization failed - check browser console for further details",
   "fourWayFailed": "Could not enable 4 way interface - reconnect flight controller",
   "readEscs": "Trying to read {{connected}} ESCs",
   "readEscsSuccess": "ESC'ler okundu",

@@ -14,5 +14,7 @@
   "unstableVersions": "Önceki Yayınlanmamış Firmwareleri göster",
   "unstableVersionsHint": "Önceki Yayınlanmamış ve stabil olmayan Firmwareleri göster",
   "skipCache": "Önbelleği atla",
-  "skipCacheHint": "Eğer firmware seçiminde en son sürümü görmüyorsanız bu ayarı etkinleştirin."
+  "skipCacheHint": "Eğer firmware seçiminde en son sürümü görmüyorsanız bu ayarı etkinleştirin.",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }

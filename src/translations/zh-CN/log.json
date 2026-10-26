@@ -12,6 +12,7 @@
   "radioOn": "您的遥控器已被检测到开启！读取和烧录已被禁用。请关闭您的遥控器，然后重试。",
   "mspFcInfo": "飞行控制器信息，标识符: {{id}} 版本: {{version}}",
   "portUsed": "端口已被另一个应用程序使用 - 请尝试重新连接",
+  "initializationFailed": "Port initialization failed - check browser console for further details",
   "fourWayFailed": "无法启用 4 路接口 - 请重新连接飞行控制器",
   "readEscs": "正在尝试读取 {{connected}} 个 ESC",
   "readEscsSuccess": "ESC 读取完成",
