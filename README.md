@@ -26,7 +26,7 @@ Currently the SiLab EMF8 MCU's are supported with the following firmware:
 
 ### ARM:
 
-*   [AM32](https://github.com/AlkaMotors/AM32-MultiRotor-ESC-firmware)
+AM32 is no longer supported by ESC Configurator. Please use the dedicated [AM32 configurator](https://am32.ca) instead.
 
 ### Adding new firmware
 If you are a firmware developer please feel free to drop an issue so I can add your firmware. Look at how BLHeli and Bluejay are implemented.

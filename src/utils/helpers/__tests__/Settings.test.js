@@ -7,10 +7,10 @@ import {
 
 import escs from './escs.json';
 import { source as bluejaySource } from '../../../sources/Bluejay';
-import { source as am32Source } from '../../../sources/AM32';
+import { source as blheliSSource } from '../../../sources/BlheliS';
 import { getSource } from '../General';
 
-const AM32_SETTINGS_DESCRIPTIONS = am32Source.getSettingsDescriptions();
+const BLHELI_S_SETTINGS_DESCRIPTIONS = blheliSSource.getSettingsDescriptions();
 const BLUEJAY_SETTINGS_DESCRIPTIONS = bluejaySource.getSettingsDescriptions();
 
 test('get master settings object', () => {
@@ -96,8 +96,8 @@ test('can migrate valid setting', () => {
 });
 
 test('can migrate from different platforms', () => {
-  const settingsDescriptions = AM32_SETTINGS_DESCRIPTIONS.COMMON;
-  const individualSettingsDescriptions = AM32_SETTINGS_DESCRIPTIONS.INDIVIDUAL;
+  const settingsDescriptions = BLHELI_S_SETTINGS_DESCRIPTIONS.COMMON;
+  const individualSettingsDescriptions = BLHELI_S_SETTINGS_DESCRIPTIONS.INDIVIDUAL;
   const result = canMigrate('MOTOR_DIRECTION', escs[0].settings, escs[1].settings, settingsDescriptions, individualSettingsDescriptions);
 
   expect(result).not.toBeTruthy();

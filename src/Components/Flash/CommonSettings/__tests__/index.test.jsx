@@ -415,6 +415,35 @@ describe('CommonSettings', () => {
     expect(screen.getByText(/common:useDedicatedConfigurator/i)).toBeInTheDocument();
   });
 
+  it('should point AM32 users to the dedicated configurator', () => {
+    const availableSettings = { NAME: 'AM32' };
+    storeRef.store.dispatch(setMaster(availableSettings));
+
+    const escs = [
+      {
+        firmwareName: 'AM32',
+        meta: { available: true },
+        settings: { NAME: 'AM32' },
+      },
+    ];
+    storeRef.store.dispatch(setIndividual(escs));
+
+    const onFlash = jest.fn();
+
+    render(
+      <CustomSettings
+        index={0}
+        onFlash={onFlash}
+        unsupported
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByText(/unsupportedFirmware/i)).toBeInTheDocument();
+    expect(screen.getByText(/common:am32UseDedicatedConfigurator/i)).toBeInTheDocument();
+    expect(screen.queryByText(/common:useDedicatedConfigurator/i)).not.toBeInTheDocument();
+  });
+
   it('should handle overrides', () => {
     const availableSettings = {
       MAIN_REVISION: 14,
@@ -475,8 +504,8 @@ describe('CommonSettings', () => {
 
     const escs = [
       {
-        firmwareName: 'AM32',
-        layoutRevision: 2,
+        firmwareName: 'Bluejay',
+        layoutRevision: 206,
         meta: { available: true },
         settings: { MODE: 1 },
       },
