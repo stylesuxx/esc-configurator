@@ -148,16 +148,6 @@ function HomeColumnCenter() {
                 Bluejay
               </a>
             </li>
-
-            <li>
-              <a
-                href="https://github.com/am32-firmware/AM32"
-                rel="noreferrer"
-                target="_blank"
-              >
-                AM32
-              </a>
-            </li>
           </ul>
         </div>
 
@@ -231,11 +221,11 @@ function HomeColumnCenter() {
           <section>
             <div>
               <ReactMarkdown>
-                {t('blheli32ToAM32Line1')}
+                {t('am32MovedLine1')}
               </ReactMarkdown>
 
               <ReactMarkdown>
-                {t('blheli32ToAM32Line2')}
+                {t('am32MovedLine2')}
               </ReactMarkdown>
             </div>
           </section>

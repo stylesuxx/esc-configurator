@@ -1,4 +1,3 @@
-import AM32Source, { source as am32Source } from './AM32';
 import BLHeliSource from './Blheli';
 import BLHeliSilabsSource, { source as blheliSilabsSource } from './Blheli/Silabs';
 import BLHeliAtmelSource, { source as blheliAtmelSource } from './Blheli/Atmel';
@@ -10,7 +9,6 @@ import BluejaySource, { source as bluejaySource } from './Bluejay';
  * application startup.
  */
 const sources = [
-  am32Source,
   blheliAtmelSource,
   blheliSilabsSource,
   blheliSSource,
@@ -22,7 +20,6 @@ const sources = [
  * types.
  */
 const classes = {
-  AM32Source,
   BLHeliSource,
   BLHeliAtmelSource,
   BLHeliSilabsSource,
@@ -31,7 +28,6 @@ const classes = {
 };
 
 export {
-  am32Source,
   blheliAtmelSource,
   blheliSilabsSource,
   blheliSSource,
