@@ -1,6 +1,11 @@
 import Msp from './Msp';
 import FourWay from './FourWay';
 import { QueueProcessor } from './helpers/QueueProcessor';
+import { delay } from './helpers/General';
+import {
+  COMMANDS,
+  MODES,
+} from './FourWayConstants';
 
 /**
  * Abstraction layer for all serial communication
@@ -157,8 +162,58 @@ class Serial {
   }
 
   /**
+   * Open a direct 4-way interface connection to an Arduino bridge (no FC).
+   * Baud rate is locked to 38400 per BLHeli Suite 4w-if spec.
+   * Interface mode is locked to SiLBLB.
+   */
+  async openDirect() {
+    const baudRate = 38400;
+    this.baudRate = baudRate;
+
+    try {
+      await this.port.open({ baudRate });
+      this.writer = await this.port.writable.getWriter();
+      this.reader = await this.port.readable.getReader();
+    } catch (e) {
+      console.debug('Could not open serial port');
+      await this.forceRelease();
+      throw new Error('Could not open serial port');
+    }
+
+    this.fourWay = new FourWay(this.executeCommand);
+
+    this.running = true;
+    this.startReader();
+
+    // Arduino auto-resets when the serial port opens - wait for it to boot
+    // before sending any 4w-if commands.
+    await delay(1500);
+
+    await this.sendHandshake();
+
+    // Set interface mode to SiLBLB - do not fail connection if this times out
+    try {
+      await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceSetMode, [
+        MODES.SiLBLB,
+      ]);
+    } catch (e) {
+      console.debug('Interface set mode failed, continuing anyway:', e.message);
+    }
+  }
+
+  /**
+   * Send the 4w-if startup handshake (4 x 0xFF bytes) to detect connection
+   * type and set the interface to listen state.
+   */
+  async sendHandshake() {
+    const handshake = new Uint8Array([0xff, 0xff, 0xff, 0xff]);
+    await this.writeBuffer(handshake.buffer);
+  }
+
+  /**
    * Stop reader and writer, attempt closing four way connection should it be
-   * available.
+   * available. Never throws - all errors are swallowed so cleanup always
+   * completes.
    */
   async disconnect() {
     this.running = false;
@@ -166,8 +221,38 @@ class Serial {
     this.writer = null;
 
     if(this.fourWay) {
-      await this.fourWay.exit();
+      try {
+        await this.fourWay.exit();
+      } catch (e) {
+        console.debug('Four way exit failed during disconnect:', e.message);
+      }
     }
+  }
+
+  /**
+   * Force-release the serial port without throwing. Use this before opening
+   * a new connection to make sure nothing is left locked.
+   */
+  async forceRelease() {
+    this.running = false;
+
+    if(this.reader) {
+      try { this.reader.cancel(); } catch(e) { console.debug(e); }
+      try { await this.reader.releaseLock(); } catch(e) { console.debug(e); }
+      this.reader = null;
+    }
+
+    if(this.writer) {
+      try { await this.writer.releaseLock(); } catch(e) { console.debug(e); }
+      this.writer = null;
+    }
+
+    if(this.port) {
+      try { await this.port.close(); } catch(e) { console.debug(e); }
+    }
+
+    this.fourWay = null;
+    this.msp = null;
   }
 
   /**
@@ -178,25 +263,16 @@ class Serial {
 
     // Attempt to stop motors
     if(this.msp) {
-      await this.stopAllMotors();
+      try { await this.stopAllMotors(); } catch(e) { console.debug(e); }
     }
 
-    if(this.reader) {
-      this.reader.cancel();
-      await this.reader.releaseLock();
-    }
-
-    if(this.writer) {
-      await this.writer.releaseLock();
-    }
+    await this.disconnect();
 
     try {
       await this.port.close();
     } catch(e) {
       // we tried...
     }
-
-    this.disconnect();
   }
 
   /**

@@ -1,6 +1,7 @@
 {
   "port": "Port",
   "baudRate": "Baud Rate",
+  "connectionMode": "Connection Mode",
   "connect": "Connect",
   "disconnect": "Disconnect",
   "serialPermission": "Select Serial Port",
@@ -63,7 +64,7 @@
   "homeContributionItem5": "Help [translate](http://crowdin.com/project/esc-configuratorcom) the interface into your language",
   "homeDisclaimerHeader": "Disclaimer",
   "homeDisclaimerTextLine1": "The web application supports ESCs running BLHeli for Atmel, BLHeli for SiLabs and BLHeli_S.",
-  "homeDisclaimerTextLine2": "**BLHeli FC passthrough** is the only interface currently supported.",
+  "homeDisclaimerTextLine2": "Two interfaces are supported: **BLHeli FC passthrough** or a **direct Arduino 4-way interface** (SiLBLB, 38400 baud).",
   "homeDisclaimerTextLine3": "Should you run into any problems, make sure to use the **Save Debug Log** button and submit a new issue via [GitHub](https://github.com/stylesuxx/esc-configurator/issues/new).",
   "homeDisclaimerTextLine4": "Application source code can be downloaded from [here](https://github.com/stylesuxx/esc-configurator).",
   "homeDisclaimerTextLine5": "Latest [CP210x Drivers](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) can be downloaded from [here](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).",
@@ -192,5 +193,7 @@
   "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
   "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
-  "selectionLinkText": "Show release notes on Github"
+  "selectionLinkText": "Show release notes on Github",
+  "fcPassthrough": "FC Passthrough",
+  "direct4Way": "Direct 4-Way (SiLBLB)"
 }

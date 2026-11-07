@@ -201,6 +201,34 @@ class App extends Component {
 
     store.dispatch(setConnecting(true));
 
+    const connectionMode = store.getState().serial.connectionMode;
+
+    if (connectionMode === 'direct-4wif') {
+      try {
+        await this.serial.forceRelease();
+        await this.serial.openDirect();
+        this.serial.setLogCallback(this.addLogMessage);
+        this.addLogMessage('portOpened');
+        this.progressReferences = [];
+
+        store.dispatch(setOpen(true));
+        store.dispatch(setFourWay(true));
+      } catch (e) {
+        console.debug(e);
+
+        try {
+          this.serial.close();
+        } catch (e2) {
+          console.debug(e2);
+        }
+
+        this.addLogMessage('portUsed');
+      }
+
+      store.dispatch(setConnecting(false));
+      return;
+    }
+
     const serial = store.getState().serial;
     try {
       await this.serial.open(serial.baudRate);
@@ -325,16 +353,20 @@ class App extends Component {
     const { escs } = store.getState();
     const { individual } = escs;
     if(this.serial) {
-      for(let i = 0; i < individual.length; i += 1) {
-        try {
-          await this.serial.resetFourWayInterface(i);
-        } catch(e) {
-          this.addLogMessage('resetEscFailed', { index: i + 1 });
+      try {
+        for(let i = 0; i < individual.length; i += 1) {
+          try {
+            await this.serial.resetFourWayInterface(i);
+          } catch(e) {
+            this.addLogMessage('resetEscFailed', { index: i + 1 });
+          }
         }
+        await this.serial.exitFourWayInterface();
+      } catch(e) {
+        console.debug('Disconnect cleanup error:', e.message);
+      } finally {
+        this.serial.close();
       }
-      await this.serial.exitFourWayInterface();
-
-      this.serial.close();
     }
 
     this.lastConnected = 0;
@@ -435,42 +467,79 @@ class App extends Component {
   handleReadEscs = async() => {
     const { escs } = store.getState();
     const individual = [];
+    const connectionMode = store.getState().serial.connectionMode;
 
     let fourWay = true;
     let connected = 0;
 
     store.dispatch(setReading(true));
 
-    // Prevent reading if radio is detected to be on and not connected yet
-    if(!escs.connected) {
-      const status = await this.serial.getStatus();
-      if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
-        this.addLogMessage('radioOn');
-        store.dispatch(setReading(false));
+    if (connectionMode === 'direct-4wif') {
+      try {
+        await this.serial.startFourWayInterface();
 
-        return;
+        await delay(1200);
+
+        // Probe ESCs by trying initFlash on each index
+        for (let i = 0; i < 8; i += 1) {
+          let initOk = false;
+          for (let attempt = 0; attempt < 3; attempt += 1) {
+            try {
+              await this.serial.initFlash(i);
+              initOk = true;
+              break;
+            } catch (ex) {
+              await delay(200);
+            }
+          }
+          if (initOk) {
+            connected = i + 1;
+          } else {
+            break;
+          }
+        }
+      } catch (e) {
+        fourWay = false;
+
+        this.addLogMessage('fourWayFailed');
+        console.debug(e);
+      }
+    } else {
+      // Prevent reading if radio is detected to be on and not connected yet
+      if (!escs.connected) {
+        const status = await this.serial.getStatus();
+        if (!status.armingDisableFlagsReasons.RX_FAILSAFE) {
+          this.addLogMessage('radioOn');
+          store.dispatch(setReading(false));
+
+          return;
+        }
+      }
+
+      try {
+        if (this.lastConnected === 0) {
+          const escResult = await this.serial.enable4WayInterface();
+          connected = escResult.connectedESCs;
+
+          await this.serial.startFourWayInterface();
+
+          /* Give the ESCs some time to boot - it might take longer if they
+           * are playing a startup melody.
+           */
+          await delay(1200);
+        } else {
+          connected = this.lastConnected;
+        }
+      } catch (e) {
+        fourWay = false;
+
+        this.addLogMessage('fourWayFailed');
+        console.debug(e);
       }
     }
 
-    try {
-      if(this.lastConnected === 0) {
-        const escs = await this.serial.enable4WayInterface();
-        connected = escs.connectedESCs;
-
-        await this.serial.startFourWayInterface();
-
-        /* Give the ESCs some time to boot - it might take longer if they
-         * are playing a startup melody.
-         */
-        await delay(1200);
-      } else {
-        connected = this.lastConnected;
-      }
-    } catch(e) {
-      fourWay = false;
-
-      this.addLogMessage('fourWayFailed');
-      console.debug(e);
+    if (connectionMode === 'direct-4wif' && connected === 0) {
+      this.addLogMessage('direct4WayNoEsc');
     }
 
     this.addLogMessage('readEscs', { connected });
