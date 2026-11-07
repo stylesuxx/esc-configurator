@@ -5,6 +5,7 @@ const initialState = {
   checked: false,
   connected: false,
   connectionMode: 'fc',
+  debugMode: false,
   fourWay: false,
   hasSerial: false,
   open: false,
@@ -27,6 +28,9 @@ export const serialSlice = createSlice({
     setConnectionMode: (state, action) => {
       state.connectionMode = action.payload;
     },
+    setDebugMode: (state, action) => {
+      state.debugMode = action.payload;
+    },
     setFourWay: (state, action) => {
       state.fourWay = action.payload;
     },
@@ -47,6 +51,7 @@ export const {
   setChecked,
   setConnected,
   setConnectionMode,
+  setDebugMode,
   setFourWay,
   setHasSerial,
   setOpen,
@@ -58,6 +63,7 @@ export const selectBaudRate = (state) => state.serial.baudRate;
 export const selectChecked = (state) => state.serial.checked;
 export const selectConnected = (state) => state.serial.connected;
 export const selectConnectionMode = (state) => state.serial.connectionMode;
+export const selectDebugMode = (state) => state.serial.debugMode;
 export const selectFourWay = (state) => state.serial.fourWay;
 export const selectHasSerial = (state) => state.serial.hasSerial;
 export const selectOpen = (state) => state.serial.open;

@@ -64,11 +64,12 @@
   "homeContributionItem5": "Help [translate](http://crowdin.com/project/esc-configuratorcom) the interface into your language",
   "homeDisclaimerHeader": "Disclaimer",
   "homeDisclaimerTextLine1": "The web application supports ESCs running BLHeli for Atmel, BLHeli for SiLabs and BLHeli_S.",
-  "homeDisclaimerTextLine2": "Two interfaces are supported: **BLHeli FC passthrough** or a **direct Arduino 4-way interface** (SiLBLB, 38400 baud).",
+  "homeDisclaimerTextLine2": "BLHeli FC passthrough and Arduino 4way-IF (Servo only) are the only interface currently supported.",
   "homeDisclaimerTextLine3": "Should you run into any problems, make sure to use the **Save Debug Log** button and submit a new issue via [GitHub](https://github.com/stylesuxx/esc-configurator/issues/new).",
   "homeDisclaimerTextLine4": "Application source code can be downloaded from [here](https://github.com/stylesuxx/esc-configurator).",
   "homeDisclaimerTextLine5": "Latest [CP210x Drivers](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) can be downloaded from [here](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).",
   "homeDisclaimerTextLine6": "Latest [STM USB VCP Drivers](https://www.st.com/en/development-tools/stsw-stm32102.html) can be downloaded from [here](https://www.st.com/en/development-tools/stsw-stm32102.html).",
+  "homeDisclaimerTextLine7": "CH340 Drivers can be downloaded from [here](https://sparks.gogo.co.nz/ch340.html?srsltid=AYCX9vJxZQNwpEhHqq5-dZWqk23Vi1T6fgGXnQpndf6_ttdyGZRWRhh7).",
   "homeWelcome": "Welcome to **ESC - Configurator**, a utility designed to simplify updating and configuring of your ESCs.",
   "betaWarningLine1": "**This tool is considered BETA.**",
   "betaWarningLine2": "Things might not work as expected yet - if you find any bugs please [report them](https://github.com/stylesuxx/esc-configurator/issues/new).",
@@ -195,5 +196,5 @@
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
   "selectionLinkText": "Show release notes on Github",
   "fcPassthrough": "FC Passthrough",
-  "direct4Way": "Direct 4-Way (SiLBLB)"
+  "direct4Way": "Arduino 4way-IF"
 }

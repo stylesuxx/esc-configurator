@@ -32,6 +32,7 @@ class Serial {
     this.baudRate = 115200;
     this.msp = null;
     this.fourWay = null;
+    this.detectedESCs = null;
     this.writer = null;
     this.reader = null;
 
@@ -57,8 +58,13 @@ class Serial {
   setLogCallback(logCallback) {
     this.logCallback = logCallback;
 
-    this.fourWay.setLogCallback(logCallback);
-    this.msp.setLogCallback(logCallback);
+    if (this.fourWay) {
+      this.fourWay.setLogCallback(logCallback);
+    }
+
+    if (this.msp) {
+      this.msp.setLogCallback(logCallback);
+    }
   }
 
   /**
@@ -175,8 +181,7 @@ class Serial {
       this.writer = await this.port.writable.getWriter();
       this.reader = await this.port.readable.getReader();
     } catch (e) {
-      console.debug('Could not open serial port');
-      await this.forceRelease();
+      console.debug('[4WAY-DEBUG] Could not open serial port');
       throw new Error('Could not open serial port');
     }
 
@@ -189,16 +194,50 @@ class Serial {
     // before sending any 4w-if commands.
     await delay(1500);
 
+    // Step 1: Send 4 x 0xFF handshake (per BLHeli Suite 4w-if spec)
     await this.sendHandshake();
 
-    // Set interface mode to SiLBLB - do not fail connection if this times out
+    // Step 2: cmd_InterfaceTestAlive (0x30) - per BLHeli Suite startup sequence
+    try {
+      await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
+    } catch (e) {
+      console.debug('[4WAY-DEBUG] cmd_InterfaceTestAlive failed:', e.message);
+    }
+
+    // Step 3: cmd_InterfaceGetProtocolVersion (0x31) - per BLHeli Suite startup sequence
+    try {
+      await this.fourWay.sendMessagePromised(COMMANDS.cmd_ProtocolGetVersion);
+    } catch (e) {
+      console.debug('[4WAY-DEBUG] cmd_InterfaceGetProtocolVersion failed:', e.message);
+    }
+
+    // Step 4: cmd_InterfaceGetName (0x32) - per BLHeli Suite startup sequence
+    try {
+      await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceGetName);
+    } catch (e) {
+      console.debug('[4WAY-DEBUG] cmd_InterfaceGetName failed:', e.message);
+    }
+
+    // Step 5: cmd_InterfaceGetVersion (0x33) - per BLHeli Suite startup sequence
+    try {
+      await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceGetVersion);
+    } catch (e) {
+      console.debug('[4WAY-DEBUG] cmd_InterfaceGetVersion failed:', e.message);
+    }
+
+    // Step 6: Set interface mode to SiLBLB - per BLHeli Suite startup sequence
     try {
       await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceSetMode, [
         MODES.SiLBLB,
       ]);
     } catch (e) {
-      console.debug('Interface set mode failed, continuing anyway:', e.message);
+      console.debug('[4WAY-DEBUG] cmd_InterfaceSetMode failed:', e.message);
     }
+
+    // Step 7: Do NOT auto-scan ESC channels here - the Arduino 4w-if firmware
+    // responds to cmd_DeviceInitFlash on all channels even without ESCs connected.
+    // ESC detection is done in handleReadEscs() by reading settings per channel.
+    this.detectedESCs = null;
   }
 
   /**

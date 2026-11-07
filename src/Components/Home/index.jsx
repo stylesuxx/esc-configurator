@@ -61,7 +61,7 @@ function Install() {
 function HomeColumnLeft() {
   const { t } = useTranslation('common');
 
-  const disclaimerLines = [1, 2, 3, 4, 5, 6].map((index) => {
+  const disclaimerLines = [1, 2, 3, 4, 5, 6, 7].map((index) => {
     const line = `homeDisclaimerTextLine${index}`;
 
     return (

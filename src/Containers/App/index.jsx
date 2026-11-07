@@ -201,11 +201,28 @@ class App extends Component {
 
     store.dispatch(setConnecting(true));
 
+    // Ensure we have a serial instance - create one if needed
+    if (!this.serial) {
+      try {
+        const ports = await this.serialApi.getPorts();
+        if (ports.length === 0) {
+          this.addLogMessage('noPorts');
+          store.dispatch(setConnecting(false));
+          return;
+        }
+        this.serial = new Serial(ports[0]);
+      } catch(e) {
+        console.debug(e);
+        this.addLogMessage('noPorts');
+        store.dispatch(setConnecting(false));
+        return;
+      }
+    }
+
     const connectionMode = store.getState().serial.connectionMode;
 
     if (connectionMode === 'direct-4wif') {
       try {
-        await this.serial.forceRelease();
         await this.serial.openDirect();
         this.serial.setLogCallback(this.addLogMessage);
         this.addLogMessage('portOpened');
@@ -217,11 +234,12 @@ class App extends Component {
         console.debug(e);
 
         try {
-          this.serial.close();
+          await this.serial.close();
         } catch (e2) {
           console.debug(e2);
         }
 
+        this.serial = undefined;
         this.addLogMessage('portUsed');
       }
 
@@ -247,11 +265,12 @@ class App extends Component {
       console.debug(e);
 
       try {
-        this.serial.close();
+        await this.serial.close();
       } catch(e) {
         console.debug(e);
       }
 
+      this.serial = undefined;
       this.addLogMessage('portUsed');
 
       return;
@@ -366,6 +385,7 @@ class App extends Component {
         console.debug('Disconnect cleanup error:', e.message);
       } finally {
         this.serial.close();
+        this.serial = undefined;
       }
     }
 
@@ -480,24 +500,45 @@ class App extends Component {
 
         await delay(1200);
 
-        // Probe ESCs by trying initFlash on each index
+        // Scan ESC channels 0-7 and only count those that return valid settings
+        // The Arduino 4w-if firmware responds to cmd_DeviceInitFlash on all channels
+        // even without ESCs, so we verify each channel returns settings data
+        // and deduplicate ESCs that appear on multiple channels
+        const seenIdentities = new Set();
         for (let i = 0; i < 8; i += 1) {
-          let initOk = false;
-          for (let attempt = 0; attempt < 3; attempt += 1) {
-            try {
-              await this.serial.initFlash(i);
-              initOk = true;
-              break;
-            } catch (ex) {
-              await delay(200);
+          try {
+            const settings = await this.handleReadEsc(i);
+
+            // Build a unique identity for this ESC to detect duplicates
+            const identity = `${settings.NAME || ''}|${settings.MAIN_REVISION || ''}|${settings.SUB_REVISION || ''}`;
+
+            // Skip if we already have an ESC with this identity (deduplication)
+            if (seenIdentities.has(identity)) {
+              if (store.getState().serial.debugMode) {
+                console.debug('[4WAY-DEBUG] Duplicate ESC on channel', i, '- skipping');
+              }
+              continue;
             }
-          }
-          if (initOk) {
-            connected = i + 1;
-          } else {
-            break;
+
+            seenIdentities.add(identity);
+            settings.index = i;
+            individual.push(settings);
+
+            if (store.getState().serial.debugMode) {
+              console.debug('[4WAY-DEBUG] ESC detected on channel', i, ':', settings.displayName);
+            }
+
+            this.addLogMessage('readEsc', {
+              index: i + 1,
+              name: settings.displayName,
+            });
+          } catch (e) {
+            // Channel has no ESC or ESC not responding - skip silently
+            console.debug('[4WAY-DEBUG] Channel', i, 'failed:', e.message);
           }
         }
+
+        connected = individual.length;
       } catch (e) {
         fourWay = false;
 
@@ -551,19 +592,22 @@ class App extends Component {
       }
     }
 
-    for (let i = 0; i < connected; i += 1) {
-      try {
-        const settings = await this.handleReadEsc(i);
-        settings.index = i;
-        individual.push(settings);
+    // Read settings for each ESC (FC passthrough path only - direct-4wif already read them)
+    if (connectionMode !== 'direct-4wif') {
+      for (let i = 0; i < connected; i += 1) {
+        try {
+          const settings = await this.handleReadEsc(i);
+          settings.index = i;
+          individual.push(settings);
 
-        this.addLogMessage('readEsc', {
-          index: i + 1,
-          name: settings.displayName,
-        });
-      } catch(e) {
-        this.addLogMessage('readEscFailed', { index: i + 1 });
-        console.debug(e);
+          this.addLogMessage('readEsc', {
+            index: i + 1,
+            name: settings.displayName,
+          });
+        } catch(e) {
+          this.addLogMessage('readEscFailed', { index: i + 1 });
+          console.debug(e);
+        }
       }
     }
 
