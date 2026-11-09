@@ -219,7 +219,12 @@ class App extends Component {
       }
     }
 
+<<<<<<< HEAD
+    // Auto-detect interface: try direct Arduino 4-way at 38400 first,
+    // fall back to FC passthrough at the user-selected baud rate
+=======
     // Auto-detect interface: try direct Arduino 4-way first, fall back to FC passthrough
+>>>>>>> parent of a397cf0 (Swap interface detection order: FC passthrough first, direct Arduino 4-way fallback)
 
     try {
       await this.serial.openDirect();
@@ -238,13 +243,108 @@ class App extends Component {
         console.debug(e2);
       }
 
+<<<<<<< HEAD
+      // Direct 4-way failed - try FC passthrough at user-selected baud rate
+      try {
+        await this.serial.open(store.getState().serial.baudRate);
+=======
       // Direct 4-way failed - try FC passthrough
       try {
         await this.serial.open(this.serial.baudRate);
+>>>>>>> parent of a397cf0 (Swap interface detection order: FC passthrough first, direct Arduino 4-way fallback)
         this.serial.setLogCallback(this.addLogMessage);
         this.addLogMessage('portOpened');
         this.progressReferences = [];
 
+<<<<<<< HEAD
+        // FC passthrough succeeded - continue with MSP initialization
+        try {
+          let apiVersion = null;
+
+          try {
+            apiVersion = await this.serial.getApiVersion();
+          } catch(e) {
+            if (e instanceof TimeoutError) {
+              let hasResets = false;
+              let i = 0;
+
+              try {
+                while ((await this.serial.getFourWayInterfaceInfo(i))) {
+                  await this.serial.resetFourWayInterface(i);
+                  i += 1;
+                }
+              } catch (ex) {
+                if (!(ex instanceof MessageNotOkError)) {
+                  this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
+                  throw ex;
+                }
+              } finally {
+                hasResets = i > 0;
+              }
+
+              if (hasResets) {
+                await this.serial.exitFourWayInterface();
+              }
+
+              apiVersion = await this.serial.getApiVersion();
+            } else {
+              throw e;
+            }
+          }
+
+          this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
+
+          const fcVariant = await this.serial.getFcVariant();
+          const fcVersion = await this.serial.getFcVersion();
+          this.addLogMessage('mspFcInfo', {
+            id: fcVariant.flightControllerIdentifier,
+            version: fcVersion.flightControllerVersion,
+          });
+
+          const buildInfo = await this.serial.getBuildInfo();
+          this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
+
+          const boardInfo = await this.serial.getBoardInfo();
+          this.addLogMessage('mspBoardInfo', {
+            identifier: boardInfo.boardIdentifier,
+            version: boardInfo.boardVersion,
+          });
+
+          const uid = (await this.serial.getUid()).uid;
+          let uidHex = 0;
+          for (let i = 0; i < uid.length; i += 1) {
+            uidHex += uid[i].toString(16);
+          }
+          this.addLogMessage('mspUid', { id: uidHex });
+
+          let motorData = await this.serial.getMotorData();
+          motorData = motorData.filter((motor) => motor > 0);
+
+          const features = await this.serial.getFeatures();
+          store.dispatch(setMspFeatures(features));
+
+          TagManager.dataLayer({
+            dataLayer: {
+              event: "FlightController",
+              flightController: {
+                mspVersion: apiVersion.apiVersion,
+                firmwareName: fcVariant.flightControllerIdentifier,
+                firmwareVersion: fcVersion.flightControllerVersion,
+                firmwareBuild: buildInfo.buildInfo,
+              },
+            },
+          });
+
+          store.dispatch(setOpen(true));
+          store.dispatch(setConnectedEscs(motorData.length));
+        } catch(e) {
+          this.serial.close();
+          this.serial = undefined;
+          this.addLogMessage('initializationFailed');
+          console.log(e);
+        }
+
+=======
         /* Send a reset of the 4 way interface, just in case it was not cleanly
          * disconnected before.
          *
@@ -252,6 +352,7 @@ class App extends Component {
          * it might lead to the ESCs being wiped.
          */
         // await this.serial.exitFourWayInterface();
+>>>>>>> parent of a397cf0 (Swap interface detection order: FC passthrough first, direct Arduino 4-way fallback)
       } catch (e) {
         console.debug(e);
 
@@ -266,6 +367,8 @@ class App extends Component {
         store.dispatch(setConnecting(false));
         return;
       }
+<<<<<<< HEAD
+=======
 
       // FC passthrough succeeded - continue with MSP initialization
       try {
@@ -354,6 +457,7 @@ class App extends Component {
         console.log(e);
       }
 
+>>>>>>> parent of a397cf0 (Swap interface detection order: FC passthrough first, direct Arduino 4-way fallback)
     }
     store.dispatch(setConnecting(false));
   };

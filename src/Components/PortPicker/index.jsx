@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import CompatibilityWarning from './CompatibilityWarning';
 
 import {
+  selectBaudRate,
   selectConnected,
   selectHasSerial,
   selectOpen,
@@ -134,6 +135,7 @@ function PortPicker({
   const hasSerial = useSelector(selectHasSerial);
   const open = useSelector(selectOpen);
   const ports = useSelector(selectPortNames);
+  const baudRate = useSelector(selectBaudRate);
 
   const handleBaudRateChange = useCallback((e) => {
     dispatch(setBaudRate(e.target.value));
@@ -173,7 +175,7 @@ function PortPicker({
           <BaudRates
             disabled={open}
             handleChange={handleBaudRateChange}
-            value={115200}
+            value={baudRate}
           />
         </div>
 
