@@ -267,8 +267,8 @@ class FourWay {
 
       // Debug print all messages except the keep alive messages
       if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
-        const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
-        console.debug(`TX: ${FourWayHelper.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+        const paramsHex = Array.from(params).map((param) => param !== undefined && param !== null ? `0x${param.toString(0x10).toUpperCase()}` : '0x00');
+        console.debug(`TX: ${FourWayHelper.commandToString(command)}${address !== undefined && address !== null ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
 
       const processMessage = async(resolve, reject) => {
@@ -285,7 +285,7 @@ class FourWay {
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
             if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
-              const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
+              const paramsHex = Array.from(msg.params).map((param) => param !== undefined && param !== null ? `0x${param.toString(0x10).toUpperCase()}` : '0x00');
               console.debug(`RX: ${FourWayHelper.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
             }
             return resolve(msg);
@@ -298,18 +298,16 @@ class FourWay {
         return reject(new MessageNotOkError('Message not OK'));
       };
 
-      processMessage(resolve, reject);
-
       try {
         const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
         console.debug(`Failed processing command ${FourWayHelper.commandToString(command)} after ${retries} retries.`);
         reject(e);
-        }
-      };
+      }
+    };
 
-      return new Promise((resolve, reject) => process(resolve, reject));
+    return new Promise((resolve, reject) => process(resolve, reject));
   }
 
   /**

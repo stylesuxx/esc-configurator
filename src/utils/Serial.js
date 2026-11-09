@@ -260,8 +260,17 @@ class Serial {
    */
   async disconnect() {
     this.running = false;
-    this.reader = null;
-    this.writer = null;
+
+    if(this.reader) {
+      try { this.reader.cancel(); } catch(e) { console.debug(e); }
+      try { await this.reader.releaseLock(); } catch(e) { console.debug(e); }
+      this.reader = null;
+    }
+
+    if(this.writer) {
+      try { await this.writer.releaseLock(); } catch(e) { console.debug(e); }
+      this.writer = null;
+    }
 
     if(this.fourWay) {
       try {
