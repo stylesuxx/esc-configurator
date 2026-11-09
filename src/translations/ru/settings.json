@@ -14,5 +14,7 @@
   "unstableVersions": "Показывать предварительные релизы прошивки",
   "unstableVersionsHint": "Показывать предварительные релизы и нестабильные версии прошивки",
   "skipCache": "Не использовать кэш",
-  "skipCacheHint": "Включите этот параметр, если при выборе прошивки не отображается последняя её версия."
+  "skipCacheHint": "Включите этот параметр, если при выборе прошивки не отображается последняя её версия.",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }

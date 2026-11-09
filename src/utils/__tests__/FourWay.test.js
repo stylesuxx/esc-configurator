@@ -50,6 +50,14 @@ describe('FourWay', () => {
     expect(serial).toHaveBeenCalled();
   });
 
+  it('should reject exit when the port is closed', async() => {
+    const { PortClosedError } = require('../Errors');
+    const failingSerial = () => Promise.reject(new PortClosedError('closed'));
+    fourWay = new FourWay(failingSerial);
+
+    await expect(fourWay.exit()).rejects.toThrow(PortClosedError);
+  });
+
   it('should reset', async() => {
     fourWay.reset();
     expect(serial).toHaveBeenCalled();

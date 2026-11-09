@@ -377,10 +377,10 @@ COMMON['206'] = {
       label: 'escPowerRating',
       options: [{
         value: '1',
-        label: '1S',
+        label: '1S Only',
       }, {
         value: '2',
-        label: '2S+',
+        label: '1-2S+',
       }],
       group: 'bluejaySafety',
       order: 0,
@@ -597,7 +597,7 @@ DEFAULTS['207'] = { // v0.20
 
 DEFAULTS['208'] = { // v0.21
   ...DEFAULTS['207'],
-  STARTUP_POWER_MIN: 51,
+  STARTUP_POWER_MIN: 21,
   STARTUP_POWER_MAX: 5,
 };
 delete DEFAULTS['208'].DITHERING;

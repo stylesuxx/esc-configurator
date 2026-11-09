@@ -90,6 +90,40 @@ describe('Log', () => {
     expect(screen.queryByText(/showLog/i)).not.toBeInTheDocument();
     expect(screen.getByText(/hideLog/i)).toBeInTheDocument();
   });
+
+  it('should save debug log', () => {
+    global.URL.createObjectURL = jest.fn();
+
+    storeRef.store.dispatch(add('line1'));
+
+    render(
+      <Log />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    userEvent.click(screen.getByText(/escButtonSaveLog/i));
+    expect(global.URL.createObjectURL).toHaveBeenCalled();
+
+    const log = storeRef.store.getState().log;
+    expect(log.log.length).toEqual(0);
+  });
+
+  it('should clear debug log', () => {
+    storeRef.store.dispatch(add('line1'));
+
+    let log = storeRef.store.getState().log;
+    expect(log.log.length).toEqual(1);
+
+    render(
+      <Log />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    userEvent.click(screen.getByText(/escButtonClearLog/i));
+
+    log = storeRef.store.getState().log;
+    expect(log.log.length).toEqual(0);
+  });
 });
 
 describe('logSlice', () => {

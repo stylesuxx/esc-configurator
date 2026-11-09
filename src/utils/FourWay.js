@@ -23,6 +23,7 @@ import {
 import {
   canMigrate,
   getIndividualSettings,
+  MIGRATION,
 } from './helpers/Settings';
 
 import {
@@ -276,12 +277,12 @@ class FourWay {
          * Immediately resolve the exit command since it will not produce any
          * processable output.
          */
-        if (command === COMMANDS.cmd_InterfaceExit) {
-          await this.serial(message, null);
-          return resolve();
-        }
-
         try {
+          if (command === COMMANDS.cmd_InterfaceExit) {
+            await this.serial(message, null);
+            return resolve();
+          }
+
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
             if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
@@ -514,6 +515,16 @@ class FourWay {
           source = null;
 
           info.layout = {};
+
+          /**
+           * Keep whatever the ESC reported. This way an unknown layout - eg.
+           * one we deliberately do not support - can still be told apart from
+           * an ESC we could not read at all, both in the log and in the UI.
+           */
+          if(layoutName) {
+            make = layoutName;
+            info.displayName = `${layoutName} - Unsupported/Unrecognized`;
+          }
         } else {
           make = layout.name;
         }
@@ -691,7 +702,7 @@ class FourWay {
     const flash = await this.sendMessagePromised(COMMANDS.cmd_DeviceInitFlash, [target]);
 
     if (flash) {
-      const newSettingsArray = Convert.objectToSettingsArray(settings, esc.layout, esc.layoutSize);
+      const newSettingsArray = Convert.objectToSettingsArray(settings, esc.layout, esc.layoutSize, esc.settingsArray);
       if(newSettingsArray.length !== esc.settingsArray.length) {
         throw new BufferLengthMismatchError(newSettingsArray.length, esc.settingsArray.length);
       }
@@ -822,11 +833,11 @@ class FourWay {
    * @param {object} esc
    * @param {object} hex
    * @param {boolean} force
-   * @param {boolean} migrate
+   * @param {string} migration
    * @param {function} cbProgress
    * @returns
    */
-  async writeHex(target, esc, hex, force, migrate, cbProgress) {
+  async writeHex(target, esc, hex, force, migration, cbProgress) {
     const {
       interfaceMode,
       signature,
@@ -1126,10 +1137,12 @@ class FourWay {
       );
 
       /**
-       * Only migrate settings if new and old Firmware are the same or if user
-       * forces override.
+       * Only migrate settings if new and old Firmware are the same or if the
+       * user asked for migration between different firmware. When the firmware
+       * defaults are requested, nothing is written and the ESC is left with
+       * the settings that came with the flashed hex.
        */
-      if(migrate || sameFirmware) {
+      if(migration !== MIGRATION.DEFAULTS && (migration === MIGRATION.ALL || sameFirmware)) {
         newEsc = migrateSettings(esc, newEsc);
       }
 

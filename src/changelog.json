@@ -1,5 +1,25 @@
 [
   {
+    "title": "Unreleased",
+    "items": [
+      "Enhancement: Debug log buttons always accessible in log bar",
+      "Translation: Add Japanese translation",
+      "Translation: Translation updates",
+      "Enhancement: More melodies",
+      "Fix: Preserve settings not known to the configurator when writing",
+      "Bugfix: Sort ESC layouts by name in the firmware selection",
+      "Chore: Remove the Y layouts - no firmware is being built for them",
+      "Enhancement: Show the reported layout of an ESC with an unknown layout",
+      "Enhancement: Only offer versions that still support the detected layout - L layouts are limited to v0.18.1",
+      "Bugfix: Fail with an error instead of hanging when writing to the serial port throws",
+      "Enhancement: Safety warnings can be hidden via the app settings",
+      "Enhancement: Settings handling can now be chosen when flashing",
+      "Bugfix: Stop retrying commands once the device is unplugged",
+      "Enhancement: Point out that LEDs are configurable when the ESC layout supports them",
+      "Bugfix: Master motor slider and motor stop apply to all 8 motors - motors 5-8 spun up in 3D mode"
+    ]
+  },
+  {
     "title": "0.32.1",
     "items": [
       "Bluejay: D & E layout for X MCU",

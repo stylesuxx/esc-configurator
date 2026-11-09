@@ -19,6 +19,7 @@ import {
 import { blheliAtmelSource as blheliSource } from '../../sources';
 import sources from '../../sources';
 import LabeledSelect from '../Input/LabeledSelect';
+import { MIGRATION } from '../../utils/helpers/Settings';
 
 import {
   selectEscs,
@@ -52,7 +53,7 @@ function FirmwareSelector({
   const [escLayout, setEscLayout] = useState(null);
   const [mode, setMode] = useState(null);
   const [force, setForce] = useState(false);
-  const [migrate, setMigrate] = useState(false);
+  const [migration, setMigration] = useState(MIGRATION.SAME);
   const [validFirmware, setValidFirmware] = useState([]);
   const [options, setOptions] = useState({
     versions: [],
@@ -70,6 +71,7 @@ function FirmwareSelector({
   });
 
   const [layoutSelectionDisabled, setLayoutSelectionDisabled] = useState(false);
+  const [limitedLayout, setLimitedLayout] = useState(null);
 
   const file = useRef(null);
 
@@ -126,11 +128,30 @@ function FirmwareSelector({
           name: layout.name,
         }));
 
+        /**
+         * Sort by display name, so that layouts are grouped no matter in which
+         * order they are defined in the sources. Numeric collation keeps eg.
+         * X-H-5 in front of X-H-10.
+         */
+        escOptions.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+        const source = sources.find((s) => s.getName() === selection.firmware);
+
         const versionsSelected = Object.values(
           versions[selection.firmware].filter((v) => settings.unstableVersions || !v.prerelease)
         );
 
-        const versionOptions = versionsSelected.map((version) => ({
+        /**
+         * Some layouts are no longer supported by current firmware, in that
+         * case only offer the versions that can still be flashed.
+         */
+        const currentLayout = layouts[esc.settings.LAYOUT];
+        const versionsSupported = source.filterVersions(versionsSelected, esc.settings.LAYOUT);
+        setLimitedLayout(
+          versionsSupported.length < versionsSelected.length ? currentLayout.name : null
+        );
+
+        const versionOptions = versionsSupported.map((version) => ({
           key: version.key,
           value: version.url,
           name: version.name,
@@ -152,7 +173,6 @@ function FirmwareSelector({
           });
         }
 
-        const source = sources.find((s) => s.getName() === selection.firmware);
         const layoutSelectionDisabled = source.getDisabledLayoutSelection(esc);
 
         const currentOptions = {
@@ -200,8 +220,8 @@ function FirmwareSelector({
 
   const handleLocalSubmit = useCallback((e) => {
     e.preventDefault();
-    onLocalSubmit(e, force, migrate);
-  }, [onLocalSubmit, force, migrate]);
+    onLocalSubmit(e, force, migration);
+  }, [onLocalSubmit, force, migration]);
 
   const handleVersionChange = useCallback((e) => {
     const selected = e.target.options.selectedIndex;
@@ -236,9 +256,9 @@ function FirmwareSelector({
     setForce(e.target.checked);
   }, [setForce]);
 
-  const handleMigrateChange = useCallback((e) => {
-    setMigrate(e.target.checked);
-  }, [setMigrate]);
+  const handleMigrationChange = useCallback((e) => {
+    setMigration(e.target.value);
+  }, [setMigration]);
 
   const handlePwmChange = useCallback((e) => {
     setSelection({
@@ -259,8 +279,26 @@ function FirmwareSelector({
       esc: esc,
     });
 
-    onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migrate);
-  }, [esc, escLayout, selection, mode, force, migrate, onSubmit]);
+    onSubmit(firmwareUrl, escLayout, selection.firmware, selection.version, selection.pwm, force, migration);
+  }, [esc, escLayout, selection, mode, force, migration, onSubmit]);
+
+  const migrationOptions = [
+    {
+      key: MIGRATION.SAME,
+      value: MIGRATION.SAME,
+      name: t('migrationSame'),
+    },
+    {
+      key: MIGRATION.ALL,
+      value: MIGRATION.ALL,
+      name: t('migrationAll'),
+    },
+    {
+      key: MIGRATION.DEFAULTS,
+      value: MIGRATION.DEFAULTS,
+      name: t('migrationDefaults'),
+    },
+  ];
 
   const disableFlashButton = !selection.url || (!selection.pwm && options.frequencies.length > 0);
 
@@ -282,26 +320,6 @@ function FirmwareSelector({
 
               <span className={force ? "red" : "hidden"}>
                 {t('forceFlashHint')}
-              </span>
-            </span>
-          </label>
-        </div>
-
-        <div className="checkbox migrate">
-          <label>
-            <input
-              defaultChecked={migrate}
-              onChange={handleMigrateChange}
-              type="checkbox"
-            />
-
-            <span>
-              <span>
-                {t('migrateFlashText')}
-              </span>
-
-              <span className={migrate ? "red" : "hidden"}>
-                {t('migrateFlashHint')}
               </span>
             </span>
           </label>
@@ -362,6 +380,13 @@ function FirmwareSelector({
                   />}
                 */}
 
+                {limitedLayout &&
+                  <div className="alert">
+                    <p>
+                      {t('layoutDeprecated', { layout: limitedLayout })}
+                    </p>
+                  </div>}
+
                 <LabeledSelect
                   firstLabel={t('selectVersion')}
                   label="Version"
@@ -378,6 +403,14 @@ function FirmwareSelector({
                     options={options.frequencies}
                     selected={selection.pwm}
                   />}
+
+                <LabeledSelect
+                  firstLabel={t('selectMigration')}
+                  label="Migration"
+                  onChange={handleMigrationChange}
+                  options={migrationOptions}
+                  selected={migration}
+                />
               </>}
 
             <div className="alert">

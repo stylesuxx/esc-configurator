@@ -14,5 +14,7 @@
   "unstableVersions": "Mostra pre-release del firmware",
   "unstableVersionsHint": "Mostra versioni del firmware instabili e pre-release",
   "skipCache": "Ignora la cache",
-  "skipCacheHint": "Abilita questa impostazione se non vedi l'ultima versione nella selezione del firmware."
+  "skipCacheHint": "Abilita questa impostazione se non vedi l'ultima versione nella selezione del firmware.",
+  "hideWarnings": "Nascondi avvisi di sicurezza",
+  "hideWarningsHint": "Nasconde gli avvisi di rimuovere le eliche, spegnere la radio e collegare l'alimentazione all' ESC. Abilitare solo se consapevoli dei rischi."
 }

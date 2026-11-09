@@ -12,6 +12,7 @@
   "radioOn": "Deine Fernsteuerung wurde als eingeschalten erkannt. Bitte schalte diese aus und versuche es erneut.",
   "mspFcInfo": "Flug-controller Info, ID: {{id}} Version: {{version}}",
   "portUsed": "Port wird möglicherweise schon von einer anderen Anwendung verwendet - bitte neu anstecken",
+  "initializationFailed": "Port initialization failed - check browser console for further details",
   "fourWayFailed": "4-way interface konnte nicht aktiviert werden - bitte neu anstecken",
   "readEscs": "Lese {{connected}} ESCs",
   "readEscsSuccess": "ESCs gelesen",

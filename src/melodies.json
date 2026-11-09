@@ -12,18 +12,21 @@
     ]
   },
   {
+    "name": "7-40 (Klezmer)",
+    "tracks": [
+      "7-40:b=200,o=6,d=8:4d,8p,8a5,16p,8d,16p,8a5,16p,8d,16p,8a5,16p,8d,16p,4f,8p,8c,16p,8f,16p,8c,16p,8f,16p,8c,16p,8f,16p,4a,8p,8f,16p,8a,16p,4g,8p,8e,16p,8g,16p,4f,8p,32e,32p,8d,16p,8f,16p,2e",
+      "7-40:b=200,o=4,d=8:1a3,4a3,8p,16p,32p,1f3,4f3,8p,16p,2d,4p,16p,2g3,4p,2e3,4p,16p,2a3",
+      "7-40:b=200,o=5,d=8:4d,8p,8a4,16p,8d,16p,8a4,16p,8d,16p,8a4,16p,8d,16p,4f,8p,8c,16p,8f,16p,8c,16p,8f,16p,8c,16p,8f,16p,4a,8p,8f,16p,8a,16p,4g,8p,8e,16p,8g,16p,4f,8p,32e,32p,8d,16p,8f,16p,2e",
+      "7-40:b=200,o=4,d=8:1a3,4a3,8p,16p,32p,1f3,4f3,8p,16p,2d,4p,16p,2g3,4p,2e3,4p,16p,2a3"
+    ]
+  },
+  {
     "name": "Abba - Chiquitita",
     "tracks": [
       "ab_chiq_m1:b=104,o=5,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h4,c#,d,8f#,e6,e,e6,p,e6,e,e6,e,e6,e,e6,e,e6,e,g#6,g#,g#6,g#,g#6,g#,g#6,g#,a6,a,a6,a,a6,a,a6,a,g#6,g#,g#6,g#,a6,a,a6,a,h6,h,h6,h,8a6",
       "ab_chiq_m2:b=104,o=6,d=16:8f#,c#,p,c#,p,c#,p,c#,p,c#,p,c#,h5,c#,d,8f#,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,a5,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,d,p,8d",
       "ab_chiq_b1:b=104,o=4,d=16:a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,e,p,a3,p,a3,p,a3,p,h3,p,c#,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,a,p,d,p,d,p,d,p,8a",
       "ab_chiq_b2:b=104,o=4,d=16:a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a3,p,a3,p,a,p,a3,p,a,p,a,p,h,p,c#5,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,d5,p,d,p,d,p,d,p,8d5"
-    ]
-  },
-  {
-    "name": "Among Us - Theme",
-    "tracks": [
-      "Amongus:b=95,o=5,d=4:c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,c6,8c6,16a#,16d6,c6,16c6,8g3,c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,2f#6,16f#6,16f6,16d#6,16f#6,16f6,16d#6"
     ]
   },
   {
@@ -45,6 +48,21 @@
     ]
   },
   {
+    "name": "Among Us - Theme",
+    "tracks": [
+      "Amongus:b=95,o=5,d=4:c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,c6,8c6,16a#,16d6,c6,16c6,8g3,c4,8c6,8d#6,8f6,8f#6,8f6,8d#6,2f#6,16f#6,16f6,16d#6,16f#6,16f6,16d#6"
+    ]
+  },
+  {
+    "name": "Angry Birds - Theme",
+    "tracks": [
+      "AngryBirdsTreble: d=4,o=5,b=250: 8e, 8f#, g, e, b, 8e, 8f#, g, 16b, 16b, 16b, 16p, b, p, 8b6, 8c7, 8b6, 8a6, 16g6, 16g6, 16g6, 16p, 8g6, 8f#6, 2e6",
+      "AngryBirdsTreble2: d=4,o=5,b=250: 8e, 8f#, g, e, b, 8e, 8f#, g, 16b, 16b, 16b, 16p, b, p, 8b, 8c6, 8b, 8a, 16g, 16g, 16g, 16p, 8g, 8f#, 2e",
+      "AngryBirdsBass: d=4,o=3,b=250: p, e, e, e, 8e, 32e, 32e, 32e, 32p, 1e, 2g, 2f#, 2e",
+      "AngryBirdsTreble: d=4,o=5,b=250: 8e, 8f#, g, e, b, 8e, 8f#, g, 16b, 16b, 16b, 16p, b, p, 8b6, 8c7, 8b6, 8a6, 16g6, 16g6, 16g6, 16p, 8g6, 8f#6, 2e6"
+    ]
+  },
+  {
     "name": "Bad Apple",
     "tracks": [
       "Melody:b=147,o=5,d=8:d#,f,f#,g#,16a#,p,16a#,d#6,c#6,16a#,p,16a#,16d#,p,16d#,1p,1p,2p,d#,f,f#,g#,16a#,p,16a#,d#6,c#6,16a#,p,16a#,16d#,1p,1p,4p",
@@ -60,6 +78,12 @@
       "bm_1:b=180,o=4,d=32:8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,4g#,p,p,2g#",
       "bm_2:b=180,o=4,d=32:8d#6,p,8d#6,p,8d6,p,8d6,p,8c#6,p,8c#6,p,8d6,p,8d6,p,4g#6,p,p,2g#6",
       "bm_3:b=180,o=4,d=32:8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8g#,p,8d#6,p,8d#6,p,4d#6,p,p,2d#6"
+    ]
+  },
+  {
+    "name": "Battlefield 2 - Theme",
+    "tracks": [
+      "bf2:b=97,o=4,d=16:1f,32f,32p,p,g,p,d#,p,c,p,1f,4f,32f,32p,p,g#,g,4f,g,g#,4a#,g#,g,4g#,g,f,g,p,f,p,d#,p,4f,g,g#,4a#,g#,g,c5,a#,8c5,a#,g#,8a#,8c5,8f,1c#5,32c#5"
     ]
   },
   {
@@ -126,6 +150,15 @@
     ]
   },
   {
+    "name": "Daft Punk - Robot Rock",
+    "tracks": [
+      "daft_punk:b=120,o=4,d=4:4p,16e6,16c6,16a5,4f5,2p,16e6,16c6,16a5,8f5,16d5,4c5,4d5",
+      "daft_punk:b=120,o=4,d=4:2f3,4p,8f3,16p,8f3,16p,2f3",
+      "daft_punk:b=120,o=4,d=4:2d4,4p,8d4,16p,8d4,16p,2d4",
+      "daft_punk:b=120,o=4,d=4:4p,16e6,16c6,16a5,4f5,2p,16e6,16c6,16a5,8f5,16d5,4c5,4d5"
+    ]
+  },
+  {
     "name": "Deco*27 - Vampire",
     "tracks": [
       "bluejay:b=163,o=5,d=8:a5,g5,f5,g5,p,4f5,f6,p,a5,16a5,g5,16p,f5,p,f6,p,1p,1p,1p,1p,1p,1p",
@@ -167,10 +200,34 @@
   {
     "name": "Doom - Theme",
     "tracks": [
+      "doom:b=420,o=4,d=32:8g4,8e4,8b3,8e4,8g4,8e4,8g4,8b4,8g4,8e4,8g4,8e4,8g4,8b4,8e5,8g5,8e3,8p,8e3,8p,4e,8e3,8p,8e3,8p,4d,8e3,8p,8e3,8p,4c,8e3,8p,8e3,8p,4a#3,8e3,8p,8e3,8p,4b3,4c,8e3,8p,8e3,8p,4e,8e3,8p,8e3,8p,4d,8e3,8p,8e3,8p,4c,8e3,8p,8e3,8p,1a#3"
+    ]
+  },
+  {
+    "name": "Doom - Theme (Polymorphic)",
+    "tracks": [
       "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1f#4",
       "e1m1:b=420,o=4,d=32:8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,4f#4,8c4,8p,4c4,4g4,4g#4,8c4,8p,4c4,4c5,8c4,8p,4c4,4a#4,8c4,8p,4c4,4g#4,8c4,8p,4c4,1c4",
       "e1m1:b=420,o=4,d=32:4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,4p,4c4,2c4,4p,4c4,2p,4p,4c4,2p,4p,4c4,4p,4c4,1c4",
       "e1m1:b=420,o=4,d=32:8c5,8p,4c5,4c6,8c5,8p,4c5,4a#5,8c5,8p,4c5,4g#5,8c5,8p,4c5,4f#5,8c5,8p,4c5,4g5,4g#5,8c5,8p,4c5,4c6,8c5,8p,4c5,4a#5,8c5,8p,4c5,4g#5,8c5,8p,4c5,1f#4"
+    ]
+  },
+  {
+    "name": "Dorofeeva - Heartbeat",
+    "tracks": [
+      "dorofeeva:b=120,o=6,d=16:16p,16p,16f#,16p,16f#,16p, 16f#,16p,8g,8p,8e,8p,16e,16p,8h,8p,8a,8p,4e,4p,16c#7,16p,16c#7,16p,16c#7,16p,16d7,16p,16d7,16p,16c#7,16p,16c#7,16p,16h,16p,16h,16p,16a,16p,16e,8p,8d,4p",
+      "dorofeeva:b=120,o=6,d=16:2p,8e3,8h3,8e4,8h3,8e3,8h3,8e4,8h3,8a3,8e4,8a4,8e4,8a3,8e4,8a4,8e4,8h3,8f#4,8h4,8f#4,8h3,8f#4,8h4,8f#4,8g3,8d4,8g4,8d4,8g3,8d4,8g4,8d4",
+      "dorofeeva:b=120,o=6,d=16:16p,16p,16f#,16p,16f#,16p,16f#,16p,8g,8p,8e,8p,16e,16p,8h,8p,8a,8p,4e,4p,16c#7,16p,16c#7,16p,16c#7,16p,16d7,16p,16d7,16p,16c#7,16p,16c#7,16p,16h,16p,16h,16p,16a,16p,16e,8p,8d,4p",
+      "dorofeeva:b=120,o=6,d=16:2p, 1e4, 1a4, 1h4,1g4"
+    ]
+  },
+  {
+    "name": "Drevo - Smaragdove nebo",
+    "tracks": [
+      "nebo:b=130,o=4,d=4:e,8b,8p,8b,8a,8b,e,8b,8p,8b,8p,8a,b,d5,8c5,8p,8c5,8b,8c5,e,8c5,8p,8c5,8p,8b,c5,d5",
+      "nebo:b=130,o=4,d=4:4p,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3",
+      "nebo:b=130,o=4,d=4:4p,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8e3,8b3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3,8a3,8e3",
+      "nebo:b=130,o=4,d=4:e,8b,8p,8b,8a,8b,e,8b,8p, 8b,8p,8a,b,d5,8c5,8p,8c5,8b,8c5,e,8c5,8p,8c5,8p, 8b,c5,d5"
     ]
   },
   {
@@ -235,6 +292,21 @@
     ]
   },
   {
+    "name": "Ghost in the Shell - Theme",
+    "tracks": [
+      "s:d=4,o=5,b=300:2p,16a4,1a#4,1c,2p,d,d#,1f,2p,32p,32f,2f#,1f,1p,1p,2p,2d,1d#,1d#,1p,d#,d,c,a#4,c,2p,1p,1p,2p,2a#4,1c,2p,d,d#,1f,2p,32p,32f,2f#,1f,1p,1p,2p,2d,1d#,1d#,1p,d#,d,2c,16p,1a#4,2p,8p,4c,4c,1c"
+    ]
+  },
+  {
+    "name": "GTA4 - Pager",
+    "tracks": [
+      "motor1:b=224,o=4,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g",
+      "motor2:b=224,o=5,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g",
+      "motor3:b=224,o=5,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g",
+      "motor4:b=224,o=4,d=32:4g,p,4g,p,4g,16p,8f,8g,8a#,8g,16p,8f,4g.,8p,4d#,p,4d#,p,8d#,4d,p,4d,p,8d,4f,p,4f#,2g"
+    ]
+  },
+  {
     "name": "Guns n Roses - Sweet Child O Mine",
     "tracks": [
       "SweetChi:d=4,o=5,b=125:8c#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#,8c#,8c#6,8g#,8f#,8f#6,8g#,8f6,8g#"
@@ -268,6 +340,15 @@
     ]
   },
   {
+    "name": "Hava Nagila",
+    "tracks": [
+      "hava_nagila:b=120,o=6,d=8:8e,8p,4e,8p,8g#,8f,8e,8g#,8p,4g#,8p,8h,8a,8g#,8a,8p,4a,8p,8c7,8h,8a,4g#,8f,8e,4g#",
+      "hava_nagila:b=120,o=5,d=8:8e,8p,4e,8p,8g#,8f,8e,8g#,8p,4g#,8p,8h,8a,8g#,8a,8p,4a,8p,8c6,8h,8a,4g#,8f,8e,4g#",
+      "hava_nagila:b=120,o=4,d=8:8e,8h,8e5,8h,8e,8h,8e5,8h,8e,8h,8e5,8h,8e,8h,8e5,8h,8a,8e5,8a5,8e5,8a,8e5,8a5,8e5,8e,8h,8e5,8h,8e,8h,4e5",
+      "hava_nagila:b=120,o=3,d=8:1e,1e,1a,1e"
+    ]
+  },
+  {
     "name": "Initial D - Rage Your Dream",
     "tracks": [
       "Melody:b=120,o=5,d=8:g,a#,c6,g4,c6,d#6,c6,g#4,d#,d#6,d6,a#4,a#5,g5,a#5,g4,g#5,a#5,c6,a#4,d#5,c6c,f5,c4,d#5,f5,g5,a#4,d6,16a#5,32a#5,32p,a#5,d5"
@@ -292,6 +373,12 @@
     ]
   },
   {
+    "name": "Kim Possible - Pager",
+    "tracks": [
+        "pager:d=16,o=5,b=200:d6,8p,d6,8p,f6,32p,d6"
+    ]
+  },
+  {
     "name": "Kino - A Pack of Cigarettes",
     "tracks": [
         "Kino1:b=128,o=7,d=8:b4,c5,b5,a5,e5,4c5,g5,e5,c5,4d5,a5,f#5,c5,b4,b4,b5,a5,e5,4c5,g5,e5,b4,c5,p,a5,f#5,c5,4b4",
@@ -304,6 +391,15 @@
     "name": "Kirby - Gourmet Race",
     "tracks": [
       "Melody:b=176,o=5,d=16:g5,d#5,c5,g#4,g4,g#4,c5,d#5,f5,d5,a#4,a4,f4,a4,a#4,d5,d#5,c5,g#4,g4,d#4,f4,g4,c5,f5,d5,a#4,g4,f4,g4,a#4,d5,d#5,c5,g#4,g4,d#5,c5,g#4,g4,d5,a#4,a4,f4,d5,a#4,a4,f4,c5,a4,f4,d4,c5,a4,f4,d4,g5,p,8p,g5"
+    ]
+  },
+  {
+    "name": "Kirby - Gourmet Race (short)",
+    "tracks": [
+      "MLead:b=206,o=6,d=16:2c7,2g6,4d#6,4d6,4c,4p,4c6,4d6,4d#6,4c6,4a#5,4c6,4g5,4p,2c7,2g6,4d#6,4d6,4p,8c6,8d6,4d#6,4f6,4d6,4a#5,4c6,4g5,4c6",
+      "MAccord:b=206,o=6,d=16:4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4f5,4p,4f5,4p,4f5,4p,4f5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5,4p,4d#5",
+      "MAccord2:b=206,o=6,d=16:4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5,4p,4c5",
+      "MAccord3:b=206,o=6,d=16:4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g#4,4p,4g#4,4p,4g#4,4p,4g#4,4p,4g4,4p,4g4,4p,4g4,4p,4g4,4p,4g4"
     ]
   },
   {
@@ -340,6 +436,21 @@
     ]
   },
   {
+    "name": "MacGyver - Theme",
+    "tracks": [
+      "MacGyverBass1:b=143,o=3,d=8:d4,d4,d4,d4,d4,d4,d4,d4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,g,g4,e,e4,e,e4,2c4",
+      "MacGyverTreb1:b=143,o=3,d=8:d4,d4,d4,d4,d4,d4,d4,d4,2d4,a,c4,p,b,2b,d4,d4,p,4d4,a4,g4,p,4e4,4g4,2c4",
+      "MacGyverTreb2:b=143,o=3,d=8:f#4,f#4,f#4,f#4,f#4,f#4,f#4,f#4,2g4,a,c4,p,d4,2d4,d4,d4,p,4g4,a4,g4,a4,4g4,4b4,2e4",
+      "MacGyverTreb3:b=143,o=3,d=8:c5,c5,c5,c5,c5,c5,c5,c5,2b4,f#4,a4,p,g4,2g4,c5,c5,p,4b4,c5,b4,a4,4g4,4e5,2a4"
+    ]
+  },
+  {
+    "name": "Mario Kart - Countdown",
+    "tracks": [
+      "Countdown:d=4,o=5,b=150:a4,p,a4,p,a4,p,2a5"
+    ]
+  },
+  {
     "name": "Mega Man - I can't defeat Airman",
     "tracks": [
       "Airman:b=118,o=4,d=16:e,g,a,b,p,8p,e,b,p,a,8p,b,p,a,g,f#,e,d,p,e,p,f#,p,a,p,a,g,f#,g,p,e,g,a,b,p,8p,e,b,p,a,8p,b,p,a,g,f#,e,d,p,e,p,f#,p,a,p,a,g,a,b"
@@ -358,6 +469,15 @@
       "Melody:b=189,o=5,d=16:1p,1p,8p,32e,32p,32e,32p,32e,32p,p,32e,32p,32e,32p,32e,32p,p,c#,p,8p,g#5,p,8p,f#5,p,8p,e5,p,8p,f#5,1p,1p,1p,1p",
       "Melody:b=189,o=5,d=16:1p,1p,1p,1p,32f#5,32p,32f#5,32p,32f#5,32p,p,32f#5,32p,32f#5,32p,32f#5,32p,p,d#5,p,8p,g#5,p,8p,f#5,p,8p,e5,p,8p,d#5,1p,1p,1p",
       "Melody:b=189,o=5,d=16:1p,1p,1p,1p,1p,2p,4p,c#5,p,c#5,p,c#5,p,g#5,p,b5,p,a#5,p,4p,c#5,p,c#5,p,c#5,p,g#5,p,b5,p,a#5,p,8p,d#6,p,e6"
+    ]
+  },
+  {
+    "name": "Mega Man X - Stage Start",
+    "tracks": [
+      "mmx_m1:b=150,o=5,d=4:8p,16g,16p,16g,8f,2g,8p,16a,16p,16a,8g,2a,16a#,16a#,16p,16a#,p,16c#6,16c#6,16p,16c#6,p,16d6,16p,8c6,16a#,16c6,16c#6,32d6,32d#6,32d6,32d#6,2d6",
+      "mmx_m2:b=150,o=5,d=4:8p,16d,16p,16d,8c,2d,8p,16e,16p,16e,8d,2e,16f,16f,16p,16f,p,16g,16g,16p,16g,p,16a,16p,8g,16f,16g,16g,32a,32a#,32a,32a#,2a",
+      "mmx_m3:b=150,o=5,d=4:8p,16g,16p,16g,8f,2g,8p,16a,16p,16a,8g,2a,16a#,16a#,16p,16a#,p,16c#6,16c#6,16p,16c#6,p,16d6,16p,8c6,16a#,16c6,16c#6,32d6,32d#6,32d6,32d#6,2d6",
+      "mmx_b1:b=150,o=4,d=4:8p,8g,8p,8g,2f,8p,8f,8p,8f,4d#.,32p,32d#,32p,32d#,16p,16d#,p,32g,32p,32g,16p,16g,4p,1d"
     ]
   },
   {
@@ -460,6 +580,15 @@
       "pgunn2:d=4,o=5,b=260:1d#,2d#.,c,1p,1p,1d#,1d#,c6.,f#.,8f,8e,8d#,8d,8c#,c,p.",
       "pgunn3:d=4,o=4,b=260:8f.,16p,f,g,f,8g#,8a,f,a#,a,8f.,16p,f,g,f,8g#,8a,f,a#,a,8f.,16p,f,g,f,8g#,8a,f,a#,a,8f.,16p,f,g,f,8g#,8a,f,a#,a",
       "pgunn4:d=4,o=4,b=260:1d#,2d#.,c,1p,1p,1d#,1d#,c5.,f#.,8f,8e,8d#,8d,8c#,c,p."
+    ]
+  },
+  {
+    "name": "Pirates of the Caribbean - Theme (short)",
+    "tracks": [
+      "melody1:b=150,d=8,o=5:a4,c5,d5,p,d5,p,d5,e5,f5,p,f5,p,f5,g5,e5,p,e5,p,d5,c5,c5,d5",
+      "harmonic1:b=150,d=8,o=5:4p,4d4,4d4,4d4,4f4,4f4,4f4,4e4,4e4,4e4,c4,d4",
+      "harmonic2:b=150,d=8,o=5:4p,d6,p,d6,p,4p,f6,p,f6,p,4p,e6,p,e6,p,4p,c6,d6",
+      "melody2:b=150,d=8,o=5:a4,c5,d5,p,d5,p,d5,e5,f5,p,f5,p,f5,g5,e5,p,e5,p,d5,c5,c5,d5"
     ]
   },
   {
@@ -568,6 +697,15 @@
     ]
   },
   {
+    "name": "Simon & Garfunkel - The Sound of Silence",
+    "tracks": [
+      "silence:b=100,o=5,d=4:8p,16p,16a,16p,16a,16p,16c6,16p,16c6,16p,16e6,16p,16c6,16p,2d6,2p,4p,16g,16p,16g,16p,16h,16p,16h,16p,16d6,16p,16d6,16p,2c6",
+      "silence:b=100,o=3,d=4:2a,16p,16p,16p,16p,16p,16p,16p,8g,8d4,8g4,8d4,8h4,8d4,8g4,8d4,8p,8d4,8g4,8d4,8h4,8d4,8g4,8d4,8a,8e4,8a4,8e4,8c5,8e4,8a4,8e4",
+      "silence:b=100,o=4,d=4:2p,16p,16p,16p,16p,16p,16p,16p,1g,1g,1a",
+      "silence:b=100,o=5,d=4:8p,16p,16e,16p,16e,16p,16e,16p,16e,16p,16e,16p,16e,16p,2g,2p,4p,16d,16p,16d,16p,16d,16p,16d,16p,16d,16p,16d,16p,2a"
+    ]
+  },
+  {
     "name": "Simpsons - Theme",
     "tracks": [
       "simpsons:d=4,o=5,b=160:c.6,e6,f#6,8a6,g.6,e6,c6,8a,8f#,8f#,8f#,2g,8p,8p,8f#,8f#,8f#,8g,a#.,8c6,8c6,8c6,c6"
@@ -577,6 +715,24 @@
     "name": "Slayer - Raining Blood",
     "tracks": [
       "RainingBlo:d=4,o=5,b=240:8d#3,8d#4,8a4,8a#4,a4,8f4,8a4,g#4,8e4,8g#4,g4,8d#3,8d#3,8d#3,8d#4,8a4,8a#4,a4,8f4,8a4,g#4,8e4,8g#4,g4,8d#3,8d#3,8d#3,8a#4,8e,8f,e,8c,8e,d#,8b4,8d#,d,8d#3,8d#3,8d#3,8a#4,8e,8f,e,8c,8e,d#,8b4,8d"
+    ]
+  },
+  {
+    "name": "Silksong - Phantom",
+    "tracks": [
+      "silksong_phantom:b=112,o=6:8g,8a,8a#,8d,8f#,8g,8a,8d,8d#,8g,8d,8g,8c,8g,8a#5,8a5,8g,8a,8a#,8d,8f#,8g,8a,8d,8d#,8g,8d,8g,8c,8g,8a#5,8g",
+      "silksong_phantom:b=112,o=5:16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,16g",
+      "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3,8p,8g,4g,8p,4d,8d,8d#,8p,8d,8p,8c,8p,8a#3,8p",
+      "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3,8p,8g,4g,8p,4d,8d,8d#,8p,8d,8p,8c,8p,8a#3,8p"
+    ]
+  },
+  {
+    "name": "Silksong - Phantom (short)",
+    "tracks": [
+      "silksong_phantom:b=112,o=6:8g,8a,8a#,8d,8f#,8g,8a,8d,8d#,8g,8d,8g,8c,8g,8a#5,8a5",
+      "silksong_phantom:b=112,o=5:16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,8g,16p,16g",
+      "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3",
+      "silksong_phantom:b=112,o=4:1g,8d#,8g,8d,8g,8c,8g,8a#3,8a3"
     ]
   },
   {
@@ -619,6 +775,24 @@
       "imperial2:d=4,o=3,b=450:4g4,4p,4g4,4p,4g4,4p,4g4,4p,8g4,8p,8g4,8p,8g4,8g4,8g4,8g4,4d#4,4p,4d#4,4p,4g4,4p,4g4,4p,4d#4,4p,4d#4,4p,1g4,2p",
       "imperial3:d=4,o=3,b=450:2d5,2p,2d5,2p,2d5,2p,2a#4,4p,4f5,2d5,2p,2a#4,4p,4f5,1d5,2p",
       "imperial4:d=4,o=3,b=450:2g6,2p,2g6,2p,2g6,2p,2d#6,4p,4a#6,2g6,2p,2d#6,4p,4a#6,1g6,2p"
+    ]
+  },
+  {
+    "name": "Star Trek - Deep Space Nine",
+    "tracks": [
+      "ds9_m1:b=72,o=4,d=8:16g3,16c,16e,2d,f,16e,16f,g,4g.,c,c5,16b,16g,c,2d,4f.3,g3.,16c,2c",
+      "ds9_m2:b=72,o=5,d=8:16g4,16c,16e,2d,f,16e,16f,g,4g.,c,c6,16b,16g,c,2d,4f.4,g4.,16p,2c",
+      "ds9_b1:b=72,o=4,d=8:c.,1c,2e,e,4g,1g,2g",
+      "ds9_b2:b=72,o=3,d=1:g,g,g,2c6"
+    ]
+  },
+  {
+    "name": "Star Trek - Deep Space Nine (high)",
+    "tracks": [
+      "ds9_m1:b=72,o=5,d=8:16g4,16c,16e,2d,f,16e,16f,g,4g.,c,c6,16b,16g,c,2d,4f4.,g4.,16c,2c",
+      "ds9_m2:b=72,o=6,d=8:16g5,16c,16e,2d,f,16e,16f,g,4g.,c,c7,16b,16g,c,2d,4f5.,g5.,16c,2c5",
+      "ds9_b1:b=72,o=5,d=8:c.,1c,2e,e,4g,1g,2g",
+      "ds9_b2:b=72,o=4,d=1:g,g,g,2c7"
     ]
   },
   {
@@ -698,6 +872,24 @@
     ]
   },
   {
+    "name": "Terminator - Theme",
+    "tracks": [
+      "terminator1:b=86,o=4,d=8:16d.,16e.,2f.,f.,32f.,16e,e,c,1f3,4f3.,16f3.,16d.,16e.,16f,2f.,f,32f,16e,e,c,32c,2a,a,16a.,2g.",
+      "terminator2:b=86,o=4,d=8:32e3,32d,e,32e,2f.,f,4e,32e,32c.,1f3,2f3,32f3,32d,e,32e,2f.,f,32f,4e,32e,16c.,2a.,32a,2g,g,16g.",
+      "terminator3:b=86,o=6,d=8:p.,1f.,p.,4e.,1c,1p,4p",
+      "terminator4:b=86,o=4,d=8:4p.,4d.,4e.,2f.,4a#3.,4c.,2d,d,p,4d.,4e.,1f,f,2d."
+    ]
+  },
+  {
+    "name": "Tokyo Ghoul - Unravel",
+    "tracks": [
+      "MLead:b=150,o=6,d=16:8a#6,4c7,4a#6,8a6,4g6,4c7,4a#6,4a6,4g6,8g6,4f6,8p,8d#6,4d#6,8f6,1d6",
+      "MAccord:b=150,o=6,d=16:8p,4d#5,4a#5,2d#6,4f5,4c6,2f6,4d5,4a#5,4a5,4f5,4a#4,4f5,2d5",
+      "MLead:b=150,o=6,d=16:8a#6,4c7,4a#6,8a6,4g6,4c7,4a#6,4a6,4g6,8g6,4f6,8p,8d#6,4d#6,8f6,1d6",
+      "MAccord:b=150,o=6,d=16:8a#6,4c7,4a#6,8a6,4g6,4c7,4a#6,4a6,4g6,8g6,4f6,8p,8d#6,4d#6,8f6,1d6"
+    ]
+  },
+  {
     "name": "Tristam - Till It's Over",
     "tracks": [
       "tris_tio_m:b=110,o=5,d=1:8a#,16d,8a,16d,4g,8d,16a,8d,16g,8f,16a#4,8g,16a#4,8g,16p,16g,8a#4,16a,8a#4,16a#,8g,16a#4,8d#,16a#4,8g,16a4,16c,8d,16a#,16p,16a#,16a,8g,16d,8a,16d,8a#.,16a,8d,8f,8g",
@@ -709,6 +901,12 @@
     "tracks": [
       "tsfh_bh_m:b=180,o=5,d=8:4a4,d,f4,a4,f4,d,f4,d,f4,a4,f4,f,a4,a,c,f,c,a,c,a,c,f,c,a,c,g,a#4,d,a,g,a#4,d,a#4,d,a#4,d,a#4,f,f4,a4,f4,d,f4,d,f4,a4,f4,a4,f4",
       "tsfh_bh_b:b=180,o=4,d=8:4p,d,p,d,p,d,p,d,p,d,p,d,p,f,p,f,p,f,p,f,p,f,p,f,p,g,p,g,p,g,p,g,p,g,p,g,p,d,p,d,p,d,p,d,p,d,p,4d"
+    ]
+  },
+  {
+    "name": "Uma Musume - Umapyoi Densetsu",
+    "tracks": [
+      "Melody:b=170,o=5,d=16:d,p,d,p,d,p,d,p,c,p,b4,p,g4,p,32p,g4,p,8d,8p,g4,p,8d,8p,g4,p,g4,p,f#4,p,g4,p,4a4,8p,32d,p,8d,4p,d4,p,8a4,p,a4,p,8d,p,32f#4,p,32g4,8p,8a4,a4,p,8g4,g4,p,8f#4,f#4,p,8g4,g4"
     ]
   },
   {
@@ -797,6 +995,15 @@
     "name": "X-Files - Theme",
     "tracks": [
       "XFiles:b=125,o=5,d=4:e,b,a,b,d6,2b."
+    ]
+  },
+  {
+    "name": "X-Files - Theme (Polyphonic)",
+    "tracks": [
+      "Xfiles1:b=384,o=5,d=4:a4,c,e,f,c,e,f,c,e,f,c,e,a,2p,a,2p,a",
+      "Xfiles2:b=384,o=5,d=4:a4,c,e,f,c,e,f,1p,1p,1p",
+      "Xfiles3:b=384,o=5,d=4:a4,c,e,f,1p,1p,1p,2p,p",
+      "Xfiles4:b=384,o=4,d=4:a,e,a,e,a,e,a,e,a,e,a,e,a,e,a,e,a,e,a"
     ]
   },
   {

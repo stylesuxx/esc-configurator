@@ -5,10 +5,17 @@ on: [push, pull_request]
 jobs:
   coverage:
     name: Coverage
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
 
       - name: Generate coverage report

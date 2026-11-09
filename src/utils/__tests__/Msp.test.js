@@ -4,6 +4,17 @@ import Msp, { MSP } from '../Msp';
 let serial;
 let msp;
 
+// MSP_SET_MOTOR carries one little endian 16 bit value per motor
+const getMotorSpeeds = (buffer) => {
+  const view = new DataView(buffer.buffer);
+  const speeds = [];
+  for(let i = 0; i < buffer.byteLength; i += 2) {
+    speeds.push(view.getUint16(i, true));
+  }
+
+  return speeds;
+};
+
 describe('Msp', () => {
   beforeEach(() => {
     serial = jest.fn();
@@ -77,6 +88,26 @@ describe('Msp', () => {
   it('should spin all motors', async() => {
     await expect(msp.spinAllMotors()).resolves.toEqual(undefined);
     expect(serial).toHaveBeenCalled();
+  });
+
+  it('should set the speed of all 8 motors', async() => {
+    const setMotor = jest.fn();
+    msp.setMotor = setMotor;
+
+    await msp.spinAllMotors(1500);
+
+    expect(getMotorSpeeds(setMotor.mock.calls[0][0])).toEqual(new Array(8).fill(1500));
+  });
+
+  it('should reset individually spun motors when spinning all motors', async() => {
+    const setMotor = jest.fn();
+    msp.setMotor = setMotor;
+
+    await msp.spinMotor(6, 1600);
+    await msp.spinMotor(8, 1700);
+    await msp.spinAllMotors(1500);
+
+    expect(getMotorSpeeds(setMotor.mock.calls[2][0])).toEqual(new Array(8).fill(1500));
   });
 
   it('should spin one motor', async() => {

@@ -1,13 +1,13 @@
 {
   "general": "",
-  "am32motor": "Motor Specs",
-  "am32sine": "Sinusoidal Settings",
-  "am32servo": "Servo Settings",
-  "am32brake": "Brake Settings",
-  "am32pwm": "PWM Settings",
-  "am32safety": "Safety Settings",
-  "bluejaySafety": "Safety Settings",
-  "bluejayBrake": "Brake Settings",
-  "bluejayBeacon": "Beacon Settings",
-  "bluejayExperimental": "Experimental Settings"
+  "am32motor": "Especificaciones de motor",
+  "am32sine": "Ajuste Sinusoidal",
+  "am32servo": "Ajustes de Servo",
+  "am32brake": "Ajustes de Freno",
+  "am32pwm": "Ajustes de PWM",
+  "am32safety": "Ajustes de Seguridad",
+  "bluejaySafety": "Ajustes de Seguridad",
+  "bluejayBrake": "Ajustes de Freno",
+  "bluejayBeacon": "Ajustes de Baliza",
+  "bluejayExperimental": "Ajustes Experimentales"
 }

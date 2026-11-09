@@ -14,5 +14,7 @@
   "unstableVersions": "顯示預發佈固件版本",
   "unstableVersionsHint": "顯示不穩定的固件版本和預發佈版本",
   "skipCache": "跳過緩存",
-  "skipCacheHint": "如果您在固件選擇中看不到最新版本，請啟用此設置。"
+  "skipCacheHint": "如果您在固件選擇中看不到最新版本，請啟用此設置。",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }

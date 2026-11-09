@@ -105,6 +105,13 @@ class LayoutMismatchError extends Error {
   }
 }
 
+class PortClosedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'PortClosedError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   ConversionError,
@@ -120,4 +127,5 @@ export {
   UnknownSignatureError,
   UnknownPlatformError,
   MessageNotOkError,
+  PortClosedError,
 };

@@ -14,5 +14,7 @@
   "unstableVersions": "Zobrazit předběžná uvolnění firmwaru",
   "unstableVersionsHint": "Zobrazit nestabilní verze firmwaru a předběžná vydání",
   "skipCache": "Přeskočit vyrovnávací paměť",
-  "skipCacheHint": "Povolte toto nastavení, pokud ve výběru firmwaru nevidíte nejnovější verzi."
+  "skipCacheHint": "Povolte toto nastavení, pokud ve výběru firmwaru nevidíte nejnovější verzi.",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }

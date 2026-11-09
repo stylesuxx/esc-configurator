@@ -12,6 +12,7 @@ import configsReducer, { set } from '../../../Containers/App/configsSlice';
 import sources from '../../../sources';
 import settingsReducer from '../../AppSettings/settingsSlice';
 import escsReducer from '../../../Containers/App/escsSlice';
+import { MIGRATION } from '../../../utils/helpers/Settings';
 
 let FirmwareSelector;
 
@@ -79,8 +80,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -89,6 +88,60 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/selectFirmware/i)).toBeInTheDocument();
     expect(screen.getByText(/selectTarget/i)).toBeInTheDocument();
+  });
+
+  it('should allow changing how settings are migrated', async() => {
+    const json = `[{ "tag_name": "v0.10.0", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
+    const configs = {
+      versions: {},
+      escs: {},
+    };
+
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = source.getEscLayouts();
+    }
+
+    storeRef.store.dispatch(set(configs));
+
+    const escMock = {
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
+    render(
+      <FirmwareSelector
+        esc={escMock}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByRole(/combobox/i, { name: 'Migration' }).value).toEqual(MIGRATION.SAME);
+
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Migration' }), {
+      target: {
+        value: MIGRATION.DEFAULTS,
+        name: 'Migration',
+      },
+    });
+
+    /**
+     * The select is re-mounted on change, so it needs to be queried again.
+     */
+    expect(screen.getByRole(/combobox/i, { name: 'Migration' }).value).toEqual(MIGRATION.DEFAULTS);
   });
 
   it('should allow changing firmware options for BLHeli_S', async() => {
@@ -132,8 +185,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -209,6 +260,78 @@ describe('FirmwareSelector', () => {
     userEvent.click(screen.getByText('buttonCancel'));
     const { targets } = storeRef.store.getState().escs;
     expect(targets.length).toBe(0);
+  });
+
+  it('should sort ESC layouts by name', async() => {
+    const json = `[{ "tag_name": "v0.10.0", "assets": [{}] }]`;
+    global.caches = {
+      open: jest.fn().mockImplementation(() =>
+        new Promise((resolve) => {
+          resolve({ match: () => new Promise((resolve) => resolve(mockJsonResponse(json))) });
+        })
+      ),
+    };
+
+    const configs = {
+      versions: {},
+      escs: {},
+    };
+
+    for(let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      const name = source.getName();
+
+      configs.versions[name] = await source.getVersions();
+      configs.escs[name] = source.getEscLayouts();
+    }
+
+    storeRef.store.dispatch(set(configs));
+
+    const escMock = {
+      settings: { LAYOUT: "#S_H_90#" },
+      meta: { signature: 0xE8B2 },
+    };
+
+    render(
+      <FirmwareSelector
+        esc={escMock}
+        onLocalSubmit={onLocalSubmit}
+        onSubmit={onSubmit}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    /**
+     * Bluejay merges the BLHeli_S layouts with its own, so its layouts are the
+     * ones which end up out of order when they are not sorted.
+     */
+    fireEvent.change(screen.getByRole(/combobox/i, { name: 'Firmware' }), {
+      target: {
+        value: 'Bluejay',
+        name: 'Firmware',
+      },
+    });
+
+    const select = screen.getByRole(/combobox/i, { name: 'ESC' });
+
+    // First option is the disabled placeholder
+    const names = Array.from(select.options).slice(1).map((option) => option.text);
+    const sorted = [ ...names].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    expect(names).toEqual(sorted);
+
+    /**
+     * The Bluejay only 120 layouts are grouped with their BLHeli_S siblings
+     * instead of being appended after all of them.
+     */
+    const pHigh = names.filter((name) => name.startsWith('P-H-'));
+    expect(pHigh).toEqual([
+      'P-H-0', 'P-H-5', 'P-H-10', 'P-H-15', 'P-H-20', 'P-H-25',
+      'P-H-30', 'P-H-40', 'P-H-50', 'P-H-70', 'P-H-90', 'P-H-120',
+    ]);
+
+    const firstPHigh = names.indexOf('P-H-0');
+    expect(names.slice(firstPHigh, firstPHigh + pHigh.length)).toEqual(pHigh);
   });
 
   it('should display title', async() => {
@@ -299,8 +422,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -364,8 +485,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();
@@ -432,8 +551,6 @@ describe('FirmwareSelector', () => {
 
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashHint/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashText/i)).toBeInTheDocument();
-    expect(screen.getByText(/migrateFlashHint/i)).toBeInTheDocument();
     expect(screen.getByText(/forceFlashText/i)).toBeInTheDocument();
 
     expect(screen.getByText("escButtonSelect")).toBeInTheDocument();

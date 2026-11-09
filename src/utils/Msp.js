@@ -604,7 +604,7 @@ class Msp {
   spinAllMotors(speed) {
     this.motorsSpinning = true;
 
-    for(let i = 0; i < 8; i += 2) {
+    for(let i = 0; i < this.speedBufView.length; i += 2) {
       this.speedBufView[i] = 0x00ff & speed;
       this.speedBufView[i + 1] = speed >> 8;
     }

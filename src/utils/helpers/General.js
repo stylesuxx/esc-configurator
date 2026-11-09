@@ -1,5 +1,6 @@
 import sources from '../../sources';
 import { store } from '../../store';
+import { PortClosedError } from '../Errors';
 
 /**
  * Deeply compare two ByteArrays to each other
@@ -83,8 +84,9 @@ async function retry(func, maxRetries, iterationDelay = 0) {
       } catch(e) {
         retries += 1;
 
-        // After max retries we pass through the original error
-        if(retries >= maxRetries) {
+        // After max retries we pass through the original error. A closed port
+        // stays closed, so retrying it only delays the failure.
+        if(retries >= maxRetries || e instanceof PortClosedError) {
           return reject(e);
         }
 

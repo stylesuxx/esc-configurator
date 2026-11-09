@@ -26,6 +26,10 @@
       "value": "it"
     },
     {
+      "label": "日本語",
+      "value": "ja"
+    },
+    {
       "label": "Polski",
       "value": "pl"
     },
@@ -77,6 +81,10 @@
       "value": false
     },
     "skipCache": {
+      "type": "boolean",
+      "value": false
+    },
+    "hideWarnings": {
       "type": "boolean",
       "value": false
     }

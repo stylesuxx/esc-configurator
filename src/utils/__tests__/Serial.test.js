@@ -107,6 +107,15 @@ describe('Serial', () => {
     expect(() => serial.open()).not.toThrow();
   });
 
+  it('should reject commands once the port is disconnected', async() => {
+    const { PortClosedError } = require('../Errors');
+
+    await serial.open();
+    await serial.disconnect();
+
+    await expect(serial.executeCommand(new Uint8Array([1]), jest.fn())).rejects.toThrow(PortClosedError);
+  });
+
   it('should execute MSP commands', async() => {
     const read = () => ({ value: { byteLength: 50 } });
     const write = jest.fn();

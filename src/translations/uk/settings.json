@@ -14,5 +14,7 @@
   "unstableVersions": "Показувати пре-релізи прошивок",
   "unstableVersionsHint": "Показувати нестабільні версії прошивки та пре-релізи",
   "skipCache": "Не використовувати кеш",
-  "skipCacheHint": "Увімкніть це налаштування, якщо ви не бачите останню версію в виборі прошивки."
+  "skipCacheHint": "Увімкніть це налаштування, якщо ви не бачите останню версію в виборі прошивки.",
+  "hideWarnings": "Hide safety warnings",
+  "hideWarningsHint": "Hides the reminders to remove your propellers, turn off your radio and connect power to the ESCs. Only enable this if you are well aware of the risks."
 }

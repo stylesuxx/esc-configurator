@@ -229,6 +229,21 @@ class Source {
   }
 
   /**
+   * Filter the available versions down to those that can actually be flashed
+   * onto the given ESC layout
+   *
+   * Firmware might drop support for a layout at some point, in that case only
+   * the versions up to the last supporting one should be offered.
+   *
+   * @param {Array<object>} versions
+   * @param {string} layout
+   * @returns {Array<object>}
+   */
+  filterVersions(versions, layout) {
+    return versions;
+  }
+
+  /**
    * Returns group order for common settings
    *
    * @returns {Array<string>}

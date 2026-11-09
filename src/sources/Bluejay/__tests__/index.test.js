@@ -253,6 +253,39 @@ describe('Bluejay', () => {
     expect(frequencies.length).toEqual(0);
   });
 
+  it('should return all versions for a supported layout', () => {
+    const versions = [
+      { key: 'v0.21.0' },
+      { key: 'v0.18.1' },
+    ];
+
+    const filtered = source.filterVersions(versions, '#A_H_120#');
+    expect(filtered.length).toEqual(2);
+  });
+
+  it('should only return supported versions for an L layout', () => {
+    const versions = [
+      { key: 'v0.21.1-RC1' },
+      { key: 'v0.19.0' },
+      { key: 'v0.18.1' },
+      { key: 'v0.17.0' },
+    ];
+
+    const filtered = source.filterVersions(versions, '#A_L_120#');
+    expect(filtered.length).toEqual(2);
+    expect(filtered[0].key).toEqual('v0.18.1');
+  });
+
+  it('should return all versions for an unknown layout', () => {
+    const versions = [
+      { key: 'v0.21.0' },
+      { key: 'v0.18.1' },
+    ];
+
+    const filtered = source.filterVersions(versions, '#INVALID#');
+    expect(filtered.length).toEqual(2);
+  });
+
   it('should enable low threshold setting', () => {
     const settings = {
       GOVERNOR_MODE: 3,
