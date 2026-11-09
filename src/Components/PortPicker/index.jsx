@@ -10,12 +10,10 @@ import CompatibilityWarning from './CompatibilityWarning';
 
 import {
   selectConnected,
-  selectConnectionMode,
   selectHasSerial,
   selectOpen,
   selectPortNames,
   setBaudRate,
-  setConnectionMode,
 } from '../../Containers/App/serialSlice';
 
 import './style.scss';
@@ -56,54 +54,6 @@ BaudRates.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-
-function ConnectionMode({
-  handleChange,
-  disabled,
-  value,
-}) {
-  const { t } = useTranslation('common');
-
-  const modes = [
-    {
-      value: 'fc',
-      label: 'fcPassthrough',
-    },
-    {
-      value: 'direct-4wif',
-      label: 'direct4Way',
-    },
-  ];
-
-  const modeElements = modes.map((mode) => (
-    <option
-      key={mode.value}
-      value={mode.value}
-    >
-      {t(mode.label)}
-    </option>
-  ));
-
-  return (
-    <select
-      className="dropdown__select"
-      disabled={disabled}
-      id="connectionMode"
-      name={t('connectionMode')}
-      onChange={handleChange}
-      title={t('connectionMode')}
-      value={value}
-    >
-      {modeElements}
-    </select>
-  );
-}
-
-ConnectionMode.propTypes = {
-  disabled: PropTypes.bool.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
 };
 
 function PermissionOverlay({
@@ -183,15 +133,10 @@ function PortPicker({
   const hasPort = useSelector(selectConnected);
   const hasSerial = useSelector(selectHasSerial);
   const open = useSelector(selectOpen);
-  const connectionMode = useSelector(selectConnectionMode);
   const ports = useSelector(selectPortNames);
 
   const handleBaudRateChange = useCallback((e) => {
     dispatch(setBaudRate(e.target.value));
-  }, [dispatch]);
-
-  const handleConnectionModeChange = useCallback((e) => {
-    dispatch(setConnectionMode(e.target.value));
   }, [dispatch]);
 
   const handlePortChange = useCallback((e) => {
@@ -226,20 +171,9 @@ function PortPicker({
           disabled={open}
         >
           <BaudRates
-            disabled={open || connectionMode === 'direct-4wif'}
-            handleChange={handleBaudRateChange}
-            value={connectionMode === 'direct-4wif' ? 38400 : 115200}
-          />
-        </div>
-
-        <div
-          className={`dropdown dark ${open ? 'disabled' : ''}`}
-          disabled={open}
-        >
-          <ConnectionMode
             disabled={open}
-            handleChange={handleConnectionModeChange}
-            value={connectionMode}
+            handleChange={handleBaudRateChange}
+            value={115200}
           />
         </div>
 

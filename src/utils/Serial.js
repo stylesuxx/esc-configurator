@@ -29,10 +29,12 @@ class Serial {
    */
   constructor(port) {
     this.port = port;
+    this.serial = port;
     this.baudRate = 115200;
     this.msp = null;
     this.fourWay = null;
     this.detectedESCs = null;
+    this.isDirect4Way = false;
     this.writer = null;
     this.reader = null;
 
@@ -150,6 +152,7 @@ class Serial {
    */
   async open(baudRate = 115200) {
     this.baudRate = baudRate;
+    this.isDirect4Way = false;
 
     try {
       await this.port.open({ baudRate });
@@ -186,6 +189,7 @@ class Serial {
     }
 
     this.fourWay = new FourWay(this.executeCommand);
+    this.isDirect4Way = true;
 
     this.running = true;
     this.startReader();

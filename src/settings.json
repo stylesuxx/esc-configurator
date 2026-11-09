@@ -58,7 +58,11 @@
     },
     "extendedDebug": {
       "type": "boolean",
-      "value": false
+      "value": true
+    },
+    "debugMode": {
+      "type": "boolean",
+      "value": true
     },
     "disableCommon": {
       "type": "boolean",

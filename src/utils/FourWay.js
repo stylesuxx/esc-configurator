@@ -216,14 +216,11 @@ class FourWay {
       return reject(new Error(error));
     }
 
-    if (view.length < 9) {
+    if (view.length < 8) {
       return reject(new NotEnoughDataError());
     }
 
     let paramCount = view[4];
-    if (paramCount === 0) {
-      paramCount = 256;
-    }
 
     if (view.length < 8 + paramCount) {
       return reject(new NotEnoughDataError());
@@ -301,16 +298,18 @@ class FourWay {
         return reject(new MessageNotOkError('Message not OK'));
       };
 
+      processMessage(resolve, reject);
+
       try {
         const result = await retry(processMessage, retries, 250);
         return resolve(result);
       } catch(e) {
         console.debug(`Failed processing command ${FourWayHelper.commandToString(command)} after ${retries} retries.`);
         reject(e);
-      }
-    };
+        }
+      };
 
-    return new Promise((resolve, reject) => process(resolve, reject));
+      return new Promise((resolve, reject) => process(resolve, reject));
   }
 
   /**

@@ -13,7 +13,7 @@
   "mspFcInfo": "Flight controller info, identifier: {{id}} version: {{version}}",
   "portUsed": "Port already in use by another application - try re-connecting",
   "fourWayFailed": "Could not enable 4 way interface - check connection",
-  "direct4WayNoEsc": "No ESCs found on direct 4-way interface - check wiring, power, and that ESC is in bootloader mode",
+  "direct4WayNoEsc": "No ESCs found on direct 4-way interface - check wiring and power",
   "readEscs": "Trying to read {{connected}} ESCs",
   "readEscsSuccess": "Done reading ESCs",
   "readEscsFailed": "Failed reading ESCs",

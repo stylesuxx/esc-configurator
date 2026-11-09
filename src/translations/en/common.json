@@ -1,7 +1,6 @@
 {
   "port": "Port",
   "baudRate": "Baud Rate",
-  "connectionMode": "Connection Mode",
   "connect": "Connect",
   "disconnect": "Disconnect",
   "serialPermission": "Select Serial Port",
@@ -194,7 +193,5 @@
   "selectionLi1": "Read the release notes to understand what changed and what you might need to adjust",
   "selectionLi2": "Make sure your motors spin up reliably on arm and in the correct direction",
   "selectionLi3": "Check motor temperatures after a short test flight and adjust tune if they are too hot",
-  "selectionLinkText": "Show release notes on Github",
-  "fcPassthrough": "FC Passthrough",
-  "direct4Way": "Arduino 4way-IF"
+  "selectionLinkText": "Show release notes on Github"
 }
