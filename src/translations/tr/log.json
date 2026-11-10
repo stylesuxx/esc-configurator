@@ -19,9 +19,6 @@
   "readEscsFailed": "ESC'ler okunamadı",
   "readEsc": "Read ESC {{index}}: {{name}}",
   "flashingEsc": "Flashing ESC {{index}}",
-  "flashingEscMissmatchFileNameMissing": "Failed flashing ESC {{index}} - File name not found in hex file, please check your hex file version!",
-  "flashingEscMissmatchMcuType": "Failed flashing ESC {{index}} - Not matching MCU type, please check your hex file!",
-  "flashingEscMissmatchFileName": "Failed flashing ESC {{index}} - Different ESC firmware file, than in current ESC flash!",
   "flashingEscFailed": "Failed flashing ESC {{index}} - check file type",
   "fetchingFilesFailed": "Failed fetching files for {{name}}",
   "readEscFailed": "Failed reading ESC {{index}}",
@@ -44,5 +41,6 @@
   "timingMismatch": "Firmware is tagged as {{tagged}} but actualy seems to be {{actual}}",
   "browser": "{{name}} ({{version}}) on {{os}}",
   "dumpingEsc": "Dumping ESC {{index}}",
-  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
+  "flashingVerificationFailed": "Verification failed - data might not have been written correctly",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }
