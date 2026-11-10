@@ -123,6 +123,7 @@
   "openPortSelection": "Open Port Selection",
   "am32MovedLine1": "AM32, the open source firmware for ARM based ESCs, has its own dedicated configurator and is no longer supported by ESC Configurator.",
   "am32MovedLine2": "To flash and configure AM32 ESCs, please head over to **[am32.ca](https://am32.ca)**.",
+  "am32MovedLine3": "The melody editor still works with AM32 ESCs: connect, read your ESCs and open the melody editor to change the startup melody.",
   "versionUnsupportedLine1": "{{name}} version '{{version}}' (Layout {{layout}}) is not yet supported.",
   "versionUnsupportedLine2": "Let us know by opening an [issue](https://github.com/stylesuxx/esc-configurator).",
   "versionUnsupportedLine3": "Only flash firmware if you are fully aware what you are doing.",

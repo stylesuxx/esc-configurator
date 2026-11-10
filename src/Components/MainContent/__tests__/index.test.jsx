@@ -136,6 +136,7 @@ describe('MainContent', () => {
     expect(screen.getByText(/bluejayTextLine2/i)).toBeInTheDocument();
     expect(screen.getByText(/am32MovedLine1/i)).toBeInTheDocument();
     expect(screen.getByText(/am32MovedLine2/i)).toBeInTheDocument();
+    expect(screen.getByText(/am32MovedLine3/i)).toBeInTheDocument();
     expect(screen.getByText(/homeDiscordHeader/i)).toBeInTheDocument();
     expect(screen.getByText(/homeDiscordText/i)).toBeInTheDocument();
     expect(screen.getByText(/homeChinaHeader/i)).toBeInTheDocument();

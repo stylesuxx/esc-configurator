@@ -227,6 +227,10 @@ function HomeColumnCenter() {
               <ReactMarkdown>
                 {t('am32MovedLine2')}
               </ReactMarkdown>
+
+              <ReactMarkdown>
+                {t('am32MovedLine3')}
+              </ReactMarkdown>
             </div>
           </section>
         </div>
