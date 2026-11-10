@@ -19,9 +19,6 @@
   "readEscsFailed": "Nie udało się odczytać ESC",
   "readEsc": "Czytaj ESC {{index}}: {{name}}",
   "flashingEsc": "Programowanie ESC {{index}}",
-  "flashingEscMissmatchFileNameMissing": "Nieudane flashowanie ESC {{index}} - Nazwa pliku nie została znaleziona w pliku hex, proszę sprawdzić wersję pliku hex!",
-  "flashingEscMissmatchMcuType": "Nieudane flashowanie ESC {{index}} - Nie pasuje do typu MCU, sprawdź swój plik hex!",
-  "flashingEscMissmatchFileName": "Nieudane flashowanie ESC {{index}} - Inny plik firmware ESC, niż w aktualnym flashu ESC!",
   "flashingEscFailed": "Nie udało się wgrać ESC {{index}} - sprawdź typ pliku",
   "fetchingFilesFailed": "Nie udało się pobrać plików dla {{name}}",
   "readEscFailed": "Odczytywanie ESC {{index}} nie powiodło się",
@@ -44,5 +41,6 @@
   "timingMismatch": "Firmware jest otagowany jako {{tagged}}, ale aktualny wydaje się być {{actual}}",
   "browser": "{{name}} ({{version}}) na {{os}}",
   "dumpingEsc": "Zrzut z ESC {{index}}",
-  "flashingVerificationFailed": "Weryfikacja nie powiodła się - dane mogły nie zostać poprawnie zapisane"
+  "flashingVerificationFailed": "Weryfikacja nie powiodła się - dane mogły nie zostać poprawnie zapisane",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }
