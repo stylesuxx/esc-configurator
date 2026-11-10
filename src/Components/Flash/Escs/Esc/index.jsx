@@ -43,7 +43,11 @@ const Esc = forwardRef(({
     enableAdvanced,
   } = useSelector(selectSettingsObject);
 
-  const source = getSource(esc.firmwareName);
+  // Settings of unsupported firmware are not shown, their layout is unreliable
+  let source = null;
+  if(esc.supported !== false) {
+    source = getSource(esc.firmwareName);
+  }
   const commonSettingsDescriptions = source ? source.getCommonSettings(esc.layoutRevision) : null;
   const descriptions = source ? source.getIndividualSettings(esc.layoutRevision) : null;
 

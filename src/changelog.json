@@ -16,7 +16,8 @@
       "Enhancement: Settings handling can now be chosen when flashing",
       "Bugfix: Stop retrying commands once the device is unplugged",
       "Enhancement: Point out that LEDs are configurable when the ESC layout supports them",
-      "Bugfix: Master motor slider and motor stop apply to all 8 motors - motors 5-8 spun up in 3D mode"
+      "Bugfix: Master motor slider and motor stop apply to all 8 motors - motors 5-8 spun up in 3D mode",
+      "Chore: AM32 is no longer supported, use the dedicated configurator at am32.ca - the melody editor still works with AM32 ESCs"
     ]
   },
   {

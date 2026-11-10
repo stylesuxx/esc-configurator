@@ -33,6 +33,7 @@ import {
 } from '../../Components/Log/logSlice';
 import {
   reset as resetState,
+  selectIsSupported,
   setConnecting,
   setDisconnecting,
   setFlashing,
@@ -556,14 +557,21 @@ class App extends Component {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     store.dispatch(setWriting(true));
-    const { escs } = store.getState();
+    const state = store.getState();
+    const { escs } = state;
+
+    /**
+     * Settings of unsupported firmware can not be edited, only the startup
+     * melody. Each ESC keeps its own settings in that case.
+     */
+    const isSupported = selectIsSupported(state);
 
     const individual = [ ...escs.individual ];
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
       const target = esc.index;
       const commonEscSettings = esc.settings;
-      const masterEscSettings = escs.master;
+      const masterEscSettings = isSupported ? escs.master : {};
       const individualEscSettings = esc.individualSettings;
 
       let commonOverrides = {};

@@ -124,6 +124,14 @@ function CommonSettings({ unsupported }) {
           { t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
         </p>
       );
+
+      if (availableSettings.NAME === 'AM32') {
+        unsupportedText = (
+          <ReactMarkdown>
+            {t('common:am32UseDedicatedConfigurator')}
+          </ReactMarkdown>
+        );
+      }
     }
 
     return (

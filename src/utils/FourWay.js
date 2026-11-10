@@ -674,6 +674,12 @@ class FourWay {
 
           info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
           info.firmwareName = am32Source.getName();
+
+          /**
+           * Identifies the firmware for the unsupported and flashing checks.
+           * String fields are never written back to the ESC.
+           */
+          info.settings.NAME = am32Source.getName();
         }
       }
 

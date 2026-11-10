@@ -212,6 +212,32 @@ describe('Esc', () => {
     });
   });
 
+  it('should not show settings of unsupported firmware', () => {
+    const esc = {
+      displayName: 'FD6288 - AM32, 2.05, Bootloader v12 (PB4)',
+      firmwareName: 'AM32',
+      layoutRevision: 2,
+      supported: false,
+      individualSettings: {
+        MOTOR_DIRECTION: 1,
+        BIDIRECTIONAL_MODE: 0,
+      },
+    };
+
+    render(
+      <Esc
+        esc={esc}
+        index={0}
+        onFirmwareDump={onFirmwareDump}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.getByText(/FD6288 - AM32, 2.05/i)).toBeInTheDocument();
+    expect(screen.queryByText(/escDirectionReversed/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/escBidirectionalMode/i)).not.toBeInTheDocument();
+  });
+
   it('should show custom settings and handle direct input', () => {
     storeRef.store.dispatch(update({
       name: 'disableCommon',
