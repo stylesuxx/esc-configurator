@@ -1,36 +1,10 @@
 import Convert from '../Convert';
 import { source } from '../../../sources/Bluejay';
+import { source as am32Source } from '../../../sources/AM32';
 import bluejaySettingsArrayObject from './bluejaySettingsArray.json';
 
 const EEPROM = source.getEeprom();
-
-/**
- * Minimal layout that leaves gaps (e.g. 0x2F) not described by any setting,
- * used to verify that unknown bytes survive a round trip.
- */
-const SPARSE_LAYOUT = {
-  BOOT_BYTE: {
-    offset: 0x00,
-    size: 1,
-  },
-  LAYOUT_REVISION: {
-    offset: 0x01,
-    size: 1,
-  },
-  NAME: {
-    offset: 0x05,
-    size: 12,
-  },
-  MOTOR_DIRECTION: {
-    offset: 0x11,
-    size: 1,
-  },
-  STARTUP_MELODY: {
-    offset: 0x30,
-    size: 128,
-  },
-};
-const SPARSE_LAYOUT_SIZE = 0xB0;
+const AM32_EEPROM = am32Source.getEeprom();
 
 // Melody missing last byte
 const settingsArray = new Uint8Array(Object.values(bluejaySettingsArrayObject));
@@ -59,16 +33,16 @@ test('settingsArray', () => {
 });
 
 test('settingsArray preserves bytes not covered by the layout', () => {
-  const layout = SPARSE_LAYOUT;
-  const layoutSize = SPARSE_LAYOUT_SIZE;
+  const layout = AM32_EEPROM.LAYOUT;
+  const layoutSize = AM32_EEPROM.LAYOUT_SIZE;
 
   /**
-   * Firmware might store settings in areas our layout does not describe (0x2F)
-   * or describes as a read only string (0x05 to 0x10). Writing a melody may
+   * AM32 2.19+ stores settings in areas our layout does not describe (0x2F) or
+   * still describes as the firmware name (0x05 - 0x10). Writing a melody may
    * not change any of them.
    *
-   * 0x05 is set to 160, a non breaking space, which would get eaten by the
-   * string round trip.
+   * Values are the AM32 factory defaults, 0x05 being max_ramp = 160 which is a
+   * non breaking space and would get eaten by the string round trip.
    */
   const current = new Uint8Array(layoutSize).fill(0);
   current.set([160, 1, 0, 10, 100, 0, 100, 0, 255, 255, 255, 255], 0x05);
@@ -83,8 +57,8 @@ test('settingsArray preserves bytes not covered by the layout', () => {
 });
 
 test('settingsArray writes the melody while preserving unknown bytes', () => {
-  const layout = SPARSE_LAYOUT;
-  const layoutSize = SPARSE_LAYOUT_SIZE;
+  const layout = AM32_EEPROM.LAYOUT;
+  const layoutSize = AM32_EEPROM.LAYOUT_SIZE;
   const melodyOffset = layout.STARTUP_MELODY.offset;
 
   const current = new Uint8Array(layoutSize).fill(0);

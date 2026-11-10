@@ -4,6 +4,7 @@ import {
   BufferLengthMismatchError,
   EscInitError,
   InvalidHexFileError,
+  LayoutMismatchError,
   MessageNotOkError,
   SettingsVerificationError,
   TooManyParametersError,
@@ -12,6 +13,7 @@ import {
 } from './Errors';
 
 import {
+  am32Source,
   blheliAtmelSource as blheliSource,
   blheliSSource,
   bluejaySource,
@@ -25,6 +27,7 @@ import {
 } from './helpers/Settings';
 
 import {
+  delay,
   getAppSetting,
   retry,
   compare,
@@ -52,14 +55,8 @@ const blheliEeprom = blheliSSource.getEeprom();
 const blheliSettingsDescriptions = blheliSSource.getSettingsDescriptions();
 const bluejayEeprom = bluejaySource.getEeprom();
 const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
-/**
- * AM32 is no longer supported by ESC Configurator, it has its own dedicated
- * configurator at https://am32.ca
- *
- * Input pins used by the AM32 bootloader are still checked so that ARM based
- * ESCs running AM32 can be identified and the user can be pointed there.
- */
-const AM32_BOOTLOADER_PINS = [0x02, 0x14, 0x06];
+const am32Eeprom = am32Source.getEeprom();
+const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
 /**
  * @typedef Response
@@ -318,20 +315,50 @@ class FourWay {
   }
 
   /**
-   * Flash preflight for making sure that the provided hex works with the
-   * current ESC hardware.
-   *
-   * Currently no firmware requires preflight checks (they were AM32 specific),
-   * this is kept as a hook for future checks.
+   * Flash preflight for making sure that the provided hex works with the current esc hardware
    *
    * @param {object} esc
    * @param {object} hex
    * @param {boolean} force
    *
-   * @throws {Error} if the firmware file does not match the ESC
+   * @throws {Error} if the firmware file does not match the MCU type or filename
    */
-  // eslint-disable-next-line no-unused-vars
-  async flashPreflight(esc, hex, force) {}
+  async flashPreflight(esc, hex, force) {
+    const info = await this.getInfo(esc.index);
+    const meta = info.meta;
+
+    // if current firmware version is 1.93 or higher, we will only flash firmware matching MCU type and throw a error if fileName is different
+    if (info.isArm && meta.am32.fileName && !force) {
+      const mcu = new MCU(esc.meta.interfaceMode, esc.meta.signature);
+      const eepromOffset = mcu.getEepromOffset();
+      const offset = 0x8000000;
+      const fileNamePlaceOffset = 30;
+
+      const fileFlash = Flash.parseHex(hex);
+      const findFileNameBlock = fileFlash.data.find((d) =>
+        (eepromOffset - fileNamePlaceOffset) > (d.address - offset) &&
+        (eepromOffset - fileNamePlaceOffset) < (d.address - offset + d.bytes)
+      );
+
+      if (!findFileNameBlock) {
+        this.addLogMessage('flashingEscMissmatchFileNameMissing', { index: esc.index + 1 });
+        throw new InvalidHexFileError('File name not found in hex file.');
+      }
+
+      const hexFileName = new TextDecoder().decode(new Uint8Array(findFileNameBlock.data).slice(0, findFileNameBlock.data.indexOf(0x00)));
+      if (!hexFileName.endsWith(meta.am32.mcuType)) {
+        this.addLogMessage('flashingEscMissmatchMcuType', { index: esc.index + 1 });
+        throw new InvalidHexFileError('Invalid MCU type in hex file.');
+      }
+
+      const currentFileName = hexFileName.slice(0, hexFileName.lastIndexOf('_'));
+      const expectedFileName = meta.am32.fileName.slice(0, meta.am32.fileName.lastIndexOf('_'));
+      if ( currentFileName !== expectedFileName) {
+        this.addLogMessage('flashingEscMissmatchFileName', { index: esc.index + 1 });
+        throw new LayoutMismatchError(expectedFileName, currentFileName);
+      }
+    }
+  }
 
   /**
    * Get information of a certain ESC
@@ -384,20 +411,43 @@ class FourWay {
       }
 
       if (mcu.class === Arm) {
-        /**
-         * ARM based ESCs are not supported. Do not attempt to read or parse
-         * the EEPROM, just identify AM32 by its bootloader input pin so the
-         * user can be redirected to the AM32 configurator.
-         */
-        const isAm32 = AM32_BOOTLOADER_PINS.includes(info.meta.input);
+        // Assume AM32 to be the default
+        source = am32Source;
 
-        info.layout = null;
-        info.layoutSize = 0;
-        info.settingsArray = [];
-        info.settings = {
-          NAME: isAm32 ? 'AM32' : 'Unknown',
-          LAYOUT_REVISION: 0,
-        };
+        const eepromOffset = mcu.getEepromOffset();
+
+        //Attempt reading filename
+        try {
+          const fileNameRead = await this.read(eepromOffset - 32, 16);
+          const fileName = new TextDecoder().decode(fileNameRead.params.slice(0, fileNameRead.params.indexOf(0x00)));
+
+          if (/[A-Z0-9_]+/.test(fileName)) {
+            info.meta.am32.fileName = fileName;
+            info.meta.am32.mcuType = fileName.slice(fileName.lastIndexOf('_') + 1);
+          }
+        } catch(e) {
+          // Failed reading filename - could be old version of AM32
+        }
+
+        info.layout = source.getLayout();
+        info.layoutSize = source.getLayoutSize();
+
+        const  settingsArray = (await this.read(eepromOffset, info.layoutSize)).params;
+        info.settingsArray = Array.from(settingsArray);
+        info.settings = Convert.arrayToSettingsObject(settingsArray, info.layout);
+
+        /**
+         * If not AM32, then very likely BLHeli_32, even if not - we can't
+         * handle it.
+         */
+        if(!Object.values(am32Eeprom.BOOT_LOADER_PINS).includes(info.meta.input)) {
+          source = null;
+
+          info.settings.NAME = 'Unknown';
+
+          // TODO: Find out if there is a way to reliably identify BLHeli_32
+          // info.settings.NAME = 'BLHeli_32';
+        }
       }
 
       /**
@@ -448,7 +498,7 @@ class FourWay {
         info.defaultSettings = source.getDefaultSettings(layoutRevision);
       }
 
-      if(!info.defaultSettings && !info.isArm) {
+      if(!info.defaultSettings) {
         this.addLogMessage('layoutNotSupported', { revision: layoutRevision });
       }
 
@@ -590,18 +640,47 @@ class FourWay {
         }
       }
 
-      // Arm is not supported, point to the dedicated AM32 configurator
+      // Arm
       if (info.isArm) {
-        make = 'Unknown';
+        if (
+          info.settings.NAME === 'BLHeli_32'
+        ) {
+          let revision = 'Unsupported/Unrecognized';
+          make = 'Unknown';
 
-        if (info.settings.NAME === 'AM32') {
-          info.displayName = 'AM32 (please use https://am32.ca)';
-        } else {
-          info.displayName = 'Unsupported/Unrecognized (ARM)';
+          info.displayName = `${make} - ${info.settings.NAME}, ${revision}`;
+          info.firmwareName = info.settings.NAME;
+
+          info.supported = false;
+        } else if (source instanceof sources.AM32Source) {
+          info.bootloader = {};
+          if(info.meta.input) {
+            info.bootloader.input = info.meta.input;
+            info.bootloader.valid = false;
+          }
+
+          /* Bootloader input pins are limited. If something different is set,
+            * then the user probably has an old fw flashed.
+            */
+          for(let [key, value] of Object.entries(am32Eeprom.BOOT_LOADER_PINS)) {
+            if(value === info.bootloader.input) {
+              info.bootloader.valid = true;
+              info.bootloader.pin = key;
+              info.bootloader.version = info.settings.BOOT_LOADER_REVISION;
+            }
+          }
+
+          info.settings.LAYOUT = info.settings.NAME;
+
+          info.displayName = am32Source.buildDisplayName(info, info.meta.am32.fileName ? info.meta.am32.fileName.slice(0, info.meta.am32.fileName.lastIndexOf('_')) : info.settings.NAME);
+          info.firmwareName = am32Source.getName();
+
+          /**
+           * Identifies the firmware for the unsupported and flashing checks.
+           * String fields are never written back to the ESC.
+           */
+          info.settings.NAME = am32Source.getName();
         }
-
-        info.firmwareName = info.settings.NAME;
-        info.supported = false;
       }
 
       info.make = make;
@@ -670,7 +749,8 @@ class FourWay {
           await this.write(eepromOffset, newSettingsArray);
           readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else if (esc.isArm) {
-          throw new UnknownPlatformError('Writing settings to ARM based ESCs is not supported');
+          await this.write(eepromOffset, newSettingsArray);
+          readbackSettings = (await this.read(eepromOffset, esc.layoutSize)).params;
         } else {
           // write only changed bytes for Atmel
           for (var pos = 0; pos < newSettingsArray.byteLength; pos += 1) {
@@ -800,6 +880,12 @@ class FourWay {
           console.debug('Bluejay layout found');
           settingsDescriptions = bluejaySettingsDescriptions.COMMON;
           individualSettingsDescriptions = bluejaySettingsDescriptions.INDIVIDUAL;
+        } break;
+
+        case am32Eeprom.LAYOUT: {
+          console.debug('AM32 layout found');
+          settingsDescriptions = am32SettingsDescriptions.COMMON;
+          individualSettingsDescriptions = am32SettingsDescriptions.INDIVIDUAL;
         } break;
 
         default: {
@@ -987,6 +1073,37 @@ class FourWay {
       }
     };
 
+    const flashArm = async(flash, mcu) => {
+      const eepromOffset = mcu.getEepromOffset();
+      const pageSize = mcu.getPageSize();
+      const firmwareStart = mcu.getFirmwareStart();
+
+      this.totalBytes = (flash.byteLength - firmwareStart) * 2;
+      this.bytesWritten = 0;
+
+      const message = await this.read(eepromOffset, am32Eeprom.LAYOUT_SIZE);
+      const originalSettings = message.params;
+
+      const eepromInfo = new Uint8Array(17).fill(0x00);
+      eepromInfo.set([originalSettings[1], originalSettings[2]], 1);
+      eepromInfo.set(Convert.asciiToBuffer('FLASH FAIL  '), 5);
+
+      await this.write(eepromOffset, eepromInfo);
+
+      await this.writePages(0x04, 0x40, pageSize, flash);
+      try {
+        await this.verifyPages(0x04, 0x40, pageSize, flash);
+      } catch(error) {
+        this.addLogMessage('flashingVerificationFailed');
+      }
+
+      originalSettings[0] = 0x01;
+      originalSettings.fill(0x00, 3, 5);
+      originalSettings.set(Convert.asciiToBuffer('NOT READY   '), 5);
+
+      await this.write(eepromOffset, originalSettings);
+    };
+
     const flashTarget = async(target, flash) => {
       const startTimestamp = Date.now();
 
@@ -998,6 +1115,14 @@ class FourWay {
       switch (interfaceMode) {
         case MODES.SiLBLB: {
           await flashSiLabs(flash, mcu);
+        } break;
+
+        case MODES.ARMBLB: {
+          await flashArm(flash, mcu);
+
+          // Reset after flashing to update name and settings
+          await this.reset(target);
+          await delay(am32Eeprom.RESET_DELAY);
         } break;
 
         default: throw new UnknownInterfaceError(interfaceMode);
@@ -1034,9 +1159,38 @@ class FourWay {
     };
 
     if(esc.isArm) {
-      this.addLogMessage('am32NotSupported', { index: target + 1 });
+      try {
+        const parsed = Flash.parseHex(hex);
+        const endAddress = parsed.data[parsed.data.length - 1].address + parsed.data[parsed.data.length - 1].bytes;
+        const flash = Flash.fillImage(parsed, endAddress - flashOffset, flashOffset);
 
-      return null;
+        if (!force) {
+          /**
+           * Compare the first 4 bytes of the vector table of the firmware to be flashed
+           * against the currently flashed firmware.
+           *
+           * The vector table will not change between firmware versions, but will be
+           * different for different MCUs
+           */
+          //call initFlash before call to read, or the read will read from the last (the 4th) esc
+          await this.initFlash(target);
+          const newVectorStartBytes = flash.subarray(firmwareStart, firmwareStart + 4);
+          const currentVectorStartBytes = (await this.read(firmwareStart, 4, 10)).params;
+
+          if (!compare(newVectorStartBytes, currentVectorStartBytes)) {
+            throw new InvalidHexFileError('Invalid hex file');
+          }
+        }
+
+        if (firmwareStart) {
+          flash.firmwareStart = firmwareStart;
+        }
+
+        return flashTarget(target, flash);
+      } catch(e) {
+        console.debug('Failed flashing Arm:', e);
+        return null;
+      }
     }
 
     if(esc.isSiLabs) {

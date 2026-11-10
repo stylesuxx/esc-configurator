@@ -1,0 +1,124 @@
+{
+  "layouts": {
+    "Aikon AK32": {
+      "name": "Aikon AK32",
+      "fileName": "AIKONSINGLE_F051"
+    },
+    "AIKON PRO 50": {
+      "name": "AIKON PRO 50",
+      "fileName": "AIKON_PRO_G071"
+    },
+    "AM32 Ref-ESC": {
+      "name": "AM32 Ref-ESC",
+      "fileName": "AM32REF_F051"
+    },
+    "BlPwr-ESC": {
+      "name": "BlPwr-ESC",
+      "fileName": "BLPWR_F051"
+    },
+    "cr hilariesc": {
+      "name": "Crteensy Hilariesc",
+      "fileName": "CRTEENSY_HILARIESC_F051"
+    },
+    "DIATONE GEN": {
+      "name": "Diatone",
+      "fileName": "DIATONE_F051"
+    },
+    "G071 120 DT": {
+      "name": "G071 120 DT",
+      "fileName": "DT120_G071"
+    },
+    "G071 120 64K": {
+      "name": "G071 120 64K",
+      "fileName": "DT120_G071_64K"
+    },
+    "G071 160 64K": {
+      "name": "G071 160 64K",
+      "fileName": "DT160_G071_64K"
+    },
+    "FD6288_PA2": {
+      "name": "FD6288 based",
+      "fileName": "FD6288_F051"
+    },
+    "Flycolor Gen": {
+      "name": "Flycolor Gen",
+      "fileName": "FLYCOLOR_F051"
+    },
+    "G071 TEENSY": {
+      "name": "G071 TEENSY",
+      "fileName": "OPEN_DRAIN_G071"
+    },
+    "G071 TEENSYB": {
+      "name": "G071 TEENSYB",
+      "fileName": "OPEN_DRAIN_B_G071"
+    },
+    "SkyStars KM55": {
+      "name": "SkyStars KM55",
+      "fileName": "SKYSTARS_KM55_E230"
+    },
+    "HGLRC_60A": {
+      "name": "HGLRC 60A",
+      "fileName": "HGLRC_F051"
+    },
+    "FLYCOLOR HV": {
+      "name": "FLYCOLOR HV",
+      "fileName": "HVFLYCOLOR_F051"
+    },
+    "IFlight_50A": {
+      "name": "iFlight 50A",
+      "fileName": "IFLIGHT_F051"
+    },
+    "Blitz 55 G0": {
+      "name": "Blitz 55 G0",
+      "fileName": "IFLIGHT_BLITZ_G_G071"
+    },
+    "MAMBA F40PRO": {
+      "name": "Mamba F40 Pro",
+      "fileName": "MAMBA_F40PRO_F051"
+    },
+    "MAMBA F50PRO": {
+      "name": "Mamba F50 Pro",
+      "fileName": "MAMBA_F50PRO_F051"
+    },
+    "MAMBA F60PRO": {
+      "name": "Mamba F60 Pro",
+      "fileName": "MAMBA_F60PRO_F051"
+    },
+    "Mp6531_Dev": {
+      "name": "MP6531 based",
+      "fileName": "MP6531_F051"
+    },
+    "Neutron G071": {
+      "name": "Neutron G071",
+      "fileName": "NEUTRON_G071"
+    },
+    "SISKIN_PA2": {
+      "name": "Sunrise Siskin",
+      "fileName": "SISKIN_F051"
+    },
+    "SkyStars K55": {
+      "name": "SkyStars K55",
+      "fileName": "SKYSTARS_F051"
+    },
+    "T-MOTOR 45A": {
+      "name": "T-motor 45A",
+      "fileName": "TMOTOR45_F051"
+    },
+    "T-MOTOR 55A": {
+      "name": "T-motor 55A",
+      "fileName": "TMOTOR55_F051"
+    },
+    "T-MOTOR G071": {
+      "name": "T-MOTOR G071",
+      "fileName": "TMOTOR_G071"
+    },
+    "Wraith_32": {
+      "name": "Wraith 32",
+      "fileName": "WRAITH32_F051"
+    },
+    "KM55A_BUTTER": {
+      "name": "SkyStars Butter",
+      "fileName": "SKYSTARS_KM55_E230"
+    }
+  }
+}

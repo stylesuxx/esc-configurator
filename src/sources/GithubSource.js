@@ -3,7 +3,7 @@ import { fetchJsonCached } from '../utils/Fetch';
 
 /**
  * Base class for all sources where releases can be properly feteched from
- * github as is the case for Bluejay.
+ * github as is the case for Bluejay and AM32.
  */
 class GithubSource extends Source {
   /**
