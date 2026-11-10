@@ -19,9 +19,6 @@
   "readEscsFailed": "Lettura ESC fallita",
   "readEsc": "Lettura ESC {{index}}: {{name}}",
   "flashingEsc": "Flashando ESC {{index}}",
-  "flashingEscMissmatchFileNameMissing": "Flash dell' ESC {{index}} fallito - Il nome del file non è stato trovato nel file hex, per favore controlla la versione del file hex!",
-  "flashingEscMissmatchMcuType": "Flash dell' ESC {{index}} fallito - Nessun tipo di MCU uguale trovata, per favore controlla il file hex!",
-  "flashingEscMissmatchFileName": "Flash dell' ESC {{index}} fallito - File del firmware ESC differente, rispetto a quello della flash nell'ESC!",
   "flashingEscFailed": "Flash dell' ESC {{index}} fallito - controlla il tipo di file",
   "fetchingFilesFailed": "Recupero file per {{name}} fallito",
   "readEscFailed": "Lettura ESC {{index}} fallita",
@@ -44,5 +41,6 @@
   "timingMismatch": "Il firmware è etichettato come {{tagged}} ma sembra essere {{actual}}",
   "browser": "{{name}} ({{version}}) su {{os}}",
   "dumpingEsc": "Dumping ESC {{index}}",
-  "flashingVerificationFailed": "Verifica fallita - i dati potrebbero non essere stati scritti correttamente"
+  "flashingVerificationFailed": "Verifica fallita - i dati potrebbero non essere stati scritti correttamente",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }
