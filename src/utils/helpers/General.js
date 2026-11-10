@@ -69,7 +69,15 @@ function isValidFlash(mcu, flash) {
  */
 async function retry(func, maxRetries, iterationDelay = 0) {
   function wrapped() {
-    return new Promise((resolve,reject) => func(resolve, reject));
+    return new Promise((resolve, reject) => {
+      /**
+       * func may be an async function: if it throws (for example a read that
+       * times out because the ESC lost power during flashing), it rejects its
+       * own promise. Pass that rejection on, otherwise this promise never
+       * settles and the caller waits forever.
+       */
+      Promise.resolve(func(resolve, reject)).catch(reject);
+    });
   }
 
   const process = async(resolve, reject) => {
