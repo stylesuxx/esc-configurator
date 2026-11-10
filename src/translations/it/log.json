@@ -42,5 +42,5 @@
   "browser": "{{name}} ({{version}}) su {{os}}",
   "dumpingEsc": "Dumping ESC {{index}}",
   "flashingVerificationFailed": "Verifica fallita - i dati potrebbero non essere stati scritti correttamente",
-  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
+  "am32NotSupported": "ESC {{index}} si basa su ARM (AM32) e non può più essere flashato qui. Si prega di usare https://am32.ca"
 }
