@@ -112,11 +112,22 @@ class PortClosedError extends Error {
   }
 }
 
+/**
+ * The flash made no progress for too long: it is given up.
+ */
+class FlashStalledError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'FlashStalledError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   ConversionError,
   EscInitError,
   EscLockedError,
+  FlashStalledError,
   InvalidHexFileError,
   LayoutMismatchError,
   MethodNotImplementedError,

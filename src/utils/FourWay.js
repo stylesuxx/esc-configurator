@@ -3,6 +3,7 @@ import Flash from './helpers/Flash';
 import {
   BufferLengthMismatchError,
   EscInitError,
+  FlashStalledError,
   InvalidHexFileError,
   LayoutMismatchError,
   MessageNotOkError,
@@ -58,6 +59,9 @@ const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
 const am32Eeprom = am32Source.getEeprom();
 const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
+// A flash that makes no progress for this long is given up
+const FLASH_STALL_MS = 30000;
+
 /**
  * @typedef Response
  * @property {number} ack
@@ -82,6 +86,10 @@ class FourWay {
     this.totalBytes = 0;
     this.bytesWritten = 0;
     this.progressCallback = null;
+
+    this.flashAbort = null;
+    this.flashAbortPromise = null;
+    this.flashLastActivity = 0;
 
     this.logCallback = null;
     this.packetErrorsCallback = null;
@@ -276,6 +284,11 @@ class FourWay {
       }
 
       const processMessage = async(resolve, reject) => {
+        // The flash was given up (no progress): nothing more is sent
+        if (this.flashAbort) {
+          return reject(this.flashAbort);
+        }
+
         /**
          * Immediately resolve the exit command since it will not produce any
          * processable output.
@@ -286,8 +299,14 @@ class FourWay {
             return resolve();
           }
 
-          const msg = await this.serial(message, this.parseMessage);
+          const msg = await this.untilFlashAbort(this.serial(message, this.parseMessage));
           if (msg && msg.ack === ACK.ACK_OK) {
+            // An answer of the ESC is progress for a flash in progress (the
+            // keep alive is answered by the flight controller, not the ESC)
+            if (command !== COMMANDS.cmd_InterfaceTestAlive) {
+              this.flashLastActivity = Date.now();
+            }
+
             if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
               const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
               console.debug(`RX: ${FourWayHelper.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
@@ -836,7 +855,13 @@ class FourWay {
   }
 
   /**
-   * Write hex to MCU
+   * Flash a hex file to an ESC, giving it up when nothing progresses for
+   * FLASH_STALL_MS. When the power of the ESC is cut during a flash, every
+   * command is retried with a growing delay, and the retries stack up: the
+   * flash could wait for many minutes. Progress is any answer of the ESC, or
+   * the progress bar moving: a healthy flash, even a slow one, gets an answer
+   * at least every second. The ESC is then left as after any failed flash:
+   * marked **FLASH*FAILED** and recoverable by flashing it again.
    *
    * @param {number} target
    * @param {object} esc
@@ -847,6 +872,69 @@ class FourWay {
    * @returns
    */
   async writeHex(target, esc, hex, force, migration, cbProgress) {
+    this.flashLastActivity = Date.now();
+    const progress = (value) => {
+      this.flashLastActivity = Date.now();
+      if(cbProgress) {
+        cbProgress(value);
+      }
+    };
+
+    this.flashAbort = null;
+    let abort = null;
+    this.flashAbortPromise = new Promise((resolve, reject) => {
+      abort = reject;
+    });
+    // Only rejected when the flash is given up, by then awaited if at all
+    this.flashAbortPromise.catch(() => {});
+
+    const watch = setInterval(() => {
+      if(!this.flashAbort && Date.now() - this.flashLastActivity > FLASH_STALL_MS) {
+        this.flashAbort = new FlashStalledError(`No progress for ${FLASH_STALL_MS} ms`);
+        this.addLogMessage('flashingEscStalled', {
+          index: target + 1,
+          seconds: Math.round(FLASH_STALL_MS / 1000),
+        });
+        abort(this.flashAbort);
+      }
+    }, 1000);
+
+    try {
+      return await this.writeHexInner(target, esc, hex, force, migration, progress);
+    } finally {
+      clearInterval(watch);
+      this.flashAbort = null;
+      this.flashAbortPromise = null;
+    }
+  }
+
+  /**
+   * The promise, or a rejection as soon as the flash in progress is given up:
+   * a command still waiting for an answer then stops waiting.
+   *
+   * @param {Promise} promise
+   * @returns {Promise}
+   */
+  untilFlashAbort(promise) {
+    if(!this.flashAbortPromise) {
+      return promise;
+    }
+
+    return Promise.race([promise, this.flashAbortPromise]);
+  }
+
+  /**
+   * Write hex to MCU
+   *
+   * @param {number} target
+   * @param {object} esc
+   * @param {object} hex
+   * @param {boolean} force
+   * @param {string} migration
+   * @param {function} cbProgress
+   * @returns
+   */
+  async writeHexInner(target, esc, hex, force, migration, cbProgress) {
     const {
       interfaceMode,
       signature,
