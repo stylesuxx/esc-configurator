@@ -222,27 +222,23 @@ class App extends Component {
     // Auto-detect interface: try direct Arduino 4-way at 38400 first,
     // fall back to FC passthrough at the user-selected baud rate
 
-    let isFourWay = false;
-
     try {
-      isFourWay = await this.serial.openDirect();
-    } catch (e) {
-      console.debug(e);
-      try {
-        await this.serial.close();
-      } catch(e2) {
-        console.debug(e2);
-      }
-    }
-
-    if (isFourWay) {
+      await this.serial.openDirect();
       this.serial.setLogCallback(this.addLogMessage);
       this.addLogMessage('portOpened');
       this.progressReferences = [];
 
       store.dispatch(setOpen(true));
       store.dispatch(setFourWay(true));
-    } else {
+    } catch (e) {
+      console.debug(e);
+
+      try {
+        await this.serial.close();
+      } catch(e2) {
+        console.debug(e2);
+      }
+
       // Direct 4-way failed - try FC passthrough at user-selected baud rate
       try {
         await this.serial.open(store.getState().serial.baudRate);
@@ -479,17 +475,16 @@ class App extends Component {
   handleReadEscs = async() => {
     const { escs } = store.getState();
     const individual = [];
-    const isDirect4Way = this.serial.isDirect4Way;
-
     let fourWay = true;
     let connected = 0;
 
     store.dispatch(setReading(true));
 
-    if (isDirect4Way) {
+    if (this.serial.isDirect4Way) {
       try {
         await this.serial.startFourWayInterface();
 
+        // Wait for Arduino to reset and be ready to accept 4w-if commands
         await delay(1200);
 
         // Direct 4-way interface: read only ESC index 0 (single ESC directly connected)
@@ -547,7 +542,7 @@ class App extends Component {
       }
     }
 
-    if (isDirect4Way && connected === 0) {
+    if (this.serial.isDirect4Way && connected === 0) {
       this.addLogMessage('direct4WayNoEsc');
     }
 
@@ -561,7 +556,7 @@ class App extends Component {
     }
 
     // Read settings for each ESC (FC passthrough path only - direct-4wif already read them)
-    if (!isDirect4Way) {
+    if (!this.serial.isDirect4Way) {
       for (let i = 0; i < connected; i += 1) {
         try {
           const settings = await this.handleReadEsc(i);

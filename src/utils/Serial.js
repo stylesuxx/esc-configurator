@@ -180,9 +180,8 @@ class Serial {
    * Open a direct 4-way interface connection to an Arduino bridge (no FC).
    * Baud rate is locked to 38400 per BLHeli Suite 4w-if spec.
    * Interface mode is locked to SiLBLB.
-   * Returns true if a 4-way device responded, false if not (skip to FC passthrough).
    */
-  async openDirect(): Promise<boolean> {
+  async openDirect() {
     const baudRate = 38400;
     this.baudRate = baudRate;
 
@@ -196,7 +195,6 @@ class Serial {
     }
 
     this.fourWay = new FourWay(this.executeCommand);
-    this.isDirect4Way = true;
 
     this.running = true;
     this.startReader();
@@ -208,39 +206,25 @@ class Serial {
     // Step 1: Send 4 x 0xFF handshake (per BLHeli Suite 4w-if spec)
     await this.sendHandshake();
 
-    // Step 2: Quick check - cmd_InterfaceGetName (0x32). Retry a couple times
-    // in case the first attempt misses the Arduino boot window. If no valid
-    // response, there's no Arduino 4-way bridge - bail early and try FC passthrough.
-    let fourWayDetected = false;
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      try {
-        await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceGetName, [0], 0, 1);
-        fourWayDetected = true;
-        break;
-      } catch (e) {
-        console.debug('[4WAY-DEBUG] cmd_InterfaceGetName attempt failed:', e.message);
-      }
-    }
-
-    if (!fourWayDetected) {
-      console.debug('[4WAY-DEBUG] cmd_InterfaceGetName failed - no 4-way device');
-      await this.close();
-      return false;
-    }
-
-    // Arduino 4-way detected - continue with full setup
-    // Step 3: cmd_InterfaceTestAlive (0x30) - per BLHeli Suite startup sequence
+    // Step 2: cmd_InterfaceTestAlive (0x30) - per BLHeli Suite startup sequence
     try {
       await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
     } catch (e) {
       console.debug('[4WAY-DEBUG] cmd_InterfaceTestAlive failed:', e.message);
     }
 
-    // Step 4: cmd_InterfaceGetProtocolVersion (0x31) - per BLHeli Suite startup sequence
+    // Step 3: cmd_InterfaceGetProtocolVersion (0x31) - per BLHeli Suite startup sequence
     try {
       await this.fourWay.sendMessagePromised(COMMANDS.cmd_ProtocolGetVersion);
     } catch (e) {
       console.debug('[4WAY-DEBUG] cmd_InterfaceGetProtocolVersion failed:', e.message);
+    }
+
+    // Step 4: cmd_InterfaceGetName (0x32) - per BLHeli Suite startup sequence
+    try {
+      await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceGetName);
+    } catch (e) {
+      console.debug('[4WAY-DEBUG] cmd_InterfaceGetName failed:', e.message);
     }
 
     // Step 5: cmd_InterfaceGetVersion (0x33) - per BLHeli Suite startup sequence
@@ -263,8 +247,6 @@ class Serial {
     // responds to cmd_DeviceInitFlash on all channels even without ESCs connected.
     // ESC detection is done in handleReadEscs() by reading settings per channel.
     this.detectedESCs = null;
-
-    return true;
   }
 
   /**
@@ -283,24 +265,13 @@ class Serial {
    */
   async disconnect() {
     this.running = false;
-
-    if(this.reader) {
-      try { this.reader.cancel(); } catch(e) { console.debug(e); }
-      try { await this.reader.releaseLock(); } catch(e) { console.debug(e); }
-      this.reader = null;
-    }
-
-    if(this.writer) {
-      try { await this.writer.releaseLock(); } catch(e) { console.debug(e); }
-      this.writer = null;
-    }
+    this.reader = null;
+    this.writer = null;
 
     if(this.fourWay) {
       try {
         await this.fourWay.exit();
-      } catch(e) {
-        // The writer is gone, so the exit command can not be sent - exit still
-        // stops the keep alive interval.
+      } catch (e) {
         console.debug('Four way exit failed during disconnect:', e.message);
       }
     }
@@ -340,7 +311,11 @@ class Serial {
 
     // Attempt to stop motors
     if(this.msp) {
-      try { await this.stopAllMotors(); } catch(e) { console.debug(e); }
+      try {
+        await this.stopAllMotors();
+      } catch(e) {
+        console.debug(e);
+      }
     }
 
     await this.disconnect();

@@ -62,7 +62,7 @@
     },
     "extendedDebug": {
       "type": "boolean",
-      "value": true
+      "value": false
     },
     "debugMode": {
       "type": "boolean",
