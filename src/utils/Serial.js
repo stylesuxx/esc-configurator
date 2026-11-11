@@ -155,6 +155,10 @@ class Serial {
       throw new Error('Could not open serial port');
     }
 
+    // Nothing from an earlier connection is kept: no waiting command, no
+    // data received before
+    this.qp.clear(new PortClosedError('Serial port is closed'));
+
     this.msp = new Msp(this.executeCommand);
     this.fourWay = new FourWay(this.executeCommand);
 
@@ -170,6 +174,7 @@ class Serial {
     this.running = false;
     this.reader = null;
     this.writer = null;
+    this.qp.clear(new PortClosedError('Serial port is closed'));
 
     if(this.fourWay) {
       try {
@@ -185,12 +190,21 @@ class Serial {
    * Attmept to cleanly close the serial connection
    */
   async close() {
+    // Attempt to stop motors while the reader still runs: the stop needs the
+    // answer to a features request.
+    if(this.msp) {
+      try {
+        await this.stopAllMotors();
+      } catch(e) {
+        // Port already gone
+      }
+    }
+
     this.running = false;
 
-    // Attempt to stop motors
-    if(this.msp) {
-      await this.stopAllMotors();
-    }
+    // No answer will be read any more: the commands still waiting are
+    // cancelled now instead of timing out after the port is closed.
+    this.qp.clear(new PortClosedError('Serial port is closed'));
 
     if(this.reader) {
       this.reader.cancel();

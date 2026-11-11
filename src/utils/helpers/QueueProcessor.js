@@ -61,6 +61,24 @@ class QueueProcessor {
   }
 
   /**
+   * Drop every command, the current one and the waiting ones, and the data
+   * received so far: each of them is rejected with the given error. Used when
+   * the port closes, so that no answer is awaited from a closed port and
+   * nothing is left for the next connection.
+   *
+   * @param {Error} error
+   */
+  clear(error) {
+    const dropped = [this.currentCommand, ...this.commands].filter(Boolean);
+    dropped.forEach((command) => clearTimeout(command.timeoutFunct));
+
+    this.commands = [];
+    this.cleanUp();
+
+    dropped.forEach((command) => command.rejectCallback(error));
+  }
+
+  /**
    * Resolve timeout by rejecting the command, clearing the buffer and
    * resetetting thestates
    */
@@ -110,7 +128,7 @@ class QueueProcessor {
     } catch(e) {
       clearTimeout(command.timeoutFunct);
 
-      // Already timed out while transmitting
+      // Already timed out or dropped while transmitting
       if(this.currentCommand !== command) {
         return;
       }
@@ -149,16 +167,24 @@ class QueueProcessor {
       this.processing = true;
 
       // this.currentCommand available or just set
+      const command = this.currentCommand;
       const currentBuffer = this.buffer;
       this.buffer = new Uint8Array();
       this.newData = false;
 
       const promise = new Promise((resolve, reject) => {
-        this.currentCommand.receive(currentBuffer, resolve, reject);
+        command.receive(currentBuffer, resolve, reject);
       });
 
       try {
         const result = await promise;
+
+        // Dropped meanwhile (port closed): the answer is not used
+        if(this.currentCommand !== command) {
+          this.processing = false;
+
+          return;
+        }
 
         clearTimeout(this.currentCommand.timeoutFunct);
         this.currentCommand.resolveCallback(result);
@@ -169,6 +195,12 @@ class QueueProcessor {
 
         this.processCommands();
       } catch(e) {
+        if(this.currentCommand !== command) {
+          this.processing = false;
+
+          return;
+        }
+
         if(e instanceof NotEnoughDataError) {
           /**
            * We don't have enough data yet, we put it back on the buffer and

@@ -60,6 +60,11 @@ import {
   setIndividualAtIndex,
 } from './escsSlice';
 
+// A late answer to the API version request is asked again before the
+// flight controller is taken for being left in passthrough
+const API_VERSION_ATTEMPTS = 3;
+const API_VERSION_RETRY_DELAY_MS = 250;
+
 class App extends Component {
   static propTypes = { serial: PropTypes.shape({ checked: PropTypes.bool.isRequired }).isRequired };
 
@@ -201,6 +206,26 @@ class App extends Component {
     this.addLogMessage('portChanged');
   };
 
+  /**
+   * Ask for the API version, again after a short pause when the flight
+   * controller does not answer in time: a single late answer (just after a
+   * reconnection for example) must not be taken for a flight controller left
+   * in passthrough.
+   */
+  getApiVersion = async() => {
+    for(let attempt = 1; ; attempt += 1) {
+      try {
+        return await this.serial.getApiVersion();
+      } catch(e) {
+        if(!(e instanceof TimeoutError) || attempt >= API_VERSION_ATTEMPTS) {
+          throw e;
+        }
+
+        await delay(API_VERSION_RETRY_DELAY_MS);
+      }
+    }
+  };
+
   handleConnect = async(e) => {
     e.preventDefault();
 
@@ -238,7 +263,7 @@ class App extends Component {
       let apiVersion = null;
 
       try {
-        apiVersion = await this.serial.getApiVersion();
+        apiVersion = await this.getApiVersion();
       } catch(e) {
         if (e instanceof TimeoutError) {
           let hasResets = false;
@@ -341,7 +366,8 @@ class App extends Component {
       }
       await this.serial.exitFourWayInterface();
 
-      this.serial.close();
+      // The port is closed when "closedPort" is logged
+      await this.serial.close();
     }
 
     this.lastConnected = 0;
