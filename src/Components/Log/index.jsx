@@ -13,6 +13,7 @@ import {
   selectLog,
   selectLogTimestamped,
 } from './logSlice';
+import { selectIsFlashing } from '../../Containers/App/stateSlice';
 
 import './style.scss';
 
@@ -21,6 +22,7 @@ function Log() {
   const dispatch = useDispatch();
   const messages = useSelector(selectLogTimestamped);
   const log = useSelector(selectLog);
+  const isFlashing = useSelector(selectIsFlashing);
   const [ expanded, setExpanded] = useState(false);
 
   const messageElements = messages.slice(0).reverse()
@@ -54,8 +56,9 @@ function Log() {
     document.body.appendChild(element);
     element.click();
 
-    dispatch(clearLog());
-  }, [dispatch, log]);
+    // The log is kept after saving it, so that a later save still holds the
+    // whole session
+  }, [log]);
 
   const handleClearLog = useCallback(() => {
     dispatch(clearLog());
@@ -75,7 +78,9 @@ function Log() {
         </button>
 
         <button
+          disabled={isFlashing}
           onClick={handleClearLog}
+          title={isFlashing ? t('escButtonClearLogFlashing') : undefined}
           type="button"
         >
           {t('escButtonClearLog')}
