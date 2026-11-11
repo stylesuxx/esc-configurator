@@ -222,23 +222,27 @@ class App extends Component {
     // Auto-detect interface: try direct Arduino 4-way at 38400 first,
     // fall back to FC passthrough at the user-selected baud rate
 
+    let isFourWay = false;
+
     try {
-      await this.serial.openDirect();
+      isFourWay = await this.serial.openDirect();
+    } catch (e) {
+      console.debug(e);
+      try {
+        await this.serial.close();
+      } catch(e2) {
+        console.debug(e2);
+      }
+    }
+
+    if (isFourWay) {
       this.serial.setLogCallback(this.addLogMessage);
       this.addLogMessage('portOpened');
       this.progressReferences = [];
 
       store.dispatch(setOpen(true));
       store.dispatch(setFourWay(true));
-    } catch (e) {
-      console.debug(e);
-
-      try {
-        await this.serial.close();
-      } catch(e2) {
-        console.debug(e2);
-      }
-
+    } else {
       // Direct 4-way failed - try FC passthrough at user-selected baud rate
       try {
         await this.serial.open(store.getState().serial.baudRate);

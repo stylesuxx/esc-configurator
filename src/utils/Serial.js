@@ -180,8 +180,9 @@ class Serial {
    * Open a direct 4-way interface connection to an Arduino bridge (no FC).
    * Baud rate is locked to 38400 per BLHeli Suite 4w-if spec.
    * Interface mode is locked to SiLBLB.
+   * Returns true if a 4-way device responded, false if not (skip to FC passthrough).
    */
-  async openDirect() {
+  async openDirect(): Promise<boolean> {
     const baudRate = 38400;
     this.baudRate = baudRate;
 
@@ -206,25 +207,30 @@ class Serial {
     // Step 1: Send 4 x 0xFF handshake (per BLHeli Suite 4w-if spec)
     await this.sendHandshake();
 
-    // Step 2: cmd_InterfaceTestAlive (0x30) - per BLHeli Suite startup sequence
+    // Step 2: Quick check - cmd_InterfaceGetName (0x32). Ping exactly 2 times
+    // to detect an Arduino 4-way bridge. If no valid response, bail early and
+    // try FC passthrough - don't waste time on all the other setup commands.
+    try {
+      await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceGetName, [0], 0, 2);
+    } catch (e) {
+      console.debug('[4WAY-DEBUG] cmd_InterfaceGetName failed - no 4-way device:', e.message);
+      await this.close();
+      return false;
+    }
+
+    // Arduino 4-way detected - continue with full setup
+    // Step 3: cmd_InterfaceTestAlive (0x30) - per BLHeli Suite startup sequence
     try {
       await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceTestAlive);
     } catch (e) {
       console.debug('[4WAY-DEBUG] cmd_InterfaceTestAlive failed:', e.message);
     }
 
-    // Step 3: cmd_InterfaceGetProtocolVersion (0x31) - per BLHeli Suite startup sequence
+    // Step 4: cmd_InterfaceGetProtocolVersion (0x31) - per BLHeli Suite startup sequence
     try {
       await this.fourWay.sendMessagePromised(COMMANDS.cmd_ProtocolGetVersion);
     } catch (e) {
       console.debug('[4WAY-DEBUG] cmd_InterfaceGetProtocolVersion failed:', e.message);
-    }
-
-    // Step 4: cmd_InterfaceGetName (0x32) - per BLHeli Suite startup sequence
-    try {
-      await this.fourWay.sendMessagePromised(COMMANDS.cmd_InterfaceGetName);
-    } catch (e) {
-      console.debug('[4WAY-DEBUG] cmd_InterfaceGetName failed:', e.message);
     }
 
     // Step 5: cmd_InterfaceGetVersion (0x33) - per BLHeli Suite startup sequence
@@ -247,6 +253,8 @@ class Serial {
     // responds to cmd_DeviceInitFlash on all channels even without ESCs connected.
     // ESC detection is done in handleReadEscs() by reading settings per channel.
     this.detectedESCs = null;
+
+    return true;
   }
 
   /**
@@ -265,8 +273,17 @@ class Serial {
    */
   async disconnect() {
     this.running = false;
-    this.reader = null;
-    this.writer = null;
+
+    if(this.reader) {
+      try { this.reader.cancel(); } catch(e) { console.debug(e); }
+      try { await this.reader.releaseLock(); } catch(e) { console.debug(e); }
+      this.reader = null;
+    }
+
+    if(this.writer) {
+      try { await this.writer.releaseLock(); } catch(e) { console.debug(e); }
+      this.writer = null;
+    }
 
     if(this.fourWay) {
       try {
