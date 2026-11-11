@@ -190,3 +190,60 @@ describe('FourWay', () => {
     await expect(fourWay.testAlive()).resolves.toMatchObject(serial());
   });
 });
+
+describe('FourWay flash verification when the ESC loses power', () => {
+  it('should reject instead of waiting forever', async() => {
+    const FourWayClass = require('../FourWay').default;
+    const fourWay = new FourWayClass(jest.fn());
+    fourWay.read = jest.fn(async() => {
+      throw new Error('Timed out after 1000ms');
+    });
+    fourWay.progressCallback = jest.fn();
+
+    const data = new Uint8Array(0x200);
+    const outcome = await Promise.race([
+      fourWay.verifyPages(0, 1, 0x200, data).then(() => 'resolved', () => 'rejected'),
+      new Promise((resolve) => setTimeout(() => resolve('stuck'), 3000)),
+    ]);
+
+    expect(outcome).toEqual('rejected');
+  });
+});
+
+describe('FourWay writeHex when the ESC loses power', () => {
+  it('should resolve to null when read() fails', async() => {
+    const { TextDecoder } = require('util');
+    global.TextDecoder = TextDecoder;
+
+    const fs = require('fs');
+    const hex = fs.readFileSync(`${__dirname}/../helpers/__tests__/valid.hex`).toString();
+
+    const FourWayClass = require('../FourWay').default;
+    const fourWay = new FourWayClass(jest.fn());
+    fourWay.logCallback = jest.fn();
+
+    // EFM8BB21 (signature 0xE8B2) answering the init, then losing power
+    fourWay.initFlash = jest.fn(async() => ({ params: [0xB2, 0xE8, 0x00, 0x01] }));
+    fourWay.read = jest.fn(async() => {
+      throw new Error('Timed out after 1000ms');
+    });
+    fourWay.write = jest.fn(async() => ({}));
+    fourWay.erasePage = jest.fn(async() => ({}));
+
+    const esc = {
+      firmwareName: 'Bluejay',
+      isArm: false,
+      isSiLabs: true,
+      meta: {
+        interfaceMode: 1,
+        signature: 0xE8B2,
+      },
+      settings: {},
+    };
+
+    // The caller shows "Failed flashing ESC" and enables the buttons again
+    // only when it gets null
+    await expect(fourWay.writeHex(0, esc, hex, false, false, jest.fn())).resolves.toBeNull();
+    expect(fourWay.read).toHaveBeenCalled();
+  });
+});

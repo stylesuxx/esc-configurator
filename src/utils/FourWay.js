@@ -1186,7 +1186,8 @@ class FourWay {
           flash.firmwareStart = firmwareStart;
         }
 
-        return flashTarget(target, flash);
+        // Awaited, so that a failing flash is caught below
+        return await flashTarget(target, flash);
       } catch(e) {
         console.debug('Failed flashing Arm:', e);
         return null;
@@ -1213,7 +1214,8 @@ class FourWay {
           flash.firmwareStart = firmwareStart;
         }
 
-        return flashTarget(target, flash);
+        // Awaited, so that a failing flash is caught below
+        return await flashTarget(target, flash);
       } catch(e) {
         console.debug('Failed flashing SiLabs:', e);
         return null;
