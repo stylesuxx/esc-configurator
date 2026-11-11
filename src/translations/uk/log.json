@@ -25,6 +25,7 @@
   "resetEscFailed": "Не вдалося скинути налаштування регулятора обертів {{index}}",
   "resetEscFailedPowerCycle": "Не вдалося скинути налаштування регулятора обертів {{index}} - перепідключіть живлення і повторіть спробу",
   "writeSettingsFailed": "Не вдалося записати налаштування до регулятора обертів {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "Не вдалося відновити дефолтні налаштування для регулятора обертів {{index}}",
   "getFileFailed": "Не вдалося отримати файл для прошивки.",
   "layoutNotSupported": "Ревізія компонування {{revision}} ще не підтримується",
