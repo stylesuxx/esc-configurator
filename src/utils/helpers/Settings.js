@@ -158,7 +158,41 @@ const supportsLeds = (esc) => {
   return led.visibleIf ? led.visibleIf(esc.individualSettings || {}) : true;
 };
 
+/**
+ * Names of the common settings described for this ESC (its firmware and
+ * layout revision), or null when there is no description for it.
+ *
+ * @param {object} esc
+ * @returns {Array<string>|null}
+ */
+const getCommonSettingNames = (esc) => {
+  if(!esc || !esc.firmwareName || !esc.layoutRevision) {
+    return null;
+  }
+
+  const source = getSource(esc.firmwareName);
+  const descriptions = source ? source.getCommonSettings(esc.layoutRevision) : null;
+  if(!descriptions || !Array.isArray(descriptions.base)) {
+    return null;
+  }
+
+  return descriptions.base.map((description) => description.name);
+};
+
+/**
+ * ESC whose last flash failed: its settings hold the **FLASH*FAILED** mark
+ * and values read with the wrong layout. They must not be written, to it or
+ * to the other ESCs, until it is flashed again.
+ *
+ * @param {object} esc
+ * @returns {boolean}
+ */
+const FLASH_FAILED_NAME = '**FLASH*FAILED**';
+const isFlashFailed = (esc) => Boolean(esc && esc.settings && esc.settings.NAME === FLASH_FAILED_NAME);
+
 export {
+  getCommonSettingNames,
+  isFlashFailed,
   getIndividualSettings,
   getIndividualSettingsDescriptions,
   getMaster,

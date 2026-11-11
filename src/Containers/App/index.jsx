@@ -9,7 +9,11 @@ import UAParser from 'ua-parser-js';
 
 import { fetchHexCached } from '../../utils/Fetch';
 import { TimeoutError } from '../../utils/helpers/QueueProcessor';
-import { getMasterSettings } from '../../utils/helpers/Settings';
+import {
+  getCommonSettingNames,
+  getMasterSettings,
+  isFlashFailed,
+} from '../../utils/helpers/Settings';
 import {
   delay,
   getAppSetting,
@@ -402,8 +406,25 @@ class App extends Component {
     store.dispatch(setFlashing(false));
   };
 
+  /**
+   * True (with a message) when an ESC is in FLASH*FAILED: nothing may be
+   * written to any ESC then, the common settings read from it being wrong.
+   */
+  isWriteBlockedByFailedFlash = () => {
+    const failed = store.getState().escs.individual.filter((esc) => isFlashFailed(esc));
+    failed.forEach((esc) => {
+      this.addLogMessage('writeSettingsBlockedFlashFailed', { index: esc.index + 1 });
+    });
+
+    return failed.length > 0;
+  };
+
   handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
+
+    if(this.isWriteBlockedByFailedFlash()) {
+      return;
+    }
 
     store.dispatch(setWriting(true));
     const { escs } = store.getState();
@@ -553,8 +574,43 @@ class App extends Component {
     store.dispatch(setMaster(master));
   };
 
+  /**
+   * Settings written to an ESC: its own, overwritten by the common settings
+   * of the first ESC and by its individual settings. Only the common settings
+   * described for this ESC are taken from the first ESC: other values stay
+   * as they are, for example the PWM frequency of Bluejay 0.19, which only
+   * displays the frequency built into the flashed file.
+   *
+   * @param {object} esc
+   * @param {object} master
+   * @returns {object}
+   */
+  getMergedSettings = (esc, master) => {
+    const commonEscSettings = esc.settings;
+    let commonOverrides = {};
+    if(getAppSetting('disableCommon')) {
+      commonOverrides = commonEscSettings;
+    }
+
+    const names = getCommonSettingNames(esc);
+    const common = names ?
+      Object.fromEntries(Object.entries(master || {}).filter(([key]) => names.includes(key))) :
+      master;
+
+    return {
+      ...commonEscSettings,
+      ...common,
+      ...commonOverrides,
+      ...esc.individualSettings,
+    };
+  };
+
   handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
+
+    if(this.isWriteBlockedByFailedFlash()) {
+      return;
+    }
 
     store.dispatch(setWriting(true));
     const state = store.getState();
@@ -570,21 +626,7 @@ class App extends Component {
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
       const target = esc.index;
-      const commonEscSettings = esc.settings;
-      const masterEscSettings = isSupported ? escs.master : {};
-      const individualEscSettings = esc.individualSettings;
-
-      let commonOverrides = {};
-      if(getAppSetting('disableCommon')) {
-        commonOverrides = commonEscSettings;
-      }
-
-      const mergedSettings = {
-        ...commonEscSettings,
-        ...masterEscSettings,
-        ...commonOverrides,
-        ...individualEscSettings,
-      };
+      const mergedSettings = this.getMergedSettings(esc, isSupported ? escs.master : {});
 
       try {
         await this.serial.writeSettings(target, esc, mergedSettings);
@@ -784,4 +826,7 @@ function mapStateToProps(state) {
   return { serial };
 }
 
+export {
+  App,
+};
 export default connect(mapStateToProps)(App);
