@@ -25,6 +25,7 @@
   "resetEscFailed": "Échec de la réinitialisation de l'ESC {{index}}",
   "resetEscFailedPowerCycle": "Échec de la réinitialisation de l'ESC {{index}} - Redémarrer celui-ci et réessayez",
   "writeSettingsFailed": "Échec de l'écriture des paramètres dans l'ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "Échec de la restauration des paramètres par défaut de l'ESC {{index}}",
   "getFileFailed": "Impossible d'ouvrir le fichier pour l'écriture.",
   "layoutNotSupported": "La révision du Layout {{revision}} n'est pas encore supportée",
