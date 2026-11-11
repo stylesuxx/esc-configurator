@@ -592,22 +592,32 @@ class App extends Component {
    */
   getMergedSettings = (esc, master) => {
     const commonEscSettings = esc.settings;
+    const individualEscSettings = esc.individualSettings;
+
+    let masterEscSettings = master;
+    const names = getCommonSettingNames(esc);
+    if(names) {
+      masterEscSettings = {};
+      for(const name of names) {
+        if(master && name in master) {
+          masterEscSettings[name] = master[name];
+        }
+      }
+    }
+
     let commonOverrides = {};
     if(getAppSetting('disableCommon')) {
       commonOverrides = commonEscSettings;
     }
 
-    const names = getCommonSettingNames(esc);
-    const common = names ?
-      Object.fromEntries(Object.entries(master || {}).filter(([key]) => names.includes(key))) :
-      master;
-
-    return {
+    const mergedSettings = {
       ...commonEscSettings,
-      ...common,
+      ...masterEscSettings,
       ...commonOverrides,
-      ...esc.individualSettings,
+      ...individualEscSettings,
     };
+
+    return mergedSettings;
   };
 
   handleWriteSettings = async() => {

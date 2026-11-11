@@ -91,7 +91,13 @@ const FLASH_FAILED_NAME = '**FLASH*FAILED**';
  * @param {object} esc
  * @returns {boolean}
  */
-const isFlashFailed = (esc) => Boolean(esc && esc.settings && esc.settings.NAME === FLASH_FAILED_NAME);
+const isFlashFailed = (esc) => {
+  if(!esc || !esc.settings) {
+    return false;
+  }
+
+  return esc.settings.NAME === FLASH_FAILED_NAME;
+};
 
 /**
  * First available ESC whose settings can be trusted: an ESC marked
@@ -185,7 +191,11 @@ const getCommonSettingNames = (esc) => {
   }
 
   const source = getSource(esc.firmwareName);
-  const descriptions = source ? source.getCommonSettings(esc.layoutRevision) : null;
+  if(!source) {
+    return null;
+  }
+
+  const descriptions = source.getCommonSettings(esc.layoutRevision);
   if(!descriptions || !Array.isArray(descriptions.base)) {
     return null;
   }
