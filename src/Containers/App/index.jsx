@@ -407,30 +407,35 @@ class App extends Component {
   };
 
   /**
-   * True (with a message) when an ESC is in FLASH*FAILED: nothing may be
-   * written to any ESC then, the common settings read from it being wrong.
+   * True (with a message) for an ESC marked FLASH*FAILED: its settings are
+   * read with the wrong layout, so nothing is written to it until it is
+   * flashed again. The healthy ESCs are still written.
+   *
+   * @param {object} esc
+   * @returns {boolean}
    */
-  isWriteBlockedByFailedFlash = () => {
-    const failed = store.getState().escs.individual.filter((esc) => isFlashFailed(esc));
-    failed.forEach((esc) => {
-      this.addLogMessage('writeSettingsBlockedFlashFailed', { index: esc.index + 1 });
-    });
+  skipFailedFlash = (esc) => {
+    if(!isFlashFailed(esc)) {
+      return false;
+    }
 
-    return failed.length > 0;
+    this.addLogMessage('writeSettingsBlockedFlashFailed', { index: esc.index + 1 });
+
+    return true;
   };
 
   handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
-
-    if(this.isWriteBlockedByFailedFlash()) {
-      return;
-    }
 
     store.dispatch(setWriting(true));
     const { escs } = store.getState();
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
+      if(this.skipFailedFlash(esc)) {
+        continue;
+      }
+
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = {
@@ -608,10 +613,6 @@ class App extends Component {
   handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
-    if(this.isWriteBlockedByFailedFlash()) {
-      return;
-    }
-
     store.dispatch(setWriting(true));
     const state = store.getState();
     const { escs } = state;
@@ -626,6 +627,10 @@ class App extends Component {
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
       const target = esc.index;
+      if(this.skipFailedFlash(esc)) {
+        continue;
+      }
+
       const mergedSettings = this.getMergedSettings(esc, isSupported ? escs.master : {});
 
       try {

@@ -207,4 +207,46 @@ describe('Flash', () => {
     expect(screen.getByText(/commonParameters/i)).toBeInTheDocument();
     expect(screen.getByText(/commonParameters/i)).toBeInTheDocument();
   });
+
+  it('should not crash when the only ESC is marked FLASH*FAILED', () => {
+    // No healthy ESC: no master, nothing to show as common settings
+    storeRef.store.dispatch(setMaster({}));
+
+    const escs = [
+      {
+        index: 0,
+        firmwareName: 'Bluejay',
+        layoutRevision: 207,
+        meta: { available: true },
+        settings: {
+          MODE: 0,
+          NAME: '**FLASH*FAILED**',
+        },
+        make: 'make 1234',
+        individualSettings: {
+          MAIN_REVISION: 0,
+          SUB_REVISION: 201,
+          NAME: '**FLASH*FAILED**',
+        },
+      },
+    ];
+    storeRef.store.dispatch(setIndividual(escs));
+
+    render(
+      <Flash
+        onCommonSettingsUpdate={onCommonSettingsUpdate}
+        onFirmwareDump={onFirmwareDump}
+        onFlash={onFlash}
+        onIndividualSettingsUpdate={onIndividualSettingsUpdate}
+        onSettingsUpdate={onSettingsUpdate}
+        progressReferences={progressReferences}
+        unsupported={false}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    expect(screen.queryByText(/commonParameters/i)).not.toBeInTheDocument();
+    // The ESC can still be flashed again
+    expect(screen.getByText(/escButtonFlash/i)).toBeInTheDocument();
+  });
 });

@@ -253,3 +253,29 @@ describe('isFlashFailed', () => {
     expect(isFlashFailed(null)).toBeFalsy();
   });
 });
+
+describe('getMaster with an ESC marked FLASH*FAILED', () => {
+  const esc = (name, beep) => ({
+    meta: { available: true },
+    settings: {
+      NAME: name,
+      BEEP_STRENGTH: beep,
+    },
+  });
+
+  it('should take the first healthy ESC', () => {
+    const { getMasterSettings } = require('../Settings');
+    const master = getMasterSettings([
+      esc('**FLASH*FAILED**', 10),
+      esc('Bluejay', 77),
+      esc('Bluejay', 40),
+    ]);
+
+    expect(master.BEEP_STRENGTH).toEqual(77);
+  });
+
+  it('should copy nothing when no ESC is healthy', () => {
+    const { getMasterSettings } = require('../Settings');
+    expect(getMasterSettings([esc('**FLASH*FAILED**', 10)])).toEqual({});
+  });
+});

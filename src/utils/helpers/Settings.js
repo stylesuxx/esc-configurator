@@ -81,13 +81,27 @@ const getIndividualSettings = (esc) => {
   return individualSettings;
 };
 
+const FLASH_FAILED_NAME = '**FLASH*FAILED**';
+
 /**
- * Get master ESC from a list of ESCs
+ * ESC whose last flash failed: its settings hold the **FLASH*FAILED** mark
+ * and values read with the wrong layout. They must not be written, to it or
+ * to the other ESCs, until it is flashed again.
+ *
+ * @param {object} esc
+ * @returns {boolean}
+ */
+const isFlashFailed = (esc) => Boolean(esc && esc.settings && esc.settings.NAME === FLASH_FAILED_NAME);
+
+/**
+ * First available ESC whose settings can be trusted: an ESC marked
+ * **FLASH*FAILED** is read with the wrong layout, so its values must never be
+ * shown as the common settings nor copied to the other ESCs.
  *
  * @param {Array<object>} escs
- * @returns {object}
+ * @returns {object|undefined}
  */
-const getMaster = (escs) => escs.find((esc) => esc.meta.available);
+const getMaster = (escs) => escs.find((esc) => esc.meta.available && !isFlashFailed(esc));
 
 /**
  * Check if a specific setting can be migrated from one firmware to another
@@ -178,17 +192,6 @@ const getCommonSettingNames = (esc) => {
 
   return descriptions.base.map((description) => description.name);
 };
-
-/**
- * ESC whose last flash failed: its settings hold the **FLASH*FAILED** mark
- * and values read with the wrong layout. They must not be written, to it or
- * to the other ESCs, until it is flashed again.
- *
- * @param {object} esc
- * @returns {boolean}
- */
-const FLASH_FAILED_NAME = '**FLASH*FAILED**';
-const isFlashFailed = (esc) => Boolean(esc && esc.settings && esc.settings.NAME === FLASH_FAILED_NAME);
 
 export {
   getCommonSettingNames,
