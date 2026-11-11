@@ -25,6 +25,7 @@
   "resetEscFailed": "重置 ESC {{index}} 失败",
   "resetEscFailedPowerCycle": "无法重置 ESC {{index}} - 重新上电，然后重试。",
   "writeSettingsFailed": "无法将设置写入到 ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "无法将默认设置恢复至 ESC {{index}}",
   "getFileFailed": "无法打开要烧录的文件",
   "layoutNotSupported": "布局版本 {{revision}} 尚不支持",
