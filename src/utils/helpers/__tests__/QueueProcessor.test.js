@@ -126,3 +126,17 @@ test('command has Data instantly', async() => {
   const result = await qp.addCommand(transmit, command);
   expect(result).toBeTruthy();
 });
+
+test('transmit never completes - command times out and queue keeps working', async() => {
+  const qp = new QueueProcessor();
+  const receive = (buffer, resolve) => resolve('ok');
+
+  // The device no longer reads: the write never completes
+  const stuck = qp.addCommand(() => new Promise(() => {}), receive, 200);
+  await expect(stuck).rejects.toThrow(TimeoutError);
+
+  const next = qp.addCommand(() => {
+    qp.addData(new Uint8Array([1]));
+  }, receive, 200);
+  await expect(next).resolves.toEqual('ok');
+});
