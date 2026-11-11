@@ -25,6 +25,7 @@
   "resetEscFailed": "Resetování ESC {{index}} selhalo",
   "resetEscFailedPowerCycle": "Resetování ESC {{index}} selhalo - odpojte a připojte napájení a zkuste to znovu",
   "writeSettingsFailed": "Nepodařilo se zapsat nastavení do ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "Obnovení výchozích nastavení na ESC {{index}} se nezdařilo",
   "getFileFailed": "Nelze získat soubor pro nahrávání.",
   "layoutNotSupported": "Revize rozvržení {{revision}} není zatím podporována",
