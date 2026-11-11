@@ -471,12 +471,24 @@ class App extends Component {
   };
 
   handleReadEsc = async(target) => {
+    if (!this.serial) {
+      this.addLogMessage('noPorts');
+      store.dispatch(setReading(false));
+      return;
+    }
+
     const settings = await this.serial.getFourWayInterfaceInfo(target);
 
     return settings;
   };
 
   handleReadEscs = async() => {
+    if (!this.serial) {
+      this.addLogMessage('noPorts');
+      store.dispatch(setReading(false));
+      return;
+    }
+
     const { escs } = store.getState();
     const individual = [];
     let fourWay = true;
@@ -514,6 +526,11 @@ class App extends Component {
       }
     } else {
       // Prevent reading if radio is detected to be on and not connected yet
+      if (!this.serial.msp) {
+        this.addLogMessage('noPorts');
+        store.dispatch(setReading(false));
+        return;
+      }
       if (!escs.connected) {
         const status = await this.serial.getStatus();
         if (!status.armingDisableFlagsReasons.RX_FAILSAFE) {

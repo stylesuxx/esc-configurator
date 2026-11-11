@@ -196,6 +196,7 @@ class Serial {
     }
 
     this.fourWay = new FourWay(this.executeCommand);
+    this.isDirect4Way = true;
 
     this.running = true;
     this.startReader();
