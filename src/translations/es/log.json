@@ -25,6 +25,7 @@
   "resetEscFailed": "Error al resetear el ESC {{index}}",
   "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
   "writeSettingsFailed": "Error al escribir ajustes en el ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "Error al restaurar la configuración predeterminada en el ESC {{index}}",
   "getFileFailed": "No se pudo obtener el archivo para flashear.",
   "layoutNotSupported": "La revisión del layout {{revision}} aún no está soportada",
