@@ -224,3 +224,58 @@ test('individual settings invalid', () => {
   const result = canMigrate('MOTOR_DIRECTION', from, to, settingsDescriptions, individualSettingsDescriptions);
   expect(result).toBeFalsy();
 });
+
+describe('getCommonSettingNames', () => {
+  it('should list the common settings described for the ESC', () => {
+    const { getCommonSettingNames } = require('../Settings');
+    const names = getCommonSettingNames({
+      firmwareName: 'Bluejay',
+      layoutRevision: '206',
+    });
+
+    expect(names).toContain('BEEP_STRENGTH');
+    expect(names).not.toContain('PWM_FREQUENCY');
+  });
+
+  it('should return null without a description', () => {
+    const { getCommonSettingNames } = require('../Settings');
+    expect(getCommonSettingNames({ firmwareName: 'Bluejay' })).toBeNull();
+    expect(getCommonSettingNames(null)).toBeNull();
+  });
+});
+
+describe('isFlashFailed', () => {
+  it('should only flag an ESC marked **FLASH*FAILED**', () => {
+    const { isFlashFailed } = require('../Settings');
+    expect(isFlashFailed({ settings: { NAME: '**FLASH*FAILED**' } })).toBeTruthy();
+    expect(isFlashFailed({ settings: { NAME: 'Bluejay' } })).toBeFalsy();
+    expect(isFlashFailed({})).toBeFalsy();
+    expect(isFlashFailed(null)).toBeFalsy();
+  });
+});
+
+describe('getMaster with an ESC marked FLASH*FAILED', () => {
+  const esc = (name, beep) => ({
+    meta: { available: true },
+    settings: {
+      NAME: name,
+      BEEP_STRENGTH: beep,
+    },
+  });
+
+  it('should take the first healthy ESC', () => {
+    const { getMasterSettings } = require('../Settings');
+    const master = getMasterSettings([
+      esc('**FLASH*FAILED**', 10),
+      esc('Bluejay', 77),
+      esc('Bluejay', 40),
+    ]);
+
+    expect(master.BEEP_STRENGTH).toEqual(77);
+  });
+
+  it('should copy nothing when no ESC is healthy', () => {
+    const { getMasterSettings } = require('../Settings');
+    expect(getMasterSettings([esc('**FLASH*FAILED**', 10)])).toEqual({});
+  });
+});

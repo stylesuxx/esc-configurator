@@ -153,3 +153,162 @@ describe('stateSlice', () => {
     expect(state.isDisconnecting).toBeFalsy();
   });
 });
+
+describe('App writing common settings', () => {
+  const bluejay = (index, revision, pwm) => ({
+    index,
+    firmwareName: 'Bluejay',
+    layoutRevision: revision,
+    settings: {
+      LAYOUT_REVISION: Number(revision),
+      PWM_FREQUENCY: pwm,
+      BEEP_STRENGTH: 40,
+      MOTOR_DIRECTION: 2,
+    },
+    individualSettings: { MOTOR_DIRECTION: 2 },
+  });
+
+  it('should keep the PWM frequency each ESC was flashed with (Bluejay 0.19)', () => {
+    const { App: AppClass } = require('../');
+    const app = new AppClass();
+    // ESC 1 to 3 built for 48 kHz, ESC 4 flashed with the 24 kHz file
+    const master = {
+      ...bluejay(0, '206', 48).settings,
+      BEEP_STRENGTH: 60,
+    };
+
+    const merged = app.getMergedSettings(bluejay(3, '206', 24), master);
+    expect(merged.PWM_FREQUENCY).toEqual(24);
+    // A common setting changed on the screen still goes to every ESC
+    expect(merged.BEEP_STRENGTH).toEqual(60);
+  });
+
+  it('should still copy the PWM frequency where it is a common setting (Bluejay 0.18)', () => {
+    const { App: AppClass } = require('../');
+    const app = new AppClass();
+    const master = bluejay(0, '205', 48).settings;
+
+    const merged = app.getMergedSettings(bluejay(3, '205', 24), master);
+    expect(merged.PWM_FREQUENCY).toEqual(48);
+  });
+});
+
+describe('App with an ESC marked FLASH*FAILED', () => {
+  const esc = (index, name, beep) => ({
+    index,
+    firmwareName: 'Bluejay',
+    layoutRevision: '206',
+    meta: { available: true },
+    settings: {
+      NAME: name,
+      BEEP_STRENGTH: beep,
+      MOTOR_DIRECTION: 2,
+    },
+    individualSettings: { MOTOR_DIRECTION: 2 },
+    defaultSettings: { BEEP_STRENGTH: 40 },
+  });
+
+  // ESC 1 is marked FLASH*FAILED, ESC 2 to 4 are healthy
+  const escs = () => [
+    esc(0, '**FLASH*FAILED**', 10),
+    esc(1, 'Bluejay', 77),
+    esc(2, 'Bluejay', 40),
+    esc(3, 'Bluejay', 40),
+  ];
+
+  const setup = () => {
+    const { App: AppClass } = require('../');
+    const {
+      setIndividual, setMaster,
+    } = require('../escsSlice');
+    const { getMasterSettings } = require('../../../utils/helpers/Settings');
+    const app = new AppClass();
+    app.addLogMessage = jest.fn();
+    app.handleReadEsc = jest.fn(async() => ({
+      settingsArray: [],
+      settings: {},
+      displayName: '',
+    }));
+    app.handleReadEscs = jest.fn();
+    app.serial = { writeSettings: jest.fn() };
+
+    const individual = escs();
+    store.dispatch(setIndividual(individual));
+    store.dispatch(setMaster(getMasterSettings(individual)));
+
+    const cleanUp = () => {
+      store.dispatch(setIndividual([]));
+      store.dispatch(setMaster({}));
+    };
+
+    return {
+      app,
+      cleanUp,
+    };
+  };
+
+  it('should skip that ESC and write the healthy ones with the settings of the first healthy ESC', async() => {
+    const {
+      app, cleanUp,
+    } = setup();
+
+    await app.handleWriteSettings();
+
+    const targets = app.serial.writeSettings.mock.calls.map((call) => call[0]);
+    expect(targets).toEqual([1, 2, 3]);
+    app.serial.writeSettings.mock.calls.forEach((call) => {
+      expect(call[2].BEEP_STRENGTH).toEqual(77);
+    });
+    expect(app.addLogMessage).toHaveBeenCalledWith('writeSettingsBlockedFlashFailed', { index: 1 });
+    expect(app.addLogMessage.mock.calls.filter((call) => call[0] === 'writeSettingsBlockedFlashFailed')).toHaveLength(1);
+    cleanUp();
+  });
+
+  it('should skip that ESC when restoring the defaults too', async() => {
+    const {
+      app, cleanUp,
+    } = setup();
+
+    await app.handleResetDefaultls();
+
+    const targets = app.serial.writeSettings.mock.calls.map((call) => call[0]);
+    expect(targets).toEqual([1, 2, 3]);
+    expect(app.addLogMessage).toHaveBeenCalledWith('writeSettingsBlockedFlashFailed', { index: 1 });
+    expect(app.addLogMessage.mock.calls.filter((call) => call[0] === 'writeSettingsBlockedFlashFailed')).toHaveLength(1);
+    cleanUp();
+  });
+});
+
+describe('escsSlice with an ESC marked FLASH*FAILED', () => {
+  it('should not give the common settings to that ESC', () => {
+    const {
+      setIndividual, setMaster, updateIndividual,
+    } = require('../escsSlice');
+
+    store.dispatch(setIndividual([
+      {
+        index: 0,
+        settings: { NAME: '**FLASH*FAILED**' },
+      },
+      {
+        index: 1,
+        settings: {
+          NAME: 'Bluejay',
+          BEEP_STRENGTH: 40,
+        },
+      },
+    ]));
+    store.dispatch(setMaster({
+      NAME: 'Bluejay',
+      BEEP_STRENGTH: 60,
+    }));
+    store.dispatch(updateIndividual());
+
+    const [failed, healthy] = store.getState().escs.individual;
+    expect(failed.settings.NAME).toEqual('**FLASH*FAILED**');
+    expect(healthy.settings.BEEP_STRENGTH).toEqual(60);
+
+    store.dispatch(setIndividual([]));
+    store.dispatch(setMaster({}));
+  });
+});
