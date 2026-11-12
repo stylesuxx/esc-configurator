@@ -208,8 +208,13 @@ class Serial {
       await this.reader.releaseLock();
     }
 
+    // No write after this point: a late command (the battery state for
+    // example) is refused as for a closed port instead of being written to a
+    // released writer
     if(this.writer) {
-      await this.writer.releaseLock();
+      const writer = this.writer;
+      this.writer = null;
+      await writer.releaseLock();
     }
 
     try {
@@ -244,7 +249,7 @@ class Serial {
    * Four Way interface - see the respective class for in depth documentation of
    * the functions.
    */
-  exitFourWayInterface = () => this.fourWay.exit();
+  exitFourWayInterface = (waitForAnswer) => this.fourWay.exit(waitForAnswer);
   flashPreflight = (esc, hex, force, i) => this.fourWay.flashPreflight(esc, hex, force, i);
   getFourWayInterfaceInfo = (esc) => this.fourWay.getInfo(esc);
   resetFourWayInterface = (esc) => this.fourWay.reset(esc);

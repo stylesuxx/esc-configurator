@@ -1423,10 +1423,22 @@ class FourWay {
   /**
    * Clear TestAlive interval and send Exit command
    *
+   * In passthrough the flight controller answers the Exit command. When the
+   * port was closed before that answer was read, the answer was only read on
+   * the next connection and the flight controller answered late for up to
+   * about 2 s: with waitForAnswer the answer is awaited (1 s at most).
+   *
+   * @param {boolean} waitForAnswer
    * @returns {Promise<Response>}
    */
-  exit() {
+  exit(waitForAnswer = false) {
     this.stop();
+
+    if(waitForAnswer) {
+      const message = this.createMessage(COMMANDS.cmd_InterfaceExit, [0], 0);
+
+      return this.serial(message, this.parseMessage);
+    }
 
     return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
   }

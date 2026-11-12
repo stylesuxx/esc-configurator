@@ -349,3 +349,46 @@ describe('App asking for the API version', () => {
     expect(app.serial.getApiVersion).toHaveBeenCalledTimes(5);
   });
 });
+
+describe('App disconnecting', () => {
+  const setup = (fourWay, exit) => {
+    const { App: AppClass } = require('../');
+    const { setFourWay } = require('../serialSlice');
+    const app = new AppClass();
+    app.addLogMessage = jest.fn();
+    app.serial = {
+      resetFourWayInterface: jest.fn(),
+      exitFourWayInterface: jest.fn(exit),
+      close: jest.fn(),
+    };
+    store.dispatch(setFourWay(fourWay));
+
+    return app;
+  };
+
+  it('should wait for the answer to exit after a passthrough', async() => {
+    const app = setup(true, () => Promise.resolve());
+
+    await app.handleDisconnect({ preventDefault: () => null });
+
+    expect(app.serial.exitFourWayInterface).toHaveBeenCalledWith(true);
+    expect(app.serial.close).toHaveBeenCalled();
+  });
+
+  it('should not wait for an answer to exit without a passthrough', async() => {
+    const app = setup(false, () => Promise.resolve());
+
+    await app.handleDisconnect({ preventDefault: () => null });
+
+    expect(app.serial.exitFourWayInterface).toHaveBeenCalledWith(false);
+  });
+
+  it('should close the port even without an answer to exit', async() => {
+    const { TimeoutError } = require('../../../utils/helpers/QueueProcessor');
+    const app = setup(true, () => Promise.reject(new TimeoutError('Timed out after 1000ms')));
+
+    await app.handleDisconnect({ preventDefault: () => null });
+
+    expect(app.serial.close).toHaveBeenCalled();
+  });
+});

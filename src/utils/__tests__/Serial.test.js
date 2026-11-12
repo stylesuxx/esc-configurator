@@ -116,6 +116,24 @@ describe('Serial', () => {
     await expect(serial.executeCommand(new Uint8Array([1]), jest.fn())).rejects.toThrow(PortClosedError);
   });
 
+  it('should refuse a command sent while the port closes', async() => {
+    const { PortClosedError } = require('../Errors');
+    let finishClose;
+    port.close = jest.fn(() => new Promise((r) => {
+      finishClose = r;
+    }));
+
+    await serial.open();
+    const closing = serial.close();
+    await new Promise((r) => setTimeout(r, 0));
+
+    // The battery state for example, asked while the port closes
+    await expect(serial.executeCommand(new Uint8Array([1]), jest.fn())).rejects.toThrow(PortClosedError);
+
+    finishClose();
+    await closing;
+  });
+
   it('should only stop the keep alive on disconnect, no exit sent to the closed port', async() => {
     await serial.open();
     const stop = jest.spyOn(serial.fourWay, 'stop');

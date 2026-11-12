@@ -355,7 +355,9 @@ class App extends Component {
 
     store.dispatch(setDisconnecting(true));
 
-    const { escs } = store.getState();
+    const {
+      escs, serial,
+    } = store.getState();
     const { individual } = escs;
     if(this.serial) {
       for(let i = 0; i < individual.length; i += 1) {
@@ -365,7 +367,13 @@ class App extends Component {
           this.addLogMessage('resetEscFailed', { index: i + 1 });
         }
       }
-      await this.serial.exitFourWayInterface();
+
+      // In passthrough, the answer to the exit is read before the port closes
+      try {
+        await this.serial.exitFourWayInterface(serial.fourWay);
+      } catch(e) {
+        // No answer: the port is closed anyway
+      }
 
       // The port is closed when "closedPort" is logged
       await this.serial.close();
