@@ -312,3 +312,40 @@ describe('escsSlice with an ESC marked FLASH*FAILED', () => {
     store.dispatch(setMaster({}));
   });
 });
+
+describe('App asking for the API version', () => {
+  const setup = (silentAnswers) => {
+    const { App: AppClass } = require('../');
+    const { TimeoutError } = require('../../../utils/helpers/QueueProcessor');
+    const app = new AppClass();
+
+    let calls = 0;
+    app.serial = {
+      getApiVersion: jest.fn(async() => {
+        calls += 1;
+        if(calls <= silentAnswers) {
+          throw new TimeoutError('Timed out after 1000ms');
+        }
+
+        return { apiVersion: '1.48.0' };
+      }),
+    };
+
+    return app;
+  };
+
+  it('should wait for a flight controller silent for 4 requests after a reconnection', async() => {
+    const app = setup(4);
+
+    await expect(app.getApiVersion()).resolves.toEqual({ apiVersion: '1.48.0' });
+    expect(app.serial.getApiVersion).toHaveBeenCalledTimes(5);
+  });
+
+  it('should give up after 5 requests without an answer', async() => {
+    const { TimeoutError } = require('../../../utils/helpers/QueueProcessor');
+    const app = setup(5);
+
+    await expect(app.getApiVersion()).rejects.toThrow(TimeoutError);
+    expect(app.serial.getApiVersion).toHaveBeenCalledTimes(5);
+  });
+});
