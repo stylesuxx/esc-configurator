@@ -134,6 +134,17 @@ describe('Serial', () => {
     await closing;
   });
 
+  it('should close the port even when the motor stop fails', async() => {
+    await serial.open();
+    jest.spyOn(serial.msp, 'stopAllMotors').mockRejectedValue(new Error('Timed out after 1000ms'));
+
+    await expect(serial.close()).resolves.toBe(undefined);
+    expect(cancel).toHaveBeenCalled();
+    expect(releaseReadLock).toHaveBeenCalled();
+    expect(releaseWriteLock).toHaveBeenCalled();
+    expect(port.close).toHaveBeenCalled();
+  });
+
   it('should only stop the keep alive on disconnect, no exit sent to the closed port', async() => {
     await serial.open();
     const stop = jest.spyOn(serial.fourWay, 'stop');
