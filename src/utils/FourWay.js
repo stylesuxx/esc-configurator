@@ -217,14 +217,11 @@ class FourWay {
       return reject(new Error(error));
     }
 
-    if (view.length < 9) {
+    if (view.length < 8) {
       return reject(new NotEnoughDataError());
     }
 
     let paramCount = view[4];
-    if (paramCount === 0) {
-      paramCount = 256;
-    }
 
     if (view.length < 8 + paramCount) {
       return reject(new NotEnoughDataError());
@@ -271,8 +268,8 @@ class FourWay {
 
       // Debug print all messages except the keep alive messages
       if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
-        const paramsHex = Array.from(params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
-        console.debug(`TX: ${FourWayHelper.commandToString(command)}${address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
+        const paramsHex = Array.from(params).map((param) => param !== undefined && param !== null ? `0x${param.toString(0x10).toUpperCase()}` : '0x00');
+        console.debug(`TX: ${FourWayHelper.commandToString(command)}${address !== undefined && address !== null ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
       }
 
       const processMessage = async(resolve, reject) => {
@@ -289,7 +286,7 @@ class FourWay {
           const msg = await this.serial(message, this.parseMessage);
           if (msg && msg.ack === ACK.ACK_OK) {
             if (getAppSetting('extendedDebug') && command !== COMMANDS.cmd_InterfaceTestAlive) {
-              const paramsHex = Array.from(msg.params).map((param) => `0x${param.toString(0x10).toUpperCase()}`);
+              const paramsHex = Array.from(msg.params).map((param) => param !== undefined && param !== null ? `0x${param.toString(0x10).toUpperCase()}` : '0x00');
               console.debug(`RX: ${FourWayHelper.commandToString(msg.command)}${msg.address ? ' @ 0x' + address.toString(0x10).toUpperCase() : ''} - ${paramsHex}`);
             }
             return resolve(msg);

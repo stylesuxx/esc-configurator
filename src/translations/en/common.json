@@ -64,7 +64,7 @@
   "homeContributionItem5": "Help [translate](http://crowdin.com/project/esc-configuratorcom) the interface into your language",
   "homeDisclaimerHeader": "Disclaimer",
   "homeDisclaimerTextLine1": "The web application supports ESCs running BLHeli for Atmel, BLHeli for SiLabs and BLHeli_S.",
-  "homeDisclaimerTextLine2": "**BLHeli FC passthrough** is the only interface currently supported.",
+  "homeDisclaimerTextLine2": "BLHeli FC passthrough and BLheli 4way-if (Servo only) are the only interfaces currently supported. Supported 4way-if devices: Arduino Uno, Raspberry Pi Pico. See [project](https://github.com/alpha-dev-studio/Blheli-4-Way-IF).",
   "homeDisclaimerTextLine3": "Should you run into any problems, make sure to use the **Save Debug Log** button and submit a new issue via [GitHub](https://github.com/stylesuxx/esc-configurator/issues/new).",
   "homeDisclaimerTextLine4": "Application source code can be downloaded from [here](https://github.com/stylesuxx/esc-configurator).",
   "homeDisclaimerTextLine5": "Latest [CP210x Drivers](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) can be downloaded from [here](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).",
