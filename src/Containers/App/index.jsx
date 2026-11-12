@@ -62,7 +62,8 @@ import {
 
 // A late answer to the API version request is asked again before the
 // flight controller is taken for being left in passthrough. Just after a
-// reconnection, the flight controller was seen silent for up to about 4 s.
+// reconnection, the flight controller was seen silent for longer than 3
+// requests (about 3.5 s); 5 requests cover about 6 s.
 const API_VERSION_ATTEMPTS = 5;
 const API_VERSION_RETRY_DELAY_MS = 250;
 
