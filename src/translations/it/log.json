@@ -25,7 +25,7 @@
   "resetEscFailed": "Ripristino ESC {{index}} fallito",
   "resetEscFailedPowerCycle": "Reset dell' ESC {{index}} fallito - riprova a disconnettere e riconnettere l'alimentazione",
   "writeSettingsFailed": "Impossibile scrivere le impostazioni su ESC {{index}}",
-  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} ignorato: è contrassegnato FLASH*FAILED (flash fallito). Provare di nuovo il Flash, quindi leggere i ESCs.",
   "restoreSettingsFailed": "Impossibile ripristinare le impostazioni predefinite su ESC {{index}}",
   "getFileFailed": "Impossibile ottenere il file da flashare.",
   "layoutNotSupported": "La revisione {{revision}} del layout non è ancora supportata",
