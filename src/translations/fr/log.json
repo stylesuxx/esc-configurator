@@ -19,15 +19,13 @@
   "readEscsFailed": "Echec de la lecture des ESCs",
   "readEsc": "Lire ESC {{index}}: {{name}}",
   "flashingEsc": "Écriture de l'ESC {{index}}",
-  "flashingEscMissmatchFileNameMissing": "Impossible de flasher ESC {{index}} - Le nom du fichier n'a pas été trouvé dans le fichier hexadécimal. Veuillez vérifier votre version du fichier hex !",
-  "flashingEscMissmatchMcuType": "Échec du flash ESC {{index}} - Le type MCU ne correspond pas, veuillez vérifier votre fichier hexadécimal !",
-  "flashingEscMissmatchFileName": "Échec du flash ESC {{index}} - Fichier de firmware ESC différent, que dans le flash ESC actuel !",
   "flashingEscFailed": "Échec de l'écriture de l'ESC {{index}} - vérifier le type de fichier",
   "fetchingFilesFailed": "Échec de la récupération des fichiers pour {{name}}",
   "readEscFailed": "Échec de la lecture de l'ESC {{index}}",
   "resetEscFailed": "Échec de la réinitialisation de l'ESC {{index}}",
   "resetEscFailedPowerCycle": "Échec de la réinitialisation de l'ESC {{index}} - Redémarrer celui-ci et réessayez",
   "writeSettingsFailed": "Échec de l'écriture des paramètres dans l'ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} est ignoré: il est marqué FLASH*FAILED (flash échoué). Flasher à nouveau, puis lire les ESC.",
   "restoreSettingsFailed": "Échec de la restauration des paramètres par défaut de l'ESC {{index}}",
   "getFileFailed": "Impossible d'ouvrir le fichier pour l'écriture.",
   "layoutNotSupported": "La révision du Layout {{revision}} n'est pas encore supportée",
@@ -44,5 +42,6 @@
   "timingMismatch": "Le micrologiciel est marqué comme {{tagged}} mais semble être {{actual}}",
   "browser": "{{name}} ({{version}}) sur {{os}}",
   "dumpingEsc": "Dump de ESC {{index}}",
-  "flashingVerificationFailed": "La vérification a échoué - les données peuvent ne pas avoir été écrites correctement"
+  "flashingVerificationFailed": "La vérification a échoué - les données peuvent ne pas avoir été écrites correctement",
+  "am32NotSupported": "ESC {{index}} est basé sur des ARM (AM32) et ne peut plus être flashé ici. Veuillez utiliser https://am32.ca"
 }

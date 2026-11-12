@@ -19,15 +19,13 @@
   "readEscsFailed": "Error al leer ESCs",
   "readEsc": "Leer ESC {{index}}: {{name}}",
   "flashingEsc": "Flasheando ESC {{index}}",
-  "flashingEscMissmatchFileNameMissing": "Failed flashing ESC {{index}} - File name not found in hex file, please check your hex file version!",
-  "flashingEscMissmatchMcuType": "Failed flashing ESC {{index}} - Not matching MCU type, please check your hex file!",
-  "flashingEscMissmatchFileName": "Failed flashing ESC {{index}} - Different ESC firmware file, than in current ESC flash!",
   "flashingEscFailed": "Error al flashear el ESC {{index}} - comprueba el tipo de archivo",
   "fetchingFilesFailed": "No se pudo obtener archivos para {{name}}",
   "readEscFailed": "Error al leer el ESC {{index}}",
   "resetEscFailed": "Error al resetear el ESC {{index}}",
   "resetEscFailedPowerCycle": "Failed resetting ESC {{index}} - power cycle and try again",
   "writeSettingsFailed": "Error al escribir ajustes en el ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "Error al restaurar la configuración predeterminada en el ESC {{index}}",
   "getFileFailed": "No se pudo obtener el archivo para flashear.",
   "layoutNotSupported": "La revisión del layout {{revision}} aún no está soportada",
@@ -44,5 +42,6 @@
   "timingMismatch": "El firmware está etiquetado como {{tagged}} pero en realidad parece ser {{actual}}",
   "browser": "{{name}} ({{version}}) en {{os}}",
   "dumpingEsc": "Volcando ESC {{index}}",
-  "flashingVerificationFailed": "Verification failed - data might not have been written correctly"
+  "flashingVerificationFailed": "Verification failed - data might not have been written correctly",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }

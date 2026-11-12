@@ -19,15 +19,13 @@
   "readEscsFailed": "ESCs Lesen fehlgeschlagen",
   "readEsc": "ESC {{index}}: {{name}}",
   "flashingEsc": "ESC {{index}} wird geflasht",
-  "flashingEscMissmatchFileNameMissing": "Fehler beim Flashen von ESC {{index}} - Dateiname in der Hex-Datei nicht gefunden, bitte überprüfe deine Hex-Dateiversion!",
-  "flashingEscMissmatchMcuType": "Fehler beim Flashen von ESC {{index}} - Kein passender MCU-Typ gefunden, bitte überprüfe deine Hex-Datei!",
-  "flashingEscMissmatchFileName": "Fehler beim Flashen von ESC {{index}} - Es bestehen Unterschiede in der ESC-Firmwaredatei zum aktuellen ESC Flashspeicher!",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
   "fetchingFilesFailed": "Fehler beim Abrufen der Dateien für {{name}}",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
   "resetEscFailed": "Reset von ESC {{index}} fehlgeschlagen",
   "resetEscFailedPowerCycle": "Fehler beim Zurücksetzen des ESC {{index}} - Stromzufuhr unterbrechen, wiederherstellen und erneut versuchen",
   "writeSettingsFailed": "Fehler beim Schreiben der Einstellungen auf ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "Fehler beim Wiederherstellen der Standardeinstellungen auf ESC {{index}}",
   "getFileFailed": "Konnte Datei zum flashen nicht holen.",
   "layoutNotSupported": "Layout Revision {{revision}} wird noch nicht unterstützt",
@@ -44,5 +42,6 @@
   "timingMismatch": "Firmware ist als {{tagged}} markiert, es scheint aber wahrscheinlicher dass es sich um {{actual}} handelt",
   "browser": "{{name}} ({{version}}) auf {{os}}",
   "dumpingEsc": "ESC {{index}} wird ausgelesen",
-  "flashingVerificationFailed": "Verifizierung fehlgeschlagen - Daten wurden möglicherweise nicht korrekt geschrieben."
+  "flashingVerificationFailed": "Verifizierung fehlgeschlagen - Daten wurden möglicherweise nicht korrekt geschrieben.",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }

@@ -19,15 +19,13 @@
   "readEscsFailed": "Сбой считывания регулятора оборотов",
   "readEsc": "Считывание с {{index}}: {{name}} регулятора оборотов",
   "flashingEsc": "Прошивка регулятора оборотов № {{index}}",
-  "flashingEscMissmatchFileNameMissing": "Ошибка при прошивке регулятора оборотов № {{index}} - Имя файла не найдено в файле прошивки, пожалуйста, проверьте версию файла прошивки!",
-  "flashingEscMissmatchMcuType": "Ошибка прошивки ESC {{index}} - Не соответствует типу микроконтроллера, пожалуйста, проверьте ваш файл прошивки!",
-  "flashingEscMissmatchFileName": "Ошибка при прошивке регулятора оборотов № {{index}} - Файл прошивки регулятора отличается от текущей прошивки регулятора!",
   "flashingEscFailed": "Ошибка при прошивке регулятора оборотов № {{index}} - проверьте тип файла",
   "fetchingFilesFailed": "Ошибка загрузки файлов для {{name}}",
   "readEscFailed": "Не удалось прочитать регулятор оборотов № {{index}}",
   "resetEscFailed": "Не удалось сбросить регулятор оборотов № {{index}}",
   "resetEscFailedPowerCycle": "Не удалось сбросить регулятор оборотов № {{index}} - отключите/включите питание и повторите попытку",
   "writeSettingsFailed": "Не удалось записать настройки в регуляторе оборотов № {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "Не удалось восстановить настройки по умолчанию в регуляторе оборотов № {{index}}",
   "getFileFailed": "Не удалось получить файл для прошивки.",
   "layoutNotSupported": "Версия компоновки {{revision}} еще не поддерживается",
@@ -44,5 +42,6 @@
   "timingMismatch": "Прошивка промаркирована как {{tagged}}, но на самом деле {{actual}}",
   "browser": "{{name}} ({{version}}) на {{os}}",
   "dumpingEsc": "Выгружаем прошивку из регулятора оборотов № {{index}}",
-  "flashingVerificationFailed": "Верификация не прошла. Возможно, данные записаны с ошибками"
+  "flashingVerificationFailed": "Верификация не прошла. Возможно, данные записаны с ошибками",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }

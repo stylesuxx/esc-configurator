@@ -19,15 +19,13 @@
   "readEscsFailed": "Lettura ESC fallita",
   "readEsc": "Lettura ESC {{index}}: {{name}}",
   "flashingEsc": "Flashando ESC {{index}}",
-  "flashingEscMissmatchFileNameMissing": "Flash dell' ESC {{index}} fallito - Il nome del file non è stato trovato nel file hex, per favore controlla la versione del file hex!",
-  "flashingEscMissmatchMcuType": "Flash dell' ESC {{index}} fallito - Nessun tipo di MCU uguale trovata, per favore controlla il file hex!",
-  "flashingEscMissmatchFileName": "Flash dell' ESC {{index}} fallito - File del firmware ESC differente, rispetto a quello della flash nell'ESC!",
   "flashingEscFailed": "Flash dell' ESC {{index}} fallito - controlla il tipo di file",
   "fetchingFilesFailed": "Recupero file per {{name}} fallito",
   "readEscFailed": "Lettura ESC {{index}} fallita",
   "resetEscFailed": "Ripristino ESC {{index}} fallito",
   "resetEscFailedPowerCycle": "Reset dell' ESC {{index}} fallito - riprova a disconnettere e riconnettere l'alimentazione",
   "writeSettingsFailed": "Impossibile scrivere le impostazioni su ESC {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} ignorato: è contrassegnato FLASH*FAILED (flash fallito). Provare di nuovo il Flash, quindi leggere i ESCs.",
   "restoreSettingsFailed": "Impossibile ripristinare le impostazioni predefinite su ESC {{index}}",
   "getFileFailed": "Impossibile ottenere il file da flashare.",
   "layoutNotSupported": "La revisione {{revision}} del layout non è ancora supportata",
@@ -44,5 +42,6 @@
   "timingMismatch": "Il firmware è etichettato come {{tagged}} ma sembra essere {{actual}}",
   "browser": "{{name}} ({{version}}) su {{os}}",
   "dumpingEsc": "Dumping ESC {{index}}",
-  "flashingVerificationFailed": "Verifica fallita - i dati potrebbero non essere stati scritti correttamente"
+  "flashingVerificationFailed": "Verifica fallita - i dati potrebbero non essere stati scritti correttamente",
+  "am32NotSupported": "ESC {{index}} si basa su ARM (AM32) e non può più essere flashato qui. Si prega di usare https://am32.ca"
 }

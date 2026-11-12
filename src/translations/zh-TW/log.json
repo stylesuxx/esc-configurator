@@ -19,15 +19,13 @@
   "readEscsFailed": "ESC 讀取失敗",
   "readEsc": "讀取 ESC {{index}}: {{name}}",
   "flashingEsc": "正在燒錄 ESC {{index}}",
-  "flashingEscMissmatchFileNameMissing": "燒錄 ESC {{index}} 失敗 - 未在 hex 文件中檢測到文件名，請檢查您的 hex 文件版本！",
-  "flashingEscMissmatchMcuType": "燒錄 ESC {{index}} 失敗 - MCU 類型不匹配，請檢查您的 hex 文件！",
-  "flashingEscMissmatchFileName": "燒錄 ESC {{index}} 失敗 - 與當前 ESC 閃存中的固件文件不同！",
   "flashingEscFailed": "燒錄 ESC {{index}} 失敗 - 請檢查文件類型",
   "fetchingFilesFailed": "獲取 {{name}} 資料失敗",
   "readEscFailed": "讀取 ESC {{index}} 失敗",
   "resetEscFailed": "重置 ESC {{index}} 失敗",
   "resetEscFailedPowerCycle": "無法重啓 ESC {{index}} - 重新上電，然後重試。",
   "writeSettingsFailed": "無法將設定寫入到 {{index}}",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "無法將默認設定恢復至 ESC {{index}}",
   "getFileFailed": "無法打開要燒錄的文件",
   "layoutNotSupported": "佈局版本 {{revision}} 尚不支持",
@@ -44,5 +42,6 @@
   "timingMismatch": "固件被標記為 {{tagged}}，但實際值似乎為 {{actual}}",
   "browser": "{{name}} ({{version}}) 在 {{os}}",
   "dumpingEsc": "正在轉儲 ESC {{index}}",
-  "flashingVerificationFailed": "驗證失敗 - 數據可能未正確寫入"
+  "flashingVerificationFailed": "驗證失敗 - 數據可能未正確寫入",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }

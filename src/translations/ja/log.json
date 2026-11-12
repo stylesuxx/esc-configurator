@@ -19,15 +19,13 @@
   "readEscsFailed": "ESCの読み込みに失敗しました",
   "readEsc": "ESC {{index}}: {{name}} を読みこむ",
   "flashingEsc": "ESC {{index}} をフラッシュ中",
-  "flashingEscMissmatchFileNameMissing": "ESC {{index}} のフラッシュに失敗しました - hexファイル内にファイル名が見つかりません。hexファイルのバージョンを確認してください！",
-  "flashingEscMissmatchMcuType": "ESC {{index}} のフラッシュに失敗しました - MCU タイプが一致しません。hexファイルを確認してください！",
-  "flashingEscMissmatchFileName": "ESC {{index}} のフラッシュに失敗しました - 現在のESCに使用されているものとは異なるESCファームウェアファイルです！",
   "flashingEscFailed": "ESCのフラッシュに失敗しました {{index}} - ファイルの種類を確認して下さい",
   "fetchingFilesFailed": "{{name}}のファイルを取得できませんでした",
   "readEscFailed": "ESC {{index}} の読み込みに失敗しました",
   "resetEscFailed": "ESC {{index}}のリセットに失敗しました",
   "resetEscFailedPowerCycle": "ESC {{index}} のリセットに失敗しました - 電源を入れ直して再試行してください",
   "writeSettingsFailed": "ESC {{index}}への設定の書き込みに失敗しました",
+  "writeSettingsBlockedFlashFailed": "ESC {{index}} skipped: it is marked FLASH*FAILED (failed flash). Flash it again, then read the ESCs.",
   "restoreSettingsFailed": "ESC {{index}}のデフォルト設定の復元に失敗しました",
   "getFileFailed": "書き込み用のファイルを取得できませんでした",
   "layoutNotSupported": "レイアウトのリビジョン {{revision}} はまだサポートされていません",
@@ -44,5 +42,6 @@
   "timingMismatch": "ファームウェアは {{tagged}} としてタグ付けされていますが、実際は {{actual}}のようです",
   "browser": "{{name}} ({{version}}) on {{os}}",
   "dumpingEsc": "ESC {{index}} をダンプ中",
-  "flashingVerificationFailed": "検証に失敗しました - データが正しく書き込まれていない可能性があります"
+  "flashingVerificationFailed": "検証に失敗しました - データが正しく書き込まれていない可能性があります",
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
 }

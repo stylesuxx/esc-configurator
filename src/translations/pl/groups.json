@@ -1,11 +1,5 @@
 {
   "general": "",
-  "am32motor": "Specyfikacje silnika",
-  "am32sine": "Ustawienia Sinusoidalne",
-  "am32servo": "Ustawienia serwera",
-  "am32brake": "Ustawienia hamowania",
-  "am32pwm": "Ustawienia PWM",
-  "am32safety": "Ustawienia Zabezpieczeń",
   "bluejaySafety": "Ustawienia Zabezpieczeń",
   "bluejayBrake": "Ustawienia hamowania",
   "bluejayBeacon": "Ustawienia Sygnalizatora",
