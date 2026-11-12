@@ -167,7 +167,7 @@ class Serial {
   }
 
   /**
-   * Stop reader and writer, attempt closing four way connection should it be
+   * Stop reader and writer, stop the four way keep alive should it be
    * available.
    */
   async disconnect() {
@@ -176,13 +176,10 @@ class Serial {
     this.writer = null;
     this.qp.clear(new PortClosedError('Serial port is closed'));
 
+    // The writer is gone, so no exit command can be sent: only the keep alive
+    // is stopped
     if(this.fourWay) {
-      try {
-        await this.fourWay.exit();
-      } catch(e) {
-        // The writer is gone, so the exit command can not be sent - exit still
-        // stops the keep alive interval.
-      }
+      this.fourWay.stop();
     }
   }
 

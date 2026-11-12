@@ -116,6 +116,17 @@ describe('Serial', () => {
     await expect(serial.executeCommand(new Uint8Array([1]), jest.fn())).rejects.toThrow(PortClosedError);
   });
 
+  it('should only stop the keep alive on disconnect, no exit sent to the closed port', async() => {
+    await serial.open();
+    const stop = jest.spyOn(serial.fourWay, 'stop');
+    const exit = jest.spyOn(serial.fourWay, 'exit');
+
+    await serial.disconnect();
+
+    expect(stop).toHaveBeenCalled();
+    expect(exit).not.toHaveBeenCalled();
+  });
+
   it('should execute MSP commands', async() => {
     const read = () => ({ value: { byteLength: 50 } });
     const write = jest.fn();

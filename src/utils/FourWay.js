@@ -136,6 +136,13 @@ class FourWay {
   }
 
   /**
+   * Stop sending keep alive commands
+   */
+  stop() {
+    clearInterval(this.interval);
+  }
+
+  /**
    * Calculate a X-Modem checksum
    *
    * @param {number} crc
@@ -1419,7 +1426,7 @@ class FourWay {
    * @returns {Promise<Response>}
    */
   exit() {
-    clearInterval(this.interval);
+    this.stop();
 
     return this.sendMessagePromised(COMMANDS.cmd_InterfaceExit);
   }
