@@ -55,9 +55,6 @@ function Log() {
     element.download = "esc-configurator-log.txt";
     document.body.appendChild(element);
     element.click();
-
-    // The log is kept after saving it, so that a later save still holds the
-    // whole session
   }, [log]);
 
   const handleClearLog = useCallback(() => {
