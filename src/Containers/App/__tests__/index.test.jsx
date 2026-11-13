@@ -350,6 +350,66 @@ describe('App asking for the API version', () => {
   });
 });
 
+describe('App connecting', () => {
+  const setup = (silentAnswers) => {
+    const { App: AppClass } = require('../');
+    const { TimeoutError } = require('../../../utils/helpers/QueueProcessor');
+    const { setOpen } = require('../serialSlice');
+    const app = new AppClass();
+    app.addLogMessage = jest.fn();
+    store.dispatch(setOpen(false));
+
+    // The flight controller is silent once the API version was answered
+    let calls = 0;
+    app.serial = {
+      open: jest.fn(),
+      setLogCallback: jest.fn(),
+      close: jest.fn(),
+      getApiVersion: jest.fn(() => ({ apiVersion: '1.48.0' })),
+      getFcVariant: jest.fn(async() => {
+        calls += 1;
+        if(calls <= silentAnswers) {
+          throw new TimeoutError('Timed out after 1000ms');
+        }
+
+        return { flightControllerIdentifier: 'BTFL' };
+      }),
+      getFcVersion: jest.fn(() => ({ flightControllerVersion: '25.12.2' })),
+      getBuildInfo: jest.fn(() => ({ buildInfo: 'Feb 23 2026' })),
+      getBoardInfo: jest.fn(() => ({
+        boardIdentifier: 'F405',
+        boardVersion: 0,
+      })),
+      getUid: jest.fn(() => ({ uid: [1, 2] })),
+      getMotorData: jest.fn(() => [1000, 1000, 1000, 1000]),
+      getFeatures: jest.fn(() => ({})),
+    };
+
+    return app;
+  };
+
+  it('should wait for a flight controller silent after the API version', async() => {
+    const app = setup(2);
+
+    await app.handleConnect({ preventDefault: () => null });
+
+    expect(app.serial.getFcVariant).toHaveBeenCalledTimes(3);
+    expect(app.addLogMessage).not.toHaveBeenCalledWith('initializationFailed');
+    expect(store.getState().serial.open).toBeTruthy();
+  });
+
+  it('should give up after 5 requests without an answer after the API version', async() => {
+    const app = setup(5);
+
+    await app.handleConnect({ preventDefault: () => null });
+
+    expect(app.serial.getFcVariant).toHaveBeenCalledTimes(5);
+    expect(app.addLogMessage).toHaveBeenCalledWith('initializationFailed');
+    expect(app.serial.close).toHaveBeenCalled();
+    expect(store.getState().serial.open).toBeFalsy();
+  });
+});
+
 describe('App disconnecting', () => {
   const setup = (fourWay, exit) => {
     const { App: AppClass } = require('../');
