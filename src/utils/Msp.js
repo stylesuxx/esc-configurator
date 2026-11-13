@@ -1,6 +1,7 @@
 import compareVersions from 'compare-versions';
 
 import { NotEnoughDataError } from './helpers/QueueProcessor';
+import { PortClosedError } from './Errors';
 
 import { store } from '../store';
 import { incrementByAmount as incrementPacketErrorsByAmount } from '../Components/Statusbar/statusSlice';
@@ -137,11 +138,23 @@ class Msp {
         bufferOut = this.encodeV2(command, data);
       }
 
+      // Only the answer to this command is taken: a late answer to an
+      // earlier command (for example after a time out) is skipped.
+      const read = (buffer, resolveRead, rejectRead) => this.read(
+        buffer,
+        resolveRead,
+        rejectRead,
+        command <= 254 ? command : null
+      );
+
       try {
-        const result = await this.serial(bufferOut, this.read);
+        const result = await this.serial(bufferOut, read);
         resolve(result);
       } catch(e) {
-        console.debug('MSP command failed:', e.message);
+        // A command cancelled because the port closes is not a failure
+        if(!(e instanceof PortClosedError)) {
+          console.debug('MSP command failed:', e.message);
+        }
         reject(e);
       }
     };
@@ -157,12 +170,16 @@ class Msp {
    *
    * Will invoke reject method in any other case and throw according error.
    *
+   * With an expected command, complete messages answering another command
+   * are skipped.
+   *
    * @param {Uint8Array} data
    * @param {function} resolve
    * @param {function} reject
+   * @param {number|null} expectedCommand
    * @returns {void}
    */
-  read(data, resolve, reject) {
+  read(data, resolve, reject, expectedCommand = null) {
     let command = 0;
     let state = 0;
     let messageBuffer = null;
@@ -250,6 +267,13 @@ class Msp {
         case 6: {
           // Message received, process
           if (messageChecksum === data[i]) {
+            if (expectedCommand !== null && command !== expectedCommand) {
+              // Late answer to another command: skip it, look further
+              state = 0;
+              messageLengthReceived = 0;
+              break;
+            }
+
             const response = this.processData(
               command,
               messageBuffer,
@@ -620,7 +644,10 @@ class Msp {
   async stopAllMotors() {
     if(this.motorsSpinning) {
       const features = await this.getFeatures();
-      return this.spinAllMotors(features['3D'] ? 1500 : 0);
+      const result = await this.spinAllMotors(features['3D'] ? 1500 : 0);
+      this.motorsSpinning = false;
+
+      return result;
     }
   }
 
@@ -799,6 +826,13 @@ class Msp {
    * @returns {Promise}
    */
   set4WayIf() {
+    /**
+     * In passthrough the flight controller stops the motor outputs and no
+     * longer answers MSP: there is nothing left to stop, and a stop sent when
+     * closing the port would only time out.
+     */
+    this.motorsSpinning = false;
+
     return this.send(MSP.MSP_SET_PASSTHROUGH);
   }
 }

@@ -155,6 +155,10 @@ class Serial {
       throw new Error('Could not open serial port');
     }
 
+    // Nothing from an earlier connection is kept: no waiting command, no
+    // data received before
+    this.qp.clear(new PortClosedError('Serial port is closed'));
+
     this.msp = new Msp(this.executeCommand);
     this.fourWay = new FourWay(this.executeCommand);
 
@@ -163,21 +167,19 @@ class Serial {
   }
 
   /**
-   * Stop reader and writer, attempt closing four way connection should it be
+   * Stop reader and writer, stop the four way keep alive should it be
    * available.
    */
   async disconnect() {
     this.running = false;
     this.reader = null;
     this.writer = null;
+    this.qp.clear(new PortClosedError('Serial port is closed'));
 
+    // The writer is gone, so no exit command can be sent: only the keep alive
+    // is stopped
     if(this.fourWay) {
-      try {
-        await this.fourWay.exit();
-      } catch(e) {
-        // The writer is gone, so the exit command can not be sent - exit still
-        // stops the keep alive interval.
-      }
+      this.fourWay.stop();
     }
   }
 
@@ -185,20 +187,34 @@ class Serial {
    * Attmept to cleanly close the serial connection
    */
   async close() {
+    // Attempt to stop motors while the reader still runs: the stop needs the
+    // answer to a features request.
+    if(this.msp) {
+      try {
+        await this.stopAllMotors();
+      } catch(e) {
+        // Port already gone
+      }
+    }
+
     this.running = false;
 
-    // Attempt to stop motors
-    if(this.msp) {
-      await this.stopAllMotors();
-    }
+    // No answer will be read any more: the commands still waiting are
+    // cancelled now instead of timing out after the port is closed.
+    this.qp.clear(new PortClosedError('Serial port is closed'));
 
     if(this.reader) {
       this.reader.cancel();
       await this.reader.releaseLock();
     }
 
+    // No write after this point: a late command (the battery state for
+    // example) is refused as for a closed port instead of being written to a
+    // released writer
     if(this.writer) {
-      await this.writer.releaseLock();
+      const writer = this.writer;
+      this.writer = null;
+      await writer.releaseLock();
     }
 
     try {
@@ -233,7 +249,7 @@ class Serial {
    * Four Way interface - see the respective class for in depth documentation of
    * the functions.
    */
-  exitFourWayInterface = () => this.fourWay.exit();
+  exitFourWayInterface = (waitForAnswer) => this.fourWay.exit(waitForAnswer);
   flashPreflight = (esc, hex, force, i) => this.fourWay.flashPreflight(esc, hex, force, i);
   getFourWayInterfaceInfo = (esc) => this.fourWay.getInfo(esc);
   resetFourWayInterface = (esc) => this.fourWay.reset(esc);

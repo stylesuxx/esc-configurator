@@ -60,6 +60,13 @@ import {
   setIndividualAtIndex,
 } from './escsSlice';
 
+// Just after a reconnection, the flight controller (Betaflight included)
+// may be silent for a moment: a request without an answer in time is asked
+// again. It was seen silent for longer than 3 requests (about 3.5 s); 5
+// requests cover about 6 s.
+const MSP_ATTEMPTS = 5;
+const MSP_RETRY_DELAY_MS = 250;
+
 class App extends Component {
   static propTypes = { serial: PropTypes.shape({ checked: PropTypes.bool.isRequired }).isRequired };
 
@@ -201,6 +208,30 @@ class App extends Component {
     this.addLogMessage('portChanged');
   };
 
+  /**
+   * Send an MSP request, again after a short pause when the flight controller
+   * does not answer in time.
+   */
+  askAgainOnTimeout = async(request) => {
+    for(let attempt = 1; ; attempt += 1) {
+      try {
+        return await request();
+      } catch(e) {
+        if(!(e instanceof TimeoutError) || attempt >= MSP_ATTEMPTS) {
+          throw e;
+        }
+
+        await delay(MSP_RETRY_DELAY_MS);
+      }
+    }
+  };
+
+  /**
+   * A single late answer to the API version (just after a reconnection for
+   * example) must not be taken for a flight controller left in passthrough.
+   */
+  getApiVersion = () => this.askAgainOnTimeout(() => this.serial.getApiVersion());
+
   handleConnect = async(e) => {
     e.preventDefault();
 
@@ -238,7 +269,7 @@ class App extends Component {
       let apiVersion = null;
 
       try {
-        apiVersion = await this.serial.getApiVersion();
+        apiVersion = await this.getApiVersion();
       } catch(e) {
         if (e instanceof TimeoutError) {
           let hasResets = false;
@@ -270,33 +301,33 @@ class App extends Component {
 
       this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
-      const fcVariant = await this.serial.getFcVariant();
-      const fcVersion = await this.serial.getFcVersion();
+      const fcVariant = await this.askAgainOnTimeout(() => this.serial.getFcVariant());
+      const fcVersion = await this.askAgainOnTimeout(() => this.serial.getFcVersion());
       this.addLogMessage('mspFcInfo', {
         id: fcVariant.flightControllerIdentifier,
         version: fcVersion.flightControllerVersion,
       });
 
-      const buildInfo = await this.serial.getBuildInfo();
+      const buildInfo = await this.askAgainOnTimeout(() => this.serial.getBuildInfo());
       this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
 
-      const boardInfo = await this.serial.getBoardInfo();
+      const boardInfo = await this.askAgainOnTimeout(() => this.serial.getBoardInfo());
       this.addLogMessage('mspBoardInfo', {
         identifier: boardInfo.boardIdentifier,
         version: boardInfo.boardVersion,
       });
 
-      const uid = (await this.serial.getUid()).uid;
+      const uid = (await this.askAgainOnTimeout(() => this.serial.getUid())).uid;
       let uidHex = 0;
       for (let i = 0; i < uid.length; i += 1) {
         uidHex += uid[i].toString(16);
       }
       this.addLogMessage('mspUid', { id: uidHex });
 
-      let motorData = await this.serial.getMotorData();
+      let motorData = await this.askAgainOnTimeout(() => this.serial.getMotorData());
       motorData = motorData.filter((motor) => motor > 0);
 
-      const features = await this.serial.getFeatures();
+      const features = await this.askAgainOnTimeout(() => this.serial.getFeatures());
       store.dispatch(setMspFeatures(features));
 
       TagManager.dataLayer({
@@ -329,7 +360,9 @@ class App extends Component {
 
     store.dispatch(setDisconnecting(true));
 
-    const { escs } = store.getState();
+    const {
+      escs, serial,
+    } = store.getState();
     const { individual } = escs;
     if(this.serial) {
       for(let i = 0; i < individual.length; i += 1) {
@@ -339,9 +372,16 @@ class App extends Component {
           this.addLogMessage('resetEscFailed', { index: i + 1 });
         }
       }
-      await this.serial.exitFourWayInterface();
 
-      this.serial.close();
+      // In passthrough, the answer to the exit is read before the port closes
+      try {
+        await this.serial.exitFourWayInterface(serial.fourWay);
+      } catch(e) {
+        // No answer: the port is closed anyway
+      }
+
+      // The port is closed when "closedPort" is logged
+      await this.serial.close();
     }
 
     this.lastConnected = 0;
