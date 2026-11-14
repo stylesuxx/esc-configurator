@@ -59,7 +59,6 @@ const bluejaySettingsDescriptions = bluejaySource.getSettingsDescriptions();
 const am32Eeprom = am32Source.getEeprom();
 const am32SettingsDescriptions = am32Source.getSettingsDescriptions();
 
-// A flash that makes no progress for this long is given up
 const FLASH_STALL_MS = 30000;
 
 /**
@@ -284,7 +283,6 @@ class FourWay {
       }
 
       const processMessage = async(resolve, reject) => {
-        // The flash was given up (no progress): nothing more is sent
         if (this.flashAbort) {
           return reject(this.flashAbort);
         }
@@ -885,7 +883,7 @@ class FourWay {
     this.flashAbortPromise = new Promise((resolve, reject) => {
       abort = reject;
     });
-    // Only rejected when the flash is given up, by then awaited if at all
+    // Avoids an unhandled rejection when nothing awaits it
     this.flashAbortPromise.catch(() => {});
 
     const watch = setInterval(() => {

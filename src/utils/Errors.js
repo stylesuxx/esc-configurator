@@ -112,9 +112,6 @@ class PortClosedError extends Error {
   }
 }
 
-/**
- * The flash made no progress for too long: it is given up.
- */
 class FlashStalledError extends Error {
   constructor(message) {
     super(message);
