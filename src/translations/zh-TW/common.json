@@ -44,6 +44,7 @@
   "escButtonFlashAll": "燒錄所有 ESC",
   "escButtonSaveLog": "保存除錯日志",
   "escButtonClearLog": "清除調試日志",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "寫入設定",
   "buttonCancel": "取消",
   "escButtonSelect": "燒錄",
