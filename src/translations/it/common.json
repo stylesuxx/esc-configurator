@@ -44,7 +44,7 @@
   "escButtonFlashAll": "Flash di tutti gli ESC",
   "escButtonSaveLog": "Salva il Log del Debug",
   "escButtonClearLog": "Cancella il Log del Debug",
-  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
+  "escButtonClearLogFlashing": "Il log non può essere cancellato durante il flash",
   "escButtonWrite": "Scrivi Impostazioni",
   "buttonCancel": "Cancella",
   "escButtonSelect": "Flash",
