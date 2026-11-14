@@ -135,9 +135,6 @@ class FourWay {
     }, 800);
   }
 
-  /**
-   * Stop sending keep alive commands
-   */
   stop() {
     clearInterval(this.interval);
   }

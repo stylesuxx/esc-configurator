@@ -380,7 +380,6 @@ class App extends Component {
         // No answer: the port is closed anyway
       }
 
-      // The port is closed when "closedPort" is logged
       await this.serial.close();
     }
 
