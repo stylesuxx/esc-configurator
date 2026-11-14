@@ -44,6 +44,7 @@
   "escButtonFlashAll": "Прошити всі регулятори",
   "escButtonSaveLog": "Зберегти журнал налагодження",
   "escButtonClearLog": "Очистити журнал налагодження",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "Записати налаштування",
   "buttonCancel": "Скасувати",
   "escButtonSelect": "Прошити",
