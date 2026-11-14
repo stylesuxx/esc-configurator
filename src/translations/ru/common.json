@@ -44,6 +44,7 @@
   "escButtonFlashAll": "Прошить все регуляторы оборотов",
   "escButtonSaveLog": "Сохранить журнал отладки",
   "escButtonClearLog": "Очистить журнал отладки",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "Применить настройки",
   "buttonCancel": "Отмена",
   "escButtonSelect": "Прошить",
