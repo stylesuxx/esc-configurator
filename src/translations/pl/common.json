@@ -44,6 +44,7 @@
   "escButtonFlashAll": "Wgraj na wszystkie ESC",
   "escButtonSaveLog": "Zapisz dziennik błędów",
   "escButtonClearLog": "Wyczyść dziennik błędów",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "Zapisz ustawienia",
   "buttonCancel": "Anuluj",
   "escButtonSelect": "Flash",
