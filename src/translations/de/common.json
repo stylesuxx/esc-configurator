@@ -44,6 +44,7 @@
   "escButtonFlashAll": "Alle flashen",
   "escButtonSaveLog": "Debug-Protokoll speichern",
   "escButtonClearLog": "Debug-Protokoll löschen",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "Einstellungen schreiben",
   "buttonCancel": "Abbrechen",
   "escButtonSelect": "Flashen",
