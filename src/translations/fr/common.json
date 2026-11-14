@@ -44,6 +44,7 @@
   "escButtonFlashAll": "Installer sur tous les ESCs",
   "escButtonSaveLog": "Enregistrer le journal de débogage",
   "escButtonClearLog": "Effacer le journal de débogage",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "Écrire les paramètres",
   "buttonCancel": "Annuler",
   "escButtonSelect": "Installer",
