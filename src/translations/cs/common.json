@@ -44,6 +44,7 @@
   "escButtonFlashAll": "Nahrát všechny ESC",
   "escButtonSaveLog": "Uložit protokol ladění",
   "escButtonClearLog": "Smazat protokol ladění",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "Zápis nastavení",
   "buttonCancel": "Zrušit",
   "escButtonSelect": "Nahrát",
