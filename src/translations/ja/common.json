@@ -44,6 +44,7 @@
   "escButtonFlashAll": "すべてのESCをフラッシュします",
   "escButtonSaveLog": "デバッグログを保存",
   "escButtonClearLog": "デバッグログをクリア",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "設定を書き込む",
   "buttonCancel": "キャンセル",
   "escButtonSelect": "フラッシュ",
