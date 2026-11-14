@@ -373,7 +373,6 @@ class App extends Component {
         }
       }
 
-      // In passthrough, the answer to the exit is read before the port closes
       try {
         await this.serial.exitFourWayInterface(serial.fourWay);
       } catch(e) {

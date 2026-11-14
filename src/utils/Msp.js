@@ -151,7 +151,6 @@ class Msp {
         const result = await this.serial(bufferOut, read);
         resolve(result);
       } catch(e) {
-        // A command cancelled because the port closes is not a failure
         if(!(e instanceof PortClosedError)) {
           console.debug('MSP command failed:', e.message);
         }
@@ -268,7 +267,6 @@ class Msp {
           // Message received, process
           if (messageChecksum === data[i]) {
             if (expectedCommand !== null && command !== expectedCommand) {
-              // Late answer to another command: skip it, look further
               state = 0;
               messageLengthReceived = 0;
               break;
