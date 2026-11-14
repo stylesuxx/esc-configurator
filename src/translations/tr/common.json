@@ -44,6 +44,7 @@
   "escButtonFlashAll": "Tümüne Yükle",
   "escButtonSaveLog": "Hata Ayıklama Günlüğünü Kaydet",
   "escButtonClearLog": "Hata Ayıklama Günlüğünü Temizle",
+  "escButtonClearLogFlashing": "The log can not be cleared while flashing",
   "escButtonWrite": "Ayarı Kaydet",
   "buttonCancel": "İptal",
   "escButtonSelect": "Kaydet",
