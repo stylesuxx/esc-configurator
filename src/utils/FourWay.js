@@ -299,8 +299,7 @@ class FourWay {
 
           const msg = await this.untilFlashAbort(this.serial(message, this.parseMessage));
           if (msg && msg.ack === ACK.ACK_OK) {
-            // An answer of the ESC is progress for a flash in progress (the
-            // keep alive is answered by the flight controller, not the ESC)
+            // Any ESC answer is progress; the keep alive is answered by the flight controller
             if (command !== COMMANDS.cmd_InterfaceTestAlive) {
               this.flashLastActivity = Date.now();
             }
@@ -907,8 +906,8 @@ class FourWay {
   }
 
   /**
-   * The promise, or a rejection as soon as the flash in progress is given up:
-   * a command still waiting for an answer then stops waiting.
+   * Rejects as soon as the flash is given up, so that a command waiting for
+   * an answer stops waiting.
    *
    * @param {Promise} promise
    * @returns {Promise}
