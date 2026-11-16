@@ -20,6 +20,7 @@
   "readEsc": "Считывание с {{index}}: {{name}} регулятора оборотов",
   "flashingEsc": "Прошивка регулятора оборотов № {{index}}",
   "flashingEscFailed": "Ошибка при прошивке регулятора оборотов № {{index}} - проверьте тип файла",
+  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
   "fetchingFilesFailed": "Ошибка загрузки файлов для {{name}}",
   "readEscFailed": "Не удалось прочитать регулятор оборотов № {{index}}",
   "resetEscFailed": "Не удалось сбросить регулятор оборотов № {{index}}",
