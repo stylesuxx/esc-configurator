@@ -206,12 +206,9 @@ class Serial {
       await this.reader.releaseLock();
     }
 
-    // From here, a late command (battery state for example) is refused like on
-    // a closed port instead of being written to a released writer
     if(this.writer) {
-      const writer = this.writer;
+      await this.writer.releaseLock();
       this.writer = null;
-      await writer.releaseLock();
     }
 
     try {
