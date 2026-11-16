@@ -112,6 +112,19 @@ describe('General', () => {
     expect(count).toEqual(1);
   });
 
+  it('retry gives up immediately on a stalled flash', async() => {
+    const { FlashStalledError } = require('../../Errors');
+    let count = 0;
+
+    function test(resolve, reject) {
+      count += 1;
+      reject(new FlashStalledError('No progress'));
+    }
+
+    await expect(retry(test, 5, 10)).rejects.toThrow(FlashStalledError);
+    expect(count).toEqual(1);
+  });
+
   it('retry succeeds at third try', async() => {
     let count = 0;
 
