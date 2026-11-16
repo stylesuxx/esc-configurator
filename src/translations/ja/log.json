@@ -20,6 +20,7 @@
   "readEsc": "ESC {{index}}: {{name}} を読みこむ",
   "flashingEsc": "ESC {{index}} をフラッシュ中",
   "flashingEscFailed": "ESCのフラッシュに失敗しました {{index}} - ファイルの種類を確認して下さい",
+  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
   "fetchingFilesFailed": "{{name}}のファイルを取得できませんでした",
   "readEscFailed": "ESC {{index}} の読み込みに失敗しました",
   "resetEscFailed": "ESC {{index}}のリセットに失敗しました",
