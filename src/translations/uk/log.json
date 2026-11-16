@@ -20,6 +20,7 @@
   "readEsc": "Зчитати регулятор обертів {{index}}: {{name}}",
   "flashingEsc": "Прошивається регулятор обертів {{index}}",
   "flashingEscFailed": "Помилка прошивання регулятора обертів {{index}} - перевірити тип файлу",
+  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
   "fetchingFilesFailed": "Помилка завантаження файлів для {{name}}",
   "readEscFailed": "Не вдалося зчитати регулятор обертів {{index}}",
   "resetEscFailed": "Не вдалося скинути налаштування регулятора обертів {{index}}",
