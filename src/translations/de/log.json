@@ -20,6 +20,7 @@
   "readEsc": "ESC {{index}}: {{name}}",
   "flashingEsc": "ESC {{index}} wird geflasht",
   "flashingEscFailed": "ESC {{index}} konnte nicht geflasht werden - prüfe den Dateityp",
+  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
   "fetchingFilesFailed": "Fehler beim Abrufen der Dateien für {{name}}",
   "readEscFailed": "ESC {{index}} konnte nicht gelesen werden",
   "resetEscFailed": "Reset von ESC {{index}} fehlgeschlagen",
