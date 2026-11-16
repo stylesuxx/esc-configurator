@@ -20,6 +20,7 @@
   "readEsc": "Lettura ESC {{index}}: {{name}}",
   "flashingEsc": "Flashando ESC {{index}}",
   "flashingEscFailed": "Flash dell' ESC {{index}} fallito - controlla il tipo di file",
+  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
   "fetchingFilesFailed": "Recupero file per {{name}} fallito",
   "readEscFailed": "Lettura ESC {{index}} fallita",
   "resetEscFailed": "Ripristino ESC {{index}} fallito",
