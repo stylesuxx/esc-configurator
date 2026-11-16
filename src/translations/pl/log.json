@@ -20,6 +20,7 @@
   "readEsc": "Czytaj ESC {{index}}: {{name}}",
   "flashingEsc": "Programowanie ESC {{index}}",
   "flashingEscFailed": "Nie udało się wgrać ESC {{index}} - sprawdź typ pliku",
+  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
   "fetchingFilesFailed": "Nie udało się pobrać plików dla {{name}}",
   "readEscFailed": "Odczytywanie ESC {{index}} nie powiodło się",
   "resetEscFailed": "Resetowanie ESC {{index}} nie powiodło się",
