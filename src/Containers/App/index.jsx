@@ -290,10 +290,10 @@ class App extends Component {
           }
 
           if (hasResets) {
-            await this.serial.exitFourWayInterface();
+            await this.serial.exitFourWayInterface(true);
           }
 
-          apiVersion = await this.serial.getApiVersion();
+          apiVersion = await this.getApiVersion();
         } else {
           throw e;
         }
