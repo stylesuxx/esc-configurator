@@ -20,6 +20,7 @@
   "readEsc": "Čtěte ESC {{index}}: {{name}}",
   "flashingEsc": "Nahrávání ESC {{index}}",
   "flashingEscFailed": "Chyba při nahrávání ESC {{index}} - zkontrolujte typ souboru",
+  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
   "fetchingFilesFailed": "Nepodařilo se načíst soubory pro {{name}}",
   "readEscFailed": "Selhalo čtení ESC {{index}}",
   "resetEscFailed": "Resetování ESC {{index}} selhalo",
