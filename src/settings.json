@@ -64,6 +64,10 @@
       "type": "boolean",
       "value": false
     },
+    "debugMode": {
+      "type": "boolean",
+      "value": true
+    },
     "disableCommon": {
       "type": "boolean",
       "value": false
