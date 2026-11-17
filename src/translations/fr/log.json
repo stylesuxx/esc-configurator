@@ -20,7 +20,7 @@
   "readEsc": "Lire ESC {{index}}: {{name}}",
   "flashingEsc": "Écriture de l'ESC {{index}}",
   "flashingEscFailed": "Échec de l'écriture de l'ESC {{index}} - vérifier le type de fichier",
-  "flashingEscStalled": "Gave up flashing ESC {{index}} - no progress for {{seconds}} s, check the ESC power",
+  "flashingEscStalled": "Abandon du flashage des ESC {{index}} - pas de progrès depuis {{seconds}} s, vérifiez leur alimentation",
   "fetchingFilesFailed": "Échec de la récupération des fichiers pour {{name}}",
   "readEscFailed": "Échec de la lecture de l'ESC {{index}}",
   "resetEscFailed": "Échec de la réinitialisation de l'ESC {{index}}",
