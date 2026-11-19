@@ -29,7 +29,7 @@ export const escsSlice = createSlice({
     setMaster: (state, action) => {
       state.master = action.payload;
     },
-    updateIndividual: (state) => {
+    updateIndividual: (state, action) => {
       const newIndividual = [];
       for(let i = 0; i < state.individual.length; i += 1) {
         // An ESC marked FLASH*FAILED keeps its mark: it is skipped when
@@ -43,8 +43,14 @@ export const escsSlice = createSlice({
 
         const newSettings = {
           ...state.individual[i],
-          settings: { ...state.master },
+          settings: { ...settings },
         };
+
+        for(const name of action.payload) {
+          if(name in newSettings.settings && name in state.master) {
+            newSettings.settings[name] = state.master[name];
+          }
+        }
 
         newIndividual.push(newSettings);
       }
