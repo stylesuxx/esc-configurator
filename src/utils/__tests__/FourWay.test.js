@@ -50,6 +50,24 @@ describe('FourWay', () => {
     expect(serial).toHaveBeenCalled();
   });
 
+  it('should wait for the answer to exit when asked to', async() => {
+    const answer = { ack: 0 };
+    const answeringSerial = jest.fn(() => Promise.resolve(answer));
+    fourWay = new FourWay(answeringSerial);
+
+    await expect(fourWay.exit(true)).resolves.toBe(answer);
+    expect(answeringSerial).toHaveBeenCalledTimes(1);
+    expect(answeringSerial.mock.calls[0][1]).toBe(fourWay.parseMessage);
+  });
+
+  it('should not wait for an answer to exit by default', async() => {
+    const answeringSerial = jest.fn(() => Promise.resolve());
+    fourWay = new FourWay(answeringSerial);
+
+    await fourWay.exit();
+    expect(answeringSerial.mock.calls[0][1]).toBe(null);
+  });
+
   it('should reject exit when the port is closed', async() => {
     const { PortClosedError } = require('../Errors');
     const failingSerial = () => Promise.reject(new PortClosedError('closed'));

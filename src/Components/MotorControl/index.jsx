@@ -32,7 +32,13 @@ function BatteryState({ getBatteryState }) {
   /* istanbul ignore next */
   useInterval(async() => {
     if(getBatteryState) {
-      const state = await getBatteryState();
+      let state = null;
+      try {
+        state = await getBatteryState();
+      } catch(e) {
+        // No answer (port closing, late flight controller): asked again later
+        return;
+      }
 
       if(state && state.cellCount > 0) {
         const danger = (state.voltage / state.cellCount) < cellLimit;

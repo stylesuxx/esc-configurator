@@ -140,3 +140,59 @@ test('transmit never completes - command times out and queue keeps working', asy
   }, receive, 200);
   await expect(next).resolves.toEqual('ok');
 });
+
+describe('QueueProcessor clear (port closed)', () => {
+  const waitingReceive = (buffer, resolve, reject) => {
+    reject(new NotEnoughDataError());
+  };
+
+  it('should reject the current and the waiting commands at once, without a later time out', async() => {
+    jest.useFakeTimers();
+    const qp = new QueueProcessor();
+    const first = qp.addCommand(() => {}, waitingReceive);
+    const second = qp.addCommand(() => {}, waitingReceive);
+    const firstError = first.catch((e) => e);
+    const secondError = second.catch((e) => e);
+
+    // Let the first command be transmitted
+    await Promise.resolve();
+    await Promise.resolve();
+
+    const closed = new Error('closed');
+    qp.clear(closed);
+
+    expect(await firstError).toBe(closed);
+    expect(await secondError).toBe(closed);
+
+    // No time out fires afterwards on a dropped command
+    const errors = [];
+    qp.addCommand(() => {}, waitingReceive).catch((e) => errors.push(e));
+    jest.advanceTimersByTime(500);
+    expect(errors).toEqual([]);
+    jest.useRealTimers();
+  });
+
+  it('should not hand data received before to the next command', async() => {
+    const qp = new QueueProcessor();
+    const first = qp.addCommand(() => {
+      // Half an answer, the rest never comes
+      qp.addData(new Uint8Array([7, 7]));
+    }, waitingReceive).catch(() => {});
+    await Promise.resolve();
+    await Promise.resolve();
+
+    qp.clear(new Error('closed'));
+    await first;
+
+    const seen = [];
+    const result = await qp.addCommand(() => {
+      qp.addData(new Uint8Array([1]));
+    }, (buffer, resolve) => {
+      seen.push(Array.from(buffer));
+      resolve('ok');
+    });
+
+    expect(result).toEqual('ok');
+    expect(seen).toEqual([[1]]);
+  });
+});
