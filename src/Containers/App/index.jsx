@@ -273,6 +273,7 @@ class App extends Component {
       } catch(e) {
         if (e instanceof TimeoutError) {
           let hasResets = false;
+          let inPassthrough = false;
           let i = 0;
 
           try {
@@ -285,11 +286,13 @@ class App extends Component {
               this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
               throw ex;
             }
+
+            inPassthrough = true;
           } finally {
             hasResets = i > 0;
           }
 
-          if (hasResets) {
+          if (hasResets || inPassthrough) {
             await this.serial.exitFourWayInterface(true);
           }
 
