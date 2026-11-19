@@ -410,6 +410,55 @@ describe('App connecting', () => {
   });
 });
 
+describe('App connecting to a flight controller left in passthrough', () => {
+  it('should leave the passthrough even when no ESC answers', async() => {
+    const { App: AppClass } = require('../');
+    const { TimeoutError } = require('../../../utils/helpers/QueueProcessor');
+    const { MessageNotOkError } = require('../../../utils/Errors');
+    const { setOpen } = require('../serialSlice');
+    const app = new AppClass();
+    app.addLogMessage = jest.fn();
+    store.dispatch(setOpen(false));
+
+    let apiCalls = 0;
+    app.serial = {
+      open: jest.fn(),
+      setLogCallback: jest.fn(),
+      close: jest.fn(),
+      getApiVersion: jest.fn(async() => {
+        apiCalls += 1;
+        if(apiCalls <= 5) {
+          throw new TimeoutError('Timed out after 1000ms');
+        }
+
+        return { apiVersion: '1.48.0' };
+      }),
+      getFourWayInterfaceInfo: jest.fn(async() => {
+        throw new MessageNotOkError('Message not OK');
+      }),
+      resetFourWayInterface: jest.fn(),
+      exitFourWayInterface: jest.fn(),
+      getFcVariant: jest.fn(() => ({ flightControllerIdentifier: 'BTFL' })),
+      getFcVersion: jest.fn(() => ({ flightControllerVersion: '25.12.2' })),
+      getBuildInfo: jest.fn(() => ({ buildInfo: 'Feb 23 2026' })),
+      getBoardInfo: jest.fn(() => ({
+        boardIdentifier: 'F405',
+        boardVersion: 0,
+      })),
+      getUid: jest.fn(() => ({ uid: [1, 2] })),
+      getMotorData: jest.fn(() => [1000, 1000, 1000, 1000]),
+      getFeatures: jest.fn(() => ({})),
+    };
+
+    await app.handleConnect({ preventDefault: () => null });
+
+    expect(app.serial.resetFourWayInterface).not.toHaveBeenCalled();
+    expect(app.serial.exitFourWayInterface).toHaveBeenCalledWith(true);
+    expect(app.addLogMessage).not.toHaveBeenCalledWith('initializationFailed');
+    expect(store.getState().serial.open).toBeTruthy();
+  });
+});
+
 describe('App disconnecting', () => {
   const setup = (fourWay, exit) => {
     const { App: AppClass } = require('../');
