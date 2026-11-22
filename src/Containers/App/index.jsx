@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import BinToHex from 'bin-to-hex';
+import i18next from 'i18next';
 import Rtttl from 'bluejay-rtttl-parse';
 import TagManager from 'react-gtm-module';
 import UAParser from 'ua-parser-js';
@@ -22,6 +23,16 @@ import MainApp from '../../Components/App';
 import Serial from '../../utils/Serial';
 import { loadSerialApi } from '../../utils/LocalStorage';
 import { MessageNotOkError } from '../../utils/Errors';
+import {
+  buildSettingsFile,
+  checkLoadedSettings,
+  downloadSettingsFile,
+  getLoadPlans,
+  getPreviewLines,
+  getSettingsFileName,
+  isSupportedEsc,
+  parseSettingsFile,
+} from '../../utils/SettingsFile';
 
 import { store } from '../../store';
 
@@ -37,6 +48,7 @@ import {
 } from '../../Components/Log/logSlice';
 import {
   reset as resetState,
+  selectCanWrite,
   selectIsSupported,
   setConnecting,
   setDisconnecting,
@@ -661,31 +673,26 @@ class App extends Component {
     return mergedSettings;
   };
 
-  handleWriteSettings = async() => {
-    TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
-
+  /**
+   * Writes to each ESC the settings given for it, then reads it back. An ESC
+   * without settings is left as it is.
+   *
+   * @param {function} getSettings settings to write to an ESC, or null
+   */
+  writeEscs = async(getSettings) => {
     store.dispatch(setWriting(true));
-    const state = store.getState();
-    const { escs } = state;
 
-    /**
-     * Settings of unsupported firmware can not be edited, only the startup
-     * melody. Each ESC keeps its own settings in that case.
-     */
-    const isSupported = selectIsSupported(state);
-
-    const individual = [ ...escs.individual ];
+    const individual = [ ...store.getState().escs.individual ];
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
       const target = esc.index;
-      if(this.skipFailedFlash(esc)) {
+      const settings = getSettings(esc);
+      if(!settings || this.skipFailedFlash(esc)) {
         continue;
       }
 
-      const mergedSettings = this.getMergedSettings(esc, isSupported ? escs.master : {});
-
       try {
-        await this.serial.writeSettings(target, esc, mergedSettings);
+        await this.serial.writeSettings(target, esc, settings);
 
         const newInfo = await this.handleReadEsc(target);
         individual[i] = {
@@ -701,6 +708,151 @@ class App extends Component {
     }
     store.dispatch(setWriting(false));
     store.dispatch(setIndividual(individual));
+  };
+
+  handleWriteSettings = async() => {
+    TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
+
+    const state = store.getState();
+
+    /**
+     * Settings of unsupported firmware can not be edited, only the startup
+     * melody. Each ESC keeps its own settings in that case.
+     */
+    let master = {};
+    if(selectIsSupported(state)) {
+      master = state.escs.master;
+    }
+
+    await this.writeEscs((esc) => this.getMergedSettings(esc, master));
+  };
+
+  /**
+   * @returns {boolean} true when the file was offered for download
+   */
+  saveSettingsFile = () => {
+    const {
+      connected,
+      individual,
+    } = store.getState().escs;
+    const fileName = getSettingsFileName();
+    if(!downloadSettingsFile(buildSettingsFile(individual, connected), fileName)) {
+      this.addLogMessage('settingsFileSaveFailed');
+
+      return false;
+    }
+
+    this.addLogMessage('settingsFileSaved', { fileName });
+
+    return true;
+  };
+
+  handleSaveSettings = () => {
+    if(!store.getState().escs.individual.some(isSupportedEsc)) {
+      this.addLogMessage('settingsFileNoEsc');
+
+      return;
+    }
+
+    this.saveSettingsFile();
+  };
+
+  handleLoadSettings = (e) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      await this.loadSettings(e.target.result);
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+
+  canLoadSettings = () => {
+    const state = store.getState();
+
+    return Boolean(this.serial) &&
+      state.serial.open &&
+      !state.state.isFlashing &&
+      selectCanWrite(state);
+  };
+
+  /**
+   * Writes the settings of a file to the ESCs, each one only to the ESC at
+   * the same position running the same firmware, version and layout.
+   *
+   * @param {string} text
+   */
+  loadSettings = async(text) => {
+    if(!this.canLoadSettings()) {
+      this.addLogMessage('settingsLoadNotAllowed');
+
+      return;
+    }
+
+    let file = null;
+    try {
+      file = parseSettingsFile(text);
+    } catch(e) {
+      this.addLogMessage('settingsLoadInvalid');
+
+      return;
+    }
+
+    const { connected } = store.getState().escs;
+    if(file.count !== connected) {
+      this.addLogMessage('settingsLoadCountMismatch', {
+        connected,
+        saved: file.count,
+      });
+
+      return;
+    }
+
+    // What is on the screen may not be written yet: start from the ESCs
+    await this.handleReadEscs();
+
+    const {
+      messages,
+      plans,
+    } = getLoadPlans(store.getState().escs.individual, file);
+    this.addLogMessages(messages);
+
+    const lines = getPreviewLines(plans, (key, params) => i18next.t(`common:${key}`, params));
+    if(lines.length === 0) {
+      this.addLogMessage('settingsLoadNoChange');
+
+      return;
+    }
+
+    if(typeof window.confirm !== 'function' ||
+      !window.confirm(i18next.t('common:settingsLoadConfirm', { changes: lines.join('\n') }))) {
+      this.addLogMessage('settingsLoadCancelled');
+
+      return;
+    }
+
+    if(!this.saveSettingsFile()) {
+      this.addLogMessage('settingsLoadNoBackup');
+
+      return;
+    }
+
+    await this.writeEscs((esc) => {
+      const plan = plans.find((plan) => plan.esc.index === esc.index);
+      if(!plan) {
+        return null;
+      }
+
+      return {
+        ...esc.settings,
+        ...plan.settings,
+      };
+    });
+
+    await this.handleReadEscs();
+    this.addLogMessages(checkLoadedSettings(plans, store.getState().escs.individual));
+  };
+
+  addLogMessages = (messages) => {
+    messages.forEach((message) => this.addLogMessage(message.key, message.params));
   };
 
   handleFirmwareDump = async (target) => {
@@ -861,7 +1013,9 @@ class App extends Component {
         onEscDump={this.handleFirmwareDump}
         onEscsFlashFile={this.handleLocalSubmit}
         onEscsFlashUrl={this.handleFlashUrl}
+        onEscsLoadSettings={this.handleLoadSettings}
         onEscsRead={this.handleReadEscs}
+        onEscsSaveSettings={this.handleSaveSettings}
         onEscsWriteDefaults={this.handleResetDefaultls}
         onEscsWriteSettings={this.handleWriteSettings}
         onMelodyWrite={this.handleMelodyWrite}

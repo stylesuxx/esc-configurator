@@ -44,5 +44,20 @@
   "browser": "{{name}} ({{version}}) on {{os}}",
   "dumpingEsc": "Dumping ESC {{index}}",
   "flashingVerificationFailed": "Verification failed - data might not have been written correctly",
-  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca"
+  "am32NotSupported": "ESC {{index}} is ARM based (AM32) and can no longer be flashed here. Please use https://am32.ca",
+  "settingsFileSaved": "Settings saved to {{fileName}}",
+  "settingsFileSaveFailed": "Could not save the settings to a file",
+  "settingsFileNoEsc": "No settings to save: only BLHeli_S and Bluejay ESCs are saved",
+  "settingsLoadNotAllowed": "Settings can only be loaded while connected, with the ESCs read and not flashing",
+  "settingsLoadInvalid": "Not a settings file of this version - nothing written",
+  "settingsLoadCountMismatch": "The file holds settings for {{saved}} ESCs, {{connected}} are connected - nothing written",
+  "settingsLoadSkippedFirmware": "ESC {{index}} skipped: only BLHeli_S and Bluejay settings can be loaded",
+  "settingsLoadSkippedMissing": "ESC {{index}} skipped: the file holds no settings for it",
+  "settingsLoadSkippedVersion": "ESC {{index}} skipped: firmware, version or layout differ from the file",
+  "settingsLoadOutOfBounds": "ESC {{index}}: out of bounds values not written: {{names}}",
+  "settingsLoadNoChange": "The settings in the file are the same as in the ESCs - nothing written",
+  "settingsLoadCancelled": "Loading settings cancelled - nothing written",
+  "settingsLoadNoBackup": "Nothing written: the current settings could not be saved first",
+  "settingsLoadVerified": "ESC {{index}}: read back, same as written",
+  "settingsLoadMismatch": "ESC {{index}}: read back differs from what was written: {{names}}"
 }

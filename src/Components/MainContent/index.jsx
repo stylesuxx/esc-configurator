@@ -93,6 +93,8 @@ function MainContent({
   onLocalSubmit,
   onAllMotorSpeed,
   onSingleMotorSpeed,
+  onLoadSettings,
+  onSaveSettings,
   progressReferences,
 }) {
   const { t } = useTranslation('common');
@@ -246,8 +248,10 @@ function MainContent({
       </div>
 
       <Buttonbar
+        onLoadSettings={onLoadSettings}
         onReadSetup={onReadEscs}
         onResetDefaults={onResetDefaultls}
+        onSaveSettings={onSaveSettings}
         onWriteSetup={onWriteSetup}
         showMelodyEditor={showMelodyEditor}
       />
@@ -264,9 +268,11 @@ MainContent.propTypes = {
   onAllMotorSpeed: PropTypes.func.isRequired,
   onFirmwareDump: PropTypes.func.isRequired,
   onFlashUrl: PropTypes.func.isRequired,
+  onLoadSettings: PropTypes.func.isRequired,
   onLocalSubmit: PropTypes.func.isRequired,
   onReadEscs: PropTypes.func.isRequired,
   onResetDefaultls: PropTypes.func.isRequired,
+  onSaveSettings: PropTypes.func.isRequired,
   onSingleMotorSpeed: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
   progress: PropTypes.arrayOf(PropTypes.number),

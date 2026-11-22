@@ -541,3 +541,308 @@ describe('App disconnecting', () => {
     expect(app.serial.close).toHaveBeenCalled();
   });
 });
+
+describe('App with a settings file', () => {
+  const bluejay = (index, settings = {}) => ({
+    index,
+    firmwareName: 'Bluejay',
+    layoutRevision: '208',
+    meta: { available: true },
+    settingsArray: [],
+    settings: {
+      NAME: 'Bluejay',
+      LAYOUT: '#J_H_40#',
+      LAYOUT_REVISION: 208,
+      MAIN_REVISION: 0,
+      SUB_REVISION: 21,
+      BEEP_STRENGTH: 40,
+      MOTOR_DIRECTION: 1,
+      ...settings,
+    },
+    individualSettings: { MOTOR_DIRECTION: 1 },
+  });
+
+  const fileText = (escs, count = escs.length) => {
+    const { buildSettingsFile } = require('../../../utils/SettingsFile');
+
+    return JSON.stringify(buildSettingsFile(escs, count));
+  };
+
+  let createObjectURL;
+  let confirm;
+  let click;
+
+  beforeEach(() => {
+    createObjectURL = URL.createObjectURL;
+    confirm = window.confirm;
+    URL.createObjectURL = jest.fn(() => 'blob:settings');
+    window.confirm = jest.fn(() => true);
+    click = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => null);
+  });
+
+  afterEach(() => {
+    const {
+      setConnected, setIndividual, setMaster,
+    } = require('../escsSlice');
+    const { setOpen } = require('../serialSlice');
+
+    URL.createObjectURL = createObjectURL;
+    window.confirm = confirm;
+    click.mockRestore();
+    store.dispatch(setIndividual([]));
+    store.dispatch(setMaster({}));
+    store.dispatch(setConnected(0));
+    store.dispatch(setOpen(false));
+    store.dispatch(resetState());
+  });
+
+  // The ESCs answer what was written to them, changed by readBack
+  const setup = (escs, readBack = {}) => {
+    const { App: AppClass } = require('../');
+    const {
+      setConnected, setIndividual, setMaster,
+    } = require('../escsSlice');
+    const { setOpen } = require('../serialSlice');
+    const { getMasterSettings } = require('../../../utils/helpers/Settings');
+
+    const app = new AppClass();
+    app.addLogMessage = jest.fn();
+    app.handleReadEscs = jest.fn();
+    app.serial = { writeSettings: jest.fn() };
+    app.handleReadEsc = jest.fn(async(target) => {
+      const written = app.serial.writeSettings.mock.calls.find((call) => call[0] === target);
+
+      return {
+        settingsArray: [],
+        settings: {
+          ...written[2],
+          ...readBack,
+        },
+        displayName: '',
+      };
+    });
+
+    store.dispatch(setIndividual(escs));
+    store.dispatch(setMaster(getMasterSettings(escs)));
+    store.dispatch(setConnected(escs.length));
+    store.dispatch(setOpen(true));
+
+    return app;
+  };
+
+  const logged = (app, message) => app.addLogMessage.mock.calls.filter((call) => call[0] === message);
+
+  it('should save the settings to a file', () => {
+    const app = setup([bluejay(0), bluejay(1)]);
+
+    app.handleSaveSettings();
+
+    expect(URL.createObjectURL).toHaveBeenCalled();
+    expect(click).toHaveBeenCalled();
+    expect(logged(app, 'settingsFileSaved')).toHaveLength(1);
+  });
+
+  it('should save nothing without a BLHeli_S or Bluejay ESC', () => {
+    const app = setup([{
+      ...bluejay(0),
+      firmwareName: 'AM32',
+    }]);
+
+    app.handleSaveSettings();
+
+    expect(URL.createObjectURL).not.toHaveBeenCalled();
+    expect(logged(app, 'settingsFileNoEsc')).toHaveLength(1);
+  });
+
+  it('should write the settings of the file after saving the current ones, then check them', async() => {
+    const app = setup([bluejay(0), bluejay(1)]);
+
+    await app.loadSettings(fileText([bluejay(0, { BEEP_STRENGTH: 80 }), bluejay(1, { BEEP_STRENGTH: 90 })]));
+
+    expect(window.confirm).toHaveBeenCalledTimes(1);
+    const calls = app.serial.writeSettings.mock.calls;
+    expect(calls.map((call) => call[0])).toEqual([0, 1]);
+    expect(calls[0][2].BEEP_STRENGTH).toEqual(80);
+    expect(calls[1][2].BEEP_STRENGTH).toEqual(90);
+    expect(URL.createObjectURL.mock.invocationCallOrder[0]).toBeLessThan(app.serial.writeSettings.mock.invocationCallOrder[0]);
+    expect(app.handleReadEscs).toHaveBeenCalledTimes(2);
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadVerified', { index: 1 });
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadVerified', { index: 2 });
+  });
+
+  it('should refuse a file saved with another number of ESCs', async() => {
+    const app = setup([bluejay(0), bluejay(1)]);
+
+    await app.loadSettings(fileText([bluejay(0, { BEEP_STRENGTH: 80 })], 1));
+
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadCountMismatch', {
+      connected: 2,
+      saved: 1,
+    });
+    expect(window.confirm).not.toHaveBeenCalled();
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+
+  it('should refuse a file that is not a settings file', async() => {
+    const app = setup([bluejay(0)]);
+
+    await app.loadSettings(JSON.stringify({ format: 'other' }));
+
+    expect(logged(app, 'settingsLoadInvalid')).toHaveLength(1);
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+
+  it('should skip an ESC running another firmware version', async() => {
+    const app = setup([bluejay(0), bluejay(1)]);
+
+    await app.loadSettings(fileText([
+      bluejay(0, {
+        SUB_REVISION: 20,
+        BEEP_STRENGTH: 80,
+      }),
+      bluejay(1, { BEEP_STRENGTH: 90 }),
+    ]));
+
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadSkippedVersion', { index: 1 });
+    expect(app.serial.writeSettings.mock.calls.map((call) => call[0])).toEqual([1]);
+  });
+
+  it('should write nothing when only the firmware version differs', async() => {
+    const app = setup([bluejay(0)]);
+
+    await app.loadSettings(fileText([bluejay(0, {
+      SUB_REVISION: 20,
+      BEEP_STRENGTH: 80,
+    })]));
+
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadSkippedVersion', { index: 1 });
+    expect(logged(app, 'settingsLoadNoChange')).toHaveLength(1);
+    expect(window.confirm).not.toHaveBeenCalled();
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+
+  it('should skip ESCs with another firmware', async() => {
+    const app = setup([{
+      ...bluejay(0),
+      firmwareName: 'AM32',
+    }, bluejay(1)]);
+
+    await app.loadSettings(fileText([bluejay(0), bluejay(1, { BEEP_STRENGTH: 90 })]));
+
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadSkippedFirmware', { index: 1 });
+    expect(app.serial.writeSettings.mock.calls.map((call) => call[0])).toEqual([1]);
+  });
+
+  it('should never write the motor direction', async() => {
+    const app = setup([bluejay(0)]);
+
+    await app.loadSettings(fileText([bluejay(0, {
+      MOTOR_DIRECTION: 2,
+      BEEP_STRENGTH: 80,
+    })]));
+
+    const settings = app.serial.writeSettings.mock.calls[0][2];
+    expect(settings.MOTOR_DIRECTION).toEqual(1);
+    expect(settings.BEEP_STRENGTH).toEqual(80);
+  });
+
+  it('should write the startup melody of the file', async() => {
+    const app = setup([bluejay(0, { STARTUP_MELODY: [0, 0, 0, 0] })]);
+
+    await app.loadSettings(fileText([bluejay(0, { STARTUP_MELODY: [1, 2, 3, 4] })]));
+
+    expect(window.confirm).toHaveBeenCalledTimes(1);
+    expect(app.serial.writeSettings.mock.calls[0][2].STARTUP_MELODY).toEqual([1, 2, 3, 4]);
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadVerified', { index: 1 });
+  });
+
+  it('should write nothing when only the motor direction differs', async() => {
+    const app = setup([bluejay(0)]);
+
+    await app.loadSettings(fileText([bluejay(0, { MOTOR_DIRECTION: 2 })]));
+
+    expect(logged(app, 'settingsLoadNoChange')).toHaveLength(1);
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+
+  it('should write nothing when the user cancels', async() => {
+    const app = setup([bluejay(0)]);
+    window.confirm = jest.fn(() => false);
+
+    await app.loadSettings(fileText([bluejay(0, { BEEP_STRENGTH: 80 })]));
+
+    expect(window.confirm).toHaveBeenCalledTimes(1);
+    expect(logged(app, 'settingsLoadCancelled')).toHaveLength(1);
+    expect(URL.createObjectURL).not.toHaveBeenCalled();
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+
+  it('should write nothing without a way to ask', async() => {
+    const app = setup([bluejay(0)]);
+    window.confirm = undefined;
+
+    await app.loadSettings(fileText([bluejay(0, { BEEP_STRENGTH: 80 })]));
+
+    expect(logged(app, 'settingsLoadCancelled')).toHaveLength(1);
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+
+  it('should write nothing when the current settings can not be saved first', async() => {
+    const app = setup([bluejay(0)]);
+    URL.createObjectURL = undefined;
+    const debug = jest.spyOn(console, 'debug').mockImplementation(() => null);
+
+    await app.loadSettings(fileText([bluejay(0, { BEEP_STRENGTH: 80 })]));
+
+    debug.mockRestore();
+    expect(logged(app, 'settingsLoadNoBackup')).toHaveLength(1);
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+
+  it('should skip values out of bounds and list them', async() => {
+    const app = setup([bluejay(0, { BRAKE_ON_STOP: 0 })]);
+
+    await app.loadSettings(fileText([bluejay(0, {
+      BEEP_STRENGTH: 300,
+      BRAKE_ON_STOP: 1,
+    })]));
+
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadOutOfBounds', {
+      index: 1,
+      names: 'BEEP_STRENGTH',
+    });
+    const settings = app.serial.writeSettings.mock.calls[0][2];
+    expect(settings.BEEP_STRENGTH).toEqual(40);
+    expect(settings.BRAKE_ON_STOP).toEqual(1);
+  });
+
+  it('should log the settings read back differently', async() => {
+    const app = setup([bluejay(0)], { BEEP_STRENGTH: 40 });
+
+    await app.loadSettings(fileText([bluejay(0, { BEEP_STRENGTH: 80 })]));
+
+    expect(app.serial.writeSettings).toHaveBeenCalledTimes(1);
+    expect(app.addLogMessage).toHaveBeenCalledWith('settingsLoadMismatch', {
+      index: 1,
+      names: 'BEEP_STRENGTH',
+    });
+    expect(logged(app, 'settingsLoadVerified')).toHaveLength(0);
+  });
+
+  it('should not load while flashing or when not connected', async() => {
+    const { setOpen } = require('../serialSlice');
+    const app = setup([bluejay(0)]);
+    const text = fileText([bluejay(0, { BEEP_STRENGTH: 80 })]);
+
+    store.dispatch(setFlashing(true));
+    await app.loadSettings(text);
+    store.dispatch(setFlashing(false));
+
+    store.dispatch(setOpen(false));
+    await app.loadSettings(text);
+
+    expect(logged(app, 'settingsLoadNotAllowed')).toHaveLength(2);
+    expect(app.handleReadEscs).not.toHaveBeenCalled();
+    expect(app.serial.writeSettings).not.toHaveBeenCalled();
+  });
+});
