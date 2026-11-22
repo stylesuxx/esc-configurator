@@ -279,6 +279,46 @@ describe('App with an ESC marked FLASH*FAILED', () => {
   });
 });
 
+describe('escsSlice when a common setting changes', () => {
+  it('should only give the common settings to the ESCs', () => {
+    const {
+      setIndividual, setMaster, updateIndividual,
+    } = require('../escsSlice');
+
+    store.dispatch(setIndividual([
+      {
+        index: 0,
+        settings: {
+          NAME: 'Bluejay',
+          BEEP_STRENGTH: 40,
+          PWM_FREQUENCY: 48,
+        },
+      },
+      {
+        index: 1,
+        settings: {
+          NAME: 'Bluejay',
+          BEEP_STRENGTH: 40,
+          PWM_FREQUENCY: 24,
+        },
+      },
+    ]));
+    store.dispatch(setMaster({
+      NAME: 'Bluejay',
+      BEEP_STRENGTH: 60,
+      PWM_FREQUENCY: 48,
+    }));
+    store.dispatch(updateIndividual(['BEEP_STRENGTH']));
+
+    const second = store.getState().escs.individual[1];
+    expect(second.settings.BEEP_STRENGTH).toEqual(60);
+    expect(second.settings.PWM_FREQUENCY).toEqual(24);
+
+    store.dispatch(setIndividual([]));
+    store.dispatch(setMaster({}));
+  });
+});
+
 describe('escsSlice with an ESC marked FLASH*FAILED', () => {
   it('should not give the common settings to that ESC', () => {
     const {
@@ -302,7 +342,7 @@ describe('escsSlice with an ESC marked FLASH*FAILED', () => {
       NAME: 'Bluejay',
       BEEP_STRENGTH: 60,
     }));
-    store.dispatch(updateIndividual());
+    store.dispatch(updateIndividual(['BEEP_STRENGTH']));
 
     const [failed, healthy] = store.getState().escs.individual;
     expect(failed.settings.NAME).toEqual('**FLASH*FAILED**');
