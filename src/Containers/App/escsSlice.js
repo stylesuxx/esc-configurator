@@ -46,7 +46,7 @@ export const escsSlice = createSlice({
           settings: { ...settings },
         };
 
-        for(const name of action.payload) {
+        for(const name of action.payload || []) {
           if(name in newSettings.settings && name in state.master) {
             newSettings.settings[name] = state.master[name];
           }

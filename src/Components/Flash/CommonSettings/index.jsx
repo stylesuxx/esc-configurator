@@ -1,15 +1,11 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
 import {
+  getCommonSettingNames,
   getMaster,
   supportsLeds,
 } from '../../../utils/helpers/Settings';
@@ -60,24 +56,10 @@ function CommonSettings({ unsupported }) {
   const subRevision = availableSettings.SUB_REVISION;
   const revision = `${mainRevision}.${subRevision}`;
 
-  const [settings, setSettings] = useState(null);
-
-  const commonNamesRef = useRef([]);
-  commonNamesRef.current = [];
-  if(settingsDescriptions) {
-    commonNamesRef.current = settingsDescriptions.base.map((description) => description.name);
-  }
-
-  const onSettingsUpdate = useCallback((master) => {
-    dispatch(setMaster(master));
-    dispatch(updateIndividual(commonNamesRef.current));
-  }, [dispatch]);
-
-  useEffect(() => {
-    if(settings) {
-      onSettingsUpdate(settings);
-    }
-  }, [settings, onSettingsUpdate]);
+  const onSettingsUpdate = useCallback((newMaster) => {
+    dispatch(setMaster(newMaster));
+    dispatch(updateIndividual(getCommonSettingNames(master)));
+  }, [dispatch, master]);
 
   const handleCheckboxChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
@@ -86,8 +68,8 @@ function CommonSettings({ unsupported }) {
       checked,
     } = e.target;
     newSettings[name] = checked ? 1 : 0;
-    setSettings(newSettings);
-  }, [availableSettings]);
+    onSettingsUpdate(newSettings);
+  }, [availableSettings, onSettingsUpdate]);
 
   const handleSelectChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
@@ -96,15 +78,15 @@ function CommonSettings({ unsupported }) {
       value,
     } = e.target;
     newSettings[name] = value;
-    setSettings(newSettings);
-  }, [availableSettings]);
+    onSettingsUpdate(newSettings);
+  }, [availableSettings, onSettingsUpdate]);
 
   const handleNumberChange = useCallback((name, value) => {
     const newSettings = { ...availableSettings };
 
     newSettings[name] = value;
-    setSettings(newSettings);
-  }, [availableSettings]);
+    onSettingsUpdate(newSettings);
+  }, [availableSettings, onSettingsUpdate]);
 
   if (!master) {
     return null;
