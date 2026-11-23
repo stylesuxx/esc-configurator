@@ -1,4 +1,7 @@
-import React, { useCallback } from 'react';
+import React, {
+  useCallback,
+  useRef,
+} from 'react';
 import {
   useDispatch,
   useSelector,
@@ -27,9 +30,11 @@ import {
 import './style.scss';
 
 function Buttonbar({
+  onLoadSettings,
   onReadSetup,
   onWriteSetup,
   onResetDefaults,
+  onSaveSettings,
 }) {
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
@@ -41,6 +46,8 @@ function Buttonbar({
   const canWrite = useSelector(selectCanWrite);
 
   const escs = useSelector(selectIndividual);
+
+  const file = useRef(null);
 
   const onSeletFirmwareForAll = useCallback(() => {
     const targets = [];
@@ -57,6 +64,10 @@ function Buttonbar({
     dispatch(prod());
     dispatch(show());
   }, [dispatch]);
+
+  const clickFile = useCallback(() => {
+    file.current.click();
+  }, [file]);
 
   return (
     <div className="button-bar">
@@ -104,6 +115,30 @@ function Buttonbar({
           text={t('resetDefaults')}
         />
 
+        {escs.length > 0 &&
+          <>
+            <GenericButton
+              disabled={!canRead}
+              onClick={onSaveSettings}
+              text={t('escButtonSaveSettings')}
+            />
+
+            <GenericButton
+              disabled={!canWrite}
+              onClick={clickFile}
+              text={t('escButtonLoadSettings')}
+            />
+
+            <input
+              accept=".json,application/json"
+              data-testid="input-settings-file"
+              onChange={onLoadSettings}
+              ref={file}
+              style={{ display: 'none' }}
+              type="file"
+            />
+          </>}
+
         {showMelodyEditor &&
           <GenericButton
             disabled={!canRead}
@@ -116,8 +151,10 @@ function Buttonbar({
 }
 
 Buttonbar.propTypes = {
+  onLoadSettings: PropTypes.func.isRequired,
   onReadSetup: PropTypes.func.isRequired,
   onResetDefaults: PropTypes.func.isRequired,
+  onSaveSettings: PropTypes.func.isRequired,
   onWriteSetup: PropTypes.func.isRequired,
 };
 

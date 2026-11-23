@@ -31,7 +31,9 @@ function App({
   onEscDump,
   onEscsFlashFile,
   onEscsFlashUrl,
+  onEscsLoadSettings,
   onEscsRead,
+  onEscsSaveSettings,
   onEscsWriteDefaults,
   onEscsWriteSettings,
   onMelodyWrite,
@@ -92,9 +94,11 @@ function App({
           onAllMotorSpeed={onAllMotorSpeed}
           onFirmwareDump={onEscDump}
           onFlashUrl={onEscsFlashUrl}
+          onLoadSettings={onEscsLoadSettings}
           onLocalSubmit={onEscsFlashFile}
           onReadEscs={onEscsRead}
           onResetDefaultls={onEscsWriteDefaults}
+          onSaveSettings={onEscsSaveSettings}
           onSingleMotorSpeed={onSingleMotorSpeed}
           onWriteSetup={onEscsWriteSettings}
           progressReferences={progressReferences}
@@ -127,7 +131,9 @@ App.propTypes = {
   onEscDump: PropTypes.func.isRequired,
   onEscsFlashFile: PropTypes.func.isRequired,
   onEscsFlashUrl: PropTypes.func.isRequired,
+  onEscsLoadSettings: PropTypes.func.isRequired,
   onEscsRead: PropTypes.func.isRequired,
+  onEscsSaveSettings: PropTypes.func.isRequired,
   onEscsWriteDefaults: PropTypes.func.isRequired,
   onEscsWriteSettings: PropTypes.func.isRequired,
   onMelodyWrite: PropTypes.func.isRequired,

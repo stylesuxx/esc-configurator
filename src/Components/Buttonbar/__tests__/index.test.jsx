@@ -41,6 +41,8 @@ function setupTestStore() {
 let onWriteSetup;
 let onReadSetup;
 let onResetDefaults;
+let onLoadSettings;
+let onSaveSettings;
 
 describe('Buttonbar', () => {
   const storeRef = setupTestStore();
@@ -49,6 +51,8 @@ describe('Buttonbar', () => {
     onWriteSetup = jest.fn();
     onReadSetup = jest.fn();
     onResetDefaults = jest.fn();
+    onLoadSettings = jest.fn();
+    onSaveSettings = jest.fn();
   });
 
   it('should display buttons', () => {
@@ -61,8 +65,10 @@ describe('Buttonbar', () => {
 
     render(
       <Buttonbar
+        onLoadSettings={onLoadSettings}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
+        onSaveSettings={onSaveSettings}
         onWriteSetup={onWriteSetup}
       />,
       { wrapper: storeRef.wrapper }
@@ -80,8 +86,10 @@ describe('Buttonbar', () => {
 
     render(
       <Buttonbar
+        onLoadSettings={onLoadSettings}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
+        onSaveSettings={onSaveSettings}
         onWriteSetup={onWriteSetup}
       />,
       { wrapper: storeRef.wrapper }
@@ -109,8 +117,10 @@ describe('Buttonbar', () => {
 
     render(
       <Buttonbar
+        onLoadSettings={onLoadSettings}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
+        onSaveSettings={onSaveSettings}
         onWriteSetup={onWriteSetup}
       />,
       { wrapper: storeRef.wrapper }
@@ -146,8 +156,10 @@ describe('Buttonbar', () => {
 
     render(
       <Buttonbar
+        onLoadSettings={onLoadSettings}
         onReadSetup={onReadSetup}
         onResetDefaults={onResetDefaults}
+        onSaveSettings={onSaveSettings}
         onSeletFirmwareForAll={onSeletFirmwareForAll}
         onWriteSetup={onWriteSetup}
       />,
@@ -163,4 +175,54 @@ describe('Buttonbar', () => {
     expect(melodies.show).toBeTruthy();
   });
 
+  describe('settings file', () => {
+    const renderButtonbar = () => render(
+      <Buttonbar
+        onLoadSettings={onLoadSettings}
+        onReadSetup={onReadSetup}
+        onResetDefaults={onResetDefaults}
+        onSaveSettings={onSaveSettings}
+        onWriteSetup={onWriteSetup}
+      />,
+      { wrapper: storeRef.wrapper }
+    );
+
+    it('should not show the buttons before the ESCs are read', () => {
+      renderButtonbar();
+
+      expect(screen.queryByText(/escButtonSaveSettings/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/escButtonLoadSettings/i)).not.toBeInTheDocument();
+    });
+
+    it('should save and load settings once the ESCs are read', () => {
+      storeRef.store.dispatch(setIndividual([{}]));
+      renderButtonbar();
+
+      userEvent.click(screen.getByText(/escButtonSaveSettings/i));
+      expect(onSaveSettings).toHaveBeenCalled();
+
+      const input = screen.getByTestId('input-settings-file');
+      const click = jest.spyOn(input, 'click');
+      userEvent.click(screen.getByText(/escButtonLoadSettings/i));
+      expect(click).toHaveBeenCalled();
+
+      const file = new File(['{}'], 'esc-settings.json', { type: 'application/json' });
+      userEvent.upload(input, file);
+      expect(onLoadSettings).toHaveBeenCalled();
+      expect(onLoadSettings.mock.calls[0][0].target.files[0]).toBe(file);
+    });
+
+    it('should not save or load while writing', () => {
+      storeRef.store.dispatch(setIndividual([{}]));
+      storeRef.store.dispatch(setWriting(true));
+      renderButtonbar();
+
+      userEvent.click(screen.getByText(/escButtonSaveSettings/i));
+      expect(onSaveSettings).not.toHaveBeenCalled();
+
+      const click = jest.spyOn(screen.getByTestId('input-settings-file'), 'click');
+      userEvent.click(screen.getByText(/escButtonLoadSettings/i));
+      expect(click).not.toHaveBeenCalled();
+    });
+  });
 });
