@@ -61,6 +61,24 @@ class QueueProcessor {
   }
 
   /**
+   * Drop every command, the current one and the waiting ones, and the data
+   * received so far: each of them is rejected with the given error. Used when
+   * the port closes, so that no answer is awaited from a closed port and
+   * nothing is left for the next connection.
+   *
+   * @param {Error} error
+   */
+  clear(error) {
+    const dropped = [this.currentCommand, ...this.commands].filter(Boolean);
+    dropped.forEach((command) => clearTimeout(command.timeoutFunct));
+
+    this.commands = [];
+    this.cleanUp();
+
+    dropped.forEach((command) => command.rejectCallback(error));
+  }
+
+  /**
    * Resolve timeout by rejecting the command, clearing the buffer and
    * resetetting thestates
    */
@@ -77,55 +95,69 @@ class QueueProcessor {
    */
   async startCommand() {
     this.cleanUp();
-    this.currentCommand = this.commands.shift();
-    const timeout = this.currentCommand.timeout;
+    const command = this.commands.shift();
+    this.currentCommand = command;
+    const timeout = command.timeout;
+
+    /**
+     * The timeout starts when the command is sent, transmission included: a
+     * write that never completes (for example the flight controller no longer
+     * reading) must not block this command, and the whole queue, forever.
+     */
+    command.timeoutFunct = setTimeout(() => {
+      // The command has already been handled
+      if(this.currentCommand !== command) {
+        return;
+      }
+
+      /*
+       * If we are not currently processing, we can Immediately handle the
+       * timeout. Ohterwise we mark the command to be quit and it will
+       * timout after processing is done, in case not enough data was
+       * available.
+       */
+      if(!this.processing) {
+        this.resolveTimeout();
+      } else {
+        this.quit = true;
+      }
+    }, timeout);
 
     try {
-      await this.currentCommand.transmit();
+      await command.transmit();
     } catch(e) {
+      clearTimeout(command.timeoutFunct);
+
+      // Already timed out or dropped while transmitting
+      if(this.currentCommand !== command) {
+        return;
+      }
+
       /**
        * Transmitting failed - this is not something we can recover from, so we
        * reject the command and carry on with the queue. Without this the
        * promise returned by addCommand would never settle and the caller would
        * wait forever.
        */
-      const failedCommand = this.currentCommand;
-
       this.cleanUp();
-      failedCommand.rejectCallback(e);
+      command.rejectCallback(e);
       this.processCommands();
 
       return;
     }
 
-    // At this point the command might already have resolved
-    if(this.currentCommand) {
-      // if there is no receive handler, just return. There is only one case in
-      // which no receive handler is needed and this is when nod data is expected
-      // to be sent back.
-      if(!this.currentCommand.receive) {
-        this.currentCommand.resolveCallback(true);
-        this.cleanUp();
-        this.processCommands();
-
-        return;
-      }
-
-      this.currentCommand.timeoutFunct = setTimeout(() => {
-        /*
-         * If we are not currently processing, we can Immediately handle the
-         * timeout. Ohterwise we mark the command to be quit and it will
-         * timout after processing is done, in case not enough data was
-         * available.
-         */
-        if(!this.processing) {
-          this.resolveTimeout();
-        }
-
-        this.quit = true;
-      }, timeout);
+    // if there is no receive handler, just return. There is only one case in
+    // which no receive handler is needed and this is when no data is expected
+    // to be sent back. The command might also already have resolved or timed
+    // out.
+    if(this.currentCommand === command && !command.receive) {
+      clearTimeout(command.timeoutFunct);
+      command.resolveCallback(true);
+      this.cleanUp();
+      this.processCommands();
     }
   }
+
 
   /**
    * Process the queue if it is not yet processing but new data is available
@@ -135,16 +167,24 @@ class QueueProcessor {
       this.processing = true;
 
       // this.currentCommand available or just set
+      const command = this.currentCommand;
       const currentBuffer = this.buffer;
       this.buffer = new Uint8Array();
       this.newData = false;
 
       const promise = new Promise((resolve, reject) => {
-        this.currentCommand.receive(currentBuffer, resolve, reject);
+        command.receive(currentBuffer, resolve, reject);
       });
 
       try {
         const result = await promise;
+
+        // Dropped meanwhile (port closed): the answer is not used
+        if(this.currentCommand !== command) {
+          this.processing = false;
+
+          return;
+        }
 
         clearTimeout(this.currentCommand.timeoutFunct);
         this.currentCommand.resolveCallback(result);
@@ -155,6 +195,12 @@ class QueueProcessor {
 
         this.processCommands();
       } catch(e) {
+        if(this.currentCommand !== command) {
+          this.processing = false;
+
+          return;
+        }
+
         if(e instanceof NotEnoughDataError) {
           /**
            * We don't have enough data yet, we put it back on the buffer and

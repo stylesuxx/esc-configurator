@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32'];
+const unsupportedNames = ['JESC', 'BLHeli_M', 'BLHeli_32', 'AM32'];
 
 const initialState = {
   isReading: false,
@@ -67,7 +67,7 @@ export const selectCanFlash = (state) => {
     isWriting,
   } = state.state;
 
-  const disableFlashingNames = ['BLHeli_32'];
+  const disableFlashingNames = ['BLHeli_32', 'AM32'];
   const disableFlashing = disableFlashingNames.includes(master.NAME);
 
   return (

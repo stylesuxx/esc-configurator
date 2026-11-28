@@ -81,13 +81,33 @@ const getIndividualSettings = (esc) => {
   return individualSettings;
 };
 
+const FLASH_FAILED_NAME = '**FLASH*FAILED**';
+
 /**
- * Get master ESC from a list of ESCs
+ * ESC whose last flash failed: its settings hold the **FLASH*FAILED** mark
+ * and values read with the wrong layout. They must not be written, to it or
+ * to the other ESCs, until it is flashed again.
+ *
+ * @param {object} esc
+ * @returns {boolean}
+ */
+const isFlashFailed = (esc) => {
+  if(!esc || !esc.settings) {
+    return false;
+  }
+
+  return esc.settings.NAME === FLASH_FAILED_NAME;
+};
+
+/**
+ * First available ESC whose settings can be trusted: an ESC marked
+ * **FLASH*FAILED** is read with the wrong layout, so its values must never be
+ * shown as the common settings nor copied to the other ESCs.
  *
  * @param {Array<object>} escs
- * @returns {object}
+ * @returns {object|undefined}
  */
-const getMaster = (escs) => escs.find((esc) => esc.meta.available);
+const getMaster = (escs) => escs.find((esc) => esc.meta.available && !isFlashFailed(esc));
 
 /**
  * Check if a specific setting can be migrated from one firmware to another
@@ -158,7 +178,34 @@ const supportsLeds = (esc) => {
   return led.visibleIf ? led.visibleIf(esc.individualSettings || {}) : true;
 };
 
+/**
+ * Names of the common settings described for this ESC (its firmware and
+ * layout revision), or null when there is no description for it.
+ *
+ * @param {object} esc
+ * @returns {Array<string>|null}
+ */
+const getCommonSettingNames = (esc) => {
+  if(!esc || !esc.firmwareName || !esc.layoutRevision) {
+    return null;
+  }
+
+  const source = getSource(esc.firmwareName);
+  if(!source) {
+    return null;
+  }
+
+  const descriptions = source.getCommonSettings(esc.layoutRevision);
+  if(!descriptions || !Array.isArray(descriptions.base)) {
+    return null;
+  }
+
+  return descriptions.base.map((description) => description.name);
+};
+
 export {
+  getCommonSettingNames,
+  isFlashFailed,
   getIndividualSettings,
   getIndividualSettingsDescriptions,
   getMaster,

@@ -94,7 +94,7 @@ describe('MCU', () => {
     expect(name).toEqual("ATmega8(A)");
   });
 
-  it('should return details with AM32 based MCU (STM32)', () => {
+  it('should return details with ARM based MCU (STM32)', () => {
     let mcu = null;
     expect(() => mcu = new MCU(MODES.ARMBLB, 0x1f06)).not.toThrow();
 
@@ -113,7 +113,7 @@ describe('MCU', () => {
     expect(name).toEqual("STM32F051");
   });
 
-  it('should return details with AM32 based MCU (ARM64K)', () => {
+  it('should return details with ARM based MCU (ARM64K)', () => {
     let mcu = null;
     expect(() => mcu = new MCU(MODES.ARMBLB, 0x3506)).not.toThrow();
 

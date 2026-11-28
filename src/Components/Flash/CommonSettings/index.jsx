@@ -1,14 +1,11 @@
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
 import {
+  getCommonSettingNames,
   getMaster,
   supportsLeds,
 } from '../../../utils/helpers/Settings';
@@ -44,8 +41,12 @@ function CommonSettings({ unsupported }) {
   const escs = useSelector(selectIndividual);
   const disabled = !useSelector(selectCanFlash);
 
+  /**
+   * No master when no ESC can be trusted, for example when the only ESC read
+   * is marked FLASH*FAILED: there are no common settings to show then.
+   */
   const master = getMaster(escs);
-  const source = getSource(master.firmwareName);
+  const source = master ? getSource(master.firmwareName) : null;
 
   const hasLeds = escs.some(supportsLeds);
   const groupOrder = source ? source.getGroupOrder() : [];
@@ -55,18 +56,10 @@ function CommonSettings({ unsupported }) {
   const subRevision = availableSettings.SUB_REVISION;
   const revision = `${mainRevision}.${subRevision}`;
 
-  const [settings, setSettings] = useState(null);
-
-  const onSettingsUpdate = useCallback((master) => {
-    dispatch(setMaster(master));
-    dispatch(updateIndividual());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if(settings) {
-      onSettingsUpdate(settings);
-    }
-  }, [settings, onSettingsUpdate]);
+  const onSettingsUpdate = useCallback((newMaster) => {
+    dispatch(setMaster(newMaster));
+    dispatch(updateIndividual(getCommonSettingNames(master)));
+  }, [dispatch, master]);
 
   const handleCheckboxChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
@@ -75,8 +68,8 @@ function CommonSettings({ unsupported }) {
       checked,
     } = e.target;
     newSettings[name] = checked ? 1 : 0;
-    setSettings(newSettings);
-  }, [availableSettings]);
+    onSettingsUpdate(newSettings);
+  }, [availableSettings, onSettingsUpdate]);
 
   const handleSelectChange = useCallback((e) => {
     const newSettings = { ...availableSettings };
@@ -85,15 +78,19 @@ function CommonSettings({ unsupported }) {
       value,
     } = e.target;
     newSettings[name] = value;
-    setSettings(newSettings);
-  }, [availableSettings]);
+    onSettingsUpdate(newSettings);
+  }, [availableSettings, onSettingsUpdate]);
 
   const handleNumberChange = useCallback((name, value) => {
     const newSettings = { ...availableSettings };
 
     newSettings[name] = value;
-    setSettings(newSettings);
-  }, [availableSettings]);
+    onSettingsUpdate(newSettings);
+  }, [availableSettings, onSettingsUpdate]);
+
+  if (!master) {
+    return null;
+  }
 
   if (!settingsDescriptions) {
     const version = `${availableSettings.MAIN_REVISION}.${availableSettings.SUB_REVISION}`;
@@ -124,6 +121,14 @@ function CommonSettings({ unsupported }) {
           { t('common:useDedicatedConfigurator', { name: availableSettings.NAME }) }
         </p>
       );
+
+      if (availableSettings.NAME === 'AM32') {
+        unsupportedText = (
+          <ReactMarkdown>
+            {t('common:am32UseDedicatedConfigurator')}
+          </ReactMarkdown>
+        );
+      }
     }
 
     return (

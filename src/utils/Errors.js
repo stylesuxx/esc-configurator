@@ -112,11 +112,19 @@ class PortClosedError extends Error {
   }
 }
 
+class FlashStalledError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'FlashStalledError';
+  }
+}
+
 export {
   BufferLengthMismatchError,
   ConversionError,
   EscInitError,
   EscLockedError,
+  FlashStalledError,
   InvalidHexFileError,
   LayoutMismatchError,
   MethodNotImplementedError,

@@ -1,6 +1,9 @@
 import sources from '../../sources';
 import { store } from '../../store';
-import { PortClosedError } from '../Errors';
+import {
+  FlashStalledError,
+  PortClosedError,
+} from '../Errors';
 
 /**
  * Deeply compare two ByteArrays to each other
@@ -69,7 +72,15 @@ function isValidFlash(mcu, flash) {
  */
 async function retry(func, maxRetries, iterationDelay = 0) {
   function wrapped() {
-    return new Promise((resolve,reject) => func(resolve, reject));
+    return new Promise((resolve, reject) => {
+      /**
+       * func may be an async function: if it throws (for example a read that
+       * times out because the ESC lost power during flashing), it rejects its
+       * own promise. Pass that rejection on, otherwise this promise never
+       * settles and the caller waits forever.
+       */
+      Promise.resolve(func(resolve, reject)).catch(reject);
+    });
   }
 
   const process = async(resolve, reject) => {
@@ -85,8 +96,9 @@ async function retry(func, maxRetries, iterationDelay = 0) {
         retries += 1;
 
         // After max retries we pass through the original error. A closed port
-        // stays closed, so retrying it only delays the failure.
-        if(retries >= maxRetries || e instanceof PortClosedError) {
+        // stays closed, and a stalled flash was given up: retrying it only
+        // delays the failure.
+        if(retries >= maxRetries || e instanceof PortClosedError || e instanceof FlashStalledError) {
           return reject(e);
         }
 

@@ -26,6 +26,7 @@ languages.forEach((language) => {
 
 const { language } = store.getState();
 i18next.init({
+  fallbackLng: 'en',
   interpolation: { escapeValue: false },
   lng: language.current,
   resources,
