@@ -9,11 +9,7 @@ import UAParser from 'ua-parser-js';
 
 import { fetchHexCached } from '../../utils/Fetch';
 import { TimeoutError } from '../../utils/helpers/QueueProcessor';
-import {
-  getCommonSettingNames,
-  getMasterSettings,
-  isFlashFailed,
-} from '../../utils/helpers/Settings';
+import { getMasterSettings } from '../../utils/helpers/Settings';
 import {
   delay,
   getAppSetting,
@@ -37,7 +33,6 @@ import {
 } from '../../Components/Log/logSlice';
 import {
   reset as resetState,
-  selectIsSupported,
   setConnecting,
   setDisconnecting,
   setFlashing,
@@ -59,13 +54,6 @@ import {
   setConnected as setConnectedEscs,
   setIndividualAtIndex,
 } from './escsSlice';
-
-// Just after a reconnection, the flight controller (Betaflight included)
-// may be silent for a moment: a request without an answer in time is asked
-// again. It was seen silent for longer than 3 requests (about 3.5 s); 5
-// requests cover about 6 s.
-const MSP_ATTEMPTS = 5;
-const MSP_RETRY_DELAY_MS = 250;
 
 class App extends Component {
   static propTypes = { serial: PropTypes.shape({ checked: PropTypes.bool.isRequired }).isRequired };
@@ -208,152 +196,162 @@ class App extends Component {
     this.addLogMessage('portChanged');
   };
 
-  /**
-   * Send an MSP request, again after a short pause when the flight controller
-   * does not answer in time.
-   */
-  askAgainOnTimeout = async(request) => {
-    for(let attempt = 1; ; attempt += 1) {
-      try {
-        return await request();
-      } catch(e) {
-        if(!(e instanceof TimeoutError) || attempt >= MSP_ATTEMPTS) {
-          throw e;
-        }
-
-        await delay(MSP_RETRY_DELAY_MS);
-      }
-    }
-  };
-
-  /**
-   * A single late answer to the API version (just after a reconnection for
-   * example) must not be taken for a flight controller left in passthrough.
-   */
-  getApiVersion = () => this.askAgainOnTimeout(() => this.serial.getApiVersion());
-
   handleConnect = async(e) => {
     e.preventDefault();
 
     store.dispatch(setConnecting(true));
 
-    const serial = store.getState().serial;
+    // Ensure we have a serial instance - create one if needed
+    if (!this.serial) {
+      try {
+        const ports = await this.serialApi.getPorts();
+        if (ports.length === 0) {
+          this.addLogMessage('noPorts');
+          store.dispatch(setConnecting(false));
+          return;
+        }
+        this.serial = new Serial(ports[0]);
+      } catch(e) {
+        console.debug(e);
+        this.addLogMessage('noPorts');
+        store.dispatch(setConnecting(false));
+        return;
+      }
+    }
+
+    // Auto-detect interface: try direct Arduino 4-way at 38400 first,
+    // fall back to FC passthrough at the user-selected baud rate
+
+    let isFourWay = false;
+
     try {
-      await this.serial.open(serial.baudRate);
+      isFourWay = await this.serial.openDirect();
+    } catch (e) {
+      console.debug(e);
+      try {
+        await this.serial.close();
+      } catch(e2) {
+        console.debug(e2);
+      }
+    }
+
+    if (isFourWay) {
       this.serial.setLogCallback(this.addLogMessage);
       this.addLogMessage('portOpened');
       this.progressReferences = [];
 
-      /* Send a reset of the 4 way interface, just in case it was not cleanly
-       * disconnected before.
-       *
-       * Unfortunately this convenience feature can not be used, since on EMU
-       * it might lead to the ESCs being wiped.
-       */
-      // await this.serial.exitFourWayInterface();
-    } catch (e) {
-      console.debug(e);
-
+      store.dispatch(setOpen(true));
+      store.dispatch(setFourWay(true));
+    } else {
+      // Direct 4-way failed - try FC passthrough at user-selected baud rate
       try {
-        this.serial.close();
-      } catch(e) {
-        console.debug(e);
-      }
+        await this.serial.open(store.getState().serial.baudRate);
+        this.serial.setLogCallback(this.addLogMessage);
+        this.addLogMessage('portOpened');
+        this.progressReferences = [];
 
-      this.addLogMessage('portUsed');
-
-      return;
-    }
-
-    try {
-      let apiVersion = null;
-
-      try {
-        apiVersion = await this.getApiVersion();
-      } catch(e) {
-        if (e instanceof TimeoutError) {
-          let hasResets = false;
-          let inPassthrough = false;
-          let i = 0;
+        // FC passthrough succeeded - continue with MSP initialization
+        try {
+          let apiVersion = null;
 
           try {
-            while ((await this.serial.getFourWayInterfaceInfo(i))) {
-              await this.serial.resetFourWayInterface(i);
-              i += 1;
-            }
-          } catch (ex) {
-            if (!(ex instanceof MessageNotOkError)) {
-              this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
-              throw ex;
-            }
+            apiVersion = await this.serial.getApiVersion();
+          } catch(e) {
+            if (e instanceof TimeoutError) {
+              let hasResets = false;
+              let i = 0;
 
-            inPassthrough = true;
-          } finally {
-            hasResets = i > 0;
+              try {
+                while ((await this.serial.getFourWayInterfaceInfo(i))) {
+                  await this.serial.resetFourWayInterface(i);
+                  i += 1;
+                }
+              } catch (ex) {
+                if (!(ex instanceof MessageNotOkError)) {
+                  this.addLogMessage('resetEscFailedPowerCycle', { index: i + 1 });
+                  throw ex;
+                }
+              } finally {
+                hasResets = i > 0;
+              }
+
+              if (hasResets) {
+                await this.serial.exitFourWayInterface();
+              }
+
+              apiVersion = await this.serial.getApiVersion();
+            } else {
+              throw e;
+            }
           }
 
-          if (hasResets || inPassthrough) {
-            await this.serial.exitFourWayInterface(true);
-          }
+          this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
 
-          apiVersion = await this.getApiVersion();
-        } else {
-          throw e;
+          const fcVariant = await this.serial.getFcVariant();
+          const fcVersion = await this.serial.getFcVersion();
+          this.addLogMessage('mspFcInfo', {
+            id: fcVariant.flightControllerIdentifier,
+            version: fcVersion.flightControllerVersion,
+          });
+
+          const buildInfo = await this.serial.getBuildInfo();
+          this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
+
+          const boardInfo = await this.serial.getBoardInfo();
+          this.addLogMessage('mspBoardInfo', {
+            identifier: boardInfo.boardIdentifier,
+            version: boardInfo.boardVersion,
+          });
+
+          const uid = (await this.serial.getUid()).uid;
+          let uidHex = 0;
+          for (let i = 0; i < uid.length; i += 1) {
+            uidHex += uid[i].toString(16);
+          }
+          this.addLogMessage('mspUid', { id: uidHex });
+
+          let motorData = await this.serial.getMotorData();
+          motorData = motorData.filter((motor) => motor > 0);
+
+          const features = await this.serial.getFeatures();
+          store.dispatch(setMspFeatures(features));
+
+          TagManager.dataLayer({
+            dataLayer: {
+              event: "FlightController",
+              flightController: {
+                mspVersion: apiVersion.apiVersion,
+                firmwareName: fcVariant.flightControllerIdentifier,
+                firmwareVersion: fcVersion.flightControllerVersion,
+                firmwareBuild: buildInfo.buildInfo,
+              },
+            },
+          });
+
+          store.dispatch(setOpen(true));
+          store.dispatch(setConnectedEscs(motorData.length));
+        } catch(e) {
+          this.serial.close();
+          this.serial = undefined;
+          this.addLogMessage('initializationFailed');
+          console.log(e);
         }
+
+      } catch (e) {
+        console.debug(e);
+
+        try {
+          await this.serial.close();
+        } catch(e2) {
+          console.debug(e2);
+        }
+
+        this.serial = undefined;
+        this.addLogMessage('portUsed');
+        store.dispatch(setConnecting(false));
+        return;
       }
-
-      this.addLogMessage('mspApiVersion', { version: apiVersion.apiVersion });
-
-      const fcVariant = await this.askAgainOnTimeout(() => this.serial.getFcVariant());
-      const fcVersion = await this.askAgainOnTimeout(() => this.serial.getFcVersion());
-      this.addLogMessage('mspFcInfo', {
-        id: fcVariant.flightControllerIdentifier,
-        version: fcVersion.flightControllerVersion,
-      });
-
-      const buildInfo = await this.askAgainOnTimeout(() => this.serial.getBuildInfo());
-      this.addLogMessage('mspBuildInfo', { info: buildInfo.buildInfo });
-
-      const boardInfo = await this.askAgainOnTimeout(() => this.serial.getBoardInfo());
-      this.addLogMessage('mspBoardInfo', {
-        identifier: boardInfo.boardIdentifier,
-        version: boardInfo.boardVersion,
-      });
-
-      const uid = (await this.askAgainOnTimeout(() => this.serial.getUid())).uid;
-      let uidHex = 0;
-      for (let i = 0; i < uid.length; i += 1) {
-        uidHex += uid[i].toString(16);
-      }
-      this.addLogMessage('mspUid', { id: uidHex });
-
-      let motorData = await this.askAgainOnTimeout(() => this.serial.getMotorData());
-      motorData = motorData.filter((motor) => motor > 0);
-
-      const features = await this.askAgainOnTimeout(() => this.serial.getFeatures());
-      store.dispatch(setMspFeatures(features));
-
-      TagManager.dataLayer({
-        dataLayer: {
-          event: "FlightController",
-          flightController: {
-            mspVersion: apiVersion.apiVersion,
-            firmwareName: fcVariant.flightControllerIdentifier,
-            firmwareVersion: fcVersion.flightControllerVersion,
-            firmwareBuild: buildInfo.buildInfo,
-          },
-        },
-      });
-
-      store.dispatch(setOpen(true));
-      store.dispatch(setConnectedEscs(motorData.length));
-    } catch(e) {
-      this.serial.close();
-      this.addLogMessage('initializationFailed');
-
-      console.log(e);
     }
-
     store.dispatch(setConnecting(false));
   };
 
@@ -363,26 +361,24 @@ class App extends Component {
 
     store.dispatch(setDisconnecting(true));
 
-    const {
-      escs, serial,
-    } = store.getState();
+    const { escs } = store.getState();
     const { individual } = escs;
     if(this.serial) {
-      for(let i = 0; i < individual.length; i += 1) {
-        try {
-          await this.serial.resetFourWayInterface(i);
-        } catch(e) {
-          this.addLogMessage('resetEscFailed', { index: i + 1 });
-        }
-      }
-
       try {
-        await this.serial.exitFourWayInterface(serial.fourWay);
+        for(let i = 0; i < individual.length; i += 1) {
+          try {
+            await this.serial.resetFourWayInterface(i);
+          } catch(e) {
+            this.addLogMessage('resetEscFailed', { index: i + 1 });
+          }
+        }
+        await this.serial.exitFourWayInterface();
       } catch(e) {
-        // No answer: the port is closed anyway
+        console.debug('Disconnect cleanup error:', e.message);
+      } finally {
+        this.serial.close();
+        this.serial = undefined;
       }
-
-      await this.serial.close();
     }
 
     this.lastConnected = 0;
@@ -447,24 +443,6 @@ class App extends Component {
     store.dispatch(setFlashing(false));
   };
 
-  /**
-   * True (with a message) for an ESC marked FLASH*FAILED: its settings are
-   * read with the wrong layout, so nothing is written to it until it is
-   * flashed again. The healthy ESCs are still written.
-   *
-   * @param {object} esc
-   * @returns {boolean}
-   */
-  skipFailedFlash = (esc) => {
-    if(!isFlashFailed(esc)) {
-      return false;
-    }
-
-    this.addLogMessage('writeSettingsBlockedFlashFailed', { index: esc.index + 1 });
-
-    return true;
-  };
-
   handleResetDefaultls = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Restoring Defaults" } });
 
@@ -473,10 +451,6 @@ class App extends Component {
     for(let i = 0; i < escs.individual.length; i += 1) {
       const esc = escs.individual[i];
       const target = esc.index;
-      if(this.skipFailedFlash(esc)) {
-        continue;
-      }
-
       const currentEscSettings = esc.settings;
       const defaultSettings = esc.defaultSettings;
       const mergedSettings = {
@@ -497,50 +471,100 @@ class App extends Component {
   };
 
   handleReadEsc = async(target) => {
+    if (!this.serial) {
+      this.addLogMessage('noPorts');
+      store.dispatch(setReading(false));
+      return;
+    }
+
     const settings = await this.serial.getFourWayInterfaceInfo(target);
 
     return settings;
   };
 
   handleReadEscs = async() => {
+    if (!this.serial) {
+      this.addLogMessage('noPorts');
+      store.dispatch(setReading(false));
+      return;
+    }
+
     const { escs } = store.getState();
     const individual = [];
-
     let fourWay = true;
     let connected = 0;
 
     store.dispatch(setReading(true));
 
-    // Prevent reading if radio is detected to be on and not connected yet
-    if(!escs.connected) {
-      const status = await this.serial.getStatus();
-      if(!status.armingDisableFlagsReasons.RX_FAILSAFE) {
-        this.addLogMessage('radioOn');
-        store.dispatch(setReading(false));
+    if (this.serial.isDirect4Way) {
+      try {
+        await this.serial.startFourWayInterface();
 
+        // Wait for Arduino to reset and be ready to accept 4w-if commands
+        await delay(1200);
+
+        // Direct 4-way interface: read only ESC index 0 (single ESC directly connected)
+        // The Arduino 4w-if firmware responds to cmd_DeviceInitFlash on all channels
+        // even without ESCs attached, so we only read ESC index 0
+        const settings = await this.handleReadEsc(0);
+        settings.index = 0;
+        individual.push(settings);
+
+        console.debug('[4WAY-DEBUG] Direct 4-way ESC detected on channel 0:', settings.displayName);
+
+        this.addLogMessage('readEsc', {
+          index: 1,
+          name: settings.displayName,
+        });
+
+        connected = 1;
+      } catch (e) {
+        fourWay = false;
+
+        this.addLogMessage('fourWayFailed');
+        console.debug(e);
+      }
+    } else {
+      // Prevent reading if radio is detected to be on and not connected yet
+      if (!this.serial.msp) {
+        this.addLogMessage('noPorts');
+        store.dispatch(setReading(false));
         return;
+      }
+      if (!escs.connected) {
+        const status = await this.serial.getStatus();
+        if (!status.armingDisableFlagsReasons.RX_FAILSAFE) {
+          this.addLogMessage('radioOn');
+          store.dispatch(setReading(false));
+
+          return;
+        }
+      }
+
+      try {
+        if (this.lastConnected === 0) {
+          const escResult = await this.serial.enable4WayInterface();
+          connected = escResult.connectedESCs;
+
+          await this.serial.startFourWayInterface();
+
+          /* Give the ESCs some time to boot - it might take longer if they
+           * are playing a startup melody.
+           */
+          await delay(1200);
+        } else {
+          connected = this.lastConnected;
+        }
+      } catch (e) {
+        fourWay = false;
+
+        this.addLogMessage('fourWayFailed');
+        console.debug(e);
       }
     }
 
-    try {
-      if(this.lastConnected === 0) {
-        const escs = await this.serial.enable4WayInterface();
-        connected = escs.connectedESCs;
-
-        await this.serial.startFourWayInterface();
-
-        /* Give the ESCs some time to boot - it might take longer if they
-         * are playing a startup melody.
-         */
-        await delay(1200);
-      } else {
-        connected = this.lastConnected;
-      }
-    } catch(e) {
-      fourWay = false;
-
-      this.addLogMessage('fourWayFailed');
-      console.debug(e);
+    if (this.serial.isDirect4Way && connected === 0) {
+      this.addLogMessage('direct4WayNoEsc');
     }
 
     this.addLogMessage('readEscs', { connected });
@@ -552,19 +576,22 @@ class App extends Component {
       }
     }
 
-    for (let i = 0; i < connected; i += 1) {
-      try {
-        const settings = await this.handleReadEsc(i);
-        settings.index = i;
-        individual.push(settings);
+    // Read settings for each ESC (FC passthrough path only - direct-4wif already read them)
+    if (!this.serial.isDirect4Way) {
+      for (let i = 0; i < connected; i += 1) {
+        try {
+          const settings = await this.handleReadEsc(i);
+          settings.index = i;
+          individual.push(settings);
 
-        this.addLogMessage('readEsc', {
-          index: i + 1,
-          name: settings.displayName,
-        });
-      } catch(e) {
-        this.addLogMessage('readEscFailed', { index: i + 1 });
-        console.debug(e);
+          this.addLogMessage('readEsc', {
+            index: i + 1,
+            name: settings.displayName,
+          });
+        } catch(e) {
+          this.addLogMessage('readEscFailed', { index: i + 1 });
+          console.debug(e);
+        }
       }
     }
 
@@ -620,69 +647,31 @@ class App extends Component {
     store.dispatch(setMaster(master));
   };
 
-  /**
-   * Settings written to an ESC: its own, overwritten by the common settings
-   * of the first ESC and by its individual settings. Only the common settings
-   * described for this ESC are taken from the first ESC: other values stay
-   * as they are, for example the PWM frequency of Bluejay 0.19, which only
-   * displays the frequency built into the flashed file.
-   *
-   * @param {object} esc
-   * @param {object} master
-   * @returns {object}
-   */
-  getMergedSettings = (esc, master) => {
-    const commonEscSettings = esc.settings;
-    const individualEscSettings = esc.individualSettings;
-
-    let masterEscSettings = master;
-    const names = getCommonSettingNames(esc);
-    if(names) {
-      masterEscSettings = {};
-      for(const name of names) {
-        if(master && name in master) {
-          masterEscSettings[name] = master[name];
-        }
-      }
-    }
-
-    let commonOverrides = {};
-    if(getAppSetting('disableCommon')) {
-      commonOverrides = commonEscSettings;
-    }
-
-    const mergedSettings = {
-      ...commonEscSettings,
-      ...masterEscSettings,
-      ...commonOverrides,
-      ...individualEscSettings,
-    };
-
-    return mergedSettings;
-  };
-
   handleWriteSettings = async() => {
     TagManager.dataLayer({ dataLayer: { event: "Writing Setup" } });
 
     store.dispatch(setWriting(true));
-    const state = store.getState();
-    const { escs } = state;
-
-    /**
-     * Settings of unsupported firmware can not be edited, only the startup
-     * melody. Each ESC keeps its own settings in that case.
-     */
-    const isSupported = selectIsSupported(state);
+    const { escs } = store.getState();
 
     const individual = [ ...escs.individual ];
     for(let i = 0; i < individual.length; i += 1) {
       const esc = individual[i];
       const target = esc.index;
-      if(this.skipFailedFlash(esc)) {
-        continue;
+      const commonEscSettings = esc.settings;
+      const masterEscSettings = escs.master;
+      const individualEscSettings = esc.individualSettings;
+
+      let commonOverrides = {};
+      if(getAppSetting('disableCommon')) {
+        commonOverrides = commonEscSettings;
       }
 
-      const mergedSettings = this.getMergedSettings(esc, isSupported ? escs.master : {});
+      const mergedSettings = {
+        ...commonEscSettings,
+        ...masterEscSettings,
+        ...commonOverrides,
+        ...individualEscSettings,
+      };
 
       try {
         await this.serial.writeSettings(target, esc, mergedSettings);
@@ -882,7 +871,4 @@ function mapStateToProps(state) {
   return { serial };
 }
 
-export {
-  App,
-};
 export default connect(mapStateToProps)(App);

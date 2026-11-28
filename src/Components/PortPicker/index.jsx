@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import CompatibilityWarning from './CompatibilityWarning';
 
 import {
+  selectBaudRate,
   selectConnected,
   selectHasSerial,
   selectOpen,
@@ -21,6 +22,7 @@ import './style.scss';
 function BaudRates({
   handleChange,
   disabled,
+  value,
 }) {
   const { t } = useTranslation('common');
   const baudRates = [115200, 57600, 38400, 28800, 19200, 14400, 9600, 4800, 2400, 1200];
@@ -37,12 +39,12 @@ function BaudRates({
   return (
     <select
       className="dropdown__select"
-      defaultValue="115200"
       disabled={disabled}
       id="baud"
       name={t('baudRate')}
       onChange={handleChange}
       title={t('baudRate')}
+      value={value}
     >
       {rateElements}
     </select>
@@ -52,6 +54,7 @@ function BaudRates({
 BaudRates.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 function PermissionOverlay({
@@ -132,6 +135,7 @@ function PortPicker({
   const hasSerial = useSelector(selectHasSerial);
   const open = useSelector(selectOpen);
   const ports = useSelector(selectPortNames);
+  const baudRate = useSelector(selectBaudRate);
 
   const handleBaudRateChange = useCallback((e) => {
     dispatch(setBaudRate(e.target.value));
@@ -171,6 +175,7 @@ function PortPicker({
           <BaudRates
             disabled={open}
             handleChange={handleBaudRateChange}
+            value={baudRate}
           />
         </div>
 
